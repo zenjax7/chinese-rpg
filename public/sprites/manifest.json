@@ -1,0 +1,506 @@
+{
+ "hero": {
+  "file": "hero.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "right",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "rabbit": {
+  "file": "rabbit.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "mushroom": {
+  "file": "mushroom.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "rabbitking": {
+  "file": "rabbitking.png",
+  "frameWidth": 384,
+  "frameHeight": 384,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "bee": {
+  "file": "bee.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": true,
+  "anchorNote": "body center hovers at 55% height; origin still 0.5/0.92 = ground point under shadow",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "spider": {
+  "file": "spider.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "queenbee": {
+  "file": "queenbee.png",
+  "frameWidth": 384,
+  "frameHeight": 384,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": true,
+  "anchorNote": "body center hovers at 55% height; origin still 0.5/0.92 = ground point under shadow",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "wolf_pup": {
+  "file": "wolf_pup.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "swift_horned_rabbit": {
+  "file": "swift_horned_rabbit.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "big_beak_crow": {
+  "file": "big_beak_crow.png",
+  "frameWidth": 384,
+  "frameHeight": 384,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "big_grey_wolf": {
+  "file": "big_grey_wolf.png",
+  "frameWidth": 384,
+  "frameHeight": 384,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "sapling_sprite": {
+  "file": "sapling_sprite.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "royal_guard_bee": {
+  "file": "royal_guard_bee.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": true,
+  "anchorNote": "body center hovers at 55% height; origin still 0.5/0.92 = ground point under shadow",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "greedy_bear": {
+  "file": "greedy_bear.png",
+  "frameWidth": 384,
+  "frameHeight": 384,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": false,
+  "anchorNote": "feet on baseline at 92% height",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "worker_bee": {
+  "file": "worker_bee.png",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "origin": {
+   "x": 0.5,
+   "y": 0.92
+  },
+  "facing": "left",
+  "flying": true,
+  "anchorNote": "body center hovers at 55% height; origin still 0.5/0.92 = ground point under shadow",
+  "frameCount": 7,
+  "animations": {
+   "idle": {
+    "start": 0,
+    "end": 1,
+    "frameRate": 3,
+    "repeat": -1
+   },
+   "attack": {
+    "start": 2,
+    "end": 4,
+    "frameRate": 8,
+    "repeat": 0
+   },
+   "hurt": {
+    "start": 5,
+    "end": 6,
+    "frameRate": 8,
+    "repeat": 0
+   }
+  }
+ },
+ "_aliases": {
+  "horned_rabbit": "rabbit",
+  "mushroom_hopper": "mushroom",
+  "horned_rabbit_king": "rabbitking",
+  "giant_bee": "bee",
+  "forest_spider": "spider",
+  "queen_bee": "queenbee"
+ },
+ "_aliases_note": "Desy roster id -> sprite key (prototype ids kept for batch 1)."
+}

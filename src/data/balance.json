@@ -1,0 +1,222 @@
+{
+ "_note": "Tuning numbers from combat-spec.md v3 / desy/data/combat_data.json, plus Jack's prototype decisions (newCap 3, Tired 30/45) and the 20% speech-on trigger requested by the team. Times in ms.",
+ "hero": {
+  "hpBase": 30,
+  "hpPerLevel": 6,
+  "mpBase": 10,
+  "mpPerLevel": 2,
+  "atkLevelDiv": 2,
+  "defLevelDiv": 3,
+  "expToNextPerLevel": 100,
+  "startLevel": 1
+ },
+ "combat": {
+  "kBlock": 1.25,
+  "kBroken": 0.5,
+  "brokenFloor": 0.5,
+  "spokenDamageMult": 1.25,
+  "spokenExtraStreak": 1,
+  "streakTiers": [
+   {
+    "min": 0,
+    "mult": 1.0
+   },
+   {
+    "min": 3,
+    "mult": 1.25
+   },
+   {
+    "min": 6,
+    "mult": 1.5
+   },
+   {
+    "min": 10,
+    "mult": 2.0
+   }
+  ],
+  "tiredAtQuestions": {
+   "normal": 30,
+   "locboss": 45,
+   "realmboss": 45
+  },
+  "tiredEnemyAtkMult": 0.7,
+  "tiredHeroDamageMult": 1.5,
+  "potionsPerBattle": 3,
+  "mpPerCorrect": 1,
+  "maxEnemies": 3,
+  "fastAnswerMs": 600,
+  "focusDelayMs": 1500,
+  "textUnlockMs": 800,
+  "audioUnlockMaxMs": 3500,
+  "feedbackMinMs": 1500,
+  "correctFeedbackMs": 700,
+  "scoutSkipAfterMs": 1000,
+  "bossCheckpointFrac": 0.5
+ },
+ "learning": {
+  "setSize": 7,
+  "newCap": 3,
+  "workingSet": 10,
+  "carryOverCap": 20,
+  "proficientCorrect": 2,
+  "maxAsksPerItem": 4,
+  "reaskGap": 2,
+  "leitnerIntervalsMin": [
+   0,
+   10,
+   1440,
+   4320,
+   10080,
+   23040,
+   50400
+  ],
+  "wrongBoxDrop": 2,
+  "maxBox": 6,
+  "proficientWeight": 0.15,
+  "overdueWeight": 1.5,
+  "overdueCap": 2,
+  "localBaseWeight": 1.0,
+  "localProgressWeight": 2.0,
+  "recentMissWeight": 0.8,
+  "spokenShareCap": 0.5,
+  "bossTrigger": 0.4,
+  "bossTriggerSpeech": 0.2,
+  "patrolsPerTrip": 2,
+  "expWayComplete": 10,
+  "expProficient": 30,
+  "firstAskOptionReduction": 1,
+  "minOptions": 2,
+  "readinessDenominator": "location pool only",
+  "eliteReplaceChance": 0.1
+ },
+ "speech": {
+  "maxTechReprompts": 2,
+  "voidsToPauseSession": 3,
+  "listenMs": 6000,
+  "listenMsLong": 8000,
+  "longAnswerSyllables": 4,
+  "noSpeechMs": 4000,
+  "maxAlternatives": 5
+ },
+ "economy": {
+  "startGold": 24,
+  "startInventory": {
+   "honey": 1,
+   "feather": 1
+  },
+  "startGear": [
+   "wood_sword",
+   "cloth_tunic"
+  ],
+  "innPriceG": 2,
+  "defeatFeePct": 0.1,
+  "defeatFloorInns": 2,
+  "courageStep": 0.2,
+  "courageMaxStacks": 3,
+  "goldRollMin": 0.8,
+  "goldRollMax": 1.2,
+  "expDampLevelsAbove": 3,
+  "expDampMult": 0.25,
+  "brokePotion": "honey",
+  "walkBackEncounterChance": 0.5,
+  "featherCarryLimit": 3
+ },
+ "chests": {
+  "normal": [
+   {
+    "weight": 0.4,
+    "goldG": 3
+   },
+   {
+    "weight": 0.35,
+    "item": "honey"
+   },
+   {
+    "weight": 0.05,
+    "item": "feather",
+    "ifCappedGoldG": 3
+   },
+   {
+    "weight": 0.1,
+    "item": "manatea"
+   },
+   {
+    "weight": 0.1,
+    "fineGear": true
+   }
+  ],
+  "locboss": {
+   "goldG": 3,
+   "item": "honey",
+   "fineGear": true
+  },
+  "realmboss": {
+   "goldG": 3,
+   "item": "honey",
+   "heroicGear": true,
+   "skillUnlock": true
+  }
+ },
+ "slots": {
+  "charmUnlockLevel": 3,
+  "skillSlotsByLevel": [
+   {
+    "level": 1,
+    "slots": 2
+   },
+   {
+    "level": 8,
+    "slots": 3
+   },
+   {
+    "level": 16,
+    "slots": 4
+   },
+   {
+    "level": 24,
+    "slots": 5
+   }
+  ]
+ },
+ "companion": {
+  "gaugeFull": 100,
+  "gainPerWrong": 20,
+  "gainPerCorrect": 5,
+  "gainPerVoidOrHint": 0,
+  "atkMult": 1.25,
+  "defMult": 0.5
+ },
+ "practice": {
+  "creditCapPerWay": 1,
+  "goldPerQuestion": 0,
+  "expPerQuestion": 0,
+  "completeReward": {
+   "item": "honey",
+   "goldG": 1
+  },
+  "listenPickLength": 8,
+  "sayItLength": 6,
+  "quickQuizLength": 10,
+  "matchingPairs": 6,
+  "flashcardsPerSession": 10
+ },
+ "inns": {
+  "nodes": [
+   {
+    "at": 0,
+    "name": "Entrance inn",
+    "zh": "入口客栈"
+   },
+   {
+    "at": 4,
+    "name": "Midpoint campfire inn",
+    "zh": "半路营火"
+   },
+   {
+    "at": 8,
+    "name": "Boss-approach inn",
+    "zh": "营地客栈"
+   }
+  ]
+ }
+}

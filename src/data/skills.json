@@ -1,0 +1,60 @@
+{
+ "_note": "Generated from combat_data.json skills_mp + mp_rules (v3 costs). Heal is earned by a Honeycomb quest in the spec; the prototype has no quests, so it unlocks at level 3.",
+ "skills": [
+  {
+   "id": "insight",
+   "zh": "提示",
+   "en": "Insight",
+   "emoji": "💡",
+   "mp": 4,
+   "perBattle": 2,
+   "kind": "question-hint",
+   "unlock": {
+    "start": true
+   },
+   "desc": "Removes 1 wrong choice from a tap question. Still works in battle, but does not count toward learning."
+  },
+  {
+   "id": "double",
+   "zh": "连击",
+   "en": "Double Strike",
+   "emoji": "⚔️",
+   "mp": 6,
+   "cooldownRounds": 3,
+   "minStreak": 3,
+   "secondHitFrac": 0.5,
+   "kind": "attack",
+   "unlock": {
+    "level": 5
+   },
+   "desc": "At streak 3+, a correct attack hits twice (2nd hit 50%)."
+  },
+  {
+   "id": "shield",
+   "zh": "守护盾",
+   "en": "Guardian Shield",
+   "emoji": "🔰",
+   "mp": 8,
+   "perBattle": 1,
+   "kind": "passive",
+   "unlock": {
+    "boss": "meadow"
+   },
+   "desc": "Auto: your first broken block in a battle becomes a good block."
+  },
+  {
+   "id": "heal",
+   "zh": "治疗",
+   "en": "Heal",
+   "emoji": "💚",
+   "mp": 12,
+   "perBattle": 1,
+   "healFrac": 0.3,
+   "kind": "heal",
+   "unlock": {
+    "level": 3
+   },
+   "desc": "Answer a question: correct heals 30% max HP. MP is spent either way. Once per battle."
+  }
+ ]
+}

@@ -1,0 +1,232 @@
+{
+ "_note": "Generated from combat_data.json gear (tiers 1-2 common/fine/heroic, shop prices), gear_heroic_drops and consumables. Charms (red_knot, jade_pendant) are prototype placeholders; the spec has no charm price table. Consumable prices are multiples of the current area G.",
+ "gear": [
+  {
+   "slot": "weapon",
+   "tier": 1,
+   "emoji": "🗡️",
+   "id": "wood_sword",
+   "rarity": "common",
+   "zh": "木剑",
+   "en": "Wooden Sword",
+   "atk": 5,
+   "price": 60,
+   "shop": true
+  },
+  {
+   "slot": "weapon",
+   "tier": 1,
+   "emoji": "🗡️",
+   "id": "wood_sword_f",
+   "rarity": "fine",
+   "zh": "好木剑",
+   "en": "Fine Wooden Sword",
+   "atk": 6,
+   "price": 0
+  },
+  {
+   "slot": "armor",
+   "tier": 1,
+   "emoji": "👕",
+   "id": "cloth_tunic",
+   "rarity": "common",
+   "zh": "布衣",
+   "en": "Cloth Tunic",
+   "def": 3,
+   "price": 50,
+   "shop": true
+  },
+  {
+   "slot": "armor",
+   "tier": 1,
+   "emoji": "👕",
+   "id": "cloth_tunic_f",
+   "rarity": "fine",
+   "zh": "好布衣",
+   "en": "Fine Cloth Tunic",
+   "def": 3,
+   "price": 0
+  },
+  {
+   "slot": "shield",
+   "tier": 1,
+   "emoji": "🛡️",
+   "id": "potlid",
+   "rarity": "common",
+   "zh": "锅盖盾",
+   "en": "Pot-lid Shield",
+   "def": 1,
+   "price": 35,
+   "shop": true
+  },
+  {
+   "slot": "shield",
+   "tier": 1,
+   "emoji": "🛡️",
+   "id": "potlid_f",
+   "rarity": "fine",
+   "zh": "好锅盖盾",
+   "en": "Fine Pot-lid Shield",
+   "def": 1,
+   "price": 0
+  },
+  {
+   "slot": "weapon",
+   "tier": 2,
+   "emoji": "🗡️",
+   "id": "stinger",
+   "rarity": "common",
+   "zh": "蜂刺短剑",
+   "en": "Stinger Dagger",
+   "atk": 8,
+   "price": 120,
+   "shop": true,
+   "shopRequires": "forest"
+  },
+  {
+   "slot": "weapon",
+   "tier": 2,
+   "emoji": "🗡️",
+   "id": "stinger_f",
+   "rarity": "fine",
+   "zh": "好蜂刺短剑",
+   "en": "Fine Stinger Dagger",
+   "atk": 9,
+   "price": 0
+  },
+  {
+   "slot": "armor",
+   "tier": 2,
+   "emoji": "🧥",
+   "id": "petal_cloak",
+   "rarity": "common",
+   "zh": "花瓣斗篷",
+   "en": "Petal Cloak",
+   "def": 5,
+   "price": 95,
+   "shop": true,
+   "shopRequires": "forest"
+  },
+  {
+   "slot": "armor",
+   "tier": 2,
+   "emoji": "🧥",
+   "id": "petal_cloak_f",
+   "rarity": "fine",
+   "zh": "好花瓣斗篷",
+   "en": "Fine Petal Cloak",
+   "def": 6,
+   "price": 0
+  },
+  {
+   "slot": "shield",
+   "tier": 2,
+   "emoji": "🛡️",
+   "id": "beeswax",
+   "rarity": "common",
+   "zh": "蜂蜡盾",
+   "en": "Beeswax Shield",
+   "def": 2,
+   "price": 70,
+   "shop": true,
+   "shopRequires": "forest"
+  },
+  {
+   "slot": "shield",
+   "tier": 2,
+   "emoji": "🛡️",
+   "id": "beeswax_f",
+   "rarity": "fine",
+   "zh": "好蜂蜡盾",
+   "en": "Fine Beeswax Shield",
+   "def": 2,
+   "price": 0
+  },
+  {
+   "id": "red_knot",
+   "slot": "charm",
+   "tier": 1,
+   "rarity": "common",
+   "zh": "红绳结",
+   "en": "Red Knot Charm",
+   "emoji": "🧧",
+   "atk": 1,
+   "price": 45,
+   "shop": true
+  },
+  {
+   "id": "jade_pendant",
+   "slot": "charm",
+   "tier": 2,
+   "rarity": "common",
+   "zh": "玉坠",
+   "en": "Jade Pendant",
+   "emoji": "📿",
+   "def": 1,
+   "mp": 4,
+   "price": 90,
+   "shop": true,
+   "shopRequires": "forest"
+  },
+  {
+   "id": "horn_dagger",
+   "slot": "weapon",
+   "tier": 1,
+   "rarity": "heroic",
+   "zh": "角兔角",
+   "en": "Rabbit-Horn Dagger",
+   "emoji": "🦴",
+   "atk": 7,
+   "startStreak": 1,
+   "price": 0,
+   "perk": "+1 streak at battle start"
+  },
+  {
+   "id": "queens_crown",
+   "slot": "charm",
+   "tier": 2,
+   "rarity": "heroic",
+   "zh": "蜂后之冠",
+   "en": "Queen's Crown",
+   "emoji": "👑",
+   "mp": 6,
+   "price": 0,
+   "perk": "+6 max MP"
+  }
+ ],
+ "consumables": [
+  {
+   "id": "honey",
+   "zh": "蜂蜜药水",
+   "en": "Honey Potion",
+   "emoji": "🍯",
+   "priceG": 1,
+   "healHpFrac": 0.4
+  },
+  {
+   "id": "bighoney",
+   "zh": "大蜂蜜",
+   "en": "Big Honey",
+   "emoji": "🏺",
+   "priceG": 2,
+   "healHpFrac": 0.7
+  },
+  {
+   "id": "manatea",
+   "zh": "魔力茶",
+   "en": "Mana Tea",
+   "emoji": "🍵",
+   "priceG": 1,
+   "healMpFrac": 0.5
+  },
+  {
+   "id": "feather",
+   "zh": "回城羽毛",
+   "en": "Return Feather",
+   "emoji": "🪶",
+   "priceG": 1,
+   "warp": true,
+   "carryLimit": 3
+  }
+ ]
+}

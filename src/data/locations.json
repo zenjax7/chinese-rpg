@@ -1,0 +1,118 @@
+{
+ "_note": "Spec v3 (realm_location_difficulty) values for tiers 1-2; enemies from desy/data. Prototype collapses each realm into one location: meadow uses the L1.1 pool, forest the L2.1 pool; path fights host the realm's other location bosses (crow, grey wolf, bear) and the scripted elite at the middle fight (4). elite = replaces one normal enemy in 10% of patrols. packs = enemies that always come in a group of N.",
+ "locations": [
+  {
+   "id": "meadow",
+   "name": "Starter Meadow",
+   "zh": "新手草原",
+   "emoji": "🌼",
+   "tier": 1,
+   "G": 6,
+   "recLevel": [
+    1,
+    3
+   ],
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "mcOptions": 3,
+   "reviewSlots": 0,
+   "pathFights": 8,
+   "roster": [
+    {
+     "enemy": "rabbit",
+     "weight": 3
+    },
+    {
+     "enemy": "mushroom",
+     "weight": 2
+    },
+    {
+     "enemy": "wolfpup",
+     "weight": 1
+    }
+   ],
+   "boss": "rabbitking",
+   "unlockRequires": [],
+   "bg": "0x6fbf4a",
+   "bossReward": {
+    "skill": "shield",
+    "heroic": "horn_dagger",
+    "text": "You learned Guardian Shield 守护盾, and found the Rabbit-Horn Dagger 角兔角!"
+   },
+   "packs": {
+    "wolfpup": 2
+   },
+   "scripted": {
+    "1": [
+     "rabbit"
+    ],
+    "3": [
+     "crow"
+    ],
+    "4": [
+     "swiftrabbit"
+    ],
+    "6": [
+     "greywolf"
+    ]
+   },
+   "elite": "swiftrabbit",
+   "desyPool": "L1.1"
+  },
+  {
+   "id": "forest",
+   "name": "Honeycomb Forest",
+   "zh": "蜂巢森林",
+   "emoji": "🍯",
+   "tier": 2,
+   "G": 12,
+   "recLevel": [
+    3,
+    5
+   ],
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "mcOptions": 3,
+   "reviewSlots": 1,
+   "pathFights": 8,
+   "roster": [
+    {
+     "enemy": "bee",
+     "weight": 3
+    },
+    {
+     "enemy": "spider",
+     "weight": 2
+    },
+    {
+     "enemy": "sapling",
+     "weight": 2
+    }
+   ],
+   "boss": "queenbee",
+   "unlockRequires": [
+    "meadow"
+   ],
+   "bg": "0x2f7d4f",
+   "bossReward": {
+    "heroic": "queens_crown",
+    "text": "The Queen's Crown 蜂后之冠 is yours! (end of prototype)"
+   },
+   "packs": {},
+   "scripted": {
+    "3": [
+     "bear"
+    ],
+    "4": [
+     "guardbee"
+    ]
+   },
+   "elite": "guardbee",
+   "desyPool": "L2.1"
+  }
+ ]
+}

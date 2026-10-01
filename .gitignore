@@ -1,0 +1,47 @@
+# dependencies / build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# backups (never commit)
+*.bak
+*.bak-*
+*.bak.*
+*.bak-*/
+src.bak*/
+tests.bak*/
+tools.bak*/
+
+# cloudflare (no longer used)
+.wrangler/
+wrangler.toml
+wrangler.json
+wrangler.jsonc
+
+# logs / temp
+*.log
+logs/
+npm-debug.log*
+tmp/
+.tmp/
+*.tmp
+
+# test / playwright artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+tests/shots/
+tests/out/
+*.trace.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# python
+__pycache__/
+*.pyc
+.venv/
