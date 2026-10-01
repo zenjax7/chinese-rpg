@@ -44,6 +44,11 @@ python3 -m http.server 8795 --bind 127.0.0.1 --directory dist &   # or any serve
 npm test                                   # = node tests/play.mjs [baseUrl], default http://127.0.0.1:8795/
 ```
 
+Extra scripts (same server):
+- `node tests/queen.mjs [baseUrl] [t1|t1s|dagger|t2|test] [runs] [acc]`: Queen Bee win rate for a gear kit (spec v3.2 §7.9).
+- `node tests/shots.mjs [baseUrl] [outPrefix] [viewports]` and `node tests/gearshots.mjs [baseUrl] [outPrefix]`: screenshots.
+- Debug panel (dev build or `?debug`): 🎽 *Tier gear* wears the shop weapon/armor/shield/charm of the current location's tier.
+
 Tests are **not** run in CI.
 
 ## Deploy (GitHub Pages via GitHub Actions)

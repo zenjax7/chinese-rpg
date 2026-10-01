@@ -1,0 +1,23 @@
+// Screenshots of the v3.2 gear flow: node tests/gearshots.mjs [baseUrl] [outPrefix]
+import { chromium } from 'playwright-core';
+const [BASE0 = 'http://127.0.0.1:8795/', OUT = '/tmp/gear-'] = process.argv.slice(2);
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const p = await ctx.newPage();
+const errs = []; p.on('pageerror', e => errs.push(e.message));
+const tid = id => p.locator(`[data-testid="${id}"]`);
+const shot = async name => { await p.waitForTimeout(500); await p.screenshot({ path: OUT + name + '.png' }); console.log('saved', OUT + name + '.png'); };
+await p.goto(BASE0); await tid('consent').waitFor();
+const m = (await tid('consent').innerText()).match(/(\d+) × (\d+)/); await tid('consent-speech').uncheck();
+await tid('consent-answer').fill(String(+m[1] * +m[2])); await tid('consent-ok').click(); await tid('town').waitFor();
+await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('chinese-rpg-proto-v3'));
+  s.level = 5; s.gold = 400; s.locs.meadow.bossDefeated = true; s.locs.meadow.pathCleared = 8; s.locs.forest.unlocked = true; s.locs.forest.previewSeen = true;
+  s.gear = ['wood_sword', 'cloth_tunic', 'potlid', 'horn_dagger']; s.equip = { weapon: 'horn_dagger', armor: 'cloth_tunic', shield: 'potlid', charm: null };
+  localStorage.setItem('chinese-rpg-proto-v3', JSON.stringify(s)); });
+await p.reload(); await tid('town').waitFor();
+await tid('go-adventure').click(); await tid('worldmap').waitFor(); await shot('worldmap-flag');
+await tid('loc-forest').click(); await tid('gear-warn').waitFor(); await shot('map-warning');
+await tid('gear-warn-shop').click(); await tid('shop-gear-warn').waitFor(); await shot('shop-warning');
+await tid('buy-beeswax').click(); await p.waitForTimeout(250); await shot('auto-equip-toast');
+await tid('buy-stinger').click(); await tid('dialog').waitFor(); await shot('equip-prompt');
+console.log(errs.length ? 'PAGE ERRORS ' + errs.join(' | ') : 'no page errors');
+await browser.close();

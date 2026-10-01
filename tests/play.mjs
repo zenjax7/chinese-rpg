@@ -48,6 +48,26 @@ async function locEnabled(p, id) {
   await tid(p, 'go-adventure').click(); await tid(p, 'worldmap').waitFor();
   const on = await tid(p, 'loc-' + id).isEnabled(); await tid(p, 'world-back').click(); await tid(p, 'town').waitFor(); return on;
 }
+const maxHp = async p => +(await p.locator('#hud .hpmax').innerText());
+const save_ = p => p.evaluate(() => JSON.parse(localStorage.getItem('chinese-rpg-proto-v3')));
+/** Battle menu policy: attack, but below `frac` of max HP drink a Honey Potion (✨ Heal if none is left). */
+function survive(frac = 0.4) {
+  return async pg => {
+    if (await hp(pg) >= frac * await maxHp(pg)) return 'act-attack';
+    if (await tid(pg, 'act-itemsmenu').isEnabled()) {
+      await tid(pg, 'act-itemsmenu').click(); await tid(pg, 'items-menu').waitFor();
+      for (const id of ['act-potion-bighoney', 'act-potion-honey']) if (await tid(pg, id).count() && await tid(pg, id).isEnabled()) { survive.used.potion++; return id; }
+      await tid(pg, 'act-back').click(); await tid(pg, 'action-menu').waitFor();
+    }
+    if (await tid(pg, 'act-skills').isEnabled()) {
+      await tid(pg, 'act-skills').click(); await tid(pg, 'skills-menu').waitFor();
+      if (await tid(pg, 'act-heal').count() && await tid(pg, 'act-heal').isEnabled()) { survive.used.heal++; return 'act-heal'; }
+      await tid(pg, 'act-back').click(); await tid(pg, 'action-menu').waitFor();
+    }
+    return 'act-attack';
+  };
+}
+survive.used = { potion: 0, heal: 0 };
 const gold = async p => +(await tid(p, 'hud-gold').innerText());
 const hp = async p => +(await tid(p, 'hud-hp').innerText());
 
@@ -243,17 +263,43 @@ check(r.result === 'win', `beat the Starter Meadow boss (${r.stats.q} q)`);
 const bv = await tid(p, 'victory').innerText(); check(/Honeycomb Forest/.test(bv) && /Guardian Shield/.test(bv), 'boss unlocks Honeycomb Forest + Guardian Shield');
 check(/heroic/.test(bv), 'Rabbit King chest gives the heroic Rabbit-Horn Dagger');
 log(bv.replace(/\n+/g, ' | '));
+check(/Equipped .*Rabbit-Horn Dagger \(ATK 5 → 7\)/.test(bv), 'strictly better heroic drop auto-equipped (shown on the results card)');
 await tid(p, 'victory-ok').click(); await tid(p, 'town').waitFor();
+check((await save_(p)).equip.weapon === 'horn_dagger', 'Rabbit-Horn Dagger is worn after the boss (auto-equip, v3.2 §7.9)');
+await tid(p, 'go-adventure').click(); await tid(p, 'worldmap').waitFor();
+check(await tid(p, 'gear-weak-forest').count() === 1 && await tid(p, 'gear-weak-meadow').count() === 0, 'world map: "gear is weak" flag on Honeycomb Forest (tier-1 armor/shield), none on the starter meadow');
+await tid(p, 'world-back').click(); await tid(p, 'town').waitFor();
 check(await locEnabled(p, 'forest'), 'Honeycomb Forest card enabled on the world map');
 await tid(p, 'go-inn').click(); await tid(p, 'inn-stay').click(); check((await tid(p, 'inn-stay').innerText()).includes('24') || true, 'inn price now 24 (tier 2)'); await tid(p, 'back').click();
-await goLoc(p, 'forest'); await tid(p, 'preview').waitFor(); await tid(p, 'preview-done').click();
+await goLoc(p, 'forest'); await tid(p, 'preview').waitFor(); await tid(p, 'preview-done').click(); await tid(p, 'location').waitFor();
+const gw = await tid(p, 'gear-warn').innerText().catch(() => '');
+check(/装备太弱/.test(gw) && /Petal Cloak/.test(gw) && /Beeswax Shield/.test(gw) && !/Stinger/.test(gw), 'forest map: bilingual weak-gear warning names the armor + shield upgrades (heroic dagger still counts): ' + gw.replace(/\n+/g, ' | '));
+// the warning's 🛒 button goes to the village shop, which repeats the warning and tags upgrades
+await debugSet(p, { gold: 400 }); await tid(p, 'gear-warn-shop').click(); await tid(p, 'shop').waitFor();
+check(await tid(p, 'shop-gear-warn').count() === 1 && await tid(p, 'upg-beeswax').count() === 1 && await tid(p, 'upg-petal_cloak').count() === 1 && await tid(p, 'upg-stinger').count() === 0,
+  'shop: weak-gear banner + ⬆ Upgrade tags on strictly better pieces only');
+await tid(p, 'buy-beeswax').click(); await p.waitForTimeout(150);
+check((await save_(p)).equip.shield === 'beeswax' && /Equipped .*Beeswax Shield \(DEF 1 → 2\)/.test(await p.locator('#toasts').innerText()), 'bought Beeswax Shield: strictly better → auto-equipped + toast');
+await tid(p, 'buy-petal_cloak').click(); await p.waitForTimeout(150);
+check((await save_(p)).equip.armor === 'petal_cloak', 'bought Petal Cloak: auto-equipped');
+await tid(p, 'buy-stinger').click(); await tid(p, 'dialog').waitFor();
+const eqPrompt = await tid(p, 'dialog').innerText();
+check(/Equip .*Stinger Dagger\?/.test(eqPrompt) && /ATK 7 → 8/.test(eqPrompt) && /lose: \+1 streak/.test(eqPrompt), 'Stinger Dagger (more ATK, no perk) asks "Equip?" instead: ' + eqPrompt.replace(/\n+/g, ' | '));
+await tid(p, 'dialog-btn-1').click(); await p.waitForTimeout(150);
+check((await save_(p)).equip.weapon === 'horn_dagger' && (await save_(p)).gear.includes('stinger'), '"Keep mine" keeps the dagger; the Stinger Dagger goes in the bag');
+for (let i = 0; i < 3; i++) await tid(p, 'buy-honey').click();
+check(await tid(p, 'shop-gear-warn').count() === 0, 'shop warning gone once the gear fits the tier');
+await tid(p, 'back').click(); await goLoc(p, 'forest'); await tid(p, 'location').waitFor();
+check(await tid(p, 'gear-warn').count() === 0, 'forest map warning gone after the upgrade');
 await tid(p, 'act-path').click(); r = await playBattle(p, () => Math.random() < 0.85);
 log('forest battle', r.result, JSON.stringify(r.stats));
 check(r.result === 'win' || r.result === 'defeat', 'played a Honeycomb Forest battle');
 if (r.result === 'win') await tid(p, 'victory-ok').click(); else await tid(p, 'back').click();
 // Queen Bee: summons at most 2 workers
 if (await tid(p, 'town').count()) await goLoc(p, 'forest');
-await tid(p, 'location').waitFor(); await debugSet(p, { level: 8 });
+await tid(p, 'location').waitFor(); await debugSet(p, { level: 8, gold: 200 });
+{ const sv8 = await save_(p); check(sv8.skillsEquipped.length === 3 && sv8.skillsEquipped.includes('shield'), 'L8 opens a 3rd skill slot and Guardian Shield fills it automatically: ' + sv8.skillsEquipped.join(','));
+  const hs = await p.locator('#toasts').innerText(); check(/New skill slot! .*Guardian Shield/.test(hs), 'toast: new skill slot filled'); }
 await tid(p, 'debug-open').click(); await tid(p, 'dbg-clearpath').click(); await tid(p, 'location').waitFor();
 log('forest approach:', await tid(p, 'location').innerText().then(t => t.replace(/\n+/g, ' | ')));
 for (let tries = 0; tries < 6 && await tid(p, 'act-patrol').count(); tries++) {
@@ -263,14 +309,23 @@ for (let tries = 0; tries < 6 && await tid(p, 'act-patrol').count(); tries++) {
   await tid(p, 'location').waitFor();
 }
 if (await tid(p, 'act-inn').count()) { await tid(p, 'act-inn').click(); await tid(p, 'inn-stay').click(); await tid(p, 'back').click(); }
-let qn = 0; await p.screenshot({ path: '/tmp/proto-forest-gate.png' }); await tid(p, 'act-boss').click(); r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png' });
+{ const sq = await save_(p); log('queen kit:', JSON.stringify(sq.equip), 'skills', sq.skillsEquipped.join(','), 'inv', JSON.stringify(sq.inv), 'hp', await hp(p), '/', await maxHp(p));
+  check((sq.inv.honey || 0) >= 3 && sq.equip.armor === 'petal_cloak' && sq.equip.shield === 'beeswax' && sq.equip.weapon === 'horn_dagger', 'Queen Bee kit: dagger + tier-2 armor/shield + 3 Honey Potions');
+}
+// Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L8), 75% (every 4th answer wrong), potion/Heal below 40% HP
+let qn = 0; survive.used = { potion: 0, heal: 0 }; await p.screenshot({ path: '/tmp/proto-forest-gate.png' }); await tid(p, 'act-boss').click();
+r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png', action: survive(0.4) });
 const summons = await p.evaluate(() => [...document.querySelectorAll('#blog div')].filter(d => /calls for help/.test(d.textContent)).length).catch(() => -1);
 log('queen battle', r.result, JSON.stringify(r.stats));
-check(r.result === 'win' || r.result === 'defeat', 'fought the Queen Bee');
+check(r.result === 'win', `beat the Queen Bee at L8 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);
 const qlog = await p.evaluate(() => window.__proto.summons);
 check(qlog === undefined ? true : qlog <= 2, 'Queen Bee summons ≤ 2');
 if (r.result === 'win') await tid(p, 'victory-ok').click(); else await tid(p, 'back').click();
 void summons;
+// debug preset: tier-matched gear for the current location
+if (await tid(p, 'town').count()) await goLoc(p, 'forest');
+await tid(p, 'location').waitFor(); await tid(p, 'debug-open').click(); await tid(p, 'dbg-tiergear').click(); await tid(p, 'location').waitFor();
+{ const e = (await save_(p)).equip; check(e.weapon === 'stinger' && e.armor === 'petal_cloak' && e.shield === 'beeswax' && e.charm === 'jade_pendant', 'debug 🎽 tier-gear preset wears the tier-2 shop set: ' + JSON.stringify(e)); }
 // persistence
 await p.reload(); await p.waitForTimeout(800);
 check(await p.evaluate(() => !!document.querySelector('[data-testid="town"],[data-testid="location"]')), 'reload restores saved game (no consent screen)');
