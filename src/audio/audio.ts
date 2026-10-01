@@ -34,7 +34,8 @@ let cur: { key: MusicKey; snd: Phaser.Sound.BaseSound } | null = null;
 let sting: Phaser.Sound.BaseSound | null = null;
 const dbg = () => ((window as any).__proto = (window as any).__proto || {}, (window as any).__proto.audio = (window as any).__proto.audio || { sfx: [], music: [], stings: [] });
 
-const musicVol = (key: string) => (cfg.muted ? 0 : cfg.master * cfg.music * (assets().music[key]?.volume ?? 1));
+let ducks = 0;   // >0 while word audio plays or the mic listens: music drops by 60% (spec §4.3/§4.4)
+const musicVol = (key: string) => (cfg.muted ? 0 : cfg.master * cfg.music * (assets().music[key]?.volume ?? 1) * (ducks ? 0.4 : 1));
 const sfxVol = (key: string) => (cfg.muted ? 0 : cfg.master * cfg.sfx * (assets().sfx[key]?.volume ?? 1));
 const loaded = (key: string) => !!scene && scene.cache.audio.exists(key);
 
@@ -51,10 +52,28 @@ if (typeof document !== 'undefined') {
   document.addEventListener('pointerdown', once, true); document.addEventListener('keydown', once, true);
 }
 
-export function playSfx(key: SfxKey) {
+/** detune in cents (the streak sound rises one semitone per streak level, spec §4.4). */
+export function playSfx(key: SfxKey, opts: { detune?: number } = {}) {
   dbg().sfx.push(key); if (dbg().sfx.length > 50) dbg().sfx.shift();
   if (!mgr || !unlocked || !loaded(key) || cfg.muted) return;
-  try { mgr.play(key, { volume: sfxVol(key) }); (dbg().played ||= []).push(key); } catch { /* ignore */ }
+  try { mgr.play(key, { volume: sfxVol(key) * (ducks ? 0.6 : 1), detune: opts.detune || 0 }); (dbg().played ||= []).push(key); } catch { /* ignore */ }
+}
+/** Duck music (and new SFX) while a word plays or while listening. Calls nest. */
+export function duck(on: boolean) {
+  ducks = Math.max(0, ducks + (on ? 1 : -1)); dbg().ducked = ducks > 0;
+  if (cur) fade(cur.snd, musicVol(cur.key), 200);
+}
+/** Short soft "beep" that tells the child listening has started (synthesised; no asset needed). */
+export function beep() {
+  (dbg().beeps = (dbg().beeps || 0) + 1);
+  const ctx: AudioContext | undefined = (mgr as any)?.context;
+  if (!ctx || !unlocked || cfg.muted) return;
+  try {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = 880;
+    const t = ctx.currentTime, v = 0.18 * cfg.master * cfg.sfx;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+    o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.2);
+  } catch { /* no WebAudio */ }
 }
 
 // Volume tweens go through a proxy object so a tween can never write to a sound that was already destroyed

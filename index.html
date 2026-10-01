@@ -2,19 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b1020" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>">
 <title>Chinese Quest – Combat Prototype</title>
 <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <div id="hud"></div>
-  <div id="game"></div>
-  <div id="ui"></div>
-  <div id="modal" class="hidden"></div>
-  <div id="toasts"></div>
-  <button id="muteBtn" title="Sound on/off" data-testid="mute-toggle">🔊</button>
-  <button id="debugBtn" title="Debug panel" data-testid="debug-open">🐞</button>
+  <!-- One 16:9 stage: the Phaser canvas (1280x720 logical) is FIT-scaled into #game; #frame-ui is a 1280x720 box
+       kept on top of the canvas with one CSS scale (src/ui/frame.ts). Everything outside the frame is letterbox. -->
+  <div id="stage">
+    <div id="game"></div>
+    <div id="frame-ui">
+      <div id="hud"></div>
+      <div id="ui"></div>
+      <div id="sys">
+        <button id="debugBtn" class="sysbtn hidden" title="Debug panel" aria-label="Debug panel" data-testid="debug-open">🐞</button>
+        <button id="muteBtn" class="sysbtn" title="Sound on/off" aria-label="Sound on/off" data-testid="mute-toggle">🔊</button>
+        <button id="pauseBtn" class="sysbtn" title="Pause" aria-label="Pause" data-testid="pause">⏸️</button>
+      </div>
+      <div id="edge"></div>
+      <div id="modal" class="hidden"></div>
+      <div id="toasts"></div>
+      <div id="rotate"><div><div style="font-size:120px">📱↻</div><div class="rot-t">Turn sideways to play</div><div class="rot-s" lang="zh-CN">请横过来玩</div></div></div>
+    </div>
+  </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

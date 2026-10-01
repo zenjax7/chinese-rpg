@@ -4,7 +4,7 @@
 import { ITEM } from '../data';
 import { assets, onAssets } from '../assets';
 import { speak, hasZhVoice, onVoices, synth } from './speech';
-import { audioSettings } from '../audio/audio';
+import { audioSettings, duck } from '../audio/audio';
 
 const ttsOk = () => !!synth() && hasZhVoice();
 const canOgg = typeof Audio !== 'undefined' && !!new Audio().canPlayType?.('audio/ogg; codecs="vorbis"');
@@ -14,6 +14,10 @@ export const canSayItem = (id: string) => !!clip(id) || ttsOk();
 let playing: HTMLAudioElement | null = null;
 /** Speaks an item (by id). Resolves when done or after maxMs. */
 export function sayItem(id: string, maxMs?: number): Promise<void> {
+  duck(true); let un = false; const undo = () => { if (!un) { un = true; duck(false); } };
+  return sayRaw(id, maxMs).then(undo, undo);
+}
+function sayRaw(id: string, maxMs?: number): Promise<void> {
   const url = clip(id); const it = ITEM[id];
   (window as any).__proto = (window as any).__proto || {}; (window as any).__proto.said = [...((window as any).__proto.said || []).slice(-20), id];
   if (url) {
