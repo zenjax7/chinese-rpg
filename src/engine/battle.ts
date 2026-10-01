@@ -4,11 +4,11 @@ import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp } from
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses } from './learning';
 import { listen, speechSupported } from './speech';
 import { sayItem } from './voice';
-import { playSfx, playMusic, playSting } from '../audio/audio';
+import { playSfx, playMusic, playSting, beep, duck } from '../audio/audio';
 import { BG } from '../assets';
 import { matchZh, matchEn } from './match';
-import { view } from '../phaser/view';
-import { $, $$, esc, render, hud, toast, sleep, on } from '../ui/dom';
+import { view, HERO_X, BASE_Y } from '../phaser/view';
+import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, flyTo } from '../ui/dom';
 
 export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
@@ -63,33 +63,51 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint };
   const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false };
   const tired = () => bs.q >= tiredAt;
-  const log = (m: string) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 30).map(x => `<div>${x}</div>`).join(''); };
+  const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
+  /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
+  const msg = (html: string, testid = '') => { const el = $('#bmsg'); if (!el) return; el.innerHTML = html; if (testid) el.dataset.testid = testid; else delete el.dataset.testid; };
+  const side = (html: string) => { const el = $('#bside'); if (el) el.innerHTML = html; };
+  const zhName = (f: Foe) => zh(f.d.zh);
   S.stats.battles++;
   view.mode('battle', parseInt(loc.bg), BG.battle(loc, isBoss));
   playMusic(leader || isBoss ? 'mus_battle_boss' : 'mus_battle_field');
   const syncView = () => view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
   syncView();
 
-  // ---- UI skeleton
+  // ---- UI skeleton: everything sits inside the 1280x720 frame; the dock (24,464,1232x236) never changes size (spec §4)
   const skeleton = () => {
-    render(`<div class="panel" data-testid="battle">
-      <div class="enemyrow" id="foes"></div>
-      <div class="row muted" id="bstat"></div>
-      <div id="bmain"></div>
-      <div class="log" id="blog"></div></div>`);
-    log(leader ? `👑 Boss battle! ${foes[0].d.zh} ${esc(foes[0].d.en)}` : `${foes.map(f => f.d.emoji).join(' ')} appeared!`);
+    render(`<div data-testid="battle" class="battle">
+      <div id="roundchip" class="plate"></div>
+      <div id="banner" class="hidden" data-testid="spell-banner"></div>
+      <div id="tgts"></div>
+      <div id="dock" class="panel" data-testid="dock"><div id="bmsg"></div><div id="bside"></div><div id="bmain"></div></div>
+      <div id="blog" class="hidden"></div></div>`);
+    setTitle(null);
+    const names = foes.map(zhName).join(foes.length > 2 ? ', ' : ' and ');
+    log(leader ? `👑 Boss battle! ${zhName(foes[0])} ${esc(foes[0].d.en)} appears!` : `${names} appeared!`);
   };
+  let lastStreak = -1;
   const refresh = () => {
-    hud();
-    const fe = $('#foes'); if (fe) fe.innerHTML = foes.map((f, i) => `<div class="card" data-testid="foe-${i}" style="${f.alive ? '' : 'opacity:.35'}" title="${esc(f.d.special)}">
-      <div style="font-size:1.6rem">${f.d.emoji} <span class="zhname">${f.d.zh}</span></div><div class="muted">${esc(f.d.en)}</div>
-      <div>${f.d.kind === 'elite' ? '<span class="tag">⭐ elite</span> ' : ''}HP <b data-testid="foe-hp-${i}">${Math.max(0, f.hp)}</b>/${f.maxHp} · ⚔️${f.d.atk} 🛡️${f.d.def_}${f.skipNext ? ' 💤' : ''}${tired() ? ' <span class="tag">😪 Tired</span>' : ''}</div></div>`).join('');
-    const st = $('#bstat'); if (st) st.innerHTML = `<span class="tag" data-testid="gauge" title="Companion gauge: fills on mistakes (+${B.companion.gainPerWrong}) and correct answers (+${B.companion.gainPerCorrect})">🐲 <span class="gauge"><span style="width:${bs.gauge}%"></span></span> ${bs.gauge}</span><span class="tag">Round ${bs.round}</span><span class="tag" data-testid="streak">🔥 Streak ${bs.streak} (×${streakMult(bs.streak)})</span>
-      <span class="tag">❓ ${bs.q}/${tiredAt}${tired() ? ' 😪 enemies tired' : ''}</span><span class="tag">🧪 ${C().potionsPerBattle - bs.potions} potion uses left</span>
-      ${S.skillsEquipped.includes('shield') ? `<span class="tag">🔰 Guardian Shield ${bs.shield ? 'used' : S.mp >= SKILL.shield.mp ? 'ready' : 'needs MP'}</span>` : ''}
-      ${hero.webbed ? '<span class="tag">🕸️ webbed</span>' : ''}${hero.rooted ? '<span class="tag">🌱 rooted</span>' : ''}`;
+    setBattleHud({ gauge: bs.gauge });
+    const rc = $('#roundchip');
+    if (rc) {
+      const st = [hero.webbed ? '<span title="Webbed: next attack does half damage">🕸️</span>' : '', hero.rooted ? '<span title="Rooted: can\'t run away">🌱</span>' : '', tired() ? '<span title="Enemies are tired">😪</span>' : ''].join('');
+      rc.innerHTML = `Round ${bs.round} · <span class="st" data-testid="streak" title="Streak ${bs.streak} (damage ×${streakMult(bs.streak)})">🔥 ×${bs.streak}</span>${st}`;
+      if (lastStreak >= 0 && bs.streak > lastStreak) { const e = $('.st', rc); e.classList.add('bump'); }
+      lastStreak = bs.streak;
+    }
     foes.forEach((f, i) => view.updateEnemy(i, f.hp, tired()));
   };
+  const banner = (html: string | null, cls = '') => {
+    const b = $('#banner'), rc = $('#roundchip'); if (!b) return;
+    if (html === null) { b.classList.add('hidden'); b.innerHTML = ''; rc?.classList.remove('hidden'); return; }
+    b.className = cls; b.innerHTML = html; rc?.classList.add('hidden');
+  };
+  const dockMain = async (html: string) => {   // dock content cross-fades (150 ms); the dock itself never resizes
+    const m = $('#bmain'); if (!m) return m; m.classList.add('fade'); await sleep(90); m.innerHTML = html; m.classList.remove('fade'); return m;
+  };
+  const heroFrame = () => ({ x: HERO_X, y: BASE_Y - 250 });
+  const splitEn = (en: string) => { const m = en.match(/^(.*?)\s*(\(.*\))\s*$/); return m ? `${esc(m[1])}<span class="hint"> ${esc(m[2])}</span>` : esc(en); };
 
   // Words are drawn silently from the location pool (no per-battle word list; the full pool is on the preview / practice pages).
   skeleton(); refresh();
@@ -116,6 +134,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
       if ((out as any).fatal) { session.speechBlocked = true; session.speechBlockReason = (out as any).fatal; toast('🔇 Speech is off for now: ' + esc((out as any).fatal) + '. We\'ll use tapping.'); way = pickWay(id, ctx); continue; }
       break;
     }
+    banner(null); view.clearFocus(); side('');
     bs.q++; res.questions++;
     feed.record(id, way, out.result);
     (window as any).__proto.lastOutcome = { id, way, ...out };
@@ -124,7 +143,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     // companion gauge (v3): +20 wrong, +5 correct, 0 for hinted answers
     const CG = B.companion; const before = bs.gauge;
     if (!out.hinted) bs.gauge = Math.min(CG.gaugeFull, bs.gauge + (out.result === 'correct' ? CG.gainPerCorrect : CG.gainPerWrong));
-    if (bs.gauge >= CG.gaugeFull && before < CG.gaugeFull) { log('💖 Your companion 小龙 is ready to help!'); toast('💖 小龙: 我来帮你!'); }
+    if (bs.gauge > before && out.result !== 'correct') flyTo(`💖 +${bs.gauge - before}`, heroFrame(), 'gauge', '#ff7eb3');   // the mistake visibly turns into help
+    if (bs.gauge >= CG.gaugeFull && before < CG.gaugeFull) { log(`💖 Your companion ${zh('小龙')} is ready to help!`); toast(`💖 ${zh('小龙')}: ${zh('我来帮你!')}`); }
     ctx.asked++; if (out.spoken) { ctx.spoken++; res.spoken++; S.stats.spoken++; }
     S.stats.questions++;
     const g = grade(id, way, out.result === 'correct', out.hinted);
@@ -133,7 +153,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     if (out.result === 'correct') {
       res.correct++; S.stats.correct++;
       if (!(out.fast && !proficient(id))) bs.streak += 1 + (out.spoken ? C().spokenExtraStreak : 0);
-      S.mp = Math.min(heroStats().maxMp, S.mp + C().mpPerCorrect);
+      const mp0 = S.mp; S.mp = Math.min(heroStats().maxMp, S.mp + C().mpPerCorrect);
+      if (S.mp > mp0) flyTo(`+${S.mp - mp0} MP`, heroFrame(), 'mp');
       bs.fastWrongs = 0;
     } else {
       bs.streak = streakDrop(bs.streak);
@@ -147,85 +168,101 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
 
   async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number): Promise<Outcome & { tech?: boolean; fatal?: string }> {
     const item = ITEM[id]; const p = prog(id);
-    const zhHtml = `<div class="zh-big" data-testid="q-zh">${item.zh}</div>`;   // characters only (no pinyin anywhere; 🔊 gives the sound)
-    const foeName = foe ? `${foe.d.emoji} ${foe.d.zh}` : '';
-    const frame = turn === 'defense' ? `<div class="muted">${foeName} is casting a spell at you… 🛡️ Block it!</div>` : turn === 'heal' ? `<div class="muted">💚 Heal spell!</div>` : `<div class="muted">⚔️ Cast your spell!</div>`;
-    const main = $('#bmain');
+    // Spell banner (top centre) always holds the stimulus: gold edge = I'm casting, red = the enemy casts at me (spec §4.2)
+    const head = turn === 'defense' ? `🛡️ ${foe ? zhName(foe) : ''} casts a spell! Block it!` : turn === 'heal' ? '💚 Heal spell!' : '⚔️ Cast your spell!';
+    const cls = turn === 'defense' ? 'def' : turn === 'heal' ? 'heal' : 'atk';
+    const zhStim = `<div class="qzh" lang="zh-CN" data-testid="q-zh">${item.zh}</div><button class="secondary" id="replay" title="Hear it again" aria-label="Hear it again">🔊</button>`;   // characters only (no pinyin anywhere; 🔊 gives the sound)
+    const enStim = `<div class="stim">${splitEn(item.enPrimary)}</div>`;
+    const zhPrompt = way === 'rZE' || way === 'sZE';
+    banner(`<div class="h">${head}</div>${zhPrompt ? zhStim : enStim}`, cls);
+    view.focus({ turn, target: turn === 'attack' && foe ? foes.indexOf(foe) : undefined, attacker: turn === 'defense' && foe ? foes.indexOf(foe) : undefined });
     const unlockDelay = bs.focus ? C().focusDelayMs : 0; bs.focus = false;
+    const rp = () => { const b = $('#replay'); if (b) b.onclick = () => sayItem(id); };
     if (way === 'rZE' || way === 'rEZ') {
       const first = Object.values(p.ways).every(w => w.a === 0);
       const n = Math.max(B.learning.minOptions, LOC[currentLoc].mcOptions - (first ? B.learning.firstAskOptionReduction : 0));
       const opts = [id, ...distractors(id, n - 1)].sort(() => Math.random() - 0.5);
-      const label = (oid: string) => way === 'rZE' ? esc(ITEM[oid].enPrimary) : ITEM[oid].zh;
-      const prompt = way === 'rZE'
-        ? `<div class="prompt">${turn === 'defense' ? 'What does this mean?' : 'Cast it! What does this mean?'}</div>${zhHtml}`
-        : `<div class="prompt">${turn === 'defense' ? 'Block it! Which one is' : 'Cast'} <b>“${esc(item.enPrimary)}”</b>${turn === 'defense' ? '?' : '! Tap the Chinese.'}</div>`;
-      const canInsight = () => S.skillsEquipped.includes('insight') && bs.insight < SKILL.insight.perBattle! && S.mp >= SKILL.insight.mp && $$('.options button:not([disabled]):not(.gone)').length > 2;
-      main.innerHTML = `<div style="text-align:center" data-testid="question" data-way="${way}">${frame}${prompt}
-        <div class="row">${way === 'rZE' ? `<button class="secondary" id="replay">🔊 Hear it</button>` : ''}
-        ${S.skillsEquipped.includes('insight') ? `<button class="secondary" id="insight" data-testid="insight">💡 Insight (${SKILL.insight.mp} MP)</button>` : ''}</div>
-        <div class="options">${opts.map(o => `<button data-o="${o}" data-testid="opt" disabled>${label(o)}</button>`).join('')}</div>
-        <div id="fb"></div></div>`;
+      const zhOpts = way === 'rEZ';
+      const label = (oid: string) => zhOpts ? `<span lang="zh-CN">${ITEM[oid].zh}</span>` : esc(ITEM[oid].enPrimary);
+      const canInsight = () => S.skillsEquipped.includes('insight') && bs.insight < SKILL.insight.perBattle! && S.mp >= SKILL.insight.mp && $$('#bmain .ans:not(.gone)').length > 2;
+      msg(zhOpts ? `${turn === 'defense' ? 'Block it! ' : ''}Tap the Chinese that means <b>${esc(item.enPrimary)}</b>` : `${turn === 'defense' ? 'Block it! ' : ''}Tap what it means`);
+      side(S.skillsEquipped.includes('insight') ? `<button class="ghost" id="insight" data-testid="insight">💡 Insight · ${SKILL.insight.mp} MP</button>` : '');
+      const nc = Math.min(4, Math.max(2, opts.length));
+      const main = await dockMain(`<div class="answers" data-testid="question" data-way="${way}">${opts.map((o, k) =>
+        `<button class="ans n${nc} ${zhOpts ? 'zhA' : 'enA'}" data-o="${o}" data-testid="opt" data-key="${k + 1}" disabled><span class="k">${k + 1}</span>${label(o)}</button>`).join('')}</div>`);
+      rp();
       (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn };
       let hinted = false;
       const ins = $('#insight') as HTMLButtonElement | null;
       const updIns = () => { if (ins) ins.disabled = !canInsight(); };
       if (ins) ins.onclick = () => {
         if (!canInsight()) return; S.mp -= SKILL.insight.mp; bs.insight++; hinted = true; hud();
-        const wrong = $$('.options button:not(.gone)').filter(b => b.dataset.o !== id); const b = wrong[Math.floor(Math.random() * wrong.length)];
+        const wrong = $$('#bmain .ans:not(.gone)').filter(b => b.dataset.o !== id); const b = wrong[Math.floor(Math.random() * wrong.length)];
         b.classList.add('gone'); b.style.visibility = 'hidden'; updIns(); log('💡 Insight removed one choice (this answer won\'t count toward learning).');
       };
-      const rp = $('#replay'); if (rp) rp.onclick = () => sayItem(id);
       updIns();
-      // PROMPT_PLAY -> INPUT_UNLOCKED (after audio, or 800 ms for text-only prompts)
-      if (way === 'rZE') await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
+      // PROMPT_PLAY -> INPUT_UNLOCKED (after audio, or 800 ms for text-only prompts); cards sit at 60% with no press state until then
+      if (zhPrompt) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
       if (unlockDelay) await sleep(unlockDelay);
-      $$('.options button:not(.gone)').forEach(b => (b as HTMLButtonElement).disabled = false); updIns();
+      $$('#bmain .ans:not(.gone)').forEach(b => { (b as HTMLButtonElement).disabled = false; b.classList.add('live'); }); updIns();
       const t0 = performance.now();
-      const pick = await new Promise<string>(res => on('.options button', (_e, el) => res(el.dataset.o!), main));
+      const pick = await new Promise<string>(res => on('.ans', (_e, el) => res(el.dataset.o!), main!));
       const fast = performance.now() - t0 < C().fastAnswerMs;
-      $$('.options button').forEach(b => { (b as HTMLButtonElement).disabled = true; if (b.dataset.o === id) b.classList.add('right'); else if (b.dataset.o === pick) b.classList.add('wrong'); });
+      $$('#bmain .ans').forEach(b => { (b as HTMLButtonElement).disabled = true; b.classList.remove('live'); if (b.dataset.o === id) b.classList.add('right'); else if (b.dataset.o === pick) b.classList.add('wrong'); else b.classList.add('faded'); });
       if (ins) ins.disabled = true;
       const correct = pick === id;
       await feedback(id, correct, turn, undefined);
       return { result: correct ? 'correct' : 'wrong', spoken: false, hinted, fast };
     }
-    // ---- spoken ways
+    // ---- spoken ways: one 150px mic in the dock centre, nothing else tappable (spec §4.3)
     const zhAns = way === 'sEZ';
     const lang = zhAns ? 'zh-CN' : 'en-US';
-    const prompt = zhAns ? `<div class="prompt">🎤 Say it in <b>Chinese</b>: <b>“${esc(item.enPrimary)}”</b></div>`
-      : `<div class="prompt">🎤 Say what this means in <b>English</b>:</div>${zhHtml}`;
-    main.innerHTML = `<div style="text-align:center" data-testid="question" data-way="${way}">${frame}${prompt}
-      ${!zhAns ? `<button class="secondary" id="replay">🔊 Hear it</button>` : ''}
-      <button id="mic" data-testid="mic" disabled>🎤</button><div id="micmsg" class="muted">${reprompts ? '🤫 I didn\'t hear anything. Tap and talk!' : 'Tap the mic, then speak.'}</div><div id="fb"></div></div>`;
+    msg(zhAns ? `🎤 Say it in <b>Chinese</b>: <b>${esc(item.enPrimary)}</b>` : '🎤 Say what it means in <b>English</b>');
+    side('');
+    await dockMain(`<div class="speech" data-testid="question" data-way="${way}">
+      <div class="l">${reprompts ? '🤫 Didn\'t hear you.<br>Tap and talk!' : 'Tap the mic,<br>then say it out loud.'}</div>
+      <button id="mic" data-testid="mic" data-key="enter" aria-label="Microphone" disabled>🎤</button>
+      <div class="r" id="micmsg">Listening starts after the beep.<br>No rush: there is no clock.</div></div>`);
+    rp();
     (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn, spoken: true };
-    const rp = $('#replay'); if (rp) rp.onclick = () => sayItem(id);
     if (!zhAns && reprompts === 0) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
     const mic = $('#mic') as HTMLButtonElement; mic.disabled = false; mic.classList.add('pulse');
     await new Promise<void>(res => mic.onclick = () => res());
-    mic.classList.remove('pulse'); mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').textContent = 'Listening… say it now!';
+    mic.classList.remove('pulse'); mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').innerHTML = '👂 Listening…<br>say it now!';
+    beep(); duck(true);
     const long = [...item.zh].length > B.speech.longAnswerSyllables;   // 1 character = 1 syllable
     const lr = await listen(lang, long);
+    duck(false);
     mic.classList.remove('listening'); mic.textContent = '🎤'; mic.disabled = true;
-    if (lr.kind === 'tech') { log(`🎤 (technical: ${lr.code}) re-prompt`); return { result: 'void', spoken: true, hinted: false, fast: false, tech: true }; }
+    if (lr.kind === 'tech') { mic.classList.add('hush'); mic.textContent = '🤫'; log(`🎤 (technical: ${lr.code}) re-prompt`, false); await sleep(400); return { result: 'void', spoken: true, hinted: false, fast: false, tech: true }; }
     if (lr.kind === 'fatal') return { result: 'void', spoken: true, hinted: false, fast: false, fatal: lr.code };
     let correct = false; let heard = '';
-    if (lr.kind === 'result') { const m = zhAns ? matchZh(lr.alts, item) : matchEn(lr.alts, item); correct = m.ok; heard = lr.alts.join(' / '); }
+    if (lr.kind === 'result') { const m = zhAns ? matchZh(lr.alts, item) : matchEn(lr.alts, item); correct = m.ok; heard = lr.alts[0] || ''; }
     else heard = '(could not understand)';
+    // "I heard: …" for 800 ms before grading, so the child sees the game listened
+    mic.classList.add('heard'); mic.textContent = '💬'; $('#micmsg').innerHTML = `💬 I heard:<br>“${esc(heard)}”`;
+    await sleep(800);
     await feedback(id, correct, turn, heard);
     return { result: correct ? 'correct' : 'wrong', spoken: true, hinted: false, fast: false };
   }
 
+  /** Feedback lives on the cards (✔/✘) and the message line; the dock never grows. Wrong = the correct word's audio, never pinyin. */
   async function feedback(id: string, correct: boolean, _turn: string, heard?: string) {
-    const item = ITEM[id]; const fb = $('#fb');
-    const heardHtml = heard !== undefined ? `<div class="muted">I heard: ${esc(heard)}</div>` : '';
-    playSfx(correct ? 'sfx_correct' : 'sfx_wrong');
-    if (correct) { fb.innerHTML = `<div class="feedback ok" data-testid="fb-ok">✅ Correct! ${item.zh} = ${esc(item.enPrimary)}${heardHtml}</div>`; await sleep(C().correctFeedbackMs); return; }
-    fb.innerHTML = `<div class="feedback bad" data-testid="fb-bad">❌ Not quite. ${heardHtml}<div class="zh">${item.zh}</div><div>${esc(item.en)}</div>
-      <button id="cont" data-testid="continue" disabled>Continue ▶</button></div>`;
-    sayItem(id);
-    await sleep(C().feedbackMinMs);
-    const b = $('#cont') as HTMLButtonElement; b.disabled = false;
+    const item = ITEM[id];
+    const heardTxt = heard !== undefined ? ` <span class="muted">(I heard “${esc(heard)}”)</span>` : '';
+    if (correct) {
+      playSfx('sfx_correct', { detune: 100 * Math.min(5, bs.streak) });
+      msg(`✔ Great! ${zh(item.zh)} = ${esc(item.enPrimary)}`, 'fb-ok');
+      sayItem(id);
+      await sleep(Math.max(800, C().correctFeedbackMs));
+      return;
+    }
+    playSfx('sfx_wrong');
+    msg(`✘ Not quite. “${esc(item.enPrimary)}” is ${zh(item.zh)} 🔊${heardTxt}`, 'fb-bad');
+    const audio = sayItem(id);   // the correct word's audio is the pronunciation aid
+    await Promise.all([sleep(C().feedbackMinMs), audio]);
+    side(`<button id="cont" data-testid="continue" data-key="enter">OK ▶</button>`);
+    const b = $('#cont') as HTMLButtonElement;
     await new Promise<void>(res => b.onclick = () => { b.disabled = true; b.remove(); res(); });
   }
 
@@ -237,8 +274,9 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const exp = Math.round(f.d.exp * damp);
     const gold = Math.max(Math.ceil(f.d.gold * B.economy.goldRollMin), Math.round(f.d.gold * rnd(B.economy.goldRollMin, B.economy.goldRollMax)));
     S.gold += gold; res.gold += gold; res.exp += exp; const lv = addExp(exp); res.levels += lv;
+    if (gold) setTimeout(() => { flyTo(`+${gold} 🪙`, { x: 900, y: 300 }, 'gold', '#ffe27a'); hud(); }, 700);
     playSfx('sfx_enemy_defeat'); if (gold) setTimeout(() => playSfx('sfx_gold'), 250); if (lv) setTimeout(() => playSfx('sfx_level_up'), 500);
-    log(`💥 ${f.d.emoji} ${f.d.zh} defeated!${exp || gold ? ` +${exp} EXP, +${gold} 🪙` : ' (no reward)'}`);
+    log(`💥 ${zhName(f)} defeated!${exp || gold ? ` +${exp} EXP, +${gold} 🪙` : ' (no reward)'}`);
     if (lv) toast(`🎉 Level up! You are now level ${S.level}`);
     if (Math.random() < f.d.chestRate) openChest(f.d.kind);
     save();
@@ -289,9 +327,9 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const h = heroStats(); const i = foes.indexOf(f);
     let d = Math.max(1, Math.round(heroDamage(h.atk, bs.streak, spoken, tired(), f.d.def_) * mult * f_web));
     if (f.d.mech.waxShieldFirstHit && !f.waxUsed) { f.waxUsed = true; d = f.d.mech.waxShieldFirstHit; log(`🕯️ ${f.d.zh}'s wax shield soaks up the hit!`); }
-    f.hp -= d; view.hitEnemy(i, d); playSfx('sfx_hit'); log(`⚔️ You hit ${f.d.zh} for ${d}${spoken ? ' (spoken ×1.25)' : ''}${bs.streak >= 3 ? ` (streak ×${streakMult(bs.streak)})` : ''}`);
+    f.hp -= d; view.hitEnemy(i, d, { spoken }); setTimeout(() => playSfx('sfx_hit'), 250); log(`⚔️ You hit ${zhName(f)} for ${d}${spoken ? ' (🎤 voice ×1.25)' : ''}${bs.streak >= 3 ? ` (streak ×${streakMult(bs.streak)})` : ''}`);
     if (f.hp <= 0) kill(f); else { checkCheckpoint(); halfTriggers(f); }
-    refresh(); await sleep(250);
+    refresh(); await sleep(750);
   }
 
   // ---- rounds
@@ -308,14 +346,23 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
         const h = heroStats(); let d = Math.max(1, r(B.companion.atkMult * h.atk - B.companion.defMult * t.d.def_));
         if (t.d.mech.waxShieldFirstHit && !t.waxUsed) { t.waxUsed = true; d = t.d.mech.waxShieldFirstHit; }
         bs.gauge = 0; (window as any).__proto.companionHits = ((window as any).__proto.companionHits || 0) + 1;
-        t.hp -= d; view.hitEnemy(foes.indexOf(t), d); playSfx('sfx_hit'); log(`🐲 小龙: 我来帮你! 小龙 breathes fire on ${t.d.zh} for ${d}!`); toast('🐲 我来帮你!');
+        msg(`🐲 ${zh('小龙')} is ready!`); await sleep(400);
+        t.hp -= d; view.hitEnemy(foes.indexOf(t), d, { companion: true }); setTimeout(() => playSfx('sfx_hit'), 250); log(`🐲 ${zh('小龙')}: ${zh('我来帮你!')} ${zh('小龙')} breathes fire on ${zhName(t)} for ${d}!`);
         if (t.hp <= 0) kill(t); else { checkCheckpoint(); halfTriggers(t); }
-        refresh(); await sleep(400);
+        refresh(); await sleep(1100);
         if (bossDead() || allDead()) { res.outcome = 'win'; break; }
       }
     }
     if (bs.round === 1) for (const f of foes.filter(x => x.alive && x.d.mech.quickStart)) { log(`💨 ${f.d.zh} is super fast and attacks first!`); if (await enemyTurn(f)) { res.outcome = 'defeat'; return finish(); } }
-    const act = await chooseAction();
+    let act: Awaited<ReturnType<typeof chooseAction>>; let target: Foe | undefined;
+    for (;;) {   // TARGET_SELECT can go ◀ Back to the commands
+      act = await chooseAction();
+      if (act.type !== 'attack' && act.type !== 'double') break;
+      const live = foes.filter(f => f.alive);
+      if (live.length === 1) { target = live[0]; break; }
+      const k = await chooseTarget(live); if (k >= 0) { target = live[k]; break; }
+    }
+    $('#tgts') && ($('#tgts').innerHTML = ''); view.setTarget(-1);
     hero.rooted = false;
     potionUsedThisTurn = false;
     if (act.type === 'flee') { res.outcome = 'flee'; S.stats.flees++; log('🏃 You ran away!'); break; }
@@ -332,17 +379,16 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
       else if (o.result === 'wrong') log('💚 The heal fizzled.');
       refresh();
     } else {
-      const live = foes.filter(f => f.alive);
-      const target = live.length > 1 ? live[await chooseTarget(live)] : live[0];
+      if (!target) target = foes.filter(f => f.alive)[0];
       const dbl = act.type === 'double';
       if (dbl) { S.mp -= SKILL.double.mp; bs.doubleReady = SKILL.double.cooldownRounds! + 1; hud(); }
       f_web = hero.webbed ? hero.webMult : 1;
-      const o = await ask('attack');
+      const o = await ask('attack', target);
       if (hero.webbed && o.result === 'correct') log('🕸️ The sticky web slows your attack (half damage).');
       if (o.result === 'correct') {
         await hit(target, 1, o.spoken);
         if (dbl && target.alive && bs.streak >= SKILL.double.minStreak!) await hit(target, SKILL.double.secondHitFrac!, o.spoken);
-      } else if (o.result === 'wrong') { view.hitEnemy(foes.indexOf(target), 'MISS'); playSfx('sfx_miss'); log('💨 Your spell missed!'); }
+      } else if (o.result === 'wrong') { view.hitEnemy(foes.indexOf(target), 'MISS'); setTimeout(() => playSfx('sfx_miss'), 180); log('💨 Your spell missed!'); await sleep(600); }
       else log('🎤 Question skipped: no damage.');
       hero.webbed = false; f_web = 1;
     }
@@ -361,7 +407,9 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const i = foes.indexOf(f); refresh();
     if (f.skipNext) { f.skipNext = false; log(`${f.d.emoji} ${f.d.zh} skips its attack.`); return false; }
     if (f.d.mech.dozeEveryNRounds && bs.round % f.d.mech.dozeEveryNRounds === 0) { log(`💤 ${f.d.zh} dozes off… Zzz (skips its attack)`); view.enemyAttack(i, 'Zzz', true); return false; }
+    view.windUp(i, true); msg(`${zhName(f)} is casting!`); await sleep(400);   // ENEMY WIND-UP (telegraph)
     const o = await ask('defense', f);
+    view.windUp(i, false);
     const h = heroStats(); const atkE = f.d.atk * (tired() ? C().tiredEnemyAtkMult : 1);
     let dmg = 0, blocked = false;
     if (o.result === 'void') { log(`🎤 ${f.d.zh}'s attack was skipped.`); return false; }
@@ -377,7 +425,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     log(blocked ? `🛡️ Blocked ${f.d.zh}'s ${f.d.attackZh}${dmg ? ` (${dmg} got through)` : ''}` : `💢 Your block broke! ${f.d.zh}'s ${f.d.attackZh} (${esc(f.d.attackEn)}) hits you for ${dmg}`);
     if (!blocked && f.d.mech.webOnBroken) { hero.webbed = true; hero.webMult = f.d.mech.webOnBroken.nextAttackMult; log('🕸️ You are stuck in a web! Your next attack does half damage.'); }
     if (!blocked && f.d.mech.rootOnBroken) { hero.rooted = true; log('🌱 Roots trip you! You can\'t run away next turn.'); }
-    refresh(); await sleep(300);
+    refresh(); hud(); await sleep(700);
     return S.hp <= 0;
   }
 
@@ -385,34 +433,75 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   decayRecentMisses(); clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
   if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; }
-  save(); hud();
-  (window as any).__proto.q = null;
+  save(); setBattleHud(null); view.clearFocus();
+  (window as any).__proto.q = null; (window as any).__proto.battleLog = bs.log.slice(0, 200);
   return res;
   }
 
-  // ---- action menus
+  // ---- action menus: 4 big bilingual commands; Skills / Items / targets open inside the same dock (spec §4.1)
   function chooseAction(): Promise<{ type: 'attack' | 'double' | 'heal' | 'potion' | 'flee'; item?: string }> {
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
       const eq = (s: string) => S.skillsEquipped.includes(s);
       const potionsLeft = C().potionsPerBattle - bs.potions;
       const pots = ['honey', 'bighoney', 'manatea'].filter(p => (S.inv[p] || 0) > 0);
+      const nPots = pots.reduce((a, p) => a + (S.inv[p] || 0), 0);
       const dblOk = eq('double') && S.mp >= SKILL.double.mp && bs.doubleReady === 0 && bs.streak >= SKILL.double.minStreak!;
       const healOk = eq('heal') && S.mp >= SKILL.heal.mp && bs.heal < SKILL.heal.perBattle!;
-      $('#bmain').innerHTML = `<div style="text-align:center" data-testid="action-menu"><div class="prompt">What will you do?</div>
-        <div class="row"><button data-a="attack" data-testid="act-attack">⚔️ Attack</button>
-        ${eq('double') ? `<button data-a="double" data-testid="act-double" ${dblOk ? '' : 'disabled'} title="${esc(SKILL.double.desc)}">⚔️⚔️ Double Strike (${SKILL.double.mp} MP${bs.doubleReady ? `, wait ${bs.doubleReady}` : ''})</button>` : ''}
-        ${eq('heal') ? `<button data-a="heal" data-testid="act-heal" ${healOk ? '' : 'disabled'}>💚 Heal (${SKILL.heal.mp} MP, ${SKILL.heal.perBattle! - bs.heal} left)</button>` : ''}
-        ${pots.map(p => `<button class="secondary" data-a="potion" data-item="${p}" data-testid="act-potion-${p}" ${potionsLeft > 0 ? '' : 'disabled'}>${CONS[p].emoji} ${CONS[p].en} ×${S.inv[p]}</button>`).join('')}
-        <button class="secondary" data-a="flee" data-testid="act-flee" ${hero.rooted ? 'disabled title="Rooted!"' : ''}>🏃 Run away${hero.rooted ? ' (rooted 🌱)' : ''}</button></div>
-        ${speechSupported() ? '' : ''}</div>`;
-      on('#bmain button[data-a]', (_e, el) => resolve({ type: el.dataset.a as any, item: el.dataset.item }));
+      const hasSkills = eq('double') || eq('heal');
+      const live = foes.filter(f => f.alive); if (live.length > 1) view.setTarget(foes.indexOf(live[0]));
+      const cmd = (k: number, a: string, ic: string, z: string, en: string, extra = '', cls = 'cream') =>
+        `<button class="cmd ${cls}" ${a} data-key="${k}" ${extra}><span class="k">${k}</span><span class="ic">${ic}</span><span class="zh" lang="zh-CN">${z}</span><span class="en">${en}</span></button>`;
+      const intro = bs.round === 1 && !bs.q && !/What will you do/.test($('#bmsg')?.textContent || '') ? ($('#bmsg')?.innerHTML || '') + ' ' : '';
+      const menu = async () => {
+        side('');
+        msg(`${intro}What will you do?${hero.webbed ? ' 🕸️ (webbed: half damage)' : ''}`);
+        await dockMain(`<div class="cmds" data-testid="action-menu">
+          ${cmd(1, 'data-a="attack" data-testid="act-attack"', '⚔️', '攻击', 'Attack', '', '')}
+          ${cmd(2, 'data-sub="skills" data-testid="act-skills"', '✨', '技能', hasSkills ? 'Skills' : 'Skills · none yet', hasSkills ? '' : 'disabled')}
+          ${cmd(3, 'data-sub="items" data-testid="act-itemsmenu"', '🍯', '道具', `Items ×${nPots}`, nPots ? '' : 'disabled')}
+          ${cmd(4, 'data-a="flee" data-testid="act-flee"', '🏃', '逃跑', hero.rooted ? 'Run · rooted 🌱' : 'Run', hero.rooted ? 'disabled title="Rooted!"' : '')}</div>`);
+        wire();
+      };
+      const sub = async (which: 'skills' | 'items') => {
+        const back = `<button class="ghost back" data-back="1" data-testid="act-back" data-key="${which === 'skills' ? 3 : pots.length + 1}">◀ Back</button>`;
+        if (which === 'skills') {
+          msg('✨ Pick a skill. You still answer a question to cast it.');
+          await dockMain(`<div class="sublist" data-testid="skills-menu">
+            ${eq('double') ? `<button data-a="double" data-testid="act-double" data-key="1" ${dblOk ? '' : 'disabled'} title="${esc(SKILL.double.desc)}"><span class="zh" lang="zh-CN">${SKILL.double.zh}</span>⚔️⚔️ ${SKILL.double.en}<span class="en">${SKILL.double.mp} MP${bs.doubleReady ? ` · wait ${bs.doubleReady}` : bs.streak < SKILL.double.minStreak! ? ` · needs 🔥${SKILL.double.minStreak}` : ''}</span></button>` : ''}
+            ${eq('heal') ? `<button data-a="heal" data-testid="act-heal" data-key="${eq('double') ? 2 : 1}" ${healOk ? '' : 'disabled'}><span class="zh" lang="zh-CN">${SKILL.heal.zh}</span>💚 ${SKILL.heal.en}<span class="en">${SKILL.heal.mp} MP · ${SKILL.heal.perBattle! - bs.heal} left</span></button>` : ''}
+            ${back}</div>`);
+        } else {
+          msg(`🍯 Potions: ${potionsLeft} of ${C().potionsPerBattle} left this battle`);
+          await dockMain(`<div class="sublist" data-testid="items-menu">${pots.map((p, k) => `<button class="secondary" data-a="potion" data-item="${p}" data-testid="act-potion-${p}" data-key="${k + 1}" ${potionsLeft > 0 ? '' : 'disabled'}>
+            <span class="zh" lang="zh-CN">${CONS[p].zh}</span>${CONS[p].emoji} ${esc(CONS[p].en)}<span class="en">×${S.inv[p]} · ${CONS[p].healHpFrac ? `+${CONS[p].healHpFrac * 100}% HP` : `+${(CONS[p].healMpFrac || 0) * 100}% MP`}</span></button>`).join('')}${back}</div>`);
+        }
+        wire();
+      };
+      const wire = () => {
+        on('#bmain button[data-a]', (_e, el) => resolve({ type: el.dataset.a as any, item: el.dataset.item }));
+        on('#bmain button[data-sub]', (_e, el) => sub(el.dataset.sub as any));
+        on('#bmain button[data-back]', () => menu());
+      };
+      await menu();
     });
   }
+  /** TARGET_SELECT: tap the enemy itself (DOM hit areas over the sprites) or ◀ ▶ + Enter; ▼ marks the current target. -1 = back. */
   function chooseTarget(live: Foe[]): Promise<number> {
-    return new Promise(resolve => {
-      $('#bmain').innerHTML = `<div style="text-align:center"><div class="prompt">Which enemy?</div><div class="row">
-        ${live.map((f, i) => `<button data-t="${i}" data-testid="target-${i}">${f.d.emoji} ${f.d.zh} (${f.hp} HP)</button>`).join('')}</div></div>`;
-      on('#bmain button[data-t]', (_e, el) => resolve(+el.dataset.t!));
+    return new Promise(async resolve => {
+      let cur = 0; const show = () => view.setTarget(foes.indexOf(live[cur]));
+      msg('🎯 Tap an enemy to attack');
+      await dockMain(`<div class="cmds" data-testid="target-menu"><button class="ghost cmd" data-back="1" data-testid="act-back" data-key="9" style="width:220px"><span class="ic">◀</span><span class="en">Back</span></button></div>`);
+      const boxes = view.foeBoxes();
+      $('#tgts').innerHTML = live.map((f, k) => { const b = boxes[foes.indexOf(f)] || { x: 700 + k * 180, y: 200, w: 160, h: 200 };
+        return `<button class="tgt" data-t="${k}" data-testid="target-${k}" data-key="${k + 1}" aria-label="${esc(f.d.en)}" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;height:${b.h}px"></button>`; }).join('');
+      show();
+      const done = (k: number) => { document.removeEventListener('target-nav', nav as any); $('#tgts').innerHTML = ''; resolve(k); };
+      const nav = (e: CustomEvent) => { cur = (cur + e.detail + live.length) % live.length; show(); };
+      document.addEventListener('target-nav', nav as any);
+      $$('#tgts .tgt').forEach(b => { b.addEventListener('mouseenter', () => { cur = +b.dataset.t!; show(); }); b.addEventListener('click', () => done(+b.dataset.t!)); });
+      on('#bmain button[data-back]', () => done(-1));
+      const enter = (e: KeyboardEvent) => { if (e.key === 'Enter') { document.removeEventListener('keydown', enter); if ($('#tgts .tgt')) done(cur); } };
+      document.addEventListener('keydown', enter);
     });
   }
 }
