@@ -1,5 +1,5 @@
 {
- "_note": "Spec v3 (realm_location_difficulty) values for tiers 1-2; enemies from desy/data. Prototype collapses each realm into one location: meadow uses the L1.1 pool, forest the L2.1 pool; path fights host the realm's other location bosses (crow, grey wolf, bear) and the scripted elite at the middle fight (4). elite = replaces one normal enemy in 10% of patrols. packs = enemies that always come in a group of N.",
+ "_note": "Spec v3 (realm_location_difficulty) values for tiers 1-2; enemies from desy/data. Prototype collapses each realm into one location: meadow uses the L1.1 pool, forest the L2.1 pool; path fights host the realm's other location bosses (crow, grey wolf, bear) and the scripted elite at the middle fight (4). elite = replaces one normal enemy in 10% of patrols. packs = enemies that always come in a group of N. mapNodes = node positions on the painted location map, in 1280x720 frame coordinates, in path order (inn, 4 fights, inn, 4 fights, inn, patrol gate, boss); a location without them gets an automatic layout.",
  "locations": [
   {
    "id": "meadow",
@@ -59,7 +59,74 @@
     ]
    },
    "elite": "swiftrabbit",
-   "desyPool": "L1.1"
+   "desyPool": "L1.1",
+   "mapNodes": [
+    {
+     "x": 188,
+     "y": 539,
+     "kind": "inn"
+    },
+    {
+     "x": 320,
+     "y": 469,
+     "kind": "fight"
+    },
+    {
+     "x": 409,
+     "y": 438,
+     "kind": "fight"
+    },
+    {
+     "x": 566,
+     "y": 445,
+     "kind": "fight"
+    },
+    {
+     "x": 675,
+     "y": 456,
+     "kind": "fight"
+    },
+    {
+     "x": 789,
+     "y": 411,
+     "kind": "inn"
+    },
+    {
+     "x": 722,
+     "y": 375,
+     "kind": "fight"
+    },
+    {
+     "x": 633,
+     "y": 358,
+     "kind": "fight"
+    },
+    {
+     "x": 497,
+     "y": 325,
+     "kind": "fight"
+    },
+    {
+     "x": 638,
+     "y": 294,
+     "kind": "fight"
+    },
+    {
+     "x": 789,
+     "y": 300,
+     "kind": "inn"
+    },
+    {
+     "x": 852,
+     "y": 245,
+     "kind": "gate"
+    },
+    {
+     "x": 878,
+     "y": 175,
+     "kind": "boss"
+    }
+   ]
   },
   {
    "id": "forest",
@@ -112,7 +179,74 @@
     ]
    },
    "elite": "guardbee",
-   "desyPool": "L2.1"
+   "desyPool": "L2.1",
+   "mapNodes": [
+    {
+     "x": 235,
+     "y": 395,
+     "kind": "inn"
+    },
+    {
+     "x": 262,
+     "y": 470,
+     "kind": "fight"
+    },
+    {
+     "x": 335,
+     "y": 530,
+     "kind": "fight"
+    },
+    {
+     "x": 425,
+     "y": 552,
+     "kind": "fight"
+    },
+    {
+     "x": 520,
+     "y": 552,
+     "kind": "fight"
+    },
+    {
+     "x": 615,
+     "y": 540,
+     "kind": "inn"
+    },
+    {
+     "x": 705,
+     "y": 520,
+     "kind": "fight"
+    },
+    {
+     "x": 785,
+     "y": 488,
+     "kind": "fight"
+    },
+    {
+     "x": 848,
+     "y": 442,
+     "kind": "fight"
+    },
+    {
+     "x": 872,
+     "y": 374,
+     "kind": "fight"
+    },
+    {
+     "x": 925,
+     "y": 330,
+     "kind": "inn"
+    },
+    {
+     "x": 972,
+     "y": 272,
+     "kind": "gate"
+    },
+    {
+     "x": 1010,
+     "y": 190,
+     "kind": "boss"
+    }
+   ]
   }
  ]
 }

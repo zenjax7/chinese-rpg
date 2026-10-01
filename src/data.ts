@@ -17,7 +17,8 @@ export interface LocationDef { id: string; name: string; zh: string; emoji: stri
   enemiesPerBattle: [number, number]; mcOptions: number; reviewSlots: number; pathFights: number;
   roster: { enemy: string; weight: number }[]; boss: string; packs: Record<string, number>; scripted: Record<string, string[]>;
   elite?: string; desyPool?: string; unlockRequires: string[]; bg: string;
-  bossReward: { skill?: string; heroic?: string; text: string }; }
+  bossReward: { skill?: string; heroic?: string; text: string };
+  mapNodes?: { x: number; y: number; kind: 'inn' | 'fight' | 'gate' | 'boss' }[]; }
 export interface GearDef { id: string; slot: 'weapon' | 'armor' | 'shield' | 'charm'; tier: number; rarity: string; zh: string; en: string;
   emoji: string; atk?: number; def?: number; mp?: number; hp?: number; price: number; shop?: boolean; shopRequires?: string; startStreak?: number; perk?: string; }
 export interface ConsumableDef { id: string; zh: string; en: string; emoji: string; priceG: number; healHpFrac?: number; healMpFrac?: number; warp?: boolean; carryLimit?: number; }
