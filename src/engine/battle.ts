@@ -1,6 +1,6 @@
 // Battle state machine (spec §1.2) driven by async UI prompts. Numbers come from src/data/*.json.
 import { B, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL } from '../data';
-import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp } from './state';
+import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses } from './learning';
 import { listen, speechSupported } from './speech';
 import { sayItem } from './voice';
@@ -12,7 +12,7 @@ import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, 
 
 export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
-  questions: number; correct: number; spoken: number; voids: number; tired: boolean; }
+  questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[]; }
 interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number; }
 type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean };
 
@@ -54,14 +54,14 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   foes.splice(C().maxEnemies);
   const leader = ['locboss', 'realmboss'].includes(foes[0].d.kind) ? foes[0] : null;   // boss down => minions flee
   const hero = { webbed: false, rooted: false, webMult: 1 };
-  const tiredAt = C().tiredAtQuestions[leader ? leader.d.kind : 'normal'];
+  const tiredAt = (C().tiredAtQuestions as Record<string, number>)[leader ? leader.d.kind : 'normal'] ?? C().tiredAtQuestions.normal;   // v3.2: 30 normal (elites too), 45 every boss
   const set = chooseBattleSet(locId, loc.reviewSlots + (isBoss ? 1 : 0));
   const feed = new QuestionFeed(set.ids);
   const ctx: WayCtx = { asked: 0, spoken: 0, cooling: new Set() };
   (window as any).__proto.summons = 0;
   const wpn = S.equip.weapon ? GEAR[S.equip.weapon] : null;
   const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint };
-  const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false };
+  const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false, gearGot: [], equipped: [] };
   const tired = () => bs.q >= tiredAt;
   const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
   /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
@@ -286,7 +286,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const giveFine = () => {
       const cand = GEAR_LIST.filter(g => g.rarity === 'fine' && g.tier === loc.tier && !S.gear.includes(g.id));
       if (!cand.length) { S.gold += 3 * G; res.gold += 3 * G; res.loot.push(`🪙 ${3 * G} gold`); return; }
-      const g = cand[Math.floor(Math.random() * cand.length)]; S.gear.push(g.id); res.loot.push(`${g.emoji} ${g.zh} ${g.en} (fine)`);
+      const g = cand[Math.floor(Math.random() * cand.length)]; S.gear.push(g.id); res.gearGot.push(g.id); res.loot.push(`${g.emoji} ${g.zh} ${g.en} (fine)`);
     };
     const give = (itemId: string) => { S.inv[itemId] = (S.inv[itemId] || 0) + 1; res.loot.push(`${CONS[itemId].emoji} ${CONS[itemId].zh} ${CONS[itemId].en}`); };
     if (kind === 'normal' || kind === 'elite') {   // v3: elites use the normal chest table (elite gold ×2 is in their stats)
@@ -298,7 +298,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
       const c = B.chests[kind]; S.gold += c.goldG * G; res.gold += c.goldG * G; res.loot.push(`🪙 ${c.goldG * G} gold`); give(c.item);
       if (c.fineGear) giveFine();
       const hid = loc.bossReward.heroic;
-      if (c.heroicGear && hid && GEAR[hid] && !S.gear.includes(hid)) { S.gear.push(hid); res.loot.push(`👑 ${GEAR[hid].emoji} ${GEAR[hid].zh} ${GEAR[hid].en} (heroic)`); }
+      if (c.heroicGear && hid && GEAR[hid] && !S.gear.includes(hid)) { S.gear.push(hid); res.gearGot.push(hid); res.loot.push(`👑 ${GEAR[hid].emoji} ${GEAR[hid].zh} ${GEAR[hid].en} (heroic)`); }
     }
     playSfx('sfx_chest'); log('🎁 A treasure chest! ' + res.loot[res.loot.length - 1]); toast('🎁 Treasure chest!');
   }
@@ -430,7 +430,10 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   }
 
   function finish(): BattleResult {
-  decayRecentMisses(); clampHpMp();
+  decayRecentMisses();
+  // v3.2 §7.9: a dropped piece that is strictly better than the worn one is equipped right away (after the fight, so stats never change mid-battle)
+  for (const id of res.gearGot) { const r = gainGear(id); if (r.equipped) res.equipped.push(equipLine(GEAR[id], r.from)); }
+  clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
   if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; }
   save(); setBattleHud(null); view.clearFocus();

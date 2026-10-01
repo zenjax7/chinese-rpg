@@ -36,6 +36,7 @@
   ],
   "tiredAtQuestions": {
    "normal": 30,
+   "elite": 30,
    "locboss": 45,
    "realmboss": 45
   },

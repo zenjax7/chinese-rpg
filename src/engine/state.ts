@@ -1,4 +1,5 @@
-import { B, LOCATIONS, LOC, GEAR, SKILLS, CONS } from '../data';
+import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, SKILLS, CONS } from '../data';
+import type { GearDef } from '../data';
 
 export type WayKey = 'rZE' | 'rEZ' | 'sZE' | 'sEZ';
 export const ALL_WAYS: WayKey[] = ['rZE', 'rEZ', 'sZE', 'sEZ'];
@@ -13,7 +14,7 @@ export interface SaveState {
   level: number; exp: number; hp: number; mp: number; gold: number;
   inv: Record<string, number>;
   gear: string[]; equip: { weapon: string | null; armor: string | null; shield: string | null; charm: string | null };
-  skills: string[]; skillsEquipped: string[];
+  skills: string[]; skillsEquipped: string[]; slotsSeen?: number;
   courage: number; lastDefeatLoc: string | null;
   where: string;            // 'town' or a location id
   lastInn: { place: string; node: number } | null;   // where the Return Feather / waking after a defeat takes you
@@ -48,7 +49,7 @@ export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 }
 function load(): SaveState {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) return s; }
+    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
 }
@@ -83,12 +84,73 @@ export function skillSlots(s: SaveState = S) {
   let n = 0; for (const r of B.slots.skillSlotsByLevel) if (s.level >= r.level) n = r.slots; return n;
 }
 /** Grants skills whose unlock condition is met and auto-equips into free slots. */
-export function refreshSkills(s: SaveState) {
+export function refreshSkills(s: SaveState): string[] {
+  const got: string[] = [];
   for (const sk of SKILLS) {
     const u = sk.unlock;
     const ok = u.start || (u.level && s.level >= u.level) || (u.boss && s.locs[u.boss]?.bossDefeated);
-    if (ok && !s.skills.includes(sk.id)) { s.skills.push(sk.id); if (s.skillsEquipped.length < skillSlots(s)) s.skillsEquipped.push(sk.id); }
+    if (ok && !s.skills.includes(sk.id)) { s.skills.push(sk.id); got.push(sk.id); }
   }
+  return fillSkillSlots(s, got);
+}
+/** Owned skills fill empty skill slots, in the order they were earned (e.g. the 3rd slot opening at L8 takes Guardian Shield).
+ *  Runs only when a slot has just opened or a skill was just earned, so a skill the player took off stays off.
+ *  Returns the ids that were newly slotted; they are also queued in `notices` for a toast. */
+export function fillSkillSlots(s: SaveState, justEarned: string[] = []): string[] {
+  const n = skillSlots(s); const opened = n > (s.slotsSeen ?? 0); s.slotsSeen = Math.max(n, s.slotsSeen ?? 0);
+  const added: string[] = [];
+  for (const id of opened ? s.skills : justEarned) {
+    if (s.skillsEquipped.length >= n) break;
+    if (!s.skillsEquipped.includes(id)) { s.skillsEquipped.push(id); added.push(id); }
+  }
+  if (opened && s.slotsSeen > 2 && added.length) for (const id of added) { const sk = SKILLS.find(k => k.id === id)!; notices.push(`✨ New skill slot! ${sk.emoji} ${sk.zh} ${sk.en} is ready.`); }
+  return added;
+}
+/** Short messages for the UI to toast (skill slots filled, gear auto-equipped outside the shop). */
+export const notices: string[] = [];
+
+// ---------------- gear comparison, auto-equip, tier check (spec v3.2 §7.9 / §11.4 item 7) ----------------
+const GEAR_STATS = ['atk', 'def', 'mp', 'hp', 'startStreak'] as const;
+/** a is strictly better than b (same slot): at least as good on every stat and perk, better on at least one. Anything beats an empty slot. */
+export function strictlyBetter(a: GearDef, b: GearDef | null | undefined): boolean {
+  if (!b) return true;
+  if (a.slot !== b.slot || a.id === b.id) return false;
+  let more = false;
+  for (const k of GEAR_STATS) { const x = a[k] || 0, y = b[k] || 0; if (x < y) return false; if (x > y) more = true; }
+  return more;
+}
+/** Adds a gear piece (drop or purchase). Auto-equips it when strictly better than what is worn in that slot.
+ *  Returns the replaced item when it was equipped (null = slot was empty), or undefined when it was not equipped. */
+export function gainGear(id: string, s: SaveState = S): { equipped: boolean; from: GearDef | null } {
+  const g = GEAR[id]; if (!s.gear.includes(id)) s.gear.push(id);
+  const cur = s.equip[g.slot] ? GEAR[s.equip[g.slot]!] : null;
+  if (!strictlyBetter(g, cur)) return { equipped: false, from: cur };
+  s.equip[g.slot] = id; return { equipped: true, from: cur };
+}
+/** "Equipped 🗡️ 角兔角 Rabbit-Horn Dagger (ATK 5 → 7)" */
+export function equipLine(g: GearDef, from: GearDef | null) {
+  const st = g.slot === 'weapon' ? 'atk' : g.slot === 'charm' ? (g.mp ? 'mp' : g.def ? 'def' : 'atk') : 'def';
+  const lbl = st.toUpperCase(); const a = from?.[st] || 0, b = g[st] || 0;
+  return `✨ Equipped ${g.emoji} ${g.zh} ${g.en}${a !== b ? ` (${lbl} ${a} → ${b})` : ''}${g.perk ? ` · ${g.perk}` : ''}`;
+}
+export function gearStatText(g: GearDef) {
+  return [g.atk ? `ATK ${g.atk}` : '', g.def ? `DEF ${g.def}` : '', g.mp ? `MP +${g.mp}` : '', g.hp ? `HP +${g.hp}` : '', g.startStreak ? `🔥+${g.startStreak}` : ''].filter(Boolean).join(' · ');
+}
+/** Common (shop) gear of a tier for the three core slots. */
+export function tierGear(tier: number): GearDef[] {
+  return (['weapon', 'armor', 'shield'] as const).map(sl => GEAR_LIST.find(g => g.slot === sl && g.tier === tier && g.rarity === 'common')!).filter(Boolean);
+}
+/** Core slots whose worn gear is below the location tier's common gear (the §6.2 "recommended gear"), except a heroic piece from the previous tier.
+ *  Charms are optional and not checked. */
+export function weakGear(locId: string, s: SaveState = S): { slot: 'weapon' | 'armor' | 'shield'; worn: GearDef | null; want: GearDef }[] {
+  const out: { slot: 'weapon' | 'armor' | 'shield'; worn: GearDef | null; want: GearDef }[] = [];
+  for (const want of tierGear(LOC[locId].tier)) {
+    const worn = s.equip[want.slot] ? GEAR[s.equip[want.slot]!] : null;
+    const st = want.slot === 'weapon' ? 'atk' : 'def';
+    const carried = worn?.rarity === 'heroic' && worn.tier === LOC[locId].tier - 1;   // a heroic piece from the previous realm still counts (diag: the dagger alone wins 86–100%)
+    if ((worn?.[st] || 0) < (want[st] || 0) && !carried) out.push({ slot: want.slot as any, worn, want });
+  }
+  return out;
 }
 export function frontierLoc() {
   let f = LOCATIONS[0]; for (const l of LOCATIONS) if (S.locs[l.id].unlocked) f = l; return f;

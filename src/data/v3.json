@@ -122,7 +122,7 @@
   {
    "mode_id": "flashcards",
    "name": "Flashcards",
-   "how_it_works": "Flip card: characters + pinyin + audio ↔ English. Kid self-marks \"knew it\"/\"not yet\"",
+   "how_it_works": "Flip card: characters + audio ↔ English (no pinyin). Kid self-marks \"knew it\"/\"not yet\"",
    "ways": "–",
    "counts_for_proficiency": "no",
    "sticker": "first clear of all cards"
@@ -249,9 +249,9 @@
   },
   {
    "key": "boss_trigger_speech",
-   "value": 0.25,
+   "value": 0.2,
    "unit": "share of the location pool proficient",
-   "notes": "patrols spawn while below"
+   "notes": "patrols spawn while below; Director’s call v3.1 (was 0.25)"
   },
   {
    "key": "boss_trigger_no_speech",
@@ -303,9 +303,33 @@
   },
   {
    "key": "new_cap",
-   "value": 4,
+   "value": 3,
    "unit": "items per battle",
-   "notes": ""
+   "notes": "hard cap, also early in a location (v3.2, was 4); a short set is never padded with unseen items"
+  },
+  {
+   "key": "tired_at_questions_normal",
+   "value": 30,
+   "unit": "questions",
+   "notes": "normal battles, elites included"
+  },
+  {
+   "key": "tired_at_questions_boss",
+   "value": 45,
+   "unit": "questions",
+   "notes": "location and realm bosses (v3.2: location boss was 40)"
+  },
+  {
+   "key": "tired_enemy_atk_mult",
+   "value": 0.7,
+   "unit": "×",
+   "notes": "enemy ATK while Tired"
+  },
+  {
+   "key": "tired_hero_damage_mult",
+   "value": 1.5,
+   "unit": "×",
+   "notes": "hero damage while Tired"
   },
   {
    "key": "carry_over_cap",
