@@ -1,5 +1,5 @@
 import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, CONS, CONSUMABLES, SKILLS, ITEM, POOLS, ENEMIES, LocationDef } from '../data';
-import { S, save, heroStats, innPrice, consPrice, speechOn, session, skillSlots, refreshSkills, resetAll, clampHpMp, expToNext, WAY_LABEL, ALL_WAYS, replaceState } from '../engine/state';
+import { S, save, heroStats, innPrice, consPrice, speechOn, session, skillSlots, refreshSkills, resetAll, clampHpMp, expToNext, WAY_LABEL, ALL_WAYS, replaceState, gainGear, equipLine, strictlyBetter, weakGear, tierGear, notices, frontierLoc } from '../engine/state';
 import { readiness, prog, proficient, progress, activeWays, distractors, bossPool } from '../engine/learning';
 import { runBattle, setCurrentLoc, BattleResult, BattleKind } from '../engine/battle';
 import { speak, speechSupported, requestMic, hasZhVoice } from '../engine/speech';
@@ -94,7 +94,8 @@ export function worldMap() {
       : `🔒 Lv ${l.recLevel[0]}–${l.recLevel[1]} · beat ${prev ? zh(bossName(prev)) : 'the boss'} to open`;
     return `<button class="loccard" data-loc="${l.id}" data-testid="loc-${l.id}" data-key="${i + 1}" ${st.unlocked ? '' : 'disabled'} style="left:${LOCATIONS.length === 1 ? 430 : 150 + i * 560}px">
       <div class="art" style="background-image:url(${bgUrl(BG.map(l))})"></div>${st.unlocked ? '' : '<div class="lock">🔒</div>'}
-      <div class="cap"><div class="nm">${l.emoji} ${zh(l.zh)} ${esc(l.name)}</div><div class="sub">${sub}</div></div></button>`; };
+      <div class="cap"><div class="nm">${l.emoji} ${zh(l.zh)} ${esc(l.name)}</div><div class="sub">${sub}</div>
+        ${st.unlocked && !st.bossDefeated && weakFor(l.id).length ? `<div class="gearflag" data-testid="gear-weak-${l.id}">⚠️ ${zh('装备太弱')} Your gear is weak here. Visit the shop!</div>` : ''}</div></button>`; };
   render(`<div data-testid="worldmap" class="screen">${LOCATIONS.map(card).join('')}
     <div class="bottombar panel"><button class="secondary" id="wback" data-testid="world-back"><span class="ic">◀</span>Village</button>
       <div class="hint">Pick a place. Locked places tell you how to open them.</div></div></div>`);
@@ -102,6 +103,17 @@ export function worldMap() {
   on('#wback', town);
 }
 const bossName = (l: LocationDef) => ENEMIES[l.boss]?.zh || l.boss;
+/** Toasts queued by the engine (new skill slot filled, …). */
+export function flushNotices() { while (notices.length) toast(notices.shift()!); }
+
+// =============== weak-gear warning (spec v3.2 §7.9 / §11.4 item 7) ===============
+/** Core slots below the location tier's shop gear. Tier-1 areas are skipped: the starting kit is their design. */
+export function weakFor(locId: string) { return LOC[locId].tier >= 2 ? weakGear(locId) : []; }
+const SLOT_IC: Record<string, string> = { weapon: '🗡️', armor: '🧥', shield: '🛡️' };
+function weakLines(locId: string) {
+  return weakFor(locId).map(w => { const st = w.slot === 'weapon' ? 'ATK' : 'DEF'; const k = w.slot === 'weapon' ? 'atk' : 'def';
+    return `<li>${SLOT_IC[w.slot]} ${w.worn ? `${zh(w.worn.zh)} ${st} ${w.worn[k] || 0}` : `no ${w.slot}`} → ${zh(w.want.zh)} ${esc(w.want.en)} ${st} ${w.want[k]}</li>`; }).join('');
+}
 
 // =============== inn (dialog in the frame) ===============
 export function innName(place: string, node = 0) {
@@ -140,16 +152,31 @@ export function shop() {
   hud(); view.mode('town', undefined, BG.village());
   const gear = GEAR_LIST.filter(g => g.shop && (!g.shopRequires || S.locs[g.shopRequires]?.unlocked));
   const statTxt = (g: any) => [g.atk ? `⚔️+${g.atk}` : '', g.def ? `🛡️+${g.def}` : '', g.mp ? `🔷+${g.mp} MP` : ''].filter(Boolean).join(' ');
+  const fl = frontierLoc(); const weak = weakFor(fl.id); const weakSlots = weak.map(w => w.slot as string);
+  const upg = (g: any) => { const cur = S.equip[g.slot as 'weapon'] ? GEAR[S.equip[g.slot as 'weapon']!] : null;
+    return !S.gear.includes(g.id) && (strictlyBetter(g, cur) && (weakSlots.includes(g.slot) || g.tier >= fl.tier)); };
   render(dlg({ testid: 'shop', title: `🧪 ${zh('商店')} Grandma Wu's Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
+    ${weak.length ? `<div class="gearwarn inline" data-testid="shop-gear-warn"><div class="gw-h">⚠️ ${zh('装备太弱')} Your gear is weak for ${fl.emoji} ${zh(fl.zh)} ${esc(fl.name)}!</div>
+      <ul>${weakLines(fl.id)}</ul><div class="muted">Look for ⬆ Upgrade below. Better gear is put on for you when you buy it.</div></div>` : ''}
     <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.map(c => `<div class="card"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div>
       <div class="muted">${c.healHpFrac ? `+${c.healHpFrac * 100}% HP` : c.healMpFrac ? `+${c.healMpFrac * 100}% MP` : 'Warp to the last inn you used (map only)'} · you have ${S.inv[c.id] || 0}${c.carryLimit ? ` (max ${c.carryLimit})` : ''}</div>
       <button data-buyc="${c.id}" data-testid="buy-${c.id}" ${S.gold >= consPrice(c.id) && !(c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit) ? '' : 'disabled'}>${c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit ? 'Bag full' : `Buy ${consPrice(c.id)} 🪙`}</button></div>`).join('')}</div>
     <h3 style="margin-top:14px">Weapons, armor, shields & charms</h3><div class="grid">${gear.map(g => { const own = S.gear.includes(g.id); return `<div class="card">
-      <div>${g.emoji} ${zh(g.zh)} ${esc(g.en)}</div><div class="muted">${g.slot} · tier ${g.tier} · ${statTxt(g)}${g.slot === 'charm' ? ` · charm slot opens at Lv ${B.slots.charmUnlockLevel}` : ''}</div>
+      <div>${g.emoji} ${zh(g.zh)} ${esc(g.en)}${upg(g) ? ' <span class="upg" data-testid="upg-' + g.id + '">⬆ Upgrade</span>' : ''}</div><div class="muted">${g.slot} · tier ${g.tier} · ${statTxt(g)}${g.slot === 'charm' ? ` · charm slot opens at Lv ${B.slots.charmUnlockLevel}` : ''}</div>
       ${own ? `<button class="secondary" disabled>Owned</button> ${S.equip[g.slot] !== g.id ? `<button data-eq="${g.id}" data-testid="equip-${g.id}">Equip</button>` : '<span class="tag">equipped</span>'}`
         : `<button data-buyg="${g.id}" data-testid="buy-${g.id}" ${S.gold >= g.price ? '' : 'disabled'}>Buy ${g.price} 🪙</button>`}</div>`; }).join('')}</div>` }));
   on('[data-buyc]', (_e, el) => { const id = el.dataset.buyc!; const p = consPrice(id); if (S.gold < p || (CONS[id].carryLimit && (S.inv[id] || 0) >= CONS[id].carryLimit!)) return; S.gold -= p; S.inv[id] = (S.inv[id] || 0) + 1; playSfx('sfx_gold'); save(); toast(`Bought ${CONS[id].en}`); shop(); });
-  on('[data-buyg]', (_e, el) => { const g = GEAR[el.dataset.buyg!]; if (S.gold < g.price) return; S.gold -= g.price; S.gear.push(g.id); if (!S.equip[g.slot]) S.equip[g.slot] = g.id; playSfx('sfx_gold'); save(); toast(`Bought ${g.en}! Equip it in Gear.`); shop(); });
+  on('[data-buyg]', async (_e, el) => { const g = GEAR[el.dataset.buyg!]; if (S.gold < g.price) return; S.gold -= g.price; playSfx('sfx_gold');
+    // v3.2 §7.9: strictly better → put on right away with a short toast; a trade-off (e.g. more ATK but losing a perk) → ask
+    const r = gainGear(g.id); clampHpMp(); save();
+    if (r.equipped) toast(equipLine(g, r.from));
+    else if (r.from) {
+      const k = g.slot === 'weapon' ? 'atk' : 'def';
+      const pick = await dialog(`${g.emoji} Equip ${zh(g.zh)} ${esc(g.en)}?`, `<p>You wear ${r.from.emoji} ${zh(r.from.zh)} ${esc(r.from.en)}.</p>
+        <p>${k.toUpperCase()} ${r.from[k] || 0} → ${g[k] || 0}${r.from.perk && !g.perk ? ` · you would lose: ${esc(r.from.perk)}` : ''}</p>`, ['Equip it', 'Keep mine']);
+      if (pick === 0) { S.equip[g.slot] = g.id; clampHpMp(); save(); toast(equipLine(g, r.from)); } else toast(`${g.emoji} ${g.en} is in your bag.`);
+    }
+    shop(); });
   on('[data-eq]', (_e, el) => { const g = GEAR[el.dataset.eq!]; S.equip[g.slot] = g.id; clampHpMp(); save(); shop(); });
   on('#back', town);
 }
@@ -302,6 +329,11 @@ export function locationScreen(id: string, note = '') {
     ${nodeHtml}${chips}
     <div class="token" id="token" data-testid="hero-token" style="left:${nodes[heroI].x - 65}px;top:${nodes[heroI].y - 118}px"></div>
     <div id="nodetip"></div>
+    ${weakFor(id).length && !st.bossDefeated ? `<div class="gearwarn" data-testid="gear-warn" style="top:${underLv ? 150 : 92}px">
+      <div class="gw-h">⚠️ ${zh('装备太弱')} Your gear is weak for ${zh(l.zh)}!</div>
+      <ul>${weakLines(id)}</ul>
+      <div class="gw-f"><span class="muted">Enemies here hit harder. Better gear is at the shop.</span>
+        <button class="secondary" data-act="gearshop" data-testid="gear-warn-shop">🛒 ${zh('商店')} Shop</button></div></div>` : ''}
     ${underLv ? `<div class="tip warn" style="left:440px;top:92px">⚠️ Recommended level ${l.recLevel[0]}–${l.recLevel[1]}. You are level ${S.level}.</div>` : ''}
     <div class="bottombar panel">
       <button class="secondary" data-act="walk" data-testid="act-walk"><span class="ic">🏠</span>Town</button>
@@ -337,6 +369,7 @@ export function locationScreen(id: string, note = '') {
     if (a === 'patrol' || a === 'train') return doBattle(id, 'patrol');
     if (a === 'boss') return doBattle(id, 'boss');
     if (a === 'preview') { await preview(id); return locationScreen(id); }
+    if (a === 'gearshop') { town(); return shop(); }   // the warning's shortcut: back to the village shop
     if (a === 'bag') return itemsScreen(() => locationScreen(id), id, () => feather(id));
     if (a === 'walk') {
       if (st.pathCleared > 0 && Math.random() < B.economy.walkBackEncounterChance) { await dialog('👣 On the road…', 'A wild monster jumps out on your way home!', ['Fight!']); return doBattle(id, 'walk'); }
@@ -385,9 +418,12 @@ function rewards(r: BattleResult, extra: string): Promise<void> {
       <div class="card">❓ ${r.correct}/${r.questions - r.voids} correct${r.spoken ? `<br>🎤 ${r.spoken} spoken` : ''}${r.voids ? ` · ${r.voids} skipped` : ''}${r.tired ? '<br>😪 Enemies got tired' : ''}</div></div>
       ${r.learned.length ? `<h3>🏅 New proficient words</h3><div class="chips">${r.learned.map(i => zh(ITEM[i].zh)).join('')}</div>` : ''}
       ${r.loot.length ? `<h3>🎁 Treasure</h3><div>${r.loot.map(esc).join('<br>')}</div>` : ''}
+      ${r.equipped.length ? `<div class="equipped" data-testid="auto-equipped">${r.equipped.map(esc).join('<br>')}</div>` : ''}
       ${extra}<p class="muted">HP and MP do not refill by themselves. Rest at the inn or drink a potion.</p>`,
       foot: `<button id="ok" data-testid="victory-ok" data-key="enter">Continue ▶</button>` }));
     on('#ok', () => res());
+    for (const t of r.equipped) toast(t);
+    flushNotices();
   });
 }
 
@@ -448,6 +484,8 @@ export function pips(id: string) {
 }
 
 // =============== debug panel (dev builds / ?debug only) ===============
+const dbgLoc = () => (S.where !== 'town' && LOC[S.where]) ? LOC[S.where] : frontierLoc();
+const heroStatsLine = () => { const h = heroStats(); return `ATK ${h.atk} · DEF ${h.def}`; };
 export function debugPanel(onChange: () => void) {
   const h = heroStats();
   const rows = LOCATIONS.flatMap(l => POOLS[l.id].map(id => ({ id, l })));
@@ -458,6 +496,7 @@ export function debugPanel(onChange: () => void) {
       <button id="apply" data-testid="dbg-apply">Apply</button></div>
     <div class="row" style="justify-content:flex-start;margin-top:10px">
       <button class="secondary" id="clearpath" data-testid="dbg-clearpath">Clear path fights (this location; all if in town)</button>
+      <button class="secondary" id="tiergear" data-testid="dbg-tiergear" title="Owns and wears the shop weapon/armor/shield (and charm) of this location's tier">🎽 Tier gear (${esc(dbgLoc().name)}, tier ${dbgLoc().tier})</button>
       <button class="secondary" id="unlock">Unlock all locations</button>
       <button class="secondary" id="export">Export save JSON</button>
       <button class="danger" id="reset" data-testid="dbg-reset">Reset everything</button>
@@ -473,9 +512,14 @@ export function debugPanel(onChange: () => void) {
   on('#apply', () => {
     S.gold = Math.max(0, +(($('#dg') as HTMLInputElement).value) | 0);
     const lv = Math.max(1, +(($('#dl') as HTMLInputElement).value) | 0); S.level = lv; if (S.exp >= expToNext(lv)) S.exp = 0; refreshSkills(S);
-    S.hp = +(($('#dh') as HTMLInputElement).value) | 0; S.mp = +(($('#dm') as HTMLInputElement).value) | 0; clampHpMp(); save(); hud(); closeModal(); onChange();
+    S.hp = +(($('#dh') as HTMLInputElement).value) | 0; S.mp = +(($('#dm') as HTMLInputElement).value) | 0; clampHpMp(); save(); hud(); closeModal(); onChange(); flushNotices();
   }, m);
   on('#clearpath', () => { for (const l of LOCATIONS.filter(x => S.where === 'town' || x.id === S.where)) { S.locs[l.id].pathCleared = l.pathFights; S.locs[l.id].approachArmed = true; } save(); closeModal(); onChange(); }, m);
+  on('#tiergear', () => {   // preset: the §6.2 recommended (common) gear for the tier, worn; nothing else changes
+    const t = dbgLoc().tier;
+    for (const g of [...tierGear(t), ...GEAR_LIST.filter(x => x.slot === 'charm' && x.tier === t && x.rarity === 'common')]) { if (!S.gear.includes(g.id)) S.gear.push(g.id); S.equip[g.slot] = g.id; }
+    clampHpMp(); save(); hud(); closeModal(); toast(`🎽 Tier ${t} gear on: ` + heroStatsLine()); onChange();
+  }, m);
   on('#unlock', () => { for (const l of LOCATIONS) S.locs[l.id].unlocked = true; save(); closeModal(); onChange(); }, m);
   on('#export', () => { const t = $('#exp') as HTMLTextAreaElement; t.classList.remove('hidden'); t.value = JSON.stringify(S); }, m);
   on('#reset', async () => { closeModal(); if ((await dialog('Reset?', 'Delete all progress and start over?', ['Yes, reset', 'Cancel'])) === 0) { resetAll(); location.reload(); } }, m);
