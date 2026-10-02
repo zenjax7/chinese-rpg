@@ -23,17 +23,23 @@ export interface SaveState {
   prog: Record<string, ItemProg>;
   stats: { battles: number; wins: number; defeats: number; flees: number; freeInn: number; paidInn: number; questions: number; correct: number; spoken: number; voids: number };
   log: any[];
+  // v3.3: bought spells (owned for good) and the town quest boards
+  spells: string[];
+  quests: Record<string, QuestState>;
 }
+/** One quest's saved progress. n = kills / drops counted; base = the realm words already Ready when a words quest was accepted. */
+export interface QuestState { s: 'active' | 'claimed'; n: number; base?: string[]; at: number; done?: number; }
 const KEY = 'chinese-rpg-proto-v3';
 
 export function newState(): SaveState {
   const s: SaveState = {
     version: 3, consent: { given: false, speech: false, at: 0 },
     level: B.hero.startLevel, exp: 0, hp: 0, mp: 0, gold: B.economy.startGold,
-    inv: { honey: 0, bighoney: 0, manatea: 0, feather: 0, ...B.economy.startInventory },
+    inv: { honey: 0, bighoney: 0, manatea: 0, bigmanatea: 0, feather: 0, ...B.economy.startInventory },
     gear: [...B.economy.startGear], equip: { weapon: null, armor: null, shield: null, charm: null },
     skills: [], skillsEquipped: [], courage: 0, lastDefeatLoc: null, where: 'town', lastInn: null, practice: {}, locs: {}, prog: {},
     stats: { battles: 0, wins: 0, defeats: 0, flees: 0, freeInn: 0, paidInn: 0, questions: 0, correct: 0, spoken: 0, voids: 0 }, log: [],
+    spells: [], quests: {},
   };
   for (const g of s.gear) { const d = GEAR[g]; if (d && !s.equip[d.slot]) s.equip[d.slot] = g; }
   LOCATIONS.forEach((l, i) => s.practice[l.id] = { done: [], rewarded: false, stickers: [] });
@@ -49,13 +55,13 @@ export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 }
 function load(): SaveState {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { fillSkillSlots(s); return s; } }
+    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
 }
 export function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* quota */ } }
 export function resetAll() { localStorage.removeItem(KEY); S = newState(); save(); }
-export function replaceState(s: SaveState) { S = s; save(); }
+export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; S = s; save(); }
 
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }
 
@@ -86,7 +92,8 @@ export function skillSlots(s: SaveState = S) {
 /** Grants skills whose unlock condition is met and auto-equips into free slots. */
 export function refreshSkills(s: SaveState): string[] {
   const got: string[] = [];
-  for (const sk of SKILLS) {
+  // a boss reward counts as earned before a level-up of the same victory (so Guardian Shield, from the Meadow boss, keeps its slot order)
+  for (const sk of [...SKILLS].sort((a, b) => +!!b.unlock.boss - +!!a.unlock.boss)) {
     const u = sk.unlock;
     const ok = u.start || (u.level && s.level >= u.level) || (u.boss && s.locs[u.boss]?.bossDefeated);
     if (ok && !s.skills.includes(sk.id)) { s.skills.push(sk.id); got.push(sk.id); }

@@ -6,7 +6,7 @@ import type Phaser from 'phaser';
 import { assets } from '../assets';
 
 export type SfxKey = 'sfx_hit' | 'sfx_miss' | 'sfx_block' | 'sfx_block_break' | 'sfx_hurt' | 'sfx_enemy_defeat' | 'sfx_correct' | 'sfx_wrong'
-  | 'sfx_level_up' | 'sfx_gold' | 'sfx_chest' | 'sfx_potion' | 'sfx_ui_click';
+  | 'sfx_level_up' | 'sfx_gold' | 'sfx_chest' | 'sfx_potion' | 'sfx_ui_click' | `sfx_spell_${string}`;
 export type MusicKey = 'mus_village' | 'mus_battle_field' | 'mus_battle_boss';
 export type StingKey = 'stg_victory' | 'stg_defeat';
 
@@ -58,6 +58,8 @@ export function playSfx(key: SfxKey, opts: { detune?: number } = {}) {
   if (!mgr || !unlocked || !loaded(key) || cfg.muted) return;
   try { mgr.play(key, { volume: sfxVol(key) * (ducks ? 0.6 : 1), detune: opts.detune || 0 }); (dbg().played ||= []).push(key); } catch { /* ignore */ }
 }
+/** v3.3: a spell's own cast sound (sfx_spell_<id>) when delivered, else a generic one. */
+export function playSpellSfx(id: string) { playSfx(assets().sfx[`sfx_spell_${id}`] ? `sfx_spell_${id}` : 'sfx_hit'); }
 /** Duck music (and new SFX) while a word plays or while listening. Calls nest. */
 export function duck(on: boolean) {
   ducks = Math.max(0, ducks + (on ? 1 : -1)); dbg().ducked = ducks > 0;

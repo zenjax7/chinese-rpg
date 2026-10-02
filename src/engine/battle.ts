@@ -1,11 +1,12 @@
 // Battle state machine (spec §1.2) driven by async UI prompts. Numbers come from src/data/*.json.
-import { B, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL } from '../data';
+import { B, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef } from '../data';
+import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses } from './learning';
 import { listen, speechSupported } from './speech';
 import { sayItem } from './voice';
-import { playSfx, playMusic, playSting, beep, duck } from '../audio/audio';
-import { BG } from '../assets';
+import { playSfx, playMusic, playSting, beep, duck, playSpellSfx } from '../audio/audio';
+import { BG, spellIcon } from '../assets';
 import { matchZh, matchEn } from './match';
 import { view, HERO_X, BASE_Y } from '../phaser/view';
 import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, flyTo } from '../ui/dom';
@@ -13,7 +14,8 @@ import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, 
 export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
   questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[]; }
-interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number; }
+interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
+  skipWhy?: string; soaked?: boolean; summoned?: boolean; fx?: string | null; }
 type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean };
 
 const C = () => B.combat;
@@ -25,6 +27,16 @@ const r = Math.round;   // spec: Math.round (half up)
 export function heroDamage(atk: number, streak: number, spoken: boolean, tired: boolean, defE: number) {
   return Math.max(1, r(atk * streakMult(streak) * (spoken ? C().spokenDamageMult : 1) * (tired ? C().tiredHeroDamageMult : 1) - 0.5 * defE));
 }
+/** v3.4 §6.7 spell damage: max(1, round_half_up(P × (Tired ? 1.5 : 1) − DEF_e)). Fixed power P: no ATK, streak or spoken factor.
+ *  All factors come from spells.json rules (tiredMult, defMult = 1 → full DEF; wardMult only when the bossMagicWard flag is on). */
+export function spellDamage(power: number, tired: boolean, ward: boolean, defE: number) {
+  const R = SPELL_RULES;
+  return Math.max(1, r(power * (tired ? R.tiredMult : 1) * (ward ? R.wardMult : 1) - R.defMult * defE));
+}
+export const isBossKind = (d: EnemyDef) => d.kind === 'locboss' || d.kind === 'realmboss';
+export const TARGET_LABEL: Record<string, string> = { single: '🎯 单个 one enemy', same_type: '👥 同类 one kind (max 3)', all: '🌐 全部 all (max 3)' };
+const STATUS_FX: Record<string, string> = { soak: 'soaked', daze: 'dazed', chill: 'chilled', freeze: 'frozen' };
+(window as any).__proto = (window as any).__proto || {}; (window as any).__proto.spellRules = SPELL_RULES;
 export function blockDamage(atkE: number, defH: number) { return Math.max(0, r(atkE - C().kBlock * defH)); }
 export function brokenDamage(atkE: number, defH: number) { return r(Math.max(Math.ceil(C().brokenFloor * atkE), atkE - C().kBroken * defH)); }
 
@@ -60,9 +72,25 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   const ctx: WayCtx = { asked: 0, spoken: 0, cooling: new Set() };
   (window as any).__proto.summons = 0;
   const wpn = S.equip.weapon ? GEAR[S.equip.weapon] : null;
-  const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint };
+  const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint, casts: 0, lastCastQ: -1 };
   const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false, gearGot: [], equipped: [] };
   const tired = () => bs.q >= tiredAt;
+  // v3.4 cast rule: 1 cast per normal/elite battle, 2 per boss battle (2nd ≥ bossGapQuestions questions later), Spellbook unlocks after minCorrect right answers
+  const castKind: 'normal' | 'elite' | 'boss' = leader || isBoss ? 'boss' : foes.some(f => f.d.kind === 'elite') ? 'elite' : 'normal';
+  const castCap = () => SPELL_RULES.castLimit[castKind] ?? 1;
+  /** Why a spell can't be cast now (null = it can). */
+  const castBlock = (sp?: SpellDef): { why: 'locked' | 'cap' | 'gap' | 'mp'; text: string } | null => {
+    const L = SPELL_RULES.castLimit;
+    if (res.correct < L.minCorrect) return { why: 'locked', text: `🔒 after ${L.minCorrect} right answers (${res.correct}/${L.minCorrect})` };
+    if (bs.casts >= castCap()) return { why: 'cap', text: `✋ ${castCap()} cast${castCap() > 1 ? 's' : ''} per battle used` };
+    if (bs.casts > 0 && bs.q - bs.lastCastQ < L.bossGapQuestions) return { why: 'gap', text: `⏳ ready in ${L.bossGapQuestions - (bs.q - bs.lastCastQ)} questions` };
+    if (sp && S.mp < sp.mp) return { why: 'mp', text: `needs ${sp.mp} MP` };
+    return null;
+  };
+  // Magic Ward 魔法护盾 (v3.3; dropped in v3.4, flag bossMagicWard): every enemy of a boss battle takes wardMult × spell damage
+  const ward = SPELL_RULES.bossMagicWard && !!leader;
+  let wardShown = false; let bookTab: 'skills' | 'spells' = 'skills'; let bookPage = 0;
+  (window as any).__proto.castState = () => ({ casts: bs.casts, cap: castCap(), kind: castKind, correct: res.correct, q: bs.q, lastCastQ: bs.lastCastQ, streak: bs.streak, block: castBlock()?.why || null });
   const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
   /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
   const msg = (html: string, testid = '') => { const el = $('#bmsg'); if (!el) return; el.innerHTML = html; if (testid) el.dataset.testid = testid; else delete el.dataset.testid; };
@@ -71,8 +99,10 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   S.stats.battles++;
   view.mode('battle', parseInt(loc.bg), BG.battle(loc, isBoss));
   playMusic(leader || isBoss ? 'mus_battle_boss' : 'mus_battle_field');
-  const syncView = () => view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
+  const syncView = () => { view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
+    foes.forEach((f, i) => { if (f.alive && f.fx) view.setStatus(i, f.fx); }); };
   syncView();
+  if (ward && S.spells.length) view.setWard(true);
 
   // ---- UI skeleton: everything sits inside the 1280x720 frame; the dock (24,464,1232x236) never changes size (spec §4)
   const skeleton = () => {
@@ -113,14 +143,14 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   skeleton(); refresh();
 
   // ---- ASK
-  async function ask(turn: 'attack' | 'defense' | 'heal', foe?: Foe): Promise<Outcome> {
+  async function ask(turn: 'attack' | 'defense' | 'heal' | 'spell', foe?: Foe, spell?: SpellDef): Promise<Outcome> {
     let { id, way, why } = feed.next(ctx);
     const item = ITEM[id];
     let reprompts = 0;
     let out: Outcome;
     for (;;) {
       if (way[0] === 's' && !speechOn()) way = pickWay(id, ctx);
-      out = await renderQuestion(id, way, turn, foe, reprompts);
+      out = await renderQuestion(id, way, turn, foe, reprompts, spell);
       if ((out as any).tech) {
         reprompts++;
         if (reprompts > B.speech.maxTechReprompts) {
@@ -166,16 +196,17 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   }
   function bs_exp(n: number, msg: string) { const lv = addExp(n); res.exp += n; res.levels += lv; if (lv) playSfx('sfx_level_up'); log(msg); toast(msg); }
 
-  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number): Promise<Outcome & { tech?: boolean; fatal?: string }> {
+  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number, spell?: SpellDef): Promise<Outcome & { tech?: boolean; fatal?: string }> {
     const item = ITEM[id]; const p = prog(id);
     // Spell banner (top centre) always holds the stimulus: gold edge = I'm casting, red = the enemy casts at me (spec §4.2)
-    const head = turn === 'defense' ? `🛡️ ${foe ? zhName(foe) : ''} casts a spell! Block it!` : turn === 'heal' ? '💚 Heal spell!' : '⚔️ Cast your spell!';
-    const cls = turn === 'defense' ? 'def' : turn === 'heal' ? 'heal' : 'atk';
+    const head = turn === 'defense' ? `🛡️ ${foe ? zhName(foe) : ''} casts a spell! Block it!` : turn === 'heal' ? '💚 Heal spell!'
+      : turn === 'spell' && spell ? `${spell.emoji} ${zh(spell.zh)} ${esc(spell.en)}! Answer right to cast it!` : '⚔️ Cast your spell!';
+    const cls = turn === 'defense' ? 'def' : turn === 'heal' ? 'heal' : turn === 'spell' ? 'atk magic' : 'atk';
     const zhStim = `<div class="qzh" lang="zh-CN" data-testid="q-zh">${item.zh}</div><button class="secondary" id="replay" title="Hear it again" aria-label="Hear it again">🔊</button>`;   // characters only (no pinyin anywhere; 🔊 gives the sound)
     const enStim = `<div class="stim">${splitEn(item.enPrimary)}</div>`;
     const zhPrompt = way === 'rZE' || way === 'sZE';
     banner(`<div class="h">${head}</div>${zhPrompt ? zhStim : enStim}`, cls);
-    view.focus({ turn, target: turn === 'attack' && foe ? foes.indexOf(foe) : undefined, attacker: turn === 'defense' && foe ? foes.indexOf(foe) : undefined });
+    view.focus({ turn: turn === 'spell' ? (foe ? 'attack' : 'heal') : turn, target: (turn === 'attack' || turn === 'spell') && foe ? foes.indexOf(foe) : undefined, attacker: turn === 'defense' && foe ? foes.indexOf(foe) : undefined });
     const unlockDelay = bs.focus ? C().focusDelayMs : 0; bs.focus = false;
     const rp = () => { const b = $('#replay'); if (b) b.onclick = () => sayItem(id); };
     if (way === 'rZE' || way === 'rEZ') {
@@ -277,6 +308,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     if (gold) setTimeout(() => { flyTo(`+${gold} 🪙`, { x: 900, y: 300 }, 'gold', '#ffe27a'); hud(); }, 700);
     playSfx('sfx_enemy_defeat'); if (gold) setTimeout(() => playSfx('sfx_gold'), 250); if (lv) setTimeout(() => playSfx('sfx_level_up'), 500);
     log(`💥 ${zhName(f)} defeated!${exp || gold ? ` +${exp} EXP, +${gold} 🪙` : ' (no reward)'}`);
+    for (const m of questKill(f.d.id, locId, !!f.summoned)) { log(m, false); toast(m); }
     if (lv) toast(`🎉 Level up! You are now level ${S.level}`);
     if (Math.random() < f.d.chestRate) openChest(f.d.kind);
     save();
@@ -306,7 +338,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   function summon(id: string, max: number, by: Foe, maxSummons = 99) {
     if (foes.filter(x => x.alive).length >= Math.min(max, C().maxEnemies) || bs.summons >= maxSummons) return;
     bs.summons++; (window as any).__proto.summons = bs.summons;
-    const n = mk(id); const dead = foes.findIndex(x => !x.alive && x !== leader);
+    const n = mk(id); n.summoned = true; const dead = foes.findIndex(x => !x.alive && x !== leader);
     if (dead >= 0) foes[dead] = n; else foes.push(n);
     syncView(); log(`📣 ${by.d.emoji} ${by.d.zh} calls for help! A ${n.d.emoji} ${n.d.zh} joins the fight.`); toast(`📣 ${by.d.en} summons a ${n.d.en}!`);
   }
@@ -330,6 +362,61 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     f.hp -= d; view.hitEnemy(i, d, { spoken }); setTimeout(() => playSfx('sfx_hit'), 250); log(`⚔️ You hit ${zhName(f)} for ${d}${spoken ? ' (🎤 voice ×1.25)' : ''}${bs.streak >= 3 ? ` (streak ×${streakMult(bs.streak)})` : ''}`);
     if (f.hp <= 0) kill(f); else { checkCheckpoint(); halfTriggers(f); }
     refresh(); await sleep(750);
+  }
+
+  // ---- v3.4 spells: a free action (no question, no fizzle, no MP regen, streak unchanged) that replaces the attack (spec §6.7).
+  // rules.castRequiresAnswer = true brings back the v3.3 "answer to cast" path (wrong answer fizzles).
+  async function castSpell(sp: SpellDef, tgt: Foe | undefined) {
+    const R = SPELL_RULES; const mpBefore = S.mp; const q0 = bs.q; const streak0 = bs.streak;
+    const live = foes.filter(f => f.alive); const first = tgt && tgt.alive ? tgt : live[0];
+    S.mp -= sp.mp; bs.casts++; bs.lastCastQ = bs.q; hud();
+    flyTo(`−${sp.mp} MP`, heroFrame(), 'mp', '#9be7ff');
+    if (ward && !wardShown) { wardShown = true; view.setWard(true); log(`🛡️ ${zh('魔法护盾')}! Magic Ward: in boss battles spells do less damage.`); toast(`🛡️ ${zh('魔法护盾')}! Magic Ward`); }
+    const info: any = { id: sp.id, power: sp.power, ward, wardMult: R.wardMult, defMult: R.defMult, tiredMult: R.tiredMult, mpBefore, mpCost: sp.mp, hits: [],
+      qBefore: q0, streakBefore: streak0, casts: bs.casts, cap: castCap(), kind: castKind, asked: false };
+    (window as any).__proto.lastSpell = info;
+    if (R.castRequiresAnswer) {
+      info.asked = true; const o = await ask('spell', sp.target === 'all' ? undefined : first, sp); info.result = o.result;
+      if (o.result !== 'correct') {
+        if (o.result === 'void' || !R.fizzleSpendsMp) { S.mp = Math.min(heroStats().maxMp, S.mp + sp.mp); hud(); }
+        if (o.result === 'wrong') { view.fizzle(sp.element); setTimeout(() => playSfx('sfx_miss'), 180); log(`💨 ${zh('失灵')} Fizzle! ${zh(sp.zh)} didn't work.`); $('#bmsg')!.dataset.testid = 'fizzle'; await sleep(900); }
+        info.mpEnd = S.mp; save(); return;
+      }
+    }
+    const tiredNow = tired(); info.tired = tiredNow;
+    const pool = sp.target === 'single' ? [first] : sp.target === 'same_type' ? [first, ...live.filter(f => f !== first && f.d.id === first.d.id)] : live;
+    const hitList = pool.filter(Boolean).slice(0, R.maxTargets);
+    const dmgs: number[] = []; const status: (string | null)[] = []; const lines: string[] = [];
+    for (const f of hitList) {
+      let d = spellDamage(sp.power, tiredNow, ward, f.d.def_);
+      const wax = !!(f.d.mech.waxShieldFirstHit && !f.waxUsed);
+      if (wax) { f.waxUsed = true; d = f.d.mech.waxShieldFirstHit!; log(`🕯️ ${f.d.zh}'s wax shield soaks up the spell!`, false); }
+      f.hp = Math.max(0, f.hp - d); dmgs.push(d); let st: string | null = null;
+      if (f.hp > 0 && sp.status) {
+        const bm = isBossKind(f.d) ? (R.statusBossMultBy?.[sp.status] ?? R.bossStatusMult) : 1;
+        if (sp.status === 'soak') { if (Math.random() < bm || bm >= 1) { f.soaked = true; st = 'soaked'; } }
+        else if (sp.skipChance > 0 && Math.random() < sp.skipChance * bm) { f.skipNext = true; f.skipWhy = `${zh(sp.statusZh || '')} ${sp.statusEn}`; st = STATUS_FX[sp.status] || null; }
+        if (st) { f.fx = st; lines.push(`${sp.emoji} ${zhName(f)} ${zh(sp.statusZh || '')} ${esc(sp.statusEn || '')}`); }
+      }
+      status.push(st); info.hits.push({ i: foes.indexOf(f), enemy: f.d.id, boss: isBossKind(f.d), def: f.d.def_, dmg: d, hpAfter: f.hp, status: st, wax });
+    }
+    msg(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)}!`, 'spell-cast');
+    void dockMain(`<div class="casting" data-testid="casting"><span class="sic">${spellIcon(sp.id, sp.emoji, 56)}</span><span><b lang="zh-CN">${sp.zh}</b> ${esc(sp.en)}<br><span class="muted">🔷 −${sp.mp} MP · ${TARGET_LABEL[sp.target]}</span></span></div>`);
+    setTimeout(() => playSpellSfx(sp.id), 300);
+    // the animation (2–3 s, src/data/spellfx.json castAnim) can be skipped with a tap anywhere / Enter / Space
+    const sk = document.createElement('button'); sk.id = 'fxskip'; sk.className = 'fxskip'; sk.dataset.testid = 'fx-skip'; sk.setAttribute('aria-label', 'Skip');
+    sk.innerHTML = '<span>▶▶ <span lang="zh-CN">跳过</span> Tap to skip</span>'; sk.onclick = () => view.skipCast();
+    const key = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') view.skipCast(); };
+    $('[data-testid="battle"]')?.appendChild(sk); document.addEventListener('keydown', key);
+    const t0 = performance.now();
+    await view.castSpell(sp, hitList.map(f => foes.indexOf(f)), dmgs, hitList.map(f => f.hp), { status, tag: ward ? '🛡️ ×' + R.wardMult : undefined });
+    info.animMs = Math.round(performance.now() - t0);
+    sk.remove(); document.removeEventListener('keydown', key);
+    log(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)} hits ${hitList.map((f, k) => `${zhName(f)} for ${dmgs[k]}`).join(', ')}${ward ? ` (🛡️ ward ×${R.wardMult})` : ''}${tiredNow ? ' (😪 ×' + R.tiredMult + ')' : ''}`);
+    for (const l of lines) log(l, false);
+    for (const f of hitList) { if (f.hp <= 0 && f.alive) kill(f); else if (f.alive) { checkCheckpoint(); halfTriggers(f); } }
+    info.qAfter = bs.q; info.streakAfter = bs.streak; info.mpEnd = S.mp; info.done = true;
+    refresh(); save(); await sleep(250);
   }
 
   // ---- rounds
@@ -356,11 +443,11 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     if (bs.round === 1) for (const f of foes.filter(x => x.alive && x.d.mech.quickStart)) { log(`💨 ${f.d.zh} is super fast and attacks first!`); if (await enemyTurn(f)) { res.outcome = 'defeat'; return finish(); } }
     let act: Awaited<ReturnType<typeof chooseAction>>; let target: Foe | undefined;
     for (;;) {   // TARGET_SELECT can go ◀ Back to the commands
-      act = await chooseAction();
-      if (act.type !== 'attack' && act.type !== 'double') break;
+      act = await chooseAction(); target = undefined;
+      if (act.type !== 'attack' && act.type !== 'double' && !(act.type === 'spell' && SPELL[act.item!].target !== 'all')) break;
       const live = foes.filter(f => f.alive);
       if (live.length === 1) { target = live[0]; break; }
-      const k = await chooseTarget(live); if (k >= 0) { target = live[k]; break; }
+      const k = await chooseTarget(live, act.type === 'spell' ? SPELL[act.item!] : undefined); if (k >= 0) { target = live[k]; break; }
     }
     $('#tgts') && ($('#tgts').innerHTML = ''); view.setTarget(-1);
     hero.rooted = false;
@@ -372,6 +459,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
       if (c.healHpFrac) { const n = Math.round(c.healHpFrac * h.maxHp); S.hp = Math.min(h.maxHp, S.hp + n); view.heroFloat('+' + n); log(`${c.emoji} +${n} HP`); }
       if (c.healMpFrac) { const n = Math.round(c.healMpFrac * h.maxMp); S.mp = Math.min(h.maxMp, S.mp + n); view.heroFloat('+' + n + ' MP', '#6dd5fa'); log(`${c.emoji} +${n} MP`); }
       refresh();
+    } else if (act.type === 'spell') {
+      await castSpell(SPELL[act.item!], target);
     } else if (act.type === 'heal') {
       S.mp -= SKILL.heal.mp; bs.heal++; hud();
       const o = await ask('heal');
@@ -405,12 +494,15 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   /** One enemy attack (wind-up => question => block). Returns true if the hero fell. */
   async function enemyTurn(f: Foe): Promise<boolean> {
     const i = foes.indexOf(f); refresh();
-    if (f.skipNext) { f.skipNext = false; log(`${f.d.emoji} ${f.d.zh} skips its attack.`); return false; }
+    if (f.skipNext) { f.skipNext = false; log(`${f.d.emoji} ${f.d.zh}${f.skipWhy ? ` is ${f.skipWhy} and` : ''} skips its attack.`); f.skipWhy = undefined;
+      if (f.fx && f.fx !== 'soaked') { f.fx = null; view.setStatus(i, null); } return false; }
     if (f.d.mech.dozeEveryNRounds && bs.round % f.d.mech.dozeEveryNRounds === 0) { log(`💤 ${f.d.zh} dozes off… Zzz (skips its attack)`); view.enemyAttack(i, 'Zzz', true); return false; }
     view.windUp(i, true); msg(`${zhName(f)} is casting!`); await sleep(400);   // ENEMY WIND-UP (telegraph)
     const o = await ask('defense', f);
     view.windUp(i, false);
-    const h = heroStats(); const atkE = f.d.atk * (tired() ? C().tiredEnemyAtkMult : 1);
+    const h = heroStats(); const soak = f.soaked ? SPELL_RULES.soakMult : 1; f.soaked = false; if (f.fx === 'soaked') { f.fx = null; view.setStatus(i, null); }
+    if (soak !== 1) log(`💧 ${f.d.zh} is soaked: its attack is weaker (×${soak}).`, false);
+    const atkE = f.d.atk * (tired() ? C().tiredEnemyAtkMult : 1) * soak;
     let dmg = 0, blocked = false;
     if (o.result === 'void') { log(`🎤 ${f.d.zh}'s attack was skipped.`); return false; }
     if (o.result === 'correct') { dmg = blockDamage(atkE, h.defBattle); blocked = true; }
@@ -442,15 +534,18 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   }
 
   // ---- action menus: 4 big bilingual commands; Skills / Items / targets open inside the same dock (spec §4.1)
-  function chooseAction(): Promise<{ type: 'attack' | 'double' | 'heal' | 'potion' | 'flee'; item?: string }> {
+  function chooseAction(): Promise<{ type: 'attack' | 'double' | 'heal' | 'potion' | 'flee' | 'spell'; item?: string }> {
     return new Promise(async resolve => {
       const eq = (s: string) => S.skillsEquipped.includes(s);
       const potionsLeft = C().potionsPerBattle - bs.potions;
-      const pots = ['honey', 'bighoney', 'manatea'].filter(p => (S.inv[p] || 0) > 0);
+      const pots = ['honey', 'bighoney', 'manatea', 'bigmanatea'].filter(p => CONS[p] && CONS[p].battleUse !== false && (S.inv[p] || 0) > 0);   // v3.4: MP potions are map-only
       const nPots = pots.reduce((a, p) => a + (S.inv[p] || 0), 0);
       const dblOk = eq('double') && S.mp >= SKILL.double.mp && bs.doubleReady === 0 && bs.streak >= SKILL.double.minStreak!;
       const healOk = eq('heal') && S.mp >= SKILL.heal.mp && bs.heal < SKILL.heal.perBattle!;
-      const hasSkills = eq('double') || eq('heal');
+      const hasSkillsOnly = eq('double') || eq('heal');
+      const owned = S.spells.filter(id => SPELL[id]);
+      const hasSkills = hasSkillsOnly || owned.length > 0;   // v3.3: the Spellbook tab lives inside ✨ 技能 Skills
+      bookTab = hasSkillsOnly ? 'skills' : 'spells';   // opens on 技能 Skills each turn (Spells first when there are no skills)
       const live = foes.filter(f => f.alive); if (live.length > 1) view.setTarget(foes.indexOf(live[0]));
       const cmd = (k: number, a: string, ic: string, z: string, en: string, extra = '', cls = 'cream') =>
         `<button class="cmd ${cls}" ${a} data-key="${k}" ${extra}><span class="k">${k}</span><span class="ic">${ic}</span><span class="zh" lang="zh-CN">${z}</span><span class="en">${en}</span></button>`;
@@ -460,15 +555,38 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
         msg(`${intro}What will you do?${hero.webbed ? ' 🕸️ (webbed: half damage)' : ''}`);
         await dockMain(`<div class="cmds" data-testid="action-menu">
           ${cmd(1, 'data-a="attack" data-testid="act-attack"', '⚔️', '攻击', 'Attack', '', '')}
-          ${cmd(2, 'data-sub="skills" data-testid="act-skills"', '✨', '技能', hasSkills ? 'Skills' : 'Skills · none yet', hasSkills ? '' : 'disabled')}
+          ${cmd(2, 'data-sub="skills" data-testid="act-skills"', '✨', '技能', hasSkills ? (owned.length ? 'Skills · Spells' : 'Skills') : 'Skills · none yet', hasSkills ? '' : 'disabled')}
           ${cmd(3, 'data-sub="items" data-testid="act-itemsmenu"', '🍯', '道具', `Items ×${nPots}`, nPots ? '' : 'disabled')}
           ${cmd(4, 'data-a="flee" data-testid="act-flee"', '🏃', '逃跑', hero.rooted ? 'Run · rooted 🌱' : 'Run', hero.rooted ? 'disabled title="Rooted!"' : '')}</div>`);
         wire();
       };
       const sub = async (which: 'skills' | 'items') => {
         const back = `<button class="ghost back" data-back="1" data-testid="act-back" data-key="${which === 'skills' ? 3 : pots.length + 1}">◀ Back</button>`;
+        $('#dock')?.classList.remove('tabs');
+        if (which === 'skills' && owned.length && !hasSkillsOnly) bookTab = 'spells';   // no skills yet: open straight on the Spellbook
+        if (which === 'skills' && owned.length) {   // two tabs: 技能 Skills | 魔法 Spells (spec v3.3 §6.7)
+          $('#dock')?.classList.add('tabs');
+          side(`<div class="tabs" role="tablist"><button class="tab ${bookTab === 'skills' ? 'on' : 'ghost'}" data-tab="skills" data-testid="tab-skills" ${hasSkillsOnly ? '' : 'disabled'} role="tab">✨ <span lang="zh-CN">技能</span> Skills</button>`
+            + `<button class="tab ${bookTab === 'spells' ? 'on' : 'ghost'}" data-tab="spells" data-testid="tab-spells" role="tab">📖 <span lang="zh-CN">魔法</span> Spells</button></div>`);
+          on('#bside [data-tab]', (_e, el) => { bookTab = el.dataset.tab as any; bookPage = 0; sub('skills'); });
+        }
+        if (which === 'skills' && bookTab === 'spells' && owned.length) {
+          const per = 4; const pages = Math.ceil(owned.length / per); bookPage = Math.min(bookPage, pages - 1);
+          const shown = owned.slice(bookPage * per, bookPage * per + per).map(id => SPELL[id]);
+          const gate = castBlock(); const locked = gate?.why === 'locked';
+          msg(locked ? `📖 ${zh('魔法书')} Spellbook is charging: ${gate!.text}. Answer questions to unlock it!` : gate ? `📖 ${gate.text}` : `📖 ${zh('魔法书')} Spellbook: 🔷 ${S.mp} MP. Casting is instant (no question).`, locked ? 'spellbook-locked-msg' : '');
+          await dockMain(`<div class="sublist spellbook${locked ? ' locked' : ''}" data-testid="spellbook" data-locked="${locked ? 1 : 0}" data-block="${gate?.why || ''}">${shown.map((sp, k) => { const b2 = castBlock(sp); const ok = !b2;
+            return `<button class="spell" data-a="spell" data-item="${sp.id}" data-testid="spell-${sp.id}" data-key="${k + 1}" data-block="${b2?.why || ''}" ${ok ? '' : 'disabled'} title="${esc(TARGET_LABEL[sp.target])}">
+              <span class="sic">${locked ? spellIcon('locked', '🔒', 34) : spellIcon(sp.id, sp.emoji, 34)}</span><span class="zh" lang="zh-CN">${sp.zh}</span><span class="nm">${esc(sp.en)}</span>
+              <span class="en">${sp.mp} MP · ${ok ? `<span data-testid="mp-left">${S.mp - sp.mp} left after</span>` : `<b class="need">${b2!.text}</b>`}</span><span class="tg">💥 ${sp.power} · ${TARGET_LABEL[sp.target]}</span></button>`; }).join('')}
+            ${pages > 1 ? `<button class="ghost back" data-page="1" data-testid="spell-more">▶ ${zh('更多')} More<span class="en">${bookPage + 1}/${pages}</span></button>` : ''}
+            <button class="ghost back" data-back="1" data-testid="act-back" data-key="${shown.length + 1}">◀ ${zh('返回')} Back</button></div>`);
+          on('#bmain [data-page]', () => { bookPage = (bookPage + 1) % pages; sub('skills'); });
+          if (!gate && shown.every(sp => S.mp < sp.mp)) msg(`📖 Not enough MP for a spell (🔷 ${S.mp}). Right answers give +1 MP.`, 'spell-nomp');
+          wire(); return;
+        }
         if (which === 'skills') {
-          msg('✨ Pick a skill. You still answer a question to cast it.');
+          msg(`✨ Pick a skill. You still answer a question to use it.${owned.length ? ' 📖 Spells: no question.' : ''}`);
           await dockMain(`<div class="sublist" data-testid="skills-menu">
             ${eq('double') ? `<button data-a="double" data-testid="act-double" data-key="1" ${dblOk ? '' : 'disabled'} title="${esc(SKILL.double.desc)}"><span class="zh" lang="zh-CN">${SKILL.double.zh}</span>⚔️⚔️ ${SKILL.double.en}<span class="en">${SKILL.double.mp} MP${bs.doubleReady ? ` · wait ${bs.doubleReady}` : bs.streak < SKILL.double.minStreak! ? ` · needs 🔥${SKILL.double.minStreak}` : ''}</span></button>` : ''}
             ${eq('heal') ? `<button data-a="heal" data-testid="act-heal" data-key="${eq('double') ? 2 : 1}" ${healOk ? '' : 'disabled'}><span class="zh" lang="zh-CN">${SKILL.heal.zh}</span>💚 ${SKILL.heal.en}<span class="en">${SKILL.heal.mp} MP · ${SKILL.heal.perBattle! - bs.heal} left</span></button>` : ''}
@@ -481,18 +599,18 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
         wire();
       };
       const wire = () => {
-        on('#bmain button[data-a]', (_e, el) => resolve({ type: el.dataset.a as any, item: el.dataset.item }));
+        on('#bmain button[data-a]', (_e, el) => { $('#dock')?.classList.remove('tabs'); side(''); resolve({ type: el.dataset.a as any, item: el.dataset.item }); });
         on('#bmain button[data-sub]', (_e, el) => sub(el.dataset.sub as any));
-        on('#bmain button[data-back]', () => menu());
+        on('#bmain button[data-back]', () => { $('#dock')?.classList.remove('tabs'); menu(); });
       };
       await menu();
     });
   }
   /** TARGET_SELECT: tap the enemy itself (DOM hit areas over the sprites) or ◀ ▶ + Enter; ▼ marks the current target. -1 = back. */
-  function chooseTarget(live: Foe[]): Promise<number> {
+  function chooseTarget(live: Foe[], sp?: SpellDef): Promise<number> {
     return new Promise(async resolve => {
       let cur = 0; const show = () => view.setTarget(foes.indexOf(live[cur]));
-      msg('🎯 Tap an enemy to attack');
+      msg(sp ? `🎯 ${sp.emoji} ${zh(sp.zh)}: tap ${sp.target === 'same_type' ? 'a kind of enemy (all of that kind are hit, up to 3)' : 'an enemy'}` : '🎯 Tap an enemy to attack');
       await dockMain(`<div class="cmds" data-testid="target-menu"><button class="ghost cmd" data-back="1" data-testid="act-back" data-key="9" style="width:220px"><span class="ic">◀</span><span class="en">Back</span></button></div>`);
       const boxes = view.foeBoxes();
       $('#tgts').innerHTML = live.map((f, k) => { const b = boxes[foes.indexOf(f)] || { x: 700 + k * 180, y: 200, w: 160, h: 200 };
