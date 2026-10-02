@@ -261,3 +261,53 @@ table.mastery td.zhc { font-size:24px; text-align:left; }
 .upg { display:inline-block; margin-left:6px; background:#2e9e4f; color:#fff; border-radius:10px; padding:1px 10px; font:800 16px var(--en); vertical-align:middle; }
 .equipped { margin-top:8px; background:#e5f7e9; color:#1d6b35; border-radius:12px; padding:6px 12px; font:800 20px var(--en); }
 .gearwarn .muted { color:#6b5a3a; }
+
+/* ---------------- v3.3: spells (Spellbook tab, magic shop) and quest board ---------------- */
+#dock.tabs #bmsg { right:430px; }
+#bside .tabs { display:flex; gap:8px; }
+#bside button.tab { width:200px; font-size:19px; }
+#bside button.tab [lang], .row.tabs button.tab [lang] { font:700 22px var(--zh); }
+button.tab.on { background:linear-gradient(180deg,#e9dcff,#b48cff); border-color:#f3ebff; box-shadow:0 4px 0 #6a4bb0; color:var(--ink); }
+.sublist.spellbook button.spell { width:236px; padding:4px 8px; background:linear-gradient(180deg,#efe6ff,#c9b0ff); border-color:#f6f0ff; box-shadow:0 6px 0 #6a4bb0; gap:0; }
+.sublist.spellbook button.spell .sic { position:absolute; left:8px; top:6px; line-height:1; }
+.sublist.spellbook button.spell .zh { font:700 30px var(--zh); line-height:1.15; }
+.sublist.spellbook button.spell .nm { font:800 18px var(--en); }
+.sublist.spellbook button.spell .en { font-size:16px; }
+.sublist.spellbook button.spell .tg { font:700 14px var(--en); opacity:.7; }
+.sublist.spellbook button.spell .need { color:#8a1f1f; }
+.sublist.spellbook button.back { width:150px; }
+.spicon { display:inline-block; vertical-align:middle; border-radius:10px; }
+.spicon.e { line-height:1; }
+#banner.magic { border-color:#c9a8ff; background:rgba(44,26,92,.95); box-shadow:0 0 30px rgba(180,140,255,.55); }
+#banner.magic .h .zh { font:700 24px var(--zh); }
+.shelf-h { margin:10px 0 8px; }
+.spellcard .sp-top { display:flex; gap:12px; align-items:center; margin-bottom:8px; }
+.spellcard .sp-n { font-weight:800; font-size:22px; }
+.spellcard .sp-n .zh { font:700 26px var(--zh); }
+.spellcard button { margin-top:8px; }
+.spellcard.own { border-color:rgba(201,168,255,.7); }
+.card.soon { border-style:dashed; opacity:.85; }
+.grid.quests { grid-template-columns:repeat(2,1fr); }
+.card.quest { position:relative; display:flex; flex-direction:column; gap:4px; }
+.card.quest .q-t { font:800 17px var(--en); opacity:.85; } .card.quest .q-t .zh { font:700 20px var(--zh); }
+.card.quest .q-n .zh { font:700 28px var(--zh); }
+.card.quest .bar { flex:none; height:16px; margin-top:4px; }
+.card.quest .q-p { font:800 17px var(--en); }
+.card.quest .q-r { font-size:18px; } .card.quest .q-r .zh { font:700 20px var(--zh); }
+.card.quest .q-b { display:flex; gap:10px; align-items:center; margin-top:4px; }
+.card.quest .q-b button { min-height:52px; padding:6px 16px; }
+.card.quest.done { border-color:var(--gold); box-shadow:0 0 16px rgba(255,207,74,.45); }
+.card.quest.claimed { opacity:.6; }
+.card.quest .bang-s { position:absolute; right:12px; top:6px; font-size:28px; animation:bounce 900ms infinite; }
+.row.tabs { gap:10px; margin-bottom:6px; }
+.row.tabs button.tab { min-height:52px; padding:6px 16px; font-size:19px; }
+/* v3.4 spells: tap-anywhere skip for the 2–3 s cast animation, locked Spellbook */
+.fxskip { position:absolute; inset:0; z-index:40; background:transparent; border:0; box-shadow:none; padding:0; margin:0; pointer-events:auto; cursor:pointer; display:block; width:auto; height:auto; border-radius:0; }
+.fxskip:hover, .fxskip:active { background:transparent; transform:none; box-shadow:none; }
+.fxskip > span { position:absolute; right:24px; top:96px; font:800 20px var(--en); color:#fff; background:rgba(30,20,60,.55); padding:6px 14px; border-radius:999px; text-shadow:0 2px 0 #0006; }
+.fxskip [lang="zh-CN"] { font:700 20px var(--zh); }
+.sublist.spellbook.locked button.spell { filter:grayscale(.75); opacity:.8; }
+.sublist.spellbook button.spell[disabled] .need { font-size:15px; }
+.casting { display:flex; align-items:center; gap:14px; font:800 22px var(--en); color:#fff; padding:6px 18px; }
+.casting b { font:700 30px var(--zh); }
+.casting .muted { font-size:16px; }

@@ -1,11 +1,13 @@
-import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, CONS, CONSUMABLES, SKILLS, ITEM, POOLS, ENEMIES, LocationDef } from '../data';
+import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, CONS, CONSUMABLES, SKILLS, ITEM, POOLS, ENEMIES, LocationDef, SPELLS, SPELL, SPELL_RULES, TOWN, QUESTS, spellPrice, SpellDef, QuestDef } from '../data';
+import { openTowns, questView, accept as acceptQuest, claim as claimQuest, reward as questReward, onArrive, claimable } from '../engine/quests';
+import { TARGET_LABEL } from '../engine/battle';
 import { S, save, heroStats, innPrice, consPrice, speechOn, session, skillSlots, refreshSkills, resetAll, clampHpMp, expToNext, WAY_LABEL, ALL_WAYS, replaceState, gainGear, equipLine, strictlyBetter, weakGear, tierGear, notices, frontierLoc } from '../engine/state';
 import { readiness, prog, proficient, progress, activeWays, distractors, bossPool } from '../engine/learning';
 import { runBattle, setCurrentLoc, BattleResult, BattleKind } from '../engine/battle';
 import { speak, speechSupported, requestMic, hasZhVoice } from '../engine/speech';
 import { sayBtn, wireSayButtons } from '../engine/voice';
 import { playMusic, playSfx, unlockAudio, audioSettings, setAudio } from '../audio/audio';
-import { BG, assets } from '../assets';
+import { BG, assets, spellIcon } from '../assets';
 import { view } from '../phaser/view';
 import { $, $$, esc, render, on, hud, toast, dialog, modal, closeModal, sleep, zh, dlg, setTitle, bookHtml, wireBook, chunk } from './dom';
 import { practiceMenu } from './practice';
@@ -49,6 +51,8 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   shop: { sign: [688, 186], hot: [580, 300, 190, 200], z: '🧪 商店', e: 'Shop', tid: 'go-shop' },
   words: { sign: [910, 138], hot: [800, 240, 240, 190], z: '📖 学堂', e: 'Words & practice', tid: 'go-words' },
   gate: { sign: [1175, 288], hot: [1090, 390, 180, 190], z: '🗺️ 出发', e: 'Adventure', tid: 'go-gate' },
+  magic: { sign: [960, 404], hot: [880, 470, 170, 100], z: '🔮 魔法店', e: 'Magic shop', tid: 'go-magic' },   // v3.3
+  quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
@@ -61,6 +65,7 @@ export function town() {
     S.hp < h.maxHp * 0.5 ? { at: 'inn', line: `The inn is warm! Rest, then let's go to the ${esc(fl.name.split(' ').pop()!.toLowerCase())}.` }
     : !S.locs[fl.id].previewSeen ? { at: 'words', line: `New words wait in ${zh(fl.zh)} ${esc(fl.name)}! Let's peek in the 学堂 first.`.replace('学堂', zh('学堂')) }
     : !hasPotion && S.gold >= potionP ? { at: 'shop', line: `We have ${S.gold} 🪙. A honey potion (${potionP} 🪙) would help us!` }
+    : claimable().length ? { at: 'quests', line: `A quest is finished! Let's get our reward at the ${zh('任务板')}.` }
     : { at: 'gate', line: `Ready? Let's go to ${zh(fl.zh)} ${esc(fl.name)}!` };
   const sign = (k: keyof typeof VILLAGE) => { const v = VILLAGE[k]; const [z1, z2] = v.z.split(' ');
     return `<button class="hot" data-go="${k}" aria-label="${v.e}" style="left:${v.hot[0]}px;top:${v.hot[1]}px;width:${v.hot[2]}px;height:${v.hot[3]}px"></button>
@@ -79,6 +84,8 @@ export function town() {
     const g = el.dataset.go!;
     if (g === 'inn') return inn();
     if (g === 'shop') return shop();
+    if (g === 'magic') return magicShop();
+    if (g === 'quests') return questBoard();
     if (g === 'equip') return equip(town);
     if (g === 'bag') return itemsScreen(town);
     if (g === 'words') { setCurrentLoc(fl.id); return preview(fl.id).then(() => { S.locs[fl.id].previewSeen = true; save(); town(); }); }
@@ -158,7 +165,7 @@ export function shop() {
   render(dlg({ testid: 'shop', title: `🧪 ${zh('商店')} Grandma Wu's Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
     ${weak.length ? `<div class="gearwarn inline" data-testid="shop-gear-warn"><div class="gw-h">⚠️ ${zh('装备太弱')} Your gear is weak for ${fl.emoji} ${zh(fl.zh)} ${esc(fl.name)}!</div>
       <ul>${weakLines(fl.id)}</ul><div class="muted">Look for ⬆ Upgrade below. Better gear is put on for you when you buy it.</div></div>` : ''}
-    <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.map(c => `<div class="card"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div>
+    <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.filter(c => !c.magicShop).map(c => `<div class="card"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div>
       <div class="muted">${c.healHpFrac ? `+${c.healHpFrac * 100}% HP` : c.healMpFrac ? `+${c.healMpFrac * 100}% MP` : 'Warp to the last inn you used (map only)'} · you have ${S.inv[c.id] || 0}${c.carryLimit ? ` (max ${c.carryLimit})` : ''}</div>
       <button data-buyc="${c.id}" data-testid="buy-${c.id}" ${S.gold >= consPrice(c.id) && !(c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit) ? '' : 'disabled'}>${c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit ? 'Bag full' : `Buy ${consPrice(c.id)} 🪙`}</button></div>`).join('')}</div>
     <h3 style="margin-top:14px">Weapons, armor, shields & charms</h3><div class="grid">${gear.map(g => { const own = S.gear.includes(g.id); return `<div class="card">
@@ -181,6 +188,78 @@ export function shop() {
   on('#back', town);
 }
 
+// =============== 🔮 magic shop 魔法店 (spec v3.3 §6.7) ===============
+/** The towns whose shelves this hub shows: every open town of the build (in this prototype both live in the village). */
+const SPELL_STAT = (sp: SpellDef) => `🔷 ${sp.mp} MP · 💥 ${sp.power} · ${TARGET_LABEL[sp.target]}${sp.statusZh ? ` · ${zh(sp.statusZh)} ${esc(sp.statusEn || '')}` : ''}`;
+export function magicShop() {
+  hud(); view.mode('town', undefined, BG.village());
+  const towns = openTowns();
+  const shelf = (t: typeof towns[number]) => {
+    const sps = SPELLS.filter(x => x.town === t.town);
+    const head = `<h3 class="shelf-h">🏠 ${zh(t.zh)} ${esc(t.en)}</h3>`;
+    // v3.4: MP potions (map-only) live in the magic shop, on the shelf of the town they unlock in (Mana Tea town 1, Big Mana Tea town 5+)
+    const pots = CONSUMABLES.filter(c => c.magicShop && (c.fromTown || 1) === t.town).map(c => { const p = consPrice(c.id);
+      return `<div class="card" data-testid="magic-pot-${c.id}"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div><div class="muted">${c.healMpFrac! >= 1 ? 'Full MP' : `+${(c.healMpFrac || 0) * 100}% MP`} · 🗺️ map only · you have ${S.inv[c.id] || 0}</div>
+        <button data-buyc="${c.id}" data-testid="magic-buy-${c.id}" ${S.gold >= p ? '' : 'disabled'}>Buy ${p} 🪙</button></div>`; }).join('');
+    if (!sps.length) {   // town 1: Mana Tea + a "coming soon" shelf (spec default)
+      return `${head}<div class="grid">${pots}
+        <div class="card soon" data-testid="spells-soon"><div>✨ ${zh('魔法')} Spells: coming soon</div><div class="muted">The next towns sell spells. ${(() => { const n = SPELLS.find(x => x.town > t.town); return n ? `First one: ${n.emoji} ${zh(n.zh)} ${esc(n.en)} in ${zh(TOWN[n.town].zh)} ${esc(TOWN[n.town].en)}.` : ''; })()}</div></div></div>`;
+    }
+    return `${head}<div class="grid">${pots}${sps.map(sp => { const own = S.spells.includes(sp.id); const p = spellPrice(sp);
+      return `<div class="card spellcard${own ? ' own' : ''}" data-testid="spellcard-${sp.id}"><div class="sp-top">${spellIcon(sp.id, sp.emoji, 48)}<div><div class="sp-n">${zh(sp.zh)} ${esc(sp.en)}</div><div class="muted">${SPELL_STAT(sp)}</div></div></div>
+        ${sp.statusText ? `<div class="muted">${esc(sp.statusText)}</div>` : ''}
+        ${own ? `<button class="secondary" disabled data-testid="owned-${sp.id}">✅ Owned for good</button>` : `<button data-buys="${sp.id}" data-testid="buy-spell-${sp.id}" ${S.gold >= p ? '' : 'disabled'}>Buy ${p} 🪙</button>`}</div>`; }).join('')}</div>`;
+  };
+  render(dlg({ testid: 'magic-shop', title: `🔮 ${zh('魔法店')} Magic Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
+    <p class="muted">Spells are yours for good. In battle: ✨ ${zh('技能')} Skills → 📖 ${zh('魔法')} Spells. ${SPELL_RULES.castRequiresAnswer ? `Answer right to cast; a wrong answer fizzles (${zh('失灵')}).` : 'Casting is instant: no question, it just uses MP.'} The Spellbook opens after ${SPELL_RULES.castLimit.minCorrect} right answers in a battle. You can cast ${SPELL_RULES.castLimit.normal} spell per battle (${SPELL_RULES.castLimit.boss} in boss battles). MP tea works on the map only.${SPELL_RULES.bossMagicWard ? ` Bosses have a ${zh('魔法护盾')} Magic Ward: spells do half damage there.` : ''}</p>
+    ${towns.map(shelf).join('')}` }));
+  on('[data-buyc]', (_e, el) => { const id = el.dataset.buyc!; const pr = consPrice(id); if (S.gold < pr) return; S.gold -= pr; S.inv[id] = (S.inv[id] || 0) + 1; playSfx('sfx_gold'); save(); toast(`Bought ${CONS[id].en}`); magicShop(); });
+  on('[data-buys]', async (_e, el) => {
+    const sp = SPELL[el.dataset.buys!]; const pr = spellPrice(sp); if (S.gold < pr || S.spells.includes(sp.id)) return;
+    // Blacksmith first 先买装备: warn when the purchase leaves less gold than the next town's weapon + armor + shield
+    const next = TOWN[sp.town + 1]; const need = next?.gearSetPrice || 0; const mode = SPELL_RULES.blacksmithFirst;
+    if (mode !== 'off' && need && S.gold - pr < need) {
+      const body = `<p data-testid="blacksmith-first">🔨 After this spell you would have <b>${S.gold - pr} 🪙</b>. The gear in ${zh(next.zh)} ${esc(next.en)} (weapon + armor + shield) costs about <b>${need} 🪙</b>.</p>
+        <p class="muted">Gear keeps you safe in every fight. Spells are extra fun.</p>`;
+      const pick = await dialog(`🔨 ${zh('先买装备吧?')} Gear first?`, body, mode === 'lock' ? ['OK, gear first'] : ['Buy the spell anyway', 'Not now']);
+      if (mode === 'lock' || pick !== 0) { magicShop(); return; }
+    }
+    S.gold -= pr; S.spells.push(sp.id); playSfx('sfx_chest'); save();
+    toast(`✨ New spell! ${sp.emoji} ${sp.zh} ${sp.en} is in your Spellbook.`); magicShop();
+  });
+  on('#back', town);
+}
+
+// =============== 📋 quest board 任务板 (spec v3.3 §7.11) ===============
+const QTYPE: Record<string, { ic: string; zh: string; en: string }> = { bounty: { ic: '⚔️', zh: '打败', en: 'Bounty' }, collect: { ic: '🧺', zh: '收集', en: 'Collect' }, words: { ic: '📚', zh: '学会', en: 'Words' }, delivery: { ic: '✉️', zh: '送信', en: 'Delivery' } };
+let boardTown = 0;
+const rewardText = (q: QuestDef) => { const r = questReward(q); return [`🪙 ${r.gold}`, r.item ? `${CONS[r.item].emoji} ${zh(CONS[r.item].zh)} ${esc(CONS[r.item].en)}` : '', r.cosmetic ? `🎩 ${esc(r.cosmetic)}` : ''].filter(Boolean).join(' + '); };
+export function questBoard() {
+  hud(); view.mode('town', undefined, BG.village());
+  const towns = openTowns(); if (!towns.some(t => t.town === boardTown)) boardTown = towns[towns.length - 1]?.town || 1;
+  const card = (q: QuestDef) => { const v = questView(q); const t = QTYPE[q.type]; const pct = Math.round(100 * v.n / v.goal);
+    const btn = v.status === 'open' ? `<button data-qacc="${q.id}" data-testid="quest-accept-${q.id}">✋ Accept</button>`
+      : v.status === 'done' ? `<button class="gold" data-qclaim="${q.id}" data-testid="quest-claim-${q.id}">🎁 Claim</button>`
+      : v.status === 'claimed' ? `<span class="tag" data-testid="quest-claimed-${q.id}">✅ Done</span>`
+      : v.status === 'locked' ? `<span class="muted">🔒 ${esc(v.why || '')}</span>`
+      : `<span class="muted">${q.type === 'delivery' ? `✉️ Letter in your bag: go to ${zh(TOWN[q.toTown!].zh)} ${esc(TOWN[q.toTown!].en)}` : 'In progress'}</span>`;
+    return `<div class="card quest ${v.status}" data-testid="quest-${q.id}" data-status="${v.status}" data-n="${v.n}">
+      <div class="q-h"><span class="q-t">${t.ic} ${zh(t.zh)} ${t.en}</span>${v.status === 'done' ? '<span class="bang-s">❗</span>' : ''}</div>
+      <div class="q-n">${zh(q.titleZh)}</div><div class="muted">${esc(q.titleEn)}</div>
+      ${q.type !== 'delivery' && (v.status === 'active' || v.status === 'done') ? `<div class="bar gold"><i style="width:${pct}%"></i></div><div class="q-p" data-testid="quest-progress-${q.id}">${v.n} / ${v.goal}</div>` : ''}
+      <div class="q-r">🎁 ${rewardText(q)}${q.type === 'delivery' ? ' <span class="muted">(paid on arrival)</span>' : ''}</div>
+      <div class="q-b">${btn}${q.type === 'words' && v.status !== 'claimed' ? ` <button class="ghost" data-qpr="${q.town}" data-testid="quest-practice-${q.id}">🎯 Practice</button>` : ''}</div></div>`; };
+  render(dlg({ testid: 'quest-board', title: `📋 ${zh('任务板')} Quest Board <span class="tag">🪙 ${S.gold}</span>`, body: `
+    ${towns.length > 1 ? `<div class="row tabs" style="justify-content:flex-start">${towns.map(t => `<button class="tab ${t.town === boardTown ? 'on' : 'ghost'}" data-btown="${t.town}" data-testid="board-town-${t.town}">🏠 ${zh(t.zh)} ${esc(t.en)}</button>`).join('')}</div>` : `<h3>🏠 ${zh(towns[0]?.zh || '')} ${esc(towns[0]?.en || '')}</h3>`}
+    <p class="muted">One-time quests. Progress is saved. Kills and drops count anywhere in this town's realm.</p>
+    <div class="grid quests">${QUESTS.filter(q => q.town === boardTown).map(card).join('')}</div>` }));
+  on('[data-btown]', (_e, el) => { boardTown = +el.dataset.btown!; questBoard(); });
+  on('[data-qacc]', (_e, el) => { const q = el.dataset.qacc!; if (acceptQuest(q)) { playSfx('sfx_ui_click'); toast(`📋 Quest accepted: ${QUESTS.find(x => x.id === q)!.titleEn}`); } questBoard(); });
+  on('[data-qclaim]', (_e, el) => { const r = claimQuest(el.dataset.qclaim!); if (r) { playSfx('sfx_gold'); toast(`🎁 +${r.gold} 🪙${r.item ? ` + ${CONS[r.item].emoji} ${CONS[r.item].en}` : ''}${r.cosmetic ? ` + 🎩 ${r.cosmetic}` : ''}`); hud(); } questBoard(); });
+  on('[data-qpr]', async (_e, el) => { const t = TOWN[+el.dataset.qpr!]; const loc = t.realmLocs.find(id => S.locs[id]?.unlocked) || t.realmLocs[0]; await practiceMenu(loc); questBoard(); });
+  on('#back', town);
+}
+
 // =============== equipment & skills ===============
 export function equip(back: () => void = town) {
   hud(); const h = heroStats(); const slots = skillSlots();
@@ -197,7 +276,10 @@ export function equip(back: () => void = town) {
     <div class="grid">${SKILLS.map(sk => { const known = S.skills.includes(sk.id); const eq = S.skillsEquipped.includes(sk.id);
       const u = sk.unlock; const how = u.start ? 'start' : u.level ? `Level ${u.level}` : `beat the ${LOC[u.boss!].name} boss`;
       return `<div class="card" style="${known ? '' : 'opacity:.6'}"><div>${sk.emoji} ${zh(sk.zh)} ${esc(sk.en)}</div><div class="muted">${esc(sk.desc)}<br>${sk.mp} MP${sk.perBattle ? ` · ${sk.perBattle}/battle` : ''}${sk.cooldownRounds ? ` · every ${sk.cooldownRounds} rounds` : ''}</div>
-      ${known ? `<button data-sk="${sk.id}" data-testid="sk-${sk.id}" class="${eq ? '' : 'secondary'}">${eq ? '✅ Equipped' : 'Equip'}</button>` : `<div class="muted">🔒 Unlock: ${how}</div>`}</div>`; }).join('')}</div>` }));
+      ${known ? `<button data-sk="${sk.id}" data-testid="sk-${sk.id}" class="${eq ? '' : 'secondary'}">${eq ? '✅ Equipped' : 'Equip'}</button>` : `<div class="muted">🔒 Unlock: ${how}</div>`}</div>`; }).join('')}</div>
+    <h3 style="margin-top:14px" data-testid="equip-spellbook">📖 ${zh('魔法书')} Spellbook (${S.spells.length} spells · no skill slots needed)</h3>
+    ${S.spells.length ? `<div class="grid">${S.spells.map(id => SPELL[id]).filter(Boolean).map(sp => `<div class="card spellcard own"><div class="sp-top">${spellIcon(sp.id, sp.emoji, 40)}<div><div class="sp-n">${zh(sp.zh)} ${esc(sp.en)}</div><div class="muted">${SPELL_STAT(sp)}</div></div></div></div>`).join('')}</div>`
+      : `<p class="muted">No spells yet. The 🔮 ${zh('魔法店')} Magic Shop sells them once a town has spells.</p>`}` }));
   on('[data-eq]', (_e, el) => { const g = GEAR[el.dataset.eq!]; S.equip[g.slot] = g.id; clampHpMp(); save(); equip(back); });
   on('[data-uneq]', (_e, el) => { (S.equip as any)[el.dataset.uneq!] = null; clampHpMp(); save(); equip(back); });
   on('[data-sk]', (_e, el) => { const id = el.dataset.sk!; const i = S.skillsEquipped.indexOf(id);
@@ -209,7 +291,7 @@ export function equip(back: () => void = town) {
 // =============== 🎒 bag: items, gear and (on a map) the Return Feather ===============
 export function itemsScreen(back: () => void, mapLoc?: string, onFeather?: () => void) {
   hud();
-  render(dlg({ testid: 'items', cls: 'narrow', title: `🎒 Bag`, body: `<div class="grid">${['honey', 'bighoney', 'manatea'].map(id => `<div class="card">${CONS[id].emoji} ${zh(CONS[id].zh)} ${esc(CONS[id].en)} ×${S.inv[id] || 0}
+  render(dlg({ testid: 'items', cls: 'narrow', title: `🎒 Bag`, body: `<div class="grid">${['honey', 'bighoney', 'manatea', 'bigmanatea'].filter(id => CONS[id] && (id !== 'bigmanatea' || (S.inv[id] || 0) > 0)).map(id => `<div class="card">${CONS[id].emoji} ${zh(CONS[id].zh)} ${esc(CONS[id].en)} ×${S.inv[id] || 0}
       <div style="margin-top:8px"><button data-use="${id}" data-testid="use-${id}" ${(S.inv[id] || 0) > 0 ? '' : 'disabled'}>Use</button></div></div>`).join('')}
     <div class="card">🪶 ${zh(CONS.feather?.zh || '回城羽毛')} Return Feather ×${S.inv.feather || 0}<div class="muted">Warps you to the last inn you used${mapLoc ? '' : ' (use it on a map)'}</div>
       ${mapLoc ? `<div style="margin-top:8px"><button data-testid="act-feather" id="feather" ${(S.inv.feather || 0) > 0 ? '' : 'disabled'}>Fly 🪶</button></div>` : ''}</div></div>`,
@@ -272,6 +354,10 @@ export async function enterLocation(id: string, fromTown = false) {
   S.where = id;
   if (fromTown) st.approachArmed = true;
   save();
+  for (const d of onArrive(id)) {   // v3.3: a carried letter is delivered (and paid) on arrival in the next town's realm
+    playSfx('sfx_gold'); hud();
+    await dialog(`✉️ ${zh('送信')} Letter delivered!`, `<p data-testid="quest-delivered">${zh(d.q.titleZh)} ${esc(d.q.titleEn)}</p><p>🎁 +${d.r.gold} 🪙${d.r.item ? ` + ${CONS[d.r.item].emoji} ${zh(CONS[d.r.item].zh)} ${esc(CONS[d.r.item].en)}` : ''}</p>`, ['Thanks!']);
+  }
   if (!st.previewSeen) { await preview(id); st.previewSeen = true; save(); }
   locationScreen(id);
 }
@@ -498,6 +584,8 @@ export function debugPanel(onChange: () => void) {
       <button class="secondary" id="clearpath" data-testid="dbg-clearpath">Clear path fights (this location; all if in town)</button>
       <button class="secondary" id="tiergear" data-testid="dbg-tiergear" title="Owns and wears the shop weapon/armor/shield (and charm) of this location's tier">🎽 Tier gear (${esc(dbgLoc().name)}, tier ${dbgLoc().tier})</button>
       <button class="secondary" id="unlock">Unlock all locations</button>
+      <button class="secondary" id="dbgquests" data-testid="dbg-quests" title="Fills the counters of accepted bounty / collect quests">📋 Finish quests</button>
+      <button class="secondary" id="dbgspells" data-testid="dbg-spells">🔮 Spells of open towns</button>
       <button class="secondary" id="export">Export save JSON</button>
       <button class="danger" id="reset" data-testid="dbg-reset">Reset everything</button>
       <button id="close" data-testid="dbg-close">Close</button></div>
@@ -520,6 +608,8 @@ export function debugPanel(onChange: () => void) {
     for (const g of [...tierGear(t), ...GEAR_LIST.filter(x => x.slot === 'charm' && x.tier === t && x.rarity === 'common')]) { if (!S.gear.includes(g.id)) S.gear.push(g.id); S.equip[g.slot] = g.id; }
     clampHpMp(); save(); hud(); closeModal(); toast(`🎽 Tier ${t} gear on: ` + heroStatsLine()); onChange();
   }, m);
+  on('#dbgquests', () => { for (const q of QUESTS) { const st = S.quests[q.id]; if (st?.s === 'active' && (q.type === 'bounty' || q.type === 'collect')) st.n = q.n; } save(); closeModal(); toast('📋 Accepted quests filled'); onChange(); }, m);
+  on('#dbgspells', () => { for (const t of openTowns()) for (const sp of SPELLS.filter(x => x.town === t.town)) if (!S.spells.includes(sp.id)) S.spells.push(sp.id); save(); closeModal(); toast('🔮 Spells added'); onChange(); }, m);
   on('#unlock', () => { for (const l of LOCATIONS) S.locs[l.id].unlocked = true; save(); closeModal(); onChange(); }, m);
   on('#export', () => { const t = $('#exp') as HTMLTextAreaElement; t.classList.remove('hidden'); t.value = JSON.stringify(S); }, m);
   on('#reset', async () => { closeModal(); if ((await dialog('Reset?', 'Delete all progress and start over?', ['Yes, reset', 'Cancel'])) === 0) { resetAll(); location.reload(); } }, m);
