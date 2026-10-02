@@ -136,7 +136,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
     check(ls.streakAfter === ls.streakBefore && ls.streakBefore === before.streak, `cast: streak unchanged (${ls.streakBefore} → ${ls.streakAfter})`);
     check(ls.qAfter === ls.qBefore, 'cast: no question counted for the cast turn');
-    check(ls.animMs >= 1800 && ls.animMs <= 3400, `cast: animation runs 2–3 s (${ls.animMs} ms)`);
+    check(ls.animMs >= 1950 && ls.animMs <= 3400, `cast: animation runs 2–3 s (${ls.animMs} ms)`);
   }
   if (await tid('victory-ok').count()) await tid('victory-ok').click();
   const q2 = (await sv()).quests.q2_bounty; log('bee bounty after battle 1', JSON.stringify(q2));

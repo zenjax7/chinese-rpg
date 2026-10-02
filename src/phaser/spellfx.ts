@@ -222,7 +222,9 @@ export function playCast(h: FxHost, spell: { id: string; element: string; emoji:
   let over = false;
   const cleanup = () => { if (over) return; over = true; timers.forEach(t => t.remove(false)); for (const o of objs) { s.tweens.killTweensOf(o); o.destroy(); }
     if (h.hero instanceof Phaser.GameObjects.Sprite && s.anims.exists('hero_idle')) h.hero.play('hero_idle'); finish(); };
-  const end = s.time.delayedCall(total, cleanup); timers.push(end);
+  // the scene clock can run a frame or two ahead of wall time; hold the end until `total` real ms have passed (2–3 s guarantee)
+  const t0 = performance.now();
+  const end = s.time.delayedCall(total, () => { const left = total - (performance.now() - t0); if (left > 0) setTimeout(cleanup, left); else cleanup(); }); timers.push(end);
   const skip = () => { if (over) return; for (const k of [...impactsLeft].sort()) { impactsLeft.delete(k); onImpact(k); } cleanup(); };
   const pr2 = (window as any).__proto = (window as any).__proto || {};
   pr2.spellAnims = [...(pr2.spellAnims || []), { id: spell.id, mode, totalMs: Math.round(total), naturalMs: Math.round(natural), targets: tgts.length, missing: [...missing] }].slice(-20);
