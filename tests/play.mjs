@@ -1,5 +1,6 @@
 // Headless play-through: node tests/play.mjs [baseUrl]
 import { chromium } from 'playwright-core';
+import { spellTests } from './spells.mjs';
 const BASE0 = process.argv[2] || 'http://127.0.0.1:8795/';
 const BASE = BASE0 + (BASE0.includes('?') ? '&' : '?') + 'debug';   // ?debug shows the 🐞 debug panel button
 const log = (...a) => console.log('•', ...a);
@@ -415,6 +416,9 @@ await nv.context().addInitScript(() => { try { delete window.speechSynthesis; } 
 await nv.goto(BASE); await consent(nv); await goLoc(nv, 'meadow'); await tid(nv, 'preview').waitFor();
 check(await nv.locator('[data-testid="preview"] button.say:enabled').count() === 0, '🔊 buttons disabled gracefully without speechSynthesis / zh voice');
 await nv.context().close();
+
+// ================= v3.4 spells, magic shop, quests (seeded save) =================
+await spellTests({ browser, BASE, check, log, shots: process.env.SPELL_SHOTS || '' });
 
 check(pinyinSeen.size === 0, 'no pinyin (tone-marked Latin) in battle / practice / results DOM' + (pinyinSeen.size ? ': ' + [...pinyinSeen].slice(0, 5).join(' | ') : ''));
 check(focusSeen.size === 0, 'no "Focus words" panel / scout screen in battle' + (focusSeen.size ? ': ' + [...focusSeen].join(', ') : ''));

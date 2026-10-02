@@ -46,6 +46,7 @@ npm test                                   # = node tests/play.mjs [baseUrl], de
 
 Extra scripts (same server):
 - `node tests/queen.mjs [baseUrl] [t1|t1s|dagger|t2|test] [runs] [acc]`: Queen Bee win rate for a gear kit (spec v3.2 §7.9).
+- `node tests/spells.mjs [baseUrl] [shotPrefix]`: the v3.4 spell / magic shop / quest checks alone (they also run at the end of `npm test`; set `SPELL_SHOTS=<prefix>` to save screenshots). `node tests/spellshots.mjs [baseUrl] [outPrefix]` saves the magic shop, Spellbook, cast and quest board screenshots.
 - `node tests/shots.mjs [baseUrl] [outPrefix] [viewports]` and `node tests/gearshots.mjs [baseUrl] [outPrefix]`: screenshots.
 - Debug panel (dev build or `?debug`): 🎽 *Tier gear* wears the shop weapon/armor/shield/charm of the current location's tier.
 
