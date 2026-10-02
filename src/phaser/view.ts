@@ -8,6 +8,7 @@
 // The battle feet line is BASE_Y = 420 (spec §4.1) so fighters stand above the fixed command dock (y 464-700).
 import Phaser from 'phaser';
 import { setAssetManifest } from '../assets';
+import { playCast, setFxData, fxTextureList, showStatus, clearStatus, StatusView, CastHandle, elementColor } from './spellfx';
 import { attachSound } from '../audio/audio';
 
 export interface ViewEnemy { sprite?: string; tint?: number | null; emoji: string; name: string; hp: number; maxHp: number; color: number; boss: boolean; tired?: boolean; }
@@ -19,7 +20,7 @@ const NUM_FONT = '"Fredoka","Nunito",sans-serif';
 const TXT_RES = 2;   // text textures at 2x so they stay sharp under the 1.5 camera zoom
 type Body = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 interface FoeView { body: Body; blob: Phaser.GameObjects.Ellipse; bar: Phaser.GameObjects.Graphics; label: Phaser.GameObjects.Text; data: ViewEnemy;
-  x: number; y: number; h: number; sprite: string | null; ghost: number; shown: number; impactAt: number; mark?: Phaser.GameObjects.Text; orb?: Phaser.GameObjects.Arc; }
+  x: number; y: number; h: number; sprite: string | null; ghost: number; shown: number; impactAt: number; mark?: Phaser.GameObjects.Text; orb?: Phaser.GameObjects.Arc; ward?: StatusView; status?: StatusView; }
 /** Enemy slot x positions (spec §4.1); a boss leading a pack takes the middle slot. */
 export function foeSlots(n: number, bossFirst: boolean): number[] {
   if (n <= 1) return [900];
@@ -48,6 +49,12 @@ class MainScene extends Phaser.Scene {
       setAssetManifest(m);
       if (!m || typeof m !== 'object') return;
       for (const [key, url] of Object.entries<string>(m.bg || {})) this.load.image(key, url);
+      // v3.4 spell art (Arty): fx texture manifest + optional per-spell recipes (spells_fx.json); see src/phaser/spellfx.ts
+      const sf = m.spellFx || {};
+      if (sf.recipes) this.load.json('spellFxRecipes', sf.recipes);
+      if (sf.manifest) { this.load.json('spellFxManifest', sf.manifest);
+        this.load.once('filecomplete-json-spellFxManifest', (_k2: string, _t2: string, fm: any) => { setFxData(fm, null);
+          for (const [key, url, fw, fh] of fxTextureList()) { if (fw && fh) this.load.spritesheet(key, url, { frameWidth: fw, frameHeight: fh }); else this.load.image(key, url); } }); }
       if (!this.sound || (this.sound as any).noAudio) return;
       for (const group of ['sfx', 'music'] as const) for (const [key, e] of Object.entries<any>(m[group] || {}))
         if (e?.urls?.length) this.load.audio(key, e.urls);   // [ogg, mp3]: Phaser picks the first the browser supports
@@ -61,6 +68,7 @@ class MainScene extends Phaser.Scene {
       for (const [anim, a] of Object.entries<any>(s.animations || {}))
         this.anims.create({ key: `${id}_${anim}`, frames: this.anims.generateFrameNumbers(id, { start: a.start, end: a.end }), frameRate: a.frameRate, repeat: a.repeat });
     }
+    setFxData(this.cache.json.get('spellFxManifest'), this.cache.json.get('spellFxRecipes'));
     (window as any).__proto = (window as any).__proto || {}; (window as any).__proto.sprites = Object.keys(this.manifest);
     (window as any).__proto.spriteInfo = Object.fromEntries(Object.entries(this.manifest).map(([k, v]: any) => [k, { file: v.file, fw: v.frameWidth, fh: v.frameHeight }]));
     this.bg = this.add.rectangle(W / 2, H / 2, W, H, 0x87ceeb).setDepth(0);
@@ -107,7 +115,7 @@ class MainScene extends Phaser.Scene {
     return true;
   }
   setMode(mode: 'town' | 'map' | 'battle' | 'blank', color = 0x6fbf4a, bgKeys: string[] = []) {
-    this.clearDecor(); this.clearFoes(); this.clearFocus(); this.shield(false);
+    this.wardOn = false; this.clearDecor(); this.clearFoes(); this.clearFocus(); this.shield(false);
     this.ground.setFillStyle(color); this.bg.setFillStyle(mode === 'battle' ? 0x9ad7f5 : 0x87ceeb);
     const b = mode === 'battle';
     this.hero.setVisible(b); this.heroShadow.setVisible(b); this.comp.setVisible(b);
@@ -124,7 +132,7 @@ class MainScene extends Phaser.Scene {
       put(160, 150, '☁️', 66); put(1090, 110, '☁️', 54); put(110, 400, '🌳'); put(1170, 430, '🌳'); put(930, 160, '⛰️', 92);
     } else if (mode === 'battle') { put(110, 80, '☁️', 58); put(1170, 120, '☁️', 48); }
   }
-  clearFoes() { for (const f of this.foes) { f.body.destroy(); f.blob.destroy(); f.bar.destroy(); f.label.destroy(); f.mark?.destroy(); f.orb?.destroy(); } this.foes = []; this.target = -1; this.targetMark?.setVisible(false); this.targetRing?.setVisible(false); }
+  clearFoes() { for (const f of this.foes) { f.body.destroy(); f.blob.destroy(); f.bar.destroy(); f.label.destroy(); f.mark?.destroy(); f.orb?.destroy(); clearStatus(this, f.ward); clearStatus(this, f.status); } this.foes = []; this.target = -1; this.targetMark?.setVisible(false); this.targetRing?.setVisible(false); }
   foeTop(f: FoeView) { return f.y - f.h * (f.sprite ? 0.84 : 0.8); }
   setEnemies(list: ViewEnemy[]) {
     this.clearFoes();
@@ -145,6 +153,54 @@ class MainScene extends Phaser.Scene {
       if (d.hp <= 0) [body, blob, f.label, f.bar].forEach(o => o.setAlpha(0));
     });
     (window as any).__proto.foeLayout = this.foes.map(f => ({ x: f.x, top: this.foeTop(f), h: f.h }));
+    if (this.wardOn) this.setWard(true);
+  }
+  // ---------------- v3.4 spells (choreography in ./spellfx.ts) ----------------
+  wardOn = false; cast: CastHandle | null = null;
+  fxTarget(f: FoeView) { return { x: f.x, top: this.foeTop(f), feet: f.y, h: f.h, body: f.body, sprite: f.sprite }; }
+  fxHost() {
+    const b = this.hero; const sp = b instanceof Phaser.GameObjects.Sprite ? b : null;
+    const w = sp ? sp.displayWidth : SIZE.hero * 0.6, h = sp ? sp.displayHeight : SIZE.hero * 0.6;
+    const box = sp ? { x: sp.x + (0.5 - sp.originX) * w, feet: sp.y + (1 - sp.originY) * h, w, h } : { x: HERO_X, feet: BASE_Y, w, h };
+    return { scene: this as Phaser.Scene, hero: b, heroBox: box, playOnce: (x: Body, id: string | null, a: string) => this.playOnce(x, id, a), hitStop: (x: Body) => this.impact(x) };
+  }
+  /** Magic Ward 魔法护盾 (flag bossMagicWard, off in v3.4): Arty's violet ward ring under every enemy. */
+  setWard(on: boolean) {
+    this.wardOn = on;
+    for (const f of this.foes) { clearStatus(this, f.ward); f.ward = undefined; if (on && f.data.hp > 0) f.ward = showStatus(this, 'ward', this.fxTarget(f), '🛡️'); }
+  }
+  /** Status overlay on enemy i: soaked | dazed | chilled | frozen, null clears it. */
+  setStatus(i: number, key: string | null) {
+    const f = this.foes[i]; if (!f) return; const was = f.status?.key;
+    clearStatus(this, f.status, !key && was === 'frozen'); f.status = undefined;
+    if (key && f.data.hp > 0) f.status = showStatus(this, key, this.fxTarget(f), '✨');
+    (window as any).__proto.statusFx = this.foes.map(x => x.status?.key || null);
+  }
+  /** Plays a cast; at each impact the damage number pops, the HP bar drops and the status overlay appears. Resolves when the animation ends or is skipped. */
+  castSpell(sp: { id: string; element: string; emoji: string; target: string }, targets: number[], dmgs: number[], hpAfter: number[], opts: { status?: (string | null)[]; tag?: string } = {}): Promise<void> {
+    const fv = targets.map(i => this.foes[i]).filter(Boolean);
+    const h = playCast(this.fxHost(), sp, fv.map(f => this.fxTarget(f)), k => {
+      const f = fv[k]; if (!f || !f.body.active) return; const i = this.foes.indexOf(f);
+      this.damageNumber(f.x + 30, this.foeTop(f) - 10, '-' + dmgs[k], '#' + elementColor(sp.element).toString(16).padStart(6, '0'), opts.tag);
+      f.impactAt = 0; this.updateEnemy(i, hpAfter[k]);
+      if (opts.status?.[k] && hpAfter[k] > 0) this.setStatus(i, opts.status[k]!);
+    });
+    this.cast = h; h.done.then(() => { if (this.cast === h) this.cast = null; });
+    return h.done;
+  }
+  skipCast() { this.cast?.skip(); }
+  /** Fizzle 失灵: a grey puff at the staff, nothing reaches the enemy. */
+  fizzle(element: string) {
+    const hp = this.heroPos(); const x = hp.x + 70, y = hp.y - 40;
+    const spark = this.add.circle(x, y, 14, elementColor(element), 0.9).setDepth(9);
+    this.tweens.add({ targets: spark, scale: 0.2, alpha: 0, duration: 260, onComplete: () => spark.destroy() });
+    for (let k = 0; k < 7; k++) {
+      const c = this.add.circle(x + (Math.random() - 0.5) * 30, y + (Math.random() - 0.5) * 20, 12 + Math.random() * 10, 0x9aa0a8, 0.75).setDepth(9);
+      this.tweens.add({ targets: c, x: c.x + (Math.random() - 0.3) * 90, y: c.y - 40 - Math.random() * 50, scale: 2, alpha: 0, duration: 800, delay: 120 + k * 30, onComplete: () => c.destroy() });
+    }
+    const t = this.txt(x, y - 70, '💨 失灵 Fizzle!', 36, '#dfe8ff', 12).setFontFamily(ZH_FONT);
+    this.tweens.add({ targets: t, y: y - 130, alpha: 0, duration: 1200, delay: 400, onComplete: () => t.destroy() });
+    const p = (window as any).__proto; p.fizzles = (p.fizzles || 0) + 1;
   }
   drawBar(f: FoeView) {
     const w = 130, x = f.x - w / 2, y = this.foeTop(f) - 20;
@@ -165,6 +221,7 @@ class MainScene extends Phaser.Scene {
       } else { f.ghost = f.shown; this.drawBar(f); }
       if (f.data.hp <= 0 && was > 0) {   // defeat: hurt frames, then fade out (no dedicated defeat frames)
         if (this.target === i) this.setTarget(-1);
+        clearStatus(this, f.ward); f.ward = undefined; clearStatus(this, f.status); f.status = undefined;
         const fade = () => this.tweens.add({ targets: [f.body, f.blob, f.label, f.bar], alpha: 0, duration: 500 });
         this.coinBurst(f.x, this.foeTop(f) + f.h * 0.4);
         if (f.sprite && this.anims.exists(`${f.sprite}_hurt`)) { const b = f.body as Phaser.GameObjects.Sprite; b.play(`${f.sprite}_hurt`); b.once('animationcomplete', () => { b.stop(); fade(); }); }
@@ -330,4 +387,10 @@ export const view = {
   spriteSheet: (id: string) => scene?.manifest[id] ? { file: scene.manifest[id].file as string, fw: scene.manifest[id].frameWidth as number, fh: scene.manifest[id].frameHeight as number,
     frames: Math.max(1, scene.textures.get(id).frameTotal - 1) } : null,
   onReady: (f: () => void) => call(() => f()),
+  castSpell: (sp: { id: string; element: string; emoji: string; target: string }, targets: number[], dmgs: number[], hpAfter: number[], opts?: { status?: (string | null)[]; tag?: string }) =>
+    scene ? scene.castSpell(sp, targets, dmgs, hpAfter, opts) : Promise.resolve(),
+  skipCast: () => call(s => s.skipCast()),
+  setStatus: (i: number, key: string | null) => call(s => s.setStatus(i, key)),
+  fizzle: (element: string) => call(s => s.fizzle(element)),
+  setWard: (on: boolean) => call(s => s.setWard(on)),
 };
