@@ -3,108 +3,170 @@
 A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teaches Mandarin reading, listening and speaking to kids aged about 10–12. Battles are won by answering vocabulary questions, typed or spoken.
 
 - **Play the live prototype:** https://zenjax7.github.io/chinese-rpg/
-- **Start here:** [plan.md](plan.md), the research summary, plan and early decisions.
+- **Start here:** [design/plan.md](design/plan.md), the research summary, plan and early decisions.
 
-This folder holds design docs, data tables and art references. It is **not** part of the game build: Vite only bundles `src/` and copies `public/`, so nothing under `docs/` is deployed to GitHub Pages.
+This folder holds design docs, data tables, reference images and Desy's design tools. It is **not** part of the game build: Vite only bundles `src/` and copies `public/`, so nothing under `docs/` goes to GitHub Pages. The layout follows Desy's repo manifest. Docs are Markdown and tables are CSV (UTF-8; some CSVs have a BOM for Excel). JSON twins are kept for code. HTML and XLSX exports are left out because they are generated from the Markdown and CSV files.
 
 ## Source of truth
 
 When documents disagree, use this order:
 
-1. **[combat-spec.md](combat-spec.md) (v3, with the v3.2/v3.3 updates)** and **[spells.md](spells.md) (v3.3)** for combat, progression, spells and quests.
-2. **The data tables in [data/](#data-tables)**, which match spec v3.3. The game data in `src/data` is built from them.
-3. [core-curriculum.md](core-curriculum.md) with [data/core-curriculum.csv](data/core-curriculum.csv) (v2) for vocabulary.
-4. [plan.md](plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
+1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.4)** and **[design/spells.md](design/spells.md) (v3.4)** for combat, progression, spells and quests.
+2. **The CSV tables in [data/](#data-tables)**, which match spec v3.4. The game data in `src/data` is built from them.
+3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
+4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
 
-Everything in [archive/](archive/) is superseded and kept for history only.
+Everything in an `archive/` folder is superseded and kept for history only.
 
-## Design docs
-
-| File | What it is |
-|---|---|
-| [plan.md](plan.md) | Research summary, plan and early decisions (vision, market gap, scope). Older than the spec. |
-| [combat-spec.md](combat-spec.md) | **Source of truth.** Combat and progression spec v3 (v3.2 caps, v3.3 spells and quests). |
-| [spells.md](spells.md) | **Source of truth.** Magic spells and quests: design and sim results (v3.3). |
-| [core-curriculum.md](core-curriculum.md) | Core curriculum v2: how the vocabulary is levelled and split across realms and locations. |
-| [enemies-art-brief.md](enemies-art-brief.md) | Art brief for all 50 enemies, by realm and priority. |
-| [ui-layout-review.md](ui-layout-review.md) | UI layout and game-feel review, with the mockups in [art/mockups/](art/mockups/). |
-| [chinese-rpg-design-memo.md](chinese-rpg-design-memo.md) | Design findings memo: reference games (Prodigy, Miitopia), HSK levels, learning design. |
-| [research-tech-market.md](research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
-| [art-direction-memo.md](art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
-| [ai-art-pipeline-proposal.md](ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
-
-### Archive (superseded)
+## Design docs ([design/](design/))
 
 | File | What it is |
 |---|---|
-| [archive/combat-spec-v1.md](archive/combat-spec-v1.md) | Combat spec v1. |
-| [archive/combat-spec-v2.md](archive/combat-spec-v2.md) | Combat spec v2. |
-| [archive/combat-spec-v2.html](archive/combat-spec-v2.html) | HTML export of combat spec v2. |
-| [archive/combat-spec-v3.html](archive/combat-spec-v3.html) | HTML export of combat spec v3 (snapshot; the .md is current). |
-| [archive/core-curriculum-v1.md](archive/core-curriculum-v1.md) | Core curriculum v1 write-up. |
-| [archive/core-curriculum-v1.csv](archive/core-curriculum-v1.csv) | Curriculum v1 data. |
-| [archive/core-curriculum-v1.xlsx](archive/core-curriculum-v1.xlsx) | Curriculum v1 spreadsheet. |
-| [archive/core-curriculum-v2.html](archive/core-curriculum-v2.html) | HTML export of curriculum v2 (snapshot; the .md is current). |
+| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.4. |
+| [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.4. |
+| [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
+| [enemies-art-brief.md](design/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
+| [ui-layout-review.md](design/ui-layout-review.md) | UI layout and game-feel review. Its images are in [images/ui-review/](images/ui-review/). |
+| [design-memo.md](design/design-memo.md) | Design findings memo: reference games (Prodigy, Miitopia), HSK levels, learning design. |
+| [plan.md](design/plan.md) | Research summary, plan and early decisions. Older than the spec. |
+| [research-tech-market.md](design/research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
+| [art-direction-memo.md](design/art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
+| [ai-art-pipeline-proposal.md](design/ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
+
+### Archive ([design/archive/](design/archive/))
+
+| File | What it is |
+|---|---|
+| [combat-spec-v3.3.md](design/archive/combat-spec-v3.3.md) | Combat spec v3.3, before the v3.4 free-cast spell change. |
+| [spells-v3.3.md](design/archive/spells-v3.3.md) | Spells and quests v3.3, before the free-cast change. |
+| [combat-spec-v2.md](design/archive/combat-spec-v2.md) | Combat spec v2. |
+| [combat-spec-v1.md](design/archive/combat-spec-v1.md) | Combat spec v1. |
+| [curriculum-notes-v1.md](design/archive/curriculum-notes-v1.md) | Curriculum notes v1. |
 
 ## Data tables
 
-All tables are in [data/](data/). The CSV and JSON versions hold the same data.
+### Curriculum ([data/curriculum/](data/curriculum/))
 
-| Table | Files |
+| File | What it is |
 |---|---|
-| Core curriculum v2 (every word and phrase, 16 columns) | [csv](data/core-curriculum.csv) · [xlsx](data/core-curriculum.xlsx) |
-| Enemy roster for art and content (names, shouts, art brief, animations) | [csv](data/enemies-roster.csv) · [json](data/enemies-roster.json) |
-| Spell cast rule (when a spell fires vs fizzles) | [csv](data/cast_rule.csv) · [json](data/cast_rule.json) |
-| Treasure chest loot tables | [csv](data/chest_contents.csv) · [json](data/chest_contents.json) |
-| Combined combat data bundle (all tables in one JSON) | [json](data/combat_data.json) |
-| Companion stats and behavior | [csv](data/companion.csv) · [json](data/companion.json) |
-| Potions and other consumable items | [csv](data/consumables.csv) · [json](data/consumables.json) |
-| Curriculum items assigned to each location | [csv](data/curriculum_location_pools.csv) |
-| Location list for the curriculum | [csv](data/curriculum_locations.csv) |
-| Per-realm curriculum totals | [csv](data/curriculum_realm_summary.csv) |
-| Prototype slice of the curriculum | [csv](data/curriculum_slice.csv) |
-| Enemy drop tables | [csv](data/drops.csv) · [json](data/drops.json) |
-| Shop prices and gold economy | [csv](data/economy_prices.csv) · [json](data/economy_prices.json) |
-| Enemy combat stats (spec v3 balance table) | [csv](data/enemies.csv) · [json](data/enemies.json) |
-| Enemy stat bands per level/role | [csv](data/enemy_stat_bands.csv) · [json](data/enemy_stat_bands.json) |
-| Weapons and armor by tier | [csv](data/gear.csv) · [json](data/gear.json) |
-| Heroic gear drops from bosses/elites | [csv](data/gear_heroic_drops.csv) · [json](data/gear_heroic_drops.json) |
-| Hero stats by level | [csv](data/hero_stats.csv) · [json](data/hero_stats.json) |
-| MP potion values | [csv](data/mp_potions.csv) · [json](data/mp_potions.json) |
-| MP rules (max MP, regen, heal limits) | [csv](data/mp_rules.csv) · [json](data/mp_rules.json) |
-| Practice mode definitions | [csv](data/practice_modes.csv) · [json](data/practice_modes.json) |
-| Rewards for practice modes | [csv](data/practice_rewards.csv) · [json](data/practice_rewards.json) |
-| Proficiency patrol settings | [csv](data/proficiency_patrol_settings.csv) · [json](data/proficiency_patrol_settings.json) |
-| Quest list | [csv](data/quests.csv) · [json](data/quests.json) |
-| Quests with full text and steps | [json](data/quests_full.json) |
-| Difficulty per realm | [csv](data/realm_difficulty.csv) · [json](data/realm_difficulty.json) |
-| Difficulty per location | [csv](data/realm_location_difficulty.csv) · [json](data/realm_location_difficulty.json) |
-| Safety nets for struggling players | [csv](data/safety_nets.csv) · [json](data/safety_nets.json) |
-| Skills and their MP costs | [csv](data/skills_mp.csv) · [json](data/skills_mp.json) |
-| Special enemy/boss mechanics | [csv](data/special_mechanics.csv) · [json](data/special_mechanics.json) |
-| Spell damage falloff | [csv](data/spell_falloff.csv) · [json](data/spell_falloff.json) |
-| Spell MP sanity check | [csv](data/spell_mp_check.csv) · [json](data/spell_mp_check.json) |
-| Spell list (shop, cost, effect) | [csv](data/spells.csv) · [json](data/spells.json) |
-| Spells with full text | [json](data/spells_full.json) |
+| [curriculum.csv](data/curriculum/curriculum.csv) | Master word and phrase list, v2 (16 columns, UTF-8 with BOM) |
+| [curriculum_location_pools.csv](data/curriculum/curriculum_location_pools.csv) | Curriculum items assigned to each location |
+| [curriculum_locations.csv](data/curriculum/curriculum_locations.csv) | Location list |
+| [curriculum_realm_summary.csv](data/curriculum/curriculum_realm_summary.csv) | Per-realm totals |
+| [curriculum_slice.csv](data/curriculum/curriculum_slice.csv) | Prototype slice |
+| [archive/curriculum-v1.csv](data/curriculum/archive/curriculum-v1.csv) | Curriculum v1 word list (superseded) |
 
-`enemies-roster.*` is the full roster that goes with the enemy art brief. `enemies.*` is the slimmer balance table from spec v3. Both use the same enemy ids; use `enemies.*` for numbers.
+### Enemies ([data/enemies/](data/enemies/))
 
-### Simulation output
+| File | What it is |
+|---|---|
+| [enemies-art-roster.csv](data/enemies/enemies-art-roster.csv) | Art-brief roster: visuals, attacks, shouts (same stats as the combat table) |
+| [enemies.csv](data/enemies/enemies.csv) | Combat table: stats, drops, specials. Use this for numbers. |
+| [enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) | Enemy stat bands by level and role |
 
-[data/sim/](data/sim/) holds the balance-sim results behind the spec (25 CSVs): realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`).
+### Spells and quests ([data/spells/](data/spells/))
 
-## Art references
+| File | What it is |
+|---|---|
+| [cast_rule.csv](data/spells/cast_rule.csv) | Spell cast rule (v3.4) |
+| [mp_potions.csv](data/spells/mp_potions.csv) | MP potion values (v3.4) |
+| [quests.csv](data/spells/quests.csv) | Quest list (unchanged in v3.4) |
+| [spell_falloff.csv](data/spells/spell_falloff.csv) | Spell damage fall-off (v3.4) |
+| [spell_mp_check.csv](data/spells/spell_mp_check.csv) | Spell MP sanity check (v3.4) |
+| [spells.csv](data/spells/spells.csv) | Spell list: towns, prices, power, MP (v3.4) |
+
+### Combat tables ([data/combat/](data/combat/))
+
+These are the spec tables.
+
+| File | What it is |
+|---|---|
+| [chest_contents.csv](data/combat/chest_contents.csv) | Treasure chest loot tables |
+| [companion.csv](data/combat/companion.csv) | Companion stats and behavior |
+| [consumables.csv](data/combat/consumables.csv) | Potions and other consumables |
+| [drops.csv](data/combat/drops.csv) | Enemy drop tables |
+| [economy_prices.csv](data/combat/economy_prices.csv) | Shop prices and gold economy |
+| [gear.csv](data/combat/gear.csv) | Weapons and armor by tier |
+| [gear_heroic_drops.csv](data/combat/gear_heroic_drops.csv) | Heroic gear drops from bosses and elites |
+| [hero_stats.csv](data/combat/hero_stats.csv) | Hero stats by level |
+| [mp_rules.csv](data/combat/mp_rules.csv) | MP rules (max MP, regen, heal limits) |
+| [practice_modes.csv](data/combat/practice_modes.csv) | Practice mode definitions |
+| [practice_rewards.csv](data/combat/practice_rewards.csv) | Rewards for practice modes |
+| [proficiency_patrol_settings.csv](data/combat/proficiency_patrol_settings.csv) | Proficiency patrol settings |
+| [realm_difficulty.csv](data/combat/realm_difficulty.csv) | Difficulty per realm |
+| [realm_location_difficulty.csv](data/combat/realm_location_difficulty.csv) | Difficulty per location |
+| [safety_nets.csv](data/combat/safety_nets.csv) | Safety nets for struggling players |
+| [skills_mp.csv](data/combat/skills_mp.csv) | Skills and their MP costs |
+| [special_mechanics.csv](data/combat/special_mechanics.csv) | Special enemy and boss mechanics |
+
+### Simulation output ([data/sim/](data/sim/))
+
+There are 25 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`). The full v3.4 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
+
+### JSON twins ([data/json/](data/json/))
+
+There are 29 JSON files for the game code. Each one matches the CSV of the same name; the art roster is `enemies-art-roster.json`. Three are bundles with no single CSV twin:
+- [combat_data.json](data/json/combat_data.json) bundles all the spec tables.
+- [spells_full.json](data/json/spells_full.json) adds the spell rules and tiers to the list.
+- [quests_full.json](data/json/quests_full.json) adds the quest rules to the list.
+
+The rules in these bundles are also written out in spells.md and combat-spec.md §6.7 and §7.11.
+
+## Images ([images/](images/))
 
 Final game sprites, backgrounds and audio are not here; they are under `public/` in the game.
 
-| Folder | What it is |
+### UI review mockups ([images/ui-review/](images/ui-review/))
+
+| File | What it is |
 |---|---|
-| [art/mockups/](art/mockups/) | UI mockups from the layout review: battle command, battle question (multiple choice and speech), battle feedback, diagnosis, map, village, scaling. The HTML/CSS sources and render script are in [art/mockups/src/](art/mockups/src/). |
-| [art/style-anchors/](art/style-anchors/) | Style exploration. `APPROVED_style_bright_detailed_battle.png` is the chosen style; anchors A (bright classic), B (storybook ink-wash), C (bold graphic), a hybrid, and a meadow battle mockup are the options it was picked from. |
-| [art/refsheets/](art/refsheets/) | Character reference sheets: `hero_v1.png`, `horned_rabbit_enemy_v1.png`, and `REJECTED_rabbit_as_buddy.png` (kept to show what to avoid: the rabbit must look like a pest monster, not a pet). |
+| [battle-command.png](images/ui-review/battle-command.png) | Mockup A: battle, command state |
+| [battle-feedback.png](images/ui-review/battle-feedback.png) | Mockup D: answer feedback and the hit |
+| [battle-question-mc.png](images/ui-review/battle-question-mc.png) | Mockup B: question open (multiple choice) |
+| [battle-question-speech.png](images/ui-review/battle-question-speech.png) | Mockup C: defense question, speech mode |
+| [diagnosis.png](images/ui-review/diagnosis.png) | Annotated diagnosis of the old battle screen |
+| [map.png](images/ui-review/map.png) | Mockup E: location map |
+| [scaling.png](images/ui-review/scaling.png) | Scaling and letterboxing across devices |
+| [village.png](images/ui-review/village.png) | Mockup F: village hub and world map |
+
+### Style anchors ([images/style-anchors/](images/style-anchors/))
+
+| File | What it is |
+|---|---|
+| [APPROVED_style_bright_detailed_battle.png](images/style-anchors/APPROVED_style_bright_detailed_battle.png) | **Approved style** (bright, detailed battle scene) |
+| [anchor_A_bright_classic.png](images/style-anchors/anchor_A_bright_classic.png) | Style option A: bright classic |
+| [anchor_B_storybook_inkwash.png](images/style-anchors/anchor_B_storybook_inkwash.png) | Style option B: storybook ink-wash |
+| [anchor_C_bold_graphic.png](images/style-anchors/anchor_C_bold_graphic.png) | Style option C: bold graphic |
+| [battle_mockup_meadow.png](images/style-anchors/battle_mockup_meadow.png) | Meadow battle mockup |
+| [hybrid_A_inkwash_Cmenace_battle.png](images/style-anchors/hybrid_A_inkwash_Cmenace_battle.png) | Hybrid: ink-wash with option C menace |
+
+### Reference sheets ([images/refsheets/](images/refsheets/))
+
+| File | What it is |
+|---|---|
+| [REJECTED_rabbit_as_buddy.png](images/refsheets/REJECTED_rabbit_as_buddy.png) | Rejected: rabbit drawn as a cute buddy (it must look like a pest monster) |
+| [hero_v1.png](images/refsheets/hero_v1.png) | Hero reference sheet v1 |
+| [horned_rabbit_enemy_v1.png](images/refsheets/horned_rabbit_enemy_v1.png) | Horned Rabbit enemy reference sheet v1 |
+
+## Design tools ([tools/](tools/))
+
+These are Desy's sim and data-generation scripts. **They live in `docs/tools/`, not the repo's top-level `tools/`.** The top-level `tools/` holds the game's own build scripts (for example `tools/build_data.py`, which builds `src/data`), and keeping the two apart stops them being mixed up. The scripts expect Desy's workspace layout (`/workspace/desy`), so they are kept here for reference and are not run from the repo.
+
+| File | What it is |
+|---|---|
+| [combat_sim.py](tools/sim/combat_sim.py) | Battle sim |
+| [sim_v3_runner.py](tools/sim/sim_v3_runner.py) | v3 sim runner |
+| [spells_runner.py](tools/sim/spells_runner.py) | Campaign runner, v3.4 |
+| [spells_sim.py](tools/sim/spells_sim.py) | Campaign sim (spells and quests) |
+| [assemble_spec.py](tools/data/assemble_spec.py) | Assembles combat-spec.md |
+| [build_data.py](tools/data/build_data.py) | Generates the data CSV/JSON tables |
+| [spec_new_sections.md](tools/data/spec_new_sections.md) | Spec source sections |
+| [spells_data.py](tools/data/spells_data.py) | Spell and quest source data and design formulas |
+| [spells_md_template.md](tools/data/spells_md_template.md) | spells.md template |
+| [write_spells_md.py](tools/data/write_spells_md.py) | Generates spells.md |
 
 ## How to update
 
-- Desy (design), Arty (art) and Director hand updated files to GameDev, who copies them into `docs/` and commits them. Or edit the files under `docs/` directly and commit.
-- When a spec changes, move the old version to `archive/` with a `-vN` suffix and keep the current file name, so links stay valid.
-- Keep the data tables in step with the spec. Do not put game assets here; they belong in `public/`. Keep files under 25 MB.
+- Desy, Arty and Director hand updated files to GameDev, who copies them into `docs/` (Desy's `repo-manifest.md` maps each source file to its path here) and commits them. Or edit the files under `docs/` directly and commit.
+- When a spec changes, copy the old version into the matching `archive/` folder with a version suffix (for example `combat-spec-v3.3.md`) and keep the current file name, so links stay valid.
+- Docs are Markdown and sheets are CSV. Don't commit HTML or XLSX exports, third-party word lists (CC-CEDICT, HSK/YCT lists), or game assets (those go in `public/`). Keep files under 5 MB.
