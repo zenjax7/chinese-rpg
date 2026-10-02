@@ -216,8 +216,22 @@
    "zh": "魔力茶",
    "en": "Mana Tea",
    "emoji": "🍵",
-   "priceG": 1,
-   "healMpFrac": 0.5
+   "priceG": 6,
+   "healMpFrac": 0.5,
+   "battleUse": false,
+   "fromTown": 1,
+   "magicShop": true
+  },
+  {
+   "id": "bigmanatea",
+   "zh": "大魔力茶",
+   "en": "Big Mana Tea",
+   "emoji": "🫖",
+   "priceG": 15,
+   "healMpFrac": 1.0,
+   "battleUse": false,
+   "fromTown": 5,
+   "magicShop": true
   },
   {
    "id": "feather",

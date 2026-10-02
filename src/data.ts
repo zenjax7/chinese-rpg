@@ -21,7 +21,9 @@ export interface LocationDef { id: string; name: string; zh: string; emoji: stri
   mapNodes?: { x: number; y: number; kind: 'inn' | 'fight' | 'gate' | 'boss' }[]; }
 export interface GearDef { id: string; slot: 'weapon' | 'armor' | 'shield' | 'charm'; tier: number; rarity: string; zh: string; en: string;
   emoji: string; atk?: number; def?: number; mp?: number; hp?: number; price: number; shop?: boolean; shopRequires?: string; startStreak?: number; perk?: string; }
-export interface ConsumableDef { id: string; zh: string; en: string; emoji: string; priceG: number; healHpFrac?: number; healMpFrac?: number; warp?: boolean; carryLimit?: number; }
+export interface ConsumableDef { id: string; zh: string; en: string; emoji: string; priceG: number; healHpFrac?: number; healMpFrac?: number; warp?: boolean; carryLimit?: number;
+  /** v3.4: false = map only (MP potions never drunk in battle). fromTown: first town that sells it. magicShop: sold in the 🔮 magic shop. */
+  battleUse?: boolean; fromTown?: number; magicShop?: boolean; }
 export interface SkillDef { id: string; zh: string; en: string; emoji: string; mp: number; perBattle?: number; cooldownRounds?: number;
   minStreak?: number; secondHitFrac?: number; healFrac?: number; kind: string; unlock: { start?: boolean; level?: number; boss?: string }; desc: string; }
 
@@ -38,3 +40,28 @@ export const CONSUMABLES: ConsumableDef[] = (shopJ as any).consumables;
 export const CONS: Record<string, ConsumableDef> = Object.fromEntries(CONSUMABLES.map(c => [c.id, c]));
 export const SKILLS: SkillDef[] = (skillsJ as any).skills;
 export const SKILL: Record<string, SkillDef> = Object.fromEntries(SKILLS.map(s => [s.id, s]));
+
+// ---- v3.3: towns, spells, quests ----
+import spellsJ from './data/spells.json';
+import questsJ from './data/quests.json';
+import townsJ from './data/towns.json';
+export interface TownDef { town: number; zh: string; en: string; G: number; realmLocs: string[]; inBuild: boolean; hub: string | null; arriveAt: string | null; gearSetPrice: number | null; }
+export interface SpellDef { id: string; town: number; zh: string; zhTrad: string; en: string; target: 'single' | 'same_type' | 'all'; element: string; emoji: string;
+  power: number; mp: number; priceG: number; status: 'soak' | 'daze' | 'chill' | 'freeze' | null; statusZh: string | null; statusEn: string | null; statusText: string | null;
+  skipChance: number; soak: boolean; statusTurns: number; }
+export interface CastLimit { normal: number; elite: number; boss: number; minCorrect: number; bossGapQuestions: number; }
+export interface SpellRules { version: string; castRequiresAnswer: boolean; fizzleSpendsMp: boolean; tiredMult: number; defMult: number; bossMagicWard: boolean; wardMult: number;
+  maxTargets: number; bossStatusMult: number; statusBossMultBy: Record<string, number>; soakMult: number; castStreak: string; castMpRegen: number; castLimit: CastLimit;
+  blacksmithFirst: 'warn' | 'lock' | 'off'; town1Shelf: string; }
+export interface QuestDef { id: string; town: number; type: 'bounty' | 'collect' | 'words' | 'delivery'; titleZh: string; titleEn: string; n: number; rewardG: number;
+  rewardItem: string | null; rewardCosmetic: string | null; enemy: string | null; enemyDesyId: string | null; dropZh: string | null; dropEn: string | null; toTown: number | null; }
+export const TOWNS: TownDef[] = (townsJ as any).towns;
+export const TOWN: Record<number, TownDef> = Object.fromEntries(TOWNS.map(t => [t.town, t]));
+export const SPELL_RULES: SpellRules = (spellsJ as any).rules;
+export const SPELLS: SpellDef[] = (spellsJ as any).spells;
+export const SPELL: Record<string, SpellDef> = Object.fromEntries(SPELLS.map(s => [s.id, s]));
+export const QUEST_RULES: { collectDrop: number; oneTime: boolean; wordsCountFrom: string; deliveryAfterRealmBoss: boolean } = (questsJ as any).rules;
+export const QUESTS: QuestDef[] = (questsJ as any).quests;
+export const QUEST: Record<string, QuestDef> = Object.fromEntries(QUESTS.map(q => [q.id, q]));
+export const spellPrice = (s: SpellDef) => Math.round(s.priceG * (TOWN[s.town]?.G || 0));
+export const questGold = (q: QuestDef) => Math.round(q.rewardG * (TOWN[q.town]?.G || 0));

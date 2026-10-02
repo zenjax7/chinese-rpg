@@ -1,7 +1,7 @@
 """Builds src/data/{items,enemies,skills,shop,v3}.json from Desy's spec v3 data. Run: python3 tools/build_data.py
 Sources: desy/data/combat_data.json (all v3 tables), desy/data/curriculum_location_pools.csv (location pools),
 desy/core-curriculum.csv (item fields), desy/enemies.json (flavor text), art/sprites/manifest.json (sprite keys)."""
-import csv, json, os
+import csv, json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DESY = os.path.join(ROOT, '..', '..', 'desy')
 CD = json.load(open(os.path.join(DESY, 'data', 'combat_data.json'), encoding='utf-8'))
@@ -103,13 +103,93 @@ gear += [
   dict(id='queens_crown', slot='charm', tier=2, rarity='heroic', zh='蜂后之冠', en="Queen's Crown", emoji='👑', mp=int(MPR['queens_crown_bonus']), price=0, perk='+6 max MP'),
 ]
 CONS = {c['item_id']: c for c in CD['consumables']}
+MPP = {r['item_id']: r for r in csv.DictReader(open(os.path.join(DESY, 'data', 'mp_potions.csv'), encoding='utf-8-sig'))}
 cons = [
   dict(id='honey', zh=CONS['honey_potion']['name_zh'], en='Honey Potion', emoji='🍯', priceG=1, healHpFrac=0.40),
   dict(id='bighoney', zh=CONS['big_honey']['name_zh'], en='Big Honey', emoji='🏺', priceG=2, healHpFrac=0.70),
-  dict(id='manatea', zh=CONS['mana_tea']['name_zh'], en='Mana Tea', emoji='🍵', priceG=1, healMpFrac=0.50),
+  # v3.4: MP potions are map-only and priced from desy/data/mp_potions.csv (Mana Tea 6 x G, Big Mana Tea 15 x G from town 5)
+  dict(id='manatea', zh=MPP['mana_tea']['name_zh'], en=MPP['mana_tea']['name_en'], emoji='🍵', priceG=int(MPP['mana_tea']['price_in_normal_kills']), healMpFrac=0.50,
+       battleUse=not MPP['mana_tea']['battle_use'].startswith('no'), fromTown=int(MPP['mana_tea']['from_town']), magicShop=True),
+  dict(id='bigmanatea', zh=MPP['big_mana_tea']['name_zh'], en=MPP['big_mana_tea']['name_en'], emoji='🫖', priceG=int(MPP['big_mana_tea']['price_in_normal_kills']), healMpFrac=1.0,
+       battleUse=not MPP['big_mana_tea']['battle_use'].startswith('no'), fromTown=int(MPP['big_mana_tea']['from_town']), magicShop=True),
   dict(id='feather', zh=CONS['return_feather']['name_zh'], en='Return Feather', emoji='🪶', priceG=1, warp=True, carryLimit=int(CONS['return_feather']['carry_limit'])),
 ]
 out('shop.json', dict(_note='Generated from combat_data.json gear (tiers 1-2 common/fine/heroic, shop prices), gear_heroic_drops and consumables. Charms (red_knot, jade_pendant) are prototype placeholders; the spec has no charm price table. Consumable prices are multiples of the current area G.', gear=gear, consumables=cons))
+
+# ---------------- v3.3/v3.4: towns, spells, quests (desy/data/spells.csv, cast_rule.csv, spell_falloff.csv, spells_full.json, quests*.json) ----------------
+# Engine-neutral JSON: plain fields, no game-specific ids beyond the prototype item/enemy ids it maps to. Every number comes from Desy's files;
+# the few prototype-only switches (castRequiresAnswer, bossMagicWard, Director defaults) are marked in rules._note.
+SPF = json.load(open(os.path.join(DESY, 'data', 'spells_full.json'), encoding='utf-8'))
+SPL = {r['spell_id']: r for r in csv.DictReader(open(os.path.join(DESY, 'data', 'spells.csv'), encoding='utf-8-sig'))}
+CR = {r['key']: r['value'] for r in csv.DictReader(open(os.path.join(DESY, 'data', 'cast_rule.csv'), encoding='utf-8-sig'))}
+FALL = list(csv.DictReader(open(os.path.join(DESY, 'data', 'spell_falloff.csv'), encoding='utf-8-sig')))
+QF = json.load(open(os.path.join(DESY, 'data', 'quests_full.json'), encoding='utf-8'))
+QL = json.load(open(os.path.join(DESY, 'data', 'quests.json'), encoding='utf-8'))
+num = lambda v: float(v) if re.fullmatch(r'-?\d+(\.\d+)?', str(v).strip()) else None
+# gear set price per tier (weapon + armor + shield, common) for the Blacksmith-first warning
+gear_set_price = {}
+for g in CD['gear']: gear_set_price[g['tier']] = gear_set_price.get(g['tier'], 0) + g['shop_price_common']
+# Towns: town t is the town of realm t. In this build both realm towns live in the one village hub ('hub'),
+# and a town is open once any location of its realm is unlocked. 'arriveAt' = where the previous town's letter is delivered.
+LOC_BY_TIER = {}
+for l in json.load(open(os.path.join(ROOT, 'src', 'data', 'locations.json'), encoding='utf-8'))['locations']: LOC_BY_TIER.setdefault(l['tier'], []).append(l['id'])
+towns = []
+for k, t in sorted(SPF['towns'].items(), key=lambda kv: int(kv[0])):
+    n = int(k); locs = LOC_BY_TIER.get(n, [])
+    towns.append(dict(town=n, zh=t['zh'], en=t['en'], G=t['G'], realmLocs=locs, inBuild=bool(locs), hub='village' if locs else None,
+                      arriveAt=(locs[0] if locs else None), gearSetPrice=gear_set_price.get(n)))
+STATUS = {'Soaked': ('soak', '湿透', 'Soaked'), 'Dazed': ('daze', '晕', 'Dazed'), 'Chilled': ('chill', '冷', 'Chilled'), 'Frozen': ('freeze', '冻住', 'Frozen')}
+ELEMENT_EMOJI = {'fire': '🔥', 'water': '🫧', 'ice': '❄️', 'thunder': '⚡', 'wind': '🌪️', 'light': '☀️', 'star': '🌠'}
+FULL = {s['id']: s for s in SPF['spells']}
+spells = []
+for sid, r in SPL.items():
+    f = FULL.get(sid, {}); st = r['status'].split(':')[0].strip()
+    key, szh, sen = STATUS.get(st, (None, None, None))
+    spells.append(dict(id=sid, town=int(r['town']), zh=r['name_zh'], zhTrad=r['name_zh_trad'], en=r['name_en'], target=('same_type' if r['target'].startswith('same') else 'all' if r['target'].startswith('all') else 'single'), element=r['element'],
+                       emoji=ELEMENT_EMOJI.get(r['element'], '✨'), power=int(r['power']), mp=int(r['mp_cost']), priceG=int(r['price_G']),
+                       status=key, statusZh=szh, statusEn=sen, statusText=None if r['status'] in ('–', '-', '') else ('Frozen: every enemy skips its next attack (1 turn). Bosses are never frozen.' if key == 'freeze' else r['status']),   # Director default for freeze
+                       skipChance=f.get('skip_p', 0), soak=bool(f.get('soak', key == 'soak')), statusTurns=1))
+ward = num(CR.get('ward_boss_mult', 1)) or 1.0
+rules = dict(
+    _note='Spell rules, spec v3.4 (desy/data/spells.csv, cast_rule.csv, spells_full.json). Prototype switches: castRequiresAnswer (Jack: false = free cast), '
+          'bossMagicWard (Director: false; wardMult is only used when it is switched on), statusBossMultBy (Director: Super Blizzard freeze never affects bosses).',
+    version=SPF.get('version', ''),
+    castRequiresAnswer=False,     # Jack 2026-10-02: a spell is a free action (no question, no fizzle). true = old v3.3 answer-to-cast path
+    fizzleSpendsMp=True,          # only used when castRequiresAnswer is true
+    tiredMult=1.5,                # damage = max(1, round_half_up(power x (Tired ? tiredMult : 1) x (Ward ? wardMult : 1) - defMult x DEF_e))
+    defMult=1.0,                  # v3.4: spells subtract the enemy's full DEF
+    bossMagicWard=False,          # v3.4 dropped the Magic Ward (cast_rule ward_boss_mult = 1.0); Director: off
+    wardMult=ward if ward != 1.0 else 0.5,
+    maxTargets=SPF['rules']['max_targets'],
+    bossStatusMult=0.5,           # bosses resist statuses: half chance
+    statusBossMultBy={'freeze': 0},   # Director default: the Super Blizzard freeze never affects bosses
+    soakMult=0.5,                 # a soaked enemy's next attack does half damage
+    castStreak='none',            # a cast neither adds to nor breaks the streak (cast_rule spell_streak_bonus)
+    castMpRegen=0,                # no MP regen on a cast turn
+    castLimit=dict(normal=int(CR['normal']), elite=int(CR['elite']), boss=int(CR['boss']), minCorrect=int(CR['min_correct']), bossGapQuestions=int(CR['boss_second_after_q'])),
+    blacksmithFirst='warn',       # 'warn' | 'lock' | 'off': purchase leaving less gold than the next town's weapon+armor+shield
+    town1Shelf='mana_tea_only')
+falloff = [dict(spell=r['spell'], town=r['town'], power=r['power'], target=r['target'], byTier={k: r[k] for k in r if re.fullmatch(r't\d', k)}) for r in FALL]
+out('spells.json', dict(_note='Generated by tools/build_data.py from desy/data spells.csv + cast_rule.csv + spell_falloff.csv + spells_full.json (v3.4). price = priceG x G of the selling town (towns.json). '
+                        'falloff is reference only (damage as % of a normal enemy HP per tier, the result of fixed power); the game does not apply it as a multiplier.',
+                        rules=rules, spells=spells, falloff=falloff))
+# quests: map the roster ids / items to this build's ids; rewards are multiples of the town G
+DESY2ID = {e['desyId']: e['id'] for e in en}
+ITEMMAP = {'honey_potion': 'honey', 'mana_tea': 'manatea', 'return_feather': 'feather'}
+quests = []
+for q in QL:
+    m = re.match(r'(?:收集)(\d+)(.)(.+)', q['title_zh']) if q['type'] == 'collect' else None
+    quests.append(dict(id=q['quest_id'], town=q['town'], type=q['type'], titleZh=q['title_zh'], titleEn=q['title_en'], n=q['n'], rewardG=q['reward_G'],
+                       rewardItem=ITEMMAP.get(q['reward_item']) if q['reward_item'] not in ('–', '-', '') else None,
+                       rewardCosmetic=None if q['reward_item'] in ITEMMAP or q['reward_item'] in ('–', '-', '') else q['reward_item'],
+                       enemy=DESY2ID.get(q['target']) if q['type'] in ('bounty', 'collect') else None, enemyDesyId=q['target'] if q['type'] in ('bounty', 'collect') else None,
+                       dropZh=m.group(3) if m else None, dropEn=re.sub(r'^Collect \d+ ', '', q['title_en']) if q['type'] == 'collect' else None,
+                       toTown=(q['town'] % 9) + 1 if q['type'] == 'delivery' else None))
+qrules = dict(_note='Quest rules (spec v3.3 §7.11). One-time quests; accept on the board, progress is saved, claim on the board.',
+              collectDrop=QF['rules']['collect_drop'], oneTime=True, wordsCountFrom='accept',   # words quest counts words that become Ready after accepting
+              deliveryAfterRealmBoss=True)
+out('quests.json', dict(_note='Generated by tools/build_data.py from desy/data/quests.json + quests_full.json (v3.3). reward gold = rewardG x G of the town.', rules=qrules, quests=quests))
+out('towns.json', dict(_note='Generated by tools/build_data.py (v3.3). Town t = the town of realm t. inBuild: a realm of this build. gearSetPrice = common weapon+armor+shield of tier t.', towns=towns))
 
 # ---------------- v3 tables used at runtime ----------------
 v3 = {k: CD[k] for k in ('companion', 'chest_contents', 'practice_modes', 'practice_rewards', 'proficiency_patrol_settings', 'safety_nets', 'drops', 'economy_prices')}
