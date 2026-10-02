@@ -1,0 +1,951 @@
+{
+ "about": "Spell fx textures. Stored at 2x display size: draw with setScale(displayScale) (0.5) on the 960x540 canvas. blendMode is the recommendation; every glow texture has an alpha version (file, works with NORMAL) and a black-background version (add_file, for ADD).",
+ "canvas": {
+  "width": 960,
+  "height": 540,
+  "heroHeightPx": 165,
+  "enemyHeightPx": [
+   120,
+   200
+  ]
+ },
+ "textures": {
+  "fireball_small": {
+   "file": "fx/fireball_small.png",
+   "add_file": "fx/add/fireball_small.png",
+   "width": 220,
+   "height": 137,
+   "displayScale": 0.5,
+   "displayWidth": 110,
+   "displayHeight": 68,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.805,
+    "y": 0.525
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     22,
+     33,
+     317,
+     217
+    ]
+   },
+   "sourceScale": 0.746
+  },
+  "fireball": {
+   "file": "fx/fireball.png",
+   "add_file": "fx/add/fireball.png",
+   "width": 300,
+   "height": 224,
+   "displayScale": 0.5,
+   "displayWidth": 150,
+   "displayHeight": 112,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.634,
+    "y": 0.546
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     319,
+     2,
+     630,
+     234
+    ]
+   },
+   "sourceScale": 0.965
+  },
+  "fireball_big": {
+   "file": "fx/fireball_big.png",
+   "add_file": "fx/add/fireball_big.png",
+   "width": 240,
+   "height": 219,
+   "displayScale": 0.5,
+   "displayWidth": 120,
+   "displayHeight": 110,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     654,
+     0,
+     922,
+     244
+    ]
+   },
+   "sourceScale": 0.896
+  },
+  "fire_impact": {
+   "file": "fx/fire_impact.png",
+   "add_file": "fx/add/fire_impact.png",
+   "width": 260,
+   "height": 209,
+   "displayScale": 0.5,
+   "displayWidth": 130,
+   "displayHeight": 104,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     938,
+     0,
+     1241,
+     244
+    ]
+   },
+   "sourceScale": 0.858
+  },
+  "embers": {
+   "file": "fx/embers.png",
+   "add_file": "fx/add/embers.png",
+   "width": 220,
+   "height": 175,
+   "displayScale": 0.5,
+   "displayWidth": 110,
+   "displayHeight": 88,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     48,
+     238,
+     314,
+     450
+    ]
+   },
+   "sourceScale": 0.827
+  },
+  "bolt_small": {
+   "file": "fx/bolt_small.png",
+   "add_file": "fx/add/bolt_small.png",
+   "width": 191,
+   "height": 300,
+   "displayScale": 0.5,
+   "displayWidth": 96,
+   "displayHeight": 150,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.351,
+    "y": 0.907
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     403,
+     223,
+     560,
+     469
+    ]
+   },
+   "sourceScale": 1.22
+  },
+  "bolt_tall": {
+   "file": "fx/bolt_tall.png",
+   "add_file": "fx/add/bolt_tall.png",
+   "width": 507,
+   "height": 600,
+   "displayScale": 0.5,
+   "displayWidth": 254,
+   "displayHeight": 300,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.464,
+    "y": 0.913
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     676,
+     211,
+     904,
+     481
+    ]
+   },
+   "sourceScale": 2.222,
+   "note": "upscaled 2.22x from the painted source; a little soft"
+  },
+  "starburst": {
+   "file": "fx/starburst.png",
+   "add_file": "fx/add/starburst.png",
+   "width": 340,
+   "height": 309,
+   "displayScale": 0.5,
+   "displayWidth": 170,
+   "displayHeight": 154,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     950,
+     212,
+     1235,
+     471
+    ]
+   },
+   "sourceScale": 1.193
+  },
+  "shooting_star": {
+   "file": "fx/shooting_star.png",
+   "add_file": "fx/add/shooting_star.png",
+   "width": 400,
+   "height": 304,
+   "displayScale": 0.5,
+   "displayWidth": 200,
+   "displayHeight": 152,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.702,
+    "y": 0.584
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     25,
+     464,
+     318,
+     687
+    ]
+   },
+   "sourceScale": 1.365
+  },
+  "star_small": {
+   "file": "fx/star_small.png",
+   "add_file": "fx/add/star_small.png",
+   "width": 72,
+   "height": 72,
+   "displayScale": 0.5,
+   "displayWidth": 36,
+   "displayHeight": 36,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     405,
+     498,
+     548,
+     641
+    ]
+   },
+   "sourceScale": 0.503
+  },
+  "sunbeam_shaft": {
+   "file": "fx/sunbeam_shaft.png",
+   "add_file": "fx/add/sunbeam_shaft.png",
+   "width": 578,
+   "height": 680,
+   "displayScale": 0.5,
+   "displayWidth": 289,
+   "displayHeight": 340,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.97
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     658,
+     444,
+     891,
+     718
+    ]
+   },
+   "sourceScale": 2.482,
+   "note": "upscaled 2.48x from the painted source; a little soft"
+  },
+  "ward_ring": {
+   "file": "fx/ward_ring.png",
+   "add_file": "fx/add/ward_ring.png",
+   "width": 400,
+   "height": 362,
+   "displayScale": 0.5,
+   "displayWidth": 200,
+   "displayHeight": 181,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     949,
+     445,
+     1236,
+     705
+    ]
+   },
+   "sourceScale": 1.394
+  },
+  "ember_1": {
+   "file": "fx/ember_1.png",
+   "add_file": "fx/add/ember_1.png",
+   "width": 28,
+   "height": 28,
+   "displayScale": 0.5,
+   "displayWidth": 14,
+   "displayHeight": 14,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     155,
+     332,
+     199,
+     376
+    ]
+   },
+   "sourceScale": 0.636
+  },
+  "ember_2": {
+   "file": "fx/ember_2.png",
+   "add_file": "fx/add/ember_2.png",
+   "width": 28,
+   "height": 28,
+   "displayScale": 0.5,
+   "displayWidth": 14,
+   "displayHeight": 14,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     195,
+     298,
+     229,
+     332
+    ]
+   },
+   "sourceScale": 0.824
+  },
+  "ember_3": {
+   "file": "fx/ember_3.png",
+   "add_file": "fx/add/ember_3.png",
+   "width": 28,
+   "height": 28,
+   "displayScale": 0.5,
+   "displayWidth": 14,
+   "displayHeight": 14,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     148,
+     300,
+     180,
+     332
+    ]
+   },
+   "sourceScale": 0.875
+  },
+  "ember_4": {
+   "file": "fx/ember_4.png",
+   "add_file": "fx/add/ember_4.png",
+   "width": 28,
+   "height": 28,
+   "displayScale": 0.5,
+   "displayWidth": 14,
+   "displayHeight": 14,
+   "blendMode": "ADD",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_glow_sheet.jpg",
+    "crop": [
+     118,
+     362,
+     148,
+     392
+    ]
+   },
+   "sourceScale": 0.933
+  },
+  "bubble": {
+   "file": "fx/bubble.png",
+   "width": 112,
+   "height": 110,
+   "displayScale": 0.5,
+   "displayWidth": 56,
+   "displayHeight": 55,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     89,
+     17,
+     254,
+     179
+    ]
+   },
+   "sourceScale": 0.679
+  },
+  "bubble_big": {
+   "file": "fx/bubble_big.png",
+   "width": 380,
+   "height": 371,
+   "displayScale": 0.5,
+   "displayWidth": 190,
+   "displayHeight": 186,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     373,
+     14,
+     542,
+     179
+    ]
+   },
+   "sourceScale": 2.249,
+   "note": "upscaled 2.25x from the painted source; a little soft"
+  },
+  "snowball": {
+   "file": "fx/snowball.png",
+   "width": 88,
+   "height": 78,
+   "displayScale": 0.5,
+   "displayWidth": 44,
+   "displayHeight": 39,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     669,
+     15,
+     856,
+     180
+    ]
+   },
+   "sourceScale": 0.471
+  },
+  "snow_puff": {
+   "file": "fx/snow_puff.png",
+   "width": 220,
+   "height": 186,
+   "displayScale": 0.5,
+   "displayWidth": 110,
+   "displayHeight": 93,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     957,
+     7,
+     1173,
+     190
+    ]
+   },
+   "sourceScale": 1.019
+  },
+  "snowflake_small": {
+   "file": "fx/snowflake_small.png",
+   "width": 72,
+   "height": 66,
+   "displayScale": 0.5,
+   "displayWidth": 36,
+   "displayHeight": 33,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     81,
+     189,
+     253,
+     346
+    ]
+   },
+   "sourceScale": 0.419
+  },
+  "snowflake_big": {
+   "file": "fx/snowflake_big.png",
+   "width": 241,
+   "height": 260,
+   "displayScale": 0.5,
+   "displayWidth": 120,
+   "displayHeight": 130,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     374,
+     180,
+     539,
+     358
+    ]
+   },
+   "sourceScale": 1.461
+  },
+  "ice_cube": {
+   "file": "fx/ice_cube.png",
+   "width": 320,
+   "height": 297,
+   "displayScale": 0.5,
+   "displayWidth": 160,
+   "displayHeight": 148,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     672,
+     189,
+     851,
+     355
+    ]
+   },
+   "sourceScale": 1.788,
+   "note": "upscaled 1.79x from the painted source; a little soft"
+  },
+  "snow_hat": {
+   "file": "fx/snow_hat.png",
+   "width": 168,
+   "height": 119,
+   "displayScale": 0.5,
+   "displayWidth": 84,
+   "displayHeight": 60,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.8
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     958,
+     201,
+     1173,
+     353
+    ]
+   },
+   "sourceScale": 0.781
+  },
+  "rain_cloud": {
+   "file": "fx/rain_cloud.png",
+   "width": 240,
+   "height": 201,
+   "displayScale": 0.5,
+   "displayWidth": 120,
+   "displayHeight": 100,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     75,
+     360,
+     264,
+     518
+    ]
+   },
+   "sourceScale": 1.27
+  },
+  "storm_cloud": {
+   "file": "fx/storm_cloud.png",
+   "width": 340,
+   "height": 208,
+   "displayScale": 0.5,
+   "displayWidth": 170,
+   "displayHeight": 104,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     340,
+     365,
+     575,
+     509
+    ]
+   },
+   "sourceScale": 1.447
+  },
+  "grey_cloud": {
+   "file": "fx/grey_cloud.png",
+   "width": 560,
+   "height": 302,
+   "displayScale": 0.5,
+   "displayWidth": 280,
+   "displayHeight": 151,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     635,
+     365,
+     889,
+     502
+    ]
+   },
+   "sourceScale": 2.205,
+   "note": "upscaled 2.20x from the painted source; a little soft"
+  },
+  "whirlwind_gust": {
+   "file": "fx/whirlwind_gust.png",
+   "width": 380,
+   "height": 254,
+   "displayScale": 0.5,
+   "displayWidth": 190,
+   "displayHeight": 127,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     944,
+     363,
+     1185,
+     524
+    ]
+   },
+   "sourceScale": 1.577
+  },
+  "leaf": {
+   "file": "fx/leaf.png",
+   "width": 55,
+   "height": 60,
+   "displayScale": 0.5,
+   "displayWidth": 28,
+   "displayHeight": 30,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     90,
+     525,
+     238,
+     687
+    ]
+   },
+   "sourceScale": 0.37
+  },
+  "feather": {
+   "file": "fx/feather.png",
+   "width": 68,
+   "height": 58,
+   "displayScale": 0.5,
+   "displayWidth": 34,
+   "displayHeight": 29,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     354,
+     521,
+     540,
+     681
+    ]
+   },
+   "sourceScale": 0.366
+  },
+  "tornado": {
+   "file": "fx/tornado.png",
+   "width": 578,
+   "height": 520,
+   "displayScale": 0.5,
+   "displayWidth": 289,
+   "displayHeight": 260,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.97
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     651,
+     511,
+     859,
+     698
+    ]
+   },
+   "sourceScale": 2.781,
+   "note": "upscaled 2.78x from the painted source; a little soft"
+  },
+  "puddle": {
+   "file": "fx/puddle.png",
+   "width": 280,
+   "height": 110,
+   "displayScale": 0.5,
+   "displayWidth": 140,
+   "displayHeight": 55,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     927,
+     567,
+     1207,
+     677
+    ]
+   },
+   "sourceScale": 1.0
+  },
+  "drip": {
+   "file": "fx/drip.png",
+   "width": 19,
+   "height": 28,
+   "displayScale": 0.5,
+   "displayWidth": 10,
+   "displayHeight": 14,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "source": {
+    "sheet": "fx_alpha_sheet.jpg",
+    "crop": [
+     147,
+     465,
+     169,
+     497
+    ]
+   },
+   "sourceScale": 0.875
+  },
+  "frozen_front": {
+   "file": "fx/frozen_front.png",
+   "width": 320,
+   "height": 297,
+   "displayScale": 0.5,
+   "displayWidth": 160,
+   "displayHeight": 148,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "derivedFrom": "ice_cube"
+  },
+  "dazed_ring": {
+   "file": "fx/dazed_ring.png",
+   "width": 1080,
+   "height": 84,
+   "displayScale": 0.5,
+   "displayWidth": 90,
+   "displayHeight": 42,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "derivedFrom": "star_small",
+   "frames": 6,
+   "frameWidth": 180,
+   "frameHeight": 84,
+   "frameRate": 10
+  },
+  "soaked_cloud": {
+   "file": "fx/soaked_cloud.png",
+   "width": 140,
+   "height": 117,
+   "displayScale": 0.5,
+   "displayWidth": 70,
+   "displayHeight": 58,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 1.0
+   },
+   "derivedFrom": "rain_cloud"
+  }
+ },
+ "status": {
+  "soaked": {
+   "texture": "soaked_cloud",
+   "blendMode": "NORMAL",
+   "anchor": "head",
+   "offsetY": -14,
+   "depth": "front",
+   "bobPx": 3,
+   "bobMs": 900,
+   "particles": {
+    "texture": "drip",
+    "frequencyMs": 260,
+    "quantity": 1,
+    "speedY": [
+     60,
+     90
+    ],
+    "lifespanMs": 500,
+    "gravityY": 300,
+    "scale": [
+     0.9,
+     0.7
+    ],
+    "spawnWidth": 50,
+    "spawnOffsetY": -4
+   },
+   "note": "little rain cloud over the head, dripping"
+  },
+  "dazed": {
+   "texture": "dazed_ring",
+   "blendMode": "NORMAL",
+   "anchor": "head",
+   "offsetY": -6,
+   "depth": "front",
+   "animation": {
+    "frames": 6,
+    "frameRate": 10,
+    "repeat": -1
+   },
+   "note": "3 stars orbiting the head (6-frame loop)"
+  },
+  "chilled": {
+   "texture": "snow_hat",
+   "blendMode": "NORMAL",
+   "anchor": "head",
+   "offsetY": 6,
+   "depth": "front",
+   "particles": {
+    "texture": "snowflake_small",
+    "frequencyMs": 350,
+    "quantity": 1,
+    "speed": [
+     10,
+     25
+    ],
+    "lifespanMs": 1200,
+    "gravityY": 20,
+    "scale": [
+     0.35,
+     0.15
+    ],
+    "alpha": [
+     0.9,
+     0
+    ],
+    "spawnWidth": 70,
+    "spawnOffsetY": 0
+   },
+   "note": "snow hat on the head plus a few tiny snowflakes drifting off it"
+  },
+  "frozen": {
+   "texture": "frozen_front",
+   "blendMode": "NORMAL",
+   "anchor": "center",
+   "offsetY": 0,
+   "depth": "front",
+   "fitToEnemy": {
+    "widthFactor": 1.15,
+    "heightFactor": 1.1
+   },
+   "alpha": 1.0,
+   "enter": {
+    "scaleFrom": 0.6,
+    "ms": 180
+   },
+   "exit": {
+    "particles": "snow_puff",
+    "ms": 200
+   },
+   "note": "clear ice cube over the enemy; the enemy stays visible through it"
+  },
+  "ward": {
+   "texture": "ward_ring",
+   "add_texture": "ward_ring",
+   "blendMode": "ADD",
+   "anchor": "feet",
+   "offsetY": -10,
+   "depth": "behind",
+   "scaleY": 0.55,
+   "alphaPulse": {
+    "min": 0.35,
+    "max": 0.85,
+    "ms": 1400,
+    "yoyo": true,
+    "repeat": -1
+   },
+   "rotateDegPerSec": 12,
+   "note": "violet shimmer ring lying flat under/behind the enemy (boss magic ward). Use fx/add/ward_ring.png with ADD, or fx/ward_ring.png with NORMAL"
+  }
+ }
+}

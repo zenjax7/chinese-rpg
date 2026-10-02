@@ -146,5 +146,27 @@
    "volume": 0.6
   }
  },
- "vo": {}
+ "vo": {},
+ "spellIcons": {
+  "small_fireball": "spells/icons/spell_small_fireball.png",
+  "bubble_spell": "spells/icons/spell_bubble_spell.png",
+  "snowball_volley": "spells/icons/spell_snowball_volley.png",
+  "little_lightning": "spells/icons/spell_little_lightning.png",
+  "fireball": "spells/icons/spell_fireball.png",
+  "whirlwind": "spells/icons/spell_whirlwind.png",
+  "snowflake_dance": "spells/icons/spell_snowflake_dance.png",
+  "lightning": "spells/icons/spell_lightning.png",
+  "sunbeam": "spells/icons/spell_sunbeam.png",
+  "big_fireball": "spells/icons/spell_big_fireball.png",
+  "blizzard": "spells/icons/spell_blizzard.png",
+  "tornado": "spells/icons/spell_tornado.png",
+  "meteor": "spells/icons/spell_meteor.png",
+  "thunderstorm": "spells/icons/spell_thunderstorm.png",
+  "super_blizzard": "spells/icons/spell_super_blizzard.png",
+  "meteor_shower": "spells/icons/spell_meteor_shower.png",
+  "locked": "spells/icons/spell_locked.png"
+ },
+ "spellFx": {
+  "manifest": "spells/fx/manifest.json"
+ }
 }
