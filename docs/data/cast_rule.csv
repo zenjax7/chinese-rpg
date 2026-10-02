@@ -1,0 +1,11 @@
+﻿key,value
+normal,1
+elite,1
+boss,2
+min_correct,3
+boss_second_after_q,12
+ward_boss_mult,1.0
+spell_streak_bonus,none (a cast neither adds to nor breaks the streak)
+spell_spoken_bonus,none (no answer is given)
+mp_regen_per_correct,1
+sec_per_cast,5

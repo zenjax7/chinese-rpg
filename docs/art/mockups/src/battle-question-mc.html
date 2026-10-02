@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"><script src="mock.js"></script></head><body>
+<div class="sheet"><div class="title">Mockup B: Battle, question open (multiple choice, EN→ZH, attack) <small>stimulus in a spell banner in the scene, answers in the same dock</small></div>
+<div class="row2"><div class="lb"><div class="frame" id="f"><div class="bg" style="background-image:url(file:///workspace/chinese-rpg/prototype/dist/bg/bg_battle_r1_starter_meadow.png);filter:brightness(.78) saturate(.85)"></div></div></div><div id="n"></div></div></div>
+<script>
+const f=document.getElementById('f');
+sp(f,'hero',360,420,250,2,'filter:drop-shadow(0 0 10px #ffe27a)');
+foe(f,'rabbit',800,420,200,'角兔',16,16,0,'filter:drop-shadow(0 0 8px #fff)');
+foe(f,'mushroom',970,420,200,'蘑菇怪',9,14,0,'opacity:.55');
+foe(f,'wolf_pup',1140,420,200,'小狼',20,20,0,'opacity:.55');
+el(f,`<div style="position:absolute;left:786px;top:180px;font-size:30px;color:#ffe27a;text-shadow:0 2px 0 #000">▼</div>`);
+party(f);corner(f);
+// spell banner
+el(f,`<div class="plate" style="left:420px;top:18px;width:560px;height:128px;text-align:center;border:3px solid #ffe27a;background:rgba(40,28,90,.92)">
+ <div style="font:800 20px Nunito;color:#ffe27a;margin-top:10px">⚔️ Cast your spell!</div>
+ <div style="font:800 40px Nunito;margin-top:4px">hello <span style="font-size:26px;opacity:.85">(polite, to adults)</span></div></div>`);
+// dock
+el(f,`<div class="panel" style="left:24px;top:464px;width:1232px;height:236px"></div>`);
+el(f,`<div style="position:absolute;left:56px;top:482px;font:700 24px Nunito;color:#fff">Tap the Chinese that means <b style="color:#ffe27a">hello (polite)</b></div>`);
+el(f,`<div class="btn sec" style="left:1034px;top:474px;width:200px;height:52px;flex-direction:row;gap:8px;font:800 19px Nunito">💡 Insight · 4 MP</div>`);
+const opts=['对不起','您好','再见'];
+opts.forEach((o,i)=>el(f,`<div class="btn cream" style="left:${64+i*392}px;top:540px;width:368px;height:128px"><span class="k">${i+1}</span><div lang="zh-CN" style="font:700 60px 'Noto Sans CJK SC';line-height:1">${o}</div></div>`));
+badge(f,1,420,30);badge(f,2,350,160);badge(f,3,1252,650);badge(f,4,40,480);badge(f,5,1228,560);badge(f,6,1010,480);badge(f,7,640,700);
+dimt(f,'Chinese 60px · button 368×128 · gap 24px',64,676);
+document.getElementById('n').innerHTML=notes([
+'<b>Spell banner</b> (560×128, top-centre) always holds the thing being asked: English here, the Chinese word (96px + 🔊) for ZH→EN. Attack banners are gold-edged purple; defense banners are red-edged (see Mockup C).',
+'<b>The world reacts</b>: the hero steps forward in a ready pose with a soft glow. The target gets a white rim light and the ▼ marker; other enemies fade to 55%. The background dims by about 20% so the question pops without hiding the fight.',
+'<b>No layout jump</b>: the dock keeps the same size and place as the command state. Only its content changes (cross-fade 150ms).',
+'<b>One short instruction line</b> (24px) repeats the target in plain words. Drop "Round 1 / 0/30 / potion uses" chips while a question is open.',
+'<b>Answer buttons</b>: cream cards, dark ink text (about 15:1 contrast), Chinese 60px bold, at least 368×128 with 24px gaps. Always one row: 2 options = 2 cards of 580 wide, 3 = 368, 4 = 284 (fits a 4-character word at 60px). English answers (ZH→EN) use 30px and may wrap to 2 lines. Never under 112px tall. Keys 1–4 on a laptop.',
+'<b>Insight</b> is secondary (outlined, 200×52, far corner) so it cannot be mis-tapped as an answer. Options stay locked (dimmed, no press) until the prompt audio ends or 800 ms.',
+'<b>Nothing else competes</b>: no log box, no feedback bar pushing content down. Feedback plays on the buttons and in the scene (Mockup D).'
+]);
+</script></body></html>

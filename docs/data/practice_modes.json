@@ -1,0 +1,42 @@
+[
+ {
+  "mode_id": "flashcards",
+  "name": "Flashcards",
+  "how_it_works": "Flip card: characters + audio ↔ English (no pinyin). Kid self-marks \"knew it\"/\"not yet\"",
+  "ways": "–",
+  "counts_for_proficiency": "no",
+  "sticker": "first clear of all cards"
+ },
+ {
+  "mode_id": "listen_pick",
+  "name": "Listen and pick",
+  "how_it_works": "Audio plays; tap the English (R-ZE) or the Chinese for an English prompt (R-EZ)",
+  "ways": "R-ZE, R-EZ",
+  "counts_for_proficiency": "yes, ≤1 per way",
+  "sticker": "first clear"
+ },
+ {
+  "mode_id": "say_it",
+  "name": "Say it",
+  "how_it_works": "See English (+ picture), say the Chinese (S-EZ); or hear Chinese, say the English (S-ZE)",
+  "ways": "S-EZ, S-ZE",
+  "counts_for_proficiency": "yes, ≤1 per way",
+  "sticker": "first clear"
+ },
+ {
+  "mode_id": "matching",
+  "name": "Matching game",
+  "how_it_works": "Match 6 Chinese cards to 6 English cards (timer-free)",
+  "ways": "R-ZE",
+  "counts_for_proficiency": "yes, ≤1 per way (first match only)",
+  "sticker": "first clear"
+ },
+ {
+  "mode_id": "quick_quiz",
+  "name": "Quick quiz",
+  "how_it_works": "10 mixed questions picked by the engine (weakest way first), same grading as battle",
+  "ways": "all active ways",
+  "counts_for_proficiency": "yes, ≤1 per way",
+  "sticker": "first clear"
+ }
+]

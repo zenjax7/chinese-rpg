@@ -1,0 +1,42 @@
+[
+ {
+  "key": "normal",
+  "value": "1"
+ },
+ {
+  "key": "elite",
+  "value": "1"
+ },
+ {
+  "key": "boss",
+  "value": "2"
+ },
+ {
+  "key": "min_correct",
+  "value": "3"
+ },
+ {
+  "key": "boss_second_after_q",
+  "value": "12"
+ },
+ {
+  "key": "ward_boss_mult",
+  "value": 1.0
+ },
+ {
+  "key": "spell_streak_bonus",
+  "value": "none (a cast neither adds to nor breaks the streak)"
+ },
+ {
+  "key": "spell_spoken_bonus",
+  "value": "none (no answer is given)"
+ },
+ {
+  "key": "mp_regen_per_correct",
+  "value": 1
+ },
+ {
+  "key": "sec_per_cast",
+  "value": 5
+ }
+]

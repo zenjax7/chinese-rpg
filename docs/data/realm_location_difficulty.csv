@@ -1,0 +1,21 @@
+﻿location_id,realm_no,realm,location_no,location_name,location_name_zh,tier,pool_items,v1_items,new_items,moved_items,top_topics,review_slots,enemies_per_fight,mc_options,path_fights,boss_id,boss_type,scripted_elite_id,normal_enemy_ids,minutes_speech_saver_75,minutes_speech_spender_75,minutes_reading_saver_75,patrols_speech_saver_75,patrols_reading_saver_75
+L1.1,1,Starter Meadow,1,Village Meadow,村边草地,1,52,42,10,0,Pronouns & question words; Greetings & politeness,0,1–2,3,8,big_beak_crow,location,,horned_rabbit;mushroom_imp,41,29,27,8.74,1.99
+L1.2,1,Starter Meadow,2,Clover Hills,三叶草山坡,1,47,33,14,0,Yes/no & core verbs; Sentence patterns; Numbers 1–10,1,1–2,3,8,big_grey_wolf,location,,horned_rabbit;mushroom_imp;wolf_pup,41,29,27,8.74,1.99
+L1.3,1,Starter Meadow,3,Horned Rabbit Warren,角兔窝,1,51,17,11,23,Adventure basics; Family & people; Connectors (basic),1,1–2,3,8,horned_rabbit_king,realm,swift_horned_rabbit,horned_rabbit;wolf_pup,41,29,27,8.74,1.99
+L2.1,2,Honeycomb Forest,1,Flower Glade,花海林地,2,59,37,22,0,Food & drink,1,1–2,3,8,greedy_bear,location,,giant_bee;sapling_sprite;forest_spider,49,32,33,11.1,3.93
+L2.2,2,Honeycomb Forest,2,Great Hive,大蜂巢,2,59,32,18,9,Wants & likes; Animals; Connectors (basic),1,1–2,3,8,queen_bee,realm,royal_guard_bee,giant_bee;forest_spider,49,32,33,11.1,3.93
+L3.1,3,Crossroads Market,1,Crossroads Highway,十字大道,3,54,31,23,0,Shopping & money; Measure words; Big numbers,2,2,4,8,bandit_boss,location,,road_bandit;slime,54,36,35,9.18,2.48
+L3.2,3,Crossroads Market,2,Night Bazaar,夜市,3,53,18,28,7,Describing things; Clothes; Comparisons,2,2,4,8,mimic_king,realm,mimic,road_bandit;slime,54,36,35,9.18,2.48
+L4.1,4,Goblin Caves,1,Cave Mouth,洞口,4,48,41,7,0,School & classroom; Family & people,2,2–3,4,8,echo_bat,location,,cave_bat,49,37,32,6.84,0.97
+L4.2,4,Goblin Caves,2,Crystal Tunnels,水晶隧道,4,47,8,39,0,School & classroom; Grammar words; Game & chat talk,2,2–3,4,8,goblin_warden,location,goblin_brute,cave_bat;goblin,49,37,32,6.84,0.97
+L4.3,4,Goblin Caves,3,Goblin 'School',哥布林学校,4,48,29,19,0,Game & chat talk; Dungeon & adventure; Requests & helping,2,2–3,4,8,goblin_king,realm,,goblin;goblin_monitor,49,37,32,6.84,0.97
+L5.1,5,Hydra Swamp,1,Misty Marsh,迷雾沼泽,5,47,24,23,0,Time & dates,2,2–3,4,8,bog_toad,location,swamp_wisp,bog_monster;bog_lizard,50,37,32,6.76,0.81
+L5.2,5,Hydra Swamp,2,Hydra's Lair,九头蛇巢穴,5,47,13,28,6,Daily routine; Connectors (basic); Time & dates,2,2–3,4,8,hydra,realm,,bog_monster;bog_lizard,50,37,32,6.76,0.81
+L6.1,6,Zombie Lands,1,Gloomy Village,灰雾村,6,60,44,16,0,Feelings; Body & health; Sentence patterns,2,3,5,8,zombie_mayor,location,,zombie,58,43,39,6.9,1.51
+L6.2,6,Zombie Lands,2,Moonlit Graveyard,月光墓园,6,60,17,42,1,Everyday actions; Body & health; Connectors (advanced),2,3,5,8,sickness_fiend,realm,zombie_knight,zombie;rattle_skeleton,58,43,39,6.9,1.51
+L7.1,7,Griffin Peaks,1,Windy Cliffs,大风悬崖,7,59,33,26,0,Places & directions,3,3,5,8,wind_dragon,location,cliff_golem,harpy;griffin,68,43,43,10.13,2.86
+L7.2,7,Griffin Peaks,2,Griffin Summit,狮鹫之巅,7,59,29,30,0,Weather; Transportation; Places & directions,3,3,5,8,griffin_king,realm,,harpy;griffin,68,43,43,10.13,2.86
+L8.1,8,Ogre Colosseum,1,Training Pits,训练场,8,52,21,31,0,Hobbies & sports,3,3,6,8,minotaur,location,,arena_troll;ogre_gladiator,64,42,39,9.06,1.76
+L8.2,8,Ogre Colosseum,2,Grand Colosseum,大角斗场,8,52,30,22,0,Exclamations & reactions; Hobbies & sports,3,3,6,8,ogre_champion,realm,fire_elemental,arena_troll;ogre_gladiator,64,42,39,9.06,1.76
+L9.1,9,Demon King's Castle,1,Demon King's Gate,魔王城门,9,48,22,26,0,Opinions; Connectors (advanced); Heroic battle talk,3,3,6,8,shadow_dragon,location,gargoyle,imp;demon_knight,60,41,37,8.09,1.46
+L9.2,9,Demon King's Castle,2,Throne Hall,王座大厅,9,49,18,31,0,Heroic battle talk; Races & story; Monster names,4,3,6,8,demon_king,realm,,imp;demon_knight,60,41,37,8.09,1.46

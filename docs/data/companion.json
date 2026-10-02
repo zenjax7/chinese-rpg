@@ -1,0 +1,74 @@
+[
+ {
+  "key": "gauge_full",
+  "value": 100,
+  "unit": "points",
+  "notes": ""
+ },
+ {
+  "key": "gain_per_wrong",
+  "value": 20,
+  "unit": "points",
+  "notes": "any graded wrong answer (attack or block)"
+ },
+ {
+  "key": "gain_per_correct",
+  "value": 5,
+  "unit": "points",
+  "notes": ""
+ },
+ {
+  "key": "gain_per_void_or_hint",
+  "value": 0,
+  "unit": "points",
+  "notes": ""
+ },
+ {
+  "key": "reset",
+  "value": "each battle",
+  "unit": "",
+  "notes": "gauge starts at 0 in every battle"
+ },
+ {
+  "key": "trigger",
+  "value": "start of the hero turn when full",
+  "unit": "",
+  "notes": "free action, no question, before the hero acts"
+ },
+ {
+  "key": "damage",
+  "value": "max(1, round(1.25 × ATK_h − 0.5 × DEF_e))",
+  "unit": "HP",
+  "notes": "no streak or spoken bonus"
+ },
+ {
+  "key": "target",
+  "value": "lowest-HP normal or elite enemy; the boss if alone",
+  "unit": "",
+  "notes": ""
+ },
+ {
+  "key": "counts_for_proficiency",
+  "value": "no",
+  "unit": "",
+  "notes": "no question is asked"
+ },
+ {
+  "key": "kills_pay",
+  "value": "yes",
+  "unit": "",
+  "notes": "normal EXP/gold/chest roll"
+ },
+ {
+  "key": "attacks_per_battle_50pct",
+  "value": "1.6–2.3",
+  "unit": "",
+  "notes": "sim, speech on, t2–t9"
+ },
+ {
+  "key": "attacks_per_battle_90pct",
+  "value": "0.6–0.8",
+  "unit": "",
+  "notes": "sim, t5–t9"
+ }
+]

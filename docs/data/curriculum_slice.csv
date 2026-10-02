@@ -1,0 +1,61 @@
+﻿no,id,simplified,traditional,pinyin,english,location_id,yct_level,hsk3_level,speaking,reading
+1,C001,你好,你好,nǐ hǎo,hello,L1.1,none,none,Y,Y
+2,C005,再见,再見,zàijiàn,goodbye,L1.1,1,1,Y,Y
+3,C007,谢谢,謝謝,xièxie,thank you,L1.1,1,1,Y,Y
+4,C008,不客气,不客氣,bù kèqi,you're welcome,L1.1,2,1,Y,Y
+5,C009,对不起,對不起,duìbuqǐ,sorry,L1.1,2,1,Y,Y
+6,C010,没关系,沒關係,méi guānxi,it's okay; no problem,L1.1,2,1,Y,Y
+7,C021,我,我,wǒ,I; me,L1.1,1,1,Y,Y
+8,C022,你,你,nǐ,you,L1.1,1,1,Y,Y
+9,C043,是,是,shì,to be; yes,L1.2,1,1,Y,Y
+10,C044,不,不,bù,not; no,L1.2,1,1,Y,Y
+11,C066,一,一,yī,one,L1.2,1,1,Y,Y
+12,C067,二,二,èr,two,L1.2,1,1,Y,Y
+13,C068,三,三,sān,three,L1.2,1,1,Y,Y
+14,C069,四,四,sì,four,L1.2,1,1,Y,Y
+15,C070,五,五,wǔ,five,L1.2,1,1,Y,Y
+16,C071,六,六,liù,six,L1.2,1,1,Y,Y
+17,C072,七,七,qī,seven,L1.2,1,1,Y,Y
+18,C073,八,八,bā,eight,L1.2,1,1,Y,Y
+19,C074,九,九,jiǔ,nine,L1.2,1,1,Y,Y
+20,C075,十,十,shí,ten,L1.2,1,1,Y,Y
+21,C597,这是……,這是……,zhè shì …,this is …,L1.2,none,none,Y,Y
+22,C598,那是什么,那是什麼,nà shì shénme,what is that?,L1.2,none,none,Y,Y
+23,C599,你是谁,你是誰,nǐ shì shéi,who are you?,L1.2,none,none,Y,Y
+24,C600,我是……,我是……,wǒ shì …,I am …,L1.2,none,none,Y,Y
+25,C602,我也是,我也是,wǒ yě shì,me too,L1.2,none,none,Y,Y
+26,C604,我有……,我有……,wǒ yǒu …,I have …,L1.2,none,none,Y,Y
+27,C076,救命,救命,jiùmìng,help! (save me!),L1.3,none,6,Y,Y
+28,C077,小心,小心,xiǎoxīn,be careful! watch out!,L1.3,4,2,Y,Y
+29,C092,兔子,兔子,tùzi,rabbit,L1.3,4,none,N,Y
+30,C176,两,兩,liǎng,two (before measure words),L1.3,2,1,N,Y
+31,C182,个,個,gè,(general measure word),L1.3,1,1,N,Y
+32,C273,爸爸,爸爸,bàba,dad,L1.3,1,1,Y,Y
+33,C274,妈妈,媽媽,māma,mom,L1.3,1,1,Y,Y
+34,C282,朋友,朋友,péngyou,friend,L1.3,2,1,Y,Y
+35,C336,和,和,hé,and; with,L1.3,1,1,Y,Y
+36,C337,也,也,yě,also; too,L1.3,2,1,Y,Y
+37,C372,很,很,hěn,very,L1.3,1,1,Y,Y
+38,C612,二十,二十,èrshí,twenty,L1.3,none,none,Y,Y
+39,C617,我们走吧,我們走吧,wǒmen zǒu ba,let's go,L1.3,none,none,Y,Y
+40,C093,吃,吃,chī,to eat,L2.1,1,1,Y,Y
+41,C094,喝,喝,hē,to drink,L2.1,1,1,Y,Y
+42,C096,米饭,米飯,mǐfàn,(cooked) rice,L2.1,1,1,Y,Y
+43,C097,面条,麵條,miàntiáo,noodles,L2.1,1,1,Y,Y
+44,C105,苹果,蘋果,píngguǒ,apple,L2.1,1,3,Y,Y
+45,C107,水,水,shuǐ,water,L2.1,1,1,Y,Y
+46,C115,蜂蜜,蜂蜜,fēngmì,honey,L2.1,none,7-9,N,Y
+47,C118,好吃,好吃,hǎochī,tasty (food),L2.1,2,1,Y,Y
+48,C121,饿,餓,è,hungry,L2.1,3,1,Y,Y
+49,C132,喜欢,喜歡,xǐhuan,to like,L2.2,1,1,Y,Y
+50,C135,不要,不要,bù yào,don't want; don't!,L2.2,none,2,Y,Y
+51,C136,我要……,我要……,wǒ yào …,I want …,L2.2,none,none,Y,Y
+52,C139,我饿了,我餓了,wǒ è le,I'm hungry,L2.2,none,none,Y,Y
+53,C142,花,花,huā,flower,L2.2,4,1,Y,Y
+54,C144,蜜蜂,蜜蜂,mìfēng,bee,L2.2,none,7-9,N,Y
+55,C160,我的妈呀,我的媽呀,wǒ de mā ya,oh my gosh! (lit. 'oh my mom!'),L2.2,none,none,Y,N
+56,C161,太好了,太好了,tài hǎo le,great! awesome!,L2.2,none,none,Y,Y
+57,C340,可是,可是,kěshì,but,L2.2,none,2,Y,Y
+58,C343,因为,因為,yīnwèi,because,L2.2,3,2,Y,Y
+59,C647,你想吃什么,你想吃什麼,nǐ xiǎng chī shénme,what do you want to eat?,L2.2,none,none,Y,Y
+60,C652,太……了,太……了,tài … le,too …; so …!,L2.2,none,none,Y,Y

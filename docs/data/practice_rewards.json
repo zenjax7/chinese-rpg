@@ -1,0 +1,50 @@
+[
+ {
+  "key": "gold_per_question",
+  "value": 0,
+  "unit": "gold",
+  "notes": ""
+ },
+ {
+  "key": "exp_per_question",
+  "value": 0,
+  "unit": "EXP",
+  "notes": ""
+ },
+ {
+  "key": "preview_complete_reward",
+  "value": "1 Honey Potion + 1 × G gold",
+  "unit": "once per location",
+  "notes": "every pool item answered at least once in a graded mode (not flashcards)"
+ },
+ {
+  "key": "mode_first_clear",
+  "value": "1 sticker",
+  "unit": "once per mode per location",
+  "notes": "cosmetic sticker book only"
+ },
+ {
+  "key": "realm_overview_complete",
+  "value": "1 cosmetic (hat/badge)",
+  "unit": "once per realm",
+  "notes": ""
+ },
+ {
+  "key": "practice_credit_cap_per_way",
+  "value": 1,
+  "unit": "correct answer",
+  "notes": "battle must supply the 2nd"
+ },
+ {
+  "key": "marks_item_seen",
+  "value": "no",
+  "unit": "",
+  "notes": "battle NEW_CAP and working set still decide introduction order"
+ },
+ {
+  "key": "leitner_effect",
+  "value": "none",
+  "unit": "",
+  "notes": "practice answers do not move Leitner boxes"
+ }
+]

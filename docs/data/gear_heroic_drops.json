@@ -1,0 +1,47 @@
+[
+ {
+  "tier": 1,
+  "realm_boss": "角兔王 Horned Rabbit King",
+  "heroic_drop": "角兔角 Rabbit-Horn Dagger (+1 streak at battle start)"
+ },
+ {
+  "tier": 2,
+  "realm_boss": "蜂后 Queen Bee",
+  "heroic_drop": "蜂后之冠 Queen's Crown (charm: +6 max MP)"
+ },
+ {
+  "tier": 3,
+  "realm_boss": "宝箱怪王 Mimic King",
+  "heroic_drop": "宝箱盾 Mimic Shield (Thorns 25%)"
+ },
+ {
+  "tier": 4,
+  "realm_boss": "哥布林大王 Goblin King (the 'Headmaster')",
+  "heroic_drop": "哥布林王冠 Goblin Crown (+10% gold)"
+ },
+ {
+  "tier": 5,
+  "realm_boss": "九头蛇 Hydra",
+  "heroic_drop": "九头蛇鳞 Hydra Scale (first broken block per battle −50%)"
+ },
+ {
+  "tier": 6,
+  "realm_boss": "病魔 Sickness Fiend",
+  "heroic_drop": "解药瓶 Cure Flask (Heal +10%)"
+ },
+ {
+  "tier": 7,
+  "realm_boss": "狮鹫王 Griffin King",
+  "heroic_drop": "狮鹫羽 Griffin Feather (Frost costs 5 MP instead of 8)"
+ },
+ {
+  "tier": 8,
+  "realm_boss": "食人魔冠军 Ogre Champion",
+  "heroic_drop": "冠军腰带 Champion Belt (streak 10 tier = ×2.25)"
+ },
+ {
+  "tier": 9,
+  "realm_boss": "魔王 Demon King",
+  "heroic_drop": "(the Demon King drops cosmetics and a title; the game is won)"
+ }
+]

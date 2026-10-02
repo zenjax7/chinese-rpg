@@ -1,0 +1,8 @@
+﻿chest_type,outcome,probability,contents
+normal chest,gold,0.4,3 × G gold
+normal chest,potion,0.35,1 Honey Potion
+normal chest,return_feather,0.05,1 Return Feather (or 3 × G gold if carrying 3)
+normal chest,mana_tea,0.1,1 Mana Tea
+normal chest,fine_gear,0.1,1 fine gear piece of the location tier
+location boss chest,bundle,1.0,3 × G gold + 1 Honey Potion + guaranteed fine gear piece
+realm boss chest,bundle,1.0,3 × G gold + 1 Honey Potion + guaranteed heroic piece + skill unlock

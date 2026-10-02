@@ -1,0 +1,6 @@
+﻿mode_id,name,how_it_works,ways,counts_for_proficiency,sticker
+flashcards,Flashcards,"Flip card: characters + audio ↔ English (no pinyin). Kid self-marks ""knew it""/""not yet""",–,no,first clear of all cards
+listen_pick,Listen and pick,Audio plays; tap the English (R-ZE) or the Chinese for an English prompt (R-EZ),"R-ZE, R-EZ","yes, ≤1 per way",first clear
+say_it,Say it,"See English (+ picture), say the Chinese (S-EZ); or hear Chinese, say the English (S-ZE)","S-EZ, S-ZE","yes, ≤1 per way",first clear
+matching,Matching game,Match 6 Chinese cards to 6 English cards (timer-free),R-ZE,"yes, ≤1 per way (first match only)",first clear
+quick_quiz,Quick quiz,"10 mixed questions picked by the engine (weakest way first), same grading as battle",all active ways,"yes, ≤1 per way",first clear

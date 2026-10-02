@@ -1,0 +1,42 @@
+[
+ {
+  "id": 1,
+  "net": "pity_inn",
+  "rule": "If gold < inn price, the inn stay is free"
+ },
+ {
+  "id": 2,
+  "net": "gold_loss_floor",
+  "rule": "A defeat never takes gold below 2 × inn price"
+ },
+ {
+  "id": 3,
+  "net": "defeat_fee",
+  "rule": "max(10% of gold, 1 inn price), only from gold above the floor"
+ },
+ {
+  "id": 4,
+  "net": "starter_and_broke_potion",
+  "rule": "1 Honey Potion at the start; after a defeat or pity stay with 0 potions and gold < inn, get 1 free"
+ },
+ {
+  "id": 5,
+  "net": "courage",
+  "rule": "+20% DEF per consecutive defeat (max +60%), cleared by a win"
+ },
+ {
+  "id": 6,
+  "net": "minimum_payout",
+  "rule": "Enemy gold never below 80% of base; every defeated enemy pays"
+ },
+ {
+  "id": 7,
+  "net": "boss_checkpoint",
+  "rule": "After the boss drops below 50% HP, retries start there (save only, no heal)"
+ },
+ {
+  "id": 8,
+  "net": "companion_team_attack",
+  "rule": "Friendship gauge fills faster on wrong answers (see companion table)"
+ }
+]

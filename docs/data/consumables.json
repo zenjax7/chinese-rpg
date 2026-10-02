@@ -1,0 +1,52 @@
+[
+ {
+  "item_id": "honey_potion",
+  "name_en": "Honey Potion",
+  "name_zh": "蜂蜜药水",
+  "effect": "+40% max HP",
+  "battle_use": "yes (uses the turn, no question)",
+  "price": "1 × G",
+  "carry_limit": "no limit (3 uses per battle)",
+  "sources": "shop; normal/elite chest; boss chest; 1 free at start; broke potion"
+ },
+ {
+  "item_id": "big_honey",
+  "name_en": "Big Honey",
+  "name_zh": "大蜂蜜",
+  "effect": "+70% max HP",
+  "battle_use": "yes (uses the turn, no question)",
+  "price": "2 × G",
+  "carry_limit": "no limit (shares the 3 per battle belt)",
+  "sources": "shop from tier 5; chests"
+ },
+ {
+  "item_id": "mana_tea",
+  "name_en": "Mana Tea",
+  "name_zh": "魔力茶",
+  "effect": "+50% max MP",
+  "battle_use": "no: map only (v3.4)",
+  "price": "6 × G (v3.4; was 1 × G)",
+  "carry_limit": "no limit",
+  "sources": "shop; normal/elite chest; words quest"
+ },
+ {
+  "item_id": "big_mana_tea",
+  "name_en": "Big Mana Tea",
+  "name_zh": "大魔力茶",
+  "effect": "refills MP to full",
+  "battle_use": "no: map only",
+  "price": "15 × G",
+  "carry_limit": "no limit",
+  "sources": "shop from town 5; boss chests"
+ },
+ {
+  "item_id": "return_feather",
+  "name_en": "Return Feather",
+  "name_zh": "回城羽毛",
+  "effect": "Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room",
+  "battle_use": "no",
+  "price": "1 × G",
+  "carry_limit": "3",
+  "sources": "shop; normal/elite chest (5%); 1 free in the tutorial"
+ }
+]

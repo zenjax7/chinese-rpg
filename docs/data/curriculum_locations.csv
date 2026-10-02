@@ -1,0 +1,21 @@
+﻿location_id,realm_no,realm,location_no,location_name,location_name_zh,tier,pool_items,v1_items,new_items,moved_items,top_topics
+L1.1,1,Starter Meadow,1,Village Meadow,村边草地,1,52,42,10,0,Pronouns & question words; Greetings & politeness
+L1.2,1,Starter Meadow,2,Clover Hills,三叶草山坡,1,47,33,14,0,Yes/no & core verbs; Sentence patterns; Numbers 1–10
+L1.3,1,Starter Meadow,3,Horned Rabbit Warren,角兔窝,1,51,17,11,23,Adventure basics; Family & people; Connectors (basic)
+L2.1,2,Honeycomb Forest,1,Flower Glade,花海林地,2,59,37,22,0,Food & drink
+L2.2,2,Honeycomb Forest,2,Great Hive,大蜂巢,2,59,32,18,9,Wants & likes; Animals; Connectors (basic)
+L3.1,3,Crossroads Market,1,Crossroads Highway,十字大道,3,54,31,23,0,Shopping & money; Measure words; Big numbers
+L3.2,3,Crossroads Market,2,Night Bazaar,夜市,3,53,18,28,7,Describing things; Clothes; Comparisons
+L4.1,4,Goblin Caves,1,Cave Mouth,洞口,4,48,41,7,0,School & classroom; Family & people
+L4.2,4,Goblin Caves,2,Crystal Tunnels,水晶隧道,4,47,8,39,0,School & classroom; Grammar words; Game & chat talk
+L4.3,4,Goblin Caves,3,Goblin 'School',哥布林学校,4,48,29,19,0,Game & chat talk; Dungeon & adventure; Requests & helping
+L5.1,5,Hydra Swamp,1,Misty Marsh,迷雾沼泽,5,47,24,23,0,Time & dates
+L5.2,5,Hydra Swamp,2,Hydra's Lair,九头蛇巢穴,5,47,13,28,6,Daily routine; Connectors (basic); Time & dates
+L6.1,6,Zombie Lands,1,Gloomy Village,灰雾村,6,60,44,16,0,Feelings; Body & health; Sentence patterns
+L6.2,6,Zombie Lands,2,Moonlit Graveyard,月光墓园,6,60,17,42,1,Everyday actions; Body & health; Connectors (advanced)
+L7.1,7,Griffin Peaks,1,Windy Cliffs,大风悬崖,7,59,33,26,0,Places & directions
+L7.2,7,Griffin Peaks,2,Griffin Summit,狮鹫之巅,7,59,29,30,0,Weather; Transportation; Places & directions
+L8.1,8,Ogre Colosseum,1,Training Pits,训练场,8,52,21,31,0,Hobbies & sports
+L8.2,8,Ogre Colosseum,2,Grand Colosseum,大角斗场,8,52,30,22,0,Exclamations & reactions; Hobbies & sports
+L9.1,9,Demon King's Castle,1,Demon King's Gate,魔王城门,9,48,22,26,0,Opinions; Connectors (advanced); Heroic battle talk
+L9.2,9,Demon King's Castle,2,Throne Hall,王座大厅,9,49,18,31,0,Heroic battle talk; Races & story; Monster names

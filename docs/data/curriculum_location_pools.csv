@@ -1,0 +1,1052 @@
+id,simplified,realm_no,realm,location_no,location_id,location_global_no,origin,v1_realm,slice
+C001,你好,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C002,您好,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C003,早上好,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C004,晚安,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C005,再见,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C006,拜拜,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C007,谢谢,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C008,不客气,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C009,对不起,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C010,没关系,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C011,请,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C012,欢迎,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C013,你好吗,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C014,我很好,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C015,名字,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C016,叫,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C017,你叫什么名字,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C018,我叫……,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C019,认识,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C020,认识你很高兴,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C586,请问,1,Starter Meadow,1,L1.1,1,v2,,N
+C587,请进,1,Starter Meadow,1,L1.1,1,v2,,N
+C588,请坐,1,Starter Meadow,1,L1.1,1,v2,,N
+C589,好久不见,1,Starter Meadow,1,L1.1,1,v2,,N
+C590,明天见,1,Starter Meadow,1,L1.1,1,v2,,N
+C021,我,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C022,你,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,Y
+C023,他,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C024,她,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C025,它,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C026,我们,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C027,你们,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C028,他们,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C029,大家,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C030,这,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C031,那,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C032,这个,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C033,那个,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C034,谁,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C035,什么,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C036,哪,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C037,哪儿,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C038,几,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C039,多少,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C040,怎么,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C041,怎么样,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C042,为什么,1,Starter Meadow,1,L1.1,1,v1,Starter Meadow,N
+C591,这些,1,Starter Meadow,1,L1.1,1,v2,,N
+C592,那些,1,Starter Meadow,1,L1.1,1,v2,,N
+C593,哪个,1,Starter Meadow,1,L1.1,1,v2,,N
+C594,这里,1,Starter Meadow,1,L1.1,1,v2,,N
+C595,那里,1,Starter Meadow,1,L1.1,1,v2,,N
+C066,一,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C067,二,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C068,三,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C069,四,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C070,五,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C071,六,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C072,七,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C073,八,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C074,九,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C075,十,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C043,是,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C044,不,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,Y
+C045,对,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C046,不对,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C047,有,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C048,没有,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C049,没,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C050,好,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C051,好的,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C052,会,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C053,能,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C054,可以,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C055,知道,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C056,看,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C057,说,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C058,听,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C059,做,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C060,在,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C596,真的,1,Starter Meadow,2,L1.2,2,v2,,N
+C061,吗,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C062,的,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C063,了,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C064,呢,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C065,吧,1,Starter Meadow,2,L1.2,2,v1,Starter Meadow,N
+C597,这是……,1,Starter Meadow,2,L1.2,2,v2,,Y
+C598,那是什么,1,Starter Meadow,2,L1.2,2,v2,,Y
+C599,你是谁,1,Starter Meadow,2,L1.2,2,v2,,Y
+C600,我是……,1,Starter Meadow,2,L1.2,2,v2,,Y
+C601,你是……吗,1,Starter Meadow,2,L1.2,2,v2,,N
+C602,我也是,1,Starter Meadow,2,L1.2,2,v2,,Y
+C603,我不是,1,Starter Meadow,2,L1.2,2,v2,,N
+C604,我有……,1,Starter Meadow,2,L1.2,2,v2,,Y
+C605,你有没有……,1,Starter Meadow,2,L1.2,2,v2,,N
+C606,我会……,1,Starter Meadow,2,L1.2,2,v2,,N
+C607,我不会,1,Starter Meadow,2,L1.2,2,v2,,N
+C608,我想……,1,Starter Meadow,2,L1.2,2,v2,,N
+C609,我们是朋友,1,Starter Meadow,2,L1.2,2,v2,,N
+C272,家,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C273,爸爸,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,Y
+C274,妈妈,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,Y
+C275,哥哥,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C276,姐姐,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C277,弟弟,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C278,妹妹,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C282,朋友,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,Y
+C283,人,1,Starter Meadow,3,L1.3,3,v1,Goblin Caves,N
+C610,十一,1,Starter Meadow,3,L1.3,3,v2,,N
+C611,十二,1,Starter Meadow,3,L1.3,3,v2,,N
+C612,二十,1,Starter Meadow,3,L1.3,3,v2,,Y
+C613,三十,1,Starter Meadow,3,L1.3,3,v2,,N
+C614,九十九,1,Starter Meadow,3,L1.3,3,v2,,N
+C176,两,1,Starter Meadow,3,L1.3,3,v1,Crossroads Market,Y
+C182,个,1,Starter Meadow,3,L1.3,3,v1,Crossroads Market,Y
+C336,和,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,Y
+C337,也,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,Y
+C338,还,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C339,都,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C353,一起,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C615,还有,1,Starter Meadow,3,L1.3,3,v2,,N
+C616,跟,1,Starter Meadow,3,L1.3,3,v2,,N
+C300,今天,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C301,明天,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C303,现在,1,Starter Meadow,3,L1.3,3,v1,Hydra Swamp,N
+C372,很,1,Starter Meadow,3,L1.3,3,v1,Zombie Lands,Y
+C373,太,1,Starter Meadow,3,L1.3,3,v1,Zombie Lands,N
+C376,真,1,Starter Meadow,3,L1.3,3,v1,Zombie Lands,N
+C454,……在哪儿,1,Starter Meadow,3,L1.3,3,v1,Griffin Peaks,N
+C076,救命,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,Y
+C077,小心,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,Y
+C078,快跑,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C079,跑,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C080,快,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C081,快点儿,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C082,慢,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C083,打,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C084,走,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C085,来,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C086,去,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C087,等,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C088,等一下,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C089,帮,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C090,帮忙,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C617,我们走吧,1,Starter Meadow,3,L1.3,3,v2,,Y
+C618,快来,1,Starter Meadow,3,L1.3,3,v2,,N
+C619,过来,1,Starter Meadow,3,L1.3,3,v2,,N
+C620,看一下,1,Starter Meadow,3,L1.3,3,v2,,N
+C092,兔子,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,Y
+C091,角兔,1,Starter Meadow,3,L1.3,3,v1,Starter Meadow,N
+C093,吃,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C094,喝,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C095,饭,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C096,米饭,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C097,面条,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C098,面包,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C099,包子,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C100,饺子,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C101,鸡蛋,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C102,肉,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C103,菜,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C104,水果,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C105,苹果,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C106,香蕉,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C107,水,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C108,茶,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C109,牛奶,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C110,果汁,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C111,可乐,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C112,蛋糕,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C113,冰淇淋,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C114,糖,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C115,蜂蜜,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C116,早饭,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C117,晚饭,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C118,好吃,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C119,甜,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C120,辣,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C121,饿,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,Y
+C122,渴,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C123,饱,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C124,杯子,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C125,筷子,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C126,汉堡,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C127,披萨,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C128,薯条,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C129,零食,2,Honeycomb Forest,1,L2.1,4,v1,Honeycomb Forest,N
+C621,吃饭,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C622,午饭,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C623,做饭,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C624,饭店,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C625,服务员,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C626,菜单,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C627,点菜,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C628,西瓜,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C629,葡萄,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C630,草莓,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C631,西红柿,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C632,巧克力,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C633,饼干,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C634,饮料,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C635,汤,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C636,酸,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C637,咸,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C638,香,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C639,味道,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C640,新鲜,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C641,尝,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C642,尝一尝,2,Honeycomb Forest,1,L2.1,4,v2,,N
+C643,碗,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C644,瓶,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C130,要,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C131,想,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C132,喜欢,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C133,爱,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C134,给,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C135,不要,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C136,我要……,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C137,我喜欢……,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C138,请给我……,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C139,我饿了,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C140,我吃饱了,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C141,太好吃了,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C645,一点儿,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C646,不太,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C647,你想吃什么,2,Honeycomb Forest,2,L2.2,5,v2,,Y
+C648,我要一碗面条,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C649,这个太甜了,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C650,我不太饿,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C651,再来一个,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C652,太……了,2,Honeycomb Forest,2,L2.2,5,v2,,Y
+C653,因为我饿了,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C340,可是,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,Y
+C341,但是,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,N
+C342,所以,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,N
+C343,因为,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,Y
+C344,因为……所以……,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,N
+C349,还是,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,N
+C350,或者,2,Honeycomb Forest,2,L2.2,5,v1,Hydra Swamp,N
+C654,又……又……,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C374,非常,2,Honeycomb Forest,2,L2.2,5,v1,Zombie Lands,N
+C375,有点儿,2,Honeycomb Forest,2,L2.2,5,v1,Zombie Lands,N
+C142,花,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C143,树,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C144,蜜蜂,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C145,森林,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C655,草,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C146,动物,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C147,猫,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C148,狗,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C149,鸟,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C150,鱼,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C151,马,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C152,牛,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C153,猪,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C154,鸡,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C155,熊猫,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C156,老虎,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C157,蛇,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C158,虫子,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C656,猴子,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C657,大象,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C658,蝴蝶,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C659,羊,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C660,养,2,Honeycomb Forest,2,L2.2,5,v2,,N
+C160,我的妈呀,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C161,太好了,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,Y
+C159,蜂后,2,Honeycomb Forest,2,L2.2,5,v1,Honeycomb Forest,N
+C162,买,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C163,卖,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C164,钱,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C165,块,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C166,多少钱,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C167,贵,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C168,便宜,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C169,太贵了,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C170,便宜一点儿吧,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C171,商店,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C172,东西,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C173,礼物,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C174,给你,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C661,元,3,Crossroads Market,1,L3.1,6,v2,,N
+C662,毛,3,Crossroads Market,1,L3.1,6,v2,,N
+C663,一共,3,Crossroads Market,1,L3.1,6,v2,,N
+C664,找钱,3,Crossroads Market,1,L3.1,6,v2,,N
+C665,试,3,Crossroads Market,1,L3.1,6,v2,,N
+C666,换,3,Crossroads Market,1,L3.1,6,v2,,N
+C667,超市,3,Crossroads Market,1,L3.1,6,v2,,N
+C668,钱包,3,Crossroads Market,1,L3.1,6,v2,,N
+C669,打折,3,Crossroads Market,1,L3.1,6,v2,,N
+C670,付钱,3,Crossroads Market,1,L3.1,6,v2,,N
+C671,别的,3,Crossroads Market,1,L3.1,6,v2,,N
+C672,还要别的吗,3,Crossroads Market,1,L3.1,6,v2,,N
+C673,我想买……,3,Crossroads Market,1,L3.1,6,v2,,N
+C674,这件衣服多少钱,3,Crossroads Market,1,L3.1,6,v2,,N
+C675,可以试试吗,3,Crossroads Market,1,L3.1,6,v2,,N
+C676,有没有大一点儿的,3,Crossroads Market,1,L3.1,6,v2,,N
+C677,我买两个,3,Crossroads Market,1,L3.1,6,v2,,N
+C678,我要这个,3,Crossroads Market,1,L3.1,6,v2,,N
+C679,玩具,3,Crossroads Market,1,L3.1,6,v2,,N
+C175,零,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C177,百,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C178,半,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C179,第一,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C180,多,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C181,少,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C680,千,3,Crossroads Market,1,L3.1,6,v2,,N
+C681,万,3,Crossroads Market,1,L3.1,6,v2,,N
+C183,本,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C184,只,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C185,杯,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C186,张,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C187,条,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C188,次,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C189,岁,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C682,件,3,Crossroads Market,1,L3.1,6,v2,,N
+C683,双,3,Crossroads Market,1,L3.1,6,v2,,N
+C190,颜色,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C191,红色,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C192,黄色,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C193,蓝色,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C194,绿色,3,Crossroads Market,1,L3.1,6,v1,Crossroads Market,N
+C195,白色,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C196,黑色,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C197,粉色,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C198,紫色,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C684,灰色,3,Crossroads Market,2,L3.2,7,v2,,N
+C685,橙色,3,Crossroads Market,2,L3.2,7,v2,,N
+C199,衣服,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C200,裤子,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C201,裙子,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C202,鞋,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C203,帽子,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C204,穿,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C686,衬衫,3,Crossroads Market,2,L3.2,7,v2,,N
+C687,外套,3,Crossroads Market,2,L3.2,7,v2,,N
+C688,袜子,3,Crossroads Market,2,L3.2,7,v2,,N
+C689,手表,3,Crossroads Market,2,L3.2,7,v2,,N
+C690,眼镜,3,Crossroads Market,2,L3.2,7,v2,,N
+C205,大,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C206,小,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C207,新,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C208,长,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C209,高,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C210,漂亮,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C211,好看,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C212,可爱,3,Crossroads Market,2,L3.2,7,v1,Crossroads Market,N
+C691,每,3,Crossroads Market,2,L3.2,7,v2,,N
+C692,一些,3,Crossroads Market,2,L3.2,7,v2,,N
+C693,旧,3,Crossroads Market,2,L3.2,7,v2,,N
+C694,短,3,Crossroads Market,2,L3.2,7,v2,,N
+C695,矮,3,Crossroads Market,2,L3.2,7,v2,,N
+C696,胖,3,Crossroads Market,2,L3.2,7,v2,,N
+C697,瘦,3,Crossroads Market,2,L3.2,7,v2,,N
+C698,重,3,Crossroads Market,2,L3.2,7,v2,,N
+C699,轻,3,Crossroads Market,2,L3.2,7,v2,,N
+C700,干净,3,Crossroads Market,2,L3.2,7,v2,,N
+C701,脏,3,Crossroads Market,2,L3.2,7,v2,,N
+C702,合适,3,Crossroads Market,2,L3.2,7,v2,,N
+C703,大小,3,Crossroads Market,2,L3.2,7,v2,,N
+C704,过,3,Crossroads Market,2,L3.2,7,v2,,N
+C705,更,3,Crossroads Market,2,L3.2,7,v2,,N
+C706,A比B……,3,Crossroads Market,2,L3.2,7,v2,,N
+C707,没有……那么……,3,Crossroads Market,2,L3.2,7,v2,,N
+C708,跟……一样,3,Crossroads Market,2,L3.2,7,v2,,N
+C709,比较,3,Crossroads Market,2,L3.2,7,v2,,N
+C710,红的比蓝的贵,3,Crossroads Market,2,L3.2,7,v2,,N
+C711,这个最好,3,Crossroads Market,2,L3.2,7,v2,,N
+C377,最,3,Crossroads Market,2,L3.2,7,v1,Zombie Lands,N
+C345,然后,3,Crossroads Market,2,L3.2,7,v1,Hydra Swamp,N
+C346,先,3,Crossroads Market,2,L3.2,7,v1,Hydra Swamp,N
+C347,再,3,Crossroads Market,2,L3.2,7,v1,Hydra Swamp,N
+C348,就,3,Crossroads Market,2,L3.2,7,v1,Hydra Swamp,N
+C355,比,3,Crossroads Market,2,L3.2,7,v1,Hydra Swamp,N
+C423,一样,3,Crossroads Market,2,L3.2,7,v1,Zombie Lands,N
+C279,爷爷,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C280,奶奶,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C281,孩子,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C284,男孩儿,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C285,女孩儿,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C286,叔叔,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C287,阿姨,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C288,你几岁,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C289,我十二岁,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C712,男,4,Goblin Caves,1,L4.1,8,v2,,N
+C713,女,4,Goblin Caves,1,L4.1,8,v2,,N
+C714,儿子,4,Goblin Caves,1,L4.1,8,v2,,N
+C715,女儿,4,Goblin Caves,1,L4.1,8,v2,,N
+C716,家人,4,Goblin Caves,1,L4.1,8,v2,,N
+C717,邻居,4,Goblin Caves,1,L4.1,8,v2,,N
+C718,小朋友,4,Goblin Caves,1,L4.1,8,v2,,N
+C221,学校,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C222,老师,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C223,学生,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C224,同学,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C225,教室,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C226,书,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C227,笔,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C228,铅笔,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C229,书包,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C230,桌子,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C231,上课,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C232,下课,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C233,作业,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C234,考试,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C235,问题,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C236,回答,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C237,问,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C238,学,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C239,学习,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C240,写,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C241,懂,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C242,汉字,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C243,中文,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C244,英文,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C245,数学,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C246,电脑,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C247,意思,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C248,老师好,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C249,我不懂,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C250,我不知道,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C251,什么意思,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C252,……用中文怎么说,4,Goblin Caves,1,L4.1,8,v1,Goblin Caves,N
+C253,请再说一遍,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C254,慢一点儿,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C255,我有问题,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C719,班,4,Goblin Caves,2,L4.2,9,v2,,N
+C720,年级,4,Goblin Caves,2,L4.2,9,v2,,N
+C721,课,4,Goblin Caves,2,L4.2,9,v2,,N
+C722,课本,4,Goblin Caves,2,L4.2,9,v2,,N
+C723,字,4,Goblin Caves,2,L4.2,9,v2,,N
+C724,词,4,Goblin Caves,2,L4.2,9,v2,,N
+C725,句子,4,Goblin Caves,2,L4.2,9,v2,,N
+C726,读,4,Goblin Caves,2,L4.2,9,v2,,N
+C727,听写,4,Goblin Caves,2,L4.2,9,v2,,N
+C728,复习,4,Goblin Caves,2,L4.2,9,v2,,N
+C729,练习,4,Goblin Caves,2,L4.2,9,v2,,N
+C730,记住,4,Goblin Caves,2,L4.2,9,v2,,N
+C731,忘记,4,Goblin Caves,2,L4.2,9,v2,,N
+C732,错,4,Goblin Caves,2,L4.2,9,v2,,N
+C733,认真,4,Goblin Caves,2,L4.2,9,v2,,N
+C734,容易,4,Goblin Caves,2,L4.2,9,v2,,N
+C735,难,4,Goblin Caves,2,L4.2,9,v2,,N
+C736,聪明,4,Goblin Caves,2,L4.2,9,v2,,N
+C737,图书馆,4,Goblin Caves,2,L4.2,9,v2,,N
+C738,黑板,4,Goblin Caves,2,L4.2,9,v2,,N
+C739,举手,4,Goblin Caves,2,L4.2,9,v2,,N
+C740,安静,4,Goblin Caves,2,L4.2,9,v2,,N
+C741,请安静,4,Goblin Caves,2,L4.2,9,v2,,N
+C742,我忘了,4,Goblin Caves,2,L4.2,9,v2,,N
+C743,校长,4,Goblin Caves,2,L4.2,9,v2,,N
+C744,考,4,Goblin Caves,2,L4.2,9,v2,,N
+C745,成绩,4,Goblin Caves,2,L4.2,9,v2,,N
+C746,放学,4,Goblin Caves,2,L4.2,9,v2,,N
+C747,放假,4,Goblin Caves,2,L4.2,9,v2,,N
+C748,暑假,4,Goblin Caves,2,L4.2,9,v2,,N
+C749,教,4,Goblin Caves,2,L4.2,9,v2,,N
+C750,讲,4,Goblin Caves,2,L4.2,9,v2,,N
+C751,介绍,4,Goblin Caves,2,L4.2,9,v2,,N
+C752,我来介绍一下,4,Goblin Caves,2,L4.2,9,v2,,N
+C753,让,4,Goblin Caves,2,L4.2,9,v2,,N
+C754,把,4,Goblin Caves,2,L4.2,9,v2,,N
+C755,被,4,Goblin Caves,2,L4.2,9,v2,,N
+C756,正在,4,Goblin Caves,2,L4.2,9,v2,,N
+C757,着,4,Goblin Caves,2,L4.2,9,v2,,N
+C256,玩,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C257,游戏,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C258,玩游戏,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C259,开始,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C260,准备,4,Goblin Caves,2,L4.2,9,v1,Goblin Caves,N
+C261,赢,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C262,输,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C263,手机,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C264,该你了,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C265,我赢了,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C266,你输了,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C267,再来一次,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C268,我来,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C269,一起玩吧,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C270,准备好了吗,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C271,不公平,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C758,你在做什么,4,Goblin Caves,3,L4.3,10,v2,,N
+C759,聊天儿,4,Goblin Caves,3,L4.3,10,v2,,N
+C760,发,4,Goblin Caves,3,L4.3,10,v2,,N
+C761,队,4,Goblin Caves,3,L4.3,10,v2,,N
+C762,升级,4,Goblin Caves,3,L4.3,10,v2,,N
+C763,作弊,4,Goblin Caves,3,L4.3,10,v2,,N
+C764,等等我,4,Goblin Caves,3,L4.3,10,v2,,N
+C765,你先走,4,Goblin Caves,3,L4.3,10,v2,,N
+C290,请帮我,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C291,能帮我吗,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C292,帮助,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C293,谢谢你的帮助,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C294,需要,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C295,别,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C296,救,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C297,保护,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C298,丢,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C299,我的……不见了,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C213,怪物,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C214,危险,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C215,小心后面,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C216,钥匙,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C217,门,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C218,开门,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C219,宝箱,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C766,把门打开,4,Goblin Caves,3,L4.3,10,v2,,N
+C767,我被抓住了,4,Goblin Caves,3,L4.3,10,v2,,N
+C768,我正在找钥匙,4,Goblin Caves,3,L4.3,10,v2,,N
+C769,抓住,4,Goblin Caves,3,L4.3,10,v2,,N
+C770,逃,4,Goblin Caves,3,L4.3,10,v2,,N
+C771,藏,4,Goblin Caves,3,L4.3,10,v2,,N
+C772,陷阱,4,Goblin Caves,3,L4.3,10,v2,,N
+C773,地下,4,Goblin Caves,3,L4.3,10,v2,,N
+C774,灯,4,Goblin Caves,3,L4.3,10,v2,,N
+C775,黑,4,Goblin Caves,3,L4.3,10,v2,,N
+C776,绳子,4,Goblin Caves,3,L4.3,10,v2,,N
+C220,哥布林,4,Goblin Caves,3,L4.3,10,v1,Goblin Caves,N
+C302,昨天,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C304,早上,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C305,中午,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C306,下午,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C307,晚上,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C308,年,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C309,月,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C310,号,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C311,星期,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C312,周末,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C313,点,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C314,分钟,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C315,小时,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C316,时候,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C317,时间,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C318,以后,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C319,以前,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C320,一会儿,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C321,每天,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C322,生日,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C323,马上,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C324,已经,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C325,几点,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C326,现在几点,5,Hydra Swamp,1,L5.1,11,v1,Hydra Swamp,N
+C777,刻,5,Hydra Swamp,1,L5.1,11,v2,,N
+C778,上午,5,Hydra Swamp,1,L5.1,11,v2,,N
+C779,早,5,Hydra Swamp,1,L5.1,11,v2,,N
+C780,晚,5,Hydra Swamp,1,L5.1,11,v2,,N
+C781,迟到,5,Hydra Swamp,1,L5.1,11,v2,,N
+C782,准时,5,Hydra Swamp,1,L5.1,11,v2,,N
+C783,最近,5,Hydra Swamp,1,L5.1,11,v2,,N
+C784,刚才,5,Hydra Swamp,1,L5.1,11,v2,,N
+C785,后来,5,Hydra Swamp,1,L5.1,11,v2,,N
+C786,从前,5,Hydra Swamp,1,L5.1,11,v2,,N
+C787,将来,5,Hydra Swamp,1,L5.1,11,v2,,N
+C788,周,5,Hydra Swamp,1,L5.1,11,v2,,N
+C789,去年,5,Hydra Swamp,1,L5.1,11,v2,,N
+C790,今年,5,Hydra Swamp,1,L5.1,11,v2,,N
+C791,明年,5,Hydra Swamp,1,L5.1,11,v2,,N
+C792,日期,5,Hydra Swamp,1,L5.1,11,v2,,N
+C793,星期一,5,Hydra Swamp,1,L5.1,11,v2,,N
+C794,星期天,5,Hydra Swamp,1,L5.1,11,v2,,N
+C795,上个星期,5,Hydra Swamp,1,L5.1,11,v2,,N
+C796,下个星期,5,Hydra Swamp,1,L5.1,11,v2,,N
+C797,第一次,5,Hydra Swamp,1,L5.1,11,v2,,N
+C798,多长时间,5,Hydra Swamp,1,L5.1,11,v2,,N
+C799,半天,5,Hydra Swamp,1,L5.1,11,v2,,N
+C800,新年,5,Hydra Swamp,2,L5.2,12,v2,,N
+C801,新年快乐,5,Hydra Swamp,2,L5.2,12,v2,,N
+C802,春节,5,Hydra Swamp,2,L5.2,12,v2,,N
+C803,节日,5,Hydra Swamp,2,L5.2,12,v2,,N
+C804,快乐,5,Hydra Swamp,2,L5.2,12,v2,,N
+C805,常常,5,Hydra Swamp,2,L5.2,12,v2,,N
+C806,有时候,5,Hydra Swamp,2,L5.2,12,v2,,N
+C807,总是,5,Hydra Swamp,2,L5.2,12,v2,,N
+C808,从来不,5,Hydra Swamp,2,L5.2,12,v2,,N
+C809,早就,5,Hydra Swamp,2,L5.2,12,v2,,N
+C810,还没,5,Hydra Swamp,2,L5.2,12,v2,,N
+C327,起床,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C328,睡觉,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C329,洗澡,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C330,刷牙,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C331,洗手,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C332,上学,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C333,回家,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C334,该睡觉了,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C335,我回来了,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C811,穿衣服,5,Hydra Swamp,2,L5.2,12,v2,,N
+C812,做作业,5,Hydra Swamp,2,L5.2,12,v2,,N
+C813,洗脸,5,Hydra Swamp,2,L5.2,12,v2,,N
+C814,睡午觉,5,Hydra Swamp,2,L5.2,12,v2,,N
+C815,快迟到了,5,Hydra Swamp,2,L5.2,12,v2,,N
+C816,我每天七点起床,5,Hydra Swamp,2,L5.2,12,v2,,N
+C817,你几点睡觉,5,Hydra Swamp,2,L5.2,12,v2,,N
+C351,对了,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C352,只,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C354,一直,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C818,才,5,Hydra Swamp,2,L5.2,12,v2,,N
+C819,就要……了,5,Hydra Swamp,2,L5.2,12,v2,,N
+C820,先……然后……,5,Hydra Swamp,2,L5.2,12,v2,,N
+C821,如果……就……,5,Hydra Swamp,2,L5.2,12,v2,,N
+C822,要是,5,Hydra Swamp,2,L5.2,12,v2,,N
+C823,……的时候,5,Hydra Swamp,2,L5.2,12,v2,,N
+C824,之前,5,Hydra Swamp,2,L5.2,12,v2,,N
+C825,之后,5,Hydra Swamp,2,L5.2,12,v2,,N
+C826,从……到……,5,Hydra Swamp,2,L5.2,12,v2,,N
+C827,直到,5,Hydra Swamp,2,L5.2,12,v2,,N
+C539,虽然……但是……,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C541,一边……一边……,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C542,一……就……,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C543,如果,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C544,而且,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C545,不过,5,Hydra Swamp,2,L5.2,12,v1,Demon King's Castle,N
+C356,九头蛇,5,Hydra Swamp,2,L5.2,12,v1,Hydra Swamp,N
+C357,高兴,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C358,开心,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C359,难过,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C360,生气,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C361,怕,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C362,害怕,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C363,累,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C364,困,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C365,无聊,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C366,担心,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C367,奇怪,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C368,有意思,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C369,哭,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C370,笑,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C371,觉得,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C378,我很害怕,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C379,我生气了,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C380,我累了,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C381,别怕,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C382,别哭,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C383,别担心,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C384,没事,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C385,你没事吧,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C386,你怎么了,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C828,伤心,6,Zombie Lands,1,L6.1,13,v2,,N
+C829,着急,6,Zombie Lands,1,L6.1,13,v2,,N
+C830,紧张,6,Zombie Lands,1,L6.1,13,v2,,N
+C831,放心,6,Zombie Lands,1,L6.1,13,v2,,N
+C832,满意,6,Zombie Lands,1,L6.1,13,v2,,N
+C833,失望,6,Zombie Lands,1,L6.1,13,v2,,N
+C834,激动,6,Zombie Lands,1,L6.1,13,v2,,N
+C835,感觉,6,Zombie Lands,1,L6.1,13,v2,,N
+C836,希望,6,Zombie Lands,1,L6.1,13,v2,,N
+C837,好像,6,Zombie Lands,1,L6.1,13,v2,,N
+C838,可怕,6,Zombie Lands,1,L6.1,13,v2,,N
+C839,恶心,6,Zombie Lands,1,L6.1,13,v2,,N
+C840,看起来,6,Zombie Lands,1,L6.1,13,v2,,N
+C841,越来越……,6,Zombie Lands,1,L6.1,13,v2,,N
+C842,得,6,Zombie Lands,1,L6.1,13,v2,,N
+C843,……得很好,6,Zombie Lands,1,L6.1,13,v2,,N
+C387,头,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C388,头发,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C389,眼睛,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C390,耳朵,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C391,鼻子,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C392,嘴,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C393,牙,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C394,手,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C395,脚,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C396,肚子,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C397,疼,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C398,生病,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C399,医生,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C400,药,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C401,受伤,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C402,休息,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C403,我头疼,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C404,我肚子疼,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C405,好疼,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C406,我受伤了,6,Zombie Lands,1,L6.1,13,v1,Zombie Lands,N
+C844,感冒,6,Zombie Lands,2,L6.2,14,v2,,N
+C845,发烧,6,Zombie Lands,2,L6.2,14,v2,,N
+C846,咳嗽,6,Zombie Lands,2,L6.2,14,v2,,N
+C847,舒服,6,Zombie Lands,2,L6.2,14,v2,,N
+C848,不舒服,6,Zombie Lands,2,L6.2,14,v2,,N
+C849,身体,6,Zombie Lands,2,L6.2,14,v2,,N
+C850,健康,6,Zombie Lands,2,L6.2,14,v2,,N
+C851,医院,6,Zombie Lands,2,L6.2,14,v2,,N
+C852,看病,6,Zombie Lands,2,L6.2,14,v2,,N
+C853,打针,6,Zombie Lands,2,L6.2,14,v2,,N
+C854,吃药,6,Zombie Lands,2,L6.2,14,v2,,N
+C855,腿,6,Zombie Lands,2,L6.2,14,v2,,N
+C856,脸,6,Zombie Lands,2,L6.2,14,v2,,N
+C857,心,6,Zombie Lands,2,L6.2,14,v2,,N
+C858,血,6,Zombie Lands,2,L6.2,14,v2,,N
+C859,多喝水,6,Zombie Lands,2,L6.2,14,v2,,N
+C860,你哪儿不舒服,6,Zombie Lands,2,L6.2,14,v2,,N
+C861,我感冒了,6,Zombie Lands,2,L6.2,14,v2,,N
+C862,你好点儿了吗,6,Zombie Lands,2,L6.2,14,v2,,N
+C407,用,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C408,找,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C409,找到,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C410,看见,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C411,进,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C412,进来,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C413,出去,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C414,回来,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C415,拿,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C416,放,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C417,打开,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C418,开,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C419,关,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C420,带,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C421,告诉,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C422,死,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C863,慢慢,6,Zombie Lands,2,L6.2,14,v2,,N
+C864,醒,6,Zombie Lands,2,L6.2,14,v2,,N
+C865,躺,6,Zombie Lands,2,L6.2,14,v2,,N
+C866,站,6,Zombie Lands,2,L6.2,14,v2,,N
+C867,推,6,Zombie Lands,2,L6.2,14,v2,,N
+C868,拉,6,Zombie Lands,2,L6.2,14,v2,,N
+C869,扔,6,Zombie Lands,2,L6.2,14,v2,,N
+C870,咬,6,Zombie Lands,2,L6.2,14,v2,,N
+C871,抱,6,Zombie Lands,2,L6.2,14,v2,,N
+C872,变,6,Zombie Lands,2,L6.2,14,v2,,N
+C873,变成,6,Zombie Lands,2,L6.2,14,v2,,N
+C874,治好,6,Zombie Lands,2,L6.2,14,v2,,N
+C875,洗,6,Zombie Lands,2,L6.2,14,v2,,N
+C876,脱,6,Zombie Lands,2,L6.2,14,v2,,N
+C877,搬,6,Zombie Lands,2,L6.2,14,v2,,N
+C878,送,6,Zombie Lands,2,L6.2,14,v2,,N
+C879,借,6,Zombie Lands,2,L6.2,14,v2,,N
+C880,修,6,Zombie Lands,2,L6.2,14,v2,,N
+C881,掉,6,Zombie Lands,2,L6.2,14,v2,,N
+C882,碰,6,Zombie Lands,2,L6.2,14,v2,,N
+C883,闻,6,Zombie Lands,2,L6.2,14,v2,,N
+C884,别动,6,Zombie Lands,2,L6.2,14,v2,,N
+C885,他变成了丧尸,6,Zombie Lands,2,L6.2,14,v2,,N
+C547,突然,6,Zombie Lands,2,L6.2,14,v1,Demon King's Castle,N
+C424,丧尸,6,Zombie Lands,2,L6.2,14,v1,Zombie Lands,N
+C425,这儿,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C426,那儿,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C427,哪里,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C428,上,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C429,下,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C430,上边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C431,下边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C432,前边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C433,后边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C434,左边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C435,右边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C436,旁边,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C437,东,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C438,西,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C439,南,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C440,北,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C441,远,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C442,近,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C443,往,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C444,到,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C445,公园,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C446,洗手间,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C447,房间,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C448,中国,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C449,美国,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C450,山,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C451,海,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C452,路,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C453,地图,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C455,洗手间在哪儿,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C456,一直走,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C457,往左走,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C458,往右走,7,Griffin Peaks,1,L7.1,15,v1,Griffin Peaks,N
+C886,附近,7,Griffin Peaks,1,L7.1,15,v2,,N
+C887,对面,7,Griffin Peaks,1,L7.1,15,v2,,N
+C888,中间,7,Griffin Peaks,1,L7.1,15,v2,,N
+C889,里边,7,Griffin Peaks,1,L7.1,15,v2,,N
+C890,外边,7,Griffin Peaks,1,L7.1,15,v2,,N
+C891,地方,7,Griffin Peaks,1,L7.1,15,v2,,N
+C892,城市,7,Griffin Peaks,1,L7.1,15,v2,,N
+C893,村子,7,Griffin Peaks,1,L7.1,15,v2,,N
+C894,国家,7,Griffin Peaks,1,L7.1,15,v2,,N
+C895,北京,7,Griffin Peaks,1,L7.1,15,v2,,N
+C896,长城,7,Griffin Peaks,1,L7.1,15,v2,,N
+C897,桥,7,Griffin Peaks,1,L7.1,15,v2,,N
+C898,河,7,Griffin Peaks,1,L7.1,15,v2,,N
+C899,湖,7,Griffin Peaks,1,L7.1,15,v2,,N
+C900,岛,7,Griffin Peaks,1,L7.1,15,v2,,N
+C901,路口,7,Griffin Peaks,1,L7.1,15,v2,,N
+C902,离,7,Griffin Peaks,1,L7.1,15,v2,,N
+C903,离这儿远吗,7,Griffin Peaks,1,L7.1,15,v2,,N
+C904,还有多远,7,Griffin Peaks,1,L7.1,15,v2,,N
+C905,过马路,7,Griffin Peaks,1,L7.1,15,v2,,N
+C906,转,7,Griffin Peaks,1,L7.1,15,v2,,N
+C907,迷路,7,Griffin Peaks,1,L7.1,15,v2,,N
+C908,我迷路了,7,Griffin Peaks,1,L7.1,15,v2,,N
+C909,爬,7,Griffin Peaks,1,L7.1,15,v2,,N
+C910,爬山,7,Griffin Peaks,1,L7.1,15,v2,,N
+C911,上来,7,Griffin Peaks,1,L7.1,15,v2,,N
+C912,下去,7,Griffin Peaks,2,L7.2,16,v2,,N
+C913,回去,7,Griffin Peaks,2,L7.2,16,v2,,N
+C914,出来,7,Griffin Peaks,2,L7.2,16,v2,,N
+C915,进去,7,Griffin Peaks,2,L7.2,16,v2,,N
+C459,车,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C460,公共汽车,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C461,火车,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C462,飞机,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C463,自行车,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C464,坐,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C465,骑,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C466,飞,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C467,出发,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C468,到了,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C469,马上到,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C916,机场,7,Griffin Peaks,2,L7.2,16,v2,,N
+C917,车站,7,Griffin Peaks,2,L7.2,16,v2,,N
+C918,地铁,7,Griffin Peaks,2,L7.2,16,v2,,N
+C919,出租车,7,Griffin Peaks,2,L7.2,16,v2,,N
+C920,船,7,Griffin Peaks,2,L7.2,16,v2,,N
+C921,开车,7,Griffin Peaks,2,L7.2,16,v2,,N
+C922,走路,7,Griffin Peaks,2,L7.2,16,v2,,N
+C923,坐飞机去,7,Griffin Peaks,2,L7.2,16,v2,,N
+C470,天气,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C471,冷,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C472,热,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C473,下雨,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C474,下雪,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C475,雨,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C476,雪,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C477,风,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C478,晴,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C479,太阳,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C480,月亮,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C481,星星,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C482,云,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C483,春天,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C484,夏天,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C485,秋天,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C486,冬天,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C487,今天好热,7,Griffin Peaks,2,L7.2,16,v1,Griffin Peaks,N
+C924,天空,7,Griffin Peaks,2,L7.2,16,v2,,N
+C925,刮风,7,Griffin Peaks,2,L7.2,16,v2,,N
+C926,阴天,7,Griffin Peaks,2,L7.2,16,v2,,N
+C927,晴天,7,Griffin Peaks,2,L7.2,16,v2,,N
+C928,暖和,7,Griffin Peaks,2,L7.2,16,v2,,N
+C929,凉快,7,Griffin Peaks,2,L7.2,16,v2,,N
+C930,温度,7,Griffin Peaks,2,L7.2,16,v2,,N
+C931,度,7,Griffin Peaks,2,L7.2,16,v2,,N
+C932,打雷,7,Griffin Peaks,2,L7.2,16,v2,,N
+C933,闪电,7,Griffin Peaks,2,L7.2,16,v2,,N
+C934,彩虹,7,Griffin Peaks,2,L7.2,16,v2,,N
+C935,雾,7,Griffin Peaks,2,L7.2,16,v2,,N
+C936,冰,7,Griffin Peaks,2,L7.2,16,v2,,N
+C937,季节,7,Griffin Peaks,2,L7.2,16,v2,,N
+C938,雨伞,7,Griffin Peaks,2,L7.2,16,v2,,N
+C939,天气预报,7,Griffin Peaks,2,L7.2,16,v2,,N
+C940,明天会下雨吗,7,Griffin Peaks,2,L7.2,16,v2,,N
+C941,羽毛,7,Griffin Peaks,2,L7.2,16,v2,,N
+C488,爱好,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C489,运动,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C490,足球,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C491,篮球,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C492,踢足球,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C493,打篮球,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C494,游泳,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C495,跑步,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C496,唱歌,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C497,跳舞,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C498,画画儿,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C499,看电视,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C500,电影,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C501,看电影,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C502,音乐,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C503,比赛,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C504,上网,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C505,视频,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C506,你喜欢做什么,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C507,我最喜欢……,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C508,我们去玩吧,8,Ogre Colosseum,1,L8.1,17,v1,Ogre Colosseum,N
+C942,打球,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C943,乒乓球,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C944,网球,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C945,排球,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C946,跳,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C947,跳高,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C948,武术,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C949,功夫,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C950,锻炼,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C951,练,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C952,训练,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C953,教练,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C954,队员,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C955,对手,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C956,冠军,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C957,第一名,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C958,分,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C959,得分,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C960,平,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C961,胜利,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C962,失败,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C963,成功,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C964,努力,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C965,坚持,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C966,观众,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C967,表演,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C968,弹钢琴,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C969,吉他,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C970,拍照,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C971,照片,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C972,歌,8,Ogre Colosseum,1,L8.1,17,v2,,N
+C973,歌手,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C974,明星,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C975,球迷,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C976,动画片,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C977,小说,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C978,漫画,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C979,兴趣,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C980,对……感兴趣,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C981,有趣,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C509,哇,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C510,哎呀,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C511,哎哟,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C512,天哪,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C513,太棒了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C514,厉害,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C515,好厉害,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C516,酷,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C517,真的吗,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C518,不会吧,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C519,没问题,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C520,当然,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C521,糟糕,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C522,完了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C523,加油,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C524,讨厌,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C525,算了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C526,哈哈,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C527,哦,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C528,嗯,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C529,喂,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C530,啊,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C531,吓死我了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C532,气死我了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C533,好险,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C534,恭喜,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C535,生日快乐,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C536,行,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C537,我知道了,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C538,怎么办,8,Ogre Colosseum,2,L8.2,18,v1,Ogre Colosseum,N
+C982,了不起,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C983,帅,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C984,真棒,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C985,不错,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C986,差不多,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C987,没想到,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C988,太可惜了,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C989,看我的,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C990,敢,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C991,你敢吗,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C992,我不怕你,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C993,来吧,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C994,哇塞,8,Ogre Colosseum,2,L8.2,18,v2,,N
+C540,不但……而且……,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C546,其实,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C548,最后,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C549,终于,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C995,不管,9,Demon King's Castle,1,L9.1,19,v2,,N
+C996,无论……都……,9,Demon King's Castle,1,L9.1,19,v2,,N
+C997,只要……就……,9,Demon King's Castle,1,L9.1,19,v2,,N
+C998,只有……才……,9,Demon King's Castle,1,L9.1,19,v2,,N
+C999,除了……以外,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1000,不是……而是……,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1001,连……都……,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1002,就算,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1003,于是,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1004,另外,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1005,否则,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1006,因此,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1007,为了,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1008,原来,9,Demon King's Castle,1,L9.1,19,v2,,N
+C550,同意,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C551,我同意,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C552,应该,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C553,可能,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C554,一定,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C555,我觉得……,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C556,你说得对,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C557,相信,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C1009,认为,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1010,意见,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1011,想法,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1012,办法,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1013,主意,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1014,好主意,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1015,我不同意,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1016,反对,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1017,支持,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1018,决定,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1019,选择,9,Demon King's Castle,1,L9.1,19,v2,,N
+C1020,必须,9,Demon King's Castle,1,L9.1,19,v2,,N
+C558,打败,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C559,战斗,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C560,攻击,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C561,勇敢,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C562,力量,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C563,魔法,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C564,放弃,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C565,不要放弃,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C566,英雄,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C567,敌人,9,Demon King's Castle,1,L9.1,19,v1,Demon King's Castle,N
+C568,坏人,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C569,坏,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C570,和平,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C571,世界,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C572,国王,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C573,城堡,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C574,永远,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C575,统治,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C576,冲啊,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C577,我来了,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C578,跟我来,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C579,我们一起打败他,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C1021,团结,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1022,合作,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1023,伙伴,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1024,信任,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1025,勇气,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1026,保卫,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1027,逃跑,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1028,投降,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1029,武器,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1030,剑,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1031,盾,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1032,宝石,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1033,黑暗,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1034,光明,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1035,士兵,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1036,战士,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1037,军队,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1038,我们必须团结起来,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1039,我们成功了,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1040,谢谢大家,9,Demon King's Castle,2,L9.2,20,v2,,N
+C580,人类,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C581,精灵,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C582,矮人,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C583,兽人,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C584,龙,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N
+C1041,故事,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1042,传说,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1043,王国,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1044,公主,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1045,王子,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1046,秘密,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1047,真相,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1048,自由,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1049,未来,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1050,命运,9,Demon King's Castle,2,L9.2,20,v2,,N
+C1051,历史,9,Demon King's Castle,2,L9.2,20,v2,,N
+C585,魔王,9,Demon King's Castle,2,L9.2,20,v1,Demon King's Castle,N

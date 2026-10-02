@@ -1,0 +1,82 @@
+[
+ {
+  "skill_id": "insight",
+  "name_en": "Insight",
+  "name_zh": "提示",
+  "effect": "Removes 1 distractor from the current MC question; a correct answer counts in combat but not for proficiency",
+  "mp_cost": 4,
+  "mp_cost_v2": 3,
+  "limit": "2 per battle",
+  "earned": "start"
+ },
+ {
+  "skill_id": "double_strike",
+  "name_en": "Double Strike",
+  "name_zh": "连击",
+  "effect": "At streak ≥ 3, a correct attack hits twice (2nd hit 50%)",
+  "mp_cost": 6,
+  "mp_cost_v2": 4,
+  "limit": "every 3 rounds",
+  "earned": "L5"
+ },
+ {
+  "skill_id": "guardian_shield",
+  "name_en": "Guardian Shield",
+  "name_zh": "守护盾",
+  "effect": "First wrong block in a battle becomes a correct block (leak still applies); auto-fires if equipped and MP ≥ cost",
+  "mp_cost": 8,
+  "mp_cost_v2": 5,
+  "limit": "1 per battle (rank 2: 2)",
+  "earned": "Starter Meadow realm boss"
+ },
+ {
+  "skill_id": "frost_word",
+  "name_en": "Frost Word",
+  "name_zh": "冰冻",
+  "effect": "A correct attack also freezes the target (skips its next attack)",
+  "mp_cost": 8,
+  "mp_cost_v2": 5,
+  "limit": "every 3 rounds",
+  "earned": "Griffin Peaks realm boss"
+ },
+ {
+  "skill_id": "heal",
+  "name_en": "Heal",
+  "name_zh": "治疗",
+  "effect": "Replaces the attack: answer one question; correct heals 30% max HP, wrong fizzles; MP spent either way",
+  "mp_cost": 12,
+  "mp_cost_v2": 6,
+  "limit": "1 per battle",
+  "earned": "Honeycomb quest"
+ },
+ {
+  "skill_id": "sweep",
+  "name_en": "Sweep",
+  "name_zh": "横扫",
+  "effect": "A correct attack hits all enemies at 60%",
+  "mp_cost": 12,
+  "mp_cost_v2": 8,
+  "limit": "every 4 rounds",
+  "earned": "Zombie Lands realm boss"
+ },
+ {
+  "skill_id": "second_wind",
+  "name_en": "Second Wind",
+  "name_zh": "再起",
+  "effect": "At 0 HP, revive at 30% HP (auto)",
+  "mp_cost": 20,
+  "mp_cost_v2": 12,
+  "limit": "1 per battle",
+  "earned": "Castle quest"
+ },
+ {
+  "skill_id": "passives",
+  "name_en": "Thorns / Echo Voice / Rally",
+  "name_zh": "反击 / 回音 / 鼓舞",
+  "effect": "Passives, as in v1",
+  "mp_cost": 0,
+  "mp_cost_v2": 0,
+  "limit": "–",
+  "earned": "as in v1"
+ }
+]

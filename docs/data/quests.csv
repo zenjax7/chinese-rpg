@@ -1,0 +1,37 @@
+﻿quest_id,town,town_zh,type,title_zh,title_en,target,n,reward_G,reward_gold,reward_item,how
+q1_bounty,1,小山村,bounty,打败8只角兔,Defeat 8 × Horned Rabbit,horned_rabbit,8,6,36,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q1_collect,1,小山村,collect,收集5个小蘑菇,Collect 5 little mushrooms,mushroom_imp,5,8,48,–,"each defeated Mushroom Imp drops one with 35% chance (a quest item, no inventory slot)"
+q1_words,1,小山村,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,60,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q1_delivery,1,小山村,delivery,把信送到蜂蜜镇,Deliver a letter to Honey Town,Honey Town,1,6,36,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q2_bounty,2,蜂蜜镇,bounty,打败8只巨蜂,Defeat 8 × Giant Bee,giant_bee,8,6,72,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q2_collect,2,蜂蜜镇,collect,收集5根蜘蛛丝,Collect 5 strands of spider silk,forest_spider,5,8,96,–,"each defeated Forest Spider drops one with 35% chance (a quest item, no inventory slot)"
+q2_words,2,蜂蜜镇,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,120,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q2_delivery,2,蜂蜜镇,delivery,把信送到十字路口集市,Deliver a letter to Crossroads Market,Crossroads Market,1,6,72,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q3_bounty,3,十字路口集市,bounty,打败8个山贼,Defeat 8 × Road Bandit,road_bandit,8,6,108,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q3_collect,3,十字路口集市,collect,收集5块果冻,Collect 5 jelly blobs,slime,5,8,144,–,"each defeated Slime drops one with 35% chance (a quest item, no inventory slot)"
+q3_words,3,十字路口集市,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,180,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q3_delivery,3,十字路口集市,delivery,把信送到矿工营地,Deliver a letter to Miner's Camp,Miner's Camp,1,6,108,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q4_bounty,4,矿工营地,bounty,打败8只洞穴蝙蝠,Defeat 8 × Cave Bat,cave_bat,8,6,162,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q4_collect,4,矿工营地,collect,收集5个小铃铛,Collect 5 little bells,goblin,5,8,216,–,"each defeated Goblin drops one with 35% chance (a quest item, no inventory slot)"
+q4_words,4,矿工营地,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,270,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q4_delivery,4,矿工营地,delivery,把信送到芦苇村,Deliver a letter to Reed Village,Reed Village,1,6,162,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q5_bounty,5,芦苇村,bounty,打败8只沼泽怪,Defeat 8 × Bog Monster,bog_monster,8,6,216,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q5_collect,5,芦苇村,collect,收集5片闪亮鳞片,Collect 5 shiny shed scales,bog_lizard,5,8,288,–,"each defeated Bog Lizard drops one with 35% chance (a quest item, no inventory slot)"
+q5_words,5,芦苇村,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,360,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q5_delivery,5,芦苇村,delivery,把信送到晨光小镇,Deliver a letter to Dawn Chapel,Dawn Chapel,1,6,216,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q6_bounty,6,晨光小镇,bounty,打败8个丧尸,Defeat 8 × Zombie,zombie,8,6,270,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q6_collect,6,晨光小镇,collect,收集5顶旧帽子,Collect 5 old hats,rattle_skeleton,5,8,360,–,"each defeated Rattle Skeleton drops one with 35% chance (a quest item, no inventory slot)"
+q6_words,6,晨光小镇,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,450,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q6_delivery,6,晨光小镇,delivery,把信送到云岭镇,Deliver a letter to Cloud Ridge,Cloud Ridge,1,6,270,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q7_bounty,7,云岭镇,bounty,打败8只鹰身女妖,Defeat 8 × Harpy,harpy,8,6,324,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q7_collect,7,云岭镇,collect,收集5根羽毛,Collect 5 feathers,griffin,5,8,432,–,"each defeated Griffin drops one with 35% chance (a quest item, no inventory slot)"
+q7_words,7,云岭镇,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,540,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q7_delivery,7,云岭镇,delivery,把信送到角斗场镇,Deliver a letter to Arena Town,Arena Town,1,6,324,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q8_bounty,8,角斗场镇,bounty,打败8个巨魔,Defeat 8 × Arena Troll,arena_troll,8,6,378,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q8_collect,8,角斗场镇,collect,收集5块铜奖牌,Collect 5 bronze medals,ogre_gladiator,5,8,504,–,"each defeated Ogre Gladiator drops one with 35% chance (a quest item, no inventory slot)"
+q8_words,8,角斗场镇,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,630,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q8_delivery,8,角斗场镇,delivery,把信送到灯火营地,Deliver a letter to Lantern Light Camp,Lantern Light Camp,1,6,378,return_feather,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)
+q9_bounty,9,灯火营地,bounty,打败8个小恶魔,Defeat 8 × Imp,imp,8,6,432,honey_potion,"counts kills of that enemy in any fight in this realm (path, patrol, boss minions)"
+q9_collect,9,灯火营地,collect,收集5颗暗影水晶,Collect 5 shadow crystals,demon_knight,5,8,576,–,"each defeated Demon Knight drops one with 35% chance (a quest item, no inventory slot)"
+q9_words,9,灯火营地,words,学会15个新词,Get 15 words of this realm Ready,realm pool,15,10,720,mana_tea,counts items of this realm's pools that become proficient (battle or practice); the quest page links to Preview & Practice
+q9_delivery,9,灯火营地,delivery,把信送到小山村,Deliver a letter to Village of 小山,Village of 小山,1,6,432,cosmetic: postman cap,offered after the realm boss; paid on arrival at the next town (realm 9: back home in 小山村)

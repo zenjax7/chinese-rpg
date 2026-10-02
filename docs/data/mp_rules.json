@@ -1,0 +1,50 @@
+[
+ {
+  "key": "max_mp",
+  "value": "10 + 2 × level",
+  "unit": "MP",
+  "notes": "14 at L2, 34 at L12, 58 at L24"
+ },
+ {
+  "key": "regen_per_correct",
+  "value": 1,
+  "unit": "MP",
+  "notes": "Every graded correct answer in battle (attack or block, any way); not practice, not hinted"
+ },
+ {
+  "key": "regen_per_wrong",
+  "value": 0,
+  "unit": "MP",
+  "notes": ""
+ },
+ {
+  "key": "restore_sources",
+  "value": "inn, waking after a defeat, Mana Tea, regen",
+  "unit": "",
+  "notes": "MP carries over between battles"
+ },
+ {
+  "key": "heal_fraction",
+  "value": 0.3,
+  "unit": "of max HP",
+  "notes": "was 0.35"
+ },
+ {
+  "key": "heal_limit_per_battle",
+  "value": 1,
+  "unit": "casts",
+  "notes": "was 2"
+ },
+ {
+  "key": "griffin_feather_frost_cost",
+  "value": 5,
+  "unit": "MP",
+  "notes": "heroic charm: Frost costs 5 instead of 8"
+ },
+ {
+  "key": "queens_crown_bonus",
+  "value": 6,
+  "unit": "max MP",
+  "notes": "heroic charm"
+ }
+]

@@ -1,0 +1,1052 @@
+﻿id,simplified,traditional,pinyin,english,type,part_of_speech,topic,realm,yct_level,hsk3_level,listening,speaking,reading,slice,notes
+C001,你好,你好,nǐ hǎo,hello,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 你+好 (parts max HSK 1, YCT 1)"
+C002,您好,您好,nín hǎo,"hello (polite, to adults/elders)",phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 您+好 (parts max HSK 1, YCT 3)"
+C003,早上好,早上好,zǎoshang hǎo,good morning,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 早上+好 (parts max HSK 1, YCT 2) | Taiwan usually says 早安 zǎo'ān"
+C004,晚安,晚安,wǎn'ān,good night,phrase,expr,Greetings & politeness,Starter Meadow,none,2,Y,Y,Y,N,
+C005,再见,再見,zàijiàn,goodbye,phrase,expr,Greetings & politeness,Starter Meadow,1,1,Y,Y,Y,Y,
+C006,拜拜,拜拜,bāibāi,bye-bye (casual),phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | loanword from English 'bye-bye'; extremely common with kids
+C007,谢谢,謝謝,xièxie,thank you,phrase,expr,Greetings & politeness,Starter Meadow,1,1,Y,Y,Y,Y,
+C008,不客气,不客氣,bù kèqi,you're welcome,phrase,expr,Greetings & politeness,Starter Meadow,2,1,Y,Y,Y,Y,
+C009,对不起,對不起,duìbuqǐ,sorry,phrase,expr,Greetings & politeness,Starter Meadow,2,1,Y,Y,Y,Y,
+C010,没关系,沒關係,méi guānxi,it's okay; no problem,phrase,expr,Greetings & politeness,Starter Meadow,2,1,Y,Y,Y,Y,
+C011,请,請,qǐng,please; to invite,word,verb,Greetings & politeness,Starter Meadow,2,1,Y,Y,Y,N,
+C012,欢迎,歡迎,huānyíng,welcome,word,verb,Greetings & politeness,Starter Meadow,3,2,Y,Y,Y,N,
+C013,你好吗,你好嗎,nǐ hǎo ma,how are you?,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+好+吗 (parts max HSK 1, YCT 1)"
+C014,我很好,我很好,wǒ hěn hǎo,I'm fine,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+很+好 (parts max HSK 1, YCT 1)"
+C015,名字,名字,míngzi,name,word,noun,Greetings & politeness,Starter Meadow,2,1,Y,Y,Y,N,
+C016,叫,叫,jiào,to be called; to call; to shout,word,verb,Greetings & politeness,Starter Meadow,1,1,Y,Y,Y,N,
+C017,你叫什么名字,你叫什麼名字,nǐ jiào shénme míngzi,what's your name?,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 你+叫+什么+名字 (parts max HSK 1, YCT 2)"
+C018,我叫……,我叫……,wǒ jiào …,my name is …,sentence frame,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+叫 (parts max HSK 1, YCT 1)"
+C019,认识,認識,rènshi,to know (someone); to recognize,word,verb,Greetings & politeness,Starter Meadow,1,1,Y,Y,Y,N,
+C020,认识你很高兴,認識你很高興,rènshi nǐ hěn gāoxìng,nice to meet you,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 认识+你+很+高兴 (parts max HSK 1, YCT 1)"
+C586,请问,請問,qǐngwèn,"excuse me, may I ask …",phrase,expr,Greetings & politeness,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C587,请进,請進,qǐng jìn,please come in,phrase,expr,Greetings & politeness,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C588,请坐,請坐,qǐng zuò,please sit down,phrase,expr,Greetings & politeness,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C589,好久不见,好久不見,hǎojiǔ bù jiàn,long time no see,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 好久+不见 (parts max HSK 6, YCT n/a) | new in v2"
+C590,明天见,明天見,míngtiān jiàn,see you tomorrow,phrase,expr,Greetings & politeness,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 明天+见 (parts max HSK 1, YCT n/a) | new in v2"
+C021,我,我,wǒ,I; me,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,Y,
+C022,你,你,nǐ,you,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,Y,
+C023,他,他,tā,he; him,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,"same sound as 她/它: great listening trap, teach by context"
+C024,她,她,tā,she; her,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C025,它,它,tā,"it (animals, monsters, things)",pronoun,pron,Pronouns & question words,Starter Meadow,3,2,Y,Y,Y,N,
+C026,我们,我們,wǒmen,we; us,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C027,你们,你們,nǐmen,you (plural),pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,
+C028,他们,他們,tāmen,they; them,pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,
+C029,大家,大家,dàjiā,everyone,pronoun,pron,Pronouns & question words,Starter Meadow,4,2,Y,Y,Y,N,
+C030,这,這,zhè,this,pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C031,那,那,nà,that; then (so…),pronoun,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,also used as a connector: 那我们走吧 'then let's go'
+C032,这个,這個,zhège,this one,pronoun,pron,Pronouns & question words,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 这+个 (parts max HSK 1, YCT 1)"
+C033,那个,那個,nàge,that one; um… (filler),pronoun,pron,Pronouns & question words,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 那+个 (parts max HSK 1, YCT 1)"
+C034,谁,誰,shéi,who,question word,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,also read shuí
+C035,什么,什麼,shénme,what,question word,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C036,哪,哪,nǎ,which,question word,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C037,哪儿,哪兒,nǎr,where,question word,pron,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,Taiwan says 哪裡 nǎlǐ (no erhua)
+C038,几,幾,jǐ,how many (small numbers),question word,num,Pronouns & question words,Starter Meadow,1,1,Y,Y,Y,N,
+C039,多少,多少,duōshao,how many; how much,question word,pron,Pronouns & question words,Starter Meadow,2,1,Y,Y,Y,N,
+C040,怎么,怎麼,zěnme,how; how come,question word,pron,Pronouns & question words,Starter Meadow,2,1,Y,Y,Y,N,
+C041,怎么样,怎麼樣,zěnmeyàng,how is it? how about it?,question word,pron,Pronouns & question words,Starter Meadow,2,2,Y,Y,Y,N,
+C042,为什么,為什麼,wèishénme,why,question word,adv,Pronouns & question words,Starter Meadow,3,2,Y,Y,Y,N,
+C591,这些,這些,zhèxiē,these,pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C592,那些,那些,nàxiē,those,pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C593,哪个,哪個,nǎge,which one?,question word,pron,Pronouns & question words,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 哪+个 (parts max HSK 1, YCT 1) | new in v2"
+C594,这里,這裡,zhèlǐ,here,pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C595,那里,那裡,nàlǐ,there,pronoun,pron,Pronouns & question words,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C066,一,一,yī,one,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,"tone changes: yí before 4th tone, yì before 1st/2nd/3rd; yī when counting"
+C067,二,二,èr,two,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C068,三,三,sān,three,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C069,四,四,sì,four,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,contrast with 十 shí (sì/shí is a classic listening pair)
+C070,五,五,wǔ,five,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C071,六,六,liù,six,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C072,七,七,qī,seven,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C073,八,八,bā,eight,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C074,九,九,jiǔ,nine,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C075,十,十,shí,ten,number,num,Numbers 1–10,Starter Meadow,1,1,Y,Y,Y,Y,
+C043,是,是,shì,to be; yes,word,verb,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,Y,
+C044,不,不,bù,not; no,word,adv,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,Y,tone changes to bú before a 4th tone (不是 bú shì)
+C045,对,對,duì,correct; right,word,adj,Yes/no & core verbs,Starter Meadow,3,1,Y,Y,Y,N,
+C046,不对,不對,bù duì,wrong; not right,phrase,expr,Yes/no & core verbs,Starter Meadow,none,1,Y,Y,Y,N,
+C047,有,有,yǒu,to have; there is,word,verb,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,N,
+C048,没有,沒有,méiyǒu,don't have; there isn't; didn't,word,verb,Yes/no & core verbs,Starter Meadow,2,1,Y,Y,Y,N,
+C049,没,沒,méi,not (have); didn't,word,adv,Yes/no & core verbs,Starter Meadow,none,1,Y,Y,Y,N,
+C050,好,好,hǎo,good; OK,word,adj,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,N,
+C051,好的,好的,hǎo de,okay; sure,phrase,expr,Yes/no & core verbs,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 好+的 (parts max HSK 1, YCT 1)"
+C052,会,會,huì,can (learned skill); will,word,verb,Yes/no & core verbs,Starter Meadow,2,1,Y,Y,Y,N,
+C053,能,能,néng,can; be able to,word,verb,Yes/no & core verbs,Starter Meadow,3,1,Y,Y,Y,N,
+C054,可以,可以,kěyǐ,may; can; OK,word,verb,Yes/no & core verbs,Starter Meadow,2,2,Y,Y,Y,N,
+C055,知道,知道,zhīdào,to know (a fact),word,verb,Yes/no & core verbs,Starter Meadow,3,1,Y,Y,Y,N,
+C056,看,看,kàn,to look; to watch; to read,word,verb,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,N,
+C057,说,說,shuō,to say; to speak,word,verb,Yes/no & core verbs,Starter Meadow,none,1,Y,Y,Y,N,
+C058,听,聽,tīng,to listen; to hear,word,verb,Yes/no & core verbs,Starter Meadow,3,1,Y,Y,Y,N,
+C059,做,做,zuò,to do; to make,word,verb,Yes/no & core verbs,Starter Meadow,2,1,Y,Y,Y,N,
+C060,在,在,zài,to be at; in; (be doing) now,word,prep,Yes/no & core verbs,Starter Meadow,1,1,Y,Y,Y,N,
+C596,真的,真的,zhēn de,really; truly,word,adv,Yes/no & core verbs,Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C061,吗,嗎,ma,(yes/no question particle),particle,particle,Particles,Starter Meadow,1,1,Y,N,Y,N,
+C062,的,的,de,('s; possessive/describing particle),particle,particle,Particles,Starter Meadow,1,1,Y,N,Y,N,
+C063,了,了,le,(done / change-of-state particle),particle,particle,Particles,Starter Meadow,2,1,Y,N,Y,N,
+C064,呢,呢,ne,(and you? / what about…? particle),particle,particle,Particles,Starter Meadow,2,1,Y,N,Y,N,
+C065,吧,吧,ba,(let's… / suggestion particle),particle,particle,Particles,Starter Meadow,3,1,Y,N,Y,N,
+C597,这是……,這是……,zhè shì …,this is …,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 这+是 (parts max HSK 1, YCT 1) | new in v2"
+C598,那是什么,那是什麼,nà shì shénme,what is that?,phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 那+是+什么 (parts max HSK 1, YCT 1) | new in v2"
+C599,你是谁,你是誰,nǐ shì shéi,who are you?,phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 你+是+谁 (parts max HSK 1, YCT 1) | new in v2"
+C600,我是……,我是……,wǒ shì …,I am …,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我+是 (parts max HSK 1, YCT 1) | new in v2"
+C601,你是……吗,你是……嗎,nǐ shì … ma,are you …?,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+是+吗 (parts max HSK 1, YCT 1) | new in v2"
+C602,我也是,我也是,wǒ yě shì,me too,phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我+也+是 (parts max HSK 1, YCT 2) | new in v2"
+C603,我不是,我不是,wǒ bù shì,I'm not; it's not me,phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+是 (parts max HSK 1, YCT 1) | new in v2"
+C604,我有……,我有……,wǒ yǒu …,I have …,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我+有 (parts max HSK 1, YCT 1) | new in v2"
+C605,你有没有……,你有沒有……,nǐ yǒu méiyǒu …,do you have …?,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 你+有没有 (parts max HSK 6, YCT n/a) | new in v2"
+C606,我会……,我會……,wǒ huì …,I can … (know how to),sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+会 (parts max HSK 1, YCT 2) | new in v2"
+C607,我不会,我不會,wǒ bù huì,I can't (don't know how),phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+会 (parts max HSK 1, YCT 2) | new in v2"
+C608,我想……,我想……,wǒ xiǎng …,I want to …; I'd like to …,sentence frame,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+想 (parts max HSK 1, YCT 3) | new in v2"
+C609,我们是朋友,我們是朋友,wǒmen shì péngyou,we are friends,phrase,expr,Sentence patterns,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我们+是+朋友 (parts max HSK 1, YCT 2) | new in v2"
+C272,家,家,jiā,home; family,word,noun,Family & people,Starter Meadow,1,1,Y,Y,Y,N,
+C273,爸爸,爸爸,bàba,dad,word,noun,Family & people,Starter Meadow,1,1,Y,Y,Y,Y,
+C274,妈妈,媽媽,māma,mom,word,noun,Family & people,Starter Meadow,1,1,Y,Y,Y,Y,
+C275,哥哥,哥哥,gēge,older brother,word,noun,Family & people,Starter Meadow,1,1,Y,Y,Y,N,
+C276,姐姐,姐姐,jiějie,older sister,word,noun,Family & people,Starter Meadow,1,1,Y,Y,Y,N,
+C277,弟弟,弟弟,dìdi,younger brother,word,noun,Family & people,Starter Meadow,2,1,Y,Y,Y,N,
+C278,妹妹,妹妹,mèimei,younger sister,word,noun,Family & people,Starter Meadow,2,1,Y,Y,Y,N,
+C282,朋友,朋友,péngyou,friend,word,noun,Family & people,Starter Meadow,2,1,Y,Y,Y,Y,
+C283,人,人,rén,person; people,word,noun,Family & people,Starter Meadow,none,1,Y,Y,Y,N,
+C610,十一,十一,shíyī,eleven,number,num,Numbers 1–100,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 十+一 (parts max HSK 1, YCT 1) | new in v2"
+C611,十二,十二,shí'èr,twelve,number,num,Numbers 1–100,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 十+二 (parts max HSK 1, YCT 1) | new in v2"
+C612,二十,二十,èrshí,twenty,number,num,Numbers 1–100,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 二+十 (parts max HSK 1, YCT 1) | new in v2"
+C613,三十,三十,sānshí,thirty,number,num,Numbers 1–100,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 三+十 (parts max HSK 1, YCT 1) | new in v2"
+C614,九十九,九十九,jiǔshíjiǔ,ninety-nine,number,num,Numbers 1–100,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 九+十+九 (parts max HSK 1, YCT 1) | teaches the tens+ones pattern up to 99 | new in v2"
+C176,两,兩,liǎng,two (before measure words),number,num,Big numbers,Starter Meadow,2,1,Y,N,Y,Y,
+C182,个,個,gè,(general measure word),measure word,mw,Measure words,Starter Meadow,1,1,Y,N,Y,Y,usually neutral tone ge in speech (一个 yí ge)
+C336,和,和,hé,and; with,connector,conj,Connectors (basic),Starter Meadow,1,1,Y,Y,Y,Y,
+C337,也,也,yě,also; too,connector,adv,Connectors (basic),Starter Meadow,2,1,Y,Y,Y,Y,
+C338,还,還,hái,still; also; even more,connector,adv,Connectors (basic),Starter Meadow,3,1,Y,Y,Y,N,polyphone: huán = to return (something)
+C339,都,都,dōu,all; both,connector,adv,Connectors (basic),Starter Meadow,3,1,Y,Y,Y,N,
+C353,一起,一起,yīqǐ,together,connector,adv,Connectors (basic),Starter Meadow,3,1,Y,Y,Y,N,said yìqǐ
+C615,还有,還有,hái yǒu,also; there's still …,connector,conj,Connectors (basic),Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C616,跟,跟,gēn,with; to follow,connector,prep,Connectors (basic),Starter Meadow,none,1,Y,Y,Y,N,new in v2
+C300,今天,今天,jīntiān,today,word,noun,Time & dates,Starter Meadow,1,1,Y,Y,Y,N,
+C301,明天,明天,míngtiān,tomorrow,word,noun,Time & dates,Starter Meadow,1,1,Y,Y,Y,N,
+C303,现在,現在,xiànzài,now,word,noun,Time & dates,Starter Meadow,1,1,Y,Y,Y,N,
+C372,很,很,hěn,very,word,adv,Feelings,Starter Meadow,1,1,Y,Y,Y,Y,
+C373,太,太,tài,too; so (much),word,adv,Feelings,Starter Meadow,3,1,Y,Y,Y,N,
+C376,真,真,zhēn,really; truly,word,adv,Feelings,Starter Meadow,2,1,Y,Y,Y,N,
+C454,……在哪儿,……在哪兒,… zài nǎr,where is …?,sentence frame,expr,Places & directions,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 在+哪儿 (parts max HSK 1, YCT 1) | Taiwan: ……在哪裡"
+C076,救命,救命,jiùmìng,help! (save me!),exclamation,interj,Adventure basics,Starter Meadow,none,6,Y,Y,Y,Y,
+C077,小心,小心,xiǎoxīn,be careful! watch out!,exclamation,verb,Adventure basics,Starter Meadow,4,2,Y,Y,Y,Y,
+C078,快跑,快跑,kuài pǎo,run! (run fast!),phrase,expr,Adventure basics,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 快+跑 (parts max HSK 1, YCT n/a)"
+C079,跑,跑,pǎo,to run,word,verb,Adventure basics,Starter Meadow,none,1,Y,Y,Y,N,
+C080,快,快,kuài,fast; quick; hurry,word,adj,Adventure basics,Starter Meadow,3,1,Y,Y,Y,N,
+C081,快点儿,快點兒,kuài diǎnr,hurry up!,phrase,expr,Adventure basics,Starter Meadow,none,2,Y,Y,Y,N,Taiwan: 快一點 kuài yīdiǎn
+C082,慢,慢,màn,slow,word,adj,Adventure basics,Starter Meadow,3,1,Y,Y,Y,N,
+C083,打,打,dǎ,to hit; to fight; to play (ball games),word,verb,Adventure basics,Starter Meadow,none,1,Y,Y,Y,N,
+C084,走,走,zǒu,to walk; to leave; go,word,verb,Adventure basics,Starter Meadow,3,1,Y,Y,Y,N,
+C085,来,來,lái,to come,word,verb,Adventure basics,Starter Meadow,2,1,Y,Y,Y,N,
+C086,去,去,qù,to go,word,verb,Adventure basics,Starter Meadow,1,1,Y,Y,Y,N,
+C087,等,等,děng,to wait,word,verb,Adventure basics,Starter Meadow,4,1,Y,Y,Y,N,
+C088,等一下,等一下,děng yīxià,wait a moment!,phrase,expr,Adventure basics,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 等+一+下 (parts max HSK 1, YCT 4) | 一下 is said yíxià"
+C089,帮,幫,bāng,to help,word,verb,Adventure basics,Starter Meadow,none,1,Y,Y,Y,N,
+C090,帮忙,幫忙,bāngmáng,to help; to do a favor,word,verb,Adventure basics,Starter Meadow,none,1,Y,Y,Y,N,
+C617,我们走吧,我們走吧,wǒmen zǒu ba,let's go,phrase,expr,Adventure basics,Starter Meadow,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我们+走+吧 (parts max HSK 1, YCT 3) | new in v2"
+C618,快来,快來,kuài lái,come quick!,phrase,expr,Adventure basics,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 快+来 (parts max HSK 1, YCT 3) | new in v2"
+C619,过来,過來,guòlai,come over here,word,verb,Adventure basics,Starter Meadow,none,2,Y,Y,Y,N,new in v2
+C620,看一下,看一下,kàn yīxià,take a look,phrase,expr,Adventure basics,Starter Meadow,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 看+一+下 (parts max HSK 1, YCT 3) | new in v2"
+C092,兔子,兔子,tùzi,rabbit,word,noun,Animals,Starter Meadow,4,none,Y,N,Y,Y,
+C091,角兔,角兔,jiǎotù,horned rabbit (monster),word,noun,Monster names,Starter Meadow,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 角+兔 (parts max HSK 5, YCT n/a) | coined game name (角 horn + 兔 rabbit)"
+C093,吃,吃,chī,to eat,word,verb,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,Y,
+C094,喝,喝,hē,to drink,word,verb,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,Y,
+C095,饭,飯,fàn,meal; cooked rice,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,
+C096,米饭,米飯,mǐfàn,(cooked) rice,word,noun,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,Y,Taiwan usually says 白飯 báifàn
+C097,面条,麵條,miàntiáo,noodles,word,noun,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,Y,
+C098,面包,麵包,miànbāo,bread,word,noun,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,N,
+C099,包子,包子,bāozi,steamed stuffed bun,word,noun,Food & drink,Honeycomb Forest,2,1,Y,Y,Y,N,
+C100,饺子,餃子,jiǎozi,dumplings,word,noun,Food & drink,Honeycomb Forest,3,2,Y,Y,Y,N,
+C101,鸡蛋,雞蛋,jīdàn,egg,word,noun,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,N,
+C102,肉,肉,ròu,meat,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,
+C103,菜,菜,cài,dish; vegetable,word,noun,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,N,
+C104,水果,水果,shuǐguǒ,fruit,word,noun,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,N,
+C105,苹果,蘋果,píngguǒ,apple,word,noun,Food & drink,Honeycomb Forest,1,3,Y,Y,Y,Y,
+C106,香蕉,香蕉,xiāngjiāo,banana,word,noun,Food & drink,Honeycomb Forest,2,3,Y,Y,Y,N,
+C107,水,水,shuǐ,water,word,noun,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,Y,
+C108,茶,茶,chá,tea,word,noun,Food & drink,Honeycomb Forest,2,1,Y,Y,Y,N,
+C109,牛奶,牛奶,niúnǎi,milk,word,noun,Food & drink,Honeycomb Forest,1,1,Y,Y,Y,N,
+C110,果汁,果汁,guǒzhī,juice,word,noun,Food & drink,Honeycomb Forest,3,3,Y,Y,Y,N,
+C111,可乐,可樂,kělè,cola; soda,word,noun,Food & drink,Honeycomb Forest,none,3,Y,Y,Y,N,
+C112,蛋糕,蛋糕,dàngāo,cake,word,noun,Food & drink,Honeycomb Forest,3,5,Y,Y,Y,N,
+C113,冰淇淋,冰淇淋,bīngqílín,ice cream,word,noun,Food & drink,Honeycomb Forest,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | very common kid word; mainland also writes 冰激凌 bīngjīlíng
+C114,糖,糖,táng,sugar; candy,word,noun,Food & drink,Honeycomb Forest,4,3,Y,Y,Y,N,
+C115,蜂蜜,蜂蜜,fēngmì,honey,word,noun,Food & drink,Honeycomb Forest,none,7-9,Y,N,Y,Y,core to the bee-forest story
+C116,早饭,早飯,zǎofàn,breakfast,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,
+C117,晚饭,晚飯,wǎnfàn,dinner,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,
+C118,好吃,好吃,hǎochī,tasty (food),word,adj,Food & drink,Honeycomb Forest,2,1,Y,Y,Y,Y,
+C119,甜,甜,tián,sweet,word,adj,Food & drink,Honeycomb Forest,4,3,Y,Y,Y,N,
+C120,辣,辣,là,spicy,word,adj,Food & drink,Honeycomb Forest,4,4,Y,N,Y,N,
+C121,饿,餓,è,hungry,word,adj,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,Y,
+C122,渴,渴,kě,thirsty,word,adj,Food & drink,Honeycomb Forest,4,1,Y,Y,Y,N,
+C123,饱,飽,bǎo,full (after eating),word,adj,Food & drink,Honeycomb Forest,3,2,Y,Y,Y,N,
+C124,杯子,杯子,bēizi,cup; glass,word,noun,Food & drink,Honeycomb Forest,3,1,Y,Y,Y,N,
+C125,筷子,筷子,kuàizi,chopsticks,word,noun,Food & drink,Honeycomb Forest,4,2,Y,Y,Y,N,
+C126,汉堡,漢堡,hànbǎo,hamburger,word,noun,Food & drink,Honeycomb Forest,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | kid-favorite food loanword
+C127,披萨,披薩,pīsà,pizza,word,noun,Food & drink,Honeycomb Forest,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | kid-favorite food loanword; Taiwan 披薩
+C128,薯条,薯條,shǔtiáo,French fries,word,noun,Food & drink,Honeycomb Forest,none,6,Y,N,N,N,kid-favorite food
+C129,零食,零食,língshí,snack,word,noun,Food & drink,Honeycomb Forest,none,4,Y,N,Y,N,
+C621,吃饭,吃飯,chī fàn,to eat (a meal),word,verb,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,new in v2
+C622,午饭,午飯,wǔfàn,lunch,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,new in v2
+C623,做饭,做飯,zuò fàn,to cook,word,verb,Food & drink,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2
+C624,饭店,飯店,fàndiàn,restaurant,word,noun,Food & drink,Honeycomb Forest,none,1,Y,Y,Y,N,new in v2
+C625,服务员,服務員,fúwùyuán,waiter; server,word,noun,Food & drink,Honeycomb Forest,4,none,Y,N,Y,N,new in v2
+C626,菜单,菜單,càidān,menu,word,noun,Food & drink,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2 | OpenCC Taiwan-phrase form: 選單
+C627,点菜,點菜,diǎn cài,to order food,word,verb,Food & drink,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 点+菜 (parts max HSK 1, YCT 3) | new in v2"
+C628,西瓜,西瓜,xīguā,watermelon,word,noun,Food & drink,Honeycomb Forest,3,4,Y,Y,Y,N,new in v2
+C629,葡萄,葡萄,pútao,grapes,word,noun,Food & drink,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C630,草莓,草莓,cǎoméi,strawberry,word,noun,Food & drink,Honeycomb Forest,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | kid-essential fruit | new in v2
+C631,西红柿,西紅柿,xīhóngshì,tomato,word,noun,Food & drink,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C632,巧克力,巧克力,qiǎokèlì,chocolate,word,noun,Food & drink,Honeycomb Forest,4,4,Y,N,Y,N,new in v2
+C633,饼干,餅乾,bǐnggān,cookie; cracker,word,noun,Food & drink,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C634,饮料,飲料,yǐnliào,drink; beverage,word,noun,Food & drink,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C635,汤,湯,tāng,soup,word,noun,Food & drink,Honeycomb Forest,4,3,Y,Y,Y,N,new in v2
+C636,酸,酸,suān,sour,word,adj,Food & drink,Honeycomb Forest,none,4,Y,N,Y,N,new in v2
+C637,咸,鹹,xián,salty,word,adj,Food & drink,Honeycomb Forest,none,4,Y,N,Y,N,new in v2
+C638,香,香,xiāng,fragrant; smells good,word,adj,Food & drink,Honeycomb Forest,none,3,Y,Y,Y,N,new in v2
+C639,味道,味道,wèidao,taste; flavor,word,noun,Food & drink,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2
+C640,新鲜,新鮮,xīnxiān,fresh,word,adj,Food & drink,Honeycomb Forest,none,4,Y,N,Y,N,new in v2
+C641,尝,嘗,cháng,to taste,word,verb,Food & drink,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C642,尝一尝,嘗一嘗,cháng yi cháng,have a taste,phrase,expr,Food & drink,Honeycomb Forest,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 尝+一+尝 (parts max HSK 5, YCT 4) | new in v2"
+C643,碗,碗,wǎn,bowl (also measure word: a bowl of),measure word,mw,Measure words,Honeycomb Forest,none,2,Y,N,Y,N,new in v2
+C644,瓶,瓶,píng,bottle (measure word: a bottle of),measure word,mw,Measure words,Honeycomb Forest,none,2,Y,N,Y,N,new in v2
+C130,要,要,yào,to want; will; need,word,verb,Wants & likes,Honeycomb Forest,2,1,Y,Y,Y,N,
+C131,想,想,xiǎng,to want to; to miss; to think,word,verb,Wants & likes,Honeycomb Forest,3,1,Y,Y,Y,N,
+C132,喜欢,喜歡,xǐhuan,to like,word,verb,Wants & likes,Honeycomb Forest,1,1,Y,Y,Y,Y,
+C133,爱,愛,ài,to love,word,verb,Wants & likes,Honeycomb Forest,1,1,Y,Y,Y,N,
+C134,给,給,gěi,to give; for,word,verb,Wants & likes,Honeycomb Forest,3,1,Y,Y,Y,N,
+C135,不要,不要,bù yào,don't want; don't!,phrase,expr,Wants & likes,Honeycomb Forest,none,2,Y,Y,Y,Y,said bú yào
+C136,我要……,我要……,wǒ yào …,I want …,sentence frame,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我+要 (parts max HSK 1, YCT 2)"
+C137,我喜欢……,我喜歡……,wǒ xǐhuan …,I like …,sentence frame,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+喜欢 (parts max HSK 1, YCT 1)"
+C138,请给我……,請給我……,qǐng gěi wǒ …,please give me …,sentence frame,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 请+给+我 (parts max HSK 1, YCT 3)"
+C139,我饿了,我餓了,wǒ è le,I'm hungry,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 我+饿+了 (parts max HSK 1, YCT 3)"
+C140,我吃饱了,我吃飽了,wǒ chī bǎo le,I'm full,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+吃+饱+了 (parts max HSK 2, YCT 3)"
+C141,太好吃了,太好吃了,tài hǎochī le,so delicious!,exclamation,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 太+好吃+了 (parts max HSK 1, YCT 3)"
+C645,一点儿,一點兒,yīdiǎnr,a little; a bit,word,adv,Wants & likes,Honeycomb Forest,4,1,Y,Y,Y,N,new in v2
+C646,不太,不太,bù tài,not very,word,adv,Wants & likes,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2
+C647,你想吃什么,你想吃什麼,nǐ xiǎng chī shénme,what do you want to eat?,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 你+想+吃+什么 (parts max HSK 1, YCT 3) | new in v2"
+C648,我要一碗面条,我要一碗麵條,wǒ yào yī wǎn miàntiáo,I'd like a bowl of noodles,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+要+一+碗+面条 (parts max HSK 2, YCT n/a) | new in v2"
+C649,这个太甜了,這個太甜了,zhège tài tián le,this is too sweet,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 这+个+太+甜+了 (parts max HSK 3, YCT 4) | new in v2"
+C650,我不太饿,我不太餓,wǒ bù tài è,I'm not very hungry,phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不太+饿 (parts max HSK 2, YCT n/a) | new in v2"
+C651,再来一个,再來一個,zài lái yī ge,"one more, please",phrase,expr,Wants & likes,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 再+来+一+个 (parts max HSK 1, YCT 3) | new in v2"
+C652,太……了,太……了,tài … le,too …; so …!,sentence frame,expr,Sentence patterns,Honeycomb Forest,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 太+了 (parts max HSK 1, YCT 3) | new in v2"
+C653,因为我饿了,因為我餓了,yīnwèi wǒ è le,because I'm hungry,phrase,expr,Sentence patterns,Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 因为+我+饿+了 (parts max HSK 2, YCT 3) | new in v2"
+C340,可是,可是,kěshì,but,connector,conj,Connectors (basic),Honeycomb Forest,none,2,Y,Y,Y,Y,
+C341,但是,但是,dànshì,but; however,connector,conj,Connectors (basic),Honeycomb Forest,3,2,Y,Y,Y,N,
+C342,所以,所以,suǒyǐ,so; therefore,connector,conj,Connectors (basic),Honeycomb Forest,3,2,Y,Y,Y,N,
+C343,因为,因為,yīnwèi,because,connector,conj,Connectors (basic),Honeycomb Forest,3,2,Y,Y,Y,Y,
+C344,因为……所以……,因為……所以……,yīnwèi … suǒyǐ …,because … so …,connector,conj,Connectors (basic),Honeycomb Forest,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 因为+所以 (parts max HSK 2, YCT 3)"
+C349,还是,還是,háishi,or (in questions); still,connector,conj,Connectors (basic),Honeycomb Forest,4,1,Y,Y,Y,N,
+C350,或者,或者,huòzhě,or,connector,conj,Connectors (basic),Honeycomb Forest,4,2,Y,Y,Y,N,
+C654,又……又……,又……又……,yòu … yòu …,both … and …,sentence frame,conj,Connectors (basic),Honeycomb Forest,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 又+又 (parts max HSK 2, YCT n/a) | new in v2"
+C374,非常,非常,fēicháng,extremely; very,word,adv,Feelings,Honeycomb Forest,4,1,Y,Y,Y,N,
+C375,有点儿,有點兒,yǒudiǎnr,a bit (usually negative),word,adv,Feelings,Honeycomb Forest,none,2,Y,Y,Y,N,Taiwan: 有點 yǒudiǎn
+C142,花,花,huā,flower,word,noun,Nature,Honeycomb Forest,4,1,Y,Y,Y,Y,
+C143,树,樹,shù,tree,word,noun,Nature,Honeycomb Forest,none,1,Y,Y,Y,N,
+C144,蜜蜂,蜜蜂,mìfēng,bee,word,noun,Nature,Honeycomb Forest,none,7-9,Y,N,Y,Y,core to the bee-forest story
+C145,森林,森林,sēnlín,forest,word,noun,Nature,Honeycomb Forest,none,4,Y,N,Y,N,
+C655,草,草,cǎo,grass,word,noun,Nature,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2
+C146,动物,動物,dòngwù,animal,word,noun,Animals,Honeycomb Forest,none,2,Y,Y,Y,N,
+C147,猫,貓,māo,cat,word,noun,Animals,Honeycomb Forest,1,2,Y,Y,Y,N,
+C148,狗,狗,gǒu,dog,word,noun,Animals,Honeycomb Forest,1,2,Y,Y,Y,N,
+C149,鸟,鳥,niǎo,bird,word,noun,Animals,Honeycomb Forest,1,2,Y,Y,Y,N,
+C150,鱼,魚,yú,fish,word,noun,Animals,Honeycomb Forest,1,2,Y,Y,Y,N,
+C151,马,馬,mǎ,horse,word,noun,Animals,Honeycomb Forest,none,3,Y,Y,Y,N,
+C152,牛,牛,niú,cow; ox,word,noun,Animals,Honeycomb Forest,none,3,Y,Y,Y,N,
+C153,猪,豬,zhū,pig,word,noun,Animals,Honeycomb Forest,none,3,Y,Y,Y,N,
+C154,鸡,雞,jī,chicken,word,noun,Animals,Honeycomb Forest,none,2,Y,Y,Y,N,
+C155,熊猫,熊貓,xióngmāo,panda,word,noun,Animals,Honeycomb Forest,2,none,Y,Y,Y,N,Taiwan also says 貓熊 māoxióng
+C156,老虎,老虎,lǎohǔ,tiger,word,noun,Animals,Honeycomb Forest,3,none,Y,Y,Y,N,
+C157,蛇,蛇,shé,snake,word,noun,Animals,Honeycomb Forest,none,5,Y,N,N,N,
+C158,虫子,蟲子,chóngzi,bug; insect; worm,word,noun,Animals,Honeycomb Forest,4,4,Y,N,Y,N,
+C656,猴子,猴子,hóuzi,monkey,word,noun,Animals,Honeycomb Forest,3,none,Y,Y,Y,N,new in v2
+C657,大象,大象,dàxiàng,elephant,word,noun,Animals,Honeycomb Forest,4,5,Y,N,Y,N,new in v2
+C658,蝴蝶,蝴蝶,húdié,butterfly,word,noun,Animals,Honeycomb Forest,4,none,Y,N,Y,N,new in v2
+C659,羊,羊,yáng,sheep; goat,word,noun,Animals,Honeycomb Forest,none,3,Y,Y,Y,N,new in v2
+C660,养,養,yǎng,"to raise (pets, animals)",word,verb,Animals,Honeycomb Forest,none,2,Y,Y,Y,N,new in v2
+C160,我的妈呀,我的媽呀,wǒ de mā ya,oh my gosh! (lit. 'oh my mom!'),exclamation,interj,Exclamations & reactions,Honeycomb Forest,none,none,Y,Y,N,Y,"Not in YCT/HSK as a unit; built from listed words 我+的+妈+呀 (parts max HSK 4, YCT n/a) | colloquial, especially northern China; see caveats"
+C161,太好了,太好了,tài hǎo le,great! awesome!,exclamation,expr,Exclamations & reactions,Honeycomb Forest,none,none,Y,Y,Y,Y,"Not in YCT/HSK as a unit; built from listed words 太+好+了 (parts max HSK 1, YCT 3)"
+C159,蜂后,蜂后,fēnghòu,queen bee (boss),word,noun,Monster names,Honeycomb Forest,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | boss name; also a real biology term
+C162,买,買,mǎi,to buy,word,verb,Shopping & money,Crossroads Market,2,1,Y,Y,Y,N,contrast with 卖 mài (tone pair)
+C163,卖,賣,mài,to sell,word,verb,Shopping & money,Crossroads Market,3,2,Y,Y,Y,N,
+C164,钱,錢,qián,money,word,noun,Shopping & money,Crossroads Market,2,1,Y,Y,Y,N,
+C165,块,塊,kuài,yuan (spoken money unit); piece; chunk,measure word,mw,Shopping & money,Crossroads Market,2,1,Y,N,Y,N,
+C166,多少钱,多少錢,duōshao qián,how much is it?,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 多少+钱 (parts max HSK 1, YCT 2)"
+C167,贵,貴,guì,expensive,word,adj,Shopping & money,Crossroads Market,4,1,Y,Y,Y,N,
+C168,便宜,便宜,piányi,cheap,word,adj,Shopping & money,Crossroads Market,4,2,Y,Y,Y,N,
+C169,太贵了,太貴了,tài guì le,too expensive!,exclamation,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 太+贵+了 (parts max HSK 1, YCT 4)"
+C170,便宜一点儿吧,便宜一點兒吧,piányi yīdiǎnr ba,"a little cheaper, please?",phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 便宜+一点儿+吧 (parts max HSK 2, YCT 4) | Taiwan: 便宜一點吧"
+C171,商店,商店,shāngdiàn,shop; store,word,noun,Shopping & money,Crossroads Market,1,1,Y,Y,Y,N,
+C172,东西,東西,dōngxi,thing; stuff,word,noun,Shopping & money,Crossroads Market,3,1,Y,Y,Y,N,
+C173,礼物,禮物,lǐwù,gift; present,word,noun,Shopping & money,Crossroads Market,3,2,Y,Y,Y,N,
+C174,给你,給你,gěi nǐ,here you go,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 给+你 (parts max HSK 1, YCT 3)"
+C661,元,元,yuán,yuan (formal unit of money),word,noun,Shopping & money,Crossroads Market,4,1,Y,Y,Y,N,new in v2
+C662,毛,毛,máo,ten cents (spoken unit),word,noun,Shopping & money,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C663,一共,一共,yīgòng,altogether; in total,word,adv,Shopping & money,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C664,找钱,找錢,zhǎo qián,to give change,word,verb,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 找+钱 (parts max HSK 1, YCT 3) | new in v2"
+C665,试,試,shì,to try; to try on,word,verb,Shopping & money,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C666,换,換,huàn,to change; to exchange,word,verb,Shopping & money,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C667,超市,超市,chāoshì,supermarket,word,noun,Shopping & money,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C668,钱包,錢包,qiánbāo,wallet,word,noun,Shopping & money,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C669,打折,打折,dǎzhé,to give a discount; on sale,word,verb,Shopping & money,Crossroads Market,none,4,Y,N,Y,N,new in v2
+C670,付钱,付錢,fù qián,to pay,word,verb,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 付+钱 (parts max HSK 3, YCT n/a) | new in v2"
+C671,别的,別的,bié de,other; else,word,pron,Shopping & money,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C672,还要别的吗,還要別的嗎,hái yào bié de ma,anything else?,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 还+要+别的+吗 (parts max HSK 1, YCT n/a) | new in v2"
+C673,我想买……,我想買……,wǒ xiǎng mǎi …,I want to buy …,sentence frame,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+想+买 (parts max HSK 1, YCT 3) | new in v2"
+C674,这件衣服多少钱,這件衣服多少錢,zhè jiàn yīfu duōshao qián,how much is this piece of clothing?,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 这+件+衣服+多少+钱 (parts max HSK 2, YCT 3) | new in v2"
+C675,可以试试吗,可以試試嗎,kěyǐ shìshi ma,can I try it (on)?,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 可以+试+试+吗 (parts max HSK 2, YCT n/a) | new in v2"
+C676,有没有大一点儿的,有沒有大一點兒的,yǒu méiyǒu dà yīdiǎnr de,do you have a bigger one?,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 有没有+大+一点儿+的 (parts max HSK 6, YCT n/a) | new in v2"
+C677,我买两个,我買兩個,wǒ mǎi liǎng ge,I'll buy two,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+买+两+个 (parts max HSK 1, YCT 2) | new in v2"
+C678,我要这个,我要這個,wǒ yào zhège,I want this one,phrase,expr,Shopping & money,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+要+这+个 (parts max HSK 1, YCT 2) | new in v2"
+C679,玩具,玩具,wánjù,toy,word,noun,Shopping & money,Crossroads Market,4,3,Y,Y,Y,N,new in v2
+C175,零,零,líng,zero,number,num,Big numbers,Crossroads Market,2,1,Y,N,Y,N,
+C177,百,百,bǎi,hundred,number,num,Big numbers,Crossroads Market,3,1,Y,N,Y,N,
+C178,半,半,bàn,half,number,num,Big numbers,Crossroads Market,3,1,Y,N,Y,N,
+C179,第一,第一,dì-yī,first; number one,number,num,Big numbers,Crossroads Market,3,none,Y,N,Y,N,
+C180,多,多,duō,many; much; more,word,adj,Big numbers,Crossroads Market,1,1,Y,N,Y,N,
+C181,少,少,shǎo,few; little; less,word,adj,Big numbers,Crossroads Market,3,1,Y,N,Y,N,
+C680,千,千,qiān,thousand,number,num,Big numbers,Crossroads Market,3,2,Y,N,Y,N,new in v2
+C681,万,萬,wàn,ten thousand,number,num,Big numbers,Crossroads Market,4,2,Y,N,Y,N,new in v2
+C183,本,本,běn,(for books),measure word,mw,Measure words,Crossroads Market,3,1,Y,N,Y,N,
+C184,只,隻,zhī,(for animals) ; also zhǐ = only,measure word,mw,Measure words,Crossroads Market,2,2,Y,N,Y,N,"polyphone: zhī (measure word) vs zhǐ (only) | Traditional 隻 (measure word); 只 zhǐ ""only"" stays 只"
+C185,杯,杯,bēi,cup of; glass of,measure word,mw,Measure words,Crossroads Market,none,1,Y,N,Y,N,
+C186,张,張,zhāng,"(for flat things: paper, tickets, tables)",measure word,mw,Measure words,Crossroads Market,4,3,Y,N,Y,N,
+C187,条,條,tiáo,"(for long thin things: fish, pants, roads)",measure word,mw,Measure words,Crossroads Market,4,2,Y,N,Y,N,
+C188,次,次,cì,time(s); occurrence,measure word,mw,Measure words,Crossroads Market,3,1,Y,N,Y,N,
+C189,岁,歲,suì,years old,measure word,mw,Measure words,Crossroads Market,1,1,Y,N,Y,N,
+C682,件,件,jiàn,"(measure word for clothes, matters)",measure word,mw,Measure words,Crossroads Market,3,2,Y,N,Y,N,new in v2
+C683,双,雙,shuāng,pair (measure word),measure word,mw,Measure words,Crossroads Market,4,3,Y,N,Y,N,new in v2
+C190,颜色,顏色,yánsè,color,word,noun,Colors,Crossroads Market,2,2,Y,Y,Y,N,
+C191,红色,紅色,hóngsè,red,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C192,黄色,黃色,huángsè,yellow,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C193,蓝色,藍色,lánsè,blue,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C194,绿色,綠色,lǜsè,green,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C195,白色,白色,báisè,white,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C196,黑色,黑色,hēisè,black,word,noun,Colors,Crossroads Market,none,2,Y,Y,Y,N,
+C197,粉色,粉色,fěnsè,pink,word,noun,Colors,Crossroads Market,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 粉+色 (parts max HSK 7-9, YCT n/a) | Taiwan usually 粉紅色 fěnhóngsè"
+C198,紫色,紫色,zǐsè,purple,word,noun,Colors,Crossroads Market,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 紫+色 (parts max HSK 5, YCT n/a) | basic color kids use constantly; lists include only some colors"
+C684,灰色,灰色,huīsè,gray,word,noun,Colors,Crossroads Market,none,5,Y,N,N,N,new in v2
+C685,橙色,橙色,chéngsè,orange (color),word,noun,Colors,Crossroads Market,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | basic color kids need; 橙 not listed in HSK 1-4 | new in v2
+C199,衣服,衣服,yīfu,clothes,word,noun,Clothes,Crossroads Market,3,1,Y,Y,Y,N,
+C200,裤子,褲子,kùzi,pants; trousers,word,noun,Clothes,Crossroads Market,3,3,Y,Y,Y,N,
+C201,裙子,裙子,qúnzi,skirt; dress,word,noun,Clothes,Crossroads Market,3,3,Y,Y,Y,N,
+C202,鞋,鞋,xié,shoe(s),word,noun,Clothes,Crossroads Market,3,2,Y,Y,Y,N,
+C203,帽子,帽子,màozi,hat,word,noun,Clothes,Crossroads Market,none,4,Y,N,Y,N,
+C204,穿,穿,chuān,to wear; to put on,word,verb,Clothes,Crossroads Market,3,1,Y,Y,Y,N,
+C686,衬衫,襯衫,chènshān,shirt,word,noun,Clothes,Crossroads Market,none,3,Y,Y,Y,N,new in v2
+C687,外套,外套,wàitào,coat; jacket,word,noun,Clothes,Crossroads Market,none,4,Y,N,Y,N,new in v2
+C688,袜子,襪子,wàzi,socks,word,noun,Clothes,Crossroads Market,none,4,Y,N,Y,N,new in v2
+C689,手表,手錶,shǒubiǎo,wristwatch,word,noun,Clothes,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C690,眼镜,眼鏡,yǎnjìng,glasses,word,noun,Clothes,Crossroads Market,4,4,Y,N,Y,N,new in v2
+C205,大,大,dà,big,word,adj,Describing things,Crossroads Market,1,1,Y,Y,Y,N,
+C206,小,小,xiǎo,small; little,word,adj,Describing things,Crossroads Market,1,1,Y,Y,Y,N,
+C207,新,新,xīn,new,word,adj,Describing things,Crossroads Market,3,1,Y,Y,Y,N,
+C208,长,長,cháng,long,word,adj,Describing things,Crossroads Market,1,2,Y,Y,Y,N,polyphone: zhǎng = to grow
+C209,高,高,gāo,tall; high,word,adj,Describing things,Crossroads Market,1,1,Y,Y,Y,N,
+C210,漂亮,漂亮,piàoliang,pretty; beautiful,word,adj,Describing things,Crossroads Market,2,2,Y,Y,Y,N,
+C211,好看,好看,hǎokàn,good-looking; nice to watch,word,adj,Describing things,Crossroads Market,none,1,Y,Y,Y,N,
+C212,可爱,可愛,kě'ài,cute,word,adj,Describing things,Crossroads Market,3,2,Y,Y,Y,N,
+C691,每,每,měi,every; each,word,pron,Describing things,Crossroads Market,3,3,Y,Y,Y,N,new in v2
+C692,一些,一些,yīxiē,some; a few,word,pron,Describing things,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C693,旧,舊,jiù,old (things); used,word,adj,Describing things,Crossroads Market,4,3,Y,Y,Y,N,new in v2
+C694,短,短,duǎn,short (length),word,adj,Describing things,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C695,矮,矮,ǎi,short (height),word,adj,Describing things,Crossroads Market,4,4,Y,N,Y,N,new in v2
+C696,胖,胖,pàng,fat; chubby,word,adj,Describing things,Crossroads Market,3,3,Y,Y,Y,N,new in v2
+C697,瘦,瘦,shòu,thin; skinny,word,adj,Describing things,Crossroads Market,3,5,Y,Y,Y,N,new in v2
+C698,重,重,zhòng,heavy,word,adj,Describing things,Crossroads Market,none,1,Y,Y,Y,N,new in v2
+C699,轻,輕,qīng,light (not heavy),word,adj,Describing things,Crossroads Market,none,2,Y,Y,Y,N,new in v2
+C700,干净,乾淨,gānjìng,clean,word,adj,Describing things,Crossroads Market,4,1,Y,Y,Y,N,new in v2
+C701,脏,髒,zāng,dirty,word,adj,Describing things,Crossroads Market,none,2,Y,Y,Y,N,new in v2
+C702,合适,合適,héshì,suitable; fits well,word,adj,Describing things,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C703,大小,大小,dàxiǎo,size,word,noun,Describing things,Crossroads Market,none,2,Y,Y,Y,N,new in v2
+C704,过,過,guo,(have done) before,particle,part,Comparisons,Crossroads Market,3,1,Y,N,Y,N,new in v2
+C705,更,更,gèng,even more,word,adv,Comparisons,Crossroads Market,4,2,Y,Y,Y,N,new in v2
+C706,A比B……,A比B……,A bǐ B …,A is more … than B,sentence frame,expr,Comparisons,Crossroads Market,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | pattern; 比 is HSK 2 / YCT | new in v2
+C707,没有……那么……,沒有……那麼……,méiyǒu … nàme …,not as … as …,sentence frame,expr,Comparisons,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 没有+那么 (parts max HSK 2, YCT n/a) | new in v2"
+C708,跟……一样,跟……一樣,gēn … yīyàng,the same as …,sentence frame,expr,Comparisons,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 跟+一样 (parts max HSK 1, YCT n/a) | new in v2"
+C709,比较,比較,bǐjiào,rather; fairly; to compare,word,adv,Comparisons,Crossroads Market,none,3,Y,Y,Y,N,new in v2
+C710,红的比蓝的贵,紅的比藍的貴,hóng de bǐ lán de guì,the red one costs more than the blue one,phrase,expr,Comparisons,Crossroads Market,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 红+的+比+蓝+的+贵 (parts max HSK 2, YCT 4) | new in v2"
+C711,这个最好,這個最好,zhège zuì hǎo,this one is the best,phrase,expr,Comparisons,Crossroads Market,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 这+个+最好 (parts max HSK 1, YCT n/a) | new in v2"
+C377,最,最,zuì,most; -est,word,adv,Feelings,Crossroads Market,3,1,Y,Y,Y,N,
+C345,然后,然後,ránhòu,then; after that,connector,conj,Connectors (basic),Crossroads Market,4,2,Y,Y,Y,N,
+C346,先,先,xiān,first,connector,adv,Connectors (basic),Crossroads Market,4,1,Y,Y,Y,N,
+C347,再,再,zài,again; then (next),connector,adv,Connectors (basic),Crossroads Market,3,1,Y,Y,Y,N,
+C348,就,就,jiù,just; then; right away,connector,adv,Connectors (basic),Crossroads Market,3,1,Y,Y,Y,N,
+C355,比,比,bǐ,compared to; than,connector,prep,Connectors (basic),Crossroads Market,2,1,Y,Y,Y,N,
+C423,一样,一樣,yīyàng,the same,word,adj,Everyday actions,Crossroads Market,4,1,Y,Y,Y,N,
+C279,爷爷,爺爺,yéye,grandpa (dad's dad),word,noun,Family & people,Goblin Caves,3,1,Y,Y,Y,N,
+C280,奶奶,奶奶,nǎinai,grandma (dad's mom),word,noun,Family & people,Goblin Caves,3,1,Y,Y,Y,N,
+C281,孩子,孩子,háizi,child; kid,word,noun,Family & people,Goblin Caves,4,1,Y,Y,Y,N,
+C284,男孩儿,男孩兒,nánháir,boy,word,noun,Family & people,Goblin Caves,none,1,Y,Y,Y,N,Taiwan: 男孩 / 男生
+C285,女孩儿,女孩兒,nǚháir,girl,word,noun,Family & people,Goblin Caves,none,1,Y,Y,Y,N,Taiwan: 女孩 / 女生
+C286,叔叔,叔叔,shūshu,uncle; 'mister' (friendly),word,noun,Family & people,Goblin Caves,4,4,Y,N,Y,N,
+C287,阿姨,阿姨,āyí,aunt; 'ma'am' (friendly),word,noun,Family & people,Goblin Caves,4,4,Y,N,Y,N,
+C288,你几岁,你幾歲,nǐ jǐ suì,how old are you? (to kids),phrase,expr,Family & people,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+几+岁 (parts max HSK 1, YCT 1)"
+C289,我十二岁,我十二歲,wǒ shí'èr suì,I'm twelve (years old),phrase,expr,Family & people,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+十+二+岁 (parts max HSK 1, YCT 1)"
+C712,男,男,nán,male; boy,word,adj,Family & people,Goblin Caves,3,1,Y,Y,Y,N,new in v2
+C713,女,女,nǚ,female; girl,word,adj,Family & people,Goblin Caves,3,1,Y,Y,Y,N,new in v2
+C714,儿子,兒子,érzi,son,word,noun,Family & people,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C715,女儿,女兒,nǚ'ér,daughter,word,noun,Family & people,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C716,家人,家人,jiārén,family members,word,noun,Family & people,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C717,邻居,鄰居,línjū,neighbor,word,noun,Family & people,Goblin Caves,4,5,Y,N,Y,N,new in v2
+C718,小朋友,小朋友,xiǎopéngyǒu,kids; little friend,word,noun,Family & people,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C221,学校,學校,xuéxiào,school,word,noun,School & classroom,Goblin Caves,1,1,Y,Y,Y,N,
+C222,老师,老師,lǎoshī,teacher,word,noun,School & classroom,Goblin Caves,1,1,Y,Y,Y,N,
+C223,学生,學生,xuéshēng,student,word,noun,School & classroom,Goblin Caves,2,1,Y,Y,Y,N,
+C224,同学,同學,tóngxué,classmate,word,noun,School & classroom,Goblin Caves,2,1,Y,Y,Y,N,
+C225,教室,教室,jiàoshì,classroom,word,noun,School & classroom,Goblin Caves,3,2,Y,Y,Y,N,
+C226,书,書,shū,book,word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C227,笔,筆,bǐ,pen,word,noun,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,
+C228,铅笔,鉛筆,qiānbǐ,pencil,word,noun,School & classroom,Goblin Caves,2,6,Y,Y,Y,N,
+C229,书包,書包,shūbāo,schoolbag; backpack,word,noun,School & classroom,Goblin Caves,2,1,Y,Y,Y,N,
+C230,桌子,桌子,zhuōzi,table; desk,word,noun,School & classroom,Goblin Caves,2,1,Y,Y,Y,N,
+C231,上课,上課,shàngkè,to start class; to attend class,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C232,下课,下課,xiàkè,class is over,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C233,作业,作業,zuòyè,homework,word,noun,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,Taiwan also 功課 gōngkè
+C234,考试,考試,kǎoshì,test; exam,word,noun,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,
+C235,问题,問題,wèntí,question; problem,word,noun,School & classroom,Goblin Caves,3,2,Y,Y,Y,N,
+C236,回答,回答,huídá,to answer,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C237,问,問,wèn,to ask,word,verb,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,
+C238,学,學,xué,to learn,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C239,学习,學習,xuéxí,to study; to learn,word,verb,School & classroom,Goblin Caves,2,1,Y,Y,Y,N,
+C240,写,寫,xiě,to write,word,verb,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,
+C241,懂,懂,dǒng,to understand,word,verb,School & classroom,Goblin Caves,3,2,Y,Y,Y,N,
+C242,汉字,漢字,Hànzì,Chinese character,word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C243,中文,中文,Zhōngwén,Chinese (language),word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,
+C244,英文,英文,Yīngwén,English (language),word,noun,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,
+C245,数学,數學,shùxué,math,word,noun,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 数+学 (parts max HSK 2, YCT n/a) | school subject 12-year-olds talk about daily"
+C246,电脑,電腦,diànnǎo,computer,word,noun,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,
+C247,意思,意思,yìsi,meaning,word,noun,School & classroom,Goblin Caves,3,2,Y,Y,Y,N,
+C248,老师好,老師好,lǎoshī hǎo,"hello, teacher!",phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 老师+好 (parts max HSK 1, YCT 1)"
+C249,我不懂,我不懂,wǒ bù dǒng,I don't understand,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+懂 (parts max HSK 2, YCT 3)"
+C250,我不知道,我不知道,wǒ bù zhīdào,I don't know,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+知道 (parts max HSK 1, YCT 3)"
+C251,什么意思,什麼意思,shénme yìsi,what does it mean?,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 什么+意思 (parts max HSK 2, YCT 3)"
+C252,……用中文怎么说,……用中文怎麼說,… yòng Zhōngwén zěnme shuō,how do you say … in Chinese?,sentence frame,expr,School & classroom,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 用+中文+怎么+说 (parts max HSK 1, YCT n/a)"
+C253,请再说一遍,請再說一遍,qǐng zài shuō yī biàn,please say it again,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 请+再说+一+遍 (parts max HSK 6, YCT n/a) | 一遍 is said yí biàn"
+C254,慢一点儿,慢一點兒,màn yīdiǎnr,"a bit slower, please",phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 慢+一点儿 (parts max HSK 1, YCT 4) | Taiwan: 慢一點"
+C255,我有问题,我有問題,wǒ yǒu wèntí,I have a question,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+有+问题 (parts max HSK 2, YCT 3)"
+C719,班,班,bān,class (group of students),word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C720,年级,年級,niánjí,grade (school year),word,noun,School & classroom,Goblin Caves,3,2,Y,Y,Y,N,new in v2
+C721,课,課,kè,lesson; class,word,noun,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,new in v2
+C722,课本,課本,kèběn,textbook,word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C723,字,字,zì,(written) character,word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C724,词,詞,cí,word,word,noun,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C725,句子,句子,jùzi,sentence,word,noun,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C726,读,讀,dú,to read (aloud); to study,word,verb,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,new in v2
+C727,听写,聽寫,tīngxiě,dictation,word,noun,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C728,复习,複習,fùxí,to review,word,verb,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C729,练习,練習,liànxí,to practice; exercise,word,verb,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C730,记住,記住,jìzhù,to remember; to memorize,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C731,忘记,忘記,wàngjì,to forget,word,verb,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C732,错,錯,cuò,wrong; mistake,word,adj,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C733,认真,認真,rènzhēn,serious; careful,word,adj,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C734,容易,容易,róngyì,easy,word,adj,School & classroom,Goblin Caves,4,3,Y,Y,Y,N,new in v2
+C735,难,難,nán,difficult; hard,word,adj,School & classroom,Goblin Caves,3,1,Y,Y,Y,N,new in v2
+C736,聪明,聰明,cōngming,smart; clever,word,adj,School & classroom,Goblin Caves,4,5,Y,N,Y,N,new in v2
+C737,图书馆,圖書館,túshūguǎn,library,word,noun,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C738,黑板,黑板,hēibǎn,blackboard,word,noun,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C739,举手,舉手,jǔ shǒu,to raise your hand,word,verb,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C740,安静,安靜,ānjìng,quiet,word,adj,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C741,请安静,請安靜,qǐng ānjìng,"quiet, please",phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 请+安静 (parts max HSK 2, YCT 4) | new in v2"
+C742,我忘了,我忘了,wǒ wàng le,I forgot,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+忘+了 (parts max HSK 1, YCT n/a) | new in v2"
+C743,校长,校長,xiàozhǎng,principal (of a school),word,noun,School & classroom,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C744,考,考,kǎo,to take a test; to test,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C745,成绩,成績,chéngjì,grades; score,word,noun,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C746,放学,放學,fàngxué,school's out,word,verb,School & classroom,Goblin Caves,none,1,Y,Y,Y,N,new in v2
+C747,放假,放假,fàngjià,to have a holiday / break,word,verb,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C748,暑假,暑假,shǔjià,summer vacation,word,noun,School & classroom,Goblin Caves,4,4,Y,N,Y,N,new in v2
+C749,教,教,jiāo,to teach,word,verb,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C750,讲,講,jiǎng,to tell; to explain,word,verb,School & classroom,Goblin Caves,4,2,Y,Y,Y,N,new in v2
+C751,介绍,介紹,jièshào,to introduce,word,verb,School & classroom,Goblin Caves,4,1,Y,Y,Y,N,new in v2
+C752,我来介绍一下,我來介紹一下,wǒ lái jièshào yīxià,let me introduce …,phrase,expr,School & classroom,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+来+介绍+一+下 (parts max HSK 1, YCT 4) | new in v2"
+C753,让,讓,ràng,to let; to make (someone do),word,verb,Grammar words,Goblin Caves,3,2,Y,N,Y,N,new in v2
+C754,把,把,bǎ,(把 moves the object before the verb: 把门打开),word,prep,Grammar words,Goblin Caves,3,3,Y,N,Y,N,new in v2
+C755,被,被,bèi,by (passive: 被……抓住),word,prep,Grammar words,Goblin Caves,4,3,Y,N,Y,N,new in v2
+C756,正在,正在,zhèngzài,in the middle of (doing),word,adv,Grammar words,Goblin Caves,4,1,Y,N,Y,N,new in v2
+C757,着,著,zhe,"(ongoing state: 开着, 拿着)",particle,part,Grammar words,Goblin Caves,4,1,Y,N,Y,N,new in v2
+C256,玩,玩,wán,to play; to have fun,word,verb,Game & chat talk,Goblin Caves,2,1,Y,Y,Y,N,
+C257,游戏,遊戲,yóuxì,game,word,noun,Game & chat talk,Goblin Caves,4,3,Y,Y,Y,N,
+C258,玩游戏,玩遊戲,wán yóuxì,to play games,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 玩+游戏 (parts max HSK 3, YCT 4)"
+C259,开始,開始,kāishǐ,to start,word,verb,Game & chat talk,Goblin Caves,4,3,Y,Y,Y,N,
+C260,准备,準備,zhǔnbèi,to get ready; to prepare,word,verb,Game & chat talk,Goblin Caves,4,1,Y,Y,Y,N,
+C261,赢,贏,yíng,to win,word,verb,Game & chat talk,Goblin Caves,none,3,Y,Y,Y,N,
+C262,输,輸,shū,to lose,word,verb,Game & chat talk,Goblin Caves,none,3,Y,Y,Y,N,
+C263,手机,手機,shǒujī,cell phone,word,noun,Game & chat talk,Goblin Caves,none,1,Y,Y,Y,N,
+C264,该你了,該你了,gāi nǐ le,your turn!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 该+你+了 (parts max HSK 2, YCT n/a)"
+C265,我赢了,我贏了,wǒ yíng le,I won!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+赢+了 (parts max HSK 3, YCT n/a)"
+C266,你输了,你輸了,nǐ shū le,you lost!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+输+了 (parts max HSK 3, YCT n/a)"
+C267,再来一次,再來一次,zài lái yī cì,one more time! again!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 再+来+一+次 (parts max HSK 1, YCT 3) | 一次 is said yí cì"
+C268,我来,我來,wǒ lái,let me (do it)!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+来 (parts max HSK 1, YCT 2)"
+C269,一起玩吧,一起玩吧,yīqǐ wán ba,let's play together!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 一起+玩+吧 (parts max HSK 1, YCT 3)"
+C270,准备好了吗,準備好了嗎,zhǔnbèi hǎo le ma,ready?,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 准备+好+了+吗 (parts max HSK 1, YCT 4)"
+C271,不公平,不公平,bù gōngpíng,not fair!,exclamation,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 不+公平 (parts max HSK 2, YCT n/a)"
+C758,你在做什么,你在做什麼,nǐ zài zuò shénme,what are you doing?,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+在+做+什么 (parts max HSK 1, YCT 2) | new in v2"
+C759,聊天儿,聊天兒,liáotiānr,to chat,word,verb,Game & chat talk,Goblin Caves,4,6,Y,N,Y,N,new in v2
+C760,发,發,fā,to send (a message),word,verb,Game & chat talk,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C761,队,隊,duì,team,word,noun,Game & chat talk,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C762,升级,升級,shēngjí,to level up; to upgrade,word,verb,Game & chat talk,Goblin Caves,none,6,Y,N,N,N,gamer word | new in v2
+C763,作弊,作弊,zuòbì,to cheat,word,verb,Game & chat talk,Goblin Caves,none,7-9,Y,N,N,N,new in v2
+C764,等等我,等等我,děngdeng wǒ,wait for me!,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 等+等+我 (parts max HSK 1, YCT 4) | new in v2"
+C765,你先走,你先走,nǐ xiān zǒu,you go first,phrase,expr,Game & chat talk,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+先+走 (parts max HSK 1, YCT 4) | new in v2"
+C290,请帮我,請幫我,qǐng bāng wǒ,please help me,phrase,expr,Requests & helping,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 请+帮+我 (parts max HSK 1, YCT n/a)"
+C291,能帮我吗,能幫我嗎,néng bāng wǒ ma,can you help me?,phrase,expr,Requests & helping,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 能+帮+我+吗 (parts max HSK 1, YCT n/a)"
+C292,帮助,幫助,bāngzhù,help; to help,word,verb,Requests & helping,Goblin Caves,3,2,Y,Y,Y,N,
+C293,谢谢你的帮助,謝謝你的幫助,xièxie nǐ de bāngzhù,thanks for your help,phrase,expr,Requests & helping,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 谢谢+你+的+帮助 (parts max HSK 2, YCT 3)"
+C294,需要,需要,xūyào,to need,word,verb,Requests & helping,Goblin Caves,none,3,Y,Y,Y,N,
+C295,别,別,bié,don't,word,adv,Requests & helping,Goblin Caves,3,1,Y,Y,Y,N,
+C296,救,救,jiù,to save; to rescue,word,verb,Requests & helping,Goblin Caves,none,3,Y,Y,Y,N,
+C297,保护,保護,bǎohù,to protect,word,verb,Requests & helping,Goblin Caves,none,3,Y,Y,Y,N,
+C298,丢,丟,diū,to lose (an item),word,verb,Requests & helping,Goblin Caves,3,5,Y,Y,Y,N,
+C299,我的……不见了,我的……不見了,wǒ de … bù jiàn le,my … is missing!,sentence frame,expr,Requests & helping,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+的+不见+了 (parts max HSK 6, YCT n/a) | quest-giver line"
+C213,怪物,怪物,guàiwu,monster,word,noun,Dungeon & adventure,Goblin Caves,none,7-9,Y,N,N,N,
+C214,危险,危險,wēixiǎn,dangerous; danger,word,adj,Dungeon & adventure,Goblin Caves,4,3,Y,Y,Y,N,
+C215,小心后面,小心後面,xiǎoxīn hòumian,watch out behind you!,phrase,expr,Dungeon & adventure,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 小心+后面 (parts max HSK 3, YCT n/a)"
+C216,钥匙,鑰匙,yàoshi,key,word,noun,Dungeon & adventure,Goblin Caves,4,7-9,Y,N,Y,N,
+C217,门,門,mén,door; gate,word,noun,Dungeon & adventure,Goblin Caves,none,1,Y,Y,Y,N,
+C218,开门,開門,kāi mén,open the door,phrase,expr,Dungeon & adventure,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 开+门 (parts max HSK 1, YCT n/a)"
+C219,宝箱,寶箱,bǎoxiāng,treasure chest,word,noun,Dungeon & adventure,Goblin Caves,none,none,Y,N,Y,N,"Not in YCT/HSK as a unit; built from listed words 宝+箱 (parts max HSK 4, YCT n/a) | RPG game word"
+C766,把门打开,把門打開,bǎ mén dǎkāi,open the door!,phrase,expr,Dungeon & adventure,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 把+门+打开 (parts max HSK 3, YCT n/a) | new in v2 | OpenCC Taiwan-phrase form: 把門開啟"
+C767,我被抓住了,我被抓住了,wǒ bèi zhuāzhù le,I've been caught!,phrase,expr,Dungeon & adventure,Goblin Caves,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+被+抓住+了 (parts max HSK 3, YCT n/a) | new in v2"
+C768,我正在找钥匙,我正在找鑰匙,wǒ zhèngzài zhǎo yàoshi,I'm looking for the key,phrase,expr,Dungeon & adventure,Goblin Caves,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+正在+找+钥匙 (parts max HSK 7-9, YCT 4) | new in v2"
+C769,抓住,抓住,zhuāzhù,to catch hold of,word,verb,Dungeon & adventure,Goblin Caves,none,3,Y,Y,Y,N,new in v2
+C770,逃,逃,táo,to escape; to flee,word,verb,Dungeon & adventure,Goblin Caves,none,5,Y,N,N,N,new in v2
+C771,藏,藏,cáng,to hide,word,verb,Dungeon & adventure,Goblin Caves,none,6,Y,N,N,N,new in v2
+C772,陷阱,陷阱,xiànjǐng,trap,word,noun,Dungeon & adventure,Goblin Caves,none,7-9,Y,N,N,N,RPG essential | new in v2
+C773,地下,地下,dìxià,underground,word,noun,Dungeon & adventure,Goblin Caves,none,4,Y,N,Y,N,new in v2
+C774,灯,燈,dēng,lamp; light,word,noun,Dungeon & adventure,Goblin Caves,none,2,Y,Y,Y,N,new in v2
+C775,黑,黑,hēi,dark,word,adj,Dungeon & adventure,Goblin Caves,3,2,Y,Y,Y,N,new in v2
+C776,绳子,繩子,shéngzi,rope,word,noun,Dungeon & adventure,Goblin Caves,none,7-9,Y,N,N,N,new in v2
+C220,哥布林,哥布林,gēbùlín,goblin,word,noun,Monster names,Goblin Caves,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | transliteration common in Chinese games
+C302,昨天,昨天,zuótiān,yesterday,word,noun,Time & dates,Hydra Swamp,2,1,Y,Y,Y,N,
+C304,早上,早上,zǎoshang,(early) morning,word,noun,Time & dates,Hydra Swamp,2,1,Y,Y,Y,N,
+C305,中午,中午,zhōngwǔ,noon,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,
+C306,下午,下午,xiàwǔ,afternoon,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,
+C307,晚上,晚上,wǎnshang,evening; night,word,noun,Time & dates,Hydra Swamp,2,1,Y,Y,Y,N,
+C308,年,年,nián,year,word,noun,Time & dates,Hydra Swamp,2,1,Y,Y,Y,N,
+C309,月,月,yuè,month; moon,word,noun,Time & dates,Hydra Swamp,1,1,Y,Y,Y,N,
+C310,号,號,hào,day of the month; number,word,noun,Time & dates,Hydra Swamp,1,1,Y,Y,Y,N,
+C311,星期,星期,xīngqī,week,word,noun,Time & dates,Hydra Swamp,1,1,Y,Y,Y,N,Taiwan also 禮拜 lǐbài
+C312,周末,週末,zhōumò,weekend,word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,
+C313,点,點,diǎn,o'clock; dot,measure word,mw,Time & dates,Hydra Swamp,1,1,Y,N,Y,N,
+C314,分钟,分鐘,fēnzhōng,minute,word,noun,Time & dates,Hydra Swamp,2,2,Y,Y,Y,N,
+C315,小时,小時,xiǎoshí,hour,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,
+C316,时候,時候,shíhou,(the) time when,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,
+C317,时间,時間,shíjiān,time,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,
+C318,以后,以後,yǐhòu,after; later,word,noun,Time & dates,Hydra Swamp,none,2,Y,Y,Y,N,
+C319,以前,以前,yǐqián,before; in the past,word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,
+C320,一会儿,一會兒,yīhuìr,a little while,word,noun,Time & dates,Hydra Swamp,4,1,Y,Y,Y,N,said yíhuìr; Taiwan: 一會兒 / 等一下
+C321,每天,每天,měitiān,every day,word,noun,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 每+天 (parts max HSK 3, YCT n/a)"
+C322,生日,生日,shēngrì,birthday,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,
+C323,马上,馬上,mǎshàng,right away; immediately,word,adv,Time & dates,Hydra Swamp,4,1,Y,Y,Y,N,
+C324,已经,已經,yǐjīng,already,word,adv,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,
+C325,几点,幾點,jǐ diǎn,what time?,phrase,expr,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 几+点 (parts max HSK 1, YCT 1)"
+C326,现在几点,現在幾點,xiànzài jǐ diǎn,what time is it now?,phrase,expr,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 现在+几+点 (parts max HSK 1, YCT 1)"
+C777,刻,刻,kè,quarter (of an hour),word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,new in v2
+C778,上午,上午,shàngwǔ,morning (before noon),word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C779,早,早,zǎo,early,word,adj,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C780,晚,晚,wǎn,late,word,adj,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C781,迟到,遲到,chídào,to be late,word,verb,Time & dates,Hydra Swamp,3,4,Y,Y,Y,N,new in v2
+C782,准时,準時,zhǔnshí,on time,word,adj,Time & dates,Hydra Swamp,4,4,Y,N,Y,N,new in v2
+C783,最近,最近,zuìjìn,recently; lately,word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,new in v2
+C784,刚才,剛才,gāngcái,just now,word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,new in v2
+C785,后来,後來,hòulái,afterwards; later,word,noun,Time & dates,Hydra Swamp,none,2,Y,Y,Y,N,new in v2
+C786,从前,從前,cóngqián,long ago; once upon a time,word,noun,Time & dates,Hydra Swamp,none,3,Y,Y,Y,N,new in v2
+C787,将来,將來,jiānglái,the future,word,noun,Time & dates,Hydra Swamp,4,3,Y,Y,Y,N,new in v2
+C788,周,周,zhōu,week,word,noun,Time & dates,Hydra Swamp,none,2,Y,Y,Y,N,new in v2
+C789,去年,去年,qùnián,last year,word,noun,Time & dates,Hydra Swamp,3,1,Y,Y,Y,N,new in v2
+C790,今年,今年,jīnnián,this year,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C791,明年,明年,míngnián,next year,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C792,日期,日期,rìqī,date,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C793,星期一,星期一,xīngqīyī,Monday,word,noun,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 星期+一 (parts max HSK 1, YCT 1) | new in v2"
+C794,星期天,星期天,xīngqītiān,Sunday,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C795,上个星期,上個星期,shàng ge xīngqī,last week,phrase,noun,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 上+个+星期 (parts max HSK 1, YCT n/a) | new in v2"
+C796,下个星期,下個星期,xià ge xīngqī,next week,phrase,noun,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 下+个+星期 (parts max HSK 1, YCT 3) | new in v2"
+C797,第一次,第一次,dì-yī cì,the first time,phrase,noun,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 第一+次 (parts max HSK -, YCT 3) | new in v2"
+C798,多长时间,多長時間,duō cháng shíjiān,how long (time)?,phrase,expr,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 多+长+时间 (parts max HSK 2, YCT 3) | new in v2"
+C799,半天,半天,bàntiān,half a day; ages,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C800,新年,新年,xīnnián,New Year,word,noun,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C801,新年快乐,新年快樂,xīnnián kuàilè,Happy New Year!,phrase,expr,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 新年+快乐 (parts max HSK 2, YCT n/a) | new in v2"
+C802,春节,春節,Chūnjié,Spring Festival (Chinese New Year),word,noun,Time & dates,Hydra Swamp,none,2,Y,Y,Y,N,new in v2
+C803,节日,節日,jiérì,holiday; festival,word,noun,Time & dates,Hydra Swamp,4,2,Y,Y,Y,N,new in v2
+C804,快乐,快樂,kuàilè,happy,word,adj,Time & dates,Hydra Swamp,3,2,Y,Y,Y,N,new in v2
+C805,常常,常常,chángcháng,often,word,adv,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C806,有时候,有時候,yǒu shíhou,sometimes,word,adv,Time & dates,Hydra Swamp,none,1,Y,Y,Y,N,new in v2
+C807,总是,總是,zǒngshì,always,word,adv,Time & dates,Hydra Swamp,none,3,Y,Y,Y,N,new in v2
+C808,从来不,從來不,cónglái bù,never,word,adv,Time & dates,Hydra Swamp,none,7-9,Y,N,N,N,new in v2
+C809,早就,早就,zǎo jiù,long ago; already,word,adv,Time & dates,Hydra Swamp,none,2,Y,Y,Y,N,new in v2
+C810,还没,還沒,hái méi,not yet,word,adv,Time & dates,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 还+没 (parts max HSK 1, YCT n/a) | new in v2"
+C327,起床,起床,qǐchuáng,to get up,word,verb,Daily routine,Hydra Swamp,2,1,Y,Y,Y,N,
+C328,睡觉,睡覺,shuìjiào,to sleep; go to bed,word,verb,Daily routine,Hydra Swamp,2,1,Y,Y,Y,N,
+C329,洗澡,洗澡,xǐzǎo,to take a bath/shower,word,verb,Daily routine,Hydra Swamp,3,2,Y,Y,Y,N,
+C330,刷牙,刷牙,shuāyá,to brush teeth,word,verb,Daily routine,Hydra Swamp,4,4,Y,N,Y,N,
+C331,洗手,洗手,xǐshǒu,to wash hands,word,verb,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 洗+手 (parts max HSK 1, YCT n/a)"
+C332,上学,上學,shàngxué,to go to school,word,verb,Daily routine,Hydra Swamp,none,1,Y,Y,Y,N,
+C333,回家,回家,huíjiā,to go home,word,verb,Daily routine,Hydra Swamp,none,1,Y,Y,Y,N,
+C334,该睡觉了,該睡覺了,gāi shuìjiào le,it's time for bed,phrase,expr,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 该+睡觉+了 (parts max HSK 2, YCT n/a)"
+C335,我回来了,我回來了,wǒ huílái le,I'm home! / I'm back!,phrase,expr,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+回来+了 (parts max HSK 1, YCT n/a)"
+C811,穿衣服,穿衣服,chuān yīfu,to get dressed,phrase,verb,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 穿+衣服 (parts max HSK 1, YCT 3) | new in v2"
+C812,做作业,做作業,zuò zuòyè,to do homework,phrase,verb,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 做+作业 (parts max HSK 2, YCT 4) | new in v2"
+C813,洗脸,洗臉,xǐ liǎn,to wash your face,word,verb,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 洗+脸 (parts max HSK 2, YCT n/a) | new in v2"
+C814,睡午觉,睡午覺,shuì wǔjiào,to take a nap,phrase,verb,Daily routine,Hydra Swamp,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | built from 睡 + 午觉 (午睡 is HSK 2) | new in v2
+C815,快迟到了,快遲到了,kuài chídào le,we're almost late!,phrase,expr,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 快+迟到+了 (parts max HSK 4, YCT 3) | new in v2"
+C816,我每天七点起床,我每天七點起床,wǒ měitiān qī diǎn qǐchuáng,I get up at seven every day,phrase,expr,Daily routine,Hydra Swamp,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+每+天+七+点+起床 (parts max HSK 3, YCT n/a) | new in v2"
+C817,你几点睡觉,你幾點睡覺,nǐ jǐ diǎn shuìjiào,what time do you go to bed?,phrase,expr,Daily routine,Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+几+点+睡觉 (parts max HSK 1, YCT 2) | new in v2"
+C351,对了,對了,duì le,oh right!; by the way,connector,expr,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 对+了 (parts max HSK 1, YCT 3)"
+C352,只,只,zhǐ,only,connector,adv,Connectors (basic),Hydra Swamp,2,2,Y,Y,Y,N,written the same as 只 zhī (measure word); stored twice on purpose
+C354,一直,一直,yīzhí,always; straight ahead,connector,adv,Connectors (basic),Hydra Swamp,4,2,Y,Y,Y,N,said yìzhí
+C818,才,才,cái,only then; not until,word,adv,Connectors (basic),Hydra Swamp,none,2,Y,N,Y,N,new in v2
+C819,就要……了,就要……了,jiù yào … le,about to …,sentence frame,expr,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 就要+了 (parts max HSK 2, YCT n/a) | new in v2"
+C820,先……然后……,先……然後……,xiān … ránhòu …,"first …, then …",sentence frame,conj,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 先+然后 (parts max HSK 2, YCT 4) | new in v2"
+C821,如果……就……,如果……就……,rúguǒ … jiù …,"if …, then …",sentence frame,conj,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 如果+就 (parts max HSK 2, YCT n/a) | new in v2"
+C822,要是,要是,yàoshi,if,connector,conj,Connectors (basic),Hydra Swamp,none,3,Y,Y,Y,N,new in v2
+C823,……的时候,……的時候,… de shíhou,when …,sentence frame,conj,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 的+时候 (parts max HSK 1, YCT 3) | new in v2"
+C824,之前,之前,zhīqián,before,word,noun,Connectors (basic),Hydra Swamp,none,4,Y,N,Y,N,new in v2
+C825,之后,之後,zhīhòu,after,word,noun,Connectors (basic),Hydra Swamp,none,4,Y,N,Y,N,new in v2
+C826,从……到……,從……到……,cóng … dào …,from … to …,sentence frame,prep,Connectors (basic),Hydra Swamp,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 从+到 (parts max HSK 1, YCT n/a) | new in v2"
+C827,直到,直到,zhídào,until,connector,prep,Connectors (basic),Hydra Swamp,none,3,Y,Y,Y,N,new in v2
+C539,虽然……但是……,雖然……但是……,suīrán … dànshì …,although … (still) …,connector,conj,Connectors (advanced),Hydra Swamp,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 虽然+但是 (parts max HSK 2, YCT 4)"
+C541,一边……一边……,一邊……一邊……,yībiān … yībiān …,doing … while doing …,connector,conj,Connectors (advanced),Hydra Swamp,4,none,Y,N,N,N,HSK: not an entry; parts ≤HSK1 | said yìbiān
+C542,一……就……,一……就……,yī … jiù …,as soon as … (then) …,connector,conj,Connectors (advanced),Hydra Swamp,none,none,Y,N,Y,N,"Not in YCT/HSK as a unit; built from listed words 一+就 (parts max HSK 1, YCT 3)"
+C543,如果,如果,rúguǒ,if,connector,conj,Connectors (advanced),Hydra Swamp,none,2,Y,Y,Y,N,
+C544,而且,而且,érqiě,and also; moreover,connector,conj,Connectors (advanced),Hydra Swamp,none,2,Y,Y,Y,N,
+C545,不过,不過,bùguò,but; however (softer),connector,conj,Connectors (advanced),Hydra Swamp,none,2,Y,Y,Y,N,said búguò
+C356,九头蛇,九頭蛇,jiǔtóushé,hydra,word,noun,Monster names,Hydra Swamp,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 九+头+蛇 (parts max HSK 5, YCT n/a) | standard Chinese name for the Greek Hydra"
+C357,高兴,高興,gāoxìng,happy; glad,word,adj,Feelings,Zombie Lands,1,1,Y,Y,Y,N,
+C358,开心,開心,kāixīn,happy; having fun,word,adj,Feelings,Zombie Lands,none,2,Y,Y,Y,N,
+C359,难过,難過,nánguò,sad,word,adj,Feelings,Zombie Lands,4,2,Y,Y,Y,N,
+C360,生气,生氣,shēngqì,angry,word,adj,Feelings,Zombie Lands,4,1,Y,Y,Y,N,
+C361,怕,怕,pà,to be afraid (of),word,verb,Feelings,Zombie Lands,none,2,Y,Y,Y,N,
+C362,害怕,害怕,hàipà,scared; to fear,word,verb,Feelings,Zombie Lands,4,3,Y,Y,Y,N,
+C363,累,累,lèi,tired,word,adj,Feelings,Zombie Lands,3,1,Y,Y,Y,N,
+C364,困,困,kùn,sleepy,word,adj,Feelings,Zombie Lands,none,3,Y,Y,Y,N,
+C365,无聊,無聊,wúliáo,bored; boring,word,adj,Feelings,Zombie Lands,none,4,Y,N,Y,N,
+C366,担心,擔心,dānxīn,to worry,word,verb,Feelings,Zombie Lands,4,4,Y,N,Y,N,
+C367,奇怪,奇怪,qíguài,strange; weird,word,adj,Feelings,Zombie Lands,4,3,Y,Y,Y,N,
+C368,有意思,有意思,yǒu yìsi,interesting; fun,word,adj,Feelings,Zombie Lands,none,2,Y,Y,Y,N,
+C369,哭,哭,kū,to cry,word,verb,Feelings,Zombie Lands,3,2,Y,Y,Y,N,
+C370,笑,笑,xiào,to laugh; to smile,word,verb,Feelings,Zombie Lands,3,1,Y,Y,Y,N,
+C371,觉得,覺得,juéde,to feel; to think,word,verb,Feelings,Zombie Lands,2,1,Y,Y,Y,N,
+C378,我很害怕,我很害怕,wǒ hěn hàipà,I'm (really) scared,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+很+害怕 (parts max HSK 3, YCT 4)"
+C379,我生气了,我生氣了,wǒ shēngqì le,I'm mad now!,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+生气+了 (parts max HSK 1, YCT 4)"
+C380,我累了,我累了,wǒ lèi le,I'm tired,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+累+了 (parts max HSK 1, YCT 3)"
+C381,别怕,別怕,bié pà,don't be afraid,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 别+怕 (parts max HSK 2, YCT n/a)"
+C382,别哭,別哭,bié kū,don't cry,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 别+哭 (parts max HSK 2, YCT 3)"
+C383,别担心,別擔心,bié dānxīn,don't worry,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 别+担心 (parts max HSK 4, YCT 4)"
+C384,没事,沒事,méishì,it's nothing; I'm fine,phrase,expr,Feelings,Zombie Lands,none,1,Y,Y,Y,N,
+C385,你没事吧,你沒事吧,nǐ méishì ba,are you okay?,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+没+事+吧 (parts max HSK 1, YCT n/a)"
+C386,你怎么了,你怎麼了,nǐ zěnme le,what's wrong?,phrase,expr,Feelings,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+怎么+了 (parts max HSK 1, YCT 2)"
+C828,伤心,傷心,shāngxīn,heartbroken; very sad,word,adj,Feelings,Zombie Lands,none,3,Y,Y,Y,N,new in v2
+C829,着急,著急,zháojí,anxious; in a hurry,word,adj,Feelings,Zombie Lands,3,4,Y,Y,Y,N,new in v2
+C830,紧张,緊張,jǐnzhāng,nervous,word,adj,Feelings,Zombie Lands,4,3,Y,Y,Y,N,new in v2
+C831,放心,放心,fàngxīn,to relax; don't worry,word,verb,Feelings,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C832,满意,滿意,mǎnyì,satisfied,word,adj,Feelings,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C833,失望,失望,shīwàng,disappointed,word,adj,Feelings,Zombie Lands,none,4,Y,N,Y,N,new in v2
+C834,激动,激動,jīdòng,excited; worked up,word,adj,Feelings,Zombie Lands,none,4,Y,N,Y,N,new in v2
+C835,感觉,感覺,gǎnjué,to feel; feeling,word,verb,Feelings,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C836,希望,希望,xīwàng,to hope; hope,word,verb,Feelings,Zombie Lands,4,3,Y,Y,Y,N,new in v2
+C837,好像,好像,hǎoxiàng,to seem; it looks like,word,adv,Feelings,Zombie Lands,4,2,Y,Y,Y,N,new in v2
+C838,可怕,可怕,kěpà,scary,word,adj,Feelings,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C839,恶心,噁心,ěxin,gross; disgusting,word,adj,Feelings,Zombie Lands,none,4,Y,N,Y,N,new in v2
+C840,看起来,看起來,kàn qǐlai,to look (like); it seems,phrase,verb,Feelings,Zombie Lands,none,3,Y,Y,Y,N,new in v2
+C841,越来越……,越來越……,yuè lái yuè …,more and more …,sentence frame,adv,Sentence patterns,Zombie Lands,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | 越来越 is HSK 2 / YCT 4; ellipsis marks the slot | new in v2
+C842,得,得,de,(links a verb to how well: 跑得快),particle,part,Sentence patterns,Zombie Lands,3,2,Y,N,Y,N,new in v2
+C843,……得很好,……得很好,… de hěn hǎo,does … very well,sentence frame,expr,Sentence patterns,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 得+很+好 (parts max HSK 2, YCT 3) | new in v2"
+C387,头,頭,tóu,head,word,noun,Body & health,Zombie Lands,none,2,Y,Y,Y,N,
+C388,头发,頭髮,tóufa,hair,word,noun,Body & health,Zombie Lands,1,2,Y,Y,Y,N,
+C389,眼睛,眼睛,yǎnjing,eye(s),word,noun,Body & health,Zombie Lands,1,2,Y,Y,Y,N,
+C390,耳朵,耳朵,ěrduo,ear,word,noun,Body & health,Zombie Lands,1,5,Y,Y,Y,N,
+C391,鼻子,鼻子,bízi,nose,word,noun,Body & health,Zombie Lands,1,5,Y,Y,Y,N,
+C392,嘴,嘴,zuǐ,mouth,word,noun,Body & health,Zombie Lands,none,2,Y,Y,Y,N,
+C393,牙,牙,yá,tooth,word,noun,Body & health,Zombie Lands,none,4,Y,N,Y,N,
+C394,手,手,shǒu,hand,word,noun,Body & health,Zombie Lands,1,1,Y,Y,Y,N,
+C395,脚,腳,jiǎo,foot,word,noun,Body & health,Zombie Lands,2,2,Y,Y,Y,N,
+C396,肚子,肚子,dùzi,belly; stomach,word,noun,Body & health,Zombie Lands,4,4,Y,N,Y,N,
+C397,疼,疼,téng,to hurt; sore,word,adj,Body & health,Zombie Lands,3,2,Y,Y,Y,N,
+C398,生病,生病,shēngbìng,to get sick,word,verb,Body & health,Zombie Lands,3,1,Y,Y,Y,N,
+C399,医生,醫生,yīshēng,doctor,word,noun,Body & health,Zombie Lands,2,1,Y,Y,Y,N,
+C400,药,藥,yào,medicine; potion,word,noun,Body & health,Zombie Lands,3,2,Y,Y,Y,N,doubles as RPG 'potion' (药水 yàoshuǐ)
+C401,受伤,受傷,shòushāng,to get hurt; injured,word,verb,Body & health,Zombie Lands,none,3,Y,Y,Y,N,
+C402,休息,休息,xiūxi,to rest,word,verb,Body & health,Zombie Lands,3,1,Y,Y,Y,N,
+C403,我头疼,我頭疼,wǒ tóu téng,I have a headache,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+头疼 (parts max HSK 6, YCT n/a)"
+C404,我肚子疼,我肚子疼,wǒ dùzi téng,my stomach hurts,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+肚子+疼 (parts max HSK 4, YCT 4)"
+C405,好疼,好疼,hǎo téng,"ow, that really hurts!",exclamation,expr,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 好+疼 (parts max HSK 2, YCT 3)"
+C406,我受伤了,我受傷了,wǒ shòushāng le,I'm hurt!,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+受伤+了 (parts max HSK 3, YCT n/a)"
+C844,感冒,感冒,gǎnmào,to catch a cold; a cold,word,verb,Body & health,Zombie Lands,3,3,Y,Y,Y,N,new in v2
+C845,发烧,發燒,fāshāo,to have a fever,word,verb,Body & health,Zombie Lands,4,4,Y,N,Y,N,new in v2
+C846,咳嗽,咳嗽,késou,to cough,word,verb,Body & health,Zombie Lands,none,7-9,Y,N,N,N,new in v2
+C847,舒服,舒服,shūfu,comfortable; well,word,adj,Body & health,Zombie Lands,3,2,Y,Y,Y,N,new in v2
+C848,不舒服,不舒服,bù shūfu,unwell; uncomfortable,phrase,adj,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 不+舒服 (parts max HSK 2, YCT 3) | new in v2"
+C849,身体,身體,shēntǐ,body; health,word,noun,Body & health,Zombie Lands,3,1,Y,Y,Y,N,new in v2
+C850,健康,健康,jiànkāng,healthy; health,word,adj,Body & health,Zombie Lands,4,2,Y,Y,Y,N,new in v2
+C851,医院,醫院,yīyuàn,hospital,word,noun,Body & health,Zombie Lands,2,1,Y,Y,Y,N,new in v2
+C852,看病,看病,kàn bìng,to see a doctor,word,verb,Body & health,Zombie Lands,none,1,Y,Y,Y,N,new in v2
+C853,打针,打針,dǎzhēn,to get a shot,word,verb,Body & health,Zombie Lands,4,4,Y,N,Y,N,new in v2
+C854,吃药,吃藥,chī yào,to take medicine,word,verb,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 吃+药 (parts max HSK 2, YCT 3) | new in v2"
+C855,腿,腿,tuǐ,leg,word,noun,Body & health,Zombie Lands,4,2,Y,Y,Y,N,new in v2
+C856,脸,臉,liǎn,face,word,noun,Body & health,Zombie Lands,4,2,Y,Y,Y,N,new in v2
+C857,心,心,xīn,heart,word,noun,Body & health,Zombie Lands,none,3,Y,Y,Y,N,new in v2
+C858,血,血,xiě,blood,word,noun,Body & health,Zombie Lands,none,3,Y,Y,Y,N,colloquial reading xiě; formal/compound reading xuè (血液) | new in v2
+C859,多喝水,多喝水,duō hē shuǐ,drink more water,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 多+喝+水 (parts max HSK 1, YCT 1) | new in v2"
+C860,你哪儿不舒服,你哪兒不舒服,nǐ nǎr bù shūfu,where do you feel unwell?,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+哪儿+不+舒服 (parts max HSK 2, YCT 3) | new in v2"
+C861,我感冒了,我感冒了,wǒ gǎnmào le,I have a cold,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+感冒+了 (parts max HSK 3, YCT 3) | new in v2"
+C862,你好点儿了吗,你好點兒了嗎,nǐ hǎo diǎnr le ma,are you feeling better?,phrase,expr,Body & health,Zombie Lands,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | built from 你好+点儿+了+吗; all parts HSK 1 | new in v2
+C407,用,用,yòng,to use,word,verb,Everyday actions,Zombie Lands,4,1,Y,Y,Y,N,
+C408,找,找,zhǎo,to look for,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,
+C409,找到,找到,zhǎodào,to find,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C410,看见,看見,kànjiàn,to see,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C411,进,進,jìn,to enter,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,
+C412,进来,進來,jìnlái,to come in,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C413,出去,出去,chūqù,to go out,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C414,回来,回來,huílái,to come back,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C415,拿,拿,ná,to take; to hold,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,
+C416,放,放,fàng,to put; to let go,word,verb,Everyday actions,Zombie Lands,4,1,Y,Y,Y,N,
+C417,打开,打開,dǎkāi,to open,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,
+C418,开,開,kāi,to open; to drive; to turn on,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,
+C419,关,關,guān,to close; to turn off,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,
+C420,带,帶,dài,to bring; to carry,word,verb,Everyday actions,Zombie Lands,4,2,Y,Y,Y,N,
+C421,告诉,告訴,gàosu,to tell,word,verb,Everyday actions,Zombie Lands,4,1,Y,Y,Y,N,
+C422,死,死,sǐ,"to die; (to death, as intensifier)",word,verb,Everyday actions,Zombie Lands,none,3,Y,Y,Y,N,
+C863,慢慢,慢慢,mànmàn,slowly; gradually,word,adv,Everyday actions,Zombie Lands,none,3,Y,Y,Y,N,new in v2
+C864,醒,醒,xǐng,to wake up,word,verb,Everyday actions,Zombie Lands,4,4,Y,N,Y,N,new in v2
+C865,躺,躺,tǎng,to lie down,word,verb,Everyday actions,Zombie Lands,4,4,Y,N,Y,N,new in v2
+C866,站,站,zhàn,to stand,word,verb,Everyday actions,Zombie Lands,4,1,Y,Y,Y,N,new in v2
+C867,推,推,tuī,to push,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C868,拉,拉,lā,to pull,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C869,扔,扔,rēng,to throw,word,verb,Everyday actions,Zombie Lands,none,5,Y,N,N,N,new in v2
+C870,咬,咬,yǎo,to bite,word,verb,Everyday actions,Zombie Lands,none,5,Y,N,N,N,new in v2
+C871,抱,抱,bào,to hug; to hold,word,verb,Everyday actions,Zombie Lands,none,4,Y,N,Y,N,new in v2
+C872,变,變,biàn,to change; to become,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C873,变成,變成,biànchéng,to turn into,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C874,治好,治好,zhìhǎo,to cure,word,verb,Everyday actions,Zombie Lands,none,none,Y,N,Y,N,"Not in YCT/HSK as a unit; built from listed words 治+好 (parts max HSK 4, YCT n/a) | new in v2"
+C875,洗,洗,xǐ,to wash,word,verb,Everyday actions,Zombie Lands,none,1,Y,Y,Y,N,new in v2
+C876,脱,脫,tuō,to take off (clothes),word,verb,Everyday actions,Zombie Lands,4,4,Y,N,Y,N,new in v2
+C877,搬,搬,bān,to move (something heavy),word,verb,Everyday actions,Zombie Lands,4,3,Y,Y,Y,N,new in v2
+C878,送,送,sòng,to give (as a gift); to deliver,word,verb,Everyday actions,Zombie Lands,3,1,Y,Y,Y,N,new in v2
+C879,借,借,jiè,to borrow; to lend,word,verb,Everyday actions,Zombie Lands,4,2,Y,Y,Y,N,new in v2
+C880,修,修,xiū,to repair,word,verb,Everyday actions,Zombie Lands,none,3,Y,Y,Y,N,new in v2
+C881,掉,掉,diào,to drop; to fall,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C882,碰,碰,pèng,to bump; to touch,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C883,闻,聞,wén,to smell,word,verb,Everyday actions,Zombie Lands,none,2,Y,Y,Y,N,new in v2
+C884,别动,別動,bié dòng,don't move!,phrase,expr,Everyday actions,Zombie Lands,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 别+动 (parts max HSK 1, YCT n/a) | new in v2"
+C885,他变成了丧尸,他變成了喪屍,tā biànchéng le sāngshī,he turned into a zombie,phrase,expr,Everyday actions,Zombie Lands,none,none,Y,Y,N,N,"Not in YCT 1-4 or HSK 3.0 (2021) lists | story sentence; 变成 HSK 2, 丧尸 is the realm monster | new in v2"
+C547,突然,突然,tūrán,suddenly,connector,adv,Connectors (advanced),Zombie Lands,4,3,Y,Y,Y,N,
+C424,丧尸,喪屍,sàngshī,zombie,word,noun,Monster names,Zombie Lands,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | mainland word for Western-style zombie; 僵尸 is the Chinese hopping vampire (Asian creature); Taiwan often uses 殭屍 for both
+C425,这儿,這兒,zhèr,here,word,pron,Places & directions,Griffin Peaks,1,1,Y,Y,Y,N,Taiwan: 這裡 zhèlǐ
+C426,那儿,那兒,nàr,there,word,pron,Places & directions,Griffin Peaks,1,1,Y,Y,Y,N,Taiwan: 那裡 nàlǐ
+C427,哪里,哪裡,nǎlǐ,where,question word,pron,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,"also a modest reply to praise ('oh, not at all')"
+C428,上,上,shàng,up; on; above,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C429,下,下,xià,down; under; below,word,noun,Places & directions,Griffin Peaks,3,1,Y,Y,Y,N,
+C430,上边,上邊,shàngbian,on top; above,word,noun,Places & directions,Griffin Peaks,2,1,Y,Y,Y,N,
+C431,下边,下邊,xiàbian,below; underneath,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C432,前边,前邊,qiánbian,in front,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C433,后边,後邊,hòubian,behind,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C434,左边,左邊,zuǒbian,left side,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C435,右边,右邊,yòubian,right side,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C436,旁边,旁邊,pángbiān,beside; next to,word,noun,Places & directions,Griffin Peaks,3,1,Y,Y,Y,N,
+C437,东,東,dōng,east,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,
+C438,西,西,xī,west,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,
+C439,南,南,nán,south,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,
+C440,北,北,běi,north,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C441,远,遠,yuǎn,far,word,adj,Places & directions,Griffin Peaks,3,1,Y,Y,Y,N,
+C442,近,近,jìn,near; close,word,adj,Places & directions,Griffin Peaks,3,2,Y,Y,Y,N,
+C443,往,往,wǎng,toward,word,prep,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,
+C444,到,到,dào,to arrive; to reach; until,word,verb,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C445,公园,公園,gōngyuán,park,word,noun,Places & directions,Griffin Peaks,4,2,Y,Y,Y,N,
+C446,洗手间,洗手間,xǐshǒujiān,restroom; bathroom,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,
+C447,房间,房間,fángjiān,room,word,noun,Places & directions,Griffin Peaks,2,1,Y,Y,Y,N,
+C448,中国,中國,Zhōngguó,China,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C449,美国,美國,Měiguó,USA; America,word,noun,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 美+国 (parts max HSK 3, YCT n/a) | the player's home country; proper nouns are mostly excluded from the lists"
+C450,山,山,shān,mountain; hill,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C451,海,海,hǎi,sea; ocean,word,noun,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,
+C452,路,路,lù,road; path,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,
+C453,地图,地圖,dìtú,map,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,
+C455,洗手间在哪儿,洗手間在哪兒,xǐshǒujiān zài nǎr,where's the restroom?,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 洗手间+在+哪儿 (parts max HSK 1, YCT 4) | Taiwan: 洗手間在哪裡"
+C456,一直走,一直走,yīzhí zǒu,go straight ahead,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 一直+走 (parts max HSK 2, YCT 4)"
+C457,往左走,往左走,wǎng zuǒ zǒu,go left,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 往+左+走 (parts max HSK 2, YCT n/a)"
+C458,往右走,往右走,wǎng yòu zǒu,go right,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 往+右+走 (parts max HSK 2, YCT n/a)"
+C886,附近,附近,fùjìn,nearby,word,noun,Places & directions,Griffin Peaks,4,4,Y,N,Y,N,new in v2
+C887,对面,對面,duìmiàn,opposite; across from,word,noun,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C888,中间,中間,zhōngjiān,middle; between,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,new in v2
+C889,里边,裡邊,lǐbian,inside,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C890,外边,外邊,wàibian,outside,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C891,地方,地方,dìfang,place,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C892,城市,城市,chéngshì,city,word,noun,Places & directions,Griffin Peaks,none,3,Y,Y,Y,N,new in v2
+C893,村子,村子,cūnzi,village,word,noun,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 村+子 (parts max HSK 3, YCT n/a) | new in v2"
+C894,国家,國家,guójiā,country,word,noun,Places & directions,Griffin Peaks,4,1,Y,Y,Y,N,new in v2
+C895,北京,北京,Běijīng,Beijing,word,noun,Places & directions,Griffin Peaks,2,1,Y,Y,Y,N,new in v2
+C896,长城,長城,Chángchéng,the Great Wall,word,noun,Places & directions,Griffin Peaks,4,3,Y,Y,Y,N,new in v2
+C897,桥,橋,qiáo,bridge,word,noun,Places & directions,Griffin Peaks,4,3,Y,Y,Y,N,new in v2
+C898,河,河,hé,river,word,noun,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C899,湖,湖,hú,lake,word,noun,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C900,岛,島,dǎo,island,word,noun,Places & directions,Griffin Peaks,none,6,Y,N,N,N,new in v2
+C901,路口,路口,lùkǒu,intersection,word,noun,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C902,离,離,lí,(distance) from,word,prep,Places & directions,Griffin Peaks,4,2,Y,Y,Y,N,new in v2
+C903,离这儿远吗,離這兒遠嗎,lí zhèr yuǎn ma,is it far from here?,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 离+这儿+远+吗 (parts max HSK 2, YCT 4) | new in v2"
+C904,还有多远,還有多遠,hái yǒu duō yuǎn,how much farther?,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 还有+多+远 (parts max HSK 1, YCT n/a) | new in v2"
+C905,过马路,過馬路,guò mǎlù,to cross the road,phrase,verb,Places & directions,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 过+马路 (parts max HSK 1, YCT n/a) | new in v2"
+C906,转,轉,zhuǎn,to turn,word,verb,Places & directions,Griffin Peaks,none,3,Y,Y,Y,N,new in v2
+C907,迷路,迷路,mílù,to get lost,word,verb,Places & directions,Griffin Peaks,4,7-9,Y,N,Y,N,new in v2
+C908,我迷路了,我迷路了,wǒ mílù le,I'm lost,phrase,expr,Places & directions,Griffin Peaks,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我+迷路+了 (parts max HSK 7-9, YCT 4) | new in v2"
+C909,爬,爬,pá,to climb; to crawl,word,verb,Places & directions,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C910,爬山,爬山,pá shān,to climb a mountain,word,verb,Places & directions,Griffin Peaks,4,2,Y,Y,Y,N,new in v2
+C911,上来,上來,shànglai,to come up,word,verb,Places & directions,Griffin Peaks,none,3,Y,Y,Y,N,new in v2
+C912,下去,下去,xiàqu,to go down,word,verb,Places & directions,Griffin Peaks,none,3,Y,Y,Y,N,new in v2
+C913,回去,回去,huíqu,to go back,word,verb,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C914,出来,出來,chūlai,to come out,word,verb,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C915,进去,進去,jìnqu,to go in,word,verb,Places & directions,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C459,车,車,chē,car; vehicle,word,noun,Transportation,Griffin Peaks,none,1,Y,Y,Y,N,
+C460,公共汽车,公共汽車,gōnggòng qìchē,bus,word,noun,Transportation,Griffin Peaks,3,2,Y,N,N,N,Taiwan: 公車 gōngchē; mainland colloquial 公交车
+C461,火车,火車,huǒchē,train,word,noun,Transportation,Griffin Peaks,4,1,Y,Y,Y,N,
+C462,飞机,飛機,fēijī,airplane,word,noun,Transportation,Griffin Peaks,3,1,Y,Y,Y,N,
+C463,自行车,自行車,zìxíngchē,bicycle,word,noun,Transportation,Griffin Peaks,3,2,Y,Y,Y,N,Taiwan: 腳踏車 jiǎotàchē
+C464,坐,坐,zuò,"to sit; to ride (bus, plane)",word,verb,Transportation,Griffin Peaks,2,1,Y,Y,Y,N,
+C465,骑,騎,qí,"to ride (bike, horse)",word,verb,Transportation,Griffin Peaks,none,2,Y,Y,Y,N,
+C466,飞,飛,fēi,to fly,word,verb,Transportation,Griffin Peaks,none,1,Y,Y,Y,N,
+C467,出发,出發,chūfā,to set off,word,verb,Transportation,Griffin Peaks,4,2,Y,Y,Y,N,
+C468,到了,到了,dào le,we're here!,phrase,expr,Transportation,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 到+了 (parts max HSK 1, YCT n/a)"
+C469,马上到,馬上到,mǎshàng dào,I'll be right there!,phrase,expr,Transportation,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 马上+到 (parts max HSK 1, YCT n/a)"
+C916,机场,機場,jīchǎng,airport,word,noun,Transportation,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C917,车站,車站,chēzhàn,station; bus stop,word,noun,Transportation,Griffin Peaks,3,1,Y,Y,Y,N,new in v2
+C918,地铁,地鐵,dìtiě,subway,word,noun,Transportation,Griffin Peaks,4,2,Y,Y,Y,N,new in v2
+C919,出租车,出租車,chūzūchē,taxi,word,noun,Transportation,Griffin Peaks,none,2,Y,Y,Y,N,new in v2 | OpenCC Taiwan-phrase form: 計程車
+C920,船,船,chuán,boat; ship,word,noun,Transportation,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C921,开车,開車,kāichē,to drive,word,verb,Transportation,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C922,走路,走路,zǒulù,to walk,word,verb,Transportation,Griffin Peaks,none,1,Y,Y,Y,N,new in v2
+C923,坐飞机去,坐飛機去,zuò fēijī qù,to go by plane,phrase,expr,Transportation,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 坐+飞机+去 (parts max HSK 1, YCT 3) | new in v2"
+C470,天气,天氣,tiānqì,weather,word,noun,Weather,Griffin Peaks,2,1,Y,Y,Y,N,
+C471,冷,冷,lěng,cold,word,adj,Weather,Griffin Peaks,2,1,Y,Y,Y,N,
+C472,热,熱,rè,hot,word,adj,Weather,Griffin Peaks,2,1,Y,Y,Y,N,
+C473,下雨,下雨,xiàyǔ,to rain,word,verb,Weather,Griffin Peaks,none,1,Y,Y,Y,N,
+C474,下雪,下雪,xiàxuě,to snow,word,verb,Weather,Griffin Peaks,3,2,Y,Y,Y,N,
+C475,雨,雨,yǔ,rain,word,noun,Weather,Griffin Peaks,none,1,Y,Y,Y,N,
+C476,雪,雪,xuě,snow,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,
+C477,风,風,fēng,wind,word,noun,Weather,Griffin Peaks,none,1,Y,Y,Y,N,
+C478,晴,晴,qíng,sunny; clear,word,adj,Weather,Griffin Peaks,4,2,Y,Y,Y,N,
+C479,太阳,太陽,tàiyáng,sun,word,noun,Weather,Griffin Peaks,3,2,Y,Y,Y,N,
+C480,月亮,月亮,yuèliang,moon,word,noun,Weather,Griffin Peaks,3,2,Y,Y,Y,N,
+C481,星星,星星,xīngxing,star,word,noun,Weather,Griffin Peaks,4,2,Y,Y,Y,N,
+C482,云,雲,yún,cloud,word,noun,Weather,Griffin Peaks,4,2,Y,Y,Y,N,
+C483,春天,春天,chūntiān,spring,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,
+C484,夏天,夏天,xiàtiān,summer,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,
+C485,秋天,秋天,qiūtiān,autumn; fall,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,
+C486,冬天,冬天,dōngtiān,winter,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,
+C487,今天好热,今天好熱,jīntiān hǎo rè,it's so hot today!,phrase,expr,Weather,Griffin Peaks,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 今天+好+热 (parts max HSK 1, YCT 2)"
+C924,天空,天空,tiānkōng,sky,word,noun,Weather,Griffin Peaks,none,3,Y,Y,Y,N,new in v2
+C925,刮风,颳風,guā fēng,the wind blows; windy,word,verb,Weather,Griffin Peaks,3,7-9,Y,Y,Y,N,new in v2
+C926,阴天,陰天,yīntiān,cloudy day,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C927,晴天,晴天,qíngtiān,sunny day,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C928,暖和,暖和,nuǎnhuo,warm,word,adj,Weather,Griffin Peaks,4,3,Y,Y,Y,N,new in v2
+C929,凉快,涼快,liángkuai,cool; pleasantly cool,word,adj,Weather,Griffin Peaks,4,2,Y,Y,Y,N,new in v2
+C930,温度,溫度,wēndù,temperature,word,noun,Weather,Griffin Peaks,none,2,Y,Y,Y,N,new in v2
+C931,度,度,dù,degree (temperature),measure word,mw,Weather,Griffin Peaks,none,2,Y,N,Y,N,new in v2
+C932,打雷,打雷,dǎléi,to thunder,word,verb,Weather,Griffin Peaks,none,4,Y,N,Y,N,new in v2
+C933,闪电,閃電,shǎndiàn,lightning,word,noun,Weather,Griffin Peaks,none,4,Y,N,Y,N,new in v2
+C934,彩虹,彩虹,cǎihóng,rainbow,word,noun,Weather,Griffin Peaks,none,7-9,Y,N,N,N,new in v2
+C935,雾,霧,wù,fog,word,noun,Weather,Griffin Peaks,none,7-9,Y,N,N,N,new in v2
+C936,冰,冰,bīng,ice,word,noun,Weather,Griffin Peaks,none,4,Y,N,Y,N,new in v2
+C937,季节,季節,jìjié,season,word,noun,Weather,Griffin Peaks,none,4,Y,N,Y,N,new in v2
+C938,雨伞,雨傘,yǔsǎn,umbrella,word,noun,Weather,Griffin Peaks,3,none,Y,Y,Y,N,new in v2
+C939,天气预报,天氣預報,tiānqì yùbào,weather forecast,word,noun,Weather,Griffin Peaks,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 天气+预报 (parts max HSK 3, YCT n/a) | new in v2"
+C940,明天会下雨吗,明天會下雨嗎,míngtiān huì xià yǔ ma,will it rain tomorrow?,phrase,expr,Weather,Griffin Peaks,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 明天+会+下雨+吗 (parts max HSK 1, YCT n/a) | new in v2"
+C941,羽毛,羽毛,yǔmáo,feather,word,noun,Weather,Griffin Peaks,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | griffin arc | new in v2
+C488,爱好,愛好,àihào,hobby,word,noun,Hobbies & sports,Ogre Colosseum,none,1,Y,Y,Y,N,
+C489,运动,運動,yùndòng,sports; exercise,word,noun,Hobbies & sports,Ogre Colosseum,3,2,Y,Y,Y,N,
+C490,足球,足球,zúqiú,soccer,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,
+C491,篮球,籃球,lánqiú,basketball,word,noun,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,
+C492,踢足球,踢足球,tī zúqiú,to play soccer,phrase,expr,Hobbies & sports,Ogre Colosseum,3,none,Y,Y,Y,N,
+C493,打篮球,打籃球,dǎ lánqiú,to play basketball,phrase,expr,Hobbies & sports,Ogre Colosseum,3,none,Y,Y,Y,N,
+C494,游泳,游泳,yóuyǒng,to swim,word,verb,Hobbies & sports,Ogre Colosseum,3,3,Y,Y,Y,N,
+C495,跑步,跑步,pǎobù,to jog; to run (exercise),word,verb,Hobbies & sports,Ogre Colosseum,3,3,Y,Y,Y,N,
+C496,唱歌,唱歌,chànggē,to sing,word,verb,Hobbies & sports,Ogre Colosseum,3,1,Y,Y,Y,N,
+C497,跳舞,跳舞,tiàowǔ,to dance,word,verb,Hobbies & sports,Ogre Colosseum,3,3,Y,Y,Y,N,
+C498,画画儿,畫畫兒,huà huàr,to draw pictures,phrase,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 画+画儿 (parts max HSK 2, YCT 2) | Taiwan: 畫畫 huàhuà"
+C499,看电视,看電視,kàn diànshì,to watch TV,phrase,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 看+电视 (parts max HSK 1, YCT 2)"
+C500,电影,電影,diànyǐng,movie,word,noun,Hobbies & sports,Ogre Colosseum,3,1,Y,Y,Y,N,
+C501,看电影,看電影,kàn diànyǐng,to watch a movie,phrase,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 看+电影 (parts max HSK 1, YCT 3)"
+C502,音乐,音樂,yīnyuè,music,word,noun,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,
+C503,比赛,比賽,bǐsài,match; competition,word,noun,Hobbies & sports,Ogre Colosseum,4,3,Y,Y,Y,N,
+C504,上网,上網,shàngwǎng,to go online,word,verb,Hobbies & sports,Ogre Colosseum,3,1,Y,Y,Y,N,
+C505,视频,視頻,shìpín,video,word,noun,Hobbies & sports,Ogre Colosseum,none,5,Y,N,N,N,Taiwan: 影片 yǐngpiàn
+C506,你喜欢做什么,你喜歡做什麼,nǐ xǐhuan zuò shénme,what do you like to do?,phrase,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 你+喜欢+做+什么 (parts max HSK 1, YCT 2)"
+C507,我最喜欢……,我最喜歡……,wǒ zuì xǐhuan …,my favorite is …,sentence frame,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+最+喜欢 (parts max HSK 1, YCT 3)"
+C508,我们去玩吧,我們去玩吧,wǒmen qù wán ba,let's go play!,phrase,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我们+去+玩+吧 (parts max HSK 1, YCT 3)"
+C942,打球,打球,dǎ qiú,to play ball,word,verb,Hobbies & sports,Ogre Colosseum,none,1,Y,Y,Y,N,new in v2
+C943,乒乓球,乒乓球,pīngpāngqiú,ping-pong,word,noun,Hobbies & sports,Ogre Colosseum,4,7-9,Y,N,Y,N,new in v2
+C944,网球,網球,wǎngqiú,tennis,word,noun,Hobbies & sports,Ogre Colosseum,4,2,Y,Y,Y,N,new in v2
+C945,排球,排球,páiqiú,volleyball,word,noun,Hobbies & sports,Ogre Colosseum,4,2,Y,Y,Y,N,new in v2
+C946,跳,跳,tiào,to jump,word,verb,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C947,跳高,跳高,tiàogāo,high jump,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C948,武术,武術,wǔshù,martial arts,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C949,功夫,功夫,gōngfu,kung fu,word,noun,Hobbies & sports,Ogre Colosseum,4,3,Y,Y,Y,N,new in v2
+C950,锻炼,鍛鍊,duànliàn,to exercise; to work out,word,verb,Hobbies & sports,Ogre Colosseum,4,4,Y,N,Y,N,new in v2
+C951,练,練,liàn,to practice; to train,word,verb,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C952,训练,訓練,xùnliàn,to train; training,word,verb,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C953,教练,教練,jiàoliàn,coach,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C954,队员,隊員,duìyuán,team member,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C955,对手,對手,duìshǒu,opponent; rival,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C956,冠军,冠軍,guànjūn,champion,word,noun,Hobbies & sports,Ogre Colosseum,none,5,Y,N,N,N,new in v2
+C957,第一名,第一名,dì-yī míng,first place,phrase,noun,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 第一+名 (parts max HSK -, YCT n/a) | new in v2"
+C958,分,分,fēn,point (score); minute; cent,word,noun,Hobbies & sports,Ogre Colosseum,none,1,Y,Y,Y,N,new in v2
+C959,得分,得分,défēn,to score,word,verb,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C960,平,平,píng,tied (score); flat,word,adj,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C961,胜利,勝利,shènglì,victory,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C962,失败,失敗,shībài,to fail; defeat,word,verb,Hobbies & sports,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C963,成功,成功,chénggōng,to succeed; success,word,verb,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C964,努力,努力,nǔlì,to try hard; hardworking,word,verb,Hobbies & sports,Ogre Colosseum,4,2,Y,Y,Y,N,new in v2
+C965,坚持,堅持,jiānchí,to keep going; to persist,word,verb,Hobbies & sports,Ogre Colosseum,4,3,Y,Y,Y,N,new in v2
+C966,观众,觀眾,guānzhòng,audience; spectators,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C967,表演,表演,biǎoyǎn,to perform; performance,word,verb,Hobbies & sports,Ogre Colosseum,4,3,Y,Y,Y,N,new in v2
+C968,弹钢琴,彈鋼琴,tán gāngqín,to play the piano,phrase,verb,Hobbies & sports,Ogre Colosseum,4,none,Y,Y,N,N,new in v2
+C969,吉他,吉他,jítā,guitar,word,noun,Hobbies & sports,Ogre Colosseum,none,7-9,Y,N,N,N,new in v2
+C970,拍照,拍照,pāizhào,to take photos,word,verb,Hobbies & sports,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C971,照片,照片,zhàopiàn,photo,word,noun,Hobbies & sports,Ogre Colosseum,4,2,Y,Y,Y,N,new in v2
+C972,歌,歌,gē,song,word,noun,Hobbies & sports,Ogre Colosseum,none,1,Y,Y,Y,N,new in v2
+C973,歌手,歌手,gēshǒu,singer,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C974,明星,明星,míngxīng,star (celebrity),word,noun,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C975,球迷,球迷,qiúmí,sports fan,word,noun,Hobbies & sports,Ogre Colosseum,none,3,Y,Y,Y,N,new in v2
+C976,动画片,動畫片,dònghuàpiàn,cartoon,word,noun,Hobbies & sports,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C977,小说,小說,xiǎoshuō,novel,word,noun,Hobbies & sports,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C978,漫画,漫畫,mànhuà,comics; manga,word,noun,Hobbies & sports,Ogre Colosseum,none,5,Y,N,N,N,new in v2
+C979,兴趣,興趣,xìngqù,interest,word,noun,Hobbies & sports,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C980,对……感兴趣,對……感興趣,duì … gǎn xìngqù,to be interested in …,sentence frame,expr,Hobbies & sports,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 对+感兴趣 (parts max HSK 4, YCT 4) | new in v2"
+C981,有趣,有趣,yǒuqù,interesting; fun,word,adj,Hobbies & sports,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C509,哇,哇,wā,wow!,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,6,Y,Y,N,N,
+C510,哎呀,哎呀,āiyā,oh no! oops!,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,7-9,Y,Y,N,N,
+C511,哎哟,哎喲,āiyō,ouch!,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT 1-4 or HSK 3.0 (2021) lists | exclamation (ouch!); very common in speech, not on test lists"
+C512,天哪,天哪,tiān na,oh my goodness!,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 天+哪 (parts max HSK 1, YCT n/a) | also written 天啊 tiān a"
+C513,太棒了,太棒了,tài bàng le,awesome! fantastic!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 太+棒+了 (parts max HSK 5, YCT n/a)"
+C514,厉害,厲害,lìhai,awesome; impressive; fierce,word,adj,Exclamations & reactions,Ogre Colosseum,4,5,Y,N,Y,N,
+C515,好厉害,好厲害,hǎo lìhai,so impressive! so cool!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 好+厉害 (parts max HSK 5, YCT 4)"
+C516,酷,酷,kù,cool,word,adj,Exclamations & reactions,Ogre Colosseum,none,6,Y,N,N,N,loan from English 'cool'
+C517,真的吗,真的嗎,zhēn de ma,really?,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 真的+吗 (parts max HSK 1, YCT n/a)"
+C518,不会吧,不會吧,bù huì ba,no way!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 不+会+吧 (parts max HSK 1, YCT 3) | said bú huì ba"
+C519,没问题,沒問題,méi wèntí,no problem,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 没+问题 (parts max HSK 2, YCT n/a)"
+C520,当然,當然,dāngrán,of course,word,adv,Exclamations & reactions,Ogre Colosseum,3,3,Y,Y,Y,N,
+C521,糟糕,糟糕,zāogāo,oh no! terrible,exclamation,adj,Exclamations & reactions,Ogre Colosseum,none,5,Y,Y,N,N,
+C522,完了,完了,wán le,"uh-oh, we're done for",exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,5,Y,Y,N,N,
+C523,加油,加油,jiāyóu,go for it! you can do it!,exclamation,verb,Exclamations & reactions,Ogre Colosseum,none,2,Y,Y,Y,N,
+C524,讨厌,討厭,tǎoyàn,annoying; to dislike,word,verb,Exclamations & reactions,Ogre Colosseum,4,5,Y,N,Y,N,
+C525,算了,算了,suàn le,forget it; never mind,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,6,Y,Y,N,N,
+C526,哈哈,哈哈,hāhā,haha,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,3,Y,Y,Y,N,
+C527,哦,哦,ò,"oh, I see",exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,7-9,Y,Y,N,N,"tone varies with meaning (ó = really?, ò = I see)"
+C528,嗯,嗯,ǹg,mm-hmm; yeah,exclamation,interj,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | tone varies by meaning; often romanized 'en'
+C529,喂,喂,wéi,hello? (on the phone),exclamation,interj,Exclamations & reactions,Ogre Colosseum,3,2,Y,Y,Y,N,wèi = 'hey!' (calling someone); wéi on the phone
+C530,啊,啊,a,ah; oh (softening particle),exclamation,particle,Exclamations & reactions,Ogre Colosseum,4,2,Y,Y,Y,N,
+C531,吓死我了,嚇死我了,xià sǐ wǒ le,you scared me to death!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 吓+死+我+了 (parts max HSK 5, YCT n/a) | high-frequency exclamation, not a test item"
+C532,气死我了,氣死我了,qì sǐ wǒ le,I'm so mad!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 气+死+我+了 (parts max HSK 3, YCT n/a)"
+C533,好险,好險,hǎo xiǎn,that was close!,exclamation,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 好+险 (parts max HSK 6, YCT n/a) | exclamation (phew, close call!); common in games"
+C534,恭喜,恭喜,gōngxǐ,congratulations!,exclamation,verb,Exclamations & reactions,Ogre Colosseum,none,7-9,Y,Y,N,N,
+C535,生日快乐,生日快樂,shēngrì kuàilè,happy birthday!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 生日+快乐 (parts max HSK 2, YCT 3)"
+C536,行,行,xíng,okay; will do; that works,word,adj,Exclamations & reactions,Ogre Colosseum,4,1,Y,Y,Y,N,
+C537,我知道了,我知道了,wǒ zhīdào le,got it; I see,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+知道+了 (parts max HSK 1, YCT 3)"
+C538,怎么办,怎麼辦,zěnme bàn,what do we do?!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,2,Y,Y,Y,N,
+C982,了不起,了不起,liǎobuqǐ,amazing; terrific,word,adj,Exclamations & reactions,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C983,帅,帥,shuài,cool; handsome,word,adj,Exclamations & reactions,Ogre Colosseum,none,4,Y,N,Y,N,new in v2
+C984,真棒,真棒,zhēn bàng,awesome!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 真+棒 (parts max HSK 5, YCT n/a) | new in v2"
+C985,不错,不錯,bùcuò,not bad; pretty good,word,adj,Exclamations & reactions,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C986,差不多,差不多,chàbuduō,about the same; almost,word,adj,Exclamations & reactions,Ogre Colosseum,none,2,Y,Y,Y,N,new in v2
+C987,没想到,沒想到,méi xiǎngdào,didn't expect that!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,4,Y,Y,N,N,new in v2
+C988,太可惜了,太可惜了,tài kěxī le,what a pity!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 太+可惜+了 (parts max HSK 5, YCT n/a) | new in v2"
+C989,看我的,看我的,kàn wǒ de,watch this!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 看+我+的 (parts max HSK 1, YCT 1) | new in v2"
+C990,敢,敢,gǎn,to dare,word,verb,Exclamations & reactions,Ogre Colosseum,4,3,Y,Y,Y,N,new in v2
+C991,你敢吗,你敢嗎,nǐ gǎn ma,do you dare?,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+敢+吗 (parts max HSK 3, YCT 4) | new in v2"
+C992,我不怕你,我不怕你,wǒ bù pà nǐ,I'm not afraid of you,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+怕+你 (parts max HSK 2, YCT n/a) | new in v2"
+C993,来吧,來吧,lái ba,bring it on!; come on!,phrase,expr,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 来+吧 (parts max HSK 1, YCT 3) | new in v2"
+C994,哇塞,哇塞,wāsài,wow! (slang),exclamation,intj,Exclamations & reactions,Ogre Colosseum,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 哇+塞 (parts max HSK 6, YCT n/a) | kid slang | new in v2"
+C540,不但……而且……,不但……而且……,bùdàn … érqiě …,not only … but also …,connector,conj,Connectors (advanced),Demon King's Castle,4,none,Y,N,N,N,HSK: not an entry; parts ≤HSK2
+C546,其实,其實,qíshí,actually,connector,adv,Connectors (advanced),Demon King's Castle,none,3,Y,Y,Y,N,
+C548,最后,最後,zuìhòu,finally; in the end; last,connector,noun,Connectors (advanced),Demon King's Castle,none,1,Y,Y,Y,N,
+C549,终于,終於,zhōngyú,at last; finally,connector,adv,Connectors (advanced),Demon King's Castle,none,3,Y,Y,Y,N,
+C995,不管,不管,bùguǎn,no matter (what/how),connector,conj,Connectors (advanced),Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C996,无论……都……,無論……都……,wúlùn … dōu …,"no matter …, still …",sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 无论+都 (parts max HSK 4, YCT 4) | new in v2"
+C997,只要……就……,只要……就……,zhǐyào … jiù …,"as long as …, then …",sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 只要+就 (parts max HSK 2, YCT 4) | new in v2"
+C998,只有……才……,只有……才……,zhǐyǒu … cái …,only if … will …,sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 只有+才 (parts max HSK 3, YCT n/a) | new in v2"
+C999,除了……以外,除了……以外,chúle … yǐwài,besides …; except …,sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 除了+以外 (parts max HSK 3, YCT n/a) | new in v2"
+C1000,不是……而是……,不是……而是……,bù shì … ér shì …,"not …, but rather …",sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 不+是+而是 (parts max HSK 4, YCT n/a) | new in v2"
+C1001,连……都……,連……都……,lián … dōu …,even …,sentence frame,conj,Connectors (advanced),Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 连+都 (parts max HSK 3, YCT n/a) | new in v2"
+C1002,就算,就算,jiùsuàn,even if,connector,conj,Connectors (advanced),Demon King's Castle,none,6,Y,N,N,N,new in v2
+C1003,于是,於是,yúshì,so; and then,connector,conj,Connectors (advanced),Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1004,另外,另外,lìngwài,in addition; besides,connector,conj,Connectors (advanced),Demon King's Castle,4,3,Y,Y,Y,N,new in v2
+C1005,否则,否則,fǒuzé,otherwise; or else,connector,conj,Connectors (advanced),Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1006,因此,因此,yīncǐ,therefore,connector,conj,Connectors (advanced),Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1007,为了,為了,wèile,in order to; for,connector,prep,Connectors (advanced),Demon King's Castle,4,3,Y,Y,Y,N,new in v2
+C1008,原来,原來,yuánlái,so it turns out; originally,word,adv,Connectors (advanced),Demon King's Castle,none,2,Y,N,Y,N,new in v2
+C550,同意,同意,tóngyì,to agree,word,verb,Opinions,Demon King's Castle,4,3,Y,Y,Y,N,
+C551,我同意,我同意,wǒ tóngyì,I agree,phrase,expr,Opinions,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+同意 (parts max HSK 3, YCT 4)"
+C552,应该,應該,yīnggāi,should,word,verb,Opinions,Demon King's Castle,4,2,Y,Y,Y,N,
+C553,可能,可能,kěnéng,maybe; possible,word,adv,Opinions,Demon King's Castle,4,2,Y,Y,Y,N,
+C554,一定,一定,yīdìng,definitely; must,word,adv,Opinions,Demon King's Castle,4,2,Y,Y,Y,N,said yídìng
+C555,我觉得……,我覺得……,wǒ juéde …,I think …,sentence frame,expr,Opinions,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+觉得 (parts max HSK 1, YCT 2)"
+C556,你说得对,你說得對,nǐ shuō de duì,you're right,phrase,expr,Opinions,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 你+说+得+对 (parts max HSK 2, YCT n/a)"
+C557,相信,相信,xiāngxìn,to believe; to trust,word,verb,Opinions,Demon King's Castle,none,2,Y,Y,Y,N,
+C1009,认为,認為,rènwéi,to think; to believe,word,verb,Opinions,Demon King's Castle,none,2,Y,Y,Y,N,new in v2
+C1010,意见,意見,yìjiàn,opinion; objection,word,noun,Opinions,Demon King's Castle,none,2,Y,Y,Y,N,new in v2
+C1011,想法,想法,xiǎngfǎ,idea; way of thinking,word,noun,Opinions,Demon King's Castle,none,2,Y,Y,Y,N,new in v2
+C1012,办法,辦法,bànfǎ,way; method; solution,word,noun,Opinions,Demon King's Castle,4,2,Y,Y,Y,N,new in v2
+C1013,主意,主意,zhǔyi,idea; plan,word,noun,Opinions,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1014,好主意,好主意,hǎo zhǔyi,good idea!,phrase,expr,Opinions,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 好+主意 (parts max HSK 3, YCT n/a) | new in v2"
+C1015,我不同意,我不同意,wǒ bù tóngyì,I disagree,phrase,expr,Opinions,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+不+同意 (parts max HSK 3, YCT 4) | new in v2"
+C1016,反对,反對,fǎnduì,to oppose; to be against,word,verb,Opinions,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1017,支持,支持,zhīchí,to support,word,verb,Opinions,Demon King's Castle,none,3,Y,Y,Y,N,new in v2 | OpenCC Taiwan-phrase form: 支援
+C1018,决定,決定,juédìng,to decide; decision,word,verb,Opinions,Demon King's Castle,4,3,Y,Y,Y,N,new in v2
+C1019,选择,選擇,xuǎnzé,to choose; choice,word,verb,Opinions,Demon King's Castle,4,4,Y,N,Y,N,new in v2
+C1020,必须,必須,bìxū,must; have to,word,adv,Opinions,Demon King's Castle,4,2,Y,Y,Y,N,new in v2
+C558,打败,打敗,dǎbài,to defeat,word,verb,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,
+C559,战斗,戰鬥,zhàndòu,to fight; battle,word,verb,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,
+C560,攻击,攻擊,gōngjī,to attack,word,verb,Heroic battle talk,Demon King's Castle,none,6,Y,N,N,N,
+C561,勇敢,勇敢,yǒnggǎn,brave,word,adj,Heroic battle talk,Demon King's Castle,4,4,Y,N,Y,N,
+C562,力量,力量,lìliàng,power; strength,word,noun,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,
+C563,魔法,魔法,mófǎ,magic,word,noun,Heroic battle talk,Demon King's Castle,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | core fantasy/RPG word (magic); kids know it from games and books
+C564,放弃,放棄,fàngqì,to give up,word,verb,Heroic battle talk,Demon King's Castle,none,5,Y,N,N,N,
+C565,不要放弃,不要放棄,bù yào fàngqì,don't give up!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 不要+放弃 (parts max HSK 5, YCT n/a) | said bú yào fàngqì"
+C566,英雄,英雄,yīngxióng,hero,word,noun,Heroic battle talk,Demon King's Castle,none,6,Y,N,N,N,
+C567,敌人,敵人,dírén,enemy,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,
+C568,坏人,壞人,huàirén,bad guy,word,noun,Heroic battle talk,Demon King's Castle,none,2,Y,Y,Y,N,
+C569,坏,壞,huài,bad; broken,word,adj,Heroic battle talk,Demon King's Castle,3,1,Y,Y,Y,N,
+C570,和平,和平,hépíng,peace,word,noun,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,
+C571,世界,世界,shìjiè,world,word,noun,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,
+C572,国王,國王,guówáng,king,word,noun,Heroic battle talk,Demon King's Castle,none,6,Y,N,N,N,
+C573,城堡,城堡,chéngbǎo,castle,word,noun,Heroic battle talk,Demon King's Castle,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | core fantasy/RPG word (castle); needed for the final realm
+C574,永远,永遠,yǒngyuǎn,forever; always,word,adv,Heroic battle talk,Demon King's Castle,none,2,Y,Y,Y,N,
+C575,统治,統治,tǒngzhì,to rule; to control,word,verb,Heroic battle talk,Demon King's Castle,none,7-9,Y,N,N,N,story word: the demon king wants to rule all races
+C576,冲啊,衝啊,chōng a,charge!,exclamation,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 冲+啊 (parts max HSK 4, YCT n/a) | battle cry, RPG flavor"
+C577,我来了,我來了,wǒ lái le,here I come! / I'm coming!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我+来+了 (parts max HSK 1, YCT 2)"
+C578,跟我来,跟我來,gēn wǒ lái,follow me!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 跟+我+来 (parts max HSK 1, YCT n/a)"
+C579,我们一起打败他,我們一起打敗他,wǒmen yīqǐ dǎbài tā,let's defeat him together!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,N,N,"Not in YCT/HSK as a unit; built from listed words 我们+一起+打败+他 (parts max HSK 4, YCT n/a)"
+C1021,团结,團結,tuánjié,to unite,word,verb,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1022,合作,合作,hézuò,to cooperate; to team up,word,verb,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1023,伙伴,夥伴,huǒbàn,partner; companion,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1024,信任,信任,xìnrèn,to trust,word,verb,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1025,勇气,勇氣,yǒngqì,courage,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1026,保卫,保衛,bǎowèi,to defend,word,verb,Heroic battle talk,Demon King's Castle,none,5,Y,N,N,N,new in v2
+C1027,逃跑,逃跑,táopǎo,to run away,word,verb,Heroic battle talk,Demon King's Castle,none,5,Y,N,N,N,new in v2
+C1028,投降,投降,tóuxiáng,to surrender,word,verb,Heroic battle talk,Demon King's Castle,none,7-9,Y,N,N,N,new in v2
+C1029,武器,武器,wǔqì,weapon,word,noun,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1030,剑,劍,jiàn,sword,word,noun,Heroic battle talk,Demon King's Castle,none,6,Y,N,N,N,RPG essential | new in v2
+C1031,盾,盾,dùn,shield,word,noun,Heroic battle talk,Demon King's Castle,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | RPG essential | new in v2
+C1032,宝石,寶石,bǎoshí,gem; jewel,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1033,黑暗,黑暗,hēi'àn,darkness; dark,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1034,光明,光明,guāngmíng,light; brightness,word,noun,Heroic battle talk,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1035,士兵,士兵,shìbīng,soldier,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1036,战士,戰士,zhànshì,warrior; fighter,word,noun,Heroic battle talk,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1037,军队,軍隊,jūnduì,army,word,noun,Heroic battle talk,Demon King's Castle,none,6,Y,N,N,N,new in v2
+C1038,我们必须团结起来,我們必須團結起來,wǒmen bìxū tuánjié qǐlai,we must unite!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 我们+必须+团结+起来 (parts max HSK 3, YCT n/a) | new in v2"
+C1039,我们成功了,我們成功了,wǒmen chénggōng le,we did it!,phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 我们+成功+了 (parts max HSK 3, YCT n/a) | new in v2"
+C1040,谢谢大家,謝謝大家,xièxie dàjiā,"thank you, everyone",phrase,expr,Heroic battle talk,Demon King's Castle,none,none,Y,Y,Y,N,"Not in YCT/HSK as a unit; built from listed words 谢谢+大家 (parts max HSK 2, YCT 4) | new in v2"
+C580,人类,人類,rénlèi,humans; humankind,word,noun,Races & story,Demon King's Castle,none,3,Y,Y,Y,N,
+C581,精灵,精靈,jīnglíng,elf; spirit,word,noun,Races & story,Demon King's Castle,none,none,Y,N,N,N,"Not in YCT/HSK as a unit; built from listed words 精+灵 (parts max HSK 7-9, YCT n/a) | standard fantasy translation for 'elf'"
+C582,矮人,矮人,ǎirén,dwarf,word,noun,Races & story,Demon King's Castle,none,none,Y,N,Y,N,"Not in YCT/HSK as a unit; built from listed words 矮+人 (parts max HSK 4, YCT n/a) | standard fantasy translation for 'dwarf'"
+C583,兽人,獸人,shòurén,orc; beastfolk,word,noun,Races & story,Demon King's Castle,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | standard fantasy translation for 'orc'
+C584,龙,龍,lóng,dragon,word,noun,Races & story,Demon King's Castle,none,3,Y,Y,Y,N,Western dragon here; note 龙 carries positive Chinese connotations (see caveats)
+C1041,故事,故事,gùshi,story,word,noun,Races & story,Demon King's Castle,none,2,Y,Y,Y,N,new in v2
+C1042,传说,傳說,chuánshuō,legend,word,noun,Races & story,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1043,王国,王國,wángguó,kingdom,word,noun,Races & story,Demon King's Castle,none,7-9,Y,N,N,N,new in v2
+C1044,公主,公主,gōngzhǔ,princess,word,noun,Races & story,Demon King's Castle,none,6,Y,N,N,N,new in v2
+C1045,王子,王子,wángzǐ,prince,word,noun,Races & story,Demon King's Castle,none,6,Y,N,N,N,new in v2
+C1046,秘密,秘密,mìmì,secret,word,noun,Races & story,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1047,真相,真相,zhēnxiàng,the truth (what really happened),word,noun,Races & story,Demon King's Castle,none,5,Y,N,N,N,new in v2
+C1048,自由,自由,zìyóu,freedom; free,word,noun,Races & story,Demon King's Castle,none,2,Y,Y,Y,N,new in v2
+C1049,未来,未來,wèilái,future,word,noun,Races & story,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C1050,命运,命運,mìngyùn,fate; destiny,word,noun,Races & story,Demon King's Castle,none,3,Y,Y,Y,N,new in v2
+C1051,历史,歷史,lìshǐ,history,word,noun,Races & story,Demon King's Castle,none,4,Y,N,Y,N,new in v2
+C585,魔王,魔王,mówáng,demon king,word,noun,Monster names,Demon King's Castle,none,none,Y,N,N,N,Not in YCT 1-4 or HSK 3.0 (2021) lists | standard fantasy/anime term for 'demon king'

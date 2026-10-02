@@ -1,0 +1,5 @@
+﻿role,boss_type,exp,gold_mult,chest_chance,chest_type,guaranteed
+normal,,6 × L_rec,1,0.1,normal chest,
+elite,,10 × L_rec,2,0.25,normal chest,
+boss,location,20 × L_rec,5,1.0,location boss chest,fine gear piece
+boss,realm,50 × L_rec,10,1.0,realm boss chest,heroic gear piece + skill unlock

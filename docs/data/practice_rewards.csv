@@ -1,0 +1,9 @@
+﻿key,value,unit,notes
+gold_per_question,0,gold,
+exp_per_question,0,EXP,
+preview_complete_reward,1 Honey Potion + 1 × G gold,once per location,every pool item answered at least once in a graded mode (not flashcards)
+mode_first_clear,1 sticker,once per mode per location,cosmetic sticker book only
+realm_overview_complete,1 cosmetic (hat/badge),once per realm,
+practice_credit_cap_per_way,1,correct answer,battle must supply the 2nd
+marks_item_seen,no,,battle NEW_CAP and working set still decide introduction order
+leitner_effect,none,,practice answers do not move Leitner boxes

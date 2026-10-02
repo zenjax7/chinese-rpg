@@ -1,0 +1,22 @@
+[
+ {
+  "item_id": "mana_tea",
+  "name_zh": "魔力茶",
+  "name_en": "Mana Tea",
+  "effect": "+50% max MP",
+  "price": "6 × G",
+  "price_in_normal_kills": 6,
+  "from_town": 1,
+  "battle_use": "no (map only)"
+ },
+ {
+  "item_id": "big_mana_tea",
+  "name_zh": "大魔力茶",
+  "name_en": "Big Mana Tea",
+  "effect": "refills MP to full",
+  "price": "15 × G",
+  "price_in_normal_kills": 15,
+  "from_town": 5,
+  "battle_use": "no (map only)"
+ }
+]

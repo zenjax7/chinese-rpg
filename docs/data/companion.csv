@@ -1,0 +1,13 @@
+﻿key,value,unit,notes
+gauge_full,100,points,
+gain_per_wrong,20,points,any graded wrong answer (attack or block)
+gain_per_correct,5,points,
+gain_per_void_or_hint,0,points,
+reset,each battle,,gauge starts at 0 in every battle
+trigger,start of the hero turn when full,,"free action, no question, before the hero acts"
+damage,"max(1, round(1.25 × ATK_h − 0.5 × DEF_e))",HP,no streak or spoken bonus
+target,lowest-HP normal or elite enemy; the boss if alone,,
+counts_for_proficiency,no,,no question is asked
+kills_pay,yes,,normal EXP/gold/chest roll
+attacks_per_battle_50pct,1.6–2.3,,"sim, speech on, t2–t9"
+attacks_per_battle_90pct,0.6–0.8,,"sim, t5–t9"

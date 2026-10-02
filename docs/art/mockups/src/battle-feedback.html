@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"><script src="mock.js"></script>
+<style>.dmg{position:absolute;font:900 64px Fredoka;color:#ffe066;-webkit-text-stroke:3px #000;text-shadow:0 5px 0 #000}.small .frame{transform:scale(.5);transform-origin:0 0}.small{width:640px;height:360px;overflow:hidden}</style></head><body>
+<div class="sheet"><div class="title">Mockup D: Answer feedback and the hit <small>correct answer → attack lands (about 1.2 s), and the wrong-answer state below</small></div>
+<div class="row2"><div class="lb"><div class="frame" id="f"><div class="bg" style="background-image:url(file:///workspace/chinese-rpg/prototype/dist/bg/bg_battle_r1_starter_meadow.png);transform:translate(4px,-3px) scale(1.01)"></div></div></div><div id="n"></div></div>
+<div class="row2"><div class="lb small"><div class="frame" id="g"><div class="bg" style="background-image:url(file:///workspace/chinese-rpg/prototype/dist/bg/bg_battle_r1_starter_meadow.png);filter:brightness(.78)"></div></div></div><div id="n2"></div></div></div>
+<script>
+const f=document.getElementById('f');
+sp(f,'hero',640,420,250,3);
+el(f,`<div style="position:absolute;left:380px;top:300px;width:220px;height:10px;background:linear-gradient(90deg,transparent,#fff8);border-radius:5px"></div><div style="position:absolute;left:360px;top:340px;width:200px;height:8px;background:linear-gradient(90deg,transparent,#fff6);border-radius:5px"></div>`);
+foe(f,'rabbit',800,420,200,'角兔',11,16,5,'filter:brightness(2.2) contrast(.6)');
+el(f,`<div style="position:absolute;left:688px;top:224px;width:40px;height:0"></div>`);
+el(f,`<div class="nameplate" style="left:800px;top:263px"><div class="bar" style="width:130px;height:16px;position:relative;border-color:#000a"><i style="width:69%;background:#2ecc71;position:absolute"></i><i style="left:69%;width:31%;background:#fff;position:absolute;opacity:.85"></i></div></div>`);
+foe(f,'mushroom',970,420,200,'蘑菇怪',9,14);foe(f,'wolf_pup',1140,420,200,'小狼',20,20);
+el(f,`<div class="dmg" style="left:840px;top:150px">-5</div><div style="position:absolute;left:760px;top:250px;font-size:40px">✨</div><div style="position:absolute;left:860px;top:300px;font-size:30px">⭐</div><div style="position:absolute;left:720px;top:330px;font-size:28px">✨</div>`);
+party(f,{mp:12,fr:20});corner(f);
+el(f,`<div style="position:absolute;left:250px;top:140px;font:900 26px Fredoka;color:#6dd5fa;-webkit-text-stroke:1px #000">+1 MP</div>`);
+el(f,`<div class="plate" style="left:540px;top:22px;width:200px;height:48px;display:flex;align-items:center;justify-content:center;gap:14px;font:800 19px Nunito;transform:scale(1.25);border-color:#ffcf4a">Round 1 <span>🔥 ×2</span></div>`);
+el(f,`<div class="panel" style="left:24px;top:464px;width:1232px;height:236px"></div>`);
+el(f,`<div style="position:absolute;left:56px;top:482px;font:800 26px Nunito;color:#9ff0bf">✔ Great! <span lang="zh-CN">您好</span> = hello (polite)</div>`);
+['对不起','您好','再见'].forEach((o,i)=>el(f,`<div class="btn ${i==1?'ok':'cream'}" style="left:${64+i*392}px;top:540px;width:368px;height:128px;${i!=1?'opacity:.35':'transform:scale(1.06)'}"><div lang="zh-CN" style="font:700 60px 'Noto Sans CJK SC';line-height:1">${i==1?'✔ ':''}${o}</div></div>`));
+badge(f,1,470,560);badge(f,2,650,180);badge(f,3,900,140);badge(f,4,800,210);badge(f,5,1110,24);badge(f,6,390,156);badge(f,7,640,470);
+document.getElementById('n').innerHTML=notes([
+'<b>0 ms, answer confirm</b>: the tapped card turns green with a ✔ (never colour alone), scales to 106% and plays sfx_correct plus the word audio (您好). Other cards fade to 35%. Line reads "Great! 您好 = hello (polite)".',
+'<b>250 ms, hero dash</b>: attack frames plus speed lines, a 180 ms lunge toward the target.',
+'<b>Impact</b>: 70 ms hit-stop (freeze both sprites), white flash on the enemy (tintFill 60 ms), camera shake 4px / 150 ms, sfx_hit, sparkles. Damage number 64px, pops 1.3× then floats up. Spoken answers get a bigger number and a "×1.25 Voice!" tag.',
+'<b>HP bar drain</b>: the lost chunk turns white, then drains over 400 ms (the "ghost bar" trick from fighting games), so the kid sees exactly how much the answer did.',
+'<b>Streak chip pops</b> (1.25× bounce) when it grows. Keep the tone upbeat: combo sound pitch rises a semitone per streak step (cap at 5).',
+'<b>Reward floats</b>: "+1 MP" flies into the MP bar. Kill: enemy hurt frame → white fade + coin burst that flies to the gold counter.',
+'<b>About 1.2 s later</b> the dock cross-fades to the next state (enemy wind-up or command). A tap anywhere skips the rest of the animation, but never skips the feedback line.'
+]);
+const g=document.getElementById('g');
+sp(g,'hero',290,420,250,5,'filter:drop-shadow(0 0 0 #000)');
+el(g,`<div class="dmg" style="left:250px;top:160px;color:#ff6b6b">-3</div>`);
+foe(g,'rabbit',800,420,200,'角兔',16,16,3);foe(g,'mushroom',970,420,200,'蘑菇怪',9,14,0,'opacity:.55');foe(g,'wolf_pup',1140,420,200,'小狼',20,20,0,'opacity:.55');
+party(g,{hp:33,fr:55});
+el(g,`<div style="position:absolute;left:280px;top:84px;font:900 34px Fredoka;color:#ff7eb3;-webkit-text-stroke:1px #000">💖 +20</div>`);
+el(g,`<div class="panel" style="left:24px;top:464px;width:1232px;height:236px"></div>`);
+el(g,`<div style="position:absolute;left:56px;top:482px;font:800 28px Nunito;color:#fff">Not quite. <b style="color:#9ff0bf">“hello (polite)” is</b> <span lang="zh-CN" style="color:#9ff0bf">您好</span> 🔊</div>`);
+['对不起','您好','再见'].forEach((o,i)=>el(g,`<div class="btn ${i==1?'ok':i==0?'bad':'cream'}" style="left:${64+i*392}px;top:540px;width:368px;height:128px;${i==2?'opacity:.35':''}"><div lang="zh-CN" style="font:700 60px 'Noto Sans CJK SC';line-height:1">${i==1?'✔ ':i==0?'✘ ':''}${o}</div></div>`));
+el(g,`<div style="position:absolute;inset:0;box-shadow:inset 0 0 90px rgba(255,60,60,.45)"></div>`);
+document.getElementById('n2').innerHTML=`<div class="notes" style="width:1100px">`+notes([
+'<b>Wrong answer (defense shown)</b>: the pick gets a red ✘ and a small side-to-side shake (no loud buzzer, soft "bonk" sfx_wrong). The right answer lights up green with ✔, its audio plays, and the line says what it was. Hold for at least 1.5 s; the kid taps "OK ▶" or it continues after audio.',
+'<b>Consequence stays mild</b>: the hero hurt frame, a red damage number and a soft red screen-edge glow for 300 ms (no full-screen red flash, no shaking the camera on the kid). The 小龙 gauge visibly fills (+20) with a heart that flies into it: mistakes turn into help, as the spec intends.',
+'<b>No pinyin</b> in feedback. The spec §1.2 FEEDBACK line still says "audio + pinyin"; that conflicts with the no-pinyin rule, so the audio replay is the only pronunciation aid.'
+]).replace('<div class="notes">','')+`</div>`;
+</script></body></html>

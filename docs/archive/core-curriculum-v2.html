@@ -1,0 +1,2081 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Core Curriculum v2</title><style>body{font-family:-apple-system,Segoe UI,Roboto,'Noto Sans SC',sans-serif;max-width:1200px;margin:2em auto;padding:0 1em;line-height:1.5;color:#222}
+table{border-collapse:collapse;margin:1em 0;font-size:13px;display:block;overflow-x:auto}th,td{border:1px solid #ccc;padding:4px 7px;vertical-align:top}
+th{background:#eef2fa;position:sticky;top:0}tr:nth-child(even) td{background:#fafafa}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}
+pre{background:#f6f8fa;padding:10px;overflow-x:auto;font-size:12.5px}h2{border-bottom:2px solid #4472C4;padding-bottom:4px;margin-top:2em}
+nav{background:#f7f7f7;padding:10px 16px;border-radius:6px;font-size:14px}</style></head><body><nav><b>Contents</b><div class="toc">
+<ul>
+<li><a href="#what-changed-from-v1">What changed from v1</a></li>
+<li><a href="#totals">Totals</a><ul>
+<li><a href="#by-level">By level</a></li>
+<li><a href="#by-realm-v1-vs-v2">By realm: v1 vs v2</a></li>
+</ul>
+</li>
+<li><a href="#locations-pools">Locations (pools)</a><ul>
+<li><a href="#by-topic">By topic</a></li>
+</ul>
+</li>
+<li><a href="#realm-plan-difficulty-rises-with-ycthsk">Realm plan (difficulty rises with YCT/HSK)</a></li>
+<li><a href="#vertical-slice-60-items">Vertical slice (60 items)</a></li>
+<li><a href="#column-conventions">Column conventions</a></li>
+<li><a href="#sources-and-method">Sources and method</a></li>
+<li><a href="#caveats">Caveats</a></li>
+</ul>
+</div>
+</nav><h1 id="core-curriculum-v2-chinese-learning-rpg">Core Curriculum v2: Chinese-learning RPG</h1>
+<p>Rebuilt 2026-09-28 (PT) for players aged 10–12. The data lives in <code>core-curriculum.csv</code> (UTF-8 with BOM, the same 16 columns as v1). The per-location split is in <code>data/curriculum_location_pools.csv</code>, and a spreadsheet version is in <code>core-curriculum.xlsx</code>. Simplified is the default script; Traditional is kept in its own column. v1 is preserved as <code>core-curriculum-v1.csv/.md/.xlsx</code>.</p>
+<h2 id="what-changed-from-v1">What changed from v1</h2>
+<ul>
+<li><strong>Bigger and harder.</strong> 1,051 items (v1: 585): 466 new items plus 46 v1 items moved to an earlier realm. Every location now has 47–60 items (v1: about 30), and realms 1–3 went from 212 to 375 items.</li>
+<li><strong>More grammar early.</strong> Items that teach a structure (sentence frames, connectors, measure words, particles, comparisons) went from 55 to 120. 67 of them are in realms 1–3 (v1: 18).</li>
+<li><strong>Higher levels.</strong> The share of items at effective HSK ≥ 2 went from 42% to 53%. Through realm 3 there are 136 of them (v1: 64).</li>
+<li><strong>Relaxed skill rules</strong> for 10–12-year-olds (see Column conventions). Speaking Y went from 422 to 861 items, and reading Y from 491 to 933. Existing items could only gain Y flags; v1 hand-set N flags were kept.</li>
+<li><strong>Location pools.</strong> Each realm is split into its locations (<code>L1.1</code> … <code>L9.2</code>, the same ids as the combat spec and the enemy roster), in topic order.</li>
+<li><strong>Stable ids.</strong> v1 ids C001–C585 are unchanged, even for moved items. New items are C586–C1051 (no zero padding past C999). Progress keyed by id carries over.</li>
+<li><strong>Slice:</strong> 60 items (v1: 40), covering L1.1–L1.3 and L2.1–L2.2.</li>
+</ul>
+<h2 id="totals">Totals</h2>
+<ul>
+<li><strong>1051 items</strong>: <strong>820 words</strong> and <strong>231 phrases/expressions</strong>. Phrases means type phrase, exclamation or sentence frame. Connectors, particles and measure words are counted as words.</li>
+<li>By type: word 705, phrase 166, connector 42, sentence frame 36, exclamation 29, number 22, pronoun 17, measure word 15, question word 11, particle 8</li>
+<li>Skill flags: listening Y = 1051, speaking Y = 861, reading Y = 933</li>
+<li>Vertical slice items: 60</li>
+<li>One deliberate duplicate (kept from v1): 只 appears twice, as zhī (measure word, Traditional 隻) and as zhǐ ('only').</li>
+</ul>
+<h3 id="by-level">By level</h3>
+<table>
+<thead>
+<tr>
+<th>level</th>
+<th>hsk3_items</th>
+<th>yct_items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>342</td>
+<td>80</td>
+</tr>
+<tr>
+<td>2</td>
+<td>204</td>
+<td>61</td>
+</tr>
+<tr>
+<td>3</td>
+<td>109</td>
+<td>131</td>
+</tr>
+<tr>
+<td>4</td>
+<td>69</td>
+<td>169</td>
+</tr>
+<tr>
+<td>5</td>
+<td>29</td>
+<td>–</td>
+</tr>
+<tr>
+<td>6</td>
+<td>18</td>
+<td>–</td>
+</tr>
+<tr>
+<td>7-9</td>
+<td>21</td>
+<td>–</td>
+</tr>
+<tr>
+<td>none</td>
+<td>259</td>
+<td>610</td>
+</tr>
+</tbody>
+</table>
+<p>246 items are in neither list, and every one has a reason in <code>notes</code>. Most are multi-word phrases and sentence frames built entirely from listed words; the notes give each component's level. HSK levels above 3 are reported as they are, so kid-common words that HSK ranks as advanced stay visible (厉害/棒 HSK5, 酷/哇 HSK6, 蜂蜜/蜜蜂 7-9).</p>
+<h3 id="by-realm-v1-vs-v2">By realm: v1 vs v2</h3>
+<p>Averages use effective levels: a phrase that isn't listed as a unit takes the highest level among its listed parts, and 7-9 counts as 7. "grammar" = sentence frames, connectors, measure words, particles and comparison/pattern items.</p>
+<table>
+<thead>
+<tr>
+<th>realm_no</th>
+<th>realm</th>
+<th>locations</th>
+<th>v1_items</th>
+<th>v2_items</th>
+<th>new_items</th>
+<th>moved_in</th>
+<th>items_per_location</th>
+<th>v1_avg_hsk</th>
+<th>v2_avg_hsk</th>
+<th>v1_avg_yct</th>
+<th>v2_avg_yct</th>
+<th>v1_share_hsk2plus</th>
+<th>v2_share_hsk2plus</th>
+<th>v1_grammar_items</th>
+<th>v2_grammar_items</th>
+<th>v2_phrases</th>
+<th>v2_speaking_y</th>
+<th>v2_reading_y</th>
+<th>v2_in_neither_list</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Starter Meadow</td>
+<td>3</td>
+<td>92</td>
+<td>150</td>
+<td>35</td>
+<td>23</td>
+<td>52/47/51</td>
+<td>1.20</td>
+<td>1.20</td>
+<td>1.73</td>
+<td>1.68</td>
+<td>12%</td>
+<td>9%</td>
+<td>6</td>
+<td>28</td>
+<td>44</td>
+<td>141</td>
+<td>144</td>
+<td>40</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Honeycomb Forest</td>
+<td>2</td>
+<td>69</td>
+<td>118</td>
+<td>40</td>
+<td>9</td>
+<td>59/59</td>
+<td>2.10</td>
+<td>2.29</td>
+<td>2.39</td>
+<td>2.84</td>
+<td>43%</td>
+<td>55%</td>
+<td>3</td>
+<td>15</td>
+<td>18</td>
+<td>90</td>
+<td>108</td>
+<td>24</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Crossroads Market</td>
+<td>2</td>
+<td>51</td>
+<td>107</td>
+<td>51</td>
+<td>7</td>
+<td>54/53</td>
+<td>1.72</td>
+<td>1.94</td>
+<td>2.52</td>
+<td>3.00</td>
+<td>45%</td>
+<td>53%</td>
+<td>9</td>
+<td>24</td>
+<td>16</td>
+<td>77</td>
+<td>98</td>
+<td>21</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Goblin Caves</td>
+<td>3</td>
+<td>87</td>
+<td>143</td>
+<td>65</td>
+<td>0</td>
+<td>48/47/48</td>
+<td>1.92</td>
+<td>2.16</td>
+<td>2.66</td>
+<td>3.27</td>
+<td>41%</td>
+<td>50%</td>
+<td>2</td>
+<td>7</td>
+<td>34</td>
+<td>121</td>
+<td>129</td>
+<td>37</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Hydra Swamp</td>
+<td>2</td>
+<td>57</td>
+<td>94</td>
+<td>51</td>
+<td>6</td>
+<td>47/47</td>
+<td>1.44</td>
+<td>1.78</td>
+<td>2.60</td>
+<td>2.88</td>
+<td>33%</td>
+<td>48%</td>
+<td>21</td>
+<td>20</td>
+<td>20</td>
+<td>83</td>
+<td>88</td>
+<td>29</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Zombie Lands</td>
+<td>2</td>
+<td>68</td>
+<td>120</td>
+<td>58</td>
+<td>1</td>
+<td>60/60</td>
+<td>1.93</td>
+<td>2.33</td>
+<td>2.93</td>
+<td>3.15</td>
+<td>49%</td>
+<td>67%</td>
+<td>0</td>
+<td>4</td>
+<td>23</td>
+<td>101</td>
+<td>110</td>
+<td>24</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Griffin Peaks</td>
+<td>2</td>
+<td>63</td>
+<td>118</td>
+<td>56</td>
+<td>0</td>
+<td>59/59</td>
+<td>1.38</td>
+<td>1.94</td>
+<td>3.00</td>
+<td>3.28</td>
+<td>37%</td>
+<td>50%</td>
+<td>1</td>
+<td>1</td>
+<td>13</td>
+<td>105</td>
+<td>109</td>
+<td>17</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ogre Colosseum</td>
+<td>2</td>
+<td>51</td>
+<td>104</td>
+<td>53</td>
+<td>0</td>
+<td>52/52</td>
+<td>3.04</td>
+<td>3.10</td>
+<td>3.12</td>
+<td>3.34</td>
+<td>65%</td>
+<td>76%</td>
+<td>1</td>
+<td>2</td>
+<td>44</td>
+<td>88</td>
+<td>78</td>
+<td>28</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Demon King's Castle</td>
+<td>2</td>
+<td>47</td>
+<td>97</td>
+<td>57</td>
+<td>0</td>
+<td>48/49</td>
+<td>3.05</td>
+<td>3.48</td>
+<td>3.57</td>
+<td>3.75</td>
+<td>77%</td>
+<td>90%</td>
+<td>12</td>
+<td>19</td>
+<td>19</td>
+<td>55</td>
+<td>69</td>
+<td>26</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>total</strong></td>
+<td>20</td>
+<td>585</td>
+<td>1051</td>
+<td>466</td>
+<td>46</td>
+<td>avg 52.5</td>
+<td>1.88</td>
+<td>2.18</td>
+<td>2.54</td>
+<td>2.82</td>
+<td>42%</td>
+<td>53%</td>
+<td>55</td>
+<td>120</td>
+<td>231</td>
+<td>861</td>
+<td>933</td>
+<td>246</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The ramp.</strong> Cumulative through each early realm:</p>
+<table>
+<thead>
+<tr>
+<th>through_realm</th>
+<th>v1_items</th>
+<th>v2_items</th>
+<th>v1_hsk2plus_items</th>
+<th>v2_hsk2plus_items</th>
+<th>v1_grammar_items</th>
+<th>v2_grammar_items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>92</td>
+<td>150</td>
+<td>11</td>
+<td>14</td>
+<td>6</td>
+<td>28</td>
+</tr>
+<tr>
+<td>2</td>
+<td>161</td>
+<td>268</td>
+<td>41</td>
+<td>79</td>
+<td>9</td>
+<td>43</td>
+</tr>
+<tr>
+<td>3</td>
+<td>212</td>
+<td>375</td>
+<td>64</td>
+<td>136</td>
+<td>18</td>
+<td>67</td>
+</tr>
+</tbody>
+</table>
+<p>How to read it:
+- <strong>Realm 1 is a denser foundation, not a higher-level one.</strong> Its average level is the same as v1 (HSK 1.20), because the additions are HSK 1 family words, numbers to 99, connectors and sentence frames. What changed is that kids now <em>build sentences</em> from day one (28 pattern items vs 6).
+- <strong>From realm 2 on, the level rises</strong>: average YCT is up 0.2–0.6 per realm and the HSK ≥ 2 share is up 8–18 points (realm 6: 49% → 67%, realm 9: 77% → 90%).
+- Hydra Swamp's grammar count went from 21 to 20: its basic connectors (因为……所以……, 虽然……但是……) moved earlier and were replaced by harder ones (如果……就……, 先……然后……, 一……就……).</p>
+<p><strong>Examples of tougher early items:</strong></p>
+<table>
+<thead>
+<tr>
+<th>realm</th>
+<th>location</th>
+<th>examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Starter Meadow</td>
+<td>L1.1–L1.3</td>
+<td>好久不见 (long time no see), 这是…… (this is …), 你有没有……? (do you have …?), 我会…… (I can …), 跟 (with), 还有 (also; there's still), 九十九 (99)</td>
+</tr>
+<tr>
+<td>2 Honeycomb Forest</td>
+<td>L2.2</td>
+<td>因为……所以…… (moved from realm 5), 又……又…… (both … and …), 太……了 (too …!), 碗 / 瓶 as measure words, 我要一碗面条 (I'd like a bowl of noodles)</td>
+</tr>
+<tr>
+<td>3 Crossroads Market</td>
+<td>L3.1–L3.2</td>
+<td>A比B…… (comparisons), 没有……那么…… (not as … as), 跟……一样 (the same as), 过 (experience), 更 (even more), 件 / 双, 千 / 万, 这件衣服多少钱?, 红的比蓝的贵</td>
+</tr>
+<tr>
+<td>4 Goblin Caves</td>
+<td>L4.2–L4.3</td>
+<td>把 / 被 / 让 / 正在 / 着, 把门打开! (open the door!), 我被抓住了! (I've been caught!)</td>
+</tr>
+<tr>
+<td>5 Hydra Swamp</td>
+<td>L5.2</td>
+<td>如果……就……, 先……然后……, 虽然……但是…… (moved from realm 9)</td>
+</tr>
+<tr>
+<td>6 Zombie Lands</td>
+<td>L6.1–L6.2</td>
+<td>越来越……, ……得很好, 看起来, 失望, 咳嗽, 你哪儿不舒服?, 他变成了丧尸</td>
+</tr>
+<tr>
+<td>7 Griffin Peaks</td>
+<td>L7.1–L7.2</td>
+<td>离这儿远吗?, 我迷路了, 上来 / 下去 / 进去 (directional complements), 天气预报, 明天会下雨吗?</td>
+</tr>
+<tr>
+<td>8 Ogre Colosseum</td>
+<td>L8.1–L8.2</td>
+<td>对……感兴趣, 坚持, 对手, 冠军, 没想到, 你敢吗?, 我不怕你</td>
+</tr>
+<tr>
+<td>9 Demon King's Castle</td>
+<td>L9.1–L9.2</td>
+<td>无论……都……, 只要……就……, 只有……才……, 连……都……, 不是……而是……, 我们必须团结起来</td>
+</tr>
+</tbody>
+</table>
+<h2 id="locations-pools">Locations (pools)</h2>
+<p>Each realm is split into its locations in topic order: items are grouped by topic, each topic keeps its authored order, and the cut between locations moves by up to 3 items so a topic isn't split mid-group. <code>location_global_no</code> (1–20) is the play order.</p>
+<table>
+<thead>
+<tr>
+<th>location_id</th>
+<th>location_name</th>
+<th>location_name_zh</th>
+<th>items</th>
+<th>v1_items</th>
+<th>new_items</th>
+<th>moved_in</th>
+<th>slice_items</th>
+<th>speaking_y</th>
+<th>reading_y</th>
+<th>top_topics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1.1</td>
+<td>Village Meadow</td>
+<td>村边草地</td>
+<td>52</td>
+<td>42</td>
+<td>10</td>
+<td>0</td>
+<td>8</td>
+<td>52</td>
+<td>48</td>
+<td>Pronouns &amp; question words (27); Greetings &amp; politeness (25)</td>
+</tr>
+<tr>
+<td>L1.2</td>
+<td>Clover Hills</td>
+<td>三叶草山坡</td>
+<td>47</td>
+<td>33</td>
+<td>14</td>
+<td>0</td>
+<td>18</td>
+<td>42</td>
+<td>46</td>
+<td>Yes/no &amp; core verbs (19); Sentence patterns (13); Numbers 1–10 (10); Particles (5)</td>
+</tr>
+<tr>
+<td>L1.3</td>
+<td>Horned Rabbit Warren</td>
+<td>角兔窝</td>
+<td>51</td>
+<td>17</td>
+<td>11</td>
+<td>23</td>
+<td>13</td>
+<td>47</td>
+<td>50</td>
+<td>Adventure basics (19); Family &amp; people (9); Connectors (basic) (7); Numbers 1–100 (5)</td>
+</tr>
+<tr>
+<td>L2.1</td>
+<td>Flower Glade</td>
+<td>花海林地</td>
+<td>59</td>
+<td>37</td>
+<td>22</td>
+<td>0</td>
+<td>9</td>
+<td>41</td>
+<td>53</td>
+<td>Food &amp; drink (59)</td>
+</tr>
+<tr>
+<td>L2.2</td>
+<td>Great Hive</td>
+<td>大蜂巢</td>
+<td>59</td>
+<td>32</td>
+<td>18</td>
+<td>9</td>
+<td>12</td>
+<td>49</td>
+<td>55</td>
+<td>Wants &amp; likes (19); Animals (18); Connectors (basic) (8); Nature (5)</td>
+</tr>
+<tr>
+<td>L3.1</td>
+<td>Crossroads Highway</td>
+<td>十字大道</td>
+<td>54</td>
+<td>31</td>
+<td>23</td>
+<td>0</td>
+<td>0</td>
+<td>34</td>
+<td>51</td>
+<td>Shopping &amp; money (32); Measure words (9); Big numbers (8); Colors (5)</td>
+</tr>
+<tr>
+<td>L3.2</td>
+<td>Night Bazaar</td>
+<td>夜市</td>
+<td>53</td>
+<td>18</td>
+<td>28</td>
+<td>7</td>
+<td>0</td>
+<td>43</td>
+<td>47</td>
+<td>Describing things (21); Clothes (11); Comparisons (8); Colors (6)</td>
+</tr>
+<tr>
+<td>L4.1</td>
+<td>Cave Mouth</td>
+<td>洞口</td>
+<td>48</td>
+<td>41</td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>45</td>
+<td>47</td>
+<td>School &amp; classroom (32); Family &amp; people (16)</td>
+</tr>
+<tr>
+<td>L4.2</td>
+<td>Crystal Tunnels</td>
+<td>水晶隧道</td>
+<td>47</td>
+<td>8</td>
+<td>39</td>
+<td>0</td>
+<td>0</td>
+<td>40</td>
+<td>45</td>
+<td>School &amp; classroom (37); Grammar words (5); Game &amp; chat talk (5)</td>
+</tr>
+<tr>
+<td>L4.3</td>
+<td>Goblin 'School'</td>
+<td>哥布林学校</td>
+<td>48</td>
+<td>29</td>
+<td>19</td>
+<td>0</td>
+<td>0</td>
+<td>36</td>
+<td>37</td>
+<td>Game &amp; chat talk (19); Dungeon &amp; adventure (18); Requests &amp; helping (10); Monster names (1)</td>
+</tr>
+<tr>
+<td>L5.1</td>
+<td>Misty Marsh</td>
+<td>迷雾沼泽</td>
+<td>47</td>
+<td>24</td>
+<td>23</td>
+<td>0</td>
+<td>0</td>
+<td>45</td>
+<td>47</td>
+<td>Time &amp; dates (47)</td>
+</tr>
+<tr>
+<td>L5.2</td>
+<td>Hydra's Lair</td>
+<td>九头蛇巢穴</td>
+<td>47</td>
+<td>13</td>
+<td>28</td>
+<td>6</td>
+<td>0</td>
+<td>38</td>
+<td>41</td>
+<td>Daily routine (16); Connectors (basic) (13); Time &amp; dates (11); Connectors (advanced) (6)</td>
+</tr>
+<tr>
+<td>L6.1</td>
+<td>Gloomy Village</td>
+<td>灰雾村</td>
+<td>60</td>
+<td>44</td>
+<td>16</td>
+<td>0</td>
+<td>0</td>
+<td>52</td>
+<td>56</td>
+<td>Feelings (37); Body &amp; health (20); Sentence patterns (3)</td>
+</tr>
+<tr>
+<td>L6.2</td>
+<td>Moonlit Graveyard</td>
+<td>月光墓园</td>
+<td>60</td>
+<td>17</td>
+<td>42</td>
+<td>1</td>
+<td>0</td>
+<td>49</td>
+<td>54</td>
+<td>Everyday actions (39); Body &amp; health (19); Connectors (advanced) (1); Monster names (1)</td>
+</tr>
+<tr>
+<td>L7.1</td>
+<td>Windy Cliffs</td>
+<td>大风悬崖</td>
+<td>59</td>
+<td>33</td>
+<td>26</td>
+<td>0</td>
+<td>0</td>
+<td>56</td>
+<td>56</td>
+<td>Places &amp; directions (59)</td>
+</tr>
+<tr>
+<td>L7.2</td>
+<td>Griffin Summit</td>
+<td>狮鹫之巅</td>
+<td>59</td>
+<td>29</td>
+<td>30</td>
+<td>0</td>
+<td>0</td>
+<td>49</td>
+<td>53</td>
+<td>Weather (36); Transportation (19); Places &amp; directions (4)</td>
+</tr>
+<tr>
+<td>L8.1</td>
+<td>Training Pits</td>
+<td>训练场</td>
+<td>52</td>
+<td>21</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>45</td>
+<td>46</td>
+<td>Hobbies &amp; sports (52)</td>
+</tr>
+<tr>
+<td>L8.2</td>
+<td>Grand Colosseum</td>
+<td>大角斗场</td>
+<td>52</td>
+<td>30</td>
+<td>22</td>
+<td>0</td>
+<td>0</td>
+<td>43</td>
+<td>32</td>
+<td>Exclamations &amp; reactions (43); Hobbies &amp; sports (9)</td>
+</tr>
+<tr>
+<td>L9.1</td>
+<td>Demon King's Gate</td>
+<td>魔王城门</td>
+<td>48</td>
+<td>22</td>
+<td>26</td>
+<td>0</td>
+<td>0</td>
+<td>33</td>
+<td>39</td>
+<td>Opinions (20); Connectors (advanced) (18); Heroic battle talk (10)</td>
+</tr>
+<tr>
+<td>L9.2</td>
+<td>Throne Hall</td>
+<td>王座大厅</td>
+<td>49</td>
+<td>18</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>22</td>
+<td>30</td>
+<td>Heroic battle talk (32); Races &amp; story (16); Monster names (1)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="by-topic">By topic</h3>
+<table>
+<thead>
+<tr>
+<th>realm</th>
+<th>topic</th>
+<th>items</th>
+<th>new_in_v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starter Meadow</td>
+<td>Pronouns &amp; question words</td>
+<td>27</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Greetings &amp; politeness</td>
+<td>25</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Yes/no &amp; core verbs</td>
+<td>19</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Adventure basics</td>
+<td>19</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Sentence patterns</td>
+<td>13</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Numbers 1–10</td>
+<td>10</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Family &amp; people</td>
+<td>9</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Connectors (basic)</td>
+<td>7</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Particles</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Numbers 1–100</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Time &amp; dates</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Feelings</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Big numbers</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Measure words</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Places &amp; directions</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Animals</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Starter Meadow</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Food &amp; drink</td>
+<td>59</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Wants &amp; likes</td>
+<td>19</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Animals</td>
+<td>18</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Connectors (basic)</td>
+<td>8</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Nature</td>
+<td>5</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Measure words</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Sentence patterns</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Feelings</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Exclamations &amp; reactions</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Honeycomb Forest</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Shopping &amp; money</td>
+<td>32</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Describing things</td>
+<td>21</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Colors</td>
+<td>11</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Clothes</td>
+<td>11</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Measure words</td>
+<td>9</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Big numbers</td>
+<td>8</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Comparisons</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Connectors (basic)</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Feelings</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Crossroads Market</td>
+<td>Everyday actions</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>School &amp; classroom</td>
+<td>69</td>
+<td>34</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Game &amp; chat talk</td>
+<td>24</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Dungeon &amp; adventure</td>
+<td>18</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Family &amp; people</td>
+<td>16</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Requests &amp; helping</td>
+<td>10</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Grammar words</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Goblin Caves</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Hydra Swamp</td>
+<td>Time &amp; dates</td>
+<td>58</td>
+<td>34</td>
+</tr>
+<tr>
+<td>Hydra Swamp</td>
+<td>Daily routine</td>
+<td>16</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Hydra Swamp</td>
+<td>Connectors (basic)</td>
+<td>13</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Hydra Swamp</td>
+<td>Connectors (advanced)</td>
+<td>6</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Hydra Swamp</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Body &amp; health</td>
+<td>39</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Everyday actions</td>
+<td>39</td>
+<td>23</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Feelings</td>
+<td>37</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Sentence patterns</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Connectors (advanced)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Zombie Lands</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Griffin Peaks</td>
+<td>Places &amp; directions</td>
+<td>63</td>
+<td>30</td>
+</tr>
+<tr>
+<td>Griffin Peaks</td>
+<td>Weather</td>
+<td>36</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Griffin Peaks</td>
+<td>Transportation</td>
+<td>19</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Ogre Colosseum</td>
+<td>Hobbies &amp; sports</td>
+<td>61</td>
+<td>40</td>
+</tr>
+<tr>
+<td>Ogre Colosseum</td>
+<td>Exclamations &amp; reactions</td>
+<td>43</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Demon King's Castle</td>
+<td>Heroic battle talk</td>
+<td>42</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Demon King's Castle</td>
+<td>Opinions</td>
+<td>20</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Demon King's Castle</td>
+<td>Connectors (advanced)</td>
+<td>18</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Demon King's Castle</td>
+<td>Races &amp; story</td>
+<td>16</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Demon King's Castle</td>
+<td>Monster names</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="realm-plan-difficulty-rises-with-ycthsk">Realm plan (difficulty rises with YCT/HSK)</h2>
+<table>
+<thead>
+<tr>
+<th>realm_no</th>
+<th>realm</th>
+<th>monsters_boss</th>
+<th>topics_taught</th>
+<th>theme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Starter Meadow</strong> (slice)</td>
+<td>horned rabbits 角兔, 角兔王</td>
+<td>greetings &amp; politeness, pronouns &amp; question words, yes/no &amp; core verbs, numbers to 99, family &amp; people, adventure basics, <strong>sentence patterns</strong> (这是……, 你有没有……, 我会……), basic connectors (和, 也, 跟, 还有)</td>
+<td>Survive your first day: say hi, introduce your family, count, and yell for help.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Honeycomb Forest</strong> (slice)</td>
+<td>jumbo bees, Queen Bee 蜂后</td>
+<td>food &amp; drink, wants &amp; likes, animals, nature, measure words 碗/瓶, patterns 太……了 / 又……又…… / 因为……所以……</td>
+<td>Forage and trade for food in a giant-bee forest, then calm the Queen Bee.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Crossroads Market</strong></td>
+<td>mimics / slimes, 宝箱怪王</td>
+<td>shopping &amp; money, big numbers (千, 万), measure words, colors, clothes, describing things, <strong>comparisons</strong> (比, 没有……那么……, 跟……一样, 更), 过</td>
+<td>The town hub: buy gear, haggle (便宜一点儿吧), compare prices.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Goblin Caves</strong></td>
+<td>goblins 哥布林, 哥布林大王</td>
+<td>school &amp; classroom, game &amp; chat talk, family &amp; people, requests &amp; helping, dungeon basics, <strong>grammar words</strong> 把 / 被 / 让 / 正在 / 着</td>
+<td>Goblins turned the cave into a mock "school". Rescue your classmates.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Hydra Swamp</strong></td>
+<td>nine-headed hydra 九头蛇</td>
+<td>time &amp; dates, daily routine, connectors (如果……就……, 先……然后……, 一……就……, 虽然……但是……)</td>
+<td>Each hydra head is part of a sentence. Chain clauses with connectors to cut them off in order.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Zombie Lands</strong></td>
+<td>zombies 丧尸, 病魔</td>
+<td>feelings, body &amp; health, everyday actions, 越来越……, ……得很好, 看起来</td>
+<td>The zombies are sick villagers. Cure them by asking how they feel and what hurts.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Griffin Peaks</strong></td>
+<td>griffins / harpies, 狮鹫王</td>
+<td>places &amp; directions, transportation, weather, directional complements (上来, 下去, 进去)</td>
+<td>A sky road: follow directions, read the weather, don't get lost (我迷路了!).</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Ogre Colosseum</strong></td>
+<td>ogre champions</td>
+<td>hobbies &amp; sports, exclamations &amp; reactions, competition talk (对手, 冠军, 坚持, 你敢吗?)</td>
+<td>An arena tournament where the crowd's cheers and trash talk are the lesson.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Demon King's Castle</strong></td>
+<td>Demon King 魔王</td>
+<td>advanced connectors (无论……都……, 只要……就……, 只有……才……, 连……都……, 不是……而是……), opinions, heroic battle talk, races &amp; story</td>
+<td>Persuade the other races to unite, then defeat the Demon King.</td>
+</tr>
+</tbody>
+</table>
+<p>Design notes (unchanged from v1): exclamations appear from realm 1 as listening flavor before they're drilled in realm 8. The realm column marks where an item is <em>introduced</em>; earlier items keep coming back through review and carry-over. 龙 is kept as a possible ally, and 僵尸 (the hopping vampire) is deliberately not used for Western zombies.</p>
+<h2 id="vertical-slice-60-items">Vertical slice (60 items)</h2>
+<p>v1's 40 slice items, plus 10 new and 10 moved items, so the slice covers every location of realms 1–2 and includes early patterns.</p>
+<table>
+<thead>
+<tr>
+<th>no</th>
+<th>id</th>
+<th>simplified</th>
+<th>traditional</th>
+<th>pinyin</th>
+<th>english</th>
+<th>location_id</th>
+<th>yct_level</th>
+<th>hsk3_level</th>
+<th>speaking</th>
+<th>reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>C001</td>
+<td>你好</td>
+<td>你好</td>
+<td>nǐ hǎo</td>
+<td>hello</td>
+<td>L1.1</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>2</td>
+<td>C005</td>
+<td>再见</td>
+<td>再見</td>
+<td>zàijiàn</td>
+<td>goodbye</td>
+<td>L1.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>3</td>
+<td>C007</td>
+<td>谢谢</td>
+<td>謝謝</td>
+<td>xièxie</td>
+<td>thank you</td>
+<td>L1.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>4</td>
+<td>C008</td>
+<td>不客气</td>
+<td>不客氣</td>
+<td>bù kèqi</td>
+<td>you're welcome</td>
+<td>L1.1</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>5</td>
+<td>C009</td>
+<td>对不起</td>
+<td>對不起</td>
+<td>duìbuqǐ</td>
+<td>sorry</td>
+<td>L1.1</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>6</td>
+<td>C010</td>
+<td>没关系</td>
+<td>沒關係</td>
+<td>méi guānxi</td>
+<td>it's okay; no problem</td>
+<td>L1.1</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>7</td>
+<td>C021</td>
+<td>我</td>
+<td>我</td>
+<td>wǒ</td>
+<td>I; me</td>
+<td>L1.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>8</td>
+<td>C022</td>
+<td>你</td>
+<td>你</td>
+<td>nǐ</td>
+<td>you</td>
+<td>L1.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>9</td>
+<td>C043</td>
+<td>是</td>
+<td>是</td>
+<td>shì</td>
+<td>to be; yes</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>10</td>
+<td>C044</td>
+<td>不</td>
+<td>不</td>
+<td>bù</td>
+<td>not; no</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>11</td>
+<td>C066</td>
+<td>一</td>
+<td>一</td>
+<td>yī</td>
+<td>one</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>12</td>
+<td>C067</td>
+<td>二</td>
+<td>二</td>
+<td>èr</td>
+<td>two</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>13</td>
+<td>C068</td>
+<td>三</td>
+<td>三</td>
+<td>sān</td>
+<td>three</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>14</td>
+<td>C069</td>
+<td>四</td>
+<td>四</td>
+<td>sì</td>
+<td>four</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>15</td>
+<td>C070</td>
+<td>五</td>
+<td>五</td>
+<td>wǔ</td>
+<td>five</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>16</td>
+<td>C071</td>
+<td>六</td>
+<td>六</td>
+<td>liù</td>
+<td>six</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>17</td>
+<td>C072</td>
+<td>七</td>
+<td>七</td>
+<td>qī</td>
+<td>seven</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>18</td>
+<td>C073</td>
+<td>八</td>
+<td>八</td>
+<td>bā</td>
+<td>eight</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>19</td>
+<td>C074</td>
+<td>九</td>
+<td>九</td>
+<td>jiǔ</td>
+<td>nine</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>20</td>
+<td>C075</td>
+<td>十</td>
+<td>十</td>
+<td>shí</td>
+<td>ten</td>
+<td>L1.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>21</td>
+<td>C597</td>
+<td>这是……</td>
+<td>這是……</td>
+<td>zhè shì …</td>
+<td>this is …</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>22</td>
+<td>C598</td>
+<td>那是什么</td>
+<td>那是什麼</td>
+<td>nà shì shénme</td>
+<td>what is that?</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>23</td>
+<td>C599</td>
+<td>你是谁</td>
+<td>你是誰</td>
+<td>nǐ shì shéi</td>
+<td>who are you?</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>24</td>
+<td>C600</td>
+<td>我是……</td>
+<td>我是……</td>
+<td>wǒ shì …</td>
+<td>I am …</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>25</td>
+<td>C602</td>
+<td>我也是</td>
+<td>我也是</td>
+<td>wǒ yě shì</td>
+<td>me too</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>26</td>
+<td>C604</td>
+<td>我有……</td>
+<td>我有……</td>
+<td>wǒ yǒu …</td>
+<td>I have …</td>
+<td>L1.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>27</td>
+<td>C076</td>
+<td>救命</td>
+<td>救命</td>
+<td>jiùmìng</td>
+<td>help! (save me!)</td>
+<td>L1.3</td>
+<td>none</td>
+<td>6</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>28</td>
+<td>C077</td>
+<td>小心</td>
+<td>小心</td>
+<td>xiǎoxīn</td>
+<td>be careful! watch out!</td>
+<td>L1.3</td>
+<td>4</td>
+<td>2</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>29</td>
+<td>C092</td>
+<td>兔子</td>
+<td>兔子</td>
+<td>tùzi</td>
+<td>rabbit</td>
+<td>L1.3</td>
+<td>4</td>
+<td>none</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>30</td>
+<td>C176</td>
+<td>两</td>
+<td>兩</td>
+<td>liǎng</td>
+<td>two (before measure words)</td>
+<td>L1.3</td>
+<td>2</td>
+<td>1</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>31</td>
+<td>C182</td>
+<td>个</td>
+<td>個</td>
+<td>gè</td>
+<td>(general measure word)</td>
+<td>L1.3</td>
+<td>1</td>
+<td>1</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>32</td>
+<td>C273</td>
+<td>爸爸</td>
+<td>爸爸</td>
+<td>bàba</td>
+<td>dad</td>
+<td>L1.3</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>33</td>
+<td>C274</td>
+<td>妈妈</td>
+<td>媽媽</td>
+<td>māma</td>
+<td>mom</td>
+<td>L1.3</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>34</td>
+<td>C282</td>
+<td>朋友</td>
+<td>朋友</td>
+<td>péngyou</td>
+<td>friend</td>
+<td>L1.3</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>35</td>
+<td>C336</td>
+<td>和</td>
+<td>和</td>
+<td>hé</td>
+<td>and; with</td>
+<td>L1.3</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>36</td>
+<td>C337</td>
+<td>也</td>
+<td>也</td>
+<td>yě</td>
+<td>also; too</td>
+<td>L1.3</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>37</td>
+<td>C372</td>
+<td>很</td>
+<td>很</td>
+<td>hěn</td>
+<td>very</td>
+<td>L1.3</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>38</td>
+<td>C612</td>
+<td>二十</td>
+<td>二十</td>
+<td>èrshí</td>
+<td>twenty</td>
+<td>L1.3</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>39</td>
+<td>C617</td>
+<td>我们走吧</td>
+<td>我們走吧</td>
+<td>wǒmen zǒu ba</td>
+<td>let's go</td>
+<td>L1.3</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>40</td>
+<td>C093</td>
+<td>吃</td>
+<td>吃</td>
+<td>chī</td>
+<td>to eat</td>
+<td>L2.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>41</td>
+<td>C094</td>
+<td>喝</td>
+<td>喝</td>
+<td>hē</td>
+<td>to drink</td>
+<td>L2.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>42</td>
+<td>C096</td>
+<td>米饭</td>
+<td>米飯</td>
+<td>mǐfàn</td>
+<td>(cooked) rice</td>
+<td>L2.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>43</td>
+<td>C097</td>
+<td>面条</td>
+<td>麵條</td>
+<td>miàntiáo</td>
+<td>noodles</td>
+<td>L2.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>44</td>
+<td>C105</td>
+<td>苹果</td>
+<td>蘋果</td>
+<td>píngguǒ</td>
+<td>apple</td>
+<td>L2.1</td>
+<td>1</td>
+<td>3</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>45</td>
+<td>C107</td>
+<td>水</td>
+<td>水</td>
+<td>shuǐ</td>
+<td>water</td>
+<td>L2.1</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>46</td>
+<td>C115</td>
+<td>蜂蜜</td>
+<td>蜂蜜</td>
+<td>fēngmì</td>
+<td>honey</td>
+<td>L2.1</td>
+<td>none</td>
+<td>7-9</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>47</td>
+<td>C118</td>
+<td>好吃</td>
+<td>好吃</td>
+<td>hǎochī</td>
+<td>tasty (food)</td>
+<td>L2.1</td>
+<td>2</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>48</td>
+<td>C121</td>
+<td>饿</td>
+<td>餓</td>
+<td>è</td>
+<td>hungry</td>
+<td>L2.1</td>
+<td>3</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>49</td>
+<td>C132</td>
+<td>喜欢</td>
+<td>喜歡</td>
+<td>xǐhuan</td>
+<td>to like</td>
+<td>L2.2</td>
+<td>1</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>50</td>
+<td>C135</td>
+<td>不要</td>
+<td>不要</td>
+<td>bù yào</td>
+<td>don't want; don't!</td>
+<td>L2.2</td>
+<td>none</td>
+<td>2</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>51</td>
+<td>C136</td>
+<td>我要……</td>
+<td>我要……</td>
+<td>wǒ yào …</td>
+<td>I want …</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>52</td>
+<td>C139</td>
+<td>我饿了</td>
+<td>我餓了</td>
+<td>wǒ è le</td>
+<td>I'm hungry</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>53</td>
+<td>C142</td>
+<td>花</td>
+<td>花</td>
+<td>huā</td>
+<td>flower</td>
+<td>L2.2</td>
+<td>4</td>
+<td>1</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>54</td>
+<td>C144</td>
+<td>蜜蜂</td>
+<td>蜜蜂</td>
+<td>mìfēng</td>
+<td>bee</td>
+<td>L2.2</td>
+<td>none</td>
+<td>7-9</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>55</td>
+<td>C160</td>
+<td>我的妈呀</td>
+<td>我的媽呀</td>
+<td>wǒ de mā ya</td>
+<td>oh my gosh! (lit. 'oh my mom!')</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>56</td>
+<td>C161</td>
+<td>太好了</td>
+<td>太好了</td>
+<td>tài hǎo le</td>
+<td>great! awesome!</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>57</td>
+<td>C340</td>
+<td>可是</td>
+<td>可是</td>
+<td>kěshì</td>
+<td>but</td>
+<td>L2.2</td>
+<td>none</td>
+<td>2</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>58</td>
+<td>C343</td>
+<td>因为</td>
+<td>因為</td>
+<td>yīnwèi</td>
+<td>because</td>
+<td>L2.2</td>
+<td>3</td>
+<td>2</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>59</td>
+<td>C647</td>
+<td>你想吃什么</td>
+<td>你想吃什麼</td>
+<td>nǐ xiǎng chī shénme</td>
+<td>what do you want to eat?</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>60</td>
+<td>C652</td>
+<td>太……了</td>
+<td>太……了</td>
+<td>tài … le</td>
+<td>too …; so …!</td>
+<td>L2.2</td>
+<td>none</td>
+<td>none</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+</tbody>
+</table>
+<h2 id="column-conventions">Column conventions</h2>
+<ul>
+<li><strong>id</strong>: stable. v1 ids (C001–C585) are unchanged, even when an item moved realm. New items are C586–C1051.</li>
+<li><strong>realm</strong>: the realm where the item is introduced. The location is in <code>data/curriculum_location_pools.csv</code> (<code>location_id</code>, <code>location_no</code>, <code>location_global_no</code>, <code>origin</code> = v1/v2, <code>v1_realm</code>).</li>
+<li><strong>yct_level</strong>: the lowest YCT level (1–4) in which the exact item appears. Otherwise <code>none</code>.</li>
+<li><strong>hsk3_level</strong>: the HSK 3.0 (2021) level of the exact item: 1–6 or 7-9. Otherwise <code>none</code>. Erhua variants are matched to their list form.</li>
+<li><strong>notes</strong>: for none-items, either "built from listed words A+B (parts max HSK x, YCT y)" or a short reason for inclusion. Also covers polyphones, tone sandhi and Taiwan wording.</li>
+<li><strong>pinyin</strong>: dictionary citation tones (一 yī, 不 bù, no sandhi), matching the HSK list and CC-CEDICT. Recommendation: apply 一/不 sandhi automatically in the game's pinyin display.</li>
+<li><strong>listening</strong>: Y for every item.</li>
+<li><strong>speaking</strong> (relaxed for ages 10–12): Y for phrases, exclamations and sentence frames of <strong>7 characters or fewer</strong>, and for words of <strong>3 characters or fewer at effective level ≤ 3</strong> in everyday topics. N for particles, bare measure words, monster names and long frames. v1 hand-set N flags were kept.</li>
+<li><strong>reading</strong> (relaxed): Y for words of <strong>3 characters or fewer at level ≤ 4</strong>, and for phrases of <strong>6 characters or fewer at level ≤ 3</strong>. N for monster names and long or advanced phrases. Slice items of 3 characters or fewer are always Y.</li>
+<li><strong>slice</strong>: Y for the 60 slice items.</li>
+</ul>
+<h2 id="sources-and-method">Sources and method</h2>
+<table>
+<thead>
+<tr>
+<th>source</th>
+<th>url</th>
+<th>use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HSK 3.0 (2021) full word list, 11,092 entries, machine-readable transcription</td>
+<td>https://github.com/ivankra/hsk30</td>
+<td>Exact-match HSK level for every item</td>
+</tr>
+<tr>
+<td>Official standard GF0025-2021 (MoE PDF)</td>
+<td>http://www.moe.gov.cn/jyb_xwfb/gzdt_gzdt/s5987/202103/W020210329527301787356.pdf</td>
+<td>Reference</td>
+</tr>
+<tr>
+<td>YCT levels 1–4 vocabulary (TSV)</td>
+<td>https://github.com/krmanik/HSK-3.0/tree/main/YCT</td>
+<td>Exact-match YCT level (lowest level wins)</td>
+</tr>
+<tr>
+<td>Purple Culture YCT 1–4 lists</td>
+<td>https://www.purpleculture.net/textbook-vocab-lists/?listid=10026</td>
+<td>Cross-check of cumulative counts</td>
+</tr>
+<tr>
+<td>CC-CEDICT</td>
+<td>https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.zip</td>
+<td>Pinyin/definition check for non-list items</td>
+</tr>
+<tr>
+<td>OpenCC (s2tw, s2twp) and pypinyin</td>
+<td>https://github.com/BYVoid/OpenCC, https://github.com/mozillazg/python-pinyin</td>
+<td>Traditional conversion and a second opinion on pinyin</td>
+</tr>
+</tbody>
+</table>
+<p>Method (v2): the 466 new items (<code>build/v2/items_add.txt</code>) and 46 moves (<code>build/v2/moves.txt</code>) were merged by <code>build/v2/build2.py</code>. It re-derives Traditional (OpenCC s2tw), levels (exact match, then erhua variants, then component levels for phrases) and skill flags, and checks pinyin against the HSK list, CC-CEDICT and pypinyin. Every disagreement was reviewed by hand. The location split and this document are generated (<code>build/v2/write_md.py</code>, <code>build/v2/stats.py</code>), so the numbers match the CSV.</p>
+<h2 id="caveats">Caveats</h2>
+<ol>
+<li><strong>Traditional is script conversion only.</strong> Where Taiwan uses a different word, the Taiwan word is in <code>notes</code> (e.g. 自行车 → 腳踏車, 公共汽车 → 公車, 地铁 → 捷運, 出租车 → 計程車, 米饭 → 白飯). A future Traditional toggle should use a separate <code>taiwan_wording</code> column.</li>
+<li><strong>Erhua (儿) is mainland and northern</strong> (哪儿, 这儿, 一点儿, 一会儿, 快点儿 …). Each note gives the Taiwan form.</li>
+<li><strong>Colloquial items</strong> (我的妈呀, 吓死我了, 哇塞, 恶心) are fine for kids but should appear in playful contexts.</li>
+<li><strong>Level sources:</strong> YCT is a community transcription, checked only against Purple Culture counts. HSK uses the 2021 standard; the revised syllabus announced in late 2025 has different boundaries, so re-run the build if you switch.</li>
+<li><strong>HSK ranks kid and game words as advanced</strong> (厉害/棒 HSK5, 救命/哇/酷 HSK6, 蜂蜜/彩虹/吉他 7-9). They're kept on purpose; realm order follows YCT and topic.</li>
+<li><strong>Game and fantasy words</strong> are coined or translated (角兔, 哥布林, 蜂后, 九头蛇, 丧尸, 精灵/矮人/兽人, 魔王).</li>
+<li><strong>Polyphones for TTS:</strong> 还, 长, 只, 喂, 哇, 嗯, 哦, 得 (de/dé/děi), 着 (zhe/zháo), 转 (zhuǎn/zhuàn). Give the TTS explicit pinyin for these.</li>
+<li><strong>Audio:</strong> use zh-CN voices to match Simplified. Parent-entered items use browser TTS.</li>
+<li><strong>Size vs targets:</strong> v2 deliberately exceeds v1's 300–450-word target (820 words, 231 phrases), because Jack asked for a harder curriculum for 10–12-year-olds. The combat spec's pacing (§5, §7.10) is tuned to these 47–60-item pools.</li>
+</ol></body></html>

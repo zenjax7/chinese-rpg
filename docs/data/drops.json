@@ -1,0 +1,38 @@
+[
+ {
+  "role": "normal",
+  "boss_type": "",
+  "exp": "6 × L_rec",
+  "gold_mult": 1,
+  "chest_chance": 0.1,
+  "chest_type": "normal chest",
+  "guaranteed": ""
+ },
+ {
+  "role": "elite",
+  "boss_type": "",
+  "exp": "10 × L_rec",
+  "gold_mult": 2,
+  "chest_chance": 0.25,
+  "chest_type": "normal chest",
+  "guaranteed": ""
+ },
+ {
+  "role": "boss",
+  "boss_type": "location",
+  "exp": "20 × L_rec",
+  "gold_mult": 5,
+  "chest_chance": 1.0,
+  "chest_type": "location boss chest",
+  "guaranteed": "fine gear piece"
+ },
+ {
+  "role": "boss",
+  "boss_type": "realm",
+  "exp": "50 × L_rec",
+  "gold_mult": 10,
+  "chest_chance": 1.0,
+  "chest_type": "realm boss chest",
+  "guaranteed": "heroic gear piece + skill unlock"
+ }
+]

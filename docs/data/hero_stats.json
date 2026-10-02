@@ -1,0 +1,101 @@
+[
+ {
+  "tier": 1,
+  "realm": "Starter Meadow",
+  "rec_level": 2,
+  "rec_level_range": "1–3",
+  "gear_tier": 1,
+  "hero_hp": 42,
+  "hero_mp": 14,
+  "hero_atk": 6,
+  "hero_def": 4
+ },
+ {
+  "tier": 2,
+  "realm": "Honeycomb Forest",
+  "rec_level": 4,
+  "rec_level_range": "3–5",
+  "gear_tier": 2,
+  "hero_hp": 54,
+  "hero_mp": 18,
+  "hero_atk": 10,
+  "hero_def": 8
+ },
+ {
+  "tier": 3,
+  "realm": "Crossroads Market",
+  "rec_level": 6,
+  "rec_level_range": "5–7",
+  "gear_tier": 3,
+  "hero_hp": 66,
+  "hero_mp": 22,
+  "hero_atk": 14,
+  "hero_def": 12
+ },
+ {
+  "tier": 4,
+  "realm": "Goblin Caves",
+  "rec_level": 9,
+  "rec_level_range": "7–10",
+  "gear_tier": 4,
+  "hero_hp": 84,
+  "hero_mp": 28,
+  "hero_atk": 18,
+  "hero_def": 16
+ },
+ {
+  "tier": 5,
+  "realm": "Hydra Swamp",
+  "rec_level": 12,
+  "rec_level_range": "10–13",
+  "gear_tier": 5,
+  "hero_hp": 102,
+  "hero_mp": 34,
+  "hero_atk": 23,
+  "hero_def": 20
+ },
+ {
+  "tier": 6,
+  "realm": "Zombie Lands",
+  "rec_level": 15,
+  "rec_level_range": "13–16",
+  "gear_tier": 6,
+  "hero_hp": 120,
+  "hero_mp": 40,
+  "hero_atk": 27,
+  "hero_def": 24
+ },
+ {
+  "tier": 7,
+  "realm": "Griffin Peaks",
+  "rec_level": 18,
+  "rec_level_range": "16–19",
+  "gear_tier": 7,
+  "hero_hp": 138,
+  "hero_mp": 46,
+  "hero_atk": 32,
+  "hero_def": 28
+ },
+ {
+  "tier": 8,
+  "realm": "Ogre Colosseum",
+  "rec_level": 21,
+  "rec_level_range": "19–22",
+  "gear_tier": 8,
+  "hero_hp": 156,
+  "hero_mp": 52,
+  "hero_atk": 36,
+  "hero_def": 32
+ },
+ {
+  "tier": 9,
+  "realm": "Demon King's Castle",
+  "rec_level": 24,
+  "rec_level_range": "22–25",
+  "gear_tier": 9,
+  "hero_hp": 174,
+  "hero_mp": 58,
+  "hero_atk": 41,
+  "hero_def": 36
+ }
+]

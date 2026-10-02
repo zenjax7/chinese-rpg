@@ -1,0 +1,6592 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Combat and Progression Spec (v3)</title><style>body{font-family:-apple-system,Segoe UI,Roboto,'Noto Sans SC',sans-serif;max-width:1200px;margin:2em auto;padding:0 1em;line-height:1.5;color:#222}
+table{border-collapse:collapse;margin:1em 0;font-size:13px;display:block;overflow-x:auto}th,td{border:1px solid #ccc;padding:4px 7px;vertical-align:top}
+th{background:#eef2fa;position:sticky;top:0}tr:nth-child(even) td{background:#fafafa}code{background:#f3f3f3;padding:1px 4px;border-radius:3px}
+pre{background:#f6f8fa;padding:10px;overflow-x:auto;font-size:12.5px}h2{border-bottom:2px solid #4472C4;padding-bottom:4px;margin-top:2em}
+nav{background:#f7f7f7;padding:10px 16px;border-radius:6px;font-size:14px}</style></head><body><nav><b>Contents</b><div class="toc">
+<ul>
+<li><a href="#what-changed-from-v2-jacks-decisions">What changed from v2 (Jack's decisions)</a></li>
+<li><a href="#0-glossary">0. Glossary</a></li>
+<li><a href="#1-battle-flow">1. Battle flow</a><ul>
+<li><a href="#11-turn-order">1.1 Turn order</a></li>
+<li><a href="#12-state-machine">1.2 State machine</a></li>
+<li><a href="#13-question-type-is-chosen-by-the-learning-engine-not-by-the-turn">1.3 Question type is chosen by the learning engine, not by the turn</a></li>
+<li><a href="#14-anti-guess-spam-kept">1.4 Anti-guess-spam (kept)</a></li>
+</ul>
+</li>
+<li><a href="#2-damage-model">2. Damage model</a><ul>
+<li><a href="#21-hero-stats">2.1 Hero stats</a></li>
+<li><a href="#22-formulas-unchanged-from-v1">2.2 Formulas (unchanged from v1)</a></li>
+<li><a href="#23-enemy-stats-by-role-and-tier">2.3 Enemy stats by role and tier</a></li>
+<li><a href="#24-worked-examples">2.4 Worked examples</a></li>
+<li><a href="#25-length-targets">2.5 Length targets</a></li>
+</ul>
+</li>
+<li><a href="#3-proficiency-model">3. Proficiency model</a><ul>
+<li><a href="#31-definition">3.1 Definition</a></li>
+<li><a href="#32-leitner-underneath-scheduling-only">3.2 Leitner underneath (scheduling only)</a></li>
+<li><a href="#33-choosing-the-7-battle-set">3.3 Choosing the 7 (battle set)</a></li>
+<li><a href="#34-picking-the-way-for-each-question">3.4 Picking the way for each question</a></li>
+</ul>
+</li>
+<li><a href="#4-when-all-7-have-been-asked-unchanged-rule">4. When all 7 have been asked (unchanged rule)</a></li>
+<li><a href="#5-difficulty-by-location-updated-for-curriculum-v2">5. Difficulty by location (updated for curriculum v2)</a></li>
+<li><a href="#6-equipment-skills-mp-and-the-companion">6. Equipment, skills, MP and the companion</a><ul>
+<li><a href="#61-slots-unchanged">6.1 Slots (unchanged)</a></li>
+<li><a href="#62-stat-ranges-by-tier-and-rarity">6.2 Stat ranges by tier and rarity</a></li>
+<li><a href="#63-heroic-drops-realm-bosses">6.3 Heroic drops (realm bosses)</a></li>
+<li><a href="#64-skills-mp-and-consumables-rebalanced-for-regen">6.4 Skills, MP and consumables (rebalanced for regen)</a></li>
+<li><a href="#65-how-gear-is-earned-no-pay-to-win">6.5 How gear is earned (no pay-to-win)</a></li>
+<li><a href="#66-companion-team-attack-decided-in">6.6 Companion team attack (decided: in)</a></li>
+<li><a href="#67-spells-new-in-v33-jacks-request">6.7 Spells (new in v3.3, Jack's request)</a></li>
+</ul>
+</li>
+<li><a href="#7-progression-economy-and-safety-nets">7. Progression, economy and safety nets</a><ul>
+<li><a href="#71-unlocks-beat-the-boss-no-percentage-gates">7.1 Unlocks: beat the boss (no percentage gates)</a></li>
+<li><a href="#72-drops-exp-gold-chests">7.2 Drops (EXP, gold, chests)</a></li>
+<li><a href="#73-inn-and-return-feather">7.3 Inn and Return Feather</a></li>
+<li><a href="#74-boss-approach-patrols-extra-encounters">7.4 Boss-approach patrols (extra encounters)</a></li>
+<li><a href="#75-defeat-the-0-hp-rule-and-safety-nets-all-decided">7.5 Defeat, the 0-HP rule, and safety nets (all decided)</a></li>
+<li><a href="#76-death-spiral-analysis-v3-rerun">7.6 Death-spiral analysis (v3 rerun)</a></li>
+<li><a href="#77-boss-approach-tuning-proficiency-cost-v3">7.7 Boss-approach tuning (proficiency cost, v3)</a></li>
+<li><a href="#78-elites">7.8 Elites</a></li>
+<li><a href="#79-special-boss-mechanics-simulated">7.9 Special boss mechanics (simulated)</a></li>
+<li><a href="#710-pacing-summary-time-per-location">7.10 Pacing summary (time per location)</a></li>
+<li><a href="#711-quests-new-in-v33">7.11 Quests (new in v3.3)</a></li>
+</ul>
+</li>
+<li><a href="#8-preview-practice-new-in-v3">8. Preview &amp; Practice (new in v3)</a><ul>
+<li><a href="#81-where-it-goes-per-location-plus-a-realm-overview">8.1 Where it goes: per location, plus a realm overview</a></li>
+<li><a href="#82-the-preview-page">8.2 The Preview page</a></li>
+<li><a href="#83-practice-modes-and-the-counting-rule">8.3 Practice modes and the counting rule</a></li>
+<li><a href="#84-rewards-small-and-never-better-than-battle-farming">8.4 Rewards (small, and never better than battle farming)</a></li>
+<li><a href="#85-ui-flow">8.5 UI flow</a></li>
+<li><a href="#86-data-needs">8.6 Data needs</a></li>
+</ul>
+</li>
+<li><a href="#9-answer-modes">9. Answer modes</a><ul>
+<li><a href="#91-speech-no-retry-for-wrong-answers-re-prompt-only-on-technical-failure">9.1 Speech: no retry for wrong answers; re-prompt only on technical failure</a></li>
+<li><a href="#92-matching-rules-unchanged-from-v1">9.2 Matching rules (unchanged from v1)</a></li>
+<li><a href="#93-distractor-generation-core-and-parent-items">9.3 Distractor generation (core and parent items)</a></li>
+</ul>
+</li>
+<li><a href="#10-parent-editor-data-model">10. Parent editor data model</a><ul>
+<li><a href="#101-entities">10.1 Entities</a></li>
+<li><a href="#102-validation">10.2 Validation</a></li>
+<li><a href="#103-scaling-to-many-locations-data-driven">10.3 Scaling to many locations (data-driven)</a></li>
+<li><a href="#104-progress-storage">10.4 Progress storage</a></li>
+</ul>
+</li>
+<li><a href="#11-tuning-knobs-analytics-open-questions">11. Tuning knobs, analytics, open questions</a><ul>
+<li><a href="#111-knobs-defaults">11.1 Knobs (defaults)</a></li>
+<li><a href="#112-analytics-to-log">11.2 Analytics to log</a></li>
+<li><a href="#113-open-questions-for-jack">11.3 Open questions for Jack</a></li>
+<li><a href="#114-risks">11.4 Risks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav><h1 id="combat-and-progression-spec-v3">Combat and Progression Spec (v3)</h1>
+<p>Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. <strong>v3.3 update 2026-10-01 (PT):</strong> purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in <code>/workspace/desy/spells.md</code>.
+Previous versions: <code>combat-spec-v2.md</code> and <code>combat-spec-v1.md</code> (both kept unchanged).
+Inputs: Jack's v2 decisions (all fixed), <code>core-curriculum.csv</code> (curriculum v2: 1,051 items, 9 realms, 20 locations, 60-item slice), <code>enemies.json</code> (50-enemy roster), and <code>chinese-rpg-design-memo.md</code>.</p>
+<p><strong>Where the numbers live.</strong> Every number in this spec is in a markdown table with snake_case column names. The same tables are exported as CSV (UTF-8 with BOM) and JSON to <code>desy/data/</code>, and bundled in <code>data/combat_data.json</code>. They're generated by one script, <code>build/v3/build_data.py</code>, which reads the simulator formulas (<code>build/combat_sim.py</code>), the roster (<code>enemies.json</code>) and the sim outputs. Rerun it, then <code>build/v3/assemble_spec.py</code>, to refresh both the data and this document.</p>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th>file (in <code>data/</code>)</th>
+<th>section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hero_stats</td>
+<td>hero_stats.csv / .json</td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>enemy_stat_bands</td>
+<td>enemy_stat_bands.csv / .json</td>
+<td>§2.3</td>
+</tr>
+<tr>
+<td>enemies</td>
+<td>enemies.csv / .json (trimmed copy of <code>enemies.json</code>)</td>
+<td>§2.3, §7.8</td>
+</tr>
+<tr>
+<td>realm_difficulty, realm_location_difficulty</td>
+<td>realm_difficulty.csv, realm_location_difficulty.csv</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>gear, gear_heroic_drops</td>
+<td>gear.csv, gear_heroic_drops.csv</td>
+<td>§6.2–6.3</td>
+</tr>
+<tr>
+<td>skills_mp, mp_rules</td>
+<td>skills_mp.csv, mp_rules.csv</td>
+<td>§6.4</td>
+</tr>
+<tr>
+<td>economy_prices, consumables</td>
+<td>economy_prices.csv, consumables.csv</td>
+<td>§6.4, §7.3</td>
+</tr>
+<tr>
+<td>companion</td>
+<td>companion.csv</td>
+<td>§6.6</td>
+</tr>
+<tr>
+<td>drops, chest_contents</td>
+<td>drops.csv, chest_contents.csv</td>
+<td>§7.2</td>
+</tr>
+<tr>
+<td>proficiency_patrol_settings</td>
+<td>proficiency_patrol_settings.csv</td>
+<td>§3, §7.4, §11.1</td>
+</tr>
+<tr>
+<td>safety_nets</td>
+<td>safety_nets.csv</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>special_mechanics</td>
+<td>special_mechanics.csv</td>
+<td>§7.9</td>
+</tr>
+<tr>
+<td>practice_modes, practice_rewards</td>
+<td>practice_modes.csv, practice_rewards.csv</td>
+<td>§8</td>
+</tr>
+<tr>
+<td>spells, quests (v3.3)</td>
+<td>spells.csv / .json, quests.csv / .json (+ spells_full.json, quests_full.json)</td>
+<td>§6.7, §7.11</td>
+</tr>
+<tr>
+<td>sim results</td>
+<td><code>data/sim/*.csv</code></td>
+<td>§7.6–7.10</td>
+</tr>
+<tr>
+<td>curriculum pools</td>
+<td>curriculum_location_pools.csv</td>
+<td>§5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Simulator.</strong> <code>build/combat_sim.py</code> (v3), driven by <code>build/sim_v3_runner.py</code>. Full output: <code>build/combat_sim_out.txt</code>, with 150 simulated realm playthroughs per row, or 1,500 single battles per row for the special-mechanic and elite tables. The v2 simulator and its output are kept as <code>combat_sim_v2.py</code> / <code>combat_sim_v2_out.txt</code>.</p>
+<h2 id="what-changed-from-v2-jacks-decisions">What changed from v2 (Jack's decisions)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>decision</th>
+<th>where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Speech is on by default.</strong> A consent screen at first launch has to be accepted before the game runs. The 2-way (reading-only) path exists only for browsers without speech recognition, or after a device or permission error.</td>
+<td>§3.1, §9.1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>"Twice" means <strong>2 correct answers in total</strong> per way. There's <strong>no rusty rule</strong>.</td>
+<td>§3.1–3.2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Spoken questions are <strong>capped at 50% of each battle</strong>.</td>
+<td>§3.4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Mic handling as proposed. <strong><code>nomatch</code> (heard speech but got no words) counts as wrong.</strong></td>
+<td>§9.1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Items proficient under 2 ways <strong>stay proficient</strong> if speech is turned on later.</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>MP regen: +1 MP per correct answer.</strong> MP costs are rebalanced: Heal 12 MP for 30% HP, once per battle.</td>
+<td>§6.4</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Inns stay close. There's a new <strong>Return Feather</strong> (1 × G).</td>
+<td>§6.4, §7.3</td>
+</tr>
+<tr>
+<td>8</td>
+<td>The <strong>companion team attack</strong> is in, with a full spec (Friendship gauge 20/5/100, 1.25 × ATK).</td>
+<td>§6.6</td>
+</tr>
+<tr>
+<td>9</td>
+<td>No tone checking and no timers. Parent-entered words use <strong>browser TTS</strong>.</td>
+<td>§8.2, §10.1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>All safety nets plus <strong>Courage</strong> are accepted. Defeat fee = <strong>max(10% of gold, 1 inn price)</strong>.</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Patrol triggers: <strong>40% without speech, 20% with speech</strong> (Director's call in v3.1; was 25%). Readiness now counts <strong>the location's own pool only</strong>.</td>
+<td>§7.4, §7.7</td>
+</tr>
+<tr>
+<td>12</td>
+<td>New <strong>Preview &amp; Practice</strong> page before each location, plus a realm overview. Practice counts toward <strong>at most 1 of the 2 correct answers per way</strong>.</td>
+<td>§8</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Curriculum v2 is harder:</strong> 1,051 items (was 585), 47–60 items per location (was ~30), more grammar patterns early, and relaxed speaking/reading rules for 10–12-year-olds.</td>
+<td>§5, <code>core-curriculum.md</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Elites</strong> (2× normal HP, location-boss ATK, DEF = tier, 2× gold, 10 × L_rec EXP, 25% chest chance). One scripted elite fight per realm, and a 10% elite chance in boss-approach patrols.</td>
+<td>§2.3, §7.8</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Enemy roles are <strong>normal / elite / boss</strong>, with <code>boss_type</code> = location or realm. There's no gatekeeper role.</td>
+<td>§2.3, §10.3</td>
+</tr>
+<tr>
+<td>16</td>
+<td><strong>Special mechanics simulated:</strong> Queen Bee summons (capped at 2, half-HP workers), Hydra Double Bite, Shadow Dragon Curse Chain, Troll Regrow.</td>
+<td>§7.9</td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>v3.2 caps (Jack's caps, as in the prototype build):</strong> at most <strong>3 new words per battle</strong> (hard cap, also early in a location; was 4), and <strong>Tired at 30 questions in normal battles (elites included) and 45 in every boss battle</strong> (the 40 tier was the location boss; it's now 45 like the realm boss).</td>
+<td>§2.5, §3.3, §11.1</td>
+</tr>
+<tr>
+<td>18</td>
+<td><strong>No pinyin anywhere in the game UI (v3.2, Jack).</strong> Answer feedback shows the correct <strong>characters + English meaning</strong> and plays the <strong>zh-CN audio</strong>. Pinyin stays in the data (speech matching, polyphone checks, the parent editor) but is never shown to the kid.</td>
+<td>§1.2, §3.4, §8.2, §9.3</td>
+</tr>
+<tr>
+<td>19</td>
+<td><strong>Bilingual battle commands (v3.2, Jack):</strong> ⚔️ 攻击 Attack · ✨ 技能 Skills · 🍯 道具 Items · 🏃 逃跑 Run. Layout reference: <code>/workspace/desy/ui-layout-review.md</code> (§4).</td>
+<td>§1.2</td>
+</tr>
+<tr>
+<td>20</td>
+<td><strong>Spells and quests (v3.3, Jack's request; details pending Jack):</strong> a magic shop in every town. Towns 2–9 sell 2 spells each, 16 in total, at 45–130 × G. Spells are owned for good and kept in a Spellbook tab inside ✨ 技能 Skills. Casting needs a right answer; a wrong answer fizzles and still spends the MP (default). Magic Ward halves spell damage in boss battles, and the Blacksmith-first warning protects gear money. Each town has a quest board with 4 one-time quests (bounty, collect, words, delivery) worth about 30 × G per realm.</td>
+<td>§6.7, §7.11</td>
+</tr>
+<tr>
+<td>–</td>
+<td>Scripted path fights per location go from 6 to 8, because pools are about 1.75× larger.</td>
+<td>§5, §7.4</td>
+</tr>
+</tbody>
+</table>
+<p>Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration", the open questions Jack answered, and the unlimited Queen Bee summon.</p>
+<hr />
+<h2 id="0-glossary">0. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>term</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item</td>
+<td>One curriculum entry (word or phrase).</td>
+</tr>
+<tr>
+<td>Way</td>
+<td>One of 4 ways to answer: <strong>R-ZE</strong> reading ZH→EN (see or hear Chinese, tap the English meaning), <strong>R-EZ</strong> reading EN→ZH (see English, tap the Chinese), <strong>S-ZE</strong> spoken ZH→EN (hear or see Chinese, say the English), <strong>S-EZ</strong> spoken EN→ZH (see English, say the Chinese). "Reading" means multiple choice.</td>
+</tr>
+<tr>
+<td>Active ways</td>
+<td>4 when speech works (the default after the consent gate). 2 (R-ZE, R-EZ) only when the browser has no speech recognition or the mic is blocked.</td>
+</tr>
+<tr>
+<td>Proficient</td>
+<td>2 correct answers (in total) in every active way. At most 1 of the 2 can come from Preview practice.</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>A village, dungeon or stage with a local pool of <strong>47–60 items</strong> (curriculum v2). It <strong>ends in a boss</strong>. The realm's last location has the realm boss.</td>
+</tr>
+<tr>
+<td>Readiness</td>
+<td>The share of the location's own pool that's proficient. It decides boss-approach patrols (§7.4).</td>
+</tr>
+<tr>
+<td>Carry-over</td>
+<td>Up to 20 not-yet-proficient items from earlier locations. They're mixed into battle sets, but not counted in readiness.</td>
+</tr>
+<tr>
+<td>Role</td>
+<td><code>normal</code>, <code>elite</code> or <code>boss</code>. Bosses have <code>boss_type</code> = <code>location</code> or <code>realm</code>.</td>
+</tr>
+<tr>
+<td>Tier <code>t</code></td>
+<td>Numeric difficulty: realm 1 = 1 … realm 9 = 9, open-ended. All stats are formulas of <code>t</code>.</td>
+</tr>
+<tr>
+<td>G</td>
+<td>Gold paid by a normal enemy at tier t: 3 × L_rec(t). Prices are multiples of G.</td>
+</tr>
+<tr>
+<td>Restore</td>
+<td>A full HP+MP refill: a paid inn stay, a free (pity) inn stay, or waking at the inn after a defeat.</td>
+</tr>
+<tr>
+<td>Preview</td>
+<td>The page before each location that lists its new items and offers practice modes (§8).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-battle-flow">1. Battle flow</h2>
+<h3 id="11-turn-order">1.1 Turn order</h3>
+<p>A <strong>round</strong> = an optional companion attack + 1 hero turn + 1 enemy turn per living enemy on screen (max 3).</p>
+<pre><code>Round:
+  0. Companion   -&gt; if the Friendship gauge is full: free team attack (no question), gauge -&gt; 0   (§6.6)
+  1. Hero turn   -&gt; Attack 攻击 | Skills 技能 | Items 道具 (potions) | Run 逃跑 (flee)
+                    Attack and question-type skills =&gt; 1 question
+  2. Enemy phase -&gt; for each living enemy, left to right: wind-up =&gt; 1 question =&gt; resolve block
+                    (Hydra: every 3rd round it attacks twice, §7.9)
+  3. End of round -&gt; tick cooldowns, specials (Regrow, Summon Worker), spawn reinforcements (tier 10+), check end
+</code></pre>
+<ul>
+<li><strong>Defense questions per round = living enemies on screen (≤ 3).</strong> A 3-enemy round is 1 attack question plus 3 defense questions. Extra enemies (tier 10+) wait as reinforcements.</li>
+<li>Potions and Flee use the hero turn <strong>without</strong> a question. Potions are capped at 3 per battle.</li>
+<li><strong>HP and MP carry over between battles.</strong> HP comes back only from an inn, a potion, Heal, or waking at the inn after a defeat. MP also regenerates <strong>+1 per correct answer</strong> in battle (§6.4).</li>
+</ul>
+<h3 id="12-state-machine">1.2 State machine</h3>
+<pre><code>BATTLE_INIT (HP/MP carried over from the map; Friendship gauge = 0)
+  -&gt; SCOUT            (the 7 focus items; new items get a teach card; skippable after 1 s)
+  -&gt; ROUND_START
+  -&gt; COMPANION_CHECK  (gauge &gt;= 100 -&gt; TEAM_ATTACK -&gt; CHECK_END)
+  -&gt; HERO_ACTION_SELECT
+       (4 bilingual commands: ⚔️ 攻击 Attack · ✨ 技能 Skills · 🍯 道具 Items · 🏃 逃跑 Run)
+       Attack/Skill -&gt; TARGET_SELECT -&gt; ASK
+       Items (potion) -&gt; APPLY_POTION -&gt; ENEMY_PHASE
+       Run          -&gt; END_FLEE
+  ASK:
+       ENGINE_PICK           (item + way, §3.4; spoken share capped at 50%)
+    -&gt; PROMPT_PLAY           (audio/text; options or mic locked)
+    -&gt; INPUT_UNLOCKED        (after the audio ends, or 800 ms for text-only prompts)
+    -&gt; AWAIT_ANSWER          MC tap | SPEECH_LISTEN -&gt; SPEECH_RESULT
+         SPEECH_RESULT = TECH_FAIL (no speech at all / device / permission / network error)
+                           -&gt; re-prompt the SAME question (max 2), then VOID (§9.1)
+                       = TRANSCRIPT (any recognized text) or NOMATCH -&gt; graded, no retry (nomatch = wrong)
+    -&gt; GRADE                 (correct/wrong; proficiency, Leitner, streak; +1 MP if correct;
+                              gauge +5 correct / +20 wrong; log)
+    -&gt; FEEDBACK              (correct characters + English meaning, zh-CN audio plays; never pinyin;
+                              wrong: the correct card lights up, 1.5 s min)
+  -&gt; RESOLVE_ATTACK / RESOLVE_BLOCK -&gt; CHECK_END
+  -&gt; ENEMY_PHASE ... -&gt; ROUND_END (specials) -&gt; ROUND_START ...
+
+On each enemy reaching HP 0: DROP (EXP + gold now; chest roll, §7.2). Summoned workers drop nothing.
+CHECK_END:  all enemies dead (or boss dead: remaining minions flee)  -&gt; VICTORY
+            hero HP &lt;= 0 (and no Second Wind)                         -&gt; DEFEAT
+            boss HP &lt;= 50% (first time)                               -&gt; BOSS_CHECKPOINT (save only, NO heal)
+VICTORY  -&gt; REWARDS (EXP, gold, chest contents, proficiency summary) -&gt; MAP (HP/MP as they are)
+DEFEAT   -&gt; INN: full HP/MP, lose gold per §7.5 (keep items, EXP and drops already collected);
+            boss: next attempt starts at 50% boss HP if the checkpoint was reached
+END_FLEE -&gt; MAP (no loss; answers so far still count)
+</code></pre>
+<p><strong>Battle UI rules (v3.2, decided by Jack).</strong> Layout reference: <code>/workspace/desy/ui-layout-review.md</code> (§4 battle screen, §5 turn-state flow).</p>
+<ul>
+<li><strong>Commands are bilingual.</strong> Each of the 4 command buttons shows the Chinese label with the English under or beside it: <strong>⚔️ 攻击 Attack · ✨ 技能 Skills · 🍯 道具 Items · 🏃 逃跑 Run</strong>. The Chinese is free incidental vocabulary and isn't graded. Skills, Items and target choice open as lists inside the dock, with a ◀ Back button.</li>
+<li><strong>Answer feedback is audio, never pinyin.</strong> Correct: the tapped card turns green and the word's zh-CN audio plays; the message line shows the characters + English meaning (e.g. "✔ 您好 = hello (polite)"). Wrong: the picked card shakes with ✘, the correct card lights green, its zh-CN audio plays, and the line shows the correct characters + English meaning ("Not quite. “hello (polite)” is 您好 🔊"). This is held for at least 1.5 s.</li>
+<li><strong>No pinyin anywhere in the game UI:</strong> not in prompts, options, feedback, enemy names, the Preview/word list, flashcards or results. Pinyin stays in the data for speech matching (§9.2), polyphone checks and the parent editor (behind the parent gate).</li>
+</ul>
+<h3 id="13-question-type-is-chosen-by-the-learning-engine-not-by-the-turn">1.3 Question type is chosen by the learning engine, not by the turn</h3>
+<ul>
+<li>Every question, attack or defense, is <code>(item, way)</code> chosen by §3.4. An attack can be R-ZE, and a defense can be S-EZ.</li>
+<li>The presentation adapts to the turn without changing the way. On a defense, the prompt is framed as the enemy's incoming spell ("Block it! What does 现在 mean?"). On an attack, it's the hero's spell ("Cast 'banana'!"). The way (input format) is the engine's choice.</li>
+<li>For spoken ways the mic button pulses. Tap to talk (push-to-talk).</li>
+</ul>
+<h3 id="14-anti-guess-spam-kept">1.4 Anti-guess-spam (kept)</h3>
+<ul>
+<li>Options unlock after the prompt plays.</li>
+<li>Distractors come from the same topic and POS.</li>
+<li>Damage never depends on speed. Answers faster than 600 ms after unlock, on items that aren't proficient, don't raise the streak.</li>
+<li>Two fast wrong answers in a row trigger the companion's "Focus!" line and a 1.5 s unlock delay next time.</li>
+<li>Proficiency only counts graded, unhinted answers.</li>
+</ul>
+<hr />
+<hr />
+<h2 id="2-damage-model">2. Damage model</h2>
+<h3 id="21-hero-stats">2.1 Hero stats</h3>
+<pre><code>HP_h  = 30 + 6*L          MP_h = 10 + 2*L
+ATK_h = weaponATK + floor(L/2) + bonuses
+DEF_h = armorDEF + shieldDEF + floor(L/3) + bonuses
+Gear at tier g (common): weaponATK = 3g+2, armorDEF = 2g+1, shieldDEF = g
+</code></pre>
+<p>Hero at the recommended level with common tier-t gear (these are the reference stats <code>ATK_ref</code> / <code>DEF_ref</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>realm</th>
+<th>rec_level</th>
+<th>rec_level_range</th>
+<th>gear_tier</th>
+<th>hero_hp</th>
+<th>hero_mp</th>
+<th>hero_atk</th>
+<th>hero_def</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Starter Meadow</td>
+<td>2</td>
+<td>1–3</td>
+<td>1</td>
+<td>42</td>
+<td>14</td>
+<td>6</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Honeycomb Forest</td>
+<td>4</td>
+<td>3–5</td>
+<td>2</td>
+<td>54</td>
+<td>18</td>
+<td>10</td>
+<td>8</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Crossroads Market</td>
+<td>6</td>
+<td>5–7</td>
+<td>3</td>
+<td>66</td>
+<td>22</td>
+<td>14</td>
+<td>12</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Goblin Caves</td>
+<td>9</td>
+<td>7–10</td>
+<td>4</td>
+<td>84</td>
+<td>28</td>
+<td>18</td>
+<td>16</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Hydra Swamp</td>
+<td>12</td>
+<td>10–13</td>
+<td>5</td>
+<td>102</td>
+<td>34</td>
+<td>23</td>
+<td>20</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Zombie Lands</td>
+<td>15</td>
+<td>13–16</td>
+<td>6</td>
+<td>120</td>
+<td>40</td>
+<td>27</td>
+<td>24</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Griffin Peaks</td>
+<td>18</td>
+<td>16–19</td>
+<td>7</td>
+<td>138</td>
+<td>46</td>
+<td>32</td>
+<td>28</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ogre Colosseum</td>
+<td>21</td>
+<td>19–22</td>
+<td>8</td>
+<td>156</td>
+<td>52</td>
+<td>36</td>
+<td>32</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Demon King's Castle</td>
+<td>24</td>
+<td>22–25</td>
+<td>9</td>
+<td>174</td>
+<td>58</td>
+<td>41</td>
+<td>36</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-formulas-unchanged-from-v1">2.2 Formulas (unchanged from v1)</h3>
+<p>Rounding is <code>Math.round</code> (half up).</p>
+<pre><code>Hero attack:   wrong -&gt; miss (0)
+               right -&gt; max(1, round(ATK_h * streakMult * (spoken ? 1.25 : 1) - 0.5*DEF_e))
+Enemy attack:  right (block)  -&gt; max(0, ATK_e - 1.25*DEF_h)                       // leak
+               wrong (broken) -&gt; max(ceil(0.5*ATK_e), ATK_e - 0.5*DEF_h)
+</code></pre>
+<p><code>streakMult</code> counts consecutive correct answers (attack and defense) within a battle: ×1.0 for 0–2, ×1.25 for 3–5, ×1.5 for 6–9, ×2.0 for 10+. A wrong answer drops one tier. A spoken correct answer adds +1 extra streak.</p>
+<h3 id="23-enemy-stats-by-role-and-tier">2.3 Enemy stats by role and tier</h3>
+<p><code>L_rec(t)</code> = 2, 4, 6, 9, 12, 15, 18, 21, 24 for t = 1..9, then <code>24 + 3(t−9)</code>. <code>ATK_ref</code> / <code>DEF_ref</code> are the stats of a hero at <code>L_rec(t)</code> with tier-t gear (§2.1). <code>base = ATK_ref − 0.5t</code>. <code>H(t)</code> = 3, 3, 2.5, 2.25, 2.25, 2, 2, 2, 2 (t ≥ 10: 2).</p>
+<table>
+<thead>
+<tr>
+<th>role</th>
+<th>boss_type</th>
+<th>hp</th>
+<th>atk</th>
+<th>def</th>
+<th>gold</th>
+<th>exp</th>
+<th>chest_chance</th>
+<th>adds</th>
+<th>where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>normal</td>
+<td></td>
+<td>round(H(t) × base)</td>
+<td>round(1.1 × DEF_ref)</td>
+<td>t</td>
+<td>1 × G</td>
+<td>6 × L_rec</td>
+<td>0.10</td>
+<td>–</td>
+<td>path fights and patrols</td>
+</tr>
+<tr>
+<td>elite</td>
+<td></td>
+<td>2 × normal HP</td>
+<td>location-boss ATK (round(1.2 × DEF_ref))</td>
+<td>t</td>
+<td>2 × G</td>
+<td>10 × L_rec</td>
+<td>0.25</td>
+<td>–</td>
+<td>1 scripted path fight per realm; 10% of boss-approach patrols (§7.8)</td>
+</tr>
+<tr>
+<td>boss</td>
+<td>location</td>
+<td>round(5 × base)</td>
+<td>round(1.2 × DEF_ref)</td>
+<td>t</td>
+<td>5 × G</td>
+<td>20 × L_rec</td>
+<td>1.0</td>
+<td>1 minion</td>
+<td>end of every location except the realm's last</td>
+</tr>
+<tr>
+<td>boss</td>
+<td>realm</td>
+<td>round(7 × base)</td>
+<td>round(1.3 × DEF_ref)</td>
+<td>t</td>
+<td>10 × G</td>
+<td>50 × L_rec</td>
+<td>1.0</td>
+<td>1 minion (t ≤ 3) or 2</td>
+<td>end of the realm's last location; 50% checkpoint (save only)</td>
+</tr>
+</tbody>
+</table>
+<p>Values by tier (<code>data/enemy_stat_bands.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>role</th>
+<th>boss_type</th>
+<th>hp</th>
+<th>atk</th>
+<th>def</th>
+<th>gold</th>
+<th>exp</th>
+<th>chest_chance</th>
+<th>minions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>normal</td>
+<td></td>
+<td>16</td>
+<td>4</td>
+<td>1</td>
+<td>6</td>
+<td>12</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>elite</td>
+<td></td>
+<td>32</td>
+<td>5</td>
+<td>1</td>
+<td>12</td>
+<td>20</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>boss</td>
+<td>location</td>
+<td>28</td>
+<td>5</td>
+<td>1</td>
+<td>30</td>
+<td>40</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>boss</td>
+<td>realm</td>
+<td>38</td>
+<td>5</td>
+<td>1</td>
+<td>60</td>
+<td>100</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>normal</td>
+<td></td>
+<td>27</td>
+<td>9</td>
+<td>2</td>
+<td>12</td>
+<td>24</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>elite</td>
+<td></td>
+<td>54</td>
+<td>10</td>
+<td>2</td>
+<td>24</td>
+<td>40</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>boss</td>
+<td>location</td>
+<td>45</td>
+<td>10</td>
+<td>2</td>
+<td>60</td>
+<td>80</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>boss</td>
+<td>realm</td>
+<td>63</td>
+<td>10</td>
+<td>2</td>
+<td>120</td>
+<td>200</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>normal</td>
+<td></td>
+<td>31</td>
+<td>13</td>
+<td>3</td>
+<td>18</td>
+<td>36</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>elite</td>
+<td></td>
+<td>62</td>
+<td>14</td>
+<td>3</td>
+<td>36</td>
+<td>60</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>boss</td>
+<td>location</td>
+<td>62</td>
+<td>14</td>
+<td>3</td>
+<td>90</td>
+<td>120</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>boss</td>
+<td>realm</td>
+<td>88</td>
+<td>16</td>
+<td>3</td>
+<td>180</td>
+<td>300</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>normal</td>
+<td></td>
+<td>36</td>
+<td>18</td>
+<td>4</td>
+<td>27</td>
+<td>54</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>elite</td>
+<td></td>
+<td>72</td>
+<td>19</td>
+<td>4</td>
+<td>54</td>
+<td>90</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>boss</td>
+<td>location</td>
+<td>80</td>
+<td>19</td>
+<td>4</td>
+<td>135</td>
+<td>180</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>boss</td>
+<td>realm</td>
+<td>112</td>
+<td>21</td>
+<td>4</td>
+<td>270</td>
+<td>450</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>normal</td>
+<td></td>
+<td>46</td>
+<td>22</td>
+<td>5</td>
+<td>36</td>
+<td>72</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>elite</td>
+<td></td>
+<td>92</td>
+<td>24</td>
+<td>5</td>
+<td>72</td>
+<td>120</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>boss</td>
+<td>location</td>
+<td>102</td>
+<td>24</td>
+<td>5</td>
+<td>180</td>
+<td>240</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>boss</td>
+<td>realm</td>
+<td>144</td>
+<td>26</td>
+<td>5</td>
+<td>360</td>
+<td>600</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>normal</td>
+<td></td>
+<td>48</td>
+<td>26</td>
+<td>6</td>
+<td>45</td>
+<td>90</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>elite</td>
+<td></td>
+<td>96</td>
+<td>29</td>
+<td>6</td>
+<td>90</td>
+<td>150</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>boss</td>
+<td>location</td>
+<td>120</td>
+<td>29</td>
+<td>6</td>
+<td>225</td>
+<td>300</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6</td>
+<td>boss</td>
+<td>realm</td>
+<td>168</td>
+<td>31</td>
+<td>6</td>
+<td>450</td>
+<td>750</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>normal</td>
+<td></td>
+<td>57</td>
+<td>31</td>
+<td>7</td>
+<td>54</td>
+<td>108</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>elite</td>
+<td></td>
+<td>114</td>
+<td>34</td>
+<td>7</td>
+<td>108</td>
+<td>180</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>boss</td>
+<td>location</td>
+<td>142</td>
+<td>34</td>
+<td>7</td>
+<td>270</td>
+<td>360</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>boss</td>
+<td>realm</td>
+<td>200</td>
+<td>36</td>
+<td>7</td>
+<td>540</td>
+<td>900</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>8</td>
+<td>normal</td>
+<td></td>
+<td>64</td>
+<td>35</td>
+<td>8</td>
+<td>63</td>
+<td>126</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>elite</td>
+<td></td>
+<td>128</td>
+<td>38</td>
+<td>8</td>
+<td>126</td>
+<td>210</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>boss</td>
+<td>location</td>
+<td>160</td>
+<td>38</td>
+<td>8</td>
+<td>315</td>
+<td>420</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>boss</td>
+<td>realm</td>
+<td>224</td>
+<td>42</td>
+<td>8</td>
+<td>630</td>
+<td>1050</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>9</td>
+<td>normal</td>
+<td></td>
+<td>73</td>
+<td>40</td>
+<td>9</td>
+<td>72</td>
+<td>144</td>
+<td>0.1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>elite</td>
+<td></td>
+<td>146</td>
+<td>43</td>
+<td>9</td>
+<td>144</td>
+<td>240</td>
+<td>0.25</td>
+<td>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>boss</td>
+<td>location</td>
+<td>182</td>
+<td>43</td>
+<td>9</td>
+<td>360</td>
+<td>480</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>boss</td>
+<td>realm</td>
+<td>256</td>
+<td>47</td>
+<td>9</td>
+<td>720</td>
+<td>1200</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>The 50-enemy roster (<code>enemies.json</code>, built by <code>build/enemies/build_enemies.py</code>) is built on these bands. Elites and bosses use them exactly. Normal enemies are archetypes around the tier's band: HP varies by up to about ±15%, ATK by about ±10%, and DEF by ±1 (for example wolf_pup 14 HP, a fast glass cannon, vs mushroom_imp 18 HP). The sim uses the band values. Each realm has 1 elite, one location boss per non-final location, and 1 realm boss. The roster's <code>sample_shout_zh</code> (the word an enemy "casts") is always an item from the enemy's <strong>earliest roster location</strong> in curriculum v2 (checked by the build script).</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name_zh</th>
+<th>name_en</th>
+<th>location_id</th>
+<th>role</th>
+<th>boss_type</th>
+<th>hp</th>
+<th>atk</th>
+<th>def</th>
+<th>gold</th>
+<th>exp</th>
+<th>chest_chance</th>
+<th>sample_shout_zh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>horned_rabbit</td>
+<td>角兔</td>
+<td>Horned Rabbit</td>
+<td>L1.1</td>
+<td>normal</td>
+<td></td>
+<td>16</td>
+<td>4</td>
+<td>1</td>
+<td>6</td>
+<td>12</td>
+<td>0.1</td>
+<td>你好</td>
+</tr>
+<tr>
+<td>mushroom_imp</td>
+<td>蘑菇小妖</td>
+<td>Mushroom Imp</td>
+<td>L1.1</td>
+<td>normal</td>
+<td></td>
+<td>18</td>
+<td>4</td>
+<td>1</td>
+<td>6</td>
+<td>12</td>
+<td>0.1</td>
+<td>谁</td>
+</tr>
+<tr>
+<td>wolf_pup</td>
+<td>小狼</td>
+<td>Wolf Pup</td>
+<td>L1.2</td>
+<td>normal</td>
+<td></td>
+<td>14</td>
+<td>4</td>
+<td>1</td>
+<td>6</td>
+<td>12</td>
+<td>0.1</td>
+<td>你是谁</td>
+</tr>
+<tr>
+<td>swift_horned_rabbit</td>
+<td>疾风角兔</td>
+<td>Swift Horned Rabbit</td>
+<td>L1.3</td>
+<td>elite</td>
+<td></td>
+<td>32</td>
+<td>5</td>
+<td>1</td>
+<td>12</td>
+<td>20</td>
+<td>0.25</td>
+<td>看</td>
+</tr>
+<tr>
+<td>big_beak_crow</td>
+<td>大嘴乌鸦</td>
+<td>Big-Beak Crow</td>
+<td>L1.1</td>
+<td>boss</td>
+<td>location</td>
+<td>28</td>
+<td>5</td>
+<td>1</td>
+<td>30</td>
+<td>40</td>
+<td>1</td>
+<td>什么</td>
+</tr>
+<tr>
+<td>big_grey_wolf</td>
+<td>大灰狼</td>
+<td>Big Grey Wolf</td>
+<td>L1.2</td>
+<td>boss</td>
+<td>location</td>
+<td>28</td>
+<td>5</td>
+<td>1</td>
+<td>30</td>
+<td>40</td>
+<td>1</td>
+<td>你好吗</td>
+</tr>
+<tr>
+<td>horned_rabbit_king</td>
+<td>角兔王</td>
+<td>Horned Rabbit King</td>
+<td>L1.3</td>
+<td>boss</td>
+<td>realm</td>
+<td>38</td>
+<td>5</td>
+<td>1</td>
+<td>60</td>
+<td>100</td>
+<td>1</td>
+<td>欢迎</td>
+</tr>
+<tr>
+<td>giant_bee</td>
+<td>巨蜂</td>
+<td>Giant Bee</td>
+<td>L2.1</td>
+<td>normal</td>
+<td></td>
+<td>23</td>
+<td>10</td>
+<td>2</td>
+<td>12</td>
+<td>24</td>
+<td>0.1</td>
+<td>蜂蜜</td>
+</tr>
+<tr>
+<td>sapling_sprite</td>
+<td>小树精</td>
+<td>Sapling Sprite</td>
+<td>L2.1</td>
+<td>normal</td>
+<td></td>
+<td>31</td>
+<td>8</td>
+<td>2</td>
+<td>12</td>
+<td>24</td>
+<td>0.1</td>
+<td>尝一尝</td>
+</tr>
+<tr>
+<td>forest_spider</td>
+<td>森林蜘蛛</td>
+<td>Forest Spider</td>
+<td>L2.1</td>
+<td>normal</td>
+<td></td>
+<td>27</td>
+<td>9</td>
+<td>2</td>
+<td>12</td>
+<td>24</td>
+<td>0.1</td>
+<td>好吃</td>
+</tr>
+<tr>
+<td>royal_guard_bee</td>
+<td>近卫蜂</td>
+<td>Royal Guard Bee</td>
+<td>L2.2</td>
+<td>elite</td>
+<td></td>
+<td>54</td>
+<td>10</td>
+<td>2</td>
+<td>24</td>
+<td>40</td>
+<td>0.25</td>
+<td>不要</td>
+</tr>
+<tr>
+<td>greedy_bear</td>
+<td>贪吃熊</td>
+<td>Greedy Bear</td>
+<td>L2.1</td>
+<td>boss</td>
+<td>location</td>
+<td>45</td>
+<td>10</td>
+<td>2</td>
+<td>60</td>
+<td>80</td>
+<td>1</td>
+<td>饿</td>
+</tr>
+<tr>
+<td>queen_bee</td>
+<td>蜂后</td>
+<td>Queen Bee</td>
+<td>L2.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>63</td>
+<td>10</td>
+<td>2</td>
+<td>120</td>
+<td>200</td>
+<td>1</td>
+<td>请给我……</td>
+</tr>
+<tr>
+<td>road_bandit</td>
+<td>山贼</td>
+<td>Road Bandit</td>
+<td>L3.1</td>
+<td>normal</td>
+<td></td>
+<td>26</td>
+<td>14</td>
+<td>3</td>
+<td>18</td>
+<td>36</td>
+<td>0.1</td>
+<td>钱包</td>
+</tr>
+<tr>
+<td>slime</td>
+<td>史莱姆</td>
+<td>Slime</td>
+<td>L3.2</td>
+<td>normal</td>
+<td></td>
+<td>36</td>
+<td>12</td>
+<td>3</td>
+<td>18</td>
+<td>36</td>
+<td>0.1</td>
+<td>绿色</td>
+</tr>
+<tr>
+<td>mimic</td>
+<td>宝箱怪</td>
+<td>Mimic</td>
+<td>L3.2</td>
+<td>elite</td>
+<td></td>
+<td>62</td>
+<td>14</td>
+<td>3</td>
+<td>36</td>
+<td>60</td>
+<td>0.25</td>
+<td>礼物</td>
+</tr>
+<tr>
+<td>bandit_boss</td>
+<td>山贼头目</td>
+<td>Bandit Boss</td>
+<td>L3.1</td>
+<td>boss</td>
+<td>location</td>
+<td>62</td>
+<td>14</td>
+<td>3</td>
+<td>90</td>
+<td>120</td>
+<td>1</td>
+<td>多少钱</td>
+</tr>
+<tr>
+<td>mimic_king</td>
+<td>宝箱怪王</td>
+<td>Mimic King</td>
+<td>L3.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>88</td>
+<td>16</td>
+<td>3</td>
+<td>180</td>
+<td>300</td>
+<td>1</td>
+<td>第一</td>
+</tr>
+<tr>
+<td>cave_bat</td>
+<td>洞穴蝙蝠</td>
+<td>Cave Bat</td>
+<td>L4.1</td>
+<td>normal</td>
+<td></td>
+<td>31</td>
+<td>20</td>
+<td>4</td>
+<td>27</td>
+<td>54</td>
+<td>0.1</td>
+<td>小朋友</td>
+</tr>
+<tr>
+<td>goblin</td>
+<td>哥布林</td>
+<td>Goblin</td>
+<td>L4.2</td>
+<td>normal</td>
+<td></td>
+<td>36</td>
+<td>18</td>
+<td>4</td>
+<td>27</td>
+<td>54</td>
+<td>0.1</td>
+<td>开始</td>
+</tr>
+<tr>
+<td>goblin_monitor</td>
+<td>哥布林班长</td>
+<td>Goblin Hall Monitor</td>
+<td>L4.3</td>
+<td>normal</td>
+<td></td>
+<td>32</td>
+<td>18</td>
+<td>5</td>
+<td>27</td>
+<td>54</td>
+<td>0.1</td>
+<td>上课</td>
+</tr>
+<tr>
+<td>goblin_brute</td>
+<td>哥布林壮汉</td>
+<td>Goblin Brute</td>
+<td>L4.2</td>
+<td>elite</td>
+<td></td>
+<td>72</td>
+<td>19</td>
+<td>4</td>
+<td>54</td>
+<td>90</td>
+<td>0.25</td>
+<td>作业</td>
+</tr>
+<tr>
+<td>echo_bat</td>
+<td>回声大蝙蝠</td>
+<td>Giant Echo Bat</td>
+<td>L4.1</td>
+<td>boss</td>
+<td>location</td>
+<td>80</td>
+<td>19</td>
+<td>4</td>
+<td>135</td>
+<td>180</td>
+<td>1</td>
+<td>我不懂</td>
+</tr>
+<tr>
+<td>goblin_warden</td>
+<td>哥布林守卫</td>
+<td>Goblin Warden</td>
+<td>L4.2</td>
+<td>boss</td>
+<td>location</td>
+<td>80</td>
+<td>19</td>
+<td>4</td>
+<td>135</td>
+<td>180</td>
+<td>1</td>
+<td>请安静</td>
+</tr>
+<tr>
+<td>goblin_king</td>
+<td>哥布林大王</td>
+<td>Goblin King (the 'Headmaster')</td>
+<td>L4.3</td>
+<td>boss</td>
+<td>realm</td>
+<td>112</td>
+<td>21</td>
+<td>4</td>
+<td>270</td>
+<td>450</td>
+<td>1</td>
+<td>考试</td>
+</tr>
+<tr>
+<td>bog_monster</td>
+<td>沼泽怪</td>
+<td>Bog Monster</td>
+<td>L5.1</td>
+<td>normal</td>
+<td></td>
+<td>53</td>
+<td>20</td>
+<td>5</td>
+<td>36</td>
+<td>72</td>
+<td>0.1</td>
+<td>迟到</td>
+</tr>
+<tr>
+<td>bog_lizard</td>
+<td>沼泽蜥蜴</td>
+<td>Bog Lizard</td>
+<td>L5.2</td>
+<td>normal</td>
+<td></td>
+<td>39</td>
+<td>24</td>
+<td>5</td>
+<td>36</td>
+<td>72</td>
+<td>0.1</td>
+<td>马上</td>
+</tr>
+<tr>
+<td>swamp_wisp</td>
+<td>鬼火</td>
+<td>Swamp Wisp</td>
+<td>L5.1</td>
+<td>elite</td>
+<td></td>
+<td>92</td>
+<td>24</td>
+<td>5</td>
+<td>72</td>
+<td>120</td>
+<td>0.25</td>
+<td>晚上</td>
+</tr>
+<tr>
+<td>bog_toad</td>
+<td>泥潭巨蛙</td>
+<td>Giant Bog Toad</td>
+<td>L5.1</td>
+<td>boss</td>
+<td>location</td>
+<td>102</td>
+<td>24</td>
+<td>5</td>
+<td>180</td>
+<td>240</td>
+<td>1</td>
+<td>一会儿</td>
+</tr>
+<tr>
+<td>hydra</td>
+<td>九头蛇</td>
+<td>Hydra</td>
+<td>L5.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>144</td>
+<td>26</td>
+<td>5</td>
+<td>360</td>
+<td>600</td>
+<td>1</td>
+<td>现在几点</td>
+</tr>
+<tr>
+<td>zombie</td>
+<td>丧尸</td>
+<td>Zombie</td>
+<td>L6.1</td>
+<td>normal</td>
+<td></td>
+<td>55</td>
+<td>23</td>
+<td>6</td>
+<td>45</td>
+<td>90</td>
+<td>0.1</td>
+<td>我头疼</td>
+</tr>
+<tr>
+<td>rattle_skeleton</td>
+<td>骷髅</td>
+<td>Rattle Skeleton</td>
+<td>L6.2</td>
+<td>normal</td>
+<td></td>
+<td>43</td>
+<td>26</td>
+<td>7</td>
+<td>45</td>
+<td>90</td>
+<td>0.1</td>
+<td>找</td>
+</tr>
+<tr>
+<td>zombie_knight</td>
+<td>丧尸骑士</td>
+<td>Zombie Knight</td>
+<td>L6.2</td>
+<td>elite</td>
+<td></td>
+<td>96</td>
+<td>29</td>
+<td>6</td>
+<td>90</td>
+<td>150</td>
+<td>0.25</td>
+<td>我累了</td>
+</tr>
+<tr>
+<td>zombie_mayor</td>
+<td>丧尸村长</td>
+<td>Zombie Mayor</td>
+<td>L6.1</td>
+<td>boss</td>
+<td>location</td>
+<td>120</td>
+<td>29</td>
+<td>6</td>
+<td>225</td>
+<td>300</td>
+<td>1</td>
+<td>别担心</td>
+</tr>
+<tr>
+<td>sickness_fiend</td>
+<td>病魔</td>
+<td>Sickness Fiend</td>
+<td>L6.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>168</td>
+<td>31</td>
+<td>6</td>
+<td>450</td>
+<td>750</td>
+<td>1</td>
+<td>生病</td>
+</tr>
+<tr>
+<td>harpy</td>
+<td>鹰身女妖</td>
+<td>Harpy</td>
+<td>L7.1</td>
+<td>normal</td>
+<td></td>
+<td>48</td>
+<td>34</td>
+<td>7</td>
+<td>54</td>
+<td>108</td>
+<td>0.1</td>
+<td>往左走</td>
+</tr>
+<tr>
+<td>griffin</td>
+<td>狮鹫</td>
+<td>Griffin</td>
+<td>L7.2</td>
+<td>normal</td>
+<td></td>
+<td>57</td>
+<td>31</td>
+<td>7</td>
+<td>54</td>
+<td>108</td>
+<td>0.1</td>
+<td>上</td>
+</tr>
+<tr>
+<td>cliff_golem</td>
+<td>石头人</td>
+<td>Cliff Golem</td>
+<td>L7.1</td>
+<td>elite</td>
+<td></td>
+<td>114</td>
+<td>34</td>
+<td>7</td>
+<td>108</td>
+<td>180</td>
+<td>0.25</td>
+<td>一直走</td>
+</tr>
+<tr>
+<td>wind_dragon</td>
+<td>风龙</td>
+<td>Wild Wind Dragon</td>
+<td>L7.1</td>
+<td>boss</td>
+<td>location</td>
+<td>142</td>
+<td>34</td>
+<td>7</td>
+<td>270</td>
+<td>360</td>
+<td>1</td>
+<td>远</td>
+</tr>
+<tr>
+<td>griffin_king</td>
+<td>狮鹫王</td>
+<td>Griffin King</td>
+<td>L7.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>200</td>
+<td>36</td>
+<td>7</td>
+<td>540</td>
+<td>900</td>
+<td>1</td>
+<td>出发</td>
+</tr>
+<tr>
+<td>arena_troll</td>
+<td>巨魔</td>
+<td>Arena Troll</td>
+<td>L8.1</td>
+<td>normal</td>
+<td></td>
+<td>74</td>
+<td>32</td>
+<td>8</td>
+<td>63</td>
+<td>126</td>
+<td>0.1</td>
+<td>踢足球</td>
+</tr>
+<tr>
+<td>ogre_gladiator</td>
+<td>食人魔斗士</td>
+<td>Ogre Gladiator</td>
+<td>L8.2</td>
+<td>normal</td>
+<td></td>
+<td>64</td>
+<td>35</td>
+<td>8</td>
+<td>63</td>
+<td>126</td>
+<td>0.1</td>
+<td>胜利</td>
+</tr>
+<tr>
+<td>fire_elemental</td>
+<td>火元素</td>
+<td>Fire Elemental</td>
+<td>L8.2</td>
+<td>elite</td>
+<td></td>
+<td>128</td>
+<td>38</td>
+<td>8</td>
+<td>126</td>
+<td>210</td>
+<td>0.25</td>
+<td>跳舞</td>
+</tr>
+<tr>
+<td>minotaur</td>
+<td>牛头人</td>
+<td>Minotaur</td>
+<td>L8.1</td>
+<td>boss</td>
+<td>location</td>
+<td>160</td>
+<td>38</td>
+<td>8</td>
+<td>315</td>
+<td>420</td>
+<td>1</td>
+<td>比赛</td>
+</tr>
+<tr>
+<td>ogre_champion</td>
+<td>食人魔冠军</td>
+<td>Ogre Champion</td>
+<td>L8.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>224</td>
+<td>42</td>
+<td>8</td>
+<td>630</td>
+<td>1050</td>
+<td>1</td>
+<td>没问题</td>
+</tr>
+<tr>
+<td>imp</td>
+<td>小恶魔</td>
+<td>Imp</td>
+<td>L9.1</td>
+<td>normal</td>
+<td></td>
+<td>62</td>
+<td>44</td>
+<td>9</td>
+<td>72</td>
+<td>144</td>
+<td>0.1</td>
+<td>其实</td>
+</tr>
+<tr>
+<td>demon_knight</td>
+<td>恶魔骑士</td>
+<td>Demon Knight</td>
+<td>L9.2</td>
+<td>normal</td>
+<td></td>
+<td>66</td>
+<td>40</td>
+<td>10</td>
+<td>72</td>
+<td>144</td>
+<td>0.1</td>
+<td>攻击</td>
+</tr>
+<tr>
+<td>gargoyle</td>
+<td>石像鬼</td>
+<td>Gargoyle</td>
+<td>L9.1</td>
+<td>elite</td>
+<td></td>
+<td>146</td>
+<td>43</td>
+<td>9</td>
+<td>144</td>
+<td>240</td>
+<td>0.25</td>
+<td>终于</td>
+</tr>
+<tr>
+<td>shadow_dragon</td>
+<td>暗影龙</td>
+<td>Shadow-Cursed Dragon</td>
+<td>L9.1</td>
+<td>boss</td>
+<td>location</td>
+<td>182</td>
+<td>43</td>
+<td>9</td>
+<td>360</td>
+<td>480</td>
+<td>1</td>
+<td>力量</td>
+</tr>
+<tr>
+<td>demon_king</td>
+<td>魔王</td>
+<td>Demon King</td>
+<td>L9.2</td>
+<td>boss</td>
+<td>realm</td>
+<td>256</td>
+<td>47</td>
+<td>9</td>
+<td>720</td>
+<td>1200</td>
+<td>1</td>
+<td>统治</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-worked-examples">2.4 Worked examples</h3>
+<p>Normal and boss numbers are unchanged from v2. The two elite rows are new.</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Hero (HP / ATK / DEF)</th>
+<th>Enemy (HP / ATK / DEF)</th>
+<th>Hit (streak 0)</th>
+<th>Correct block</th>
+<th>Broken block</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starter Meadow (t1), horned rabbit</td>
+<td>42 / 6 / 4</td>
+<td>16 / 4 / 1</td>
+<td>6 − 0.5 = 5.5 → <strong>6</strong> (3 hits)</td>
+<td>4 − 5 → <strong>0</strong></td>
+<td>max(2, 4 − 2) = <strong>2</strong></td>
+</tr>
+<tr>
+<td>Starter Meadow location boss</td>
+<td>42 / 6 / 4</td>
+<td>28 / 5 / 1</td>
+<td>6 (5 hits)</td>
+<td>5 − 5 → <strong>0</strong></td>
+<td>max(3, 3) = <strong>3</strong></td>
+</tr>
+<tr>
+<td>Queen Bee 蜂后 (t2 realm boss)</td>
+<td>54 / 10 / 8</td>
+<td>63 / 10 / 2</td>
+<td>10 − 1 = <strong>9</strong> (7 hits)</td>
+<td>10 − 10 → <strong>0</strong></td>
+<td>max(5, 10 − 4) = <strong>6</strong></td>
+</tr>
+<tr>
+<td>Hydra Swamp (t5), bog lizard</td>
+<td>102 / 23 / 20</td>
+<td>46 / 22 / 5</td>
+<td>20.5 → <strong>21</strong> (3 hits; 2 on a streak)</td>
+<td>22 − 25 → <strong>0</strong></td>
+<td>max(11, 12) = <strong>12</strong></td>
+</tr>
+<tr>
+<td>Hydra 九头蛇 (t5 realm boss)</td>
+<td>102 / 23 / 20</td>
+<td>144 / 26 / 5</td>
+<td>21 (7 hits)</td>
+<td>26 − 25 = <strong>1</strong> (leak)</td>
+<td>max(13, 16) = <strong>16</strong></td>
+</tr>
+<tr>
+<td>Hydra Swamp, <strong>under-geared</strong> (tier-3 gear, L9) vs bog lizard</td>
+<td>84 / 15 / 13</td>
+<td>46 / 22 / 5</td>
+<td>12.5 → <strong>13</strong> (4 hits)</td>
+<td>22 − 16.25 = 5.75 → <strong>6</strong></td>
+<td>22 − 6.5 = 15.5 → <strong>16</strong></td>
+</tr>
+<tr>
+<td>Demon King's Castle (t9), demon knight</td>
+<td>174 / 41 / 36</td>
+<td>73 / 40 / 9</td>
+<td>36.5 → <strong>37</strong> (2 hits)</td>
+<td>40 − 45 → <strong>0</strong></td>
+<td>max(20, 22) = <strong>22</strong></td>
+</tr>
+<tr>
+<td>Demon King 魔王 (t9 realm boss)</td>
+<td>174 / 41 / 36</td>
+<td>256 / 47 / 9</td>
+<td>37 (7 hits)</td>
+<td>47 − 45 = <strong>2</strong></td>
+<td>max(24, 29) = <strong>29</strong></td>
+</tr>
+<tr>
+<td>Demon King, under-geared (tier-7 gear, L21)</td>
+<td>156 / 33 / 29</td>
+<td>256 / 47 / 9</td>
+<td>33 − 4.5 = 28.5 → <strong>29</strong> (9 hits)</td>
+<td>47 − 36.25 = 10.75 → <strong>11</strong></td>
+<td>47 − 14.5 = 32.5 → <strong>33</strong></td>
+</tr>
+<tr>
+<td>Horned Rabbit Warren (t1), <strong>elite</strong> swift horned rabbit</td>
+<td>42 / 6 / 4</td>
+<td>32 / 5 / 1</td>
+<td>6 − 0.5 → <strong>6</strong> (6 hits)</td>
+<td>5 − 5 → <strong>0</strong></td>
+<td>max(3, 3) = <strong>3</strong></td>
+</tr>
+<tr>
+<td>Goblin Caves (t4), <strong>elite</strong> goblin brute</td>
+<td>84 / 18 / 16</td>
+<td>72 / 19 / 4</td>
+<td>18 − 2 = <strong>16</strong> (5 hits)</td>
+<td>19 − 20 → <strong>0</strong></td>
+<td>max(10, 11) = <strong>11</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Because HP now carries over, a broken block costs more than one fight's worth: it's HP the kid has to pay to get back (inn or potion).</p>
+<h3 id="25-length-targets">2.5 Length targets</h3>
+<p>These are about the same as v1 at about 8–10 s per question.</p>
+<table>
+<thead>
+<tr>
+<th>Battle</th>
+<th>Rounds</th>
+<th>Questions</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal, tiers 1–3</td>
+<td>5–7</td>
+<td>11–15</td>
+<td>1.5–2.5 min</td>
+</tr>
+<tr>
+<td>Normal, tiers 4–9</td>
+<td>6–8</td>
+<td>15–22</td>
+<td>2.5–3.5 min</td>
+</tr>
+<tr>
+<td>Location boss</td>
+<td>7–10</td>
+<td>18–25</td>
+<td>3–4 min</td>
+</tr>
+<tr>
+<td>Realm boss</td>
+<td>9–12</td>
+<td>22–30</td>
+<td>4–6 min</td>
+</tr>
+</tbody>
+</table>
+<p>A soft cap at 30 questions in normal battles (elites included) and 45 in every boss battle (location and realm boss; v3.2, the location boss was 40) makes enemies "Tired" (ATK −30%, hero damage +50%). Its firing rate is logged.</p>
+<hr />
+<hr />
+<h2 id="3-proficiency-model">3. Proficiency model</h2>
+<h3 id="31-definition">3.1 Definition</h3>
+<p>Per item, the engine tracks each <strong>way</strong> separately:</p>
+<pre><code>WayStat { correct: int; attempts: int; runLen: int /* current correct run */;
+          practiceCredit: 0|1 /* §8: at most 1 correct from Preview practice */;
+          box: 0..6; lastSeen; lastPromo; dueAt /* Leitner, scheduling only */ }
+Item progress = { R-ZE, R-EZ, S-ZE, S-EZ : WayStat }
+</code></pre>
+<ul>
+<li><strong>Speech is expected to be on.</strong> At first launch a parent sees a consent screen: the mic is used push-to-talk only; Chrome sends the audio to Google for recognition; transcripts, never audio, are stored locally. The game doesn't start until they accept. After that, <code>activeWays</code> = all 4.</li>
+<li><strong>2-way path (reading only):</strong> <code>activeWays = [R-ZE, R-EZ]</code> only when the browser has no <code>SpeechRecognition</code> (Safari/Firefox/iPad), or a <code>not-allowed</code> / <code>service-not-allowed</code> / <code>language-not-supported</code> error disables speech (§9.1). The HUD says "Reading mode: this browser can't listen." This is a fallback, not an option in settings.</li>
+<li><strong>Proficient(item)</strong> = every active way has <code>correct ≥ 2</code>, counted <strong>in total, not in a row</strong> (decided).</li>
+<li><strong>Practice credit:</strong> <code>correct</code> in a way may include at most <strong>1</strong> correct answer from Preview practice (<code>practiceCredit</code>). The 2nd must come from a graded battle question (§8.3).</li>
+<li><strong>Way progress</strong> = <code>min(correct, 2)</code>. <strong>Item progress</strong> = the sum over active ways ÷ (2 × active ways), from 0 to 1. The HUD shows up to 8 pips (4 in reading mode).</li>
+<li><strong>Hints:</strong> a correct answer given after the Insight hint doesn't add to <code>correct</code>.</li>
+<li><strong><code>nomatch</code> = wrong</strong> (decided, §9.1).</li>
+<li><strong>Speech turned on later</strong> (e.g. the kid moves from an iPad to a Chromebook): items that are already proficient under 2 ways <strong>stay proficient</strong> (decided). Their spoken ways start at 0 and are scheduled like review (weight 0.15 + overdue boost). They don't count against readiness and don't trigger patrols. Items that aren't yet proficient simply gain 2 more ways to fill.</li>
+</ul>
+<h3 id="32-leitner-underneath-scheduling-only">3.2 Leitner underneath (scheduling only)</h3>
+<p>Each way keeps a Leitner box that decides <strong>when</strong> it comes back. Proficiency decides <strong>what counts as learned</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Event (per way)</th>
+<th>Box</th>
+<th>Proficiency counter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct, unhinted, and (due or box ≤ 1)</td>
+<td>+1</td>
+<td><code>correct += 1</code></td>
+</tr>
+<tr>
+<td>Correct but not due (box ≥ 2)</td>
+<td>no change</td>
+<td><code>correct += 1</code> (still counts toward the 2)</td>
+</tr>
+<tr>
+<td>Correct with hint</td>
+<td>no change</td>
+<td>no change</td>
+</tr>
+<tr>
+<td>Wrong</td>
+<td>−2 (floor 0)</td>
+<td>no change. Proficiency is <strong>sticky</strong> (no rusty rule).</td>
+</tr>
+</tbody>
+</table>
+<p><code>INTERVAL[box]</code> = 0, 10 min, 1 d, 3 d, 7 d, 16 d, 35 d.</p>
+<p><strong>Proficient items in review:</strong> their selection weight is 0.15 unless a way is <strong>due</strong>. A due way raises the weight by <code>1.5 × min(overdueRatio, 2)</code>, so proficient items come back on the Leitner schedule, on average every few battles, and more often right after a miss.</p>
+<p><strong>No rusty rule</strong> (decided): once proficient, an item stays proficient. Wrong answers on proficient items only move the Leitner box, which brings the item back sooner.</p>
+<h3 id="33-choosing-the-7-battle-set">3.3 Choosing the 7 (battle set)</h3>
+<p>This is the same as v1 with two changes: weights use proficiency, and there's a <strong>working set</strong>.</p>
+<pre><code class="language-python">SET_SIZE = 7; NEW_CAP = 3; WORKING_SET = 10     # NEW_CAP: hard cap on new items per battle (v3.2, was 4); WORKING_SET: max seen-but-not-proficient local items
+
+def choose_battle_set(location, kid):
+    carried = kid.not_proficient(earlier_items)[:20]            # carry-over &quot;debt&quot;, oldest first
+    review  = kid.unlocked_items_before(location)
+    s  = weighted_sample(review, w_review, location.review_slots)   # 0..3 slots by tier (§5)
+    unseen = [i for i in location.items if not kid.seen(i)]
+    active = [i for i in location.items if kid.seen(i) and not kid.proficient(i)]
+    new_quota = min(NEW_CAP, len(unseen), max(0, WORKING_SET - len(active)))
+    if len(active) + len(s) &lt; SET_SIZE - new_quota:                 # early in a location: fill with new
+        new_quota = min(len(unseen), SET_SIZE - len(s) - len(active), NEW_CAP)   # v3.2: the cap still holds; the set may run short
+    s += unseen[:new_quota]                                         # authored order
+    s += weighted_sample([i for i in location.items + carried if kid.seen(i) and i not in s],
+                         w_local, SET_SIZE - len(s))   # never padded with unseen items
+    return sorted(s, key=lambda i: kid.progress(i) + uniform(0, 0.08))   # weakest first
+
+def w_local(i):
+    if kid.proficient(i): return 0.15 + 1.5*min(kid.max_overdue(i), 2)
+    return 1.0 + 2.0*(1 - kid.progress(i)) + 0.8*kid.recent_misses(i)
+
+def w_review(i):  # earlier locations
+    return (0.15 if kid.proficient(i) else 1.0 + 2.0*(1 - kid.progress(i))) + 1.5*min(kid.max_overdue(i), 2)
+</code></pre>
+<p>Why a working set: with "weakest first" and no cap, progress spreads evenly over all 47–60 items, so no item is proficient for a long time. The HUD would show "0 of 52 ready" for many battles. In the sim, a working set of 10 cut patrols by about 10% and made the proficient count rise steadily. It doesn't change the total learning required.</p>
+<h3 id="34-picking-the-way-for-each-question">3.4 Picking the way for each question</h3>
+<pre><code class="language-python">SPOKEN_CAP = 0.50                                                   # max share of spoken questions per battle
+
+def pick_way(item):
+    ways = kid.active_ways()
+    if battle.spoken_asked + 1 &gt; SPOKEN_CAP * max(battle.asked + 1, 4):   # cap reached: reading ways only
+        ways = [w for w in ways if w.startswith('R')]
+    todo = [w for w in ways if item[w].correct &lt; 2]                 # the weakest ways first
+    if todo:
+        return min(todo, key=lambda w: (item[w].correct,             # fewest corrects
+                                        est_acc(item[w]),            # then lowest (c+1)/(a+2)
+                                        random()))
+    return max(ways, key=lambda w: (overdue(item[w]), -est_acc(item[w]), random()))   # proficient: most overdue way
+</code></pre>
+<ul>
+<li><strong>Spoken cap (decided, 50%):</strong> without it, speech-on kids got about 56% spoken questions. With it they get 48–50%, and in-battle accuracy rises about 1 point. The cost is about 15–20% more patrols but only about 5% more time (e.g. t1 at 75%: 8.9 vs 7.5 patrols, 41.6 vs 39.3 min per location), because the spoken ways fill a bit more slowly. Defeat rates barely move (<code>data/sim/sim_spoken_cap.csv</code>).</li>
+<li>Presentation per way:</li>
+<li><strong>R-ZE:</strong> characters + audio (for <code>reading = N</code> items the audio is the main stimulus), English options. No pinyin.</li>
+<li><strong>R-EZ:</strong> English prompt; Chinese options as characters only (no pinyin, v3.2). The correct answer's audio plays in the feedback.</li>
+<li><strong>S-ZE:</strong> Chinese audio + characters; the kid says the English meaning (<code>en-US</code> recognizer).</li>
+<li><strong>S-EZ:</strong> English prompt plus a picture if available; the kid says the Chinese (<code>zh-CN</code> recognizer).</li>
+<li>The first-ever question on an item uses one fewer MC option (minimum 2).</li>
+</ul>
+<hr />
+<h2 id="4-when-all-7-have-been-asked-unchanged-rule">4. When all 7 have been asked (unchanged rule)</h2>
+<p><strong>Re-ask missed items first (gap ≥ 2 questions), then cycle the weakest of the 7. Max 4 asks per item per battle. No new items mid-battle.</strong></p>
+<ul>
+<li>A re-ask of a missed item uses the <strong>same way</strong>, with options reshuffled and one distractor swapped.</li>
+<li>A re-ask after a correct answer goes to the item's next-weakest way.</li>
+<li>The soft cap (§2.5) ends pathological fights.</li>
+</ul>
+<p>The justification is unchanged. Battles always outlast the 7 items, and re-asking just-missed items is the most valuable repetition. Mid-battle bonus items would dilute the 7-item focus.</p>
+<hr />
+<hr />
+<h2 id="5-difficulty-by-location-updated-for-curriculum-v2">5. Difficulty by location (updated for curriculum v2)</h2>
+<p>Every location = <strong>8 scripted path fights</strong> (one of them the realm's scripted elite, in the elite's home location) + a boss-approach zone (patrols while readiness is under the trigger, §7.4) + the location boss. There are 20 locations (3/2/2/3/2/2/2/2/2 per realm), with the same ids as v2 (<code>L1.1</code> … <code>L9.2</code>).</p>
+<p><strong>Per realm</strong> (<code>data/realm_difficulty.csv</code>). Minutes are sim estimates per location at 75% accuracy with light practice. "saver" trains until the trigger clears; "spender" goes to the boss after the 2 forced patrols.</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>realm</th>
+<th>realm_zh</th>
+<th>locations</th>
+<th>pool_items</th>
+<th>items_per_location</th>
+<th>enemies_per_fight</th>
+<th>mc_options</th>
+<th>review_slots</th>
+<th>normal_hp_atk_def</th>
+<th>elite_hp_atk_def</th>
+<th>location_boss_hp_atk</th>
+<th>realm_boss_hp_atk</th>
+<th>rec_level_range</th>
+<th>gear_tier</th>
+<th>hero_hp_mp_atk_def</th>
+<th>gold_per_normal</th>
+<th>inn_price</th>
+<th>honey_potion_price</th>
+<th>minutes_speech_saver_75</th>
+<th>minutes_speech_spender_75</th>
+<th>minutes_reading_saver_75</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Starter Meadow</td>
+<td>新手草原</td>
+<td>3</td>
+<td>150</td>
+<td>52/47/51</td>
+<td>1–2</td>
+<td>3</td>
+<td>0 (loc 1), 1</td>
+<td>16 / 4 / 1</td>
+<td>32 / 5 / 1</td>
+<td>28 / 5</td>
+<td>38 / 5 (角兔王)</td>
+<td>1–3</td>
+<td>1</td>
+<td>42 / 14 / 6 / 4</td>
+<td>6</td>
+<td>12</td>
+<td>6</td>
+<td>41</td>
+<td>29</td>
+<td>27</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Honeycomb Forest</td>
+<td>蜂巢森林</td>
+<td>2</td>
+<td>118</td>
+<td>59/59</td>
+<td>1–2</td>
+<td>3</td>
+<td>1</td>
+<td>27 / 9 / 2</td>
+<td>54 / 10 / 2</td>
+<td>45 / 10</td>
+<td>63 / 10 (蜂后)</td>
+<td>3–5</td>
+<td>2</td>
+<td>54 / 18 / 10 / 8</td>
+<td>12</td>
+<td>24</td>
+<td>12</td>
+<td>49</td>
+<td>32</td>
+<td>33</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Crossroads Market</td>
+<td>十字路口集市</td>
+<td>2</td>
+<td>107</td>
+<td>54/53</td>
+<td>2</td>
+<td>4</td>
+<td>2</td>
+<td>31 / 13 / 3</td>
+<td>62 / 14 / 3</td>
+<td>62 / 14</td>
+<td>88 / 16 (宝箱怪王)</td>
+<td>5–7</td>
+<td>3</td>
+<td>66 / 22 / 14 / 12</td>
+<td>18</td>
+<td>36</td>
+<td>18</td>
+<td>54</td>
+<td>36</td>
+<td>35</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Goblin Caves</td>
+<td>哥布林洞穴</td>
+<td>3</td>
+<td>143</td>
+<td>48/47/48</td>
+<td>2–3</td>
+<td>4</td>
+<td>2</td>
+<td>36 / 18 / 4</td>
+<td>72 / 19 / 4</td>
+<td>80 / 19</td>
+<td>112 / 21 (哥布林大王)</td>
+<td>7–10</td>
+<td>4</td>
+<td>84 / 28 / 18 / 16</td>
+<td>27</td>
+<td>54</td>
+<td>27</td>
+<td>49</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Hydra Swamp</td>
+<td>九头蛇沼泽</td>
+<td>2</td>
+<td>94</td>
+<td>47/47</td>
+<td>2–3</td>
+<td>4</td>
+<td>2</td>
+<td>46 / 22 / 5</td>
+<td>92 / 24 / 5</td>
+<td>102 / 24</td>
+<td>144 / 26 (九头蛇)</td>
+<td>10–13</td>
+<td>5</td>
+<td>102 / 34 / 23 / 20</td>
+<td>36</td>
+<td>72</td>
+<td>36</td>
+<td>50</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Zombie Lands</td>
+<td>僵尸之地</td>
+<td>2</td>
+<td>120</td>
+<td>60/60</td>
+<td>3</td>
+<td>5</td>
+<td>2</td>
+<td>48 / 26 / 6</td>
+<td>96 / 29 / 6</td>
+<td>120 / 29</td>
+<td>168 / 31 (病魔)</td>
+<td>13–16</td>
+<td>6</td>
+<td>120 / 40 / 27 / 24</td>
+<td>45</td>
+<td>90</td>
+<td>45</td>
+<td>58</td>
+<td>43</td>
+<td>39</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Griffin Peaks</td>
+<td>狮鹫山峰</td>
+<td>2</td>
+<td>118</td>
+<td>59/59</td>
+<td>3</td>
+<td>5</td>
+<td>3</td>
+<td>57 / 31 / 7</td>
+<td>114 / 34 / 7</td>
+<td>142 / 34</td>
+<td>200 / 36 (狮鹫王)</td>
+<td>16–19</td>
+<td>7</td>
+<td>138 / 46 / 32 / 28</td>
+<td>54</td>
+<td>108</td>
+<td>54</td>
+<td>68</td>
+<td>43</td>
+<td>43</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ogre Colosseum</td>
+<td>食人魔角斗场</td>
+<td>2</td>
+<td>104</td>
+<td>52/52</td>
+<td>3</td>
+<td>6</td>
+<td>3</td>
+<td>64 / 35 / 8</td>
+<td>128 / 38 / 8</td>
+<td>160 / 38</td>
+<td>224 / 42 (食人魔冠军)</td>
+<td>19–22</td>
+<td>8</td>
+<td>156 / 52 / 36 / 32</td>
+<td>63</td>
+<td>126</td>
+<td>63</td>
+<td>64</td>
+<td>42</td>
+<td>39</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Demon King's Castle</td>
+<td>魔王城</td>
+<td>2</td>
+<td>97</td>
+<td>48/49</td>
+<td>3</td>
+<td>6</td>
+<td>3 (boss: 4)</td>
+<td>73 / 40 / 9</td>
+<td>146 / 43 / 9</td>
+<td>182 / 43</td>
+<td>256 / 47 (魔王)</td>
+<td>22–25</td>
+<td>9</td>
+<td>174 / 58 / 41 / 36</td>
+<td>72</td>
+<td>144</td>
+<td>72</td>
+<td>60</td>
+<td>41</td>
+<td>37</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per location</strong> (<code>data/realm_location_difficulty.csv</code>; the CSV also has v1 item counts, normal enemy ids and patrol counts):</p>
+<table>
+<thead>
+<tr>
+<th>location_id</th>
+<th>location_name</th>
+<th>location_name_zh</th>
+<th>pool_items</th>
+<th>new_items</th>
+<th>moved_items</th>
+<th>top_topics</th>
+<th>review_slots</th>
+<th>enemies_per_fight</th>
+<th>mc_options</th>
+<th>boss_id</th>
+<th>boss_type</th>
+<th>scripted_elite_id</th>
+<th>minutes_speech_saver_75</th>
+<th>minutes_speech_spender_75</th>
+<th>minutes_reading_saver_75</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1.1</td>
+<td>Village Meadow</td>
+<td>村边草地</td>
+<td>52</td>
+<td>10</td>
+<td>0</td>
+<td>Pronouns &amp; question words; Greetings &amp; politeness</td>
+<td>0</td>
+<td>1–2</td>
+<td>3</td>
+<td>big_beak_crow</td>
+<td>location</td>
+<td></td>
+<td>41</td>
+<td>29</td>
+<td>27</td>
+</tr>
+<tr>
+<td>L1.2</td>
+<td>Clover Hills</td>
+<td>三叶草山坡</td>
+<td>47</td>
+<td>14</td>
+<td>0</td>
+<td>Yes/no &amp; core verbs; Sentence patterns; Numbers 1–10</td>
+<td>1</td>
+<td>1–2</td>
+<td>3</td>
+<td>big_grey_wolf</td>
+<td>location</td>
+<td></td>
+<td>41</td>
+<td>29</td>
+<td>27</td>
+</tr>
+<tr>
+<td>L1.3</td>
+<td>Horned Rabbit Warren</td>
+<td>角兔窝</td>
+<td>51</td>
+<td>11</td>
+<td>23</td>
+<td>Adventure basics; Family &amp; people; Connectors (basic)</td>
+<td>1</td>
+<td>1–2</td>
+<td>3</td>
+<td>horned_rabbit_king</td>
+<td>realm</td>
+<td>swift_horned_rabbit</td>
+<td>41</td>
+<td>29</td>
+<td>27</td>
+</tr>
+<tr>
+<td>L2.1</td>
+<td>Flower Glade</td>
+<td>花海林地</td>
+<td>59</td>
+<td>22</td>
+<td>0</td>
+<td>Food &amp; drink</td>
+<td>1</td>
+<td>1–2</td>
+<td>3</td>
+<td>greedy_bear</td>
+<td>location</td>
+<td></td>
+<td>49</td>
+<td>32</td>
+<td>33</td>
+</tr>
+<tr>
+<td>L2.2</td>
+<td>Great Hive</td>
+<td>大蜂巢</td>
+<td>59</td>
+<td>18</td>
+<td>9</td>
+<td>Wants &amp; likes; Animals; Connectors (basic)</td>
+<td>1</td>
+<td>1–2</td>
+<td>3</td>
+<td>queen_bee</td>
+<td>realm</td>
+<td>royal_guard_bee</td>
+<td>49</td>
+<td>32</td>
+<td>33</td>
+</tr>
+<tr>
+<td>L3.1</td>
+<td>Crossroads Highway</td>
+<td>十字大道</td>
+<td>54</td>
+<td>23</td>
+<td>0</td>
+<td>Shopping &amp; money; Measure words; Big numbers</td>
+<td>2</td>
+<td>2</td>
+<td>4</td>
+<td>bandit_boss</td>
+<td>location</td>
+<td></td>
+<td>54</td>
+<td>36</td>
+<td>35</td>
+</tr>
+<tr>
+<td>L3.2</td>
+<td>Night Bazaar</td>
+<td>夜市</td>
+<td>53</td>
+<td>28</td>
+<td>7</td>
+<td>Describing things; Clothes; Comparisons</td>
+<td>2</td>
+<td>2</td>
+<td>4</td>
+<td>mimic_king</td>
+<td>realm</td>
+<td>mimic</td>
+<td>54</td>
+<td>36</td>
+<td>35</td>
+</tr>
+<tr>
+<td>L4.1</td>
+<td>Cave Mouth</td>
+<td>洞口</td>
+<td>48</td>
+<td>7</td>
+<td>0</td>
+<td>School &amp; classroom; Family &amp; people</td>
+<td>2</td>
+<td>2–3</td>
+<td>4</td>
+<td>echo_bat</td>
+<td>location</td>
+<td></td>
+<td>49</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>L4.2</td>
+<td>Crystal Tunnels</td>
+<td>水晶隧道</td>
+<td>47</td>
+<td>39</td>
+<td>0</td>
+<td>School &amp; classroom; Grammar words; Game &amp; chat talk</td>
+<td>2</td>
+<td>2–3</td>
+<td>4</td>
+<td>goblin_warden</td>
+<td>location</td>
+<td>goblin_brute</td>
+<td>49</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>L4.3</td>
+<td>Goblin 'School'</td>
+<td>哥布林学校</td>
+<td>48</td>
+<td>19</td>
+<td>0</td>
+<td>Game &amp; chat talk; Dungeon &amp; adventure; Requests &amp; helping</td>
+<td>2</td>
+<td>2–3</td>
+<td>4</td>
+<td>goblin_king</td>
+<td>realm</td>
+<td></td>
+<td>49</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>L5.1</td>
+<td>Misty Marsh</td>
+<td>迷雾沼泽</td>
+<td>47</td>
+<td>23</td>
+<td>0</td>
+<td>Time &amp; dates</td>
+<td>2</td>
+<td>2–3</td>
+<td>4</td>
+<td>bog_toad</td>
+<td>location</td>
+<td>swamp_wisp</td>
+<td>50</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>L5.2</td>
+<td>Hydra's Lair</td>
+<td>九头蛇巢穴</td>
+<td>47</td>
+<td>28</td>
+<td>6</td>
+<td>Daily routine; Connectors (basic); Time &amp; dates</td>
+<td>2</td>
+<td>2–3</td>
+<td>4</td>
+<td>hydra</td>
+<td>realm</td>
+<td></td>
+<td>50</td>
+<td>37</td>
+<td>32</td>
+</tr>
+<tr>
+<td>L6.1</td>
+<td>Gloomy Village</td>
+<td>灰雾村</td>
+<td>60</td>
+<td>16</td>
+<td>0</td>
+<td>Feelings; Body &amp; health; Sentence patterns</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>zombie_mayor</td>
+<td>location</td>
+<td></td>
+<td>58</td>
+<td>43</td>
+<td>39</td>
+</tr>
+<tr>
+<td>L6.2</td>
+<td>Moonlit Graveyard</td>
+<td>月光墓园</td>
+<td>60</td>
+<td>42</td>
+<td>1</td>
+<td>Everyday actions; Body &amp; health; Connectors (advanced)</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>sickness_fiend</td>
+<td>realm</td>
+<td>zombie_knight</td>
+<td>58</td>
+<td>43</td>
+<td>39</td>
+</tr>
+<tr>
+<td>L7.1</td>
+<td>Windy Cliffs</td>
+<td>大风悬崖</td>
+<td>59</td>
+<td>26</td>
+<td>0</td>
+<td>Places &amp; directions</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>wind_dragon</td>
+<td>location</td>
+<td>cliff_golem</td>
+<td>68</td>
+<td>43</td>
+<td>43</td>
+</tr>
+<tr>
+<td>L7.2</td>
+<td>Griffin Summit</td>
+<td>狮鹫之巅</td>
+<td>59</td>
+<td>30</td>
+<td>0</td>
+<td>Weather; Transportation; Places &amp; directions</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>griffin_king</td>
+<td>realm</td>
+<td></td>
+<td>68</td>
+<td>43</td>
+<td>43</td>
+</tr>
+<tr>
+<td>L8.1</td>
+<td>Training Pits</td>
+<td>训练场</td>
+<td>52</td>
+<td>31</td>
+<td>0</td>
+<td>Hobbies &amp; sports</td>
+<td>3</td>
+<td>3</td>
+<td>6</td>
+<td>minotaur</td>
+<td>location</td>
+<td></td>
+<td>64</td>
+<td>42</td>
+<td>39</td>
+</tr>
+<tr>
+<td>L8.2</td>
+<td>Grand Colosseum</td>
+<td>大角斗场</td>
+<td>52</td>
+<td>22</td>
+<td>0</td>
+<td>Exclamations &amp; reactions; Hobbies &amp; sports</td>
+<td>3</td>
+<td>3</td>
+<td>6</td>
+<td>ogre_champion</td>
+<td>realm</td>
+<td>fire_elemental</td>
+<td>64</td>
+<td>42</td>
+<td>39</td>
+</tr>
+<tr>
+<td>L9.1</td>
+<td>Demon King's Gate</td>
+<td>魔王城门</td>
+<td>48</td>
+<td>26</td>
+<td>0</td>
+<td>Opinions; Connectors (advanced); Heroic battle talk</td>
+<td>3</td>
+<td>3</td>
+<td>6</td>
+<td>shadow_dragon</td>
+<td>location</td>
+<td>gargoyle</td>
+<td>60</td>
+<td>41</td>
+<td>37</td>
+</tr>
+<tr>
+<td>L9.2</td>
+<td>Throne Hall</td>
+<td>王座大厅</td>
+<td>49</td>
+<td>31</td>
+<td>0</td>
+<td>Heroic battle talk; Races &amp; story; Monster names</td>
+<td>4</td>
+<td>3</td>
+<td>6</td>
+<td>demon_king</td>
+<td>realm</td>
+<td></td>
+<td>60</td>
+<td>41</td>
+<td>37</td>
+</tr>
+</tbody>
+</table>
+<p>What changed from v2:
+- Pools are <strong>47–60 items</strong> (average 52.5), up from about 30. Realms 1–3 went from 212 to 375 items.
+- Path fights went from 6 to 8, so the scripted part of a location still introduces most of the pool (8 fights × up to 3 new items, capped by the working set).
+- Enemy stat bands, gold and prices are unchanged.
+- <strong>Time per location</strong> with speech on is 41–68 min (saver) or 29–43 min (spender) at 75% accuracy with the 20% trigger, vs about 40–53 min for 30 items in v2. That's <strong>~0.8–0.9 min per item vs ~1.3 in v2</strong>, but locations are longer in absolute terms. Decided: keep the 60-item locations with the midpoint inn and save point, and judge length in the playtest. Save points split a location into 2–3 sessions (§11.4).</p>
+<p><strong>Boss-approach trigger:</strong> patrols spawn while fewer than <strong>20%</strong> (speech on) or <strong>40%</strong> (reading only) of <strong>the location's own pool</strong> is proficient (§7.4).</p>
+<p><strong>Past realm 9, by formula:</strong>
+- Stats: §2.3 with <code>L_rec = 24 + 3(t−9)</code>.
+- Enemies: 3 on screen, plus <code>floor((t−9)/2)</code> reinforcements (max 6 total).
+- MC options capped at 6.
+- Review share: <code>min(0.5, 3/7 + 0.03(t−9))</code>.
+- Prices: G = 3 × L_rec(t); inn = 2 × G; Honey Potion = Return Feather = 1 × G.
+- Prompt hardening: confusable distractors at t ≥ 12. (Pinyin is never shown, v3.2, so there's no pinyin-hiding step.)</p>
+<hr />
+<h2 id="6-equipment-skills-mp-and-the-companion">6. Equipment, skills, MP and the companion</h2>
+<h3 id="61-slots-unchanged">6.1 Slots (unchanged)</h3>
+<table>
+<thead>
+<tr>
+<th>Slot</th>
+<th>Unlock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weapon, Armor, Shield</td>
+<td>start</td>
+</tr>
+<tr>
+<td>Charm</td>
+<td>L3</td>
+</tr>
+<tr>
+<td>Skill slots</td>
+<td>2 (L1), 3 (L8), 4 (L16), 5 (L24)</td>
+</tr>
+<tr>
+<td>Potion belt</td>
+<td>3 uses per battle</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-stat-ranges-by-tier-and-rarity">6.2 Stat ranges by tier and rarity</h3>
+<p>Common = the formula value. Fine = round(1.15 × common) plus a minor perk. Heroic = round(1.3 × common) (at least common + 1) plus a named perk, from bosses and quests only. Shop sells common gear. From t10, the weapon price ≈ 190t, armor 0.8× and shield 0.6× of that. Prices and stats are unchanged from v2.</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>slot</th>
+<th>stat</th>
+<th>common</th>
+<th>fine</th>
+<th>heroic</th>
+<th>shop_price_common</th>
+<th>example_name_zh</th>
+<th>example_name_en</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>60</td>
+<td>木剑</td>
+<td>Wooden Sword</td>
+</tr>
+<tr>
+<td>1</td>
+<td>armor</td>
+<td>DEF</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>50</td>
+<td>布衣</td>
+<td>Cloth Tunic</td>
+</tr>
+<tr>
+<td>1</td>
+<td>shield</td>
+<td>DEF</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>35</td>
+<td>锅盖盾</td>
+<td>Pot-lid Shield</td>
+</tr>
+<tr>
+<td>2</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>120</td>
+<td>蜂刺短剑</td>
+<td>Stinger Dagger</td>
+</tr>
+<tr>
+<td>2</td>
+<td>armor</td>
+<td>DEF</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>95</td>
+<td>花瓣斗篷</td>
+<td>Petal Cloak</td>
+</tr>
+<tr>
+<td>2</td>
+<td>shield</td>
+<td>DEF</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>70</td>
+<td>蜂蜡盾</td>
+<td>Beeswax Shield</td>
+</tr>
+<tr>
+<td>3</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>11</td>
+<td>13</td>
+<td>14</td>
+<td>220</td>
+<td>铁剑</td>
+<td>Iron Sword</td>
+</tr>
+<tr>
+<td>3</td>
+<td>armor</td>
+<td>DEF</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>175</td>
+<td>皮甲</td>
+<td>Leather Armor</td>
+</tr>
+<tr>
+<td>3</td>
+<td>shield</td>
+<td>DEF</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>130</td>
+<td>圆盾</td>
+<td>Round Shield</td>
+</tr>
+<tr>
+<td>4</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>14</td>
+<td>16</td>
+<td>18</td>
+<td>380</td>
+<td>弯刀</td>
+<td>Scimitar</td>
+</tr>
+<tr>
+<td>4</td>
+<td>armor</td>
+<td>DEF</td>
+<td>9</td>
+<td>10</td>
+<td>12</td>
+<td>300</td>
+<td>矿工护甲</td>
+<td>Miner's Plate</td>
+</tr>
+<tr>
+<td>4</td>
+<td>shield</td>
+<td>DEF</td>
+<td>4</td>
+<td>5</td>
+<td>5</td>
+<td>230</td>
+<td>石盾</td>
+<td>Stone Shield</td>
+</tr>
+<tr>
+<td>5</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>17</td>
+<td>20</td>
+<td>22</td>
+<td>650</td>
+<td>蛇牙矛</td>
+<td>Hydra-fang Spear</td>
+</tr>
+<tr>
+<td>5</td>
+<td>armor</td>
+<td>DEF</td>
+<td>11</td>
+<td>13</td>
+<td>14</td>
+<td>520</td>
+<td>鳞甲</td>
+<td>Scale Mail</td>
+</tr>
+<tr>
+<td>5</td>
+<td>shield</td>
+<td>DEF</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>390</td>
+<td>沼泽盾</td>
+<td>Bog Shield</td>
+</tr>
+<tr>
+<td>6</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>20</td>
+<td>23</td>
+<td>26</td>
+<td>900</td>
+<td>圣光锤</td>
+<td>Holy Mace</td>
+</tr>
+<tr>
+<td>6</td>
+<td>armor</td>
+<td>DEF</td>
+<td>13</td>
+<td>15</td>
+<td>17</td>
+<td>720</td>
+<td>医者长袍</td>
+<td>Healer's Robe</td>
+</tr>
+<tr>
+<td>6</td>
+<td>shield</td>
+<td>DEF</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>540</td>
+<td>银盾</td>
+<td>Silver Shield</td>
+</tr>
+<tr>
+<td>7</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>23</td>
+<td>26</td>
+<td>30</td>
+<td>1150</td>
+<td>狮鹫羽弓</td>
+<td>Griffin Bow</td>
+</tr>
+<tr>
+<td>7</td>
+<td>armor</td>
+<td>DEF</td>
+<td>15</td>
+<td>17</td>
+<td>20</td>
+<td>920</td>
+<td>风之甲</td>
+<td>Wind Mail</td>
+</tr>
+<tr>
+<td>7</td>
+<td>shield</td>
+<td>DEF</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>690</td>
+<td>云盾</td>
+<td>Cloud Shield</td>
+</tr>
+<tr>
+<td>8</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>26</td>
+<td>30</td>
+<td>34</td>
+<td>1400</td>
+<td>冠军大剑</td>
+<td>Champion Blade</td>
+</tr>
+<tr>
+<td>8</td>
+<td>armor</td>
+<td>DEF</td>
+<td>17</td>
+<td>20</td>
+<td>22</td>
+<td>1120</td>
+<td>角斗士铠甲</td>
+<td>Gladiator Plate</td>
+</tr>
+<tr>
+<td>8</td>
+<td>shield</td>
+<td>DEF</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>840</td>
+<td>塔盾</td>
+<td>Tower Shield</td>
+</tr>
+<tr>
+<td>9</td>
+<td>weapon</td>
+<td>ATK</td>
+<td>29</td>
+<td>33</td>
+<td>38</td>
+<td>1700</td>
+<td>勇者之剑</td>
+<td>Hero's Sword</td>
+</tr>
+<tr>
+<td>9</td>
+<td>armor</td>
+<td>DEF</td>
+<td>19</td>
+<td>22</td>
+<td>25</td>
+<td>1360</td>
+<td>龙鳞甲</td>
+<td>Dragon-scale Mail</td>
+</tr>
+<tr>
+<td>9</td>
+<td>shield</td>
+<td>DEF</td>
+<td>9</td>
+<td>10</td>
+<td>12</td>
+<td>1020</td>
+<td>精灵盾</td>
+<td>Elven Shield</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-heroic-drops-realm-bosses">6.3 Heroic drops (realm bosses)</h3>
+<p>The example gear names in §6.2 double as vocabulary exposure.</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>realm_boss</th>
+<th>heroic_drop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>角兔王 Horned Rabbit King</td>
+<td>角兔角 Rabbit-Horn Dagger (+1 streak at battle start)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂后 Queen Bee</td>
+<td>蜂后之冠 Queen's Crown (charm: +6 max MP)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>宝箱怪王 Mimic King</td>
+<td>宝箱盾 Mimic Shield (Thorns 25%)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>哥布林大王 Goblin King (the 'Headmaster')</td>
+<td>哥布林王冠 Goblin Crown (+10% gold)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>九头蛇 Hydra</td>
+<td>九头蛇鳞 Hydra Scale (first broken block per battle −50%)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>病魔 Sickness Fiend</td>
+<td>解药瓶 Cure Flask (Heal +10%)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>狮鹫王 Griffin King</td>
+<td>狮鹫羽 Griffin Feather (Frost costs 5 MP instead of 8)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>食人魔冠军 Ogre Champion</td>
+<td>冠军腰带 Champion Belt (streak 10 tier = ×2.25)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>魔王 Demon King</td>
+<td>(the Demon King drops cosmetics and a title; the game is won)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64-skills-mp-and-consumables-rebalanced-for-regen">6.4 Skills, MP and consumables (rebalanced for regen)</h3>
+<p><strong>MP rules (decided): +1 MP per correct answer in battle</strong>, plus the inn, waking after a defeat, and Mana Tea. <code>MP_h = 10 + 2L</code>.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+<th>unit</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>max_mp</td>
+<td>10 + 2 × level</td>
+<td>MP</td>
+<td>14 at L2, 34 at L12, 58 at L24</td>
+</tr>
+<tr>
+<td>regen_per_correct</td>
+<td>1</td>
+<td>MP</td>
+<td>Every graded correct answer in battle (attack or block, any way); not practice, not hinted</td>
+</tr>
+<tr>
+<td>regen_per_wrong</td>
+<td>0</td>
+<td>MP</td>
+<td></td>
+</tr>
+<tr>
+<td>restore_sources</td>
+<td>inn, waking after a defeat, Mana Tea, regen</td>
+<td></td>
+<td>MP carries over between battles</td>
+</tr>
+<tr>
+<td>heal_fraction</td>
+<td>0.3</td>
+<td>of max HP</td>
+<td>was 0.35</td>
+</tr>
+<tr>
+<td>heal_limit_per_battle</td>
+<td>1</td>
+<td>casts</td>
+<td>was 2</td>
+</tr>
+<tr>
+<td>griffin_feather_frost_cost</td>
+<td>5</td>
+<td>MP</td>
+<td>heroic charm: Frost costs 5 instead of 8</td>
+</tr>
+<tr>
+<td>queens_crown_bonus</td>
+<td>6</td>
+<td>max MP</td>
+<td>heroic charm</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>name_en</th>
+<th>name_zh</th>
+<th>effect</th>
+<th>mp_cost</th>
+<th>mp_cost_v2</th>
+<th>limit</th>
+<th>earned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insight</td>
+<td>提示</td>
+<td>Removes 1 distractor from the current MC question; a correct answer counts in combat but not for proficiency</td>
+<td>4</td>
+<td>3</td>
+<td>2 per battle</td>
+<td>start</td>
+</tr>
+<tr>
+<td>Double Strike</td>
+<td>连击</td>
+<td>At streak ≥ 3, a correct attack hits twice (2nd hit 50%)</td>
+<td>6</td>
+<td>4</td>
+<td>every 3 rounds</td>
+<td>L5</td>
+</tr>
+<tr>
+<td>Guardian Shield</td>
+<td>守护盾</td>
+<td>First wrong block in a battle becomes a correct block (leak still applies); auto-fires if equipped and MP ≥ cost</td>
+<td>8</td>
+<td>5</td>
+<td>1 per battle (rank 2: 2)</td>
+<td>Starter Meadow realm boss</td>
+</tr>
+<tr>
+<td>Frost Word</td>
+<td>冰冻</td>
+<td>A correct attack also freezes the target (skips its next attack)</td>
+<td>8</td>
+<td>5</td>
+<td>every 3 rounds</td>
+<td>Griffin Peaks realm boss</td>
+</tr>
+<tr>
+<td>Heal</td>
+<td>治疗</td>
+<td>Replaces the attack: answer one question; correct heals 30% max HP, wrong fizzles; MP spent either way</td>
+<td>12</td>
+<td>6</td>
+<td>1 per battle</td>
+<td>Honeycomb quest</td>
+</tr>
+<tr>
+<td>Sweep</td>
+<td>横扫</td>
+<td>A correct attack hits all enemies at 60%</td>
+<td>12</td>
+<td>8</td>
+<td>every 4 rounds</td>
+<td>Zombie Lands realm boss</td>
+</tr>
+<tr>
+<td>Second Wind</td>
+<td>再起</td>
+<td>At 0 HP, revive at 30% HP (auto)</td>
+<td>20</td>
+<td>12</td>
+<td>1 per battle</td>
+<td>Castle quest</td>
+</tr>
+<tr>
+<td>Thorns / Echo Voice / Rally</td>
+<td>反击 / 回音 / 鼓舞</td>
+<td>Passives, as in v1</td>
+<td>0</td>
+<td>0</td>
+<td>–</td>
+<td>as in v1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why these costs.</strong> With regen and the v2 costs, MP stops being a reason to visit the inn. At t2 and 75% accuracy, battles between restores went from 4.2 to 6.9, and at 50% accuracy the kid cast about 2× as many Heals (0.41 vs 0.21 per battle). The chosen preset (<code>regen_b</code>: Heal 12 MP / 30% HP / once per battle, Shield 8) keeps pacing close to v2 and keeps Heal a deliberate choice. Saver kid, speech on (<code>data/sim/sim_mp.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>acc</th>
+<th>mp_preset</th>
+<th>defeat_rate</th>
+<th>battles_between_restores</th>
+<th>heals_per_battle</th>
+<th>upkeep_share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td>v2 (no regen)</td>
+<td>0.00</td>
+<td>2.24</td>
+<td>0.21</td>
+<td>0.47</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td>regen + v2 costs</td>
+<td>0.01</td>
+<td>2.96</td>
+<td>0.41</td>
+<td>0.37</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.01</td>
+<td>2.49</td>
+<td>0.17</td>
+<td>0.43</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.75</td>
+<td>v2 (no regen)</td>
+<td>0.00</td>
+<td>4.24</td>
+<td>0.01</td>
+<td>0.21</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.75</td>
+<td>regen + v2 costs</td>
+<td>0.00</td>
+<td>6.88</td>
+<td>0.06</td>
+<td>0.13</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.75</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.00</td>
+<td>6.34</td>
+<td>0.04</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>v2 (no regen)</td>
+<td>0.08</td>
+<td>1.80</td>
+<td>0.91</td>
+<td>0.42</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.15</td>
+<td>1.70</td>
+<td>0.42</td>
+<td>0.42</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td>v2 (no regen)</td>
+<td>0.00</td>
+<td>3.55</td>
+<td>0.13</td>
+<td>0.19</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.00</td>
+<td>3.83</td>
+<td>0.12</td>
+<td>0.18</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>v2 (no regen)</td>
+<td>0.14</td>
+<td>1.67</td>
+<td>1.98</td>
+<td>0.39</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.19</td>
+<td>1.42</td>
+<td>0.76</td>
+<td>0.46</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td>v2 (no regen)</td>
+<td>0.00</td>
+<td>2.97</td>
+<td>0.32</td>
+<td>0.19</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td><strong>regen_b (chosen)</strong></td>
+<td>0.00</td>
+<td>2.86</td>
+<td>0.25</td>
+<td>0.20</td>
+</tr>
+</tbody>
+</table>
+<p>The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, because Heal is limited to 1 per battle. The companion (§6.6) more than offsets this. Budget check: at L4 (18 MP) a kid starts a battle able to cast Guardian Shield (8) and gets Heal (12) after 2 correct answers. At L12 (34 MP), Shield + Heal + a Double Strike fit from the start.</p>
+<p><strong>Consumables</strong> (prices in <code>data/economy_prices.csv</code>, G = gold per normal enemy):</p>
+<table>
+<thead>
+<tr>
+<th>item_id</th>
+<th>name_en</th>
+<th>name_zh</th>
+<th>effect</th>
+<th>battle_use</th>
+<th>price</th>
+<th>carry_limit</th>
+<th>sources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>honey_potion</td>
+<td>Honey Potion</td>
+<td>蜂蜜药水</td>
+<td>+40% max HP</td>
+<td>yes (uses the turn, no question)</td>
+<td>1 × G</td>
+<td>no limit (3 uses per battle)</td>
+<td>shop; normal/elite chest; boss chest; 1 free at start; broke potion</td>
+</tr>
+<tr>
+<td>big_honey</td>
+<td>Big Honey</td>
+<td>大蜂蜜</td>
+<td>+70% max HP</td>
+<td>yes (uses the turn, no question)</td>
+<td>2 × G</td>
+<td>no limit (shares the 3 per battle belt)</td>
+<td>shop from tier 5; chests</td>
+</tr>
+<tr>
+<td>mana_tea</td>
+<td>Mana Tea</td>
+<td>魔力茶</td>
+<td>+50% max MP</td>
+<td>yes (uses the turn, no question)</td>
+<td>1 × G</td>
+<td>no limit (shares the belt)</td>
+<td>shop; normal/elite chest</td>
+</tr>
+<tr>
+<td>return_feather</td>
+<td>Return Feather</td>
+<td>回城羽毛</td>
+<td>Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room</td>
+<td>no</td>
+<td>1 × G</td>
+<td>3</td>
+<td>shop; normal/elite chest (5%); 1 free in the tutorial</td>
+</tr>
+</tbody>
+</table>
+<h3 id="65-how-gear-is-earned-no-pay-to-win">6.5 How gear is earned (no pay-to-win)</h3>
+<p>There's no real money and no premium currency. Gear comes from:
+- <strong>Shop:</strong> common gear, priced at about 8 at-level battles of gold.
+- <strong>Chests:</strong> see §7.2.
+- <strong>Location bosses:</strong> a guaranteed fine piece.
+- <strong>Realm bosses:</strong> a guaranteed heroic piece plus a skill.
+- <strong>Quests:</strong> fine and heroic pieces, and skills.
+- <strong>Proficiency milestones:</strong> rank-ups for skills, e.g. 40 and 120 proficient items.</p>
+<hr />
+<h3 id="66-companion-team-attack-decided-in">6.6 Companion team attack (decided: in)</h3>
+<p>The kid's companion (memo §2.4, the "Kind friend") has a <strong>Friendship gauge</strong> (友情). Misses fill it faster than hits, so mistakes turn into help instead of shame.</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+<th>unit</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gauge_full</td>
+<td>100</td>
+<td>points</td>
+<td></td>
+</tr>
+<tr>
+<td>gain_per_wrong</td>
+<td>20</td>
+<td>points</td>
+<td>any graded wrong answer (attack or block)</td>
+</tr>
+<tr>
+<td>gain_per_correct</td>
+<td>5</td>
+<td>points</td>
+<td></td>
+</tr>
+<tr>
+<td>gain_per_void_or_hint</td>
+<td>0</td>
+<td>points</td>
+<td></td>
+</tr>
+<tr>
+<td>reset</td>
+<td>each battle</td>
+<td></td>
+<td>gauge starts at 0 in every battle</td>
+</tr>
+<tr>
+<td>trigger</td>
+<td>start of the hero turn when full</td>
+<td></td>
+<td>free action, no question, before the hero acts</td>
+</tr>
+<tr>
+<td>damage</td>
+<td>max(1, round(1.25 × ATK_h − 0.5 × DEF_e))</td>
+<td>HP</td>
+<td>no streak or spoken bonus</td>
+</tr>
+<tr>
+<td>target</td>
+<td>lowest-HP normal or elite enemy; the boss if alone</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>counts_for_proficiency</td>
+<td>no</td>
+<td></td>
+<td>no question is asked</td>
+</tr>
+<tr>
+<td>kills_pay</td>
+<td>yes</td>
+<td></td>
+<td>normal EXP/gold/chest roll</td>
+</tr>
+<tr>
+<td>attacks_per_battle_50pct</td>
+<td>1.6–2.3</td>
+<td></td>
+<td>sim, speech on, t2–t9</td>
+</tr>
+<tr>
+<td>attacks_per_battle_90pct</td>
+<td>0.6–0.8</td>
+<td></td>
+<td>sim, t5–t9</td>
+</tr>
+</tbody>
+</table>
+<p>UI and rules:
+- The gauge is a heart bar under the companion portrait. It glows at 100. At the start of the hero's next turn the companion dashes in ("我来帮你!") and hits the target. There's no question and no input. It's a 1.5 s animation.
+- It never counts for proficiency, streak or MP regen. The streak multiplier and spoken bonus don't apply.
+- It can land the killing blow. The enemy pays normal drops. In a boss fight it hits minions first, and the boss once the minions are gone.
+- It works in every battle (path fights, patrols, elites, bosses). The gauge resets to 0 at the start of each battle. It doesn't carry over.
+- Voided questions and hinted answers don't move the gauge.</p>
+<p>Sim effect (spender, nets+, speech on; defeat rate per battle for each gauge variant, written as per-wrong gain / damage multiplier; <code>data/sim/sim_companion_variants.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>acc</th>
+<th>companion_off</th>
+<th>c20_x1_0</th>
+<th>c20_x1_25 (chosen)</th>
+<th>c25_x1_5</th>
+<th>companion_attacks_per_battle (chosen)</th>
+<th>battle_questions_per_location off → chosen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td>0.13</td>
+<td>0.02</td>
+<td>0.02</td>
+<td>0.01</td>
+<td>1.63</td>
+<td>289 → 187</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>0.60</td>
+<td>0.36</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>2.09</td>
+<td>627 → 286</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.65</td>
+<td>0.16</td>
+<td>0.08</td>
+<td>0.04</td>
+<td>0.03</td>
+<td>1.57</td>
+<td>323 → 221</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.90</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.58</td>
+<td>177 → 161</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>0.67</td>
+<td>0.31</td>
+<td>0.30</td>
+<td>0.25</td>
+<td>2.20</td>
+<td>767 → 344</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.65</td>
+<td>0.19</td>
+<td>0.07</td>
+<td>0.06</td>
+<td>0.04</td>
+<td>1.73</td>
+<td>363 → 250</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.90</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.73</td>
+<td>202 → 182</td>
+</tr>
+</tbody>
+</table>
+<p>At 50% accuracy the companion cuts defeats by more than half. Because it also ends losing streaks sooner, low-accuracy kids answer far fewer questions per location (fewer retries of the same boss). At 90% it fires less than once per battle, so strong kids barely notice it. 1.25× was chosen over 1.5× so the companion helps without doing the kid's job.</p>
+<h3 id="67-spells-new-in-v33-jacks-request">6.7 Spells (new in v3.3, Jack's request)</h3>
+<p>Full write-up: <code>/workspace/desy/spells.md</code>. Data: <code>data/spells.json</code> / <code>.csv</code> (flat), <code>data/spells_full.json</code> (with rules and HSK notes). Sim: <code>build/spells_sim.py</code> + <code>build/spells_runner.py</code> → <code>build/v3/sim/v3_spells.txt</code>.</p>
+<p><strong>Rules.</strong>
+- Every town has a magic shop 魔法店. Towns 2–9 each sell 2 spells (16 in total). Town 1 sells only Mana Tea and shows the spell shelf as "coming soon".
+- Prices are in G of the town that sells them (G = gold per normal enemy there): 45–130 × G, which is 540–9,360 gold. In other words, 45–130 normal kills, or 18–101 kills plus that realm's 4 quests (§7.11).
+- A spell you buy is yours for good. It sits in a <strong>Spellbook</strong> tab inside ✨ 技能 Skills, so there are still 4 battle commands. It doesn't take a skill slot. You can cast it in any battle if you have enough MP.
+- Casting replaces your attack for that turn and asks <strong>one normal engine question</strong> (§1.3). Spells don't change the 50% spoken cap (§3.4) or the 4-way item selection (§3.4).
+  - Right answer: the spell hits, and the streak goes +1 as usual.
+  - Wrong answer: the spell <strong>fizzles and the MP is still spent</strong> (default, pending Jack). The alternative is that a fizzle costs no MP; see the table below.
+- Damage: <code>max(1, round(M × ATK_h × (spoken ? 1.25 : 1) × (Tired ? 1.5 : 1) × (Ward ? 0.5 : 1) − 0.5 × DEF_e))</code>. M is the spell's <code>mult</code>. <strong>No streak multiplier</strong>: the streak still rewards plain attacks.
+- Targeting: <strong>single</strong>; <strong>same type</strong> (every enemy of the tapped enemy's kind; a boss is its own kind); or <strong>all</strong> on screen. All targeting is max 3 enemies.
+- Statuses:
+  - Soaked: the next enemy attack does half damage.
+  - Dazed / Chilled: the enemy has a chance to skip its next attack.
+  - Frozen: the enemy skips its next attack.
+  - Bosses resist: status chances are halved against bosses.
+- <strong>Magic Ward 魔法护盾:</strong> in every boss battle (location and realm boss), every enemy, summoned helpers included, takes ×0.5 spell damage. Without the Ward, spells shorten realm 5–9 boss fights from 22–24 to about 18–20 questions, below the §2.5 realm-boss target. With the Ward they stay at 21–25, the same as without spells.
+- <strong>Blacksmith first 先买装备:</strong> if a spell purchase would leave less gold than the next town's weapon + armor + shield, the shopkeeper warns the kid first. Without this warning, kids who buy spells play 13–14% of battles in old gear, against 4% without spells.
+- Spells never combine with Frost, Sweep or Double Strike on the same turn. The companion's team attack (§6.6) is unchanged. Spells compete with Guardian Shield, Heal and Second Wind for MP. The Spellbook shows how much MP will be left after the cast, so the kid can keep enough for Heal.</p>
+<table>
+<thead>
+<tr>
+<th>town</th>
+<th>town_zh</th>
+<th>name_zh</th>
+<th>name_zh_trad</th>
+<th>name_en</th>
+<th>target</th>
+<th>element</th>
+<th>mult</th>
+<th>mp_cost</th>
+<th>price_G</th>
+<th>price</th>
+<th>status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>小火球术</td>
+<td>小火球術</td>
+<td>Small Fireball</td>
+<td>single</td>
+<td>fire</td>
+<td>1.6</td>
+<td>8</td>
+<td>60</td>
+<td>720</td>
+<td>–</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>泡泡术</td>
+<td>泡泡術</td>
+<td>Bubble Spell</td>
+<td>single</td>
+<td>water</td>
+<td>1</td>
+<td>6</td>
+<td>45</td>
+<td>540</td>
+<td>Soaked: the target's next attack does half damage</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>雪球术</td>
+<td>雪球術</td>
+<td>Snowball Volley</td>
+<td>same type (max 3)</td>
+<td>ice</td>
+<td>1</td>
+<td>10</td>
+<td>60</td>
+<td>1080</td>
+<td>–</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>小闪电术</td>
+<td>小閃電術</td>
+<td>Little Lightning</td>
+<td>single</td>
+<td>thunder</td>
+<td>2</td>
+<td>10</td>
+<td>75</td>
+<td>1350</td>
+<td>Dazed: 25% chance the target skips its next attack (bosses 12.5%)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>火球术</td>
+<td>火球術</td>
+<td>Fireball</td>
+<td>single</td>
+<td>fire</td>
+<td>2.2</td>
+<td>12</td>
+<td>70</td>
+<td>1890</td>
+<td>–</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>旋风术</td>
+<td>旋風術</td>
+<td>Whirlwind</td>
+<td>same type (max 3)</td>
+<td>wind</td>
+<td>1.3</td>
+<td>14</td>
+<td>85</td>
+<td>2295</td>
+<td>–</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>雪花术</td>
+<td>雪花術</td>
+<td>Snowflake Dance</td>
+<td>all on screen (max 3)</td>
+<td>ice</td>
+<td>0.8</td>
+<td>16</td>
+<td>90</td>
+<td>3240</td>
+<td>–</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>闪电术</td>
+<td>閃電術</td>
+<td>Lightning Bolt</td>
+<td>single</td>
+<td>thunder</td>
+<td>2.6</td>
+<td>14</td>
+<td>75</td>
+<td>2700</td>
+<td>Dazed: 30% chance the target skips its next attack (bosses 15%)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>阳光术</td>
+<td>陽光術</td>
+<td>Sunbeam</td>
+<td>same type (max 3)</td>
+<td>light</td>
+<td>1.6</td>
+<td>18</td>
+<td>80</td>
+<td>3600</td>
+<td>–</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>大火球术</td>
+<td>大火球術</td>
+<td>Big Fireball</td>
+<td>single</td>
+<td>fire</td>
+<td>3</td>
+<td>18</td>
+<td>90</td>
+<td>4050</td>
+<td>–</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>暴风雪术</td>
+<td>暴風雪術</td>
+<td>Blizzard</td>
+<td>all on screen (max 3)</td>
+<td>ice</td>
+<td>1.1</td>
+<td>24</td>
+<td>100</td>
+<td>5400</td>
+<td>Chilled: each target 30% chance to skip its next attack (bosses 15%)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>龙卷风术</td>
+<td>龍捲風術</td>
+<td>Tornado</td>
+<td>same type (max 3)</td>
+<td>wind</td>
+<td>2</td>
+<td>22</td>
+<td>85</td>
+<td>4590</td>
+<td>–</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>流星术</td>
+<td>流星術</td>
+<td>Meteor</td>
+<td>single</td>
+<td>star</td>
+<td>3.5</td>
+<td>24</td>
+<td>90</td>
+<td>5670</td>
+<td>–</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>雷雨术</td>
+<td>雷雨術</td>
+<td>Thunderstorm</td>
+<td>all on screen (max 3)</td>
+<td>thunder</td>
+<td>1.3</td>
+<td>28</td>
+<td>110</td>
+<td>6930</td>
+<td>Dazed: each target 30% chance to skip its next attack (bosses 15%)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>超暴风雪术</td>
+<td>超暴風雪術</td>
+<td>Super Blizzard</td>
+<td>all on screen (max 3)</td>
+<td>ice</td>
+<td>1.6</td>
+<td>34</td>
+<td>130</td>
+<td>9360</td>
+<td>Frozen: every target skips its next attack (bosses 50% chance)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>流星雨术</td>
+<td>流星雨術</td>
+<td>Meteor Shower</td>
+<td>all on screen (max 3)</td>
+<td>star</td>
+<td>2</td>
+<td>40</td>
+<td>120</td>
+<td>8640</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sim (v3.3, campaign of realms 1–9, 150 runs per row, speech on).</strong> Rows marked "spells" use the defaults: Ward, Blacksmith-first warning, and MP spent on a fizzle.</p>
+<table>
+<thead>
+<tr>
+<th>kid, accuracy</th>
+<th>playthrough h (no spells → spells)</th>
+<th>spells owned by the end</th>
+<th>defeat % (all battles)</th>
+<th>boss first-try win</th>
+<th>boss questions</th>
+<th>normal questions</th>
+<th>full-gear share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>saver 75%</td>
+<td>17.7 → 17.6</td>
+<td>5.2 of 16</td>
+<td>0.1 → 0.1</td>
+<td>1.00 → 1.00</td>
+<td>22.3 → 22.8</td>
+<td>16.8 → 14.6</td>
+<td>0.96 → 0.97</td>
+</tr>
+<tr>
+<td>spender 75%</td>
+<td>12.8 → 11.9</td>
+<td>2.0</td>
+<td>0.4 → 0.1</td>
+<td>0.99 → 1.00</td>
+<td>22.1 → 22.4</td>
+<td>17.0 → 15.4</td>
+<td>0.96 → 0.96</td>
+</tr>
+<tr>
+<td>saver 65%</td>
+<td>20.4 → 20.3</td>
+<td>3.9</td>
+<td>1.3 → 1.3</td>
+<td>0.99 → 0.99</td>
+<td>25.4 → 25.7</td>
+<td>18.7 → 16.5</td>
+<td>0.96 → 0.97</td>
+</tr>
+<tr>
+<td>saver 50%</td>
+<td>27.0 → 26.9</td>
+<td>0.8</td>
+<td>11.5 → 12.0</td>
+<td>0.85 → 0.84</td>
+<td>27.7 → 27.9</td>
+<td>21.0 → 20.3</td>
+<td>0.95 → 0.94</td>
+</tr>
+<tr>
+<td>saver 90%</td>
+<td>14.7 → 14.6</td>
+<td>6.6</td>
+<td>0 → 0</td>
+<td>1.00 → 1.00</td>
+<td>17.9 → 18.7</td>
+<td>14.0 → 12.1</td>
+<td>0.96 → 0.97</td>
+</tr>
+</tbody>
+</table>
+<p>How to read this:
+- <strong>Spells don't change learning time.</strong> Locations are gated by readiness (§7.4), so savers' minutes per location stay within 2 min. Spenders, who leave before they're ready, play about 7% less (12.8 → 11.9 h at 75%). Normal fights get shorter (about −2 questions), so kids fight a few more of them.
+- <strong>Bosses aren't trivialized.</strong> With the Ward, boss length and first-try win rates match the no-spell game.
+- <strong>Spells aren't a crutch for struggling kids.</strong> At 50% accuracy, about half of all casts fizzle, and spells are close to neutral (defeats 11.5% → 12.0%).
+- <strong>The safety nets hold.</strong> Free inns per run stay at 0–0.2 with spells; gold never hit 0 in the default config.
+- <strong>Spells are the late-game gold sink.</strong> Without spells, a 75% saver ends the game holding about 27,000 unspent gold. With spells, about 5,300.</p>
+<p><strong>Fizzle rule comparison (Jack to choose).</strong></p>
+<table>
+<thead>
+<tr>
+<th>kid, accuracy</th>
+<th>MP spent on a fizzle (default)</th>
+<th>no MP lost on a fizzle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>saver 50%</td>
+<td>defeats 12.0%, casts 1.65 per battle, fizzles 0.92</td>
+<td>11.8%, 2.26 casts, 1.24 fizzles</td>
+</tr>
+<tr>
+<td>saver 65%</td>
+<td>1.3%, 1.57 casts, 3.9 spells owned</td>
+<td>1.0%, 2.09 casts, 4.8 spells owned</td>
+</tr>
+<tr>
+<td>saver 75%</td>
+<td>0.1%, 1.46 casts, normal fight 14.6 q</td>
+<td>0.0%, 1.83 casts, normal fight 13.8 q</td>
+</tr>
+<tr>
+<td>saver 90%</td>
+<td>0%, 1.35 casts</td>
+<td>0%, 1.54 casts</td>
+</tr>
+</tbody>
+</table>
+<p>Refunding the MP lets kids cast about 15–37% more often (more for weaker kids). It barely changes win rates: −0.2 points of defeats at 50%. The default keeps a wrong answer meaningful ("the magic needs the right word") and keeps MP choices real.</p>
+<hr />
+<h2 id="7-progression-economy-and-safety-nets">7. Progression, economy and safety nets</h2>
+<h3 id="71-unlocks-beat-the-boss-no-percentage-gates">7.1 Unlocks: beat the boss (no percentage gates)</h3>
+<ul>
+<li>The next location unlocks when the kid <strong>beats the current location's boss</strong>. The next realm unlocks when the realm boss is beaten.</li>
+<li>No proficiency, Learned or level gate is ever required. Levels remain a recommendation, shown as a warning if the kid is 2+ levels under.</li>
+<li>Why this is safe for learning: every later pool folds in earlier items (review slots plus carried-over non-proficient items), and the boss approach adds practice when the pool is under-learned (§7.4).</li>
+</ul>
+<h3 id="72-drops-exp-gold-chests">7.2 Drops (EXP, gold, chests)</h3>
+<p>When an enemy's HP hits 0, its drops are collected <strong>immediately</strong>. They're kept even if the hero is defeated later in the same fight. Gold is <code>G × gold_mult × U(0.8, 1.2)</code>, and <strong>never below 80% of base</strong>. Summoned worker bees (§7.9) drop nothing.</p>
+<table>
+<thead>
+<tr>
+<th>role</th>
+<th>boss_type</th>
+<th>exp</th>
+<th>gold_mult</th>
+<th>chest_chance</th>
+<th>chest_type</th>
+<th>guaranteed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>normal</td>
+<td></td>
+<td>6 × L_rec</td>
+<td>1</td>
+<td>0.1</td>
+<td>normal chest</td>
+<td></td>
+</tr>
+<tr>
+<td>elite</td>
+<td></td>
+<td>10 × L_rec</td>
+<td>2</td>
+<td>0.25</td>
+<td>normal chest</td>
+<td></td>
+</tr>
+<tr>
+<td>boss</td>
+<td>location</td>
+<td>20 × L_rec</td>
+<td>5</td>
+<td>1</td>
+<td>location boss chest</td>
+<td>fine gear piece</td>
+</tr>
+<tr>
+<td>boss</td>
+<td>realm</td>
+<td>50 × L_rec</td>
+<td>10</td>
+<td>1</td>
+<td>realm boss chest</td>
+<td>heroic gear piece + skill unlock</td>
+</tr>
+</tbody>
+</table>
+<p>Gold, prices and multiples by tier (<code>data/economy_prices.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>gold_per_normal</th>
+<th>inn</th>
+<th>honey_potion</th>
+<th>big_honey</th>
+<th>mana_tea</th>
+<th>return_feather</th>
+<th>weapon</th>
+<th>armor</th>
+<th>shield</th>
+<th>elite_gold</th>
+<th>location_boss_gold</th>
+<th>realm_boss_gold</th>
+<th>defeat_gold_floor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>6</td>
+<td>12</td>
+<td>6</td>
+<td></td>
+<td>6</td>
+<td>6</td>
+<td>60</td>
+<td>50</td>
+<td>35</td>
+<td>12</td>
+<td>30</td>
+<td>60</td>
+<td>24</td>
+</tr>
+<tr>
+<td>2</td>
+<td>12</td>
+<td>24</td>
+<td>12</td>
+<td></td>
+<td>12</td>
+<td>12</td>
+<td>120</td>
+<td>95</td>
+<td>70</td>
+<td>24</td>
+<td>60</td>
+<td>120</td>
+<td>48</td>
+</tr>
+<tr>
+<td>3</td>
+<td>18</td>
+<td>36</td>
+<td>18</td>
+<td></td>
+<td>18</td>
+<td>18</td>
+<td>220</td>
+<td>175</td>
+<td>130</td>
+<td>36</td>
+<td>90</td>
+<td>180</td>
+<td>72</td>
+</tr>
+<tr>
+<td>4</td>
+<td>27</td>
+<td>54</td>
+<td>27</td>
+<td></td>
+<td>27</td>
+<td>27</td>
+<td>380</td>
+<td>300</td>
+<td>230</td>
+<td>54</td>
+<td>135</td>
+<td>270</td>
+<td>108</td>
+</tr>
+<tr>
+<td>5</td>
+<td>36</td>
+<td>72</td>
+<td>36</td>
+<td>72</td>
+<td>36</td>
+<td>36</td>
+<td>650</td>
+<td>520</td>
+<td>390</td>
+<td>72</td>
+<td>180</td>
+<td>360</td>
+<td>144</td>
+</tr>
+<tr>
+<td>6</td>
+<td>45</td>
+<td>90</td>
+<td>45</td>
+<td>90</td>
+<td>45</td>
+<td>45</td>
+<td>900</td>
+<td>720</td>
+<td>540</td>
+<td>90</td>
+<td>225</td>
+<td>450</td>
+<td>180</td>
+</tr>
+<tr>
+<td>7</td>
+<td>54</td>
+<td>108</td>
+<td>54</td>
+<td>108</td>
+<td>54</td>
+<td>54</td>
+<td>1150</td>
+<td>920</td>
+<td>690</td>
+<td>108</td>
+<td>270</td>
+<td>540</td>
+<td>216</td>
+</tr>
+<tr>
+<td>8</td>
+<td>63</td>
+<td>126</td>
+<td>63</td>
+<td>126</td>
+<td>63</td>
+<td>63</td>
+<td>1400</td>
+<td>1120</td>
+<td>840</td>
+<td>126</td>
+<td>315</td>
+<td>630</td>
+<td>252</td>
+</tr>
+<tr>
+<td>9</td>
+<td>72</td>
+<td>144</td>
+<td>72</td>
+<td>144</td>
+<td>72</td>
+<td>72</td>
+<td>1700</td>
+<td>1360</td>
+<td>1020</td>
+<td>144</td>
+<td>360</td>
+<td>720</td>
+<td>288</td>
+</tr>
+</tbody>
+</table>
+<p>Chest contents (<code>data/chest_contents.csv</code>). Elites use the normal chest table at a 25% chance.</p>
+<table>
+<thead>
+<tr>
+<th>chest_type</th>
+<th>outcome</th>
+<th>probability</th>
+<th>contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>normal chest</td>
+<td>gold</td>
+<td>0.4</td>
+<td>3 × G gold</td>
+</tr>
+<tr>
+<td>normal chest</td>
+<td>potion</td>
+<td>0.35</td>
+<td>1 Honey Potion</td>
+</tr>
+<tr>
+<td>normal chest</td>
+<td>return_feather</td>
+<td>0.05</td>
+<td>1 Return Feather (or 3 × G gold if carrying 3)</td>
+</tr>
+<tr>
+<td>normal chest</td>
+<td>mana_tea</td>
+<td>0.1</td>
+<td>1 Mana Tea</td>
+</tr>
+<tr>
+<td>normal chest</td>
+<td>fine_gear</td>
+<td>0.1</td>
+<td>1 fine gear piece of the location tier</td>
+</tr>
+<tr>
+<td>location boss chest</td>
+<td>bundle</td>
+<td>1</td>
+<td>3 × G gold + 1 Honey Potion + guaranteed fine gear piece</td>
+</tr>
+<tr>
+<td>realm boss chest</td>
+<td>bundle</td>
+<td>1</td>
+<td>3 × G gold + 1 Honey Potion + guaranteed heroic piece + skill unlock</td>
+</tr>
+</tbody>
+</table>
+<p>The Return Feather (5%) comes out of the old 40% potion share. The sim models the v2 split (40/40/10/10); the difference is negligible.</p>
+<p>EXP from proficiency (never damped): +10 per way completed (2nd correct in a way) and +30 when an item becomes Proficient. Practice answers give no EXP (§8.4).</p>
+<p>EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's recommended maximum. The level curve is unchanged: 100 × L EXP from L to L+1.</p>
+<h3 id="73-inn-and-return-feather">7.3 Inn and Return Feather</h3>
+<ul>
+<li><strong>Inn price = 2 × G</strong> (t1 12 gold … t9 144 gold). A stay gives full HP and MP.</li>
+<li><strong>Inns stay close</strong> (decided): every village has an inn, and every location map has an inn or campfire-inn at its entrance, one at about the midpoint of the 8 path fights, and one at the boss approach. The sim assumes an inn is reachable between any two fights.</li>
+<li><strong>Return Feather 回城羽毛 (new): 1 × G.</strong> Out of battle only; it warps to the last inn used (or the location's entrance inn). You can carry at most 3, and it can't be used in the boss room. Sources: the shop, 5% of normal and elite chests, and 1 free in the tutorial.</li>
+<li>Pricing: it equals 1 Honey Potion. It saves walking time, not HP, so it shouldn't cost more than a potion. It's cheaper than the inn it leads to, so a kid never pays more for the trip than for the stay.</li>
+<li>Starting kit: 24 gold (2 inn stays) plus 1 free Honey Potion.</li>
+</ul>
+<h3 id="74-boss-approach-patrols-extra-encounters">7.4 Boss-approach patrols (extra encounters)</h3>
+<p><strong>What:</strong> the zone just before each location boss. While <strong>readiness</strong> is below the trigger, <strong>patrols</strong> (normal enemies of the location's roster) walk the approach path.</p>
+<p><strong>Readiness (v3)</strong> = proficient items ÷ items in <strong>the location's own pool</strong> (47–60). Carried-over items (up to 20 earlier, not-yet-proficient items) are still mixed into every battle set, but they <strong>no longer count</strong> in readiness. In v2 they did, so a kid who struggled in location 1 dragged that debt into every later gate. With the larger v2 pools, the own-pool denominator cuts patrols by about 20% (t1 at 75%, speech on, light practice, 6 path fights, both at a 25% trigger: 16.6 → 12.9 patrols). The HUD at the gate shows "Ready words: 9 / 52 (need 11)".</p>
+<p><strong>Default trigger (decided):</strong> <strong>20%</strong> of the location pool with speech on (Director's call in v3.1, down from 25%), <strong>40%</strong> in reading mode.</p>
+<p><strong>How it plays:</strong></p>
+<ol>
+<li>Walking from the last path fight to the boss gate while below the trigger, the kid meets <strong>2 patrols</strong> ("each approach trip"). They can't be sneaked past. This is the only forced cost.</li>
+<li>After those 2, the <strong>boss gate is always open</strong>. The kid chooses <strong>Enter</strong> (fight the boss now) or <strong>Train</strong>, which spawns another patrol right away and is repeatable.</li>
+<li><strong>Elite patrols:</strong> each patrol has a <strong>10%</strong> chance to include the location's elite in place of one normal enemy. If the location has no elite of its own, it uses the realm's elite. The elite glows gold on the map, so the kid can see it's worth more (2 × G, 25% chest).</li>
+<li>When readiness reaches the trigger, patrols disappear (one optional wandering patrol stays for farming), and the gate glows "Ready!".</li>
+<li>If the kid loses to the boss, they wake at the inn. Walking back to the gate triggers up to 2 more patrols if still below the trigger.</li>
+<li>Patrol fights use the normal 7-item selection, which already favors the least-proficient items. So patrols target exactly what's missing.</li>
+<li>Preview practice (§8) raises readiness before the kid even reaches the gate. Light practice cuts patrols by about 25–30%, and full practice by about 50–57%.</li>
+</ol>
+<p><strong>It never blocks the boss.</strong></p>
+<h3 id="75-defeat-the-0-hp-rule-and-safety-nets-all-decided">7.5 Defeat, the 0-HP rule, and safety nets (all decided)</h3>
+<p>At 0 HP the kid wakes at the inn with full HP and MP and keeps all items, EXP and drops. Gold loss follows net 3 (fee) and net 2 (floor).</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>net</th>
+<th>rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>pity_inn</td>
+<td>If gold &lt; inn price, the inn stay is free</td>
+</tr>
+<tr>
+<td>2</td>
+<td>gold_loss_floor</td>
+<td>A defeat never takes gold below 2 × inn price</td>
+</tr>
+<tr>
+<td>3</td>
+<td>defeat_fee</td>
+<td>max(10% of gold, 1 inn price), only from gold above the floor</td>
+</tr>
+<tr>
+<td>4</td>
+<td>starter_and_broke_potion</td>
+<td>1 Honey Potion at the start; after a defeat or pity stay with 0 potions and gold &lt; inn, get 1 free</td>
+</tr>
+<tr>
+<td>5</td>
+<td>courage</td>
+<td>+20% DEF per consecutive defeat (max +60%), cleared by a win</td>
+</tr>
+<tr>
+<td>6</td>
+<td>minimum_payout</td>
+<td>Enemy gold never below 80% of base; every defeated enemy pays</td>
+</tr>
+<tr>
+<td>7</td>
+<td>boss_checkpoint</td>
+<td>After the boss drops below 50% HP, retries start there (save only, no heal)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>companion_team_attack</td>
+<td>Friendship gauge fills faster on wrong answers (see companion table)</td>
+</tr>
+</tbody>
+</table>
+<p>The sim label <strong>"nets+"</strong> = all 8. <strong>"none"</strong> = a flat 10% defeat fee with no other nets, as a stress test. Evidence is in §7.6.</p>
+<h3 id="76-death-spiral-analysis-v3-rerun">7.6 Death-spiral analysis (v3 rerun)</h3>
+<p><strong>Model.</strong> One full realm playthrough per run with the v3.2 defaults: curriculum v2 pools, 3 new items per battle, Tired at 30 (normal) / 45 (bosses), speech-on trigger 20%, 8 path fights, boss approach, bosses with retries, MP regen (regen_b), companion, spoken cap 50%, light practice, and elites. HP and MP carry over, inns cost gold, and potions are bought. The hero is at the recommended level and gear, with Heal and Guardian Shield from tier 2. 150 runs per row.</p>
+<p><strong>Two kid profiles:</strong>
+- <strong>Spender:</strong> spends every coin on gear or cosmetics after each fight, keeps no potions, and rushes the boss after the 2 forced patrols. This is the death-spiral stress test.
+- <strong>Saver:</strong> keeps 2 inn stays in reserve, keeps 2 potions, and trains until the trigger clears.</p>
+<p><strong>Speech accuracy assumption</strong> (unchanged from v2). "acc" is the kid's accuracy on a new item in reading ZH→EN. Other ways: R-EZ acc − 3 pts; S-ZE acc × 0.95; S-EZ (acc − 10 pts) × 0.85. Each prior correct answer in a way adds +4 pts (cap 97%). In-battle accuracy for speech-on kids is 4–5 pts below "acc" with the 50% spoken cap (6–8 pts without it).</p>
+<p><strong>Spender: no nets → nets+</strong> (<code>data/sim/sim_economy.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>acc</th>
+<th>speech</th>
+<th>defeat_rate_none</th>
+<th>defeat_rate_nets</th>
+<th>stuck_events_none</th>
+<th>stuck_events_nets</th>
+<th>battles_between_restores_nets</th>
+<th>upkeep_share_nets</th>
+<th>gear_gold_nets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.50</td>
+<td>on</td>
+<td>0.05</td>
+<td>0.00</td>
+<td>8.15</td>
+<td>0</td>
+<td>2.98</td>
+<td>0.12</td>
+<td>464</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.75</td>
+<td>on</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>5.11</td>
+<td>0</td>
+<td>5.67</td>
+<td>0.06</td>
+<td>498</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td>on</td>
+<td>0.11</td>
+<td>0.02</td>
+<td>4.75</td>
+<td>0</td>
+<td>2.24</td>
+<td>0.19</td>
+<td>600</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.75</td>
+<td>on</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2.77</td>
+<td>0</td>
+<td>5.82</td>
+<td>0.06</td>
+<td>698</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>on</td>
+<td>0.33</td>
+<td>0.21</td>
+<td>3.21</td>
+<td>0</td>
+<td>1.42</td>
+<td>0.24</td>
+<td>2169</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.65</td>
+<td>on</td>
+<td>0.10</td>
+<td>0.04</td>
+<td>3.39</td>
+<td>0</td>
+<td>2.28</td>
+<td>0.14</td>
+<td>2620</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td>on</td>
+<td>0.03</td>
+<td>0.00</td>
+<td>3.02</td>
+<td>0</td>
+<td>3.41</td>
+<td>0.09</td>
+<td>2794</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>off</td>
+<td>0.22</td>
+<td>0.14</td>
+<td>3.08</td>
+<td>0</td>
+<td>1.60</td>
+<td>0.21</td>
+<td>2351</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>on</td>
+<td>0.40</td>
+<td>0.31</td>
+<td>2.18</td>
+<td>0</td>
+<td>1.20</td>
+<td>0.27</td>
+<td>4407</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.65</td>
+<td>on</td>
+<td>0.12</td>
+<td>0.06</td>
+<td>2.91</td>
+<td>0</td>
+<td>1.72</td>
+<td>0.19</td>
+<td>5614</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td>on</td>
+<td>0.04</td>
+<td>0.01</td>
+<td>3.07</td>
+<td>0</td>
+<td>2.60</td>
+<td>0.13</td>
+<td>6025</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>off</td>
+<td>0.27</td>
+<td>0.19</td>
+<td>2.34</td>
+<td>0</td>
+<td>1.32</td>
+<td>0.26</td>
+<td>4894</td>
+</tr>
+</tbody>
+</table>
+<p>"Stuck event" = after a fight, HP &lt; 50%, gold &lt; inn price, and no potion. With nets+, runs where gold ever hit 0: <strong>0.00</strong> in every row.</p>
+<p><strong>Saver with nets+</strong> (the realistic, diligent kid):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>acc</th>
+<th>speech</th>
+<th>battles</th>
+<th>defeat_rate</th>
+<th>battles_between_restores</th>
+<th>inn_paid</th>
+<th>upkeep_share</th>
+<th>gear_gold</th>
+<th>minutes_per_location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.50</td>
+<td>on</td>
+<td>65.7</td>
+<td>0.00</td>
+<td>3.35</td>
+<td>19.4</td>
+<td>0.31</td>
+<td>597</td>
+<td>61</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.65</td>
+<td>on</td>
+<td>57.1</td>
+<td>0.00</td>
+<td>4.57</td>
+<td>12.3</td>
+<td>0.20</td>
+<td>609</td>
+<td>48</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.75</td>
+<td>on</td>
+<td>53.2</td>
+<td>0.00</td>
+<td>6.25</td>
+<td>8.2</td>
+<td>0.14</td>
+<td>616</td>
+<td>42</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.90</td>
+<td>on</td>
+<td>49.8</td>
+<td>0.00</td>
+<td>13.08</td>
+<td>3.6</td>
+<td>0.06</td>
+<td>640</td>
+<td>35</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.75</td>
+<td>off</td>
+<td>32.8</td>
+<td>0.00</td>
+<td>7.39</td>
+<td>4.2</td>
+<td>0.10</td>
+<td>450</td>
+<td>27</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.50</td>
+<td>on</td>
+<td>49.0</td>
+<td>0.01</td>
+<td>2.56</td>
+<td>18.6</td>
+<td>0.42</td>
+<td>735</td>
+<td>70</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.75</td>
+<td>on</td>
+<td>39.8</td>
+<td>0.00</td>
+<td>6.43</td>
+<td>5.9</td>
+<td>0.14</td>
+<td>923</td>
+<td>49</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>on</td>
+<td>41.1</td>
+<td>0.14</td>
+<td>1.69</td>
+<td>18.4</td>
+<td>0.43</td>
+<td>2274</td>
+<td>75</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.65</td>
+<td>on</td>
+<td>33.4</td>
+<td>0.03</td>
+<td>2.56</td>
+<td>11.8</td>
+<td>0.28</td>
+<td>2898</td>
+<td>57</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td>on</td>
+<td>31.6</td>
+<td>0.00</td>
+<td>3.78</td>
+<td>8.1</td>
+<td>0.18</td>
+<td>3231</td>
+<td>50</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td>off</td>
+<td>19.8</td>
+<td>0.00</td>
+<td>4.57</td>
+<td>4.1</td>
+<td>0.12</td>
+<td>2394</td>
+<td>32</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>on</td>
+<td>44.5</td>
+<td>0.19</td>
+<td>1.41</td>
+<td>23.1</td>
+<td>0.46</td>
+<td>4955</td>
+<td>91</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.65</td>
+<td>on</td>
+<td>36.2</td>
+<td>0.03</td>
+<td>2.01</td>
+<td>16.6</td>
+<td>0.31</td>
+<td>6832</td>
+<td>69</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td>on</td>
+<td>34.3</td>
+<td>0.00</td>
+<td>2.87</td>
+<td>11.6</td>
+<td>0.20</td>
+<td>7772</td>
+<td>60</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td>off</td>
+<td>21.0</td>
+<td>0.00</td>
+<td>3.53</td>
+<td>5.6</td>
+<td>0.14</td>
+<td>5503</td>
+<td>37</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusions</strong></p>
+<ol>
+<li><strong>There's still no gold death spiral.</strong> With nets+, stuck events and zero-gold runs are 0 in every row. Without nets, stuck events happen 2–9 times per realm, but income stays positive because every defeated enemy pays.</li>
+<li><strong>Defeat loops at low accuracy are much smaller than in v2</strong>, thanks to the companion and the spoken cap. Defeat rate per battle with nets+:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>acc</th>
+<th>t1–t2</th>
+<th>t5 (spender → saver)</th>
+<th>t9 (spender → saver)</th>
+<th>v2 at t5–t9, speech on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.50</td>
+<td>≤ 2%</td>
+<td>21% → 14%</td>
+<td>31% → 19%</td>
+<td>40–60%</td>
+</tr>
+<tr>
+<td>0.65</td>
+<td>≤ 0%</td>
+<td>4% → 3%</td>
+<td>6% → 3%</td>
+<td>7–17%</td>
+</tr>
+<tr>
+<td>≥ 0.75</td>
+<td>0%</td>
+<td>≤ 1%</td>
+<td>≤ 1%</td>
+<td>≤ 3%</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li><strong>Battles between restores</strong> (saver, speech on): t1 3.4 / 4.6 / 6.3 / 13.1 at 50 / 65 / 75 / 90% accuracy; t9 1.4 / 2.0 / 2.9 / 6.8. Inns must stay close (§7.3).</li>
+<li><strong>Gold:</strong> upkeep (inn + potions) takes 6–46% of the saver's income (≤ 20% at ≥ 75% accuracy). Gear money per realm at ≥ 65% (t5: 2,600–3,600; t9: 5,600–8,700) covers a next-tier set (t6: 2,160). At 50% it's still about enough at t5 (about 2,200), thanks to the longer locations. <strong>Gear lag is still not modeled</strong>, since the sim fixes gear at the recommended tier.</li>
+<li><strong>Price sensitivity</strong> was not rerun. Prices are unchanged from v2, and the v2 result (<code>combat_sim_sensitivity_v2_out.txt</code>: keep inn = 2 × G, potion = 1 × G) still applies.</li>
+</ol>
+<h3 id="77-boss-approach-tuning-proficiency-cost-v3">7.7 Boss-approach tuning (proficiency cost, v3)</h3>
+<p>Saver kid (trains until the trigger clears, capped at 40 patrols), 75% accuracy, v3 defaults. "Minutes" includes practice time (5 s per practice question) and battle time (9.2 s per question). Source: <code>data/sim/sim_patrols_minutes.csv</code>, <code>sim_trigger_tuning.csv</code>.</p>
+<p><strong>Practice effect</strong> (t1, speech on, 20% trigger):</p>
+<table>
+<thead>
+<tr>
+<th>practice</th>
+<th>patrols_per_location</th>
+<th>battle_questions</th>
+<th>minutes_per_location</th>
+<th>items_proficient_at_boss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>none</td>
+<td>12.0</td>
+<td>257</td>
+<td>39</td>
+<td>0.24</td>
+</tr>
+<tr>
+<td>light (listen-and-pick + say-it once per item)</td>
+<td>8.7</td>
+<td>216</td>
+<td>41</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>full (every way once per item)</td>
+<td>5.2</td>
+<td>177</td>
+<td>44</td>
+<td>0.26</td>
+</tr>
+</tbody>
+</table>
+<p>Practice swaps battle time for practice time. Total time stays about the same, and patrols drop by 25–50%. That's the intended trade: less grinding the same enemies, and more focused study the kid chooses.</p>
+<p><strong>Trigger options</strong> (t1, speech on, 75%, light practice):</p>
+<table>
+<thead>
+<tr>
+<th>metric</th>
+<th>trigger</th>
+<th>patrols_per_location</th>
+<th>minutes_per_location</th>
+<th>items_proficient_at_boss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>local + carry-over (v2)</td>
+<td>0.25</td>
+<td>14.6</td>
+<td>52</td>
+<td>0.36</td>
+</tr>
+<tr>
+<td>own pool (v3.0)</td>
+<td>0.25</td>
+<td>11.0</td>
+<td>45</td>
+<td>0.29</td>
+</tr>
+<tr>
+<td><strong>own pool (v3.1 default)</strong></td>
+<td><strong>0.20</strong></td>
+<td><strong>8.6</strong></td>
+<td><strong>41</strong></td>
+<td><strong>0.25</strong></td>
+</tr>
+<tr>
+<td>own pool</td>
+<td>0.15</td>
+<td>5.5</td>
+<td>36</td>
+<td>0.20</td>
+</tr>
+</tbody>
+</table>
+<p>(These rows use 6 path fights; with the default 8 path fights, the 20% trigger gives 8.7 patrols.)</p>
+<p><strong>Defaults by tier</strong> (saver, 75%, light practice):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>speech</th>
+<th>patrols_per_location</th>
+<th>battle_questions</th>
+<th>minutes_per_location</th>
+<th>items_proficient_at_boss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>on</td>
+<td>8.7</td>
+<td>216</td>
+<td>41</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>5</td>
+<td>on</td>
+<td>6.8</td>
+<td>274</td>
+<td>50</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>9</td>
+<td>on</td>
+<td>8.1</td>
+<td>336</td>
+<td>60</td>
+<td>0.24</td>
+</tr>
+<tr>
+<td>1</td>
+<td>off</td>
+<td>1.9</td>
+<td>125</td>
+<td>27</td>
+<td>0.57</td>
+</tr>
+<tr>
+<td>5</td>
+<td>off</td>
+<td>0.8</td>
+<td>160</td>
+<td>32</td>
+<td>0.54</td>
+</tr>
+<tr>
+<td>9</td>
+<td>off</td>
+<td>1.6</td>
+<td>190</td>
+<td>37</td>
+<td>0.57</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>At the boss, speech-on kids have about 25% of the pool fully proficient (8 correct answers per item). Reading-mode kids have 50–60% (4 per item). Speech-on items keep being practiced as carry-over in the next location.</li>
+<li><strong>The default is now 20%</strong> (Director's call, v3.1). Compared with 25% it saves about 4 min per location at t1 (41 vs 45 min) and 5–9 min at t2–t9 (e.g. t5 49 vs 54, t9 59 vs 67). About 25% of the pool is fully proficient at the boss instead of about 30%. The 25% outputs are kept in <code>build/v3/sim_trigger25/</code> (that comparison was run with the v3.1 caps).</li>
+<li><strong>v3.2 caps (3 new items per battle, Tired at 30 / 45):</strong> a small cost. Speech-on savers at 75% need +0.1 to +0.7 patrols and +0.3 to +1.1 min per location (e.g. t1 8.1 → 8.3 patrols, 41.1 → 41.8 min; t2 10.4 → 11.1, 47.9 → 48.5 min; t9 6.5 → 6.7, 59.2 → 59.8 min). Reading mode: +0.0 to +0.6 patrols, ≤ 1.5 min. The whole playthrough stays about 18 h. Defeat rates don't move. The v3.1 outputs are kept in <code>build/v3/sim_v3_1/</code>.</li>
+<li><strong>Half-up rounding (v3.2):</strong> the sim now rounds combat damage like the prototype (<code>Math.round</code>). Rows only change where a damage value lands on exactly .5, which is mostly the odd tiers, where 0.5 × DEF_e is fractional. The hero kills a little sooner there. At t7/t9, speech-on savers need +1.4 to +1.9 more patrols per location (t7 8.6 → 10.1, t9 6.7 → 8.1 at 75%), but the same total questions and minutes (t7 67.6 → 67.9, t9 59.8 → 59.7 min), because fights are shorter. Spenders save about 3 min per location at t7/t9 (t9 44.9 → 41.5). t9 defeat rates at 50% accuracy drop (saver 23% → 19%, spender 36% → 31%). The playthrough stays about 18 h. t2–t6 and t8 are identical. The pre-change outputs are in <code>build/v3/sim_v3_2_bankers/</code>.</li>
+</ul>
+<h3 id="78-elites">7.8 Elites</h3>
+<p><strong>Rule</strong> (from the roster brief, now part of the spec): an elite is a named, tougher normal enemy.</p>
+<table>
+<thead>
+<tr>
+<th>stat</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hp</td>
+<td>2 × the tier's normal HP</td>
+</tr>
+<tr>
+<td>atk</td>
+<td>the tier's location-boss ATK (round(1.2 × DEF_ref))</td>
+</tr>
+<tr>
+<td>def</td>
+<td>t</td>
+</tr>
+<tr>
+<td>gold</td>
+<td>2 × G</td>
+</tr>
+<tr>
+<td>exp</td>
+<td>10 × L_rec</td>
+</tr>
+<tr>
+<td>chest_chance</td>
+<td>0.25 (normal chest table)</td>
+</tr>
+<tr>
+<td>scripted</td>
+<td>1 per realm: the middle path fight (fight 4 of 8) of the elite's home location (<code>location_id</code> in <code>enemies.json</code>); it replaces one normal enemy</td>
+</tr>
+<tr>
+<td>patrols</td>
+<td>10% of boss-approach patrols replace one normal enemy with an elite</td>
+</tr>
+<tr>
+<td>role / boss_type</td>
+<td><code>elite</code> / empty</td>
+</tr>
+</tbody>
+</table>
+<p>The roster's 9 elites (one per realm) are in §2.3 (<code>role = elite</code>): swift_horned_rabbit (L1.3), royal_guard_bee (L2.2), mimic (L3.2), goblin_brute (L4.2), swamp_wisp (L5.1), zombie_knight (L6.2), cliff_golem (L7.1), fire_elemental (L8.2), gargoyle (L9.1).</p>
+<p><strong>Sim</strong> (<code>data/sim/sim_elites.csv</code>, single battle from full HP, speech on, companion on):</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>acc</th>
+<th>win_rate_normal</th>
+<th>win_rate_with_elite</th>
+<th>questions_normal</th>
+<th>questions_with_elite</th>
+<th>hp_lost_normal</th>
+<th>hp_lost_with_elite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.50</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>14.3</td>
+<td>20.3</td>
+<td>0.19</td>
+<td>0.35</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.75</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>11.4</td>
+<td>16.1</td>
+<td>0.08</td>
+<td>0.15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.50</td>
+<td>0.99</td>
+<td>0.94</td>
+<td>20.1</td>
+<td>26.2</td>
+<td>0.46</td>
+<td>0.57</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.75</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>15.9</td>
+<td>20.3</td>
+<td>0.19</td>
+<td>0.26</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.50</td>
+<td>0.97</td>
+<td>0.83</td>
+<td>25.3</td>
+<td>29.6</td>
+<td>0.58</td>
+<td>0.69</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.75</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>19.7</td>
+<td>23.3</td>
+<td>0.28</td>
+<td>0.33</td>
+</tr>
+</tbody>
+</table>
+<p>An elite adds about 4–6 questions and 5–16 points of HP loss to a fight. Over a whole realm, elites change the defeat rate by ≤ 1 point, battles between restores by about −0.1 to −0.35, and gear gold by −0.5 to +3%. They're a spike, not a wall. The only real risk is t9 at 50% accuracy (87% win rate in a single fight from full HP), where Courage and the boss-style telegraph (gold glow) apply.</p>
+<h3 id="79-special-boss-mechanics-simulated">7.9 Special boss mechanics (simulated)</h3>
+<p>Single battle from full HP/MP with 1 potion, speech on, companion on, roster stats. Win rate without → with the mechanic (<code>data/special_mechanics.csv</code>, <code>data/sim/sim_specials.csv</code>):</p>
+<table>
+<thead>
+<tr>
+<th>name_zh</th>
+<th>name_en</th>
+<th>tier</th>
+<th>mechanic</th>
+<th>rule</th>
+<th>win_50_off</th>
+<th>win_50_on</th>
+<th>win_65_off</th>
+<th>win_65_on</th>
+<th>win_75_off</th>
+<th>win_75_on</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>蜂后</td>
+<td>Queen Bee</td>
+<td>2</td>
+<td>Summon Worker</td>
+<td>Every 3rd round, if fewer than 3 enemies: summon 1 worker bee at half normal HP, no drops; max 2 per fight</td>
+<td>0.99</td>
+<td>0.65</td>
+<td>1</td>
+<td>0.98</td>
+<td>1</td>
+<td>1</td>
+<td>adopt (the unlimited v2 version was unwinnable at ≤65%)</td>
+</tr>
+<tr>
+<td>九头蛇</td>
+<td>Hydra</td>
+<td>5</td>
+<td>Double Bite</td>
+<td>Every 3rd round the Hydra attacks twice (2 block questions)</td>
+<td>0.39</td>
+<td>0.18</td>
+<td>0.9</td>
+<td>0.78</td>
+<td>0.99</td>
+<td>0.97</td>
+<td>keep</td>
+</tr>
+<tr>
+<td>暗影龙</td>
+<td>Shadow-Cursed Dragon</td>
+<td>9</td>
+<td>Curse Chain</td>
+<td>+3 ATK while its imp minion is alive</td>
+<td>0.97</td>
+<td>0.92</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>keep as a teaching cue ("break the chain first")</td>
+</tr>
+<tr>
+<td>巨魔</td>
+<td>Arena Troll</td>
+<td>8</td>
+<td>Regrow</td>
+<td>Cosmetic only (decided): a green regrowth sparkle at the end of a round in which it was not hit; no HP change. Simulated rule was +4 HP</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>cosmetic (decided): green sparkle only, no HP effect in game</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Queen Bee 蜂后, Summon Worker:</strong> the roster's v2 text (a worker every 3 turns, no limit) was <strong>broken</strong>. Fights ran to about 80 questions, and the win rate at 50–65% accuracy fell to 0–34%, because each worker is a full normal enemy that paid drops (a farming loop too). <strong>v3 rule:</strong> every 3rd round, if fewer than 3 enemies are on screen, summon 1 worker bee at <strong>half normal HP</strong> with <strong>no drops</strong>, <strong>max 2 per fight</strong>. Result: 65% / 98% / 100% win at 50 / 65 / 75%, and about 10 more questions per fight (2 summons every time). The roster text is updated.</li>
+<li><strong>Hydra 九头蛇, Double Bite:</strong> every 3rd round the Hydra attacks twice (2 block questions). It's a real difficulty bump at low accuracy (win 39% → 18% at 50%, 90% → 78% at 65%), and negligible at ≥ 75%. <strong>Keep:</strong> it's the realm-5 final boss, it's telegraphed (both heads rear up), and bosses have the 50% checkpoint.</li>
+<li><strong>Shadow Dragon 暗影龙, Curse Chain:</strong> +3 ATK while its imp minion is alive. When the kid kills the imp first (the default targeting), the effect is nil. If the kid ignores the imp, the win rate at 50% drops 97% → 91% and HP lost rises 52% → 67%. <strong>Keep as a teaching cue:</strong> the chain glows between them, and the companion says "Break the chain first!"</li>
+<li><strong>Queen Bee in the prototype build (headless test, 2026-09-29 PT): a loss at L8 / 75% is expected for that setup, and it isn't a data mismatch.</strong> The prototype's Queen Bee (63 HP / 10 ATK / 2 DEF, 1 giant bee 23/10/2, workers 12 HP, every 3rd round, max 2) and its hero formulas match §2.1/§2.3. Three setup differences explain the loss: (1) the test hero still wore tier-1 gear (wooden sword, cloth tunic, pot lid → ATK 9, DEF 6), because heroic/fine drops only auto-equip into an empty slot. With DEF 6, every <em>correct</em> block against ATK 10 still leaks round(10 − 7.5) = 3 HP. At the recommended gear (DEF 8+) it leaks 0; (2) the test only attacks: no potion, no Heal, and Guardian Shield wasn't equipped; (3) it always targets the Queen and misses exactly every 4th answer. Replaying that setup in the sim with half-up rounding reproduces the result exactly: a loss in <strong>28 questions</strong> in every run. With a random 75% it wins 50%. Any one fix brings it back to 86–100%: potions + Heal + Shield (91–100%), tier-2 common gear at L8 (100%), the heroic Rabbit-Horn Dagger equipped (86–100%), or a +1 DEF charm (93–100%). Frost, Sweep and Second Wind unlock in realms 6–9, so they aren't part of the tier-2 design. Second Wind alone would also flip this fight (85–100%). Source: <code>build/v3/queen_diag/</code>.</li>
+<li><strong>Arena Troll 巨魔, Regrow: cosmetic (decided, v3.1).</strong> The simulated rule (+4 HP at the end of a round if it wasn't hit) had <strong>zero</strong> effect under focus fire, and the "Tag Team" variant added only about 5% more questions. In the game, Regrow is a green sparkle with no HP change.</li>
+</ul>
+<h3 id="710-pacing-summary-time-per-location">7.10 Pacing summary (time per location)</h3>
+<p>From <code>data/sim/sim_realms.csv</code> (light practice, v3.2 defaults, speech-on trigger 20%). Minutes per location:</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>speech_saver_65</th>
+<th>speech_saver_75</th>
+<th>speech_spender_75</th>
+<th>reading_saver_75</th>
+<th>reading_spender_75</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>48</td>
+<td>41</td>
+<td>29</td>
+<td>27</td>
+<td>27</td>
+</tr>
+<tr>
+<td>2</td>
+<td>55</td>
+<td>49</td>
+<td>32</td>
+<td>33</td>
+<td>30</td>
+</tr>
+<tr>
+<td>3</td>
+<td>61</td>
+<td>54</td>
+<td>36</td>
+<td>35</td>
+<td>34</td>
+</tr>
+<tr>
+<td>4</td>
+<td>57</td>
+<td>49</td>
+<td>37</td>
+<td>32</td>
+<td>32</td>
+</tr>
+<tr>
+<td>5</td>
+<td>57</td>
+<td>50</td>
+<td>37</td>
+<td>32</td>
+<td>32</td>
+</tr>
+<tr>
+<td>6</td>
+<td>66</td>
+<td>58</td>
+<td>43</td>
+<td>39</td>
+<td>39</td>
+</tr>
+<tr>
+<td>7</td>
+<td>79</td>
+<td>68</td>
+<td>43</td>
+<td>43</td>
+<td>40</td>
+</tr>
+<tr>
+<td>8</td>
+<td>73</td>
+<td>64</td>
+<td>42</td>
+<td>39</td>
+<td>38</td>
+</tr>
+<tr>
+<td>9</td>
+<td>69</td>
+<td>60</td>
+<td>41</td>
+<td>37</td>
+<td>37</td>
+</tr>
+</tbody>
+</table>
+<p>Patrols per location (saver) and share of the pool proficient at the boss:</p>
+<table>
+<thead>
+<tr>
+<th>tier</th>
+<th>patrols_speech_saver_65</th>
+<th>patrols_speech_saver_75</th>
+<th>patrols_reading_saver_75</th>
+<th>items_proficient_at_boss_speech_75</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>9.9</td>
+<td>8.7</td>
+<td>2.0</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>2</td>
+<td>12.3</td>
+<td>11.1</td>
+<td>3.9</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>3</td>
+<td>9.9</td>
+<td>9.2</td>
+<td>2.5</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>4</td>
+<td>7.6</td>
+<td>6.8</td>
+<td>1.0</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7.6</td>
+<td>6.8</td>
+<td>0.8</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7.6</td>
+<td>6.9</td>
+<td>1.5</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>7</td>
+<td>11.3</td>
+<td>10.1</td>
+<td>2.9</td>
+<td>0.24</td>
+</tr>
+<tr>
+<td>8</td>
+<td>9.9</td>
+<td>9.1</td>
+<td>1.8</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>9</td>
+<td>9.0</td>
+<td>8.1</td>
+<td>1.5</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+<p>A whole playthrough (20 locations) is about 18 h for a speech-on saver at 75% accuracy (about 20 h at the old 25% trigger), 13 h for a speech-on spender, and 11–12 h in reading mode. Save points at each inn (§7.3) let a location span 2–3 sessions of 20–30 min.</p>
+<h3 id="711-quests-new-in-v33">7.11 Quests (new in v3.3)</h3>
+<p>Every town has a quest board 任务板 with <strong>4 quests</strong>: one of each type. Quests can't be repeated, and they're all optional. Rewards are in G of that town, so each realm's board pays about 30 × G in total (36–2,106 gold). Data: <code>data/quests.json</code> / <code>.csv</code> (36 quests).</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>goal</th>
+<th>reward</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bounty 打败</td>
+<td>defeat 8 of the realm's first normal enemy</td>
+<td>6 × G + 1 Honey Potion</td>
+<td>any fight in the realm counts, boss helpers included</td>
+</tr>
+<tr>
+<td>collect 收集</td>
+<td>collect 5 drops (e.g. 5片树叶) from the realm's second normal enemy</td>
+<td>8 × G</td>
+<td>35% drop per kill; quest items take no bag slot</td>
+</tr>
+<tr>
+<td>words 学会</td>
+<td>get 15 of this realm's words to Ready</td>
+<td>10 × G + 1 Mana Tea</td>
+<td>battle or practice; the quest links to Preview &amp; Practice (§8)</td>
+</tr>
+<tr>
+<td>delivery 送信</td>
+<td>after the realm boss, take a letter to the next town</td>
+<td>6 × G (paid there) + Return Feather</td>
+<td>realm 9: back to 小山村, a cosmetic postman cap</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>town</th>
+<th>town_zh</th>
+<th>type</th>
+<th>title_zh</th>
+<th>title_en</th>
+<th>n</th>
+<th>reward_G</th>
+<th>reward_gold</th>
+<th>reward_item</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>小山村</td>
+<td>bounty</td>
+<td>打败8只角兔</td>
+<td>Defeat 8 × Horned Rabbit</td>
+<td>8</td>
+<td>6</td>
+<td>36</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>1</td>
+<td>小山村</td>
+<td>collect</td>
+<td>收集5个小蘑菇</td>
+<td>Collect 5 little mushrooms</td>
+<td>5</td>
+<td>8</td>
+<td>48</td>
+<td>–</td>
+</tr>
+<tr>
+<td>1</td>
+<td>小山村</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>60</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>1</td>
+<td>小山村</td>
+<td>delivery</td>
+<td>把信送到蜂蜜镇</td>
+<td>Deliver a letter to Honey Town</td>
+<td>1</td>
+<td>6</td>
+<td>36</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>bounty</td>
+<td>打败8只巨蜂</td>
+<td>Defeat 8 × Giant Bee</td>
+<td>8</td>
+<td>6</td>
+<td>72</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>collect</td>
+<td>收集5根蜘蛛丝</td>
+<td>Collect 5 strands of spider silk</td>
+<td>5</td>
+<td>8</td>
+<td>96</td>
+<td>–</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>120</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>2</td>
+<td>蜂蜜镇</td>
+<td>delivery</td>
+<td>把信送到十字路口集市</td>
+<td>Deliver a letter to Crossroads Market</td>
+<td>1</td>
+<td>6</td>
+<td>72</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>bounty</td>
+<td>打败8个山贼</td>
+<td>Defeat 8 × Road Bandit</td>
+<td>8</td>
+<td>6</td>
+<td>108</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>collect</td>
+<td>收集5块果冻</td>
+<td>Collect 5 jelly blobs</td>
+<td>5</td>
+<td>8</td>
+<td>144</td>
+<td>–</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>180</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>3</td>
+<td>十字路口集市</td>
+<td>delivery</td>
+<td>把信送到矿工营地</td>
+<td>Deliver a letter to Miner's Camp</td>
+<td>1</td>
+<td>6</td>
+<td>108</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>bounty</td>
+<td>打败8只洞穴蝙蝠</td>
+<td>Defeat 8 × Cave Bat</td>
+<td>8</td>
+<td>6</td>
+<td>162</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>collect</td>
+<td>收集5个小铃铛</td>
+<td>Collect 5 little bells</td>
+<td>5</td>
+<td>8</td>
+<td>216</td>
+<td>–</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>270</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>4</td>
+<td>矿工营地</td>
+<td>delivery</td>
+<td>把信送到芦苇村</td>
+<td>Deliver a letter to Reed Village</td>
+<td>1</td>
+<td>6</td>
+<td>162</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>bounty</td>
+<td>打败8只沼泽怪</td>
+<td>Defeat 8 × Bog Monster</td>
+<td>8</td>
+<td>6</td>
+<td>216</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>collect</td>
+<td>收集5片闪亮鳞片</td>
+<td>Collect 5 shiny shed scales</td>
+<td>5</td>
+<td>8</td>
+<td>288</td>
+<td>–</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>360</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>5</td>
+<td>芦苇村</td>
+<td>delivery</td>
+<td>把信送到晨光小镇</td>
+<td>Deliver a letter to Dawn Chapel</td>
+<td>1</td>
+<td>6</td>
+<td>216</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>bounty</td>
+<td>打败8个丧尸</td>
+<td>Defeat 8 × Zombie</td>
+<td>8</td>
+<td>6</td>
+<td>270</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>collect</td>
+<td>收集5顶旧帽子</td>
+<td>Collect 5 old hats</td>
+<td>5</td>
+<td>8</td>
+<td>360</td>
+<td>–</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>450</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>6</td>
+<td>晨光小镇</td>
+<td>delivery</td>
+<td>把信送到云岭镇</td>
+<td>Deliver a letter to Cloud Ridge</td>
+<td>1</td>
+<td>6</td>
+<td>270</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>bounty</td>
+<td>打败8只鹰身女妖</td>
+<td>Defeat 8 × Harpy</td>
+<td>8</td>
+<td>6</td>
+<td>324</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>collect</td>
+<td>收集5根羽毛</td>
+<td>Collect 5 feathers</td>
+<td>5</td>
+<td>8</td>
+<td>432</td>
+<td>–</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>540</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>7</td>
+<td>云岭镇</td>
+<td>delivery</td>
+<td>把信送到角斗场镇</td>
+<td>Deliver a letter to Arena Town</td>
+<td>1</td>
+<td>6</td>
+<td>324</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>bounty</td>
+<td>打败8个巨魔</td>
+<td>Defeat 8 × Arena Troll</td>
+<td>8</td>
+<td>6</td>
+<td>378</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>collect</td>
+<td>收集5块铜奖牌</td>
+<td>Collect 5 bronze medals</td>
+<td>5</td>
+<td>8</td>
+<td>504</td>
+<td>–</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>630</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>8</td>
+<td>角斗场镇</td>
+<td>delivery</td>
+<td>把信送到灯火营地</td>
+<td>Deliver a letter to Lantern Light Camp</td>
+<td>1</td>
+<td>6</td>
+<td>378</td>
+<td>return_feather</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>bounty</td>
+<td>打败8个小恶魔</td>
+<td>Defeat 8 × Imp</td>
+<td>8</td>
+<td>6</td>
+<td>432</td>
+<td>honey_potion</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>collect</td>
+<td>收集5颗暗影水晶</td>
+<td>Collect 5 shadow crystals</td>
+<td>5</td>
+<td>8</td>
+<td>576</td>
+<td>–</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>words</td>
+<td>学会15个新词</td>
+<td>Get 15 words of this realm Ready</td>
+<td>15</td>
+<td>10</td>
+<td>720</td>
+<td>mana_tea</td>
+</tr>
+<tr>
+<td>9</td>
+<td>灯火营地</td>
+<td>delivery</td>
+<td>把信送到小山村</td>
+<td>Deliver a letter to Village of 小山</td>
+<td>1</td>
+<td>6</td>
+<td>432</td>
+<td>cosmetic: postman cap</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sim.</strong> Savers finish all 4 quests in almost every realm (collect 80–100%). Spenders always finish the bounty and usually the collect quest, but they finish the words quest only in realms 1 and 4 (0–13% elsewhere): it's the quest that rewards slowing down. Quests are about 15% of all gold income.</p>
+<p><strong>How quests feed spells.</strong> Quests pay about 30 × G per realm, which is about 40–55% of a beginner spell or 25% of a top spell. A spell costs 45–130 kills. With that realm's 4 quests done, it costs 18–101 kills. In play time, that's about 1 to 2 h of a saver's realm (57–113 min at the realm's pace).</p>
+<hr />
+<h2 id="8-preview-practice-new-in-v3">8. Preview &amp; Practice (new in v3)</h2>
+<h3 id="81-where-it-goes-per-location-plus-a-realm-overview">8.1 Where it goes: per location, plus a realm overview</h3>
+<p><strong>Decision: a Preview page before each location</strong> (20 pages), plus a short <strong>realm overview</strong> at each realm gate (9 pages).</p>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>items per page</th>
+<th>pros</th>
+<th>cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>per realm</td>
+<td>94–150</td>
+<td>9 pages; one "story arc" intro</td>
+<td>Too many items for one sitting (a 150-item list is a textbook page, not a game screen). The kid would preview words they won't fight for another hour. Practice credit would be spent on items far from their battle use.</td>
+</tr>
+<tr>
+<td><strong>per location (chosen)</strong></td>
+<td>47–60</td>
+<td>Matches the unit the engine uses (each location's pool, readiness and boss). New items are practiced minutes before the battles that use them. Readiness at the gate reflects exactly this list.</td>
+<td>20 pages; needs a realm-level story hook → the realm overview</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>realm overview</strong> is a single screen: the realm map, the realm boss silhouette, the 2–3 location names and topics (e.g. "Crossroads Market: shopping, money, comparisons"), and 6–8 "headline" items (one per topic) with audio. It's the story-arc intro. The item lists and practice are per location.</p>
+<h3 id="82-the-preview-page">8.2 The Preview page</h3>
+<p>Opened automatically the first time the kid enters a location (skippable after 3 s), and any time from the location map, the inn, or the boss gate ("Practice the words you still need").</p>
+<table>
+<thead>
+<tr>
+<th>block</th>
+<th>contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td>Location name (中文 + English), the boss portrait, readiness bar "Ready words 9 / 52 (need 11)"</td>
+</tr>
+<tr>
+<td>item list</td>
+<td>Every pool item in authored order. Per row: characters (Simplified, or Traditional if the parent chose it), English, 🔊 audio button (no pinyin, v3.2), topic chip, progress pips (4 or 2 ways), and a "new" badge for items never seen in battle. Filter chips: All / New / Not ready / Ready. Sentence frames show a filled example (这件衣服多少钱?).</td>
+</tr>
+<tr>
+<td>practice modes</td>
+<td>5 tiles (§8.3), each with a sticker slot showing whether it's cleared.</td>
+</tr>
+<tr>
+<td>rewards strip</td>
+<td>The "Preview complete" reward and the sticker count (§8.4).</td>
+</tr>
+</tbody>
+</table>
+<p>Audio: the core items' recorded or cloud TTS clip (<code>audio.url</code>). Parent items use <strong>browser TTS</strong> (<code>speechSynthesis</code>, zh-CN voice; decided). If no zh-CN voice is available, the 🔊 button is hidden and the item shows characters + English only. It never falls back to pinyin (v3.2). The parent editor flags these items (§10.2).</p>
+<h3 id="83-practice-modes-and-the-counting-rule">8.3 Practice modes and the counting rule</h3>
+<table>
+<thead>
+<tr>
+<th>mode_id</th>
+<th>name</th>
+<th>how_it_works</th>
+<th>ways</th>
+<th>counts_for_proficiency</th>
+<th>sticker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>flashcards</td>
+<td>Flashcards</td>
+<td>Flip card: characters + audio ↔ English (no pinyin). Kid self-marks "knew it"/"not yet"</td>
+<td>–</td>
+<td>no</td>
+<td>first clear of all cards</td>
+</tr>
+<tr>
+<td>listen_pick</td>
+<td>Listen and pick</td>
+<td>Audio plays; tap the English (R-ZE) or the Chinese for an English prompt (R-EZ)</td>
+<td>R-ZE, R-EZ</td>
+<td>yes, ≤1 per way</td>
+<td>first clear</td>
+</tr>
+<tr>
+<td>say_it</td>
+<td>Say it</td>
+<td>See English (+ picture), say the Chinese (S-EZ); or hear Chinese, say the English (S-ZE)</td>
+<td>S-EZ, S-ZE</td>
+<td>yes, ≤1 per way</td>
+<td>first clear</td>
+</tr>
+<tr>
+<td>matching</td>
+<td>Matching game</td>
+<td>Match 6 Chinese cards to 6 English cards (timer-free)</td>
+<td>R-ZE</td>
+<td>yes, ≤1 per way (first match only)</td>
+<td>first clear</td>
+</tr>
+<tr>
+<td>quick_quiz</td>
+<td>Quick quiz</td>
+<td>10 mixed questions picked by the engine (weakest way first), same grading as battle</td>
+<td>all active ways</td>
+<td>yes, ≤1 per way</td>
+<td>first clear</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Counting rule (decided):</strong> a correct practice answer counts toward proficiency, but <strong>at most 1 of the 2 correct answers per way</strong> can come from practice (<code>WayStat.practiceCredit</code>, 0 or 1). Details:
+- Only graded modes count (listen-and-pick, say-it, matching, quick quiz). Flashcards are self-marked and never count.
+- Practice uses the same matching rules as battle (§9.2), <code>nomatch</code> = wrong, and no hints.
+- A wrong practice answer doesn't remove credit and doesn't move the Leitner box. Practice has <strong>no penalty</strong>.
+- Practice doesn't mark an item "seen" for the battle engine. NEW_CAP and the working set still decide when items enter battle sets, so a kid can't skip the teach-card flow.
+- Sessions are short: 8–12 questions per round, then a "Go fight!" button. No timers (decided). Matching is untimed and counts moves, not seconds.</p>
+<p>What the sim models: "light" practice = one R-ZE (listen-and-pick) + one S-EZ (say-it) per item (R-ZE + R-EZ in reading mode). "Full" = each active way once per item. Both use the ≤1-per-way cap. Results are in §7.7: light cuts patrols about 25–30% (reading mode: ~80%) at about the same total time; full cuts about 50–57%.</p>
+<h3 id="84-rewards-small-and-never-better-than-battle-farming">8.4 Rewards (small, and never better than battle farming)</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+<th>unit</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gold_per_question</td>
+<td>0</td>
+<td>gold</td>
+<td></td>
+</tr>
+<tr>
+<td>exp_per_question</td>
+<td>0</td>
+<td>EXP</td>
+<td></td>
+</tr>
+<tr>
+<td>preview_complete_reward</td>
+<td>1 Honey Potion + 1 × G gold</td>
+<td>once per location</td>
+<td>every pool item answered at least once in a graded mode (not flashcards)</td>
+</tr>
+<tr>
+<td>mode_first_clear</td>
+<td>1 sticker</td>
+<td>once per mode per location</td>
+<td>cosmetic sticker book only</td>
+</tr>
+<tr>
+<td>realm_overview_complete</td>
+<td>1 cosmetic (hat/badge)</td>
+<td>once per realm</td>
+<td></td>
+</tr>
+<tr>
+<td>practice_credit_cap_per_way</td>
+<td>1</td>
+<td>correct answer</td>
+<td>battle must supply the 2nd</td>
+</tr>
+<tr>
+<td>marks_item_seen</td>
+<td>no</td>
+<td></td>
+<td>battle NEW_CAP and working set still decide introduction order</td>
+</tr>
+<tr>
+<td>leitner_effect</td>
+<td>none</td>
+<td></td>
+<td>practice answers do not move Leitner boxes</td>
+</tr>
+</tbody>
+</table>
+<p>Why it can't beat farming: practice pays 0 gold and 0 EXP per question. The one-time "Preview complete" reward per location (1 Honey Potion + 1 × G) is worth about 2 normal enemies, and it's only given once. Stickers and the realm cosmetic are purely cosmetic, stored in a sticker book. Proficiency EXP (+10 per way completed, +30 per proficient item) is paid only when the way is completed in battle, even if practice supplied the first correct answer.</p>
+<h3 id="85-ui-flow">8.5 UI flow</h3>
+<pre><code>Enter location (first time) -&gt; PREVIEW (auto, skippable after 3 s)
+  PREVIEW -&gt; [tap a mode tile] -&gt; MODE_INTRO (1 line + example) -&gt; ROUND (8–12 q) -&gt; ROUND_SUMMARY
+          -&gt; sticker if first clear; &quot;Preview complete&quot; when every item has been answered once in a graded mode
+          -&gt; back to PREVIEW
+  PREVIEW -&gt; &quot;Go fight!&quot; -&gt; LOCATION_MAP
+Realm gate (first time) -&gt; REALM_OVERVIEW (story card, headline items with audio) -&gt; first location's PREVIEW
+Boss gate below trigger -&gt; &quot;Train&quot; (patrol) | &quot;Practice&quot; (opens PREVIEW filtered to &quot;Not ready&quot;) | &quot;Enter&quot;
+Inn menu -&gt; &quot;Practice words&quot; -&gt; PREVIEW
+</code></pre>
+<h3 id="86-data-needs">8.6 Data needs</h3>
+<pre><code class="language-ts">Location { ...; previewIntro: { textEn: string; textZh?: string }; headlineItemIds?: string[] }
+Realm    { ...; overview: { storyEn: string; storyZh?: string; headlineItemIds: string[]; bossArt: string } }
+Item     { ...; audio: { source: 'recorded' | 'cloud_tts' | 'browser_tts'; url?: string; voice?: string };
+           exampleZh?: string; exampleEn?: string /* for sentence frames */; imageUrl?: string /* say-it prompt */ }
+WayStat  { ...; practiceCredit: 0 | 1 }
+PracticeStats { itemKey; way; attempts: int; correct: int; lastPracticed: ts }           // per item-way; analytics only
+LocationProgress { locationId; previewSeen: boolean; previewComplete: boolean; previewRewardClaimed: boolean;
+                   modeCleared: { flashcards; listen_pick; say_it; matching; quick_quiz : boolean };
+                   bossDefeated: boolean }
+RealmProgress { realmId; overviewSeen: boolean; overviewRewardClaimed: boolean }
+StickerBook  { stickers: { id; locationId; modeId; earnedAt }[] }
+</code></pre>
+<p>Tables: <code>data/practice_modes.csv</code>, <code>data/practice_rewards.csv</code>, and <code>data/curriculum_location_pools.csv</code> (the item list per location).</p>
+<hr />
+<h2 id="9-answer-modes">9. Answer modes</h2>
+<h3 id="91-speech-no-retry-for-wrong-answers-re-prompt-only-on-technical-failure">9.1 Speech: no retry for wrong answers; re-prompt only on technical failure</h3>
+<p>Setup (unchanged from v1): <code>SpeechRecognition || webkitSpeechRecognition</code>, <code>continuous = false</code>, <code>interimResults = false</code>, <code>maxAlternatives = 5</code>. <code>lang = 'zh-CN'</code> for S-EZ answers and <code>'en-US'</code> for S-ZE answers. <strong>Push-to-talk</strong>: the kid taps the mic, and it's never always-on.</p>
+<p><strong>Consent gate (decided).</strong> At first launch, before anything else, a parent screen explains: "This game listens only when your child taps the microphone. In Chrome, the recording is sent to Google to turn speech into text. We keep only the text, on this device." Buttons: <strong>I agree</strong> (required to continue) and <strong>Why?</strong>. There's no "play without speech" button. If the browser can't do speech recognition at all, the screen says so and continues in reading mode (§3.1). The consent timestamp is stored in <code>Settings.speechConsentAt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max listen window</td>
+<td>6 s; 8 s if the answer is longer than 4 syllables</td>
+</tr>
+<tr>
+<td>No-speech timeout</td>
+<td>4 s with nothing detected (this is a technical failure, not a wrong answer)</td>
+</tr>
+<tr>
+<td>Start</td>
+<td>After the prompt audio ends and the kid taps the mic, with a beep cue</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Jack's rule:</strong> a spoken answer that's recognized and doesn't match is <strong>wrong</strong>. It's graded once, with the normal miss or broken block. There's no "try again" and no MC fallback. The model audio plays <em>after</em> grading as feedback.</p>
+<p><strong>Split between "wrong" and "technical failure"</strong> (decided):</p>
+<table>
+<thead>
+<tr>
+<th>Recognizer outcome</th>
+<th>Classification</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result</code> with any transcript (even an unrelated word)</td>
+<td><strong>Graded</strong></td>
+<td>Matching per §9.2. A mismatch is wrong.</td>
+</tr>
+<tr>
+<td><code>nomatch</code> event (the engine heard speech but produced no usable text)</td>
+<td><strong>Graded as wrong</strong> (decided)</td>
+<td>The kid spoke, so this counts as an answer.</td>
+</tr>
+<tr>
+<td><code>error: no-speech</code> (no audio energy at all), or the 4 s timeout with no speech-start</td>
+<td>Technical</td>
+<td>"I didn't hear anything, tap and talk!" Same question re-prompted.</td>
+</tr>
+<tr>
+<td><code>error: audio-capture</code> (mic busy or glitch), <code>aborted</code> (interrupted by the app or OS)</td>
+<td>Technical</td>
+<td>Same re-prompt</td>
+</tr>
+<tr>
+<td><code>error: network</code></td>
+<td>Technical, re-prompted once</td>
+<td>If it happens a second time, speech pauses for the battle</td>
+</tr>
+<tr>
+<td><code>error: not-allowed</code>, <code>service-not-allowed</code>, <code>language-not-supported</code>, API missing (Safari/Firefox)</td>
+<td>Device or permission</td>
+<td><strong>Speech is disabled for the session</strong> with a friendly banner. The kid continues in reading mode (2 ways, §3.1) until it's fixed. No question is graded.</td>
+</tr>
+</tbody>
+</table>
+<p>Limits that stop this from becoming a retry loophole:</p>
+<ul>
+<li><strong>At most 2 technical re-prompts per question.</strong> After a 3rd technical failure the question is <strong>VOID</strong>: no damage either way, no proficiency or Leitner change, and the turn passes. On defense, a void means the enemy's attack is <em>skipped</em> (not taken and not blocked), so voiding never costs HP. The engine then marks the item's spoken way "cooling" for the battle and picks a reading way for that item next time (this isn't a retry of the same answer; it's the next scheduled question).</li>
+<li><strong>3 voided questions in a session → speech pauses for the rest of the session</strong> ("Your microphone seems sleepy. We'll use tapping for now."). It's logged so Jack can see flaky devices.</li>
+<li>A re-prompt is only possible when the recognizer reported <em>no transcript at all</em>. Anything the kid actually said is graded. Kids can't game this by mumbling, because a mumble either produces a transcript (graded) or <code>nomatch</code> (graded wrong).</li>
+<li>Push-to-talk and the beep cue keep <code>no-speech</code> rare. The sim doesn't model technical failures: under this rule they cost only time, never HP or proficiency.</li>
+</ul>
+<p><strong>ASR false rejects</strong> are the real cost of the no-retry rule. A correct answer sometimes gets transcribed wrong, especially short Chinese words said by kids. The sim models spoken accuracy below MC (§7.6). Mitigations that don't bend the rule: the homophone rule (§9.2), contained-match, <code>maxAlternatives = 5</code>, a per-item "speech match rate" KPI (items under 40% get extra <code>alt_answers</code> or <code>speaking = N</code>), and the 50% spoken cap per battle (§3.4).</p>
+<p>Spoken correct: correct, ×1.25 damage on attack, +1 extra streak, and it counts toward that spoken way's <code>correct</code> for proficiency.</p>
+<p>Privacy: log transcript text only, never audio.</p>
+<h3 id="92-matching-rules-unchanged-from-v1">9.2 Matching rules (unchanged from v1)</h3>
+<p>Normalization, applied to both the transcript alternatives and the accepted answers:</p>
+<ol>
+<li>NFKC normalization, which converts full-width forms to half-width.</li>
+<li>Strip all punctuation and whitespace, both CJK (，。！？、…) and ASCII.</li>
+<li>Convert Traditional to Simplified with OpenCC <code>t2s</code> (opencc-js).</li>
+<li>Convert digits to Chinese numerals (10 → 十, 12岁 → 十二岁, 2 → 二/两; both accepted).</li>
+<li>Strip a trailing 儿 (erhua) on both sides.</li>
+<li>Strip leading and trailing fillers 啊 呃 嗯 那个, unless the answer contains them.</li>
+<li>English: lowercase; strip articles and "to"; keep letters, digits and apostrophes; light stemming (s/es/ed/ing).</li>
+</ol>
+<p>Accept a ZH answer if <strong>any</strong> alternative satisfies <strong>any</strong> of these:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact</td>
+<td><code>norm(alt) == norm(ans)</code> for the answer or any <code>alt_answers_zh</code></td>
+</tr>
+<tr>
+<td>Contained</td>
+<td><code>norm(ans)</code> is a substring of <code>norm(alt)</code> and the extra characters ≤ max(2, len(ans))</td>
+</tr>
+<tr>
+<td>Homophone</td>
+<td>Toneless pinyin of alt == toneless pinyin of ans (handles 他/她/它 and recognizer character choice). Tones aren't checked (decided).</td>
+</tr>
+<tr>
+<td>Fuzzy (≥4 syllables only)</td>
+<td>Syllable Levenshtein similarity ≥ <strong>0.8</strong> on toneless pinyin; lenient pairs (zh~z, ch~c, sh~s, -ng~-n, l~n) cost 0.5</td>
+</tr>
+<tr>
+<td>≤3 syllables</td>
+<td>Exact or homophone only</td>
+</tr>
+</tbody>
+</table>
+<p>Accept an EN answer if any normalized alternative equals a gloss sense (split on <code>;</code> <code>,</code> <code>/</code>, parentheticals removed) or an <code>alt_answers_en</code>; or has token-set ratio ≥ <strong>0.8</strong> with a sense; or contains the head word of a 1–2-word sense.</p>
+<p>Because a mismatch is now final, these rules should lean <strong>lenient</strong>. Before the playtest, run the matcher on real recordings of the kids saying the 60 slice items, and add alt answers wherever it rejects a correct answer.</p>
+<h3 id="93-distractor-generation-core-and-parent-items">9.3 Distractor generation (core and parent items)</h3>
+<p>Candidates come from all items the engine knows: core items plus the kid's parent sets. The kid's seen items are preferred so that distractors are familiar.</p>
+<pre><code class="language-python">def distractors(target, direction, k, location_tier):
+    C = [c for c in all_items if c.id != target.id]
+    C = [c for c in C if not is_excluded(c, target, direction)]
+    for c in C:
+        c.score = (3 if c.topic == target.topic else 0)
+                + (2 if c.type == target.type and c.pos == target.pos else 0)
+                + (1 if abs(c.char_len - target.char_len) &lt;= 1 else 0)
+                + (1 if 0.6 &lt;= len(c.en_primary)/len(target.en_primary) &lt;= 1.6 else 0)
+                + (1 if abs(eff_level(c) - eff_level(target)) &lt;= 1 else 0)
+                + (1 if kid.seen(c) else 0)
+                - (2 if c.id in last_distractors_for(target) else 0)   # rotate, defeat position/set memory
+                + (1 if location_tier &gt;= 12 and shares_char(c, target) else 0)
+    top = sorted(C, key=score, reverse=True)[:2*k]
+    return random.sample(top, k)
+
+def is_excluded(c, t, direction):
+    return (norm_zh(c.simplified) in t.accepted_zh or norm_zh(c.traditional) in t.accepted_zh   # same answer
+         or synonym(c, t)                                                   # see below
+         or (direction == 'ZH→EN' and prompt_is_audio(t) and toneless(c) == toneless(t))   # homophone ambiguity
+         or (direction == 'EN→ZH' and en_overlap(c, t))                     # both could fit the English prompt
+         or (t.type in ('phrase', 'exclamation') and c.type not in ('phrase', 'exclamation'))   # form match
+         or (location_tier &lt; 12 and shares_char(c, t) and c.char_len &lt;= 2)) # too confusable early
+
+def synonym(c, t):
+    return (content_tokens(c.english) &amp; content_tokens(t.english))          # &quot;happy&quot; vs &quot;happy; glad&quot;
+        or same_manual_group(c, t)      # curated groups: 高兴/开心/快乐, 怕/害怕, 帮/帮忙/帮助, 看/看见,
+                                        # 二/两, 哪儿/哪里, 这儿/这里, 但是/可是/不过, 很/非常, 家/房子 ...
+        or cedict_gloss_overlap(c, t) &gt;= 0.5
+</code></pre>
+<ul>
+<li>Fallback: if fewer than k candidates survive, relax the rules in this order: level, then length, then topic. Never relax the synonym, answer or homophone rules. If the options still fall short, show fewer options.</li>
+<li>Option display: EN→ZH options show characters only. There is no pinyin anywhere in the game UI (v3.2); <code>reading = N</code> items lean on the audio. ZH→EN options show the <strong>primary English sense only</strong>, in a consistent format.</li>
+<li>Quality loop: if one distractor draws more than 40% of an item's wrong answers across ≥20 attempts, flag the pair for review (it may be an unlisted synonym).</li>
+</ul>
+<hr />
+<h2 id="10-parent-editor-data-model">10. Parent editor data model</h2>
+<h3 id="101-entities">10.1 Entities</h3>
+<pre><code class="language-ts">WordSet {
+  id: uuid; name: string; ownerParentId: string; childIds: string[];
+  placement: { mode: 'new_location' | 'attach_to_location'; locationId?: string };  // default new_location
+  tierMode: 'kid_frontier' | 'fixed'; tier?: number;        // default kid_frontier (rewards scale with progress)
+  monsterSkin?: EnemyRosterId;                             // default auto (pick an unlocked roster)
+  items: CustomItem[]; createdAt; updatedAt; version: number; status: 'draft' | 'ready';
+}
+
+CustomItem {
+  // ---- parent-entered (the only required fields) ----
+  english: string;              // required, 1–60 chars; ';' separates alternative senses: &quot;happy; glad&quot;
+  chinese: string;              // required, Simplified or Traditional, 1–12 CJK chars, may include &quot;……&quot;
+  // ---- optional parent fields ----
+  topic?: string;               // dropdown of core topics + free text; default 'Custom'
+  altAnswersZh?: string[];      // e.g. 天啊 for 天哪
+  altAnswersEn?: string[];
+  note?: string;                // shown on the feedback card
+  // ---- generated (parents may edit pinyin/topic/flags; engine re-validates; pinyin is data only, never shown in the game UI) ----
+  id: uuid; itemKey: string;    // itemKey = sha1(simplified + '|' + primaryEnglishLower); shared with core for dedupe
+  inputScript: 'simplified' | 'traditional' | 'mixed';
+  simplified: string; traditional: string;          // OpenCC t2s / s2tw
+  pinyin: string;               // tone marks, via pinyin-pro in phrase mode
+  pinyinCandidates?: string[];  // when a polyphone was detected (还, 长, 只, 行, 了 ...)
+  pinyinConfidence: 'high' | 'needs_review';
+  toneless: string; syllables: number; charLen: number;
+  type: string; pos: string;    // CC-CEDICT lookup; else heuristic ('phrase' if &gt;4 chars or has a space/…)
+  hsk3Level: string; yctLevel: string;             // exact lookup; else 'none' + component levels
+  listening: 'Y'; speaking: 'Y' | 'N'; reading: 'Y' | 'N';   // same rules as the core curriculum
+  audio: { source: 'browser_tts' | 'cloud_tts' | 'recorded'; voice?: string; url?: string; checked: boolean };  // parent items: browser_tts (decided)
+  synonymGroup?: string; englishSenses: string[]; enPrimary: string;
+  duplicateOfCore?: string;     // core id if the same item already exists (mastery is shared)
+  status: 'ready' | 'needs_review' | 'error'; issues: Issue[];
+}
+</code></pre>
+<h3 id="102-validation">10.2 Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Level</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Required</td>
+<td>error</td>
+<td>Both english and chinese are non-empty</td>
+</tr>
+<tr>
+<td>Chinese charset</td>
+<td>error</td>
+<td>Only CJK Unified Ideographs, plus <code>……</code>, and <code>·</code> for names. No Latin letters, digits or pinyin in the chinese field.</td>
+</tr>
+<tr>
+<td>Length</td>
+<td>error / warn</td>
+<td>Chinese 1–12 chars (warn above 8: hard to say); English ≤ 60</td>
+</tr>
+<tr>
+<td>Pinyin</td>
+<td>error</td>
+<td>Every generated syllable is a valid Mandarin syllable, and the syllable count equals the Hanzi count (erhua exempt)</td>
+</tr>
+<tr>
+<td>Polyphone</td>
+<td>warn (needs_review)</td>
+<td>Show the candidates, e.g. 还 hái / huán; the parent taps one. Default is the phrase-mode best guess.</td>
+</tr>
+<tr>
+<td>Duplicate in set</td>
+<td>error</td>
+<td>Same simplified form twice in a set (unless the english senses differ, as with 只 zhī/zhǐ)</td>
+</tr>
+<tr>
+<td>Duplicate of core</td>
+<td>info</td>
+<td>Link to the core item and share its mastery; the parent's English is added as an alt answer</td>
+</tr>
+<tr>
+<td>Ambiguous English</td>
+<td>warn</td>
+<td>Two items in the set with the same primary English sense make ZH→EN ambiguous. Suggest adding a hint, e.g. "happy (高兴)".</td>
+</tr>
+<tr>
+<td>Mixed script</td>
+<td>warn</td>
+<td>Mixed Simplified/Traditional input is auto-converted; show both</td>
+</tr>
+<tr>
+<td>Content filter</td>
+<td>error</td>
+<td>Profanity/slur lists in both languages</td>
+</tr>
+<tr>
+<td>Set size</td>
+<td>error / warn</td>
+<td>Minimum 7 items per set, or 4 with top-up from core same-topic items; recommended 20–40; maximum 300 (split into 50-item locations automatically)</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>warn</td>
+<td>If no zh-CN TTS voice is available on the device, flag it (the item then shows characters + English with no audio button; never pinyin)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-scaling-to-many-locations-data-driven">10.3 Scaling to many locations (data-driven)</h3>
+<pre><code class="language-ts">Realm    { id; name; themeText; tierBase: number; locationIds: string[]; bossLocationId: string; overview /* §8.6 */ }
+Location { id /* 'L1.1' … */; realmId; name; nameZh; tier: number; itemIds: string[];      // 47–60 in the core curriculum
+           enemiesPerBattle: [min, max]; mcOptions: number; reviewSlots: number; pathFights: 8;
+           enemyRoster: { enemyId; weight }[]; bossId; scriptedEliteId?: string;         // every location ends in a boss
+           unlock: { requires: string[] /* previous location ids whose boss must be beaten */ };
+           bossApproach: { trigger: number /* 0.20 speech, 0.40 reading */; patrolsPerTrip: 2; eliteChance: 0.10; roster: EnemyRef[] };
+           previewIntro /* §8.6 */ }
+Enemy    { id; nameZh; nameEn; art; role: 'normal' | 'elite' | 'boss'; bossType?: 'location' | 'realm';
+           statsFromTier: true; overrides?; minions?: EnemyRef[]; special?: SpecialId /* §7.9 */; shoutItemId: string }
+</code></pre>
+<ul>
+<li>Every difficulty value defaults from <code>tier</code> using the §2.3/§5/§7 formulas, so a new realm is just JSON plus art. The generated tables in <code>data/</code> are exactly these defaults.</li>
+<li>A parent WordSet compiles into <code>ceil(n/50)</code> Locations under a "Guild Quests" realm at the kid's frontier tier, reusing unlocked enemy rosters.</li>
+<li>Progress (4 WayStats) is keyed by <code>itemKey</code>, so the same word learned in a parent set and in the core curriculum shares one record.</li>
+<li>Performance: a pool of 10k items is fine. Selection is O(n) per battle, and distractor scoring can be precomputed per topic bucket.</li>
+</ul>
+<h3 id="104-progress-storage">10.4 Progress storage</h3>
+<p>Progress is kept per <code>itemKey</code> (core id or parent item id) as <strong>4 WayStats</strong> records: <code>{way: 'R-ZE'|'R-EZ'|'S-ZE'|'S-EZ', correct, practiceCredit, wrong, lastSeen, box, dueAt}</code>, plus a derived <code>proficient</code> flag (§3.1). Also stored:
+- <code>PracticeStats</code> per item-way;
+- <code>LocationProgress</code> (<code>bossDefeated</code>, <code>previewSeen</code>, <code>previewComplete</code>, <code>previewRewardClaimed</code>, <code>modeCleared</code>);
+- <code>RealmProgress</code> (<code>overviewSeen</code>);
+- <code>Settings</code> (<code>speechConsentAt</code>, <code>speechAvailable</code>, <code>script: 'simplified'|'traditional'</code>).</p>
+<p>Editing a parent item's Chinese text resets all 4 WayStats. Editing only the English or alt answers keeps them. Items made proficient in reading mode keep <code>proficient = true</code> when speech becomes available (§3.1).</p>
+<hr />
+<h2 id="11-tuning-knobs-analytics-open-questions">11. Tuning knobs, analytics, open questions</h2>
+<h3 id="111-knobs-defaults">11.1 Knobs (defaults)</h3>
+<p>All in <code>data/proficiency_patrol_settings.csv</code>, <code>mp_rules.csv</code>, <code>companion.csv</code> and <code>economy_prices.csv</code> unless noted.</p>
+<table>
+<thead>
+<tr>
+<th>knob</th>
+<th>default</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SET_SIZE / WORKING_SET / NEW_CAP</td>
+<td>7 / 10 / <strong>3</strong> per battle (hard cap, v3.2; was 4)</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>Proficiency</td>
+<td>2 correct (total) in each of 4 ways; 2 reading ways only without speech; ≤ 1 from practice</td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>Proficient-item review weight</td>
+<td>0.15, raised by 1.5 × min(overdue, 2) when a way is due</td>
+<td>§3.2</td>
+</tr>
+<tr>
+<td>Readiness</td>
+<td>proficient ÷ the location's own pool</td>
+<td>§7.4</td>
+</tr>
+<tr>
+<td>Boss-approach trigger</td>
+<td><strong>20%</strong> (speech on), <strong>40%</strong> (reading mode)</td>
+<td>§7.7 (Director's call, v3.1)</td>
+</tr>
+<tr>
+<td>Patrols per approach trip / elite chance</td>
+<td>2 / 10%</td>
+<td>§7.4, §7.8</td>
+</tr>
+<tr>
+<td>Path fights per location</td>
+<td>8 (one is the scripted elite in its home location)</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>Carry-over cap</td>
+<td>20 earlier items</td>
+<td>§3.3</td>
+</tr>
+<tr>
+<td>Spoken cap</td>
+<td>50% of questions per battle</td>
+<td>§3.4</td>
+</tr>
+<tr>
+<td>K_BLOCK / K_BROKEN / BROKEN_FLOOR</td>
+<td>1.25 / 0.5 / 0.5</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>Rounding</td>
+<td>half-up (<code>Math.round</code>) for all combat damage, as in the prototype</td>
+<td>sim switched in v3.2</td>
+</tr>
+<tr>
+<td>Enemy ATK normal / elite / location boss / realm boss</td>
+<td>1.1 / 1.2 / 1.2 / 1.3 × DEF_ref</td>
+<td>§2.3</td>
+</tr>
+<tr>
+<td>Enemy HP normal / elite / location boss / realm boss</td>
+<td>H(t) / 2 × H(t) / 5 / 7 × base</td>
+<td>§2.3</td>
+</tr>
+<tr>
+<td>Boss minions / checkpoint</td>
+<td>1 (location) or 1–2 (realm) / 50% save point, no heal</td>
+<td></td>
+</tr>
+<tr>
+<td>Streak tiers</td>
+<td>3 / 6 / 10 → ×1.25 / 1.5 / 2.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Spoken bonus</td>
+<td>×1.25 damage, +1 streak</td>
+<td></td>
+</tr>
+<tr>
+<td>Soft cap (Tired: enemy ATK × 0.7, hero damage × 1.5)</td>
+<td><strong>30 questions</strong> in normal battles (elites included), <strong>45</strong> in all boss battles (v3.2; the location boss was 40)</td>
+<td>§2.5</td>
+</tr>
+<tr>
+<td>G(t)</td>
+<td>6, 12, 18, 27, 36, 45, 54, 63, 72 (±20%, floor 80%)</td>
+<td>gold multipliers: normal 1, elite 2, location boss 5, realm boss 10</td>
+</tr>
+<tr>
+<td>EXP</td>
+<td>6 / 10 / 20 / 50 × L_rec (normal / elite / location boss / realm boss)</td>
+<td>XP curve 100 × L</td>
+</tr>
+<tr>
+<td>Chest chance</td>
+<td>10% normal, 25% elite, 100% boss</td>
+<td>§7.2</td>
+</tr>
+<tr>
+<td>Inn / Honey Potion / Big Honey / Mana Tea / Return Feather</td>
+<td>2×G / 1×G / 2×G / 1×G / 1×G</td>
+<td>§6.4, §7.3</td>
+</tr>
+<tr>
+<td>Start kit</td>
+<td>24 gold + 1 free Honey Potion (+1 Return Feather in the tutorial)</td>
+<td></td>
+</tr>
+<tr>
+<td>MP</td>
+<td>10 + 2L; <strong>+1 per correct answer</strong>; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20</td>
+<td>§6.4</td>
+</tr>
+<tr>
+<td>Companion</td>
+<td>gauge 100; +20 per wrong, +5 per correct; attack 1.25 × ATK_h − 0.5 × DEF_e; resets each battle</td>
+<td>§6.6</td>
+</tr>
+<tr>
+<td>Defeat fee</td>
+<td>max(10% of gold, inn price), never below 2 × inn; free inn when gold &lt; inn</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>Courage</td>
+<td>+20% DEF per consecutive defeat, cap +60%, cleared by a win</td>
+<td>§7.5</td>
+</tr>
+<tr>
+<td>Queen Bee summons</td>
+<td>every 3rd round, max 2, half HP, no drops</td>
+<td>§7.9</td>
+</tr>
+<tr>
+<td>Speech</td>
+<td>consent gate; 2 technical re-prompts, then VOID; 3 voids → speech paused for the session; 6/8 s listen; 4 s no-speech; nomatch = wrong</td>
+<td>§9.1</td>
+</tr>
+<tr>
+<td>Practice</td>
+<td>≤ 1 credit per way; 0 gold / 0 EXP per question; Preview complete = 1 Honey Potion + 1 × G once per location</td>
+<td>§8</td>
+</tr>
+<tr>
+<td>Leitner intervals</td>
+<td>0, 10 min, 1 d, 3 d, 7 d, 16 d, 35 d; wrong = −2 boxes</td>
+<td>scheduling only</td>
+</tr>
+<tr>
+<td>Spells (v3.3)</td>
+<td>2 per town in towns 2–9; price 45–130 × G of the selling town; MP 6–40; mult 0.8–3.5; max 3 targets; no streak multiplier; fizzle = MP spent (alternative: refund)</td>
+<td>§6.7, <code>data/spells.csv</code></td>
+</tr>
+<tr>
+<td>Magic Ward / status vs bosses</td>
+<td>×0.5 spell damage to every foe in boss battles; status chance ×0.5 on bosses</td>
+<td>§6.7</td>
+</tr>
+<tr>
+<td>Blacksmith first</td>
+<td>warn if a spell purchase leaves less than the next town's weapon + armor + shield</td>
+<td>§6.7</td>
+</tr>
+<tr>
+<td>Quests (v3.3)</td>
+<td>4 per town, one-time: bounty 8 kills (6 × G + Honey Potion), collect 5 drops at 35% (8 × G), words 15 Ready (10 × G + Mana Tea), delivery (6 × G + Return Feather)</td>
+<td>§7.11, <code>data/quests.csv</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="112-analytics-to-log">11.2 Analytics to log</h3>
+<p>Local-first (IndexedDB plus a JSON export). No third-party analytics.</p>
+<ul>
+<li><strong>Per question:</strong> ts, ids, itemKey, <strong>way</strong> (R-ZE / R-EZ / S-ZE / S-EZ) and <strong>why it was picked</strong> (weakest way / review / new), turnKind, options and distractors, latency, answer, correct, hint used, fast flag; speech {alternatives, outcome: graded-match / graded-mismatch / nomatch / technical(code) / void, re-prompt count}; WayStats before and after; damage dealt and taken.</li>
+<li><strong>Per battle:</strong> result, questions, spoken share, HP and MP at start and end, skills and potions used, voids, soft cap fired.</li>
+<li><strong>Economy:</strong> gold earned by source (drops, chests, boss), spent on inn / potions / gear, defeat fees, free-inn uses, Courage level at each fight, gold at each inn visit, <strong>battles between restores</strong>, defeat streak length.</li>
+<li><strong>Progress:</strong> pool proficiency % at each boss attempt, patrols fought per location, the kid choosing "go to the boss anyway", time per location.</li>
+<li><strong>Speech health:</strong> error codes by device, void rate, sessions where speech was paused, and <strong>measured false rejects</strong> (Jack or a parent tags a sample of graded-mismatch transcripts as "actually correct"). This replaces the sim's ASR assumptions with real numbers.</li>
+<li><strong>v3 additions:</strong> companion attacks per battle and whether they landed a kill; spoken-cap hits per battle; elite encounters (scripted/patrol) and their outcome; Queen Bee summons and Hydra double-bite broken blocks; Return Feather uses; <strong>v3.3:</strong> spell purchases (realm, gold before and after, gear owned), casts, fizzles, MP at cast, Ward-reduced hits, quest accept and complete times; <strong>practice</strong>: mode, questions, correct, practice credits granted, time in Preview, whether "Go fight!" was pressed from the Preview, and readiness at the gate with vs without practice.</li>
+</ul>
+<p>KPIs: accuracy 75–85% per realm; normal-battle defeat rate &lt; 10%; boss first-try win rate 60–85%; free-inn uses &lt; 1 per realm after tier 1; spoken accuracy within 10 points of reading accuracy; <strong>time per location &lt; 60 min (speech on)</strong>; Preview used by &gt; 50% of kids in at least half the locations.</p>
+<h3 id="113-open-questions-for-jack">11.3 Open questions for Jack</h3>
+<p><strong>Closed in v3.1 (Director's calls, 2026-09-28 PT):</strong></p>
+<table>
+<thead>
+<tr>
+<th>no</th>
+<th>question</th>
+<th>decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Speech-on trigger 25% vs 20%</td>
+<td><strong>20%.</strong> Set in <code>data/proficiency_patrol_settings.csv</code> (<code>boss_trigger_speech = 0.20</code>) and <code>combat_sim.py</code> (<code>TRIGGER_SPEECH</code>). All trigger-dependent sim tables were rerun (§5, §6.4, §6.6, §7.6–7.10).</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Length of the 60-item locations</td>
+<td><strong>Keep them</strong> as they are, with the midpoint inn and save point (§7.3). Length will be judged in the playtest against the time-per-location KPI (§11.2).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Troll Regrow</td>
+<td><strong>Cosmetic.</strong> A green sparkle only, with no HP effect (§7.9). Tag Team isn't used.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Practice reward values</td>
+<td><strong>Fine as proposed:</strong> 1 Honey Potion + 1 × G per location for "Preview complete", stickers per mode, and one cosmetic per realm overview (§8.4).</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>goblin_gatekeeper</code> name</td>
+<td><strong>Renamed <code>goblin_warden</code> 哥布林守卫 (Goblin Warden)</strong> in the roster. It's still role <code>boss</code>, boss_type <code>location</code> (L4.2). <code>mushroom_hopper</code> is now <code>mushroom_imp</code> 蘑菇小妖.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Closed in v3.2 (Jack's calls via Director, 2026-09-29 PT):</strong> the caps now match Jack's caps as the prototype build uses them: <strong>NEW_CAP = 3</strong> new items per battle (hard cap, was 4), and <strong>Tired at 30 questions</strong> in normal battles, elites included, <strong>and 45 in every boss battle</strong> (the old 40 tier was the location boss). Set in <code>data/proficiency_patrol_settings.csv</code> (<code>new_cap</code>, <code>tired_at_questions_normal</code>, <code>tired_at_questions_boss</code>) and in <code>combat_sim.py</code> (<code>NEW_CAP</code>, <code>SOFT_CAP_Q</code>). All sim tables were rerun (§7.7).
+Also in v3.2: <strong>no pinyin anywhere in the game UI</strong>, with audio-only answer feedback (characters + English + zh-CN audio, §1.2). <strong>Bilingual battle commands</strong> 攻击 Attack / 技能 Skills / 道具 Items / 逃跑 Run (§1.2; layout in <code>/workspace/desy/ui-layout-review.md</code>). The <strong>sim now rounds halves up</strong> like the prototype and the spec (<code>Math.round</code>); see §11.4.</p>
+<p><strong>Still open:</strong></p>
+<ol start="6">
+<li><strong>ASR assumptions.</strong> The spoken-accuracy penalty (S-EZ at (acc − 10) × 0.85) is still a guess. Measure it in week 1 and retune the trigger.</li>
+<li><strong>Gear lag.</strong> Still not modeled in the realm sim, but the prototype's Queen Bee test shows it matters. An L8 hero in tier-1 gear loses a fight that an L4 hero in tier-2 gear wins 96–100% of the time with the same attack-only play (§7.9). Proposal: auto-equip a drop or purchase when it's strictly better, show a "your gear is 1+ tier old" warning at the realm gate, and offer an upgrade there. The v3.3 campaign sim (<code>build/spells_sim.py</code>) now models gear tiers: the kid enters a realm in the previous tier's gear and buys the upgrade in town.</li>
+<li><strong>Spells and quests (v3.3; defaults are proposals, see <code>/workspace/desy/spells.md</code>).</strong>
+   - (a) Fizzle rule: MP spent (default) or refunded (§6.7 table).
+   - (b) Town names: all 9 are placeholders.
+   - (c) Town 1's magic shop: Mana Tea plus a "coming soon" shelf, or a cheap teaser spell?
+   - (d) Elements: cosmetic only (default), or weaknesses such as fire vs the Fire Elemental?
+   - (e) Magic Ward: ×0.5 in boss battles (default), or a stronger or weaker value?
+   - (f) Prices: the first spell is affordable on arrival in town 2, because realm 1 has almost nothing to spend gold on. Raise the beginner prices, or add a town-1 sink?
+   - (g) Quests: one-time (default) or repeatable? Should the words quest count earlier realms' words? Spenders finish it in few late realms.
+   - (h) Should the Blacksmith-first warning be a hard lock?</li>
+</ol>
+<h3 id="114-risks">11.4 Risks</h3>
+<ul>
+<li><strong>Long locations with speech on:</strong> 41–68 min for savers at 75% accuracy. Decided: keep the 60-item locations with the midpoint inn and save point, and judge length in the playtest ("time per location" KPI).</li>
+<li><strong>Low-accuracy kids at t9:</strong> a 19–31% defeat rate at 50% accuracy even with the companion, and 87% single-fight win rate against an elite. If real accuracy in late realms is under 65%, the content is too hard. That's a signal to review the realm 8–9 items, which are now 76–90% HSK ≥ 2.</li>
+<li><strong>ASR rates are assumptions:</strong> measure real false rejects in week 1 (§11.2).</li>
+<li><strong>Practice gaming:</strong> the ≤1-credit cap plus 0 gold/EXP per question stops farming, but a kid could still grind say-it to fill 1 credit per spoken way. That's fine: it's real speaking practice.</li>
+<li><strong>Gear lag isn't modeled:</strong> show the upgrade warning. Every correct block leaks HP once DEF is below ATK_e ÷ 1.25, so a hero whose gear is a tier old takes chip damage on every question (see the Queen Bee note in §7.9).</li>
+<li><strong>Sim rounding (resolved in v3.2):</strong> <code>combat_sim.py</code> now rounds halves up in combat (<code>Math.round</code>, like the spec and the prototype), where it used Python's half-to-even <code>round</code> before. The enemy stat bands still use the authored roster values. Mostly t7/t9 move: more, shorter patrol fights at the same total time, and lower defeat rates at 50% accuracy (§7.7).</li>
+<li><strong>Parent-entered errors and Web Speech drift:</strong> unchanged. Keep the reading ways first-class for the reading-mode fallback.</li>
+<li><strong>Spells (v3.3):</strong> if kids ignore the Blacksmith-first warning and buy spells before gear, defeats rise sharply in the sim: spell-first saver at 65%, 1.3% → 12.5%; spender at 75%, 0.4% → 7.4%. Keep the warning prominent, or make it a hard lock. Without the Magic Ward, late boss fights drop to about 19 questions (target 22–30).</li>
+</ul></body></html>

@@ -1,0 +1,3 @@
+﻿item_id,name_zh,name_en,effect,price,price_in_normal_kills,from_town,battle_use
+mana_tea,魔力茶,Mana Tea,+50% max MP,6 × G,6,1,no (map only)
+big_mana_tea,大魔力茶,Big Mana Tea,refills MP to full,15 × G,15,5,no (map only)

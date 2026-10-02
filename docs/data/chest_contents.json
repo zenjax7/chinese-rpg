@@ -1,0 +1,44 @@
+[
+ {
+  "chest_type": "normal chest",
+  "outcome": "gold",
+  "probability": 0.4,
+  "contents": "3 × G gold"
+ },
+ {
+  "chest_type": "normal chest",
+  "outcome": "potion",
+  "probability": 0.35,
+  "contents": "1 Honey Potion"
+ },
+ {
+  "chest_type": "normal chest",
+  "outcome": "return_feather",
+  "probability": 0.05,
+  "contents": "1 Return Feather (or 3 × G gold if carrying 3)"
+ },
+ {
+  "chest_type": "normal chest",
+  "outcome": "mana_tea",
+  "probability": 0.1,
+  "contents": "1 Mana Tea"
+ },
+ {
+  "chest_type": "normal chest",
+  "outcome": "fine_gear",
+  "probability": 0.1,
+  "contents": "1 fine gear piece of the location tier"
+ },
+ {
+  "chest_type": "location boss chest",
+  "outcome": "bundle",
+  "probability": 1.0,
+  "contents": "3 × G gold + 1 Honey Potion + guaranteed fine gear piece"
+ },
+ {
+  "chest_type": "realm boss chest",
+  "outcome": "bundle",
+  "probability": 1.0,
+  "contents": "3 × G gold + 1 Honey Potion + guaranteed heroic piece + skill unlock"
+ }
+]

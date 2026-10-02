@@ -1,0 +1,9 @@
+﻿key,value,unit,notes
+max_mp,10 + 2 × level,MP,"14 at L2, 34 at L12, 58 at L24"
+regen_per_correct,1,MP,"Every graded correct answer in battle (attack or block, any way); not practice, not hinted"
+regen_per_wrong,0,MP,
+restore_sources,"inn, waking after a defeat, Mana Tea, regen",,MP carries over between battles
+heal_fraction,0.3,of max HP,was 0.35
+heal_limit_per_battle,1,casts,was 2
+griffin_feather_frost_cost,5,MP,heroic charm: Frost costs 5 instead of 8
+queens_crown_bonus,6,max MP,heroic charm

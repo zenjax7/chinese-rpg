@@ -1,0 +1,10 @@
+﻿tier,realm,gold_per_normal,inn,honey_potion,big_honey,mana_tea,big_mana_tea,return_feather,weapon,armor,shield,elite_gold,location_boss_gold,realm_boss_gold,defeat_fee,defeat_gold_floor
+1,Starter Meadow,6,12,6,,36,,6,60,50,35,12,30,60,"max(10% of gold, 1 inn)",24
+2,Honeycomb Forest,12,24,12,,72,,12,120,95,70,24,60,120,"max(10% of gold, 1 inn)",48
+3,Crossroads Market,18,36,18,,108,,18,220,175,130,36,90,180,"max(10% of gold, 1 inn)",72
+4,Goblin Caves,27,54,27,,162,,27,380,300,230,54,135,270,"max(10% of gold, 1 inn)",108
+5,Hydra Swamp,36,72,36,72,216,540,36,650,520,390,72,180,360,"max(10% of gold, 1 inn)",144
+6,Zombie Lands,45,90,45,90,270,675,45,900,720,540,90,225,450,"max(10% of gold, 1 inn)",180
+7,Griffin Peaks,54,108,54,108,324,810,54,1150,920,690,108,270,540,"max(10% of gold, 1 inn)",216
+8,Ogre Colosseum,63,126,63,126,378,945,63,1400,1120,840,126,315,630,"max(10% of gold, 1 inn)",252
+9,Demon King's Castle,72,144,72,144,432,1080,72,1700,1360,1020,144,360,720,"max(10% of gold, 1 inn)",288

@@ -1,0 +1,92 @@
+[
+ {
+  "tier": 1,
+  "rec_level": 2,
+  "mp_pool": 14,
+  "spells_sold_mp": "–",
+  "casts_from_full": "–",
+  "casts_keeping_heal_12": "–",
+  "casts_at_level_plus_3": "–",
+  "top_spell_pct_of_realm_boss_hp": "–"
+ },
+ {
+  "tier": 2,
+  "rec_level": 4,
+  "mp_pool": 18,
+  "spells_sold_mp": "小火球术 7, 泡泡术 6",
+  "casts_from_full": "2.6",
+  "casts_keeping_heal_12": "0.9",
+  "casts_at_level_plus_3": "3.4",
+  "top_spell_pct_of_realm_boss_hp": "29%"
+ },
+ {
+  "tier": 3,
+  "rec_level": 6,
+  "mp_pool": 22,
+  "spells_sold_mp": "雪球术 9, 小闪电术 9",
+  "casts_from_full": "2.4",
+  "casts_keeping_heal_12": "1.1",
+  "casts_at_level_plus_3": "3.1",
+  "top_spell_pct_of_realm_boss_hp": "14%"
+ },
+ {
+  "tier": 4,
+  "rec_level": 9,
+  "mp_pool": 28,
+  "spells_sold_mp": "火球术 11, 旋风术 13",
+  "casts_from_full": "2.2",
+  "casts_keeping_heal_12": "1.2",
+  "casts_at_level_plus_3": "2.6",
+  "top_spell_pct_of_realm_boss_hp": "14%"
+ },
+ {
+  "tier": 5,
+  "rec_level": 12,
+  "mp_pool": 34,
+  "spells_sold_mp": "雪花术 15, 闪电术 14",
+  "casts_from_full": "2.3",
+  "casts_keeping_heal_12": "1.5",
+  "casts_at_level_plus_3": "2.7",
+  "top_spell_pct_of_realm_boss_hp": "11%"
+ },
+ {
+  "tier": 6,
+  "rec_level": 15,
+  "mp_pool": 40,
+  "spells_sold_mp": "阳光术 18, 大火球术 16",
+  "casts_from_full": "2.2",
+  "casts_keeping_heal_12": "1.6",
+  "casts_at_level_plus_3": "2.6",
+  "top_spell_pct_of_realm_boss_hp": "14%"
+ },
+ {
+  "tier": 7,
+  "rec_level": 18,
+  "mp_pool": 46,
+  "spells_sold_mp": "暴风雪术 21, 龙卷风术 21",
+  "casts_from_full": "2.2",
+  "casts_keeping_heal_12": "1.6",
+  "casts_at_level_plus_3": "2.5",
+  "top_spell_pct_of_realm_boss_hp": "12%"
+ },
+ {
+  "tier": 8,
+  "rec_level": 21,
+  "mp_pool": 52,
+  "spells_sold_mp": "流星术 21, 雷雨术 23",
+  "casts_from_full": "2.3",
+  "casts_keeping_heal_12": "1.7",
+  "casts_at_level_plus_3": "2.5",
+  "top_spell_pct_of_realm_boss_hp": "13%"
+ },
+ {
+  "tier": 9,
+  "rec_level": 24,
+  "mp_pool": 58,
+  "spells_sold_mp": "超暴风雪术 28, 流星雨术 28",
+  "casts_from_full": "2.1",
+  "casts_keeping_heal_12": "1.6",
+  "casts_at_level_plus_3": "2.3",
+  "top_spell_pct_of_realm_boss_hp": "13%"
+ }
+]

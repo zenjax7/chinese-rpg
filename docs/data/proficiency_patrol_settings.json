@@ -1,0 +1,158 @@
+[
+ {
+  "key": "proficiency_correct_per_way",
+  "value": 2,
+  "unit": "correct answers",
+  "notes": "in total, not in a row; no rusty rule"
+ },
+ {
+  "key": "active_ways_speech",
+  "value": 4,
+  "unit": "ways",
+  "notes": "R-ZE, R-EZ, S-ZE, S-EZ (default: speech is on after the consent gate)"
+ },
+ {
+  "key": "active_ways_no_speech",
+  "value": 2,
+  "unit": "ways",
+  "notes": "R-ZE, R-EZ; only for browsers without the Web Speech API or after a device/permission error"
+ },
+ {
+  "key": "keep_proficient_when_speech_added",
+  "value": "yes",
+  "unit": "",
+  "notes": "items proficient under 2 ways stay proficient; spoken ways still get scheduled"
+ },
+ {
+  "key": "nomatch_counts_as",
+  "value": "wrong",
+  "unit": "",
+  "notes": "heard speech but no words = graded wrong"
+ },
+ {
+  "key": "practice_credit_cap_per_way",
+  "value": 1,
+  "unit": "correct answers",
+  "notes": "Preview practice can supply at most 1 of the 2 correct answers per way"
+ },
+ {
+  "key": "boss_trigger_speech",
+  "value": 0.2,
+  "unit": "share of the location pool proficient",
+  "notes": "patrols spawn while below; Director’s call v3.1 (was 0.25)"
+ },
+ {
+  "key": "boss_trigger_no_speech",
+  "value": 0.4,
+  "unit": "share of the location pool proficient",
+  "notes": ""
+ },
+ {
+  "key": "readiness_denominator",
+  "value": "location pool only",
+  "unit": "",
+  "notes": "carried-over items are still practiced but not counted (was local + carry-over)"
+ },
+ {
+  "key": "forced_patrols_per_trip",
+  "value": 2,
+  "unit": "fights",
+  "notes": "each walk to the boss gate while below the trigger"
+ },
+ {
+  "key": "elite_patrol_chance",
+  "value": 0.1,
+  "unit": "per patrol",
+  "notes": "one normal enemy is replaced by the location elite"
+ },
+ {
+  "key": "scripted_elites_per_realm",
+  "value": 1,
+  "unit": "fights",
+  "notes": "middle path fight of the elite’s home location"
+ },
+ {
+  "key": "path_fights",
+  "value": 8,
+  "unit": "fights",
+  "notes": "scripted fights per location before the boss approach (was 6)"
+ },
+ {
+  "key": "set_size",
+  "value": 7,
+  "unit": "items",
+  "notes": ""
+ },
+ {
+  "key": "working_set",
+  "value": 10,
+  "unit": "items",
+  "notes": ""
+ },
+ {
+  "key": "new_cap",
+  "value": 3,
+  "unit": "items per battle",
+  "notes": "hard cap, also early in a location (v3.2, was 4); a short set is never padded with unseen items"
+ },
+ {
+  "key": "tired_at_questions_normal",
+  "value": 30,
+  "unit": "questions",
+  "notes": "normal battles, elites included"
+ },
+ {
+  "key": "tired_at_questions_boss",
+  "value": 45,
+  "unit": "questions",
+  "notes": "location and realm bosses (v3.2: location boss was 40)"
+ },
+ {
+  "key": "tired_enemy_atk_mult",
+  "value": 0.7,
+  "unit": "×",
+  "notes": "enemy ATK while Tired"
+ },
+ {
+  "key": "tired_hero_damage_mult",
+  "value": 1.5,
+  "unit": "×",
+  "notes": "hero damage while Tired"
+ },
+ {
+  "key": "carry_over_cap",
+  "value": 20,
+  "unit": "items",
+  "notes": "not-yet-proficient earlier items mixed into battle sets"
+ },
+ {
+  "key": "spoken_cap",
+  "value": 0.5,
+  "unit": "share of questions per battle",
+  "notes": ""
+ },
+ {
+  "key": "proficient_review_weight",
+  "value": 0.15,
+  "unit": "selection weight",
+  "notes": "+1.5 × min(overdue, 2) when a way is due"
+ },
+ {
+  "key": "leitner_intervals",
+  "value": "0, 10 min, 1 d, 3 d, 7 d, 16 d, 35 d",
+  "unit": "",
+  "notes": "wrong = −2 boxes; scheduling only"
+ },
+ {
+  "key": "sec_per_battle_question",
+  "value": 9.2,
+  "unit": "s",
+  "notes": "sim estimate"
+ },
+ {
+  "key": "sec_per_practice_question",
+  "value": 5.0,
+  "unit": "s",
+  "notes": "sim estimate"
+ }
+]

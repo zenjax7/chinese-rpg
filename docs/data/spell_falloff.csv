@@ -1,0 +1,19 @@
+﻿spell,town,power,target,t2,t3,t4,t5,t6,t7,t8,t9
+"plain attack (rec. gear, no streak)",–,–,–,33%,40%,44%,45%,50%,50%,50%,50%
+normal enemy HP / DEF,–,–,–,27 / 2,31 / 3,36 / 4,46 / 5,48 / 6,57 / 7,64 / 8,73 / 9
+小火球术 Small Fireball,2,20,single,67%,55%,44%,33%,29%,23%,19%,15%
+泡泡术 Bubble Spell,2,11,single,33%,26%,19%,13%,10%,7%,5%,3%
+雪球术 Snowball Volley,3,15,same type (max 3),,39%,31%,22%,19%,14%,11%,8%
+小闪电术 Little Lightning,3,25,single,,71%,58%,43%,40%,32%,27%,22%
+火球术 Fireball,4,31,single,,,75%,57%,52%,42%,36%,30%
+旋风术 Whirlwind,4,20,same type (max 3),,,44%,33%,29%,23%,19%,15%
+雪花术 Snowflake Dance,5,21,all on screen (max 3),,,,35%,31%,25%,20%,16%
+闪电术 Lightning Bolt,5,40,single,,,,76%,71%,58%,50%,42%
+阳光术 Sunbeam,6,30,same type (max 3),,,,,50%,40%,34%,29%
+大火球术 Big Fireball,6,47,single,,,,,85%,70%,61%,52%
+暴风雪术 Blizzard,7,30,all on screen (max 3),,,,,,40%,34%,29%
+龙卷风术 Tornado,7,38,same type (max 3),,,,,,54%,47%,40%
+流星术 Meteor,8,69,single,,,,,,,95%,82%
+雷雨术 Thunderstorm,8,37,all on screen (max 3),,,,,,,45%,38%
+超暴风雪术 Super Blizzard,9,42,all on screen (max 3),,,,,,,,45%
+流星雨术 Meteor Shower,9,49,all on screen (max 3),,,,,,,,55%

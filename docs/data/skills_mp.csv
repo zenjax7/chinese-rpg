@@ -1,0 +1,9 @@
+﻿skill_id,name_en,name_zh,effect,mp_cost,mp_cost_v2,limit,earned
+insight,Insight,提示,Removes 1 distractor from the current MC question; a correct answer counts in combat but not for proficiency,4,3,2 per battle,start
+double_strike,Double Strike,连击,"At streak ≥ 3, a correct attack hits twice (2nd hit 50%)",6,4,every 3 rounds,L5
+guardian_shield,Guardian Shield,守护盾,First wrong block in a battle becomes a correct block (leak still applies); auto-fires if equipped and MP ≥ cost,8,5,1 per battle (rank 2: 2),Starter Meadow realm boss
+frost_word,Frost Word,冰冻,A correct attack also freezes the target (skips its next attack),8,5,every 3 rounds,Griffin Peaks realm boss
+heal,Heal,治疗,"Replaces the attack: answer one question; correct heals 30% max HP, wrong fizzles; MP spent either way",12,6,1 per battle,Honeycomb quest
+sweep,Sweep,横扫,A correct attack hits all enemies at 60%,12,8,every 4 rounds,Zombie Lands realm boss
+second_wind,Second Wind,再起,"At 0 HP, revive at 30% HP (auto)",20,12,1 per battle,Castle quest
+passives,Thorns / Echo Voice / Rally,反击 / 回音 / 鼓舞,"Passives, as in v1",0,0,–,as in v1

@@ -1,0 +1,28 @@
+﻿tier,slot,stat,common,fine,heroic,shop_price_common,example_name_zh,example_name_en
+1,weapon,ATK,5,6,7,60,木剑,Wooden Sword
+1,armor,DEF,3,3,4,50,布衣,Cloth Tunic
+1,shield,DEF,1,1,2,35,锅盖盾,Pot-lid Shield
+2,weapon,ATK,8,9,10,120,蜂刺短剑,Stinger Dagger
+2,armor,DEF,5,6,7,95,花瓣斗篷,Petal Cloak
+2,shield,DEF,2,2,3,70,蜂蜡盾,Beeswax Shield
+3,weapon,ATK,11,13,14,220,铁剑,Iron Sword
+3,armor,DEF,7,8,9,175,皮甲,Leather Armor
+3,shield,DEF,3,3,4,130,圆盾,Round Shield
+4,weapon,ATK,14,16,18,380,弯刀,Scimitar
+4,armor,DEF,9,10,12,300,矿工护甲,Miner's Plate
+4,shield,DEF,4,5,5,230,石盾,Stone Shield
+5,weapon,ATK,17,20,22,650,蛇牙矛,Hydra-fang Spear
+5,armor,DEF,11,13,14,520,鳞甲,Scale Mail
+5,shield,DEF,5,6,7,390,沼泽盾,Bog Shield
+6,weapon,ATK,20,23,26,900,圣光锤,Holy Mace
+6,armor,DEF,13,15,17,720,医者长袍,Healer's Robe
+6,shield,DEF,6,7,8,540,银盾,Silver Shield
+7,weapon,ATK,23,26,30,1150,狮鹫羽弓,Griffin Bow
+7,armor,DEF,15,17,20,920,风之甲,Wind Mail
+7,shield,DEF,7,8,9,690,云盾,Cloud Shield
+8,weapon,ATK,26,30,34,1400,冠军大剑,Champion Blade
+8,armor,DEF,17,20,22,1120,角斗士铠甲,Gladiator Plate
+8,shield,DEF,8,9,10,840,塔盾,Tower Shield
+9,weapon,ATK,29,33,38,1700,勇者之剑,Hero's Sword
+9,armor,DEF,19,22,25,1360,龙鳞甲,Dragon-scale Mail
+9,shield,DEF,9,10,12,1020,精灵盾,Elven Shield

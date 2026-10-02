@@ -1,0 +1,10 @@
+﻿tier,realm,rec_level,rec_level_range,gear_tier,hero_hp,hero_mp,hero_atk,hero_def
+1,Starter Meadow,2,1–3,1,42,14,6,4
+2,Honeycomb Forest,4,3–5,2,54,18,10,8
+3,Crossroads Market,6,5–7,3,66,22,14,12
+4,Goblin Caves,9,7–10,4,84,28,18,16
+5,Hydra Swamp,12,10–13,5,102,34,23,20
+6,Zombie Lands,15,13–16,6,120,40,27,24
+7,Griffin Peaks,18,16–19,7,138,46,32,28
+8,Ogre Colosseum,21,19–22,8,156,52,36,32
+9,Demon King's Castle,24,22–25,9,174,58,41,36
