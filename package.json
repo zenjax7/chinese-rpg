@@ -13,19 +13,33 @@
     "build:ci": "tsc && vite build",
     "world": "python3 tools/world/build_world.py",
     "validate:world": "python3 tools/world/validate_all.py",
-    "test:world": "node tests/world.mjs"
+    "test:world": "node tests/world.mjs",
+    "test:api": "tsc -p tsconfig.server.json && vitest run -c vitest.api.config.ts",
+    "test:api:pg": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-postgresql://rpg:rpg_local_dev@127.0.0.1:5432/rpg_test} vitest run -c vitest.api.config.ts",
+    "db:migrate": "node server/migrate.mjs",
+    "db:status": "node server/migrate.mjs --status"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@auth/core": "^0.41.3",
+    "@auth/neon-adapter": "^1.11.3",
+    "@neondatabase/serverless": "^1.2.0",
+    "ajv": "^8.20.0",
     "phaser": "^4.2.1",
-    "pinyin-pro": "^3.29.4"
+    "pinyin-pro": "^3.29.4",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^26.6.4",
+    "@types/pg": "^8.23.1",
+    "pg": "^8.23.1",
     "playwright-core": "^1.63.0",
     "typescript": "^7.0.2",
-    "vite": "^8.3.1"
+    "vite": "^8.3.1",
+    "vitest": "^5.0.3"
   },
   "type": "module",
   "private": true,
