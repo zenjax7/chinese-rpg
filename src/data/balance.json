@@ -43,7 +43,7 @@
   "tiredEnemyAtkMult": 0.7,
   "tiredHeroDamageMult": 1.5,
   "potionsPerBattle": 3,
-  "mpPerCorrect": 1,
+  "mpPerCorrect": 0,
   "maxEnemies": 3,
   "fastAnswerMs": 600,
   "focusDelayMs": 1500,
