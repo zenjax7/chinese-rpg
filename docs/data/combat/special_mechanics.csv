@@ -1,5 +1,5 @@
 ﻿enemy_id,name_zh,name_en,tier,role,boss_type,mechanic,rule,sim_variant,win_50_off,win_50_on,win_65_off,win_65_on,win_75_off,win_75_on,verdict
-queen_bee,蜂后,Queen Bee,2,boss,realm,Summon Worker,"Every 3rd round, if fewer than 3 enemies: summon 1 worker bee at half normal HP, no drops; max 2 per fight",queen_bee_v3,0.99,0.65,1.0,0.98,1.0,1.0,adopt (the unlimited v2 version was unwinnable at ≤65%)
-hydra,九头蛇,Hydra,5,boss,realm,Double Bite,Every 3rd round the Hydra attacks twice (2 block questions),hydra,0.39,0.18,0.9,0.78,0.99,0.97,keep
-shadow_dragon,暗影龙,Shadow-Cursed Dragon,9,boss,location,Curse Chain,+3 ATK while its imp minion is alive,shadow_dragon_focus,0.97,0.92,1.0,1.0,1.0,1.0,"keep as a teaching cue (""break the chain first"")"
+queen_bee,蜂后,Queen Bee,2,boss,realm,Summon Worker,"Every 3rd round, if fewer than 3 enemies: summon 1 worker bee at half normal HP, no drops; max 2 per fight",queen_bee_v3,0.99,0.84,1.0,1.0,1.0,1.0,adopt (the unlimited v2 version was unwinnable at ≤65%)
+hydra,九头蛇,Hydra,5,boss,realm,Double Bite,Every 3rd round the Hydra attacks twice (2 block questions),hydra,0.72,0.52,0.99,0.96,1.0,1.0,keep
+shadow_dragon,暗影龙,Shadow-Cursed Dragon,9,boss,location,Curse Chain,+3 ATK while its imp minion is alive,shadow_dragon_focus,0.98,0.88,1.0,1.0,1.0,1.0,"keep as a teaching cue (""break the chain first"")"
 arena_troll,巨魔,Arena Troll,8,normal,,Regrow,Cosmetic only (decided): a green regrowth sparkle at the end of a round in which it was not hit; no HP change. Simulated rule was +4 HP,troll_tag,1.0,1.0,1.0,1.0,1.0,1.0,"cosmetic (decided): green sparkle only, no HP effect in game"

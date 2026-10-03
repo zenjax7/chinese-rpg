@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"><script src="mock.js"></script></head><body>
+<div class="sheet"><div class="title">Diagnosis: the current battle screen <small>real screenshot, 1280×900 browser window (2026-09-28 build)</small></div>
+<div class="row2"><div style="position:relative;width:1280px;height:900px" id="f"><img src="file:///workspace/chinese-rpg/shots/2026-09-28-battle-hit.png" style="position:absolute;inset:0"></div><div id="n"></div></div></div>
+<script>
+const f=document.getElementById('f');
+
+box(f,336,44,608,342);dimt(f,'canvas 608×342 (960×540 drawn at 63%)',340,390-22);
+box(f,188,396,904,478);dimt(f,'DOM panel, max-width 900 (grows per state)',820,862);
+box(f,0,0,1280,44);box(f,556,412,170,102);box(f,360,518,560,26);box(f,214,665,420,76);box(f,208,746,862,40);box(f,208,796,862,64);box(f,740,190,90,50);
+badge(f,1,60,90);badge(f,2,360,70);badge(f,3,190,410);badge(f,4,20,22);badge(f,5,560,420);badge(f,6,360,530);badge(f,7,214,670);badge(f,8,208,760);badge(f,9,830,200);
+document.getElementById('n').innerHTML=notes([
+'<b>Loud page gradient</b> (orange → pink → purple → cyan) around everything. It is louder than the painted art, and it fills about 45% of the window with nothing. It says "web page", not "game world".',
+'<b>The game is small</b>: the 960×540 canvas is squeezed into 38% of the window height, so it shows at 63%. Hero about 95px, enemies about 80px, enemy name about 11px.',
+'<b>Two windows, two widths</b> (608px scene, 900px panel), with a gap between them. They read as two apps glued together, and your eye jumps between them every turn.',
+'<b>Web toolbar on top</b>: HP/MP/EXP far from the hero, plus a dev "tap mode" label and a 🐞 button the kid can press.',
+'<b>Enemy shown twice</b>: in the scene and again as a card in the panel (with English and stats), so there are two places to look.',
+'<b>Row of tiny chips</b> (≈14px): gauge, round, streak, 0/30, potion uses. Noise during a question.',
+'<b>Answers look like menu buttons</b>: same gold style as "Attack". Chinese only about 22px. After answering, the wrong card turns grey-olive and the right one teal, which is not clearly "right/wrong".',
+'<b>Feedback is a web alert</b>: a green bar (white on #2ecc71 is only 2.1:1 contrast) and a growing log. The panel grows from about 290 to 470px across states, so things jump.',
+'<b>The hit itself is weak</b>: a small "-5" and a wiggle, far from the answer the kid just tapped. Cause and effect are split across the two windows.'
+]);
+</script></body></html>

@@ -11,8 +11,8 @@ This folder holds design docs, data tables, reference images and Desy's design t
 
 When documents disagree, use this order:
 
-1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.4)** and **[design/spells.md](design/spells.md) (v3.4)** for combat, progression, spells and quests.
-2. **The CSV tables in [data/](#data-tables)**, which match spec v3.4. The game data in `src/data` is built from them.
+1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.7)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests.
+2. **The CSV tables in [data/](#data-tables)**, which match spec v3.7. The game data in `src/data` is built from them.
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
 4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
 
@@ -22,8 +22,8 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
-| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.4. |
-| [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.4. |
+| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.7 (no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints). |
+| [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.7 (no cast caps, MP only; MP costs 1.25 × v3.4). |
 | [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
 | [enemies-art-brief.md](design/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
 | [ui-layout-review.md](design/ui-layout-review.md) | UI layout and game-feel review. Its images are in [images/ui-review/](images/ui-review/). |
@@ -37,6 +37,12 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
+| [combat-spec-v3.6.md](design/archive/combat-spec-v3.6.md) | Combat spec v3.6 (~20-answer target for all bosses). |
+| [spells-v3.6.md](design/archive/spells-v3.6.md) | Spells and quests v3.6. |
+| [combat-spec-v3.5.md](design/archive/combat-spec-v3.5.md) | Combat spec v3.5 (MP regen, MP hints, v3.5 boss stats). |
+| [spells-v3.5.md](design/archive/spells-v3.5.md) | Spells and quests v3.5. |
+| [combat-spec-v3.4.md](design/archive/combat-spec-v3.4.md) | Combat spec v3.4, with per-battle cast caps. |
+| [spells-v3.4.md](design/archive/spells-v3.4.md) | Spells and quests v3.4, with cast caps and the 3-correct unlock. |
 | [combat-spec-v3.3.md](design/archive/combat-spec-v3.3.md) | Combat spec v3.3, before the v3.4 free-cast spell change. |
 | [spells-v3.3.md](design/archive/spells-v3.3.md) | Spells and quests v3.3, before the free-cast change. |
 | [combat-spec-v2.md](design/archive/combat-spec-v2.md) | Combat spec v2. |
@@ -63,17 +69,18 @@ Everything in an `archive/` folder is superseded and kept for history only.
 | [enemies-art-roster.csv](data/enemies/enemies-art-roster.csv) | Art-brief roster: visuals, attacks, shouts (same stats as the combat table) |
 | [enemies.csv](data/enemies/enemies.csv) | Combat table: stats, drops, specials. Use this for numbers. |
 | [enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) | Enemy stat bands by level and role |
+| [boss_hp.csv](data/enemies/boss_hp.csv) | Boss HP multipliers and ATK × 0.8 by tier and boss type (v3.7: location ~15, realm ~20 correct answers; v3.6 values kept as columns) |
 
 ### Spells and quests ([data/spells/](data/spells/))
 
 | File | What it is |
 |---|---|
-| [cast_rule.csv](data/spells/cast_rule.csv) | Spell cast rule (v3.4) |
-| [mp_potions.csv](data/spells/mp_potions.csv) | MP potion values (v3.4) |
-| [quests.csv](data/spells/quests.csv) | Quest list (unchanged in v3.4) |
-| [spell_falloff.csv](data/spells/spell_falloff.csv) | Spell damage fall-off (v3.4) |
-| [spell_mp_check.csv](data/spells/spell_mp_check.csv) | Spell MP sanity check (v3.4) |
-| [spells.csv](data/spells/spells.csv) | Spell list: towns, prices, power, MP (v3.4) |
+| [cast_rule.csv](data/spells/cast_rule.csv) | Spell cast rule (v3.6+: no cap, MP only, no regen, no hints) |
+| [mp_potions.csv](data/spells/mp_potions.csv) | MP potion values (map only) |
+| [quests.csv](data/spells/quests.csv) | Quest list |
+| [spell_falloff.csv](data/spells/spell_falloff.csv) | Spell damage fall-off: reference only, not a game rule |
+| [spell_mp_check.csv](data/spells/spell_mp_check.csv) | Spell MP sanity check (v3.5+ costs) |
+| [spells.csv](data/spells/spells.csv) | Spell list: towns, prices, power, MP (v3.5+ costs = 1.25 × v3.4; the v3.4 MP is kept in `mp_cost_v34`) |
 
 ### Combat tables ([data/combat/](data/combat/))
 
@@ -101,11 +108,11 @@ These are the spec tables.
 
 ### Simulation output ([data/sim/](data/sim/))
 
-There are 25 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`). The full v3.4 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
+There are 28 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
 
 ### JSON twins ([data/json/](data/json/))
 
-There are 29 JSON files for the game code. Each one matches the CSV of the same name; the art roster is `enemies-art-roster.json`. Three are bundles with no single CSV twin:
+There are 30 JSON files for the game code. Each one matches the CSV of the same name; the art roster is `enemies-art-roster.json`. Three are bundles with no single CSV twin:
 - [combat_data.json](data/json/combat_data.json) bundles all the spec tables.
 - [spells_full.json](data/json/spells_full.json) adds the spell rules and tiers to the list.
 - [quests_full.json](data/json/quests_full.json) adds the quest rules to the list.
@@ -128,6 +135,8 @@ Final game sprites, backgrounds and audio are not here; they are under `public/`
 | [map.png](images/ui-review/map.png) | Mockup E: location map |
 | [scaling.png](images/ui-review/scaling.png) | Scaling and letterboxing across devices |
 | [village.png](images/ui-review/village.png) | Mockup F: village hub and world map |
+
+The HTML/CSS mock sources are in [images/ui-review/src/](images/ui-review/src/) (re-render with `render.mjs`; they expect the prototype's `dist/` art). They are kept as sources only and are not part of the game build.
 
 ### Style anchors ([images/style-anchors/](images/style-anchors/))
 
@@ -156,8 +165,14 @@ These are Desy's sim and data-generation scripts. **They live in `docs/tools/`, 
 |---|---|
 | [combat_sim.py](tools/sim/combat_sim.py) | Battle sim |
 | [sim_v3_runner.py](tools/sim/sim_v3_runner.py) | v3 sim runner |
-| [spells_runner.py](tools/sim/spells_runner.py) | Campaign runner, v3.4 |
+| [spells_runner.py](tools/sim/spells_runner.py) | Campaign runner, v3.7 |
 | [spells_sim.py](tools/sim/spells_sim.py) | Campaign sim (spells and quests) |
+| [boss_harness.py](tools/sim/boss_harness.py) | v3.6 single boss fight harness (full MP, 2 strongest spells) |
+| [boss_tune.py](tools/sim/boss_tune.py) | Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) |
+| [boss_tune_v37_loc.json](tools/sim/boss_tune_v37_loc.json) | v3.7 location boss HP tuning output (~15 correct answers) |
+| [regen_only.py](tools/sim/regen_only.py) | v3.6 check: removing MP regen alone |
+| [atk_check.py](tools/sim/atk_check.py) | v3.6 boss ATK multiplier check |
+| [v37_boss_check_0.5.json](tools/sim/v37_boss_check_0.5.json), [0.75](tools/sim/v37_boss_check_0.75.json), [0.9](tools/sim/v37_boss_check_0.9.json) | v3.7 boss check output at 50 / 75 / 90 % accuracy |
 | [assemble_spec.py](tools/data/assemble_spec.py) | Assembles combat-spec.md |
 | [build_data.py](tools/data/build_data.py) | Generates the data CSV/JSON tables |
 | [spec_new_sections.md](tools/data/spec_new_sections.md) | Spec source sections |

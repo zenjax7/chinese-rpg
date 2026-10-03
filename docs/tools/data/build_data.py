@@ -63,12 +63,14 @@ emit('hero_stats', ['tier', 'realm', 'rec_level', 'rec_level_range', 'gear_tier'
 ROLE_KIND = [('normal', '', 'normal'), ('elite', '', 'elite'), ('boss', 'location', 'locboss'), ('boss', 'realm', 'realmboss')]
 EXPM = {'normal': 6, 'elite': 10, 'locboss': 20, 'realmboss': 50}
 FORM = {'normal': ('H(t) × base', '1.1 × DEF_ref'), 'elite': ('2 × H(t) × base', '1.2 × DEF_ref'),
-        'locboss': ('5 × base', '1.2 × DEF_ref'), 'realmboss': ('7 × base', '1.3 × DEF_ref')}
+        'locboss': ('5 × base × m(t) (v3.7, boss_hp table)', '0.8 × 1.2 × DEF_ref (v3.6)'), 'realmboss': ('7 × base × m(t) (v3.6, boss_hp table)', '0.8 × 1.3 × DEF_ref (v3.6)')}
+import spells_data as SD0
 MINIONS = {'normal': lambda t: 0, 'elite': lambda t: 0, 'locboss': lambda t: 1, 'realmboss': lambda t: 1 if t <= 3 else 2}
 rows = []
 for t in T:
     for role, bt, k in ROLE_KIND:
-        e = C.enemy(t, k)
+        e = dict(C.enemy(t, k))
+        if k in ('locboss', 'realmboss'): e['HP'] = round(e['HP']*SD0.BOSS_HP_MULT[(t, k)]); e['ATK'] = round(e['ATK']*SD0.BOSS_ATK_MULT[k])   # v3.6
         rows.append((t, REALMS[t][0], role, bt, e['HP'], e['ATK'], e['DEF'], G(t) * C.GOLD_MULT[k], EXPM[k] * C.lrec(t),
                      C.CHEST_RATE[k], MINIONS[k](t), FORM[k][0], FORM[k][1]))
 emit('enemy_stat_bands', ['tier', 'realm', 'role', 'boss_type', 'hp', 'atk', 'def', 'gold', 'exp', 'chest_chance', 'minions', 'hp_formula', 'atk_formula'], rows,
@@ -166,9 +168,9 @@ rows = [
 emit('skills_mp', ['skill_id', 'name_en', 'name_zh', 'effect', 'mp_cost', 'mp_cost_v2', 'limit', 'earned'], rows,
      ['name_en', 'name_zh', 'effect', 'mp_cost', 'mp_cost_v2', 'limit', 'earned'])
 rows = [('max_mp', '10 + 2 × level', 'MP', '14 at L2, 34 at L12, 58 at L24'),
-        ('regen_per_correct', 1, 'MP', 'Every graded correct answer in battle (attack or block, any way); not practice, not hinted'),
+        ('regen_per_correct', 0, 'MP', 'v3.6 (Jack): removed. Was +1 per graded correct answer in battle (v3.0-v3.5)'),
         ('regen_per_wrong', 0, 'MP', ''),
-        ('restore_sources', 'inn, waking after a defeat, Mana Tea, regen', '', 'MP carries over between battles'),
+        ('restore_sources', 'inn, waking after a defeat, Mana Tea / Big Mana Tea (map only)', '', 'MP carries over between battles; no regen (v3.6)'),
         ('heal_fraction', 0.30, 'of max HP', 'was 0.35'),
         ('heal_limit_per_battle', 1, 'casts', 'was 2'),
         ('griffin_feather_frost_cost', 5, 'MP', 'heroic charm: Frost costs 5 instead of 8'),
@@ -295,12 +297,12 @@ import spells_data as SD
 DMG = 'max(1, round({p} × (Tired ? 1.5 : 1) − DEF_e))'
 TGT = {'single': 'single', 'same_type': 'same type (max 3)', 'all': 'all on screen (max 3)'}
 rows = [[s['id'], s['town'], SD.TOWNS[s['town']][1], SD.TOWNS[s['town']][0], s['realm'], s['zh'], s['zh_trad'], s['en'], TGT[s['target']], s['element'],
-         s['power'], s['mp'], round(SD.tier_stats(s['town'])['MP']/s['mp'], 1), f"{SD.spell_dmg(s, s['town'])/SD.tier_stats(s['town'])['HP']:.0%}",
+         s['power'], s['mp'], s['mp_v34'], f"{s['mp']/SD.tier_stats(s['town'])['MP']:.0%}", round(SD.tier_stats(s['town'])['MP']/s['mp'], 1), f"{SD.spell_dmg(s, s['town'])/SD.tier_stats(s['town'])['HP']:.0%}",
          f"{SD.spell_dmg(s, 9)/SD.tier_stats(9)['HP']:.0%}", s['price_G'], s['price'], DMG.format(p=s['power']), s['status'] or '–',
          SD.char_notes(s['zh']), s['visual']] for s in SD.SPELLS]
-emit('spells', ['spell_id', 'town', 'town_zh', 'town_en', 'realm', 'name_zh', 'name_zh_trad', 'name_en', 'target', 'element', 'power', 'mp_cost',
+emit('spells', ['spell_id', 'town', 'town_zh', 'town_en', 'realm', 'name_zh', 'name_zh_trad', 'name_en', 'target', 'element', 'power', 'mp_cost', 'mp_cost_v34', 'mp_pct_of_bar',
                 'casts_from_full_mp', 'dmg_pct_normal_own_tier', 'dmg_pct_normal_t9', 'price_G', 'price', 'damage_formula', 'status', 'hsk_chars', 'visual_brief'], rows,
-     md_cols=['town', 'name_zh', 'name_zh_trad', 'name_en', 'target', 'element', 'power', 'mp_cost', 'casts_from_full_mp', 'dmg_pct_normal_own_tier', 'dmg_pct_normal_t9', 'price_G', 'price', 'status'])
+     md_cols=['town', 'name_zh', 'name_zh_trad', 'name_en', 'target', 'element', 'power', 'mp_cost', 'mp_cost_v34', 'mp_pct_of_bar', 'casts_from_full_mp', 'dmg_pct_normal_own_tier', 'dmg_pct_normal_t9', 'price_G', 'price', 'status'])
 # falloff: damage as % of a typical normal enemy's HP at each tier (own tier and later), plus the hero's plain attack for reference
 ts = {t: SD.tier_stats(t) for t in range(1, 10)}
 rows = [['plain attack (rec. gear, no streak)', '–', '–', '–'] + [f"{(ts[t]['ATK'] - 0.5*ts[t]['DEF'])/ts[t]['HP']:.0%}" for t in range(2, 10)]]
@@ -319,9 +321,30 @@ for t in range(1, 10):
 emit('spell_mp_check', ['tier', 'rec_level', 'mp_pool', 'spells_sold_mp', 'casts_from_full', 'casts_keeping_heal_12', 'casts_at_level_plus_3', 'top_spell_pct_of_realm_boss_hp'], rows)
 rows = [[m['id'], m['zh'], m['en'], m['effect'], f"{m['price_G']} × G", m['price_G'], m['from_town'], m['battle_use']] for m in SD.MP_ITEMS]
 emit('mp_potions', ['item_id', 'name_zh', 'name_en', 'effect', 'price', 'price_in_normal_kills', 'from_town', 'battle_use'], rows)
-rows = [[k, str(v)] for k, v in SD.CAST_RULE.items()] + [['ward_boss_mult', SD.WARD], ['spell_streak_bonus', 'none (a cast neither adds to nor breaks the streak)'],
-        ['spell_spoken_bonus', 'none (no answer is given)'], ['mp_regen_per_correct', 1], ['sec_per_cast', 5]]
+rows = [['casts_per_battle', 'no cap (v3.5; v3.4 had 1 per normal/elite battle, 2 per boss)'], ['unlock', 'none: castable from turn 1 (v3.5; v3.4 needed 3 correct answers)'],
+        ['back_to_back', 'allowed'], ['limit', 'MP only: cost 41-60% of the bar at the recommended level (about 2 casts from full); MP cost = 1.25 x v3.4'],
+        ['mp_regen_per_correct', '0 (removed in v3.6; MP only from the inn or map-only MP potions)'], ['magic_ward', 'removed (v3.5)'], ['spell_power', 'fixed per spell; no magic stat (v3.5)'],
+        ['super_blizzard_freeze', 'non-boss targets skip their next attack (1 turn); bosses immune (v3.5)'],
+        ['spell_streak_bonus', 'none (a cast neither adds to nor breaks the streak)'], ['spell_spoken_bonus', 'none (no answer is given)'],
+        ['mp_potions_in_battle', 'no (map only)'], ['cast_animation', f'about 2-3 s, a tap skips it (sim: {SD.CAST_ANIM_SEC:g} s per cast)'],
+        ['mp_hints', 'none (v3.6: no MP tips, no casts-ready count, no Preview boss tip)'],
+        ['boss_target', 'a kid who enters a boss fight with full MP and spends it all on spells still needs about 15 correct answers for a location boss and about 20 for a realm boss (v3.7 boss HP; v3.6 was 20 for both)']]
 emit('cast_rule', ['key', 'value'], rows)
+# v3.7 boss HP (location ~15, realm ~20 correct answers) and the correct-answers check (build/v3/explore/boss_harness.py: one boss fight from full HP/MP, rec. level, full gear, 2 best spells of towns t and t-1, all MP spent on spells; 600 fights)
+BC = {a: json.load(open(f'{ROOT}/build/v3/sim/v37_boss_check_{a}.json')) for a in ('0.75', '0.5', '0.9')}
+V36 = {(1, 'locboss'): 2.00, (2, 'locboss'): 2.30, (3, 'locboss'): 2.65, (4, 'locboss'): 2.50, (5, 'locboss'): 2.65, (6, 'locboss'): 2.55, (7, 'locboss'): 2.50, (8, 'locboss'): 2.60, (9, 'locboss'): 2.70}
+V36.update({k: v for k, v in SD.BOSS_HP_MULT.items() if k[1] == 'realmboss'})   # v3.6 realm multipliers are unchanged
+rows = []
+for t in range(1, 10):
+    for k in ('locboss', 'realmboss'):
+        e = C.enemy(t, k); m = SD.BOSS_HP_MULT[(t, k)]; key = f'{t},{k}'
+        c = lambda a, lab, f='correct': BC[a][key][lab][f]
+        m36 = V36[(t, k)]
+        rows.append([t, 'location' if k == 'locboss' else 'realm', e['HP'], m, round(e['HP']*m), e['ATK'], round(e['ATK']*SD.BOSS_ATK_MULT[k]), 15 if k == 'locboss' else 20, m36, round(e['HP']*m36),
+                     f"{c('0.75', 'none'):.1f}", f"{c('0.75', 'spells'):.1f}", f"{c('0.75', 'spells', 'casts'):.1f}", f"{c('0.75', 'none', 'q'):.1f} / {c('0.75', 'spells', 'q'):.1f}",
+                     f"{c('0.5', 'spells'):.1f}", f"{c('0.9', 'spells'):.1f}", f"{c('0.5', 'none', 'win'):.2f} / {c('0.5', 'spells', 'win'):.2f}"])
+emit('boss_hp', ['tier', 'boss_type', 'hp_v35', 'hp_mult', 'hp', 'atk_v35', 'atk', 'target_correct', 'hp_mult_v36', 'hp_v36', 'correct_needed_no_spells_75', 'correct_needed_full_mp_spells_75', 'casts_75',
+                 'questions_no_spells_vs_spells_75', 'correct_needed_full_mp_spells_50', 'correct_needed_full_mp_spells_90', 'single_fight_win_50_no_spells_vs_spells'], rows)
 rows = [[q['id'], q['town'], SD.TOWNS[q['town']][1], q['type'], q['title_zh'], q['title_en'], q['target'], q['n'], q['reward_G'], q['reward_gold'],
          q['reward_item'] or '–', q['how']] for q in SD.QUESTS]
 emit('quests', ['quest_id', 'town', 'town_zh', 'type', 'title_zh', 'title_en', 'target', 'n', 'reward_G', 'reward_gold', 'reward_item', 'how'], rows,

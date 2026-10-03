@@ -7,9 +7,9 @@
  },
  {
   "key": "regen_per_correct",
-  "value": 1,
+  "value": 0,
   "unit": "MP",
-  "notes": "Every graded correct answer in battle (attack or block, any way); not practice, not hinted"
+  "notes": "v3.6 (Jack): removed. Was +1 per graded correct answer in battle (v3.0-v3.5)"
  },
  {
   "key": "regen_per_wrong",
@@ -19,9 +19,9 @@
  },
  {
   "key": "restore_sources",
-  "value": "inn, waking after a defeat, Mana Tea, regen",
+  "value": "inn, waking after a defeat, Mana Tea / Big Mana Tea (map only)",
   "unit": "",
-  "notes": "MP carries over between battles"
+  "notes": "MP carries over between battles; no regen (v3.6)"
  },
  {
   "key": "heal_fraction",

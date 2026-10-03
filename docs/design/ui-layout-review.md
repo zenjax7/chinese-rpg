@@ -179,7 +179,7 @@ Notes:
 2. **250 ms:** the dock dims slightly and the hero dashes (attack frames + speed lines, 180 ms lunge).
 3. **Impact:** a 70 ms hit-stop (pause the actor tweens and animations), a white flash on the enemy (`setTint(0xffffff).setTintMode(Phaser.TintModes.FILL)` for 60 ms; note `setTintFill` is a no-op in Phaser 4), `cameras.main.shake(150, 0.004)`, `sfx_hit`, sparkles. A 64px damage number pops to 1.3× and floats up. For a spoken answer, the number is bigger and gets a "×1.25 🎤 Voice!" tag.
 4. **HP "ghost bar":** the lost chunk turns white, then drains over 400 ms.
-5. **Rewards fly to the HUD:** "+1 MP" into the MP bar. The streak chip bounces. The streak sound pitch goes up one step per streak level (cap at 5).
+5. **Rewards fly to the HUD:** the streak chip bounces (no "+1 MP" float: answers don't give MP since v3.6). The streak sound pitch goes up one step per streak level (cap at 5).
 6. **About 1.2 s:** go to the next state. Tapping anywhere speeds up the animation, but the feedback line always stays at least 800 ms.
 
 **Correct (defense):** the shield bubble flashes bright blue, `sfx_block`, "🛡️ Blocked!" floats over the hero, and the enemy recoils.
@@ -298,4 +298,4 @@ These are currently long scrolling web pages (a table of 52 rows). Keep them ins
 
 - Review: `/workspace/desy/ui-layout-review.md`
 - Images: `../images/ui-review/diagnosis.png`, `../images/ui-review/scaling.png`, `../images/ui-review/battle-command.png`, `../images/ui-review/battle-question-mc.png`, `../images/ui-review/battle-question-speech.png`, `../images/ui-review/battle-feedback.png`, `../images/ui-review/map.png`, `../images/ui-review/village.png`
-- Mockup sources (HTML/CSS; they use the real game art from `prototype/dist`): `ui-review/src/*.html` (kept in Desy's workspace, not in the repo). Re-render with `node ui-review/src/render.mjs <name>` (uses the prototype's `playwright-core` and `/usr/bin/google-chrome`).
+- Mockup sources (HTML/CSS; they use the real game art from `prototype/dist`): `../images/ui-review/src/*.html`. Re-render with `node ../images/ui-review/src/render.mjs <name>` (uses the prototype's `playwright-core` and `/usr/bin/google-chrome`).

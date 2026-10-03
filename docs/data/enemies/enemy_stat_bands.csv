@@ -1,37 +1,37 @@
 ﻿tier,realm,role,boss_type,hp,atk,def,gold,exp,chest_chance,minions,hp_formula,atk_formula
 1,Starter Meadow,normal,,16,4,1,6,12,0.1,0,H(t) × base,1.1 × DEF_ref
 1,Starter Meadow,elite,,32,5,1,12,20,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-1,Starter Meadow,boss,location,28,5,1,30,40,1.0,1,5 × base,1.2 × DEF_ref
-1,Starter Meadow,boss,realm,38,5,1,60,100,1.0,1,7 × base,1.3 × DEF_ref
+1,Starter Meadow,boss,location,34,4,1,30,40,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+1,Starter Meadow,boss,realm,57,4,1,60,100,1.0,1,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 2,Honeycomb Forest,normal,,27,9,2,12,24,0.1,0,H(t) × base,1.1 × DEF_ref
 2,Honeycomb Forest,elite,,54,10,2,24,40,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-2,Honeycomb Forest,boss,location,45,10,2,60,80,1.0,1,5 × base,1.2 × DEF_ref
-2,Honeycomb Forest,boss,realm,63,10,2,120,200,1.0,1,7 × base,1.3 × DEF_ref
+2,Honeycomb Forest,boss,location,70,8,2,60,80,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+2,Honeycomb Forest,boss,realm,104,8,2,120,200,1.0,1,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 3,Crossroads Market,normal,,31,13,3,18,36,0.1,0,H(t) × base,1.1 × DEF_ref
 3,Crossroads Market,elite,,62,14,3,36,60,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-3,Crossroads Market,boss,location,62,14,3,90,120,1.0,1,5 × base,1.2 × DEF_ref
-3,Crossroads Market,boss,realm,88,16,3,180,300,1.0,1,7 × base,1.3 × DEF_ref
+3,Crossroads Market,boss,location,118,11,3,90,120,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+3,Crossroads Market,boss,realm,163,13,3,180,300,1.0,1,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 4,Goblin Caves,normal,,36,18,4,27,54,0.1,0,H(t) × base,1.1 × DEF_ref
 4,Goblin Caves,elite,,72,19,4,54,90,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-4,Goblin Caves,boss,location,80,19,4,135,180,1.0,1,5 × base,1.2 × DEF_ref
-4,Goblin Caves,boss,realm,112,21,4,270,450,1.0,2,7 × base,1.3 × DEF_ref
+4,Goblin Caves,boss,location,136,15,4,135,180,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+4,Goblin Caves,boss,realm,118,17,4,270,450,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 5,Hydra Swamp,normal,,46,22,5,36,72,0.1,0,H(t) × base,1.1 × DEF_ref
 5,Hydra Swamp,elite,,92,24,5,72,120,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-5,Hydra Swamp,boss,location,102,24,5,180,240,1.0,1,5 × base,1.2 × DEF_ref
-5,Hydra Swamp,boss,realm,144,26,5,360,600,1.0,2,7 × base,1.3 × DEF_ref
+5,Hydra Swamp,boss,location,189,19,5,180,240,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+5,Hydra Swamp,boss,realm,173,21,5,360,600,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 6,Zombie Lands,normal,,48,26,6,45,90,0.1,0,H(t) × base,1.1 × DEF_ref
 6,Zombie Lands,elite,,96,29,6,90,150,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-6,Zombie Lands,boss,location,120,29,6,225,300,1.0,1,5 × base,1.2 × DEF_ref
-6,Zombie Lands,boss,realm,168,31,6,450,750,1.0,2,7 × base,1.3 × DEF_ref
+6,Zombie Lands,boss,location,216,23,6,225,300,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+6,Zombie Lands,boss,realm,185,25,6,450,750,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 7,Griffin Peaks,normal,,57,31,7,54,108,0.1,0,H(t) × base,1.1 × DEF_ref
 7,Griffin Peaks,elite,,114,34,7,108,180,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-7,Griffin Peaks,boss,location,142,34,7,270,360,1.0,1,5 × base,1.2 × DEF_ref
-7,Griffin Peaks,boss,realm,200,36,7,540,900,1.0,2,7 × base,1.3 × DEF_ref
+7,Griffin Peaks,boss,location,241,27,7,270,360,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+7,Griffin Peaks,boss,realm,280,29,7,540,900,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 8,Ogre Colosseum,normal,,64,35,8,63,126,0.1,0,H(t) × base,1.1 × DEF_ref
 8,Ogre Colosseum,elite,,128,38,8,126,210,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-8,Ogre Colosseum,boss,location,160,38,8,315,420,1.0,1,5 × base,1.2 × DEF_ref
-8,Ogre Colosseum,boss,realm,224,42,8,630,1050,1.0,2,7 × base,1.3 × DEF_ref
+8,Ogre Colosseum,boss,location,296,30,8,315,420,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+8,Ogre Colosseum,boss,realm,246,34,8,630,1050,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)
 9,Demon King's Castle,normal,,73,40,9,72,144,0.1,0,H(t) × base,1.1 × DEF_ref
 9,Demon King's Castle,elite,,146,43,9,144,240,0.25,0,2 × H(t) × base,1.2 × DEF_ref
-9,Demon King's Castle,boss,location,182,43,9,360,480,1.0,1,5 × base,1.2 × DEF_ref
-9,Demon King's Castle,boss,realm,256,47,9,720,1200,1.0,2,7 × base,1.3 × DEF_ref
+9,Demon King's Castle,boss,location,346,34,9,360,480,1.0,1,"5 × base × m(t) (v3.7, boss_hp table)",0.8 × 1.2 × DEF_ref (v3.6)
+9,Demon King's Castle,boss,realm,397,38,9,720,1200,1.0,2,"7 × base × m(t) (v3.6, boss_hp table)",0.8 × 1.3 × DEF_ref (v3.6)

@@ -205,6 +205,8 @@ class QuestionFeed:
 
 # ---------------- one battle (persistent HP/MP) ----------------
 # ---------------- v3.3 spells (campaign mode only) ----------------
+BOSS_ATK_MULT = {}
+BOSS_HP_MULT = {}   # v3.6: (tier, kind) -> boss HP multiplier, campaign mode only (set by spells_sim from spells_data)
 SPELL_POLICY = dict(min_gain=1.25, keep_shield=True, heal_reserve_below=0.5, boss_mult=1.0, max_casts=None, keep_heal=False)   # boss_mult: Magic Ward on bosses; max_casts per battle
 _FIGHT = ['normal']
 def spell_damage(sp, h, f, tired):
@@ -240,6 +242,9 @@ def cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
     reserve = (MPCFG['shield'] if (SPELL_POLICY['keep_shield'] and S['shield'] and not shield_used) else 0)
     if S['heal'] and (S['hp'] < SPELL_POLICY['heal_reserve_below']*h['HP'] or SPELL_POLICY.get('keep_heal')): reserve += MPCFG['heal']
     if S.get('second_wind') and not S.get('_sw'): reserve = max(reserve, 20)
+    if free and SPELL_POLICY.get('mp_style') == 'dump': reserve = 0          # v3.6 boss test: spend every MP point on spells
+    if free and SPELL_POLICY.get('mp_style', 'free').startswith('save') and kind == 'normal' and not any(f['kind'] == 'elite' for f in foes):
+        reserve += SPELL_POLICY.get('save_casts', 2)*max(sp['mp'] for sp in S['spells'])   # v3.5 'save' kid: keep MP for elites and bosses
     best = None
     for sp in S['spells']:
         if S['mp'] - sp['mp'] < reserve: continue
@@ -248,11 +253,11 @@ def cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
             val = 0
             for f in ts:
                 val += min(f['HP'], spell_damage(sp, h, f, tired))
-                p = sp.get('skip_p', 0) * (0.5 if f['kind'] in ('locboss', 'realmboss') else 1)
+                p = sp.get('skip_p', 0) * (sp.get('boss_skip', 0.5) if f['kind'] in ('locboss', 'realmboss') else 1)
                 if sp.get('soak'): p = 0.5 * (0.5 if f['kind'] in ('locboss', 'realmboss') else 1)
                 if spell_damage(sp, h, f, tired) < f['HP']: val += p * 0.5 * f['ATK']
             if best is None or val > best[0]: best = (val, sp, tgt)
-    if best is None or best[0] < SPELL_POLICY['min_gain']*atk_val: return False
+    if best is None or best[0] < (0 if SPELL_POLICY.get('mp_style') == 'dump' else SPELL_POLICY['min_gain'])*atk_val: return False
     val, sp, tgt = best
     if free:
         S['mp'] -= sp['mp']; S['_last_cast_q'] = S.get('_bq', 0); S['_last_turn_cast'] = True
@@ -266,7 +271,7 @@ def cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
             if f['HP'] > 0:
                 boss = f['kind'] in ('locboss', 'realmboss')
                 if sp.get('soak'): f['soaked'] = True
-                if sp.get('skip_p') and rng.random() < sp['skip_p']*(0.5 if boss else 1): f['frozen'] = True
+                if sp.get('skip_p') and rng.random() < sp['skip_p']*(sp.get('boss_skip', 0.5) if boss else 1): f['frozen'] = True
     else:
         stats['fizzles'] = stats.get('fizzles', 0) + 1
     return True
@@ -283,6 +288,8 @@ def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=Non
         if elite: foes[0] = enemy(t, 'elite')
     else:
         boss = enemy(t, kind)
+        if S.get('campaign') and BOSS_HP_MULT.get((t, kind)): boss['HP'] = round(boss['HP']*BOSS_HP_MULT[(t, kind)])   # v3.6 boss HP (campaign only)
+        if S.get('campaign') and BOSS_ATK_MULT.get(kind): boss['ATK'] = round(boss['ATK']*BOSS_ATK_MULT[kind])            # v3.6 option: boss ATK (campaign only)
         if resume_half: boss['HP'] = boss['HP']//2
         foes = [boss] + [enemy(t) for _ in range(1 if (kind == 'locboss' or t <= 3) else 2)]
     maxhp0 = foes[0]['HP']
@@ -311,7 +318,12 @@ def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=Non
         stats['q'] += 1; stats['correct'] += ok; stats['spoken'] += w[0] == 's'
         if camp: S['_bq'] = q; S['_bcorrect'] = S.get('_bcorrect', 0) + ok
         if ok:
-            streak += 1; S['mp'] = min(h['MP'], S['mp'] + MPCFG['regen'])
+            streak += 1
+            if camp and SPELL_POLICY.get('regen_big_only') and kind == 'normal' and not elite: pass   # v3.5 option: no answer regen in normal battles
+            elif camp and SPELL_POLICY.get('regen_line'):      # v3.5 option: answer regen only refills MP up to the line
+                line = max(SPELL_POLICY['regen_line']*h['MP'], MPCFG['heal'] + MPCFG['shield'])
+                if S['mp'] < line: S['mp'] = min(line, h['MP'], S['mp'] + MPCFG['regen'])
+            else: S['mp'] = min(h['MP'], S['mp'] + MPCFG['regen'])
         else: streak = sdrop(streak)
         if COMPANION['on']: gauge += COMPANION['per_correct'] if ok else COMPANION['per_wrong']
         return ok
@@ -350,8 +362,9 @@ def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=Non
             elif special == 'troll_tag': tgt = live[(rnd // 2) % len(live)]       # v3 Tag Team: only the front troll can be targeted, they swap every 2 rounds
             else: tgt = min(live, key=lambda f: f['HP'] if f['kind'] in ('normal', 'elite') else 1e9)
             sk = None   # optional t6+ skills (diagnostic only; off unless S sets them): Sweep every 4 rounds, Frost every 3
-            if S.get('sweep') and rnd % 4 == 1 and len(live) > 1 and S['mp'] >= 12: sk = 'sweep'; S['mp'] -= 12
-            elif S.get('frost') and rnd % 3 == 1 and S['mp'] >= 8: sk = 'frost'; S['mp'] -= 8
+            skr = (MPCFG['heal'] + MPCFG['shield']) if (camp and MPCFG['regen'] == 0) else 0   # v3.6 (no regen): keep Heal + Shield MP
+            if S.get('sweep') and rnd % 4 == 1 and len(live) > 1 and S['mp'] >= 12 + skr: sk = 'sweep'; S['mp'] -= 12
+            elif S.get('frost') and rnd % 3 == 1 and S['mp'] >= 8 + skr: sk = 'frost'; S['mp'] -= 8
             if ask():
                 dmg = max(1, round(h['ATK']*smult(streak)*(1.5 if tired else 1) - 0.5*tgt['DEF']))
                 if sk == 'sweep':

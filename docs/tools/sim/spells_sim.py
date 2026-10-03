@@ -11,7 +11,7 @@ sys.path.insert(0, '/workspace/desy/build/v3/archive_v3_3')
 import spells_data_v3_3 as D33
 
 SPELL_BY_ID = {s['id']: s for s in D.SPELLS}
-SEC_PER_CAST = 5.0     # v3.4: a free cast still takes a turn of animation
+SEC_PER_CAST = D.CAST_ANIM_SEC     # v3.5: 2-3 s cast animation, a tap skips it (v3.4 assumed 5 s)
 LOC_SPECIES = {}
 for t in range(1, 10):
     for k in range(C.LOCS[t]):
@@ -30,19 +30,26 @@ def campaign(args):
     opt = args[5] if len(args) > 5 else {}
     v34 = opt.get('rules', 'v34') == 'v34'
     SP = D.SPELLS if v34 else D33.SPELLS
+    if opt.get('k_mult'): SP = [dict(s, mp=round(s['mp']*opt['k_mult'])) for s in SP]
     strength = lambda s: s.get('power', s.get('mult'))
     tea_price = lambda t: (6 if v34 else 1)*C.gold_per_enemy(t)
     spells_on = mode in ('spend', 'refund')
     cosm = mode == 'off_cosm'
     rng = random.Random(seed)
+    style = opt.get('mp_style', 'free')
+    C.SPELL_POLICY.update(regen_big_only=opt.get('regen_big_only'), regen_line=opt.get('regen_line'), mp_style=style, save_casts=opt.get('save_casts', 2), min_gain=opt.get('min_gain', 1.0 if v34 else 1.25))
     C.SPELL_POLICY.update(cast_rule=(opt.get('cast_rule', D.CAST_RULE) if v34 else None), boss_mult=opt.get('boss_mult', 1.0), max_casts=opt.get('max_casts'), keep_heal=opt.get('keep_heal', False), ward_minions=opt.get('ward_minions', False))
     C.MPCFG = dict(C.MP_PRESETS[C.DEFAULT_MP]); C.COMPANION = dict(C.COMPANION_DEFAULT); C.SPOKEN_CAP = 0.5; C.PATH_ENCOUNTERS = 8
+    C.MPCFG['regen'] = opt.get('regen', D.MP_REGEN if v34 else 1)                 # v3.6: no MP regen on correct answers
+    C.BOSS_HP_MULT.clear()
+    C.BOSS_ATK_MULT.clear(); C.BOSS_ATK_MULT.update(opt.get('boss_atk', getattr(D, 'BOSS_ATK_MULT', {})) if v34 else {})
+    if opt.get('boss_hp', True) and v34: C.BOSS_HP_MULT.update(D.BOSS_HP_MULT)     # v3.6 boss HP
     C.WORKING_SET = C.DEFAULT_WORKING_SET
     pol = dict(C.POLICIES[kid]); nets = C.NETS['nets+']
     order = opt.get('order', 'gear_first')
     L = C.Learner(p, speech, 'total', rng)
     S = dict(hero=None, hp=0, mp=0, gold=24, potions=1, heal=False, shield=False, campaign=True, species=None,
-             spells=[], fizzle='refund' if mode == 'refund' else 'spend', tea=0)
+             spells=[], fizzle='refund' if mode == 'refund' else 'spend', tea=0, bigtea=0)
     stats = dict(q=0, correct=0, spoken=0, potions_used=0, companion=0, heals=0, practice_q=0, kills=collections.Counter())
     prior = []; uid = 0
     out = dict(realms=[], spell_buys=[], affordable={}, events=[])
@@ -61,7 +68,8 @@ def campaign(args):
         R = dict(t=t, battles=0, defeats=0, boss_fights=0, boss_wins=0, boss_first=0, boss_q=[], patrols=0, inn_paid=0, inn_free=0,
                  stuck=0, gold_zero=0, min_gold=1e9, gold_start=S['gold'], gear_done_battle=None, casts=0, fizzles=0, heals=0,
                  quest_gold=0, spent_spells=0, spent_gear=0, spent_cosm=0, income=0, q0=stats['q'], min0=tq_minutes(), battles_full_gear=0,
-                 spell_dmg=0, dmg_share=[], loc_min=[], normal_q=[], tea_bought=0, tea_used=0, turns=[], mp_start=[], can_cast=[])
+                 spell_dmg=0, dmg_share=[], loc_min=[], normal_q=[], tea_bought=0, tea_used=0, turns=[], mp_start=[], can_cast=[],
+                 boss_mp_start=[], boss_hp_lost=[], boss_casts=[], tea_gold=0)
         kills0 = collections.Counter(stats['kills']); drops = 0; quests_done = set(); q_words_pool = []
         qs = {q['type']: q for q in D.QUESTS if q['town'] == t}
         def pay_quest(kind):
@@ -120,15 +128,22 @@ def campaign(args):
                 if buy_spell(): buy_gear()
             else:
                 if buy_gear(): buy_spell()
-            if spells_on and kid == 'saver' and S['spells'] and S['tea'] < 1 and S['gold'] - tea_price(t) >= reserve():
-                S['gold'] -= tea_price(t); S['tea'] += 1; R['tea_bought'] += 1
+            if spells_on and S['spells'] and (style.endswith('tea') if v34 else kid == 'saver'):
+                if v34 and t >= 5 and S['bigtea'] < 1 and S['gold'] - 15*C.gold_per_enemy(t) >= reserve():      # v3.5 tea kid: keeps 1 Big Mana Tea in stock
+                    S['gold'] -= 15*C.gold_per_enemy(t); R['tea_gold'] += 15*C.gold_per_enemy(t); S['bigtea'] += 1; R['tea_bought'] += 1
+                elif (not v34 or t < 5) and S['tea'] < 1 and S['gold'] - tea_price(t) >= reserve():
+                    S['gold'] -= tea_price(t); R['tea_gold'] += tea_price(t); S['tea'] += 1; R['tea_bought'] += 1
             if cosm and all(sl in owned_gear for sl, _ in gear):          # v3.2 behaviour: the rest goes to cosmetics
                 while S['gold'] - round(1.5*C.inn_price(t)) >= reserve():
                     S['gold'] -= round(1.5*C.inn_price(t)); R['spent_cosm'] += round(1.5*C.inn_price(t))
         def between(before_boss=False):
-            if S['tea'] > 0 and S['spells'] and (before_boss if v34 else True) and S['mp'] < (0.5 if v34 else 0.4)*h['MP'] and S['hp'] >= pol['inn_below']*h['HP']:
+            tea_kid = v34 and style.endswith('tea')
+            if tea_kid and before_boss and S['bigtea'] > 0 and S['spells'] and S['mp'] < 0.6*h['MP']:
+                R['tea_used'] += 1; S['bigtea'] -= 1; S['mp'] = h['MP']
+            if S['tea'] > 0 and S['spells'] and (before_boss if v34 else True) and S['mp'] < ((0.75 if tea_kid else 0.5) if v34 else 0.4)*h['MP'] and S['hp'] >= pol['inn_below']*h['HP']:
                 R['tea_used'] += 1; S['tea'] -= 1; S['mp'] = min(h['MP'], S['mp'] + 0.5*h['MP'])
-            low = S['hp'] < (0.8 if before_boss else pol['inn_below'])*h['HP'] or (S['mp'] < C.MPCFG['heal'] and S['heal'] and S['hp'] < 0.7*h['HP'])
+            low = S['hp'] < (opt.get('boss_inn_below', 0.8) if before_boss else pol['inn_below'])*h['HP'] or (S['mp'] < C.MPCFG['heal'] and S['heal'] and S['hp'] < 0.7*h['HP'])
+            if before_boss and v34 and style.startswith('save') and S['spells'] and S['mp'] < opt.get('boss_inn_mp', 0.6)*h['MP']: low = True   # v3.6 saver: refill MP before the boss
             if low:
                 price = C.inn_price(t)
                 if S['gold'] >= price:
@@ -151,7 +166,8 @@ def campaign(args):
             st0 = dict(stats); k_before = collections.Counter(stats['kills']); S['_sw'] = False; S['_casts'] = 0; S['_bq'] = 0; S['_bcorrect'] = 0; S['_last_cast_q'] = 0; S['_last_turn_cast'] = False
             R['mp_start'].append(S['mp']/h['MP'])
             R['can_cast'].append(bool(S['spells']) and S['mp'] >= min(sp['mp'] for sp in S['spells']))
-            qb = stats['q']
+            qb = stats['q']; hp0 = S['hp']
+            if kind != 'normal': R['boss_mp_start'].append(S['mp']/h['MP'])
             won, g, c, cp = C.battle(t, S, L, qset, kind, rng, stats, resume, elite=elite)
             R['battles'] += 1; R['casts'] += stats.get('spell_casts', 0) - st0.get('spell_casts', 0)
             R['turns'].append(('boss' if kind != 'normal' else 'elite' if elite else 'normal', stats['q'] - qb, stats.get('spell_casts', 0) - st0.get('spell_casts', 0), stats['potions_used'] - st0['potions_used'], stats['correct'] - st0['correct'], stats.get('hero_q', 0) - st0.get('hero_q', 0)))
@@ -160,6 +176,7 @@ def campaign(args):
             if len(owned_gear) >= (1 if t == 1 else 3): R['battles_full_gear'] += 1
             if kind != 'normal':
                 R['boss_fights'] += 1; R['boss_wins'] += won; R['boss_q'].append(stats['q'] - qb)
+                R['boss_hp_lost'].append((hp0 - (S['hp'] if won else 0))/h['HP']); R['boss_casts'].append(stats.get('spell_casts', 0) - st0.get('spell_casts', 0))
             else: R['normal_q'].append(stats['q'] - qb)
             newk = stats['kills'] - k_before
             drops += sum(1 for _ in range(newk[qs['collect']['target']]) if rng.random() < D.QUEST_RULES['collect_drop'])

@@ -1,11 +1,15 @@
 ﻿key,value
-normal,1
-elite,1
-boss,2
-min_correct,3
-boss_second_after_q,12
-ward_boss_mult,1.0
+casts_per_battle,"no cap (v3.5; v3.4 had 1 per normal/elite battle, 2 per boss)"
+unlock,none: castable from turn 1 (v3.5; v3.4 needed 3 correct answers)
+back_to_back,allowed
+limit,MP only: cost 41-60% of the bar at the recommended level (about 2 casts from full); MP cost = 1.25 x v3.4
+mp_regen_per_correct,0 (removed in v3.6; MP only from the inn or map-only MP potions)
+magic_ward,removed (v3.5)
+spell_power,fixed per spell; no magic stat (v3.5)
+super_blizzard_freeze,non-boss targets skip their next attack (1 turn); bosses immune (v3.5)
 spell_streak_bonus,none (a cast neither adds to nor breaks the streak)
 spell_spoken_bonus,none (no answer is given)
-mp_regen_per_correct,1
-sec_per_cast,5
+mp_potions_in_battle,no (map only)
+cast_animation,"about 2-3 s, a tap skips it (sim: 2.5 s per cast)"
+mp_hints,"none (v3.6: no MP tips, no casts-ready count, no Preview boss tip)"
+boss_target,a kid who enters a boss fight with full MP and spends it all on spells still needs about 15 correct answers for a location boss and about 20 for a realm boss (v3.7 boss HP; v3.6 was 20 for both)

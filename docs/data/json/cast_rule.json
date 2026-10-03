@@ -1,27 +1,35 @@
 [
  {
-  "key": "normal",
-  "value": "1"
+  "key": "casts_per_battle",
+  "value": "no cap (v3.5; v3.4 had 1 per normal/elite battle, 2 per boss)"
  },
  {
-  "key": "elite",
-  "value": "1"
+  "key": "unlock",
+  "value": "none: castable from turn 1 (v3.5; v3.4 needed 3 correct answers)"
  },
  {
-  "key": "boss",
-  "value": "2"
+  "key": "back_to_back",
+  "value": "allowed"
  },
  {
-  "key": "min_correct",
-  "value": "3"
+  "key": "limit",
+  "value": "MP only: cost 41-60% of the bar at the recommended level (about 2 casts from full); MP cost = 1.25 x v3.4"
  },
  {
-  "key": "boss_second_after_q",
-  "value": "12"
+  "key": "mp_regen_per_correct",
+  "value": "0 (removed in v3.6; MP only from the inn or map-only MP potions)"
  },
  {
-  "key": "ward_boss_mult",
-  "value": 1.0
+  "key": "magic_ward",
+  "value": "removed (v3.5)"
+ },
+ {
+  "key": "spell_power",
+  "value": "fixed per spell; no magic stat (v3.5)"
+ },
+ {
+  "key": "super_blizzard_freeze",
+  "value": "non-boss targets skip their next attack (1 turn); bosses immune (v3.5)"
  },
  {
   "key": "spell_streak_bonus",
@@ -32,11 +40,19 @@
   "value": "none (no answer is given)"
  },
  {
-  "key": "mp_regen_per_correct",
-  "value": 1
+  "key": "mp_potions_in_battle",
+  "value": "no (map only)"
  },
  {
-  "key": "sec_per_cast",
-  "value": 5
+  "key": "cast_animation",
+  "value": "about 2-3 s, a tap skips it (sim: 2.5 s per cast)"
+ },
+ {
+  "key": "mp_hints",
+  "value": "none (v3.6: no MP tips, no casts-ready count, no Preview boss tip)"
+ },
+ {
+  "key": "boss_target",
+  "value": "a kid who enters a boss fight with full MP and spends it all on spells still needs about 15 correct answers for a location boss and about 20 for a realm boss (v3.7 boss HP; v3.6 was 20 for both)"
  }
 ]

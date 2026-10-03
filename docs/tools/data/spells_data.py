@@ -41,7 +41,7 @@ _S = [
   'A shooting star with a long rainbow tail falls on one enemy; a starburst flash and tiny stars bouncing off. No crater.'),
  ('thunderstorm', 8, '雷雨术', '雷雨術', 'Thunderstorm', 'all', 'thunder', 1.3, 28, 110, 'Dazed: each target 30% chance to skip its next attack (bosses 15%)', 0.30, False,
   'A small storm cloud rains on all enemies (max 3) with friendly zig-zag bolts; puddles form under them and they hop around.'),
- ('super_blizzard', 9, '超暴风雪术', '超暴風雪術', 'Super Blizzard', 'all', 'ice', 1.6, 34, 130, 'Frozen: every target skips its next attack (bosses 50% chance)', 1.0, False,
+ ('super_blizzard', 9, '超暴风雪术', '超暴風雪術', 'Super Blizzard', 'all', 'ice', 1.6, 34, 130, 'Frozen: every non-boss target skips its next attack (1 turn); bosses are immune', 1.0, False,
   'The screen fills with a huge swirling snowstorm and a giant snowflake emblem; every enemy (max 3) is briefly frozen in a clear ice cube with a surprised face, then pops out.'),
  ('meteor_shower', 9, '流星雨术', '流星雨術', 'Meteor Shower', 'all', 'star', 2.0, 40, 120, '', 0, False,
   'The sky turns deep violet and a shower of colourful shooting stars rains on all enemies (max 3); each hit makes a star-shaped sparkle.'),
@@ -61,20 +61,35 @@ FK = {'small_fireball': (0.65, 0.40), 'bubble_spell': (0.35, 0.33), 'snowball_vo
       'fireball': (0.75, 0.40), 'whirlwind': (0.45, 0.45), 'snowflake_dance': (0.35, 0.45), 'lightning': (0.75, 0.40),
       'sunbeam': (0.50, 0.45), 'big_fireball': (0.85, 0.40), 'blizzard': (0.40, 0.45), 'tornado': (0.55, 0.45),
       'meteor': (0.95, 0.40), 'thunderstorm': (0.45, 0.45), 'super_blizzard': (0.45, 0.48), 'meteor_shower': (0.55, 0.48)}
-def spell_dmg(sp, t, tired=False, ward=1.0):
-    return max(1, round(sp['power'] * (1.5 if tired else 1) * ward - tier_stats(t)['DEF']))
+K_MULT = 1.25   # v3.5: no cast caps, so MP costs are 1.25x the v3.4 costs (41-60% of the bar at the recommended level, ~2 casts from full)
+def spell_dmg(sp, t, tired=False):
+    return max(1, round(sp['power'] * (1.5 if tired else 1) - tier_stats(t)['DEF']))
 SPELLS = []
 for (sid, town, zs, zt, en, tgt, el, mult, mp, pg, status, skip, soak, vis) in _S:
     ts = tier_stats(town); F, K = FK[sid]
     SPELLS.append(dict(id=sid, town=town, realm=REALM_EN[town], zh=zs, zh_trad=zt, en=en, target=tgt, element=el,
-                       power=round(F*ts['HP'] + ts['DEF']), mp=round(K*ts['MP']), F=F, K=K, v33_mult=mult, v33_mp=mp,
-                       price_G=pg, price=pg*G(town), status=status, skip_p=skip, soak=soak, visual=vis))
+                       power=round(F*ts['HP'] + ts['DEF']), mp=round(K_MULT*K*ts['MP']), F=F, K=round(K_MULT*K, 3), K_v34=K, mp_v34=round(K*ts['MP']), v33_mult=mult, v33_mp=mp,
+                       price_G=pg, price=pg*G(town), status=status, skip_p=skip, boss_skip=(0.0 if sid == 'super_blizzard' else 0.5), soak=soak, visual=vis))
 # MP potions (v3.4: expensive; drink on the map only, never in battle, so a potion never replaces a question turn)
 MP_ITEMS = [dict(id='mana_tea', zh='魔力茶', zh_trad='魔力茶', en='Mana Tea', effect='+50% max MP', price_G=6, from_town=1, battle_use='no (map only)'),
             dict(id='big_mana_tea', zh='大魔力茶', zh_trad='大魔力茶', en='Big Mana Tea', effect='refills MP to full', price_G=15, from_town=5, battle_use='no (map only)')]
 # Cast rule (v3.4)
-CAST_RULE = dict(normal=1, elite=1, boss=2, min_correct=3, boss_second_after_q=12)   # 1 cast per normal/elite battle, 2 per boss battle (2nd after 12 more questions); only after 3 correct answers in that battle
-WARD = 1.0   # v3.4: Magic Ward dropped (was x0.5 in boss battles in v3.3)
+# v3.5 (Jack, 2026-10-02 PT): NO cast caps and no 3-correct unlock. MP cost is the only limit; managing MP is the kid's job,
+# and saving MP for elites and bosses is meant to be a rewarded strategy.
+CAST_RULE = {}
+CAST_RULE_V34 = dict(normal=1, elite=1, boss=2, min_correct=3, boss_second_after_q=12)   # v3.4 (superseded): 1 per normal/elite battle, 2 per boss (12 q apart), after 3 correct
+# v3.5 decisions (Jack/Director, 2026-10-02 PT): Magic Ward removed; fixed spell power (no magic stat); MP costs and tea prices unchanged;
+# Super Blizzard's Freeze lasts 1 turn and doesn't affect bosses; cast animation about 2-3 s, a tap skips it.
+CAST_ANIM_SEC = 2.5   # sim time per cast (v3.4 assumed 5 s)
+
+# v3.6 (Jack, 2026-10-02 PT): NO MP regen on correct answers (MP comes back only at inns or from map-only MP potions); no MP hints.
+MP_REGEN = 0
+# v3.6 boss HP: multiplier on the v3.5 boss HP so that a 75% kid who enters with full MP and spends it all on spells still needs about 20 correct answers
+# (hero + block) to win (tuned with build/v3/explore/boss_tune.py, 600 fights per step). Tier 1 has no spells: 20 correct answers without spells.
+# v3.7 (Jack, 2026-10-02 PT): location bosses retuned to ~15 correct answers with full-MP spells (75%); realm bosses stay at ~20 (v3.6 values). v3.6 location multipliers: 2.00, 2.30, 2.65, 2.50, 2.65, 2.55, 2.50, 2.60, 2.70
+BOSS_HP_MULT = {(1, 'locboss'): 1.20, (1, 'realmboss'): 1.50, (2, 'locboss'): 1.55, (2, 'realmboss'): 1.65, (3, 'locboss'): 1.90, (3, 'realmboss'): 1.85, (4, 'locboss'): 1.70, (4, 'realmboss'): 1.05, (5, 'locboss'): 1.85, (5, 'realmboss'): 1.20, (6, 'locboss'): 1.80, (6, 'realmboss'): 1.10, (7, 'locboss'): 1.70, (7, 'realmboss'): 1.40, (8, 'locboss'): 1.85, (8, 'realmboss'): 1.10, (9, 'locboss'): 1.90, (9, 'realmboss'): 1.55}
+# v3.6 boss ATK x0.8 (location and realm bosses): longer boss fights would otherwise roughly double boss defeats for 50%-accuracy kids
+BOSS_ATK_MULT = {'locboss': 0.8, 'realmboss': 0.8}
 
 # ---------------- HSK 3.0 level of each character (from sources/hsk30.csv) ----------------
 def hsk_levels():
@@ -136,14 +151,15 @@ for t in range(1, 10):
     ]
 
 def write_json():
-    json.dump(dict(version='v3.4 (2026-10-02 PT): casting is a free action (no question, no fizzle)',
+    json.dump(dict(version='v3.7 (2026-10-02 PT): location bosses ~15 correct answers, realm bosses ~20, even with a full MP bar spent on spells (v3.6: 20 for both); v3.6: no MP regen on correct answers, boss ATK x0.8; no MP hints. v3.5 rules kept: free cast (no question, no fizzle), no cast caps, Magic Ward removed, Freeze 1 turn and not on bosses, 2-3 s skippable cast animation',
                    rules=dict(price_unit='G(t) = gold per normal enemy at the selling town = 3 x L_rec(t)',
                               damage='max(1, round(power x (Tired ? 1.5 : 1) - DEF_e)); fixed power (no ATK/gear/level scaling), full enemy DEF, no streak or spoken bonus',
-                              design_rule='power = round(F x HP_normal(t) + DEF(t)); mp = round(K x MP_pool(t)), MP_pool = 10 + 2 x L_rec(t)',
-                              cast='free action: uses the hero turn, asks no question, cannot fizzle; MP is always spent; no MP regen and no streak change on that turn',
-                              cast_rule=CAST_RULE, cast_rule_text='max 1 cast per normal or elite battle, 2 per boss battle (the 2nd at least 12 questions after the 1st); the Spellbook unlocks only after 3 correct answers in that battle',
-                              max_targets=3, boss_status='bosses resist statuses (half chance)', ownership='permanent; castable in any battle when MP >= cost and the cast rule allows',
-                              magic_ward='dropped in v3.4 (was x0.5 spell damage in boss battles in v3.3)', ward_value=WARD,
+                              design_rule='power = round(F x HP_normal(t) + DEF(t)); mp = round(K x MP_pool(t)), MP_pool = 10 + 2 x L_rec(t); v3.5 K = 1.25 x v3.4 K (0.41-0.60)',
+                              cast='free action: uses the hero turn, asks no question, cannot fizzle; MP is always spent; no streak change on that turn', mp_regen='none (v3.6): MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea / Big Mana Tea', boss_hp_mult={f'{t},{k}': m for (t, k), m in BOSS_HP_MULT.items()}, boss_atk_mult=BOSS_ATK_MULT, boss_target='about 15 correct answers per location boss and about 20 per realm boss, even with a full MP bar spent on spells (v3.7; v3.6 was 20 for both)',
+                              cast_rule=CAST_RULE, cast_rule_text='no per-battle cap and no unlock: cast any turn while MP >= cost (back-to-back allowed); MP is the only limit (v3.5)', mp_strategy='saving MP for elites and bosses is the kid\'s call; no hints anywhere (v3.6)',
+                              max_targets=3, boss_status='bosses resist statuses (half chance); Super Blizzard Freeze does not affect bosses', freeze='Super Blizzard: every non-boss target skips its next attack (lasts 1 turn)',
+                              cast_animation='about 2-3 s; a tap skips it', ownership='permanent; castable in any battle when MP >= cost and the cast rule allows',
+                              magic_ward='removed (decided v3.5; was x0.5 spell damage in boss battles in v3.3)', spell_power='fixed per spell; no magic stat or wand scaling (decided v3.5)',
                               mp_potions=MP_ITEMS, mp_potions_note='map only (never in battle), so a potion never replaces a question turn',
                               blacksmith_first='the magic shop reminds the kid when a purchase would leave less gold than the next town\'s weapon + armor + shield',
                               same_turn='a spell replaces the attack; it never combines with Frost/Sweep on the same turn; companion team attack is unchanged'),

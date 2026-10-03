@@ -1,7 +1,7 @@
 @@@ PREAMBLE
 # Combat and Progression Spec (v3)
 
-Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7).
+Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7).
 Previous versions: `combat-spec-v2.md` and `combat-spec-v1.md` (both kept unchanged).
 Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1,051 items, 9 realms, 20 locations, 60-item slice), `enemies.json` (50-enemy roster), and `chinese-rpg-design-memo.md`.
 
@@ -22,7 +22,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | safety_nets | safety_nets.csv | §7.5 |
 | special_mechanics | special_mechanics.csv | §7.9 |
 | practice_modes, practice_rewards | practice_modes.csv, practice_rewards.csv | §8 |
-| spells, quests (v3.3/v3.4) | spells, spell_falloff, spell_mp_check, mp_potions, cast_rule, quests (.csv / .json; + spells_full.json, quests_full.json) | §6.7, §7.11 |
+| spells, quests (v3.3–v3.5) | spells, spell_falloff, spell_mp_check, mp_potions, cast_rule, quests (.csv / .json; + spells_full.json, quests_full.json) | §6.7, §7.11 |
 | sim results | `data/sim/*.csv` | §7.6–7.10 |
 | curriculum pools | curriculum_location_pools.csv | §5 |
 
@@ -37,7 +37,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 3 | Spoken questions are **capped at 50% of each battle**. | §3.4 |
 | 4 | Mic handling as proposed. **`nomatch` (heard speech but got no words) counts as wrong.** | §9.1 |
 | 5 | Items proficient under 2 ways **stay proficient** if speech is turned on later. | §3.1 |
-| 6 | **MP regen: +1 MP per correct answer.** MP costs are rebalanced: Heal 12 MP for 30% HP, once per battle. | §6.4 |
+| 6 | ~~**MP regen: +1 MP per correct answer.**~~ **Removed in v3.6 (row 26).** MP costs are rebalanced: Heal 12 MP for 30% HP, once per battle. | §6.4 |
 | 7 | Inns stay close. There's a new **Return Feather** (1 × G). | §6.4, §7.3 |
 | 8 | The **companion team attack** is in, with a full spec (Friendship gauge 20/5/100, 1.25 × ATK). | §6.6 |
 | 9 | No tone checking and no timers. Parent-entered words use **browser TTS**. | §8.2, §10.1 |
@@ -51,11 +51,20 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 17 | **v3.2 caps (Jack's caps, as in the prototype build):** at most **3 new words per battle** (hard cap, also early in a location; was 4), and **Tired at 30 questions in normal battles (elites included) and 45 in every boss battle** (the 40 tier was the location boss; it's now 45 like the realm boss). | §2.5, §3.3, §11.1 |
 | 18 | **No pinyin anywhere in the game UI (v3.2, Jack).** Answer feedback shows the correct **characters + English meaning** and plays the **zh-CN audio**. Pinyin stays in the data (speech matching, polyphone checks, the parent editor) but is never shown to the kid. | §1.2, §3.4, §8.2, §9.3 |
 | 19 | **Bilingual battle commands (v3.2, Jack):** ⚔️ 攻击 Attack · ✨ 技能 Skills · 🍯 道具 Items · 🏃 逃跑 Run. Layout reference: `/workspace/desy/ui-layout-review.md` (§4). | §1.2 |
-| 20 | **Spells and quests (v3.3, Jack's request; details pending Jack):** a magic shop in every town. Towns 2–9 sell 2 spells each, 16 in total, at 45–130 × G. Spells are owned for good and kept in a Spellbook tab inside ✨ 技能 Skills. Casting needs a right answer; a wrong answer fizzles and still spends the MP (default). Magic Ward halves spell damage in boss battles, and the Blacksmith-first warning protects gear money. Each town has a quest board with 4 one-time quests (bounty, collect, words, delivery) worth about 30 × G per realm. | §6.7, §7.11 |
-| 21 | **Spells v3.4 (Jack, 2026-10-02 PT):** **casting is a free action** (no question, no fizzle). Damage = fixed power − full DEF, so old spells fall off. MP cost is 33–48% of the pool (2–3 casts from full). **Cast rule:** 1 per normal or elite battle, 2 per boss battle, and only after 3 correct answers in that battle. Mana Tea is 6 × G and the new Big Mana Tea 15 × G, both map-only. The Magic Ward is dropped, and spells get no streak bonus. | §6.7 |
+| 20 | **Spells and quests (v3.3, Jack's request; details pending Jack):** a magic shop in every town. Towns 2–9 sell 2 spells each, 16 in total, at 45–130 × G. Spells are owned for good and kept in a Spellbook tab inside ✨ 技能 Skills. Casting needs a right answer; a wrong answer fizzles and still spends the MP (default). Magic Ward halves spell damage in boss battles, and the Blacksmith-first warning protects gear money. Each town has a quest board with 4 one-time quests (bounty, collect, words, delivery) worth about 30 × G per realm. *(Fizzle superseded in v3.4; Ward removed in v3.5.)* | §6.7, §7.11 |
+| 21 | **Spells v3.4 (Jack, 2026-10-02 PT):** **casting is a free action** (no question, no fizzle). Damage = fixed power − full DEF, so old spells fall off. MP cost is 33–48% of the pool (2–3 casts from full). **Cast rule:** 1 per normal or elite battle, 2 per boss battle, and only after 3 correct answers in that battle. Mana Tea is 6 × G and the new Big Mana Tea 15 × G, both map-only. The Magic Ward is dropped, and spells get no streak bonus. *(Cast rule, Ward and MP costs superseded by rows 22–24, v3.5.)* | §6.7 |
+| 22 | **v3.5 (Jack, 2026-10-02 PT): no cast caps.** The per-battle caps (1 per normal/elite battle, 2 per boss) and the 3-correct unlock are removed. **MP is the only limit**, and saving MP for elites and bosses is the kid's strategy. To keep questions the main thing, spell MP costs are raised to 1.25 × v3.4 (41–60% of the bar at the recommended level: 2 casts of a single-target spell from full). Sim: every per-realm question share ≥ 0.857. | §1.1, §6.7, §11.1 |
+| 23 | **Magic Ward removed (v3.5, Jack).** | §6.7 |
+| 24 | **v3.5 defaults adopted (Director):** fixed spell power (no magic stat); Mana Tea 6 × G and Big Mana Tea 15 × G unchanged, both map-only (no in-battle MP potions); Super Blizzard's Freeze lasts 1 turn and doesn't affect bosses; cast animations are about 2–3 s and a tap skips them. | §6.7 |
+| 25 | ~~**MP hints (v3.5):** an inn and boss-gate tip, "Save your MP for the boss!"; the boss gate shows how many casts the current MP allows; the Preview page shows the location boss.~~ **Superseded by row 29 (v3.6): no hints.** | §6.7, §8 |
+| 26 | **No MP regen (v3.6, Jack 2026-10-02 PT).** The +1 MP per correct answer is gone. MP comes back only at the inn, on waking after a defeat, or from Mana Tea / Big Mana Tea (map only). Casting is expensive, and a kid who runs out of MP before the boss has only themselves to blame. Starting pool, growth, inn and tea prices are unchanged (the sim shows Heal and Shield stay usable). | §6.4, §6.7 |
+| 27 | **Boss target (v3.6, Jack):** a kid who arrives at a boss with full MP and spends it all on spells still needs **about 20 correct answers** to win, at every tier, for location and realm bosses. Boss HP is raised by tier and type (realm × 1.05–1.85; `data/boss_hp.csv`). Spell MP costs and power are unchanged. **Location bosses amended by row 30 (v3.7).** | §2.3, §6.7 |
+| 28 | **Boss ATK × 0.8 (v3.6, Director's default):** with the longer fights, boss ATK is cut by 20% so first-try wins and defeats for 50% kids stay close to v3.5. | §2.3 |
+| 29 | **No MP hints (v3.6, Jack):** no inn or boss-gate "Save your MP" tip, no casts-ready count at the boss gate, and no boss tip on the Preview page. | §6.7, §8.2 |
+| 30 | **Location bosses ~15 correct answers (v3.7, Jack 2026-10-02 PT).** Even with a full MP bar spent on spells, a location boss needs about 15 correct answers and a realm boss about 20. Location boss HP × 1.2–1.9 by tier (v3.6: × 2.0–2.7); realm bosses unchanged; boss ATK × 0.8 kept, because 50% kids' defeats don't rise. | §2.3, §6.7 |
 | – | Scripted path fights per location go from 6 to 8, because pools are about 1.75× larger. | §5, §7.4 |
 
-Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration", the open questions Jack answered, and the unlimited Queen Bee summon.
+Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration" (back in v3.6, row 26), the open questions Jack answered, and the unlimited Queen Bee summon.
 
 @@@ GLOSSARY
 ## 0. Glossary
@@ -91,8 +100,8 @@ Round:
 ```
 
 - **Defense questions per round = living enemies on screen (≤ 3).** A 3-enemy round is 1 attack question plus 3 defense questions. Extra enemies (tier 10+) wait as reinforcements.
-- Potions and Flee use the hero turn **without** a question. Potions are capped at 3 per battle. **Spells (v3.4)** also use the hero turn without a question: at most 1 per normal or elite battle and 2 per boss battle, and only after 3 correct answers in that battle (§6.7). MP potions can't be used in battle.
-- **HP and MP carry over between battles.** HP comes back only from an inn, a potion, Heal, or waking at the inn after a defeat. MP also regenerates **+1 per correct answer** in battle (§6.4).
+- Potions and Flee use the hero turn **without** a question. Potions are capped at 3 per battle. **Spells (v3.4/v3.5)** also use the hero turn without a question. There's no per-battle cap; MP cost is the only limit (§6.7). MP potions can't be used in battle.
+- **HP and MP carry over between battles.** HP comes back only from an inn, a potion, Heal, or waking at the inn after a defeat. MP comes back only from an inn, waking after a defeat, or map-only Mana Tea; there is **no MP regen** in battle (v3.6, §6.4).
 
 @@@ 1.2
 ### 1.2 State machine
@@ -115,7 +124,7 @@ BATTLE_INIT (HP/MP carried over from the map; Friendship gauge = 0)
          SPEECH_RESULT = TECH_FAIL (no speech at all / device / permission / network error)
                            -> re-prompt the SAME question (max 2), then VOID (§9.1)
                        = TRANSCRIPT (any recognized text) or NOMATCH -> graded, no retry (nomatch = wrong)
-    -> GRADE                 (correct/wrong; proficiency, Leitner, streak; +1 MP if correct;
+    -> GRADE                 (correct/wrong; proficiency, Leitner, streak; no MP regen (v3.6);
                               gauge +5 correct / +20 wrong; log)
     -> FEEDBACK              (correct characters + English meaning, zh-CN audio plays; never pinyin;
                               wrong: the correct card lights up, 1.5 s min)
@@ -161,8 +170,14 @@ Hero at the recommended level with common tier-t gear (these are the reference s
 |---|---|---|---|---|---|---|---|---|---|
 | normal | | round(H(t) × base) | round(1.1 × DEF_ref) | t | 1 × G | 6 × L_rec | 0.10 | – | path fights and patrols |
 | elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | 1 scripted path fight per realm; 10% of boss-approach patrols (§7.8) |
-| boss | location | round(5 × base) | round(1.2 × DEF_ref) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
-| boss | realm | round(7 × base) | round(1.3 × DEF_ref) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location; 50% checkpoint (save only) |
+| boss | location | round(5 × base × m(t)) (v3.6) | round(0.8 × round(1.2 × DEF_ref)) (v3.6) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
+| boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location; 50% checkpoint (save only) |
+
+**Boss HP and ATK (v3.6; location bosses v3.7).** m(t) is the boss HP multiplier in `data/boss_hp.csv`, tuned so that a kid who enters with full MP and spends it all on spells still needs about **15 correct answers for a location boss and about 20 for a realm boss** (targets, Jack): location bosses × 1.2–1.9 (v3.7; v3.6 was × 2.0–2.7 for 20), realm bosses × 1.05–1.85 (realm bosses already had more HP, and from t4 they face the kid's two strongest spells with a bigger pool). Boss ATK is × 0.8 so the longer fights don't raise defeats. The check is one boss fight from full HP and MP at the recommended level with full gear and the 2 strongest spells of towns t and t−1 (`build/v3/explore/boss_harness.py`, 600 fights per cell):
+
+{{table:boss_hp}}
+
+The v3.2 single-battle and realm tables in §5, §6.4, §6.6 and §7.6–7.10 were run before v3.6 (v3.5 boss stats, +1 MP regen) and weren't rerun, except the special-mechanics table (§7.9), which reads the roster. The v3.6 campaign numbers are in §6.7.
 
 Values by tier (`data/enemy_stat_bands.csv`):
 
@@ -269,9 +284,11 @@ The example gear names in §6.2 double as vocabulary exposure.
 {{table:gear_heroic_drops}}
 
 @@@ 6.4
-### 6.4 Skills, MP and consumables (rebalanced for regen)
+### 6.4 Skills, MP and consumables
 
-**MP rules (decided): +1 MP per correct answer in battle**, plus the inn, waking after a defeat, and Mana Tea. `MP_h = 10 + 2L`.
+**MP rules (v3.6, Jack): no MP regen.** MP comes back only at the inn, on waking after a defeat, or from Mana Tea / Big Mana Tea (map only). `MP_h = 10 + 2L`. The +1 MP per correct answer (v3.0–v3.5) is removed.
+
+**Heal and Shield without regen (v3.6 campaign sim, §6.7).** Removing regen alone moves defeats by less than 1 point (50% saver no spells 11.5% → 10.8%, 50% spender 25.7% → 25.5%), because kids already go back to the inn when MP is too low for Heal. Heals per battle drop a little (50% saver 0.41 → 0.34, 75% saver 0.11 → 0.07). Free inns and the gold floor don't move. So the pool (10 + 2L), growth, inn price (2 × G) and tea prices stay as they are. In the sim, Sweep and Frost keep 20 MP (Heal + Shield) in reserve. The table below is the v3.0 regen tuning and is kept as history.
 
 {{table:mp_rules}}
 
@@ -296,7 +313,7 @@ The example gear names in §6.2 double as vocabulary exposure.
 | 9 | 0.75 | v2 (no regen) | 0.00 | 2.97 | 0.32 | 0.19 |
 | 9 | 0.75 | **regen_b (chosen)** | 0.00 | 2.86 | 0.25 | 0.20 |
 
-The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, because Heal is limited to 1 per battle. The companion (§6.6) more than offsets this. Budget check: at L4 (18 MP) a kid starts a battle able to cast Guardian Shield (8) and gets Heal (12) after 2 correct answers. At L12 (34 MP), Shield + Heal + a Double Strike fit from the start.
+The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, because Heal is limited to 1 per battle. The companion (§6.6) more than offsets this. Budget check (v3.6, no regen): at L4 (18 MP) a full bar covers Guardian Shield (8) or Heal (12), not both; from L6 (22 MP) both fit. At L12 (34 MP), Shield + Heal + a Double Strike fit. Whatever a battle spends stays spent until the inn or a Mana Tea.
 
 **Consumables** (prices in `data/economy_prices.csv`, G = gold per normal enemy):
 
@@ -311,7 +328,7 @@ The kid's companion (memo §2.4, the "Kind friend") has a **Friendship gauge** (
 
 UI and rules:
 - The gauge is a heart bar under the companion portrait. It glows at 100. At the start of the hero's next turn the companion dashes in ("我来帮你!") and hits the target. There's no question and no input. It's a 1.5 s animation.
-- It never counts for proficiency, streak or MP regen. The streak multiplier and spoken bonus don't apply.
+- It never counts for proficiency or streak. The streak multiplier and spoken bonus don't apply.
 - It can land the killing blow. The enemy pays normal drops. In a boss fight it hits minions first, and the boss once the minions are gone.
 - It works in every battle (path fights, patrols, elites, bosses). The gauge resets to 0 at the start of each battle. It doesn't carry over.
 - Voided questions and hinted answers don't move the gauge.
@@ -532,14 +549,14 @@ An elite adds about 4–6 questions and 5–16 points of HP loss to a fight. Ove
 @@@ 7.9
 ### 7.9 Special boss mechanics (simulated)
 
-Single battle from full HP/MP with 1 potion, speech on, companion on, roster stats. Win rate without → with the mechanic (`data/special_mechanics.csv`, `data/sim/sim_specials.csv`):
+Single battle from full HP/MP with 1 potion, speech on, companion on, roster stats (**rerun for v3.7** with the v3.7 boss HP and ATK × 0.8; the battle rules are still the v3.2 ones, with +1 MP regen and no spells; v3.5 and v3.6 numbers in `build/v3/archive_v3_5/` and `archive_v3_6/v3_specials.txt`; only the Shadow Dragon, a location boss, changed in v3.7). Win rate without → with the mechanic (`data/special_mechanics.csv`, `data/sim/sim_specials.csv`):
 
 {{table:special_mechanics}}
 
-- **Queen Bee 蜂后, Summon Worker:** the roster's v2 text (a worker every 3 turns, no limit) was **broken**. Fights ran to about 80 questions, and the win rate at 50–65% accuracy fell to 0–34%, because each worker is a full normal enemy that paid drops (a farming loop too). **v3 rule:** every 3rd round, if fewer than 3 enemies are on screen, summon 1 worker bee at **half normal HP** with **no drops**, **max 2 per fight**. Result: 65% / 98% / 100% win at 50 / 65 / 75%, and about 10 more questions per fight (2 summons every time). The roster text is updated.
-- **Hydra 九头蛇, Double Bite:** every 3rd round the Hydra attacks twice (2 block questions). It's a real difficulty bump at low accuracy (win 39% → 18% at 50%, 90% → 78% at 65%), and negligible at ≥ 75%. **Keep:** it's the realm-5 final boss, it's telegraphed (both heads rear up), and bosses have the 50% checkpoint.
-- **Shadow Dragon 暗影龙, Curse Chain:** +3 ATK while its imp minion is alive. When the kid kills the imp first (the default targeting), the effect is nil. If the kid ignores the imp, the win rate at 50% drops 97% → 91% and HP lost rises 52% → 67%. **Keep as a teaching cue:** the chain glows between them, and the companion says "Break the chain first!"
-- **Queen Bee in the prototype build (headless test, 2026-09-29 PT): a loss at L8 / 75% is expected for that setup, and it isn't a data mismatch.** The prototype's Queen Bee (63 HP / 10 ATK / 2 DEF, 1 giant bee 23/10/2, workers 12 HP, every 3rd round, max 2) and its hero formulas match §2.1/§2.3. Three setup differences explain the loss: (1) the test hero still wore tier-1 gear (wooden sword, cloth tunic, pot lid → ATK 9, DEF 6), because heroic/fine drops only auto-equip into an empty slot. With DEF 6, every *correct* block against ATK 10 still leaks round(10 − 7.5) = 3 HP. At the recommended gear (DEF 8+) it leaks 0; (2) the test only attacks: no potion, no Heal, and Guardian Shield wasn't equipped; (3) it always targets the Queen and misses exactly every 4th answer. Replaying that setup in the sim with half-up rounding reproduces the result exactly: a loss in **28 questions** in every run. With a random 75% it wins 50%. Any one fix brings it back to 86–100%: potions + Heal + Shield (91–100%), tier-2 common gear at L8 (100%), the heroic Rabbit-Horn Dagger equipped (86–100%), or a +1 DEF charm (93–100%). Frost, Sweep and Second Wind unlock in realms 6–9, so they aren't part of the tier-2 design. Second Wind alone would also flip this fight (85–100%). Source: `build/v3/queen_diag/`.
+- **Queen Bee 蜂后, Summon Worker:** the roster's v2 text (a worker every 3 turns, no limit) was **broken**. Fights ran to about 60–100 questions (v3.6 HP), and the win rate at 50–65% accuracy fell to 1–45%, because each worker is a full normal enemy that paid drops (a farming loop too). **v3 rule:** every 3rd round, if fewer than 3 enemies are on screen, summon 1 worker bee at **half normal HP** with **no drops**, **max 2 per fight**. Result (v3.6 boss stats): 84% / 100% / 100% win at 50 / 65 / 75% (v3.5: 65% / 98% / 100%), and about 10–12 more questions per fight (2 summons every time). The roster text is updated.
+- **Hydra 九头蛇, Double Bite:** every 3rd round the Hydra attacks twice (2 block questions). It's a real difficulty bump at low accuracy (v3.6: win 72% → 52% at 50%, 99% → 96% at 65%; v3.5: 39% → 18% and 90% → 78%), and negligible at ≥ 75%. **Keep:** it's the realm-5 final boss, it's telegraphed (both heads rear up), and bosses have the 50% checkpoint.
+- **Shadow Dragon 暗影龙, Curse Chain:** +3 ATK while its imp minion is alive. When the kid kills the imp first (the default targeting), the effect is nil. If the kid ignores the imp, the win rate at 50% drops 98% → 88% and HP lost rises 54% → 68% (v3.7 boss stats; v3.6: 91% → 69%, 64% → 80%; v3.5: 97% → 92%, 52% → 66%). **Keep as a teaching cue:** the chain glows between them, and the companion says "Break the chain first!"
+- **Queen Bee in the prototype build (headless test, 2026-09-29 PT): a loss at L8 / 75% is expected for that setup, and it isn't a data mismatch.** (v3.6 note: the roster's Queen Bee is now 104 HP / 8 ATK; the prototype still has the v3.5 stats below.) The prototype's Queen Bee (63 HP / 10 ATK / 2 DEF, 1 giant bee 23/10/2, workers 12 HP, every 3rd round, max 2) and its hero formulas match §2.1/§2.3. Three setup differences explain the loss: (1) the test hero still wore tier-1 gear (wooden sword, cloth tunic, pot lid → ATK 9, DEF 6), because heroic/fine drops only auto-equip into an empty slot. With DEF 6, every *correct* block against ATK 10 still leaks round(10 − 7.5) = 3 HP. At the recommended gear (DEF 8+) it leaks 0; (2) the test only attacks: no potion, no Heal, and Guardian Shield wasn't equipped; (3) it always targets the Queen and misses exactly every 4th answer. Replaying that setup in the sim with half-up rounding reproduces the result exactly: a loss in **28 questions** in every run. With a random 75% it wins 50%. Any one fix brings it back to 86–100%: potions + Heal + Shield (91–100%), tier-2 common gear at L8 (100%), the heroic Rabbit-Horn Dagger equipped (86–100%), or a +1 DEF charm (93–100%). Frost, Sweep and Second Wind unlock in realms 6–9, so they aren't part of the tier-2 design. Second Wind alone would also flip this fight (85–100%). Source: `build/v3/queen_diag/`.
 - **Arena Troll 巨魔, Regrow: cosmetic (decided, v3.1).** The simulated rule (+4 HP at the end of a round if it wasn't hit) had **zero** effect under focus fire, and the "Tag Team" variant added only about 5% more questions. In the game, Regrow is a green sparkle with no HP change.
 
 @@@ 7.10
@@ -594,7 +611,7 @@ Opened automatically the first time the kid enters a location (skippable after 3
 
 | block | contents |
 |---|---|
-| header | Location name (中文 + English), the boss portrait, readiness bar "Ready words 9 / 52 (need 11)" |
+| header | Location name (中文 + English), the boss portrait (as in v3.0–v3.4), readiness bar "Ready words 9 / 52 (need 11)". No MP or boss tip (v3.6: the v3.5 tip and boss name line are removed). |
 | item list | Every pool item in authored order. Per row: characters (Simplified, or Traditional if the parent chose it), English, 🔊 audio button (no pinyin, v3.2), topic chip, progress pips (4 or 2 ways), and a "new" badge for items never seen in battle. Filter chips: All / New / Not ready / Ready. Sentence frames show a filled example (这件衣服多少钱?). |
 | practice modes | 5 tiles (§8.3), each with a sticker slot showing whether it's cleared. |
 | rewards strip | The "Preview complete" reward and the sticker count (§8.4). |
@@ -707,8 +724,8 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | Spoken cap | 50% of questions per battle | §3.4 |
 | K_BLOCK / K_BROKEN / BROKEN_FLOOR | 1.25 / 0.5 / 0.5 | unchanged |
 | Rounding | half-up (`Math.round`) for all combat damage, as in the prototype | sim switched in v3.2 |
-| Enemy ATK normal / elite / location boss / realm boss | 1.1 / 1.2 / 1.2 / 1.3 × DEF_ref | §2.3 |
-| Enemy HP normal / elite / location boss / realm boss | H(t) / 2 × H(t) / 5 / 7 × base | §2.3 |
+| Enemy ATK normal / elite / location boss / realm boss | 1.1 / 1.2 / 1.2 / 1.3 × DEF_ref; bosses × 0.8 (v3.6) | §2.3 |
+| Enemy HP normal / elite / location boss / realm boss | H(t) / 2 × H(t) / 5 × m(t) / 7 × m(t) × base; m(t) location 1.2–1.9, realm 1.05–1.85 (v3.7, `data/boss_hp.csv`) | §2.3 |
 | Boss minions / checkpoint | 1 (location) or 1–2 (realm) / 50% save point, no heal | |
 | Streak tiers | 3 / 6 / 10 → ×1.25 / 1.5 / 2.0 | |
 | Spoken bonus | ×1.25 damage, +1 streak | |
@@ -716,9 +733,9 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | G(t) | 6, 12, 18, 27, 36, 45, 54, 63, 72 (±20%, floor 80%) | gold multipliers: normal 1, elite 2, location boss 5, realm boss 10 |
 | EXP | 6 / 10 / 20 / 50 × L_rec (normal / elite / location boss / realm boss) | XP curve 100 × L |
 | Chest chance | 10% normal, 25% elite, 100% boss | §7.2 |
-| Inn / Honey Potion / Big Honey / Mana Tea / Big Mana Tea / Return Feather | 2×G / 1×G / 2×G / **6×G** / **15×G** (town 5+) / 1×G; MP potions are map-only (v3.4) | §6.4, §6.7, §7.3 |
+| Inn / Honey Potion / Big Honey / Mana Tea / Big Mana Tea / Return Feather | 2×G / 1×G / 2×G / **6×G** / **15×G** (town 5+) / 1×G; MP potions are map-only (v3.4; confirmed v3.5) | §6.4, §6.7, §7.3 |
 | Start kit | 24 gold + 1 free Honey Potion (+1 Return Feather in the tutorial) | |
-| MP | 10 + 2L; **+1 per correct answer**; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20 | §6.4 |
+| MP | 10 + 2L; **no regen (v3.6)**: inn, waking after a defeat, map-only Mana Tea; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20 | §6.4 |
 | Companion | gauge 100; +20 per wrong, +5 per correct; attack 1.25 × ATK_h − 0.5 × DEF_e; resets each battle | §6.6 |
 | Defeat fee | max(10% of gold, inn price), never below 2 × inn; free inn when gold < inn | §7.5 |
 | Courage | +20% DEF per consecutive defeat, cap +60%, cleared by a win | §7.5 |
@@ -726,9 +743,11 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | Speech | consent gate; 2 technical re-prompts, then VOID; 3 voids → speech paused for the session; 6/8 s listen; 4 s no-speech; nomatch = wrong | §9.1 |
 | Practice | ≤ 1 credit per way; 0 gold / 0 EXP per question; Preview complete = 1 Honey Potion + 1 × G once per location | §8 |
 | Leitner intervals | 0, 10 min, 1 d, 3 d, 7 d, 16 d, 35 d; wrong = −2 boxes | scheduling only |
-| Spells (v3.4) | 2 per town in towns 2–9; price 45–130 × G; free cast (no question); damage max(1, round(P × Tired − DEF_e)), P = round(F × HP_normal(t) + DEF(t)); MP = round(K × pool(t)), K 0.33–0.48 | §6.7, `data/spells.csv` |
-| Cast rule | 1 per normal or elite battle, 2 per boss battle (2nd ≥ 12 questions later), unlocked after 3 correct answers in the battle | §6.7, `data/cast_rule.csv` |
-| Magic Ward / status vs bosses | Ward dropped in v3.4 (`WARD = 1.0`); status chance ×0.5 on bosses | §6.7 |
+| Spells (v3.5) | 2 per town in towns 2–9; price 45–130 × G; free cast (no question); fixed power, damage max(1, round(P × Tired − DEF_e)), P = round(F × HP_normal(t) + DEF(t)); MP = round(K × pool(t)), K 0.41–0.60 (1.25 × v3.4) | §6.7, `data/spells.csv` |
+| Cast rule | **None (v3.5):** no per-battle cap, no unlock, back-to-back allowed; MP is the only limit; no MP hints (v3.6) | §6.7, `data/cast_rule.csv` |
+| Boss target (v3.7) | about 15 correct answers per location boss and 20 per realm boss, even with a full MP bar spent on spells | §2.3, `data/boss_hp.csv` |
+| Magic Ward / status vs bosses | Ward **removed** (v3.5); status chance ×0.5 on bosses; Super Blizzard Freeze 1 turn, bosses immune | §6.7 |
+| Cast animation | about 2–3 s, tap to skip (sim 2.5 s) | §6.7 |
 | Blacksmith first | warn if a spell purchase leaves less than the next town's weapon + armor + shield | §6.7 |
 | Quests (v3.3) | 4 per town, one-time: bounty 8 kills (6 × G + Honey Potion), collect 5 drops at 35% (8 × G), words 15 Ready (10 × G + Mana Tea), delivery (6 × G + Return Feather) | §7.11, `data/quests.csv` |
 
@@ -762,8 +781,11 @@ Also in v3.2: **no pinyin anywhere in the game UI**, with audio-only answer feed
    - (b) Town names: all 9 are placeholders.
    - (c) Town 1's magic shop: Mana Tea plus a "coming soon" shelf, or a cheap teaser spell?
    - (d) Elements: cosmetic only (default), or weaknesses such as fire vs the Fire Elemental?
-   - (e) v3.4: OK to drop the Magic Ward? If realm-boss fights run short in playtests, set the boss cap to 1 rather than bring back the Ward.
-   - (i) v3.4: should MP bite harder? With +1 MP per correct answer and the cast cap, kids still start most battles with 62–82% MP. Options: K = 0.5 (exactly 2 casts from full), or casts that don't refill from regen.
+   - (e) ~~Drop the Magic Ward?~~ **Closed (v3.5):** removed.
+   - (i) ~~Should MP bite harder?~~ **Closed (v3.5):** caps removed, MP costs are 1.25 × v3.4; magic stat: none; tea prices unchanged; Freeze 1 turn, not on bosses; animations 2–3 s, skippable.
+   - (j) ~~v3.5 saving payoff~~ **Closed (v3.6):** regen removed, so MP comes back only from the inn or map-only tea. Savers now reach bosses with 94% vs 89% MP (75%) and 89% vs 74% (90%). The boss target (about 20 correct answers even with a full MP bar) keeps bosses long either way. Hints are removed.
+   - (k) ~~v3.6: location bosses as long as realm bosses?~~ **Closed (v3.7, Jack):** location bosses about 15 correct answers, realm bosses about 20.
+   - (l) v3.6: **boss ATK × 0.8** is a Director default to keep 50% kids' defeats flat (kept in v3.7: 50% defeats 9.7% → 9.4% saver, 22.6% → 22.0% spender). OK, or prefer × 0.9?
    - (f) Prices: the first spell is affordable on arrival in town 2, because realm 1 has almost nothing to spend gold on. Raise the beginner prices, or add a town-1 sink?
    - (g) Quests: one-time (default) or repeatable? Should the words quest count earlier realms' words? Spenders finish it in few late realms.
    - (h) Should the Blacksmith-first warning be a hard lock?
@@ -778,39 +800,45 @@ Also in v3.2: **no pinyin anywhere in the game UI**, with audio-only answer feed
 - **Gear lag isn't modeled:** show the upgrade warning. Every correct block leaks HP once DEF is below ATK_e ÷ 1.25, so a hero whose gear is a tier old takes chip damage on every question (see the Queen Bee note in §7.9).
 - **Sim rounding (resolved in v3.2):** `combat_sim.py` now rounds halves up in combat (`Math.round`, like the spec and the prototype), where it used Python's half-to-even `round` before. The enemy stat bands still use the authored roster values. Mostly t7/t9 move: more, shorter patrol fights at the same total time, and lower defeat rates at 50% accuracy (§7.7).
 - **Parent-entered errors and Web Speech drift:** unchanged. Keep the reading ways first-class for the reading-mode fallback.
-- **Spells (v3.3/v3.4):** if kids ignore the Blacksmith-first warning and buy spells before gear, defeats rise sharply in the sim: spell-first saver at 65%, 1.3% → 12.5%; spender at 75%, 0.4% → 7.4%. Keep the warning prominent, or make it a hard lock. Without the Magic Ward, late boss fights drop to about 19 questions (target 22–30).
+- **Spells (v3.3–v3.5):** if kids ignore the Blacksmith-first warning and buy spells before gear, defeats rise sharply in the sim: spell-first saver at 65%, 1.3% → 12.5%; spender at 75%, 0.4% → 7.4%. Keep the warning prominent, or make it a hard lock. In v3.7, boss HP is tuned so that even a full MP bar spent on spells leaves about 15 correct answers per location boss and 20 per realm boss.
+- **Long boss fights for low-accuracy kids (v3.6–v3.7):** in a single fight, a 50% kid needs 27–28 questions for a location boss and 33–36 for a realm boss with full-MP spells (up to 35.5 and 44.7 without spells), so a realm boss without spells can reach the Tired cap of 45. Campaign boss battles for a 50% saver average 31–41 questions per realm (v3.6: 37–46). If playtests show fatigue, lower the realm-boss target next.
 
 @@@ 6.7
-### 6.7 Spells (v3.3 request; **v3.4: casting is a free action**)
+### 6.7 Spells (v3.3 request; v3.4 free cast; v3.5: no cast caps; v3.6: no MP regen, no hints; **v3.7: location bosses ~15 / realm bosses ~20 correct answers**)
 
 Full write-up: `/workspace/desy/spells.md`.
 - Data: `data/spells.csv` / `.json`, `data/spell_falloff.csv`, `data/spell_mp_check.csv`, `data/mp_potions.csv`, `data/cast_rule.csv`, `data/spells_full.json`.
-- Sim: `build/spells_sim.py` + `build/spells_runner.py` → `build/v3/sim/v3_spells.txt`. The v3.3 version is kept in `build/v3/archive_v3_3/`.
+- Sim: `build/spells_sim.py` + `build/spells_runner.py` → `build/v3/sim/v3_spells.txt`. Earlier versions are kept in `build/v3/archive_v3_3/` to `build/v3/archive_v3_6/`.
 
-**Rules (v3.4, Jack 2026-10-02 PT).**
+**Rules (v3.5, Jack 2026-10-02 PT; v3.6 changes marked).**
 - **Shop.** Every town has a magic shop 魔法店. Towns 2–9 sell 2 spells each, 16 in total, at 45–130 × G of the selling town (540–9,360 gold). Town 1 sells Mana Tea only.
 - **Ownership.** Spells are owned for good. They live in a **Spellbook tab inside ✨ 技能 Skills**, so there are still 4 battle commands and no skill slot is used.
-- **Casting is a free action.** It uses the hero's turn but asks **no question** and can't fizzle. The MP is always spent. That turn gives no MP regen and doesn't change the streak. Enemy turns still ask their block questions as usual.
+- **Casting is a free action** (v3.4). It uses the hero's turn but asks **no question** and can't fizzle. The MP is always spent. It doesn't change the streak. Enemy turns still ask their block questions as usual.
+- **No cast caps (v3.5).** No per-battle limit, no "3 correct answers first" unlock, and back-to-back casts are allowed. **MP is the only limit.** Managing MP is the kid's job, and saving it for elites and bosses is the intended strategy.
 - **Damage:** `max(1, round(P × (Tired ? 1.5 : 1) − DEF_e))`.
-  - P is the spell's fixed **power**. It doesn't grow with ATK, gear or level.
+  - P is the spell's **fixed power** (decided v3.5: no magic stat, no wand scaling). It doesn't grow with ATK, gear or level.
   - Spells subtract the enemy's **full DEF**, where attacks subtract 0.5 × DEF.
   - There's no streak or spoken bonus, because no answer is given.
   - Design rule: `P = round(F × HP_normal(t) + DEF(t))`, where F is the share of a normal enemy's HP the spell removes in its own town's realm (0.35–0.95).
-  - Normal-enemy HP grows from 27 (t2) to 73 (t9). So each spell drops to the level of a plain attack 2–3 tiers after its town (see `spell_falloff` below).
-- **MP cost:** `MP = round(K × MP_pool(t))` with K = 0.33–0.48, using MP_pool = 10 + 2 × L_rec (unchanged). From a full bar, a kid can cast 2.1–3.0 spells at the spell's own tier, or about 1–1.7 if they keep 12 MP for Heal.
-  - **MP growth is unchanged.** A kid 3 levels over the recommended level still gets only 2.3–3.4 casts.
-  - Old spells become cheap relative to the pool, but by then they're weak.
-- **Cast rule (anti-dodge):**
-  - **1 cast per normal or elite battle, 2 per boss battle.** The 2nd boss cast needs at least 12 more questions after the first.
-  - The Spellbook **unlocks only after 3 correct answers in that battle** (the "magic charge"). So spells are earned by answering, and a fight can't be opened with a free cast.
-- **MP potions are expensive and map-only** (they're never drunk in battle, so a potion never replaces a question turn):
-  - Mana Tea 魔力茶: +50% max MP for **6 × G** (= 6 normal kills; was 1 × G).
-  - Big Mana Tea 大魔力茶: full MP for **15 × G**, from town 5.
-  - The inn (2 × G, full HP + MP) stays the cheap refill; tea is the price of not walking back.
-- **Magic Ward dropped** (it was ×0.5 spell damage in boss battles in v3.3). With the cast cap and fixed power, the strongest owned spell does only 11–14% of a realm boss's HP from tier 3 on (29% at tier 2). Spells shorten boss fights by about 1 question on average, and first-try win rates don't change. With the Ward, kids would cast half as often on bosses, so spells would "feel broken" there.
-- **Unchanged from v3.3:**
+  - Normal-enemy HP grows from 27 (t2) to 73 (t9), so each spell drops to the level of a plain attack 2–3 tiers after its town (see `spell_falloff` below).
+- **MP cost (v3.5: 1.25 × the v3.4 cost):**
+  - `MP = round(K × MP_pool(t))`, with K = 0.41–0.60 (Bubble Spell 0.41) and MP_pool = 10 + 2 × L_rec (unchanged).
+  - At the spell's own tier, a full bar holds **exactly 2 casts of a single-target spell** and 1.7–1.8 casts of a crowd spell.
+  - With the caps gone, the v3.4 costs let 75–90% savers' boss fights fall to a per-realm question share of 0.83–0.85 in the sim. At 1.25× the lowest is 0.857.
+  - MP growth is unchanged.
+- **Statuses:**
+  - Soaked, Dazed and Chilled work as in v3.3, and bosses get half the chance.
+  - **Super Blizzard's Freeze (v3.5):** every non-boss target skips its next attack (it lasts 1 turn). **Bosses are immune.**
+- **MP potions stay expensive and map-only.** Prices are unchanged (decided v3.5): Mana Tea 魔力茶 +50% MP for 6 × G, Big Mana Tea 大魔力茶 full MP for 15 × G (town 5+).
+  - **In-battle MP potions stay off.** The sim shows they aren't needed: a kid who also drinks tea at the boss gate gains about 0.1 casts per boss over one who just saved. Allowing them in battle would also allow drink-cast-drink chains that replace questions.
+  - The inn (2 × G, full HP + MP) stays the cheap refill.
+- **Magic Ward: removed** (decided v3.5).
+- **Cast animation (decided v3.5):** about 2–3 s, and a tap skips it. The sim counts 2.5 s per cast.
+- **No MP regen (v3.6).** Correct answers no longer give MP. MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea. A kid who spends it all before the boss has to walk back to the inn or fight with attacks.
+- **Boss HP (v3.6; v3.7 location bosses).** Bosses are tuned so a kid who arrives with full MP and spends it all on spells still needs about 15 correct answers for a location boss and about 20 for a realm boss (§2.3, `data/boss_hp.csv`).
+- **No MP hints (v3.6).** No inn or boss-gate tip, no casts-ready count, and no boss tip on the Preview page. The MP bar is the only cue.
+- **Unchanged:**
   - targeting: single / same type / all on screen, max 3;
-  - bosses get half the chance of status effects;
   - the Blacksmith-first warning;
   - spells never combine with Frost or Sweep on the same turn;
   - the companion team attack.
@@ -829,25 +857,34 @@ Full write-up: `/workspace/desy/spells.md`.
 
 {{table:cast_rule}}
 
-**Sim (v3.4, campaign of realms 1–9, 150 runs per row, speech on).** Columns compare no spells → v3.3 spells (cast = question) → v3.4 spells (free cast, cast rule, no Ward):
+**Sim (v3.7, campaign of realms 1–9, 150 runs per row, speech on).** The comparison is with the archived v3.6 run (`build/v3/archive_v3_6/`: same code and seeds, location bosses at about 20 correct answers). v3.6 vs v3.5 is in `build/v3/archive_v3_6/combat-spec-v3.6.md`.
 
-| kid, accuracy | playthrough h | spells owned | defeat % | boss questions | normal questions | question share of turns (normal / boss) | hero turns that are casts |
-|---|---|---|---|---|---|---|---|
-| saver 75% | 17.7 → 17.6 → 17.8 | 0 → 5.2 → 5.8 | 0.1 → 0.1 → 0.0 | 22.3 → 22.8 → 21.0 | 16.8 → 14.6 → 15.9 | 0.989 → 0.989 → 0.959 / 0.992 → 0.990 → 0.959 | 9.4% |
-| spender 75% | 12.8 → 11.9 → 12.7 | 0 → 2.0 → 2.1 | 0.4 → 0.1 → 0.3 | 22.1 → 22.4 → 21.9 | 17.0 → 15.4 → 16.7 | 0.989 → 0.991 → 0.974 / 0.995 → 0.992 → 0.982 | 4.8% |
-| saver 65% | 20.4 → 20.3 → 20.5 | 0 → 3.9 → 4.2 | 1.3 → 1.3 → 0.9 | 25.4 → 25.7 → 24.0 | 18.7 → 16.5 → 17.8 | 0.980 → 0.981 → 0.956 / 0.982 → 0.980 → 0.956 | 7.9% |
-| saver 50% | 27.0 → 26.9 → 27.0 | 0 → 0.8 → 0.8 | 11.5 → 12.0 → 11.3 | 27.7 → 27.9 → 27.3 | 21.0 → 20.3 → 20.8 | 0.972 → 0.972 → 0.964 / 0.976 → 0.975 → 0.969 | 2.5% |
-| saver 90% | 14.7 → 14.6 → 14.9 | 0 → 6.6 → 7.0 | 0 | 17.9 → 18.7 → 17.1 | 14.0 → 12.1 → 13.6 | 0.998 → 0.998 → 0.967 / 0.999 → 0.999 → 0.961 | 9.6% |
+Each kid (gold saver or spender, by accuracy) is run with four MP styles. Nothing in the game tells the kid to save (v3.6: no hints); the styles are kid habits:
+- **free:** casts in every fight whenever a spell beats an attack.
+- **save:** in normal fights, keeps enough MP for 2 casts of its strongest spell; casts freely in elite and boss fights; goes back to the inn before a boss if MP is under 60%.
+- **save+tea:** like save, and also keeps a Mana Tea (Big Mana Tea from town 5) in stock and drinks it at the boss gate.
+- **free+tea:** like free, plus the tea.
+
+Question share = questions ÷ all turns (casts and potions count as non-question turns). "Min by realm" is the lowest single realm (realms 2–9).
+
+| kid, accuracy | playthrough h: v3.6 free → v3.7 none / free / save | defeat %: v3.6 free / save → v3.7 none / free / save | boss 1st-try: v3.6 free → v3.7 free / save | boss questions: v3.6 free → v3.7 none / free / save | q share n / e / b: v3.6 free → v3.7 free → v3.7 save | min by realm n / e / b (v3.7 free; save) | hero turns cast n / b: v3.6 free → v3.7 free → v3.7 save | MP at boss start: v3.6 free → v3.7 free / save / save+tea |
+|---|---|---|---|---|---|---|---|---|
+| saver 75% | 18.2 → 18.0 / 17.9 / 17.9 | 0.0 / 0.0 → 0.0 / 0.0 / 0.0 | 1.00 → 1.00 / 1.00 | 30.0 → 27.5 / 26.1 / 26.0 | 0.949 → 0.949 → 0.991 / 0.958 → 0.959 → 0.958 / 0.965 → 0.962 → 0.955 | 0.926 / 0.935 / 0.925; 0.988 / 0.936 / 0.914 | 13.1% → 13.0% → 0.0% / 7.1% → 8.4% → 9.9% | 89% → 89% / 94% / 96% |
+| spender 75% | 12.8 → 12.9 / 12.6 / 12.8 | 0.1 / 0.1 → 0.1 / 0.1 / 0.1 | 1.00 → 1.00 / 1.00 | 30.4 → 27.3 / 27.0 / 26.8 | 0.971 → 0.970 → 0.990 / 0.975 → 0.975 → 0.974 / 0.982 → 0.982 → 0.980 | 0.937 / 0.956 / 0.962; 0.987 / 0.950 / 0.956 | 6.1% → 6.2% → 0.0% / 3.1% → 3.4% → 4.0% | 88% → 88% / 92% / 93% |
+| saver 65% | 20.9 → 20.7 / 20.8 / 20.6 | 0.2 / 0.7 → 0.8 / 0.2 / 0.6 | 1.00 → 1.00 / 1.00 | 34.0 → 31.2 / 29.7 / 29.3 | 0.935 → 0.934 → 0.982 / 0.944 → 0.943 → 0.949 / 0.957 → 0.955 → 0.953 | 0.904 / 0.911 / 0.918; 0.975 / 0.924 / 0.916 | 15.1% → 15.2% → 0.0% / 6.8% → 8.0% → 8.4% | 94% → 94% / 97% / 98% |
+| saver 50% | 27.2 → 26.9 / 26.9 / 26.9 | 8.6 / 9.5 → 9.4 / 8.3 / 9.2 | 0.92 → 0.93 / 0.93 | 39.2 → 36.0 / 35.2 / 35.1 | 0.958 → 0.957 → 0.972 / 0.956 → 0.954 → 0.957 / 0.966 → 0.966 → 0.965 | 0.917 / 0.921 / 0.938; 0.962 / 0.926 / 0.937 | 4.4% → 4.6% → 0.2% / 2.2% → 2.8% → 2.8% | 98% → 98% / 99% / 99% |
+| spender 50% | 18.6 → 18.3 / 18.3 / 18.3 | 22.6 / 22.6 → 22.0 / 22.0 / 22.0 | 0.61 → 0.70 / 0.70 | 34.6 → 32.1 / 32.1 / 32.1 | 0.990 → 0.990 → 0.990 / 0.993 → 0.993 → 0.993 / 0.996 → 0.996 → 0.996 | 0.988 / 0.982 / 0.987; 0.988 / 0.982 / 0.987 | 0.0% → 0.0% → 0.0% / 0.0% → 0.0% → 0.0% | 99% → 98% / 98% / 98% |
+| saver 90% | 15.1 → 14.9 / 14.9 / 14.8 | 0.0 / 0.0 → 0.0 / 0.0 / 0.0 | 1.00 → 1.00 / 1.00 | 23.7 → 21.6 / 21.0 / 20.8 | 0.972 → 0.973 → 0.999 / 0.979 → 0.977 → 0.971 / 0.969 → 0.966 → 0.953 | 0.960 / 0.965 / 0.937; 0.998 / 0.950 / 0.923 | 7.8% → 7.8% → 0.0% / 7.5% → 8.4% → 11.6% | 74% → 72% / 89% / 94% |
+| spender 90% | 11.2 → 11.2 / 11.1 / 11.2 | 0.0 / 0.0 → 0.0 / 0.0 / 0.0 | 1.00 → 1.00 / 1.00 | 23.9 → 21.6 / 21.3 / 21.2 | 0.981 → 0.981 → 0.999 / 0.985 → 0.984 → 0.982 / 0.982 → 0.981 → 0.968 | 0.961 / 0.965 / 0.955; 0.997 / 0.958 / 0.915 | 5.3% → 5.3% → 0.0% / 4.2% → 4.6% → 7.8% | 69% → 68% / 86% / 88% |
 
 How to read this:
-- **Questions stay the main thing.** The question share counts potions as non-question turns too. At least 92.5% of turns are questions in every tier, profile and battle type; across the whole game, 95.5–98.6%.
-- **Learning time doesn't move.** Savers' minutes per location stay within about +1 min of the no-spell game (a cast adds about 5 s of animation). Spenders stay within ±2 min, where v3.3 cut them by up to 6 min. The share of realm words proficient at realm end is identical (23% for savers, 11–12% for spenders), because locations are readiness-gated.
-- **MP is used:** kids start battles at 62–82% MP (80–95% without spells), and heals per battle fall from 0.11 to 0.05 at 75%.
-- **Win rates don't move.** Boss first-try wins are unchanged (1.00 at 75%, 0.84–0.85 at 50%).
-- **Rejected cast rules** (75% saver):
-  - 1 cast per battle without the 3-correct charge: 95.3% question share, 10.8% of hero turns cast.
-  - No cap, only "no back-to-back": 94.0% normal / 92.9% boss, 15.4% of hero turns cast, boss fights −2.6 questions.
-- **The guard rails still matter.** Ignoring the Blacksmith-first warning (spell-first) puts kids in old gear: defeats 1.7% for savers and 7.8% for spenders at 75%.
+- **Boss targets met (single fight from full HP and MP, `data/boss_hp.csv`).** Spending every MP point on spells, a 75% kid needs **14.8–15.4 correct answers per location boss** and **19.4–20.1 per realm boss** at every tier (no spells: 15.3–19.3 and 20.1–24.9). At 50%: 13.4–14.1 and 17.7–18.7 (no spells 13.6–17.9 and 17.8–24.3). At 90%: 14.2–15.4 and 17.9–20.4 (no spells 14.9–17.9 and 18.5–22.8). Full-MP spell use is 1.0–1.8 casts per boss.
+- **Location bosses are shorter.** A 75% kid's single location-boss fight takes about 20–21 questions with spells (v3.6: about 26), a realm boss still about 26–27. In the campaign, boss battles average 26–27.5 questions at 75% (v3.6: 29.6–31.1), 29–31 at 65%, 35–36 for a 50% saver (v3.6: 39–40) and 20.8–21.6 at 90% (v3.6: 23.5–24.3).
+- **Defeats don't rise, so boss ATK × 0.8 stays.** 50% saver 9.7% → 9.4% (no spells), 8.6% → 8.3% (free); 50% spender 22.6% → 22.0%, and its first-try boss win rises 0.61 → 0.70. 65–90% kids are unchanged (0–3.5%).
+- **Question share is unchanged within ±0.005** for every profile and style, and no realm falls below 0.85 (lowest single realm 0.904, 65% saver, normal battles, free style). Casts are at most 15% of hero turns in normal fights and 13% in boss fights (v3.6: 15% and 11%), because the same 1–2 casts now land in shorter fights.
+- **Time:** playthrough hours drop by 0.1–0.3 h per profile (75% saver 18.1 → 17.9–18.0 h; 50% spender 18.6 → 18.3 h).
+- **Heal, Shield, inns and gold:** unchanged within noise (heals per battle 50% saver 0.34; free inns 50% spender 1.4–1.5 per run, others at most 0.25; lowest gold 14–33 by profile; no run hits 0 gold).
+- **From v3.6 (still true):** no MP regen; savers reach bosses with 94% vs 89% MP (75%); tea costs 1,000–6,600 gold per run and adds at most about 0.15 casts per boss.
 
 @@@ 7.11
 ### 7.11 Quests (new in v3.3)
