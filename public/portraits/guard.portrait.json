@@ -1,0 +1,17 @@
+{
+ "id": "guard",
+ "name": {
+  "zh": "守卫",
+  "en": "Guard"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 414
+}

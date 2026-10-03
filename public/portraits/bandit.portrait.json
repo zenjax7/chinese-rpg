@@ -1,0 +1,17 @@
+{
+ "id": "bandit",
+ "name": {
+  "zh": "山贼",
+  "en": "Bandit"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 428
+}

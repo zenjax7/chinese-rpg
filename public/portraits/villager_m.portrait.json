@@ -1,0 +1,17 @@
+{
+ "id": "villager_m",
+ "name": {
+  "zh": "村民",
+  "en": "Villager (man)"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 401
+}

@@ -1,0 +1,21 @@
+{
+ "id": "xiaolong",
+ "name": {
+  "zh": "小龙",
+  "en": "Little Dragon"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "surprised",
+  "angry",
+  "worried",
+  "thinking",
+  "hungry",
+  "brave"
+ ],
+ "mirror": true,
+ "anchorY": 230
+}

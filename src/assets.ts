@@ -4,15 +4,18 @@ import type { LocationDef } from './data';
 
 export interface AudioEntry { urls: string[]; loopStart?: number; loopEnd?: number; volume?: number; }
 export interface AssetManifest { bg: Record<string, string>; sfx: Record<string, AudioEntry>; music: Record<string, AudioEntry>; vo: Record<string, string[]>;
-  spellIcons: Record<string, string>; spellFx: { manifest?: string; recipes?: string }; }
-const EMPTY: AssetManifest = { bg: {}, sfx: {}, music: {}, vo: {}, spellIcons: {}, spellFx: {} };
+  spellIcons: Record<string, string>; spellFx: { manifest?: string; recipes?: string };
+  /** consumable id -> Arty's item icon (public/items/icons/item_<name>.png) */ itemIcons: Record<string, string>;
+  /** dialogue art for the (future) dialogue scene: portraits/portraits_index.json (v2, .webp), ui/manifest.json */ portraits: { index?: string }; ui: { manifest?: string }; }
+const EMPTY: AssetManifest = { bg: {}, sfx: {}, music: {}, vo: {}, spellIcons: {}, spellFx: {}, itemIcons: {}, portraits: {}, ui: {} };
 let M: AssetManifest = EMPTY;
 const waiters: ((m: AssetManifest) => void)[] = [];
 
 export function setAssetManifest(m: any) {
-  M = { bg: m?.bg || {}, sfx: m?.sfx || {}, music: m?.music || {}, vo: m?.vo || {}, spellIcons: m?.spellIcons || {}, spellFx: m?.spellFx || {} };
+  M = { bg: m?.bg || {}, sfx: m?.sfx || {}, music: m?.music || {}, vo: m?.vo || {}, spellIcons: m?.spellIcons || {}, spellFx: m?.spellFx || {},
+    itemIcons: m?.itemIcons || {}, portraits: m?.portraits || {}, ui: m?.ui || {} };
   (window as any).__proto = (window as any).__proto || {};
-  (window as any).__proto.assets = { bg: Object.keys(M.bg), sfx: Object.keys(M.sfx), music: Object.keys(M.music), vo: Object.keys(M.vo).length, spellIcons: Object.keys(M.spellIcons), spellFx: M.spellFx };
+  (window as any).__proto.assets = { bg: Object.keys(M.bg), sfx: Object.keys(M.sfx), music: Object.keys(M.music), vo: Object.keys(M.vo).length, spellIcons: Object.keys(M.spellIcons), spellFx: M.spellFx, itemIcons: Object.keys(M.itemIcons), portraits: M.portraits, ui: M.ui };
   waiters.splice(0).forEach(f => f(M));
 }
 export const assets = () => M;
@@ -34,4 +37,9 @@ export const BG = {
 export function spellIcon(id: string, emoji: string, size = 40): string {
   const u = M.spellIcons[id];
   return u ? `<img class="spicon" src="${u}" alt="" width="${size}" height="${size}" style="width:${size}px;height:${size}px">` : `<span class="spicon e" style="font-size:${Math.round(size * 0.8)}px">${emoji}</span>`;
+}
+/** Item icon: Arty's PNG when delivered (public/items/icons/item_<name>.png), else the item's emoji. */
+export function itemIcon(id: string, emoji: string, size = 28): string {
+  const u = M.itemIcons[id];
+  return u ? `<img class="itemicon" data-testid="itemicon-${id}" src="${u}" alt="" width="${size}" height="${size}" style="width:${size}px;height:${size}px">` : emoji;
 }

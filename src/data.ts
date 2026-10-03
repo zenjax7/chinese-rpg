@@ -8,7 +8,7 @@ import skillsJ from './data/skills.json';
 export interface Item { id: string; zh: string; trad: string; py: string; en: string; enPrimary: string; type: string; pos: string;
   topic: string; loc: string; speaking: boolean; reading: boolean; altZh: string[]; altEn: string[]; }
 export interface EnemyDef { id: string; zh: string; py: string; en: string; emoji: string; color: number; tier: number;
-  kind: 'normal' | 'elite' | 'locboss' | 'realmboss'; role: string; desyId: string; sprite: string; spriteTint: number | null; level: number; hp: number; atk: number; def_: number;
+  kind: 'normal' | 'elite' | 'locboss' | 'realmboss'; role: string; desyId: string; sprite: string; spriteTint: number | null; headAnchor?: number; level: number; hp: number; atk: number; def_: number;
   exp: number; gold: number; chestRate: number; minions: string[]; attackZh: string; attackEn: string; special: string; group: string;
   mech: { partnerFallSkip?: boolean; dozeEveryNRounds?: number; quickStart?: boolean; summonAtHalf?: { enemy: string; maxOnScreen: number };
     honeyDistract?: boolean; rootOnBroken?: boolean; webOnBroken?: { nextAttackMult: number }; waxShieldFirstHit?: number; healOnceAtHalf?: number;

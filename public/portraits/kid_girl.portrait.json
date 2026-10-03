@@ -1,0 +1,17 @@
+{
+ "id": "kid_girl",
+ "name": {
+  "zh": "小女孩",
+  "en": "Girl"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 468
+}

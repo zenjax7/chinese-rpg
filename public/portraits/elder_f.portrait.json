@@ -1,0 +1,17 @@
+{
+ "id": "elder_f",
+ "name": {
+  "zh": "老奶奶",
+  "en": "Grandma"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 441
+}

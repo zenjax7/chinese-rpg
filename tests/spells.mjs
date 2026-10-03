@@ -40,6 +40,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await tid('go-magic').click(); await tid('magic-shop').waitFor();
   check(await tid('magic-pot-manatea').count() === 1 && await tid('magic-pot-bigmanatea').count() === 0, 'magic shop: Mana Tea (town 1) on sale, Big Mana Tea (town 5+) not yet');
   check(/魔力茶/.test(await tid('magic-pot-manatea').innerText()), 'magic shop: bilingual Mana Tea label');
+  check(await p.locator('[data-testid="magic-pot-manatea"] img[data-testid="itemicon-manatea"]').count() === 1, "magic shop: Mana Tea shows Arty's item icon");
   let g = await goldNow(); await tid('magic-buy-manatea').click();
   const teaP = g - await goldNow(); check(teaP === 6 * G && (await sv()).inv.manatea === 1, `magic shop: bought Mana Tea for 6×G (${teaP} = 6 × ${G})`);
   const card = await tid('spellcard-small_fireball').innerText();
@@ -95,7 +96,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     if (midShot) { await p.waitForTimeout(900); await p.screenshot({ path: midShot }); log('saved', midShot); }
     if (skip) { await p.waitForTimeout(150); await p.evaluate(() => document.querySelector('[data-testid="fx-skip"]')?.click()); }
     await p.waitForFunction(() => window.__proto.lastSpell?.done, null, { timeout: 8000 });
-    return { ls: await p.evaluate(() => window.__proto.lastSpell), total: await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0]?.totalMs), before, mp0, asked };
+    return { ls: await p.evaluate(() => window.__proto.lastSpell), ...(await p.evaluate(() => { const a = (window.__proto.spellAnims || []).slice(-1)[0] || {}; return { total: a.totalMs, recipeMs: a.recipeMs, animMode: a.mode }; })), before, mp0, asked };
   }
   
   // ---- forest path battles: cast on turn 1, back to back, MP the only limit; tap skips; MP potions not in battle ----
@@ -145,13 +146,15 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0 && ls.mpCost === 9, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
     check(ls.streakAfter === ls.streakBefore && ls.streakBefore === before.streak, `cast: streak unchanged (${ls.streakBefore} → ${ls.streakAfter})`);
     check(ls.qAfter === ls.qBefore, 'cast: no question counted for the cast turn');
-    check(first.total >= 2000 && first.total <= 3000 && ls.animMs >= 1950, `cast: animation timeline 2–3 s (${first.total} ms planned, ${ls.animMs} ms wall incl. the screenshot)`);
+    check(first.animMode === 'recipe' && first.total >= 1200 && first.total <= 4500 && (first.recipeMs == null || Math.abs(first.total - first.recipeMs) <= 300) && ls.animMs >= first.total - 60,
+      `cast: the recipe's own timeline, at most 4.5 s (${first.total} ms planned, recipe ${first.recipeMs} ms, ${ls.animMs} ms wall incl. the screenshot)`);
   }
   check(second && second.ls.skippedAt != null && second.ls.animMs - second.ls.skippedAt < 400 && second.ls.animMs < second.total - 50, `cast: tap skips the animation (tap at ${second?.ls.skippedAt} ms, ended at ${second?.ls.animMs} of ${second?.total} ms)`);
   await tid('act-inn').click().catch(() => {}); if (await tid('inn').count()) { await hintFree('inn'); await tid('back').click(); await tid('location').waitFor(); }
   // Mana Tea works on the map (bag)
   await rest(3); await tid('location').waitFor(); const mpA = (await sv()).mp; const teaA = (await sv()).inv.manatea;   // chests can drop Mana Tea too
   await tid('act-bag').click(); await tid('items').waitFor({ timeout: 4000 }).catch(() => {});
+  check(await p.locator('[data-testid="items"] img[data-testid="itemicon-manatea"]').count() === 1, "bag: Mana Tea shows Arty's item icon (not the emoji)");
   if (await tid('use-manatea').count()) { await tid('use-manatea').click(); await p.waitForTimeout(200); const sB = await sv(); check(sB.mp > mpA && sB.inv.manatea === teaA - 1, `map: Mana Tea restores MP from the bag (${mpA} → ${sB.mp})`); await tid('back').click().catch(() => {}); }
   else check(false, 'map: bag with Mana Tea reachable from the location');
 

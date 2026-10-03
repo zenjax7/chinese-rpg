@@ -167,6 +167,17 @@
   "locked": "spells/icons/spell_locked.png"
  },
  "spellFx": {
-  "manifest": "spells/fx/manifest.json"
+  "manifest": "spells/fx/manifest.json",
+  "recipes": "spells/spells_fx.json"
+ },
+ "itemIcons": {
+  "bigmanatea": "items/icons/item_big_mana_tea.png",
+  "manatea": "items/icons/item_mana_tea.png"
+ },
+ "portraits": {
+  "index": "portraits/portraits_index.json"
+ },
+ "ui": {
+  "manifest": "ui/manifest.json"
  }
 }

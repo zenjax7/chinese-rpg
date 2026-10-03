@@ -90,7 +90,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   S.stats.battles++;
   view.mode('battle', parseInt(loc.bg), BG.battle(loc, isBoss));
   playMusic(leader || isBoss ? 'mus_battle_boss' : 'mus_battle_field');
-  const syncView = () => { view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
+  const syncView = () => { view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, headAnchor: f.d.headAnchor, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
     foes.forEach((f, i) => { if (f.alive && f.fx) view.setStatus(i, f.fx); }); };
   syncView();
 
@@ -395,7 +395,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     msg(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)}!`, 'spell-cast');
     void dockMain(`<div class="casting" data-testid="casting"><span class="sic">${spellIcon(sp.id, sp.emoji, 56)}</span><span><b lang="zh-CN">${sp.zh}</b> ${esc(sp.en)}<br><span class="muted">🔷 −${sp.mp} MP · ${TARGET_LABEL[sp.target]}</span></span></div>`);
     setTimeout(() => playSpellSfx(sp.id), 300);
-    // the animation (2–3 s, src/data/spellfx.json castAnim) can be skipped with a tap anywhere / Enter / Space
+    // the animation (the recipe's own length, 1.5–4.2 s; Arty's spells_fx.json) can be skipped with a tap anywhere / Enter / Space
     const sk = document.createElement('button'); sk.id = 'fxskip'; sk.className = 'fxskip'; sk.dataset.testid = 'fx-skip'; sk.setAttribute('aria-label', 'Skip');
     sk.innerHTML = '<span>▶▶ <span lang="zh-CN">跳过</span> Tap to skip</span>'; sk.onclick = () => { info.skippedAt ??= Math.round(performance.now() - t0); view.skipCast(); };
     const key = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { info.skippedAt ??= Math.round(performance.now() - t0); view.skipCast(); } };

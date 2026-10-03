@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "palette": {"navy": "#0d1b3d", "gold": "#d4a84a", "goldHighlight": "#f6da8c", "goldDark": "#7a581e"},
+  "dialogue_panel": {
+    "file": "dialogue_panel.png", "size": [96, 96],
+    "slice": {"left": 24, "right": 24, "top": 24, "bottom": 24},
+    "fillOpacity": 0.92,
+    "phaser": "this.add.nineslice(x, y, 'dialogue_panel', undefined, 1180, 190, 24, 24, 24, 24).setOrigin(0)"
+  },
+  "dialogue_nameplate": {
+    "file": "dialogue_nameplate.png", "size": [176, 46],
+    "slice": {"left": 30, "right": 30, "top": 12, "bottom": 12},
+    "note": "pointed ends live in the left/right slices: stretch width freely; keep height 46 (or scale uniformly) so the points don't distort",
+    "phaser": "this.add.nineslice(x, y, 'dialogue_nameplate', undefined, Math.max(176, textWidth + 80), 46, 30, 30, 12, 12)"
+  },
+  "dialogue_next_arrow": {"file": "dialogue_next_arrow.png", "size": [32, 32]},
+  "dialogue_next_arrow_bob": {
+    "file": "dialogue_next_arrow_bob.png", "frameWidth": 32, "frameHeight": 32, "frames": 2,
+    "note": "frame 1 is the arrow 3 px lower; play at ~3 fps, or tween y +-3 px on the single image instead"
+  },
+  "mockupLayout": {
+    "frame": [1280, 720],
+    "dialogueBox": {"x": 50, "y": 510, "w": 1180, "h": 190},
+    "portraitDisplaySize": 360,
+    "portraitLeft": {"x": 70, "bottomY": 518, "flipX": false},
+    "portraitRight": {"x": 850, "bottomY": 518, "flipX": true},
+    "portraitBottomTuckPx": 8,
+    "nonSpeakerTint": "brightness x0.55, saturation x0.75 (Phaser: setTint(0x8c8c8c) is close)",
+    "nameplate": {"leftX": 80, "rightAlignX": 1200, "y": 476, "font": "Noto Serif CJK SC Bold 28px, #f6de96"},
+    "text": {"x": 106, "y": 550, "main": "Noto Sans CJK SC 30px white + soft shadow", "pinyin": "Noto Sans CJK SC 21px #ecd696", "english": "Noto Sans CJK SC 18px #c4cad6"},
+    "nextArrow": {"x": 1172, "y": 646}
+  },
+  "mockups": ["dialogue_mockup.png", "dialogue_mockup_speaker_right.png"]
+}

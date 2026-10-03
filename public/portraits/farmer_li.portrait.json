@@ -1,0 +1,16 @@
+{
+ "id": "farmer_li",
+ "name": {
+  "zh": "李农夫",
+  "en": "Farmer Li"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "worried",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 230
+}

@@ -1,0 +1,16 @@
+{
+ "id": "xiaoming",
+ "name": {
+  "zh": "小明",
+  "en": "Xiaoming"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "worried",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 230
+}

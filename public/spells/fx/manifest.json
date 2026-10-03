@@ -9,6 +9,11 @@
    200
   ]
  },
+ "displayScaleByCanvas": {
+  "960x540": 0.5,
+  "1280x720": 0.6667
+ },
+ "canvasNote": "Textures are stored at 2x their size on a 960x540 frame. The game frame is now 1280x720 (hero ~230 px, feet y=420): draw them at ~0.667 (displayScale x 4/3). displayWidth/Height are 960-frame px.",
  "textures": {
   "fireball_small": {
    "file": "fx/fireball_small.png",
@@ -805,6 +810,20 @@
    },
    "derivedFrom": "ice_cube"
   },
+  "frozen_back": {
+   "file": "fx/frozen_back.png",
+   "width": 320,
+   "height": 297,
+   "displayScale": 0.5,
+   "displayWidth": 160,
+   "displayHeight": 148,
+   "blendMode": "NORMAL",
+   "origin": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "derivedFrom": "ice_cube"
+  },
   "dazed_ring": {
    "file": "fx/dazed_ring.png",
    "width": 1080,
@@ -910,10 +929,14 @@
   },
   "frozen": {
    "texture": "frozen_front",
+   "front": "frozen_front",
+   "back": "frozen_back",
    "blendMode": "NORMAL",
    "anchor": "center",
    "offsetY": 0,
    "depth": "front",
+   "backDepth": "behind",
+   "layering": "draw back behind the enemy and front in front of it, same position/scale/origin",
    "fitToEnemy": {
     "widthFactor": 1.15,
     "heightFactor": 1.1
@@ -930,6 +953,7 @@
    "note": "clear ice cube over the enemy; the enemy stays visible through it"
   },
   "ward": {
+   "optional": true,
    "texture": "ward_ring",
    "add_texture": "ward_ring",
    "blendMode": "ADD",
@@ -945,7 +969,7 @@
     "repeat": -1
    },
    "rotateDegPerSec": 12,
-   "note": "violet shimmer ring lying flat under/behind the enemy (boss magic ward). Use fx/add/ward_ring.png with ADD, or fx/ward_ring.png with NORMAL"
+   "note": "OPTIONAL: the Magic Ward will probably be dropped and nothing requires it. Violet shimmer ring lying flat under/behind the enemy. Use fx/add/ward_ring.png with ADD, or fx/ward_ring.png with NORMAL"
   }
  }
 }

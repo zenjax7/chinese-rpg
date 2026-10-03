@@ -1,0 +1,17 @@
+{
+ "id": "merchant",
+ "name": {
+  "zh": "商人",
+  "en": "Merchant"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "angry",
+  "surprised"
+ ],
+ "mirror": true,
+ "anchorY": 401
+}

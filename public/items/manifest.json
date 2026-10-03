@@ -1,0 +1,38 @@
+{
+  "source": "src/mana_tea_pair.jpg",
+  "sizes": [
+    128,
+    64
+  ],
+  "padding_px": {
+    "128": 5,
+    "64": 2
+  },
+  "style": "square gold-framed badge, transparent outside the frame, matches spells/icons square icons (e.g. spell_super_blizzard)",
+  "items": {
+    "item_mana_tea": {
+      "name_en": "Mana Tea",
+      "name_zh": "魔力茶",
+      "icon": "icons/item_mana_tea.png",
+      "icon_64": "icons/64/item_mana_tea.png",
+      "source_crop": [
+        76,
+        80,
+        606,
+        612
+      ]
+    },
+    "item_big_mana_tea": {
+      "name_en": "Big Mana Tea",
+      "name_zh": "大魔力茶",
+      "icon": "icons/item_big_mana_tea.png",
+      "icon_64": "icons/64/item_big_mana_tea.png",
+      "source_crop": [
+        674,
+        80,
+        1205,
+        611
+      ]
+    }
+  }
+}

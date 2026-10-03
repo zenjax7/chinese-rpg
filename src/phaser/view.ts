@@ -11,12 +11,13 @@ import { setAssetManifest } from '../assets';
 import { playCast, setFxData, fxTextureList, showStatus, clearStatus, StatusView, CastHandle, elementColor } from './spellfx';
 import { attachSound } from '../audio/audio';
 
-export interface ViewEnemy { sprite?: string; tint?: number | null; emoji: string; name: string; hp: number; maxHp: number; color: number; boss: boolean; tired?: boolean; }
+export interface ViewEnemy { sprite?: string; tint?: number | null; headAnchor?: number; emoji: string; name: string; hp: number; maxHp: number; color: number; boss: boolean; tired?: boolean; }
 export const W = 1280, H = 720, RENDER_ZOOM = 1.5;
 export const BASE_Y = 420, HERO_X = 290, COMP_X = 150;
 export const SIZE = { hero: 230, normal: 185, boss: 290 };   // on-screen frame height in frame px (spec §4.1)
 const ZH_FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif';
 const NUM_FONT = '"Fredoka","Nunito",sans-serif';
+const HEAD_ANCHOR = 0.08;   // default enemy headAnchor (fraction of the sprite height from its top)
 const TXT_RES = 2;   // text textures at 2x so they stay sharp under the 1.5 camera zoom
 type Body = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 interface FoeView { body: Body; blob: Phaser.GameObjects.Ellipse; bar: Phaser.GameObjects.Graphics; label: Phaser.GameObjects.Text; data: ViewEnemy;
@@ -156,7 +157,10 @@ class MainScene extends Phaser.Scene {
   }
   // ---------------- v3.4 spells (choreography in ./spellfx.ts) ----------------
   cast: CastHandle | null = null;
-  fxTarget(f: FoeView) { return { x: f.x, top: this.foeTop(f), feet: f.y, h: f.h, body: f.body, sprite: f.sprite }; }
+  /** Head anchor (snow hat, dazed stars, soaked cloud, target_head): enemies.json headAnchor = y as a fraction of the sprite's
+   *  height from its top (default 0.08 = the visible-body top used by foeTop); eared / horned enemies set it lower. */
+  foeHead(f: FoeView) { if (!f.sprite) return this.foeTop(f); const oy = (f.body as Phaser.GameObjects.Sprite).originY ?? 0.92; return f.y - f.h * oy + f.h * (f.data.headAnchor ?? HEAD_ANCHOR); }
+  fxTarget(f: FoeView) { return { x: f.x, top: this.foeTop(f), head: this.foeHead(f), feet: f.y, h: f.h, body: f.body, sprite: f.sprite }; }
   fxHost() {
     const b = this.hero; const sp = b instanceof Phaser.GameObjects.Sprite ? b : null;
     const w = sp ? sp.displayWidth : SIZE.hero * 0.6, h = sp ? sp.displayHeight : SIZE.hero * 0.6;
@@ -177,8 +181,10 @@ class MainScene extends Phaser.Scene {
       const f = fv[k]; if (!f || !f.body.active) return; const i = this.foes.indexOf(f);
       this.damageNumber(f.x + 30, this.foeTop(f) - 10, '-' + dmgs[k], '#' + elementColor(sp.element).toString(16).padStart(6, '0'), opts.tag);
       f.impactAt = 0; this.updateEnemy(i, hpAfter[k]);
+    }, k => {   // statuses appear when the impact ends (Arty's README)
+      const f = fv[k]; if (!f || !f.body.active) return; const i = this.foes.indexOf(f);
       if (opts.status?.[k] && hpAfter[k] > 0) this.setStatus(i, opts.status[k]!);
-    });
+    }, k => (opts.status?.[k] && hpAfter[k] > 0 ? opts.status[k]! : null));
     this.cast = h; h.done.then(() => { if (this.cast === h) this.cast = null; });
     return h.done;
   }

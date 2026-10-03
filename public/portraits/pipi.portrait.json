@@ -1,0 +1,20 @@
+{
+ "id": "pipi",
+ "name": {
+  "zh": "皮皮",
+  "en": "Pipi"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "surprised",
+  "angry",
+  "worried",
+  "thinking",
+  "smug"
+ ],
+ "mirror": true,
+ "anchorY": 260
+}

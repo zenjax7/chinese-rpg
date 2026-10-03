@@ -9,6 +9,13 @@ Sources (override with env vars, e.g. for testing with a scratch dir):
              Skipped: the src/, tools/ and _scratch/ folders, __pycache__ and preview_*.png sheets.
              Manifest: spellIcons {<spell_id>: url} (icons/spell_<id>.png, else icons/64/spell_<id>.png), spellFx {manifest, recipes} when present.
              Optional sfx_spell_<spell_id>.ogg|mp3 in AUDIO_DIR/sfx are picked up by the sfx rule (cast sound; generic fallback otherwise).
+  ART_ITEMS  default /workspace/art/items         -> public/items/ (icons/item_<name>.png 128 px, icons/64/, manifest.json)
+             Manifest: itemIcons {<consumable id>: url} (item_mana_tea -> manatea, item_big_mana_tea -> bigmanatea, ...).
+  ART_PORTRAITS default /workspace/art/portraits -> public/portraits/<id>_<expr>.webp + <id>.portrait.json + portraits_index.json
+             (v2 dialogue portraits, converted PNG -> WebP q85 with alpha; json rewritten to the .webp names; the old <id>/
+             folders, mockup*/preview*/sheet files are skipped). Manifest: portraits {index}.
+  ART_UI     default /workspace/art/ui            -> public/ui/ (dialogue panel / nameplate / next arrow + manifest.json;
+             the *_mockup*.png references and src/, tools/ are skipped). Manifest: ui.
 Optional <folder>/manifest.json (sfx, music) may carry per-key extras, e.g. {"mus_village": {"loopStart": 2.5, "loopEnd": 64.0}}.
 Run by `npm run build` / `npm run dev` (prebuild / predev). Safe to run when nothing exists yet.
 If a source folder is missing (e.g. in CI, where /workspace/art and /workspace/audio don't exist), the matching
@@ -21,6 +28,9 @@ PUB = os.path.normpath(os.path.join(HERE, '..', 'public'))
 ART_BG = os.environ.get('ART_BG', '/workspace/art/backgrounds')
 AUDIO = os.environ.get('AUDIO_DIR', '/workspace/audio')
 ART_SPELLS = os.environ.get('ART_SPELLS', '/workspace/art/spells')
+ART_ITEMS = os.environ.get('ART_ITEMS', '/workspace/art/items')
+ART_PORTRAITS = os.environ.get('ART_PORTRAITS', '/workspace/art/portraits')
+ART_UI = os.environ.get('ART_UI', '/workspace/art/ui')
 try:
     with open(os.path.join(HERE, '..', 'src', 'data', 'spells.json'), encoding='utf-8') as _f: SPELL_KNOWN = [x['id'] for x in json.load(_f)['spells']]
 except Exception: SPELL_KNOWN = []
@@ -102,7 +112,7 @@ def sync_audio(src, dst_rel, pattern, known=(), prefixes=(), section=None):
     return out
 
 
-SPELL_SKIP_DIRS = {'src', 'tools', '_scratch', '__pycache__'}
+SPELL_SKIP_DIRS = {'src', 'tools', '_scratch', '__pycache__', 'demo'}   # demo/ = Arty's reference video + contact sheet, not game art
 
 
 def sync_spells():
@@ -133,12 +143,84 @@ def sync_spells():
     print(f'  spell art: {n} files copied to public/spells')
     return icons, fx
 
+ART_SKIP_DIRS = {'src', 'tools', '_work', '_scratch', '__pycache__', '.venv', 'venv'}
+def mirror(src, dst_rel, keep):
+    """Copies the files under src for which keep(relpath) is true into public/<dst_rel> (fresh). None when src is missing."""
+    if not os.path.isdir(src):
+        print(f'  skip: {src} not found; keeping public/{dst_rel} as-is'); return None
+    dst = os.path.join(PUB, dst_rel); fresh(dst); files = []
+    for root, dirs, names in os.walk(src):
+        dirs[:] = sorted(d for d in dirs if not (d in ART_SKIP_DIRS or d.startswith('.') or d.startswith('src_')))
+        for name in sorted(names):
+            rel = os.path.normpath(os.path.join(os.path.relpath(root, src), name))
+            if name.startswith('.') or not keep(rel): continue
+            os.makedirs(os.path.dirname(os.path.join(dst, rel)), exist_ok=True); shutil.copy2(os.path.join(src, rel), os.path.join(dst, rel)); files.append(rel)
+    size = sum(os.path.getsize(os.path.join(dst, f)) for f in files)
+    print(f'  {dst_rel}: {len(files)} files, {size / 1e6:.1f} MB copied to public/{dst_rel}')
+    return files
+
+ITEM_ICON_ID = {'item_mana_tea': 'manatea', 'item_big_mana_tea': 'bigmanatea', 'item_honey_potion': 'honey', 'item_big_honey_potion': 'bighoney', 'item_return_feather': 'feather'}
+def sync_items():
+    files = mirror(ART_ITEMS, 'items', lambda r: r == 'manifest.json' or (r.startswith('icons') and r.endswith('.png') and not os.path.basename(r).startswith('preview_')))
+    if files is None: return None
+    icons = {}
+    for f in files:
+        b = os.path.basename(f)[:-4]
+        if b.startswith('item_'):
+            gid = ITEM_ICON_ID.get(b, b[5:].replace('_', ''))
+            if os.path.dirname(f) == 'icons' or gid not in icons: icons[gid] = f'items/{f}'
+    return icons
+
+PORTRAIT_WEBP_QUALITY = 85
+def sync_portraits():
+    """v2 portraits: flat <id>_<expr>.png (512x768 RGBA) + <id>.portrait.json + portraits_index.json. Only those are synced;
+    the old <id>/ subfolders, mockup*/preview*/sheet strips are skipped. PNGs are converted to WebP (quality 85, alpha) and
+    every json is rewritten to reference the .webp names, so no PNG source lands in public/."""
+    if not os.path.isdir(ART_PORTRAITS):
+        print(f'  skip: {ART_PORTRAITS} not found; keeping public/portraits as-is'); return None
+    try:
+        from PIL import Image
+    except ImportError:
+        print('  warning: Pillow missing; keeping public/portraits as-is'); return None
+    dst = os.path.join(PUB, 'portraits'); os.makedirs(dst, exist_ok=True)   # not wiped: unchanged WebPs are reused (conversion is slow)
+    names = os.listdir(ART_PORTRAITS); keep = set()
+    ids = sorted(n[:-len('.portrait.json')] for n in names if n.endswith('.portrait.json'))
+    webp = lambda f: re.sub(r'\.png$', '.webp', f)
+    def fix(o):   # .png -> .webp in every string value
+        if isinstance(o, dict): return {k: fix(v) for k, v in o.items()}
+        if isinstance(o, list): return [fix(v) for v in o]
+        return webp(o) if isinstance(o, str) and o.endswith('.png') else o
+    n = 0; size = 0
+    for name in sorted(names):
+        src = os.path.join(ART_PORTRAITS, name)
+        if not os.path.isfile(src) or re.match(r'(mockup|preview|sheet)', name) or 'sheet' in name: continue
+        if name.endswith('.png') and any(name.startswith(i + '_') for i in ids):
+            out = os.path.join(dst, webp(name))
+            if not os.path.isfile(out) or os.path.getmtime(out) < os.path.getmtime(src):
+                Image.open(src).convert('RGBA').save(out, 'WEBP', quality=PORTRAIT_WEBP_QUALITY, method=6)
+        elif name.endswith('.portrait.json') or name == 'portraits_index.json':
+            out = os.path.join(dst, name)
+            with open(src, encoding='utf-8') as f: doc = fix(json.load(f))
+            with open(out, 'w', encoding='utf-8') as f: json.dump(doc, f, ensure_ascii=False, indent=1)
+        else: continue
+        n += 1; size += os.path.getsize(out); keep.add(os.path.basename(out))
+    for old in os.listdir(dst):   # drop anything that is no longer part of the set (old folders, renamed files)
+        if old not in keep:
+            q = os.path.join(dst, old); shutil.rmtree(q) if os.path.isdir(q) else os.remove(q)
+    print(f'  portraits: {n} files (v2 flat set, PNG -> WebP q{PORTRAIT_WEBP_QUALITY}), {size / 1e6:.1f} MB in public/portraits')
+    return {'index': 'portraits/portraits_index.json'} if os.path.isfile(os.path.join(dst, 'portraits_index.json')) else {}
+
+def sync_ui():
+    files = mirror(ART_UI, 'ui', lambda r: os.sep not in r and (r == 'manifest.json' or (r.endswith('.png') and 'mockup' not in r and not r.startswith('preview_'))))
+    if files is None: return None
+    return {'manifest': 'ui/manifest.json'} if 'manifest.json' in files else {}
+
 
 def main():
     global OLD
     OLD = load_old_manifest()
     man = {'_note': 'Generated by tools/sync_assets.py. Lists only files present in public/. Do not edit by hand.',
-           'bg': {}, 'sfx': {}, 'music': {}, 'vo': {}, 'spellIcons': {}, 'spellFx': {}}
+           'bg': {}, 'sfx': {}, 'music': {}, 'vo': {}, 'spellIcons': {}, 'spellFx': {}, 'itemIcons': {}, 'portraits': {}, 'ui': {}}
     # backgrounds
     if not os.path.isdir(ART_BG):
         print(f'  skip: {ART_BG} not found; keeping public/bg as-is')
@@ -157,6 +239,8 @@ def main():
     sp = sync_spells()
     if sp is None: man['spellIcons'], man['spellFx'] = OLD.get('spellIcons', {}), OLD.get('spellFx', {})
     else: man['spellIcons'], man['spellFx'] = sp
+    for key, fn in (('itemIcons', sync_items), ('portraits', sync_portraits), ('ui', sync_ui)):
+        r = fn(); man[key] = OLD.get(key, {}) if r is None else r
     with open(os.path.join(PUB, 'assets-manifest.json'), 'w', encoding='utf-8') as f: json.dump(man, f, ensure_ascii=False, indent=1)
 
     def report(label, have, known):
@@ -167,6 +251,7 @@ def main():
     print(f'  voice clips: {len(man["vo"])}')
     report('spell icons', man['spellIcons'], SPELL_KNOWN)
     print(f"  spell fx: manifest {'yes' if man['spellFx'].get('manifest') else 'MISSING'}, recipes (spells_fx.json) {'yes' if man['spellFx'].get('recipes') else 'MISSING (built-in element fallbacks)'}")
+    print(f"  item icons: {', '.join(sorted(man['itemIcons'])) or 'none'}; portraits index: {'yes' if man['portraits'].get('index') else 'no'}; ui manifest: {'yes' if man['ui'].get('manifest') else 'no'}")
     report('spell sfx', {k for k in man['sfx'] if k.startswith('sfx_spell_')}, [f'sfx_spell_{k}' for k in SPELL_KNOWN])
     for k, v in list(man['sfx'].items()) + list(man['music'].items()):
         if len(v['urls']) < 2: print(f'  note: {k} has only {v["urls"]} (both .ogg and .mp3 recommended)')

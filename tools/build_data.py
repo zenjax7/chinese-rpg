@@ -56,12 +56,18 @@ MAP = {  # stable prototype id -> (Desy id, emoji placeholder, tint, mechanics c
   'queenbee':    ('queen_bee', '🐝', 0xff7a00, {'summonEveryNTurns': {'n': 3, 'enemy': 'workerbee', 'maxOnScreen': 3, 'maxSummons': 2}}),
 }
 MINION_ID = {'Horned Rabbit': 'rabbit', 'Giant Bee': 'bee', 'Wolf Pup': 'wolfpup'}
+# headAnchor: y of the top of the head (where the snow hat / dazed stars / soaked cloud sit) as a fraction of the sprite frame height
+# from its top. Measured on frame 0 of each sprite: below the ears / horns / antennae / spear, not the bbox top (runtime default 0.08).
+HEAD_ANCHOR = {'rabbit': 0.44, 'swiftrabbit': 0.30, 'rabbitking': 0.35, 'wolfpup': 0.33, 'greywolf': 0.10, 'bear': 0.28,
+               'guardbee': 0.32, 'bee': 0.20, 'workerbee': 0.24, 'queenbee': 0.23, 'sapling': 0.13, 'spider': 0.36, 'mushroom': 0.11, 'crow': 0.09}
+HEAD_ANCHOR_DEFAULT = 0.1
+
 en = []
 for pid, (did, emoji, color, mech) in MAP.items():
     d, f = stats[did], full[did]
     kind = 'normal' if d['role'] == 'normal' else 'elite' if d['role'] == 'elite' else ('realmboss' if d['boss_type'] == 'realm' else 'locboss')
     minions = [MINION_ID[k] for k in MINION_ID if d['minions'] and k in d['minions']]
-    en.append(dict(id=pid, desyId=did, sprite=sprite_for(pid, did), spriteTint=None, zh=d['name_zh'], py=d['pinyin'], en=d['name_en'], emoji=emoji, color=color,
+    en.append(dict(id=pid, desyId=did, sprite=sprite_for(pid, did), spriteTint=None, headAnchor=HEAD_ANCHOR.get(pid, HEAD_ANCHOR_DEFAULT), zh=d['name_zh'], py=d['pinyin'], en=d['name_en'], emoji=emoji, color=color,
                    tier=d['realm'], level=d['level'], kind=kind, role=d['role'], hp=d['hp'], atk=d['atk'], def_=d['def'], exp=d['exp'], gold=d['gold'],
                    chestRate=d['chest_chance'], minions=minions, mech=mech, attackZh=f.get('attack_name_zh', ''), attackEn=f.get('attack_name_en', ''),
                    special=d['special'], group=f.get('group_behavior', '')))
@@ -74,7 +80,7 @@ for e in en:
         if (e['hp'], e['atk']) != (int(r['hp']), int(r['atk'])): print(f"note: {e['id']} roster {e['hp']}/{e['atk']} -> boss_hp.csv {r['hp']}/{r['atk']}")
         e['hp'], e['atk'] = int(r['hp']), int(r['atk'])
 bee = next(e for e in en if e['id'] == 'bee')
-wb = dict(bee); wb.update(id='workerbee', desyId='worker_bee (queen summon)', sprite='worker_bee' if 'worker_bee' in MAN else 'bee', zh='工蜂', py='gōngfēng', en='Worker Bee',
+wb = dict(bee); wb.update(id='workerbee', headAnchor=HEAD_ANCHOR['workerbee'], desyId='worker_bee (queen summon)', sprite='worker_bee' if 'worker_bee' in MAN else 'bee', zh='工蜂', py='gōngfēng', en='Worker Bee',
                           hp=round(bee['hp'] / 2), exp=0, gold=0, chestRate=0, mech={}, special=qspec['rule'])
 en.append(wb)
 out('enemies.json', dict(_note='Generated from desy/data/combat_data.json enemies (stats, gold, EXP, chest chance) + desy/enemies.json (flavor). id = stable prototype id; desyId = roster id; sprite = key in art/sprites/manifest.json (after _aliases). workerbee = Queen Bee summon (v3: half normal HP, no drops, max 2 per fight). gold = base before the 0.8-1.2 roll. Boss HP/ATK from desy/data/boss_hp.csv (v3.7: HP x m(t), location bosses ~15 correct answers, realm ~20; ATK x 0.8).', enemies=en))

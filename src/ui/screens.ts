@@ -7,7 +7,7 @@ import { runBattle, setCurrentLoc, BattleResult, BattleKind } from '../engine/ba
 import { speak, speechSupported, requestMic, hasZhVoice, srLog, srDebugHtml } from '../engine/speech';
 import { sayBtn, wireSayButtons } from '../engine/voice';
 import { playMusic, playSfx, unlockAudio, audioSettings, setAudio } from '../audio/audio';
-import { BG, assets, spellIcon } from '../assets';
+import { BG, assets, spellIcon, itemIcon } from '../assets';
 import { view } from '../phaser/view';
 import { $, $$, esc, render, on, hud, toast, dialog, modal, closeModal, sleep, zh, dlg, setTitle, bookHtml, wireBook, chunk } from './dom';
 import { practiceMenu } from './practice';
@@ -165,7 +165,7 @@ export function shop() {
   render(dlg({ testid: 'shop', title: `🧪 ${zh('商店')} Grandma Wu's Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
     ${weak.length ? `<div class="gearwarn inline" data-testid="shop-gear-warn"><div class="gw-h">⚠️ ${zh('装备太弱')} Your gear is weak for ${fl.emoji} ${zh(fl.zh)} ${esc(fl.name)}!</div>
       <ul>${weakLines(fl.id)}</ul><div class="muted">Look for ⬆ Upgrade below. Better gear is put on for you when you buy it.</div></div>` : ''}
-    <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.filter(c => !c.magicShop).map(c => `<div class="card"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div>
+    <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.filter(c => !c.magicShop).map(c => `<div class="card"><div>${itemIcon(c.id, c.emoji)} ${zh(c.zh)} ${esc(c.en)}</div>
       <div class="muted">${c.healHpFrac ? `+${c.healHpFrac * 100}% HP` : c.healMpFrac ? `+${c.healMpFrac * 100}% MP` : 'Warp to the last inn you used (map only)'} · you have ${S.inv[c.id] || 0}${c.carryLimit ? ` (max ${c.carryLimit})` : ''}</div>
       <button data-buyc="${c.id}" data-testid="buy-${c.id}" ${S.gold >= consPrice(c.id) && !(c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit) ? '' : 'disabled'}>${c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit ? 'Bag full' : `Buy ${consPrice(c.id)} 🪙`}</button></div>`).join('')}</div>
     <h3 style="margin-top:14px">Weapons, armor, shields & charms</h3><div class="grid">${gear.map(g => { const own = S.gear.includes(g.id); return `<div class="card">
@@ -199,7 +199,7 @@ export function magicShop() {
     const head = `<h3 class="shelf-h">🏠 ${zh(t.zh)} ${esc(t.en)}</h3>`;
     // v3.4: MP potions (map-only) live in the magic shop, on the shelf of the town they unlock in (Mana Tea town 1, Big Mana Tea town 5+)
     const pots = CONSUMABLES.filter(c => c.magicShop && (c.fromTown || 1) === t.town).map(c => { const p = consPrice(c.id);
-      return `<div class="card" data-testid="magic-pot-${c.id}"><div>${c.emoji} ${zh(c.zh)} ${esc(c.en)}</div><div class="muted">${c.healMpFrac! >= 1 ? 'Full MP' : `+${(c.healMpFrac || 0) * 100}% MP`} · 🗺️ map only · you have ${S.inv[c.id] || 0}</div>
+      return `<div class="card" data-testid="magic-pot-${c.id}"><div>${itemIcon(c.id, c.emoji, 40)} ${zh(c.zh)} ${esc(c.en)}</div><div class="muted">${c.healMpFrac! >= 1 ? 'Full MP' : `+${(c.healMpFrac || 0) * 100}% MP`} · 🗺️ map only · you have ${S.inv[c.id] || 0}</div>
         <button data-buyc="${c.id}" data-testid="magic-buy-${c.id}" ${S.gold >= p ? '' : 'disabled'}>Buy ${p} 🪙</button></div>`; }).join('');
     if (!sps.length) {   // town 1: Mana Tea + a "coming soon" shelf (spec default)
       return `${head}<div class="grid">${pots}
@@ -233,7 +233,7 @@ export function magicShop() {
 // =============== 📋 quest board 任务板 (spec v3.3 §7.11) ===============
 const QTYPE: Record<string, { ic: string; zh: string; en: string }> = { bounty: { ic: '⚔️', zh: '打败', en: 'Bounty' }, collect: { ic: '🧺', zh: '收集', en: 'Collect' }, words: { ic: '📚', zh: '学会', en: 'Words' }, delivery: { ic: '✉️', zh: '送信', en: 'Delivery' } };
 let boardTown = 0;
-const rewardText = (q: QuestDef) => { const r = questReward(q); return [`🪙 ${r.gold}`, r.item ? `${CONS[r.item].emoji} ${zh(CONS[r.item].zh)} ${esc(CONS[r.item].en)}` : '', r.cosmetic ? `🎩 ${esc(r.cosmetic)}` : ''].filter(Boolean).join(' + '); };
+const rewardText = (q: QuestDef) => { const r = questReward(q); return [`🪙 ${r.gold}`, r.item ? `${itemIcon(r.item, CONS[r.item].emoji)} ${zh(CONS[r.item].zh)} ${esc(CONS[r.item].en)}` : '', r.cosmetic ? `🎩 ${esc(r.cosmetic)}` : ''].filter(Boolean).join(' + '); };
 export function questBoard() {
   hud(); view.mode('town', undefined, BG.village());
   const towns = openTowns(); if (!towns.some(t => t.town === boardTown)) boardTown = towns[towns.length - 1]?.town || 1;
@@ -291,7 +291,7 @@ export function equip(back: () => void = town) {
 // =============== 🎒 bag: items, gear and (on a map) the Return Feather ===============
 export function itemsScreen(back: () => void, mapLoc?: string, onFeather?: () => void) {
   hud();
-  render(dlg({ testid: 'items', cls: 'narrow', title: `🎒 Bag`, body: `<div class="grid">${['honey', 'bighoney', 'manatea', 'bigmanatea'].filter(id => CONS[id] && (id !== 'bigmanatea' || (S.inv[id] || 0) > 0)).map(id => `<div class="card">${CONS[id].emoji} ${zh(CONS[id].zh)} ${esc(CONS[id].en)} ×${S.inv[id] || 0}
+  render(dlg({ testid: 'items', cls: 'narrow', title: `🎒 Bag`, body: `<div class="grid">${['honey', 'bighoney', 'manatea', 'bigmanatea'].filter(id => CONS[id] && (id !== 'bigmanatea' || (S.inv[id] || 0) > 0)).map(id => `<div class="card">${itemIcon(id, CONS[id].emoji, 40)} ${zh(CONS[id].zh)} ${esc(CONS[id].en)} ×${S.inv[id] || 0}
       <div style="margin-top:8px"><button data-use="${id}" data-testid="use-${id}" ${(S.inv[id] || 0) > 0 ? '' : 'disabled'}>Use</button></div></div>`).join('')}
     <div class="card">🪶 ${zh(CONS.feather?.zh || '回城羽毛')} Return Feather ×${S.inv.feather || 0}<div class="muted">Warps you to the last inn you used${mapLoc ? '' : ' (use it on a map)'}</div>
       ${mapLoc ? `<div style="margin-top:8px"><button data-testid="act-feather" id="feather" ${(S.inv.feather || 0) > 0 ? '' : 'disabled'}>Fly 🪶</button></div>` : ''}</div></div>`,
@@ -356,7 +356,7 @@ export async function enterLocation(id: string, fromTown = false) {
   save();
   for (const d of onArrive(id)) {   // v3.3: a carried letter is delivered (and paid) on arrival in the next town's realm
     playSfx('sfx_gold'); hud();
-    await dialog(`✉️ ${zh('送信')} Letter delivered!`, `<p data-testid="quest-delivered">${zh(d.q.titleZh)} ${esc(d.q.titleEn)}</p><p>🎁 +${d.r.gold} 🪙${d.r.item ? ` + ${CONS[d.r.item].emoji} ${zh(CONS[d.r.item].zh)} ${esc(CONS[d.r.item].en)}` : ''}</p>`, ['Thanks!']);
+    await dialog(`✉️ ${zh('送信')} Letter delivered!`, `<p data-testid="quest-delivered">${zh(d.q.titleZh)} ${esc(d.q.titleEn)}</p><p>🎁 +${d.r.gold} 🪙${d.r.item ? ` + ${itemIcon(d.r.item, CONS[d.r.item].emoji)} ${zh(CONS[d.r.item].zh)} ${esc(CONS[d.r.item].en)}` : ''}</p>`, ['Thanks!']);
   }
   if (!st.previewSeen) { await preview(id); st.previewSeen = true; save(); }
   locationScreen(id);

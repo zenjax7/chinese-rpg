@@ -1,0 +1,19 @@
+{
+ "id": "hero",
+ "name": {
+  "zh": "{hero}",
+  "en": "{hero}"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "surprised",
+  "angry",
+  "worried",
+  "thinking"
+ ],
+ "mirror": true,
+ "anchorY": 258
+}

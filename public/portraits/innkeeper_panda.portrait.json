@@ -1,0 +1,18 @@
+{
+ "id": "innkeeper_panda",
+ "name": {
+  "zh": "熊猫",
+  "en": "Panda innkeeper"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "worried",
+  "surprised",
+  "sad"
+ ],
+ "mirror": true,
+ "anchorY": 230,
+ "big": true
+}

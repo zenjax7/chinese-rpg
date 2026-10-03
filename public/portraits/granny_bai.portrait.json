@@ -1,0 +1,20 @@
+{
+ "id": "granny_bai",
+ "name": {
+  "zh": "白奶奶",
+  "en": "Granny Bai"
+ },
+ "defaultExpr": "neutral",
+ "expressions": [
+  "neutral",
+  "happy",
+  "sad",
+  "surprised",
+  "angry",
+  "worried",
+  "thinking",
+  "wink"
+ ],
+ "mirror": true,
+ "anchorY": 230
+}

@@ -311,3 +311,4 @@ button.tab.on { background:linear-gradient(180deg,#e9dcff,#b48cff); border-color
 .casting { display:flex; align-items:center; gap:14px; font:800 22px var(--en); color:#fff; padding:6px 18px; }
 .casting b { font:700 30px var(--zh); }
 .casting .muted { font-size:16px; }
+.itemicon { vertical-align:middle; display:inline-block; object-fit:contain; }

@@ -1,73 +1,39 @@
 {
- "_note": "Spell visuals config (hand-maintained, engine-neutral). wandTip: offset from the hero sprite's bottom-centre in fractions of the hero's on-screen width/height (x 0.5 = right edge, y -0.6 = 40% of the height from the top). artCanvas: the canvas Arty's fx numbers are authored for (960x540); px values and texture scales are multiplied by 1280/960. castAnim: every cast is fitted into minMs..maxMs (stretched at most maxStretch, then held); a tap/click skips it. elementDefaults: recipes in Arty's spells_fx.json schema, used when spells_fx.json or a spell's entry is missing.",
- "wandTip": { "x": 0.5, "y": -0.6 },
- "artCanvas": { "width": 960, "height": 540 },
- "castAnim": { "minMs": 2000, "maxMs": 3000, "maxStretch": 1.4, "skippable": true },
- "maxTargets": 3,
- "flash": { "maxPerCast": 1, "maxMs": 100, "color": "#ffffff" },
- "elementColor": { "fire": "#ff7a2f", "water": "#6fd3ff", "ice": "#cff4ff", "thunder": "#ffe14d", "wind": "#9fe8a0", "light": "#fff3a0", "star": "#d9a0ff" },
- "elementDefaults": {
-  "fire": {
-   "cast": { "at": "wand_tip", "durationMs": 260, "glow": { "texture": "ember_1", "scaleFrom": 0.6, "scaleTo": 2.4, "alpha": 0.95, "blendMode": "ADD" },
-     "particles": [{ "texture": "ember_2", "count": 6, "speedMin": 20, "speedMax": 60, "lifespanMs": 400, "gravityY": -40, "scaleStart": 1, "scaleEnd": 0.3, "blendMode": "ADD", "emitOverMs": 260, "spawnRadius": 6 }] },
-   "projectile": { "texture": "fireball_small", "path": "straight", "from": "wand_tip", "to": "target_center", "travelMs": 450, "scale": 1.0, "count": 1,
-     "trail": { "texture": "ember_1", "count": 14, "speedMin": 10, "speedMax": 40, "angleMin": 150, "angleMax": 210, "lifespanMs": 380, "gravityY": -30, "scaleStart": 0.9, "scaleEnd": 0.2, "blendMode": "ADD", "emitOverMs": 450, "spawnRadius": 6 } },
-   "impact": { "texture": "fire_impact", "at": "target_center", "scaleFrom": 0.4, "scaleTo": 0.9, "growMs": 110, "holdMs": 0, "fadeMs": 350, "blendMode": "ADD",
-     "particles": [{ "texture": "ember_3", "count": 8, "speedMin": 30, "speedMax": 90, "angleMin": 200, "angleMax": 340, "lifespanMs": 800, "gravityY": -60, "scaleStart": 1, "scaleEnd": 0.3, "blendMode": "ADD" }],
-     "enemyReaction": { "type": "hurt_shake", "durationMs": 400 } },
-   "staggerMs": 120
+  "_note": "Spell visuals config (hand-maintained, engine-neutral). wandTip: offset from the hero sprite's bottom-centre in fractions of the hero's on-screen width/height (x 0.5 = right edge, y -0.6 = 40% of the height from the top). Recipes: Arty's public/spells/spells_fx.json (1280x720 frame, schema in art/spells/README.md); every cast runs for the recipe's own length (1.5-2.9 s; super_blizzard ~4.2 s, meteor_shower ~4.0 s), capped at castAnim.maxMs, and a tap / Enter / Space skips it. elementFallback: the recipe used for a spell that has no recipe of its own. statusCanvas: fx/manifest.json status offsets are 960x540 px (x 1280/960). flash: at most one camera flash per cast, white, under maxMs (only lightning has one).",
+  "wandTip": {
+    "x": 0.5,
+    "y": -0.6
   },
-  "water": {
-   "cast": { "at": "wand_tip", "durationMs": 220, "glow": { "texture": "star_small", "scaleFrom": 0.4, "scaleTo": 1.0, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": "bubble", "path": "straight", "from": "wand_tip", "to": "target_center", "travelMs": 480, "scale": 0.55, "scaleFrom": 0.25, "count": 5, "intervalMs": 50, "wobblePx": 14 },
-   "impact": { "texture": "bubble_big", "at": "target_center", "scaleFrom": 0.55, "scaleTo": 1.0, "growMs": 180, "holdMs": 300, "fadeMs": 100, "alpha": 0.9, "blendMode": "NORMAL",
-     "particles": [{ "texture": "drip", "count": 10, "speedMin": 60, "speedMax": 160, "angleMin": 200, "angleMax": 340, "lifespanMs": 500, "gravityY": 500, "scaleStart": 1, "scaleEnd": 0.8 }],
-     "enemyReaction": { "type": "hurt_shake", "durationMs": 350 } },
-   "staggerMs": 120
+  "castAnim": {
+    "maxMs": 5000,
+    "skippable": true
   },
-  "ice": {
-   "cast": { "at": "wand_tip", "durationMs": 220, "glow": { "texture": "star_small", "scaleFrom": 0.4, "scaleTo": 1.1, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": "snowball", "path": "straight", "from": "air_near_target", "to": "target_center", "travelMs": 260, "scale": 1.0, "scaleFrom": 0.2, "spinDegPerSec": 240, "count": 3, "intervalMs": 80 },
-   "impact": { "texture": "snow_puff", "at": "target_center", "scaleFrom": 0.25, "scaleTo": 0.7, "growMs": 90, "holdMs": 0, "fadeMs": 320, "blendMode": "NORMAL",
-     "particles": [{ "texture": "snowflake_small", "count": 8, "speedMin": 40, "speedMax": 120, "lifespanMs": 650, "gravityY": 120, "scaleStart": 0.6, "scaleEnd": 0.2, "spinDegPerSec": 180 }],
-     "enemyReaction": { "type": "shiver", "durationMs": 450 } },
-   "staggerMs": 110
+  "maxTargets": 3,
+  "flash": {
+    "maxPerCast": 1,
+    "maxMs": 100,
+    "color": "#ffffff"
   },
-  "thunder": {
-   "cast": { "at": "wand_tip", "durationMs": 220, "glow": { "texture": "star_small", "scaleFrom": 0.4, "scaleTo": 1.1, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": null, "path": "none", "travelMs": 0, "count": 0 },
-   "ambient": [{ "type": "cloud_above_target", "texture": "storm_cloud", "scale": 0.5, "offsetY": -100, "inMs": 180, "holdMs": 520, "outMs": 200 }],
-   "impact": { "texture": "bolt_small", "at": "target_head", "offsetY": 30, "scaleFrom": 0.75, "scaleTo": 0.75, "growMs": 40, "holdMs": 120, "fadeMs": 160, "blendMode": "ADD",
-     "glow": { "texture": "starburst", "scale": 0.45, "alpha": 0.7, "fadeMs": 220, "blendMode": "ADD" },
-     "particles": [{ "texture": "star_small", "count": 5, "speedMin": 60, "speedMax": 140, "lifespanMs": 450, "scaleStart": 0.45, "scaleEnd": 0.1, "blendMode": "ADD" }],
-     "enemyReaction": { "type": "hurt_shake", "durationMs": 400 } },
-   "impactDelayMs": 200, "staggerMs": 200
+  "statusCanvas": {
+    "width": 960,
+    "height": 540
   },
-  "wind": {
-   "cast": { "at": "wand_tip", "durationMs": 240, "glow": { "texture": "star_small", "scaleFrom": 0.4, "scaleTo": 1.2, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": "whirlwind_gust", "path": "straight", "from": "wand_tip", "to": "target_center", "travelMs": 420, "scale": 0.55, "spinDegPerSec": -540, "count": 1,
-     "trail": { "texture": "leaf", "count": 6, "speedMin": 30, "speedMax": 70, "lifespanMs": 450, "gravityY": 40, "scaleStart": 0.9, "scaleEnd": 0.6, "spinDegPerSec": 400, "emitOverMs": 420, "spawnRadius": 20 } },
-   "impact": { "texture": "whirlwind_gust", "at": "target_center", "scaleFrom": 0.6, "scaleTo": 0.9, "growMs": 120, "holdMs": 380, "fadeMs": 200, "alpha": 0.9, "blendMode": "NORMAL",
-     "particles": [{ "texture": "leaf", "count": 6, "speedMin": 80, "speedMax": 160, "lifespanMs": 700, "gravityY": 120, "scaleStart": 1, "scaleEnd": 0.6, "spinDegPerSec": 500 }],
-     "enemyReaction": { "type": "lift_spin", "durationMs": 700, "liftPx": 40, "turns": 2 } },
-   "staggerMs": 120
+  "elementColor": {
+    "fire": "#ff7a2f",
+    "water": "#6fd3ff",
+    "ice": "#cff4ff",
+    "thunder": "#ffe14d",
+    "wind": "#9fe8a0",
+    "light": "#fff3a0",
+    "star": "#d9a0ff"
   },
-  "light": {
-   "cast": { "at": "wand_tip", "durationMs": 240, "glow": { "texture": "star_small", "scaleFrom": 0.4, "scaleTo": 1.4, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": null, "path": "none", "travelMs": 0, "count": 0 },
-   "ambient": [{ "type": "tint", "color": "#3a3a48", "alpha": 0.18, "inMs": 300, "holdMs": 500, "outMs": 400, "startMs": 0 }],
-   "impact": { "texture": "sunbeam_shaft", "at": "target_feet", "offsetY": 8, "scaleFrom": 0.9, "scaleTo": 1.0, "growMs": 160, "holdMs": 300, "fadeMs": 260, "alpha": 0.95, "blendMode": "ADD",
-     "particles": [{ "texture": "star_small", "count": 8, "speedMin": 20, "speedMax": 60, "lifespanMs": 700, "gravityY": -40, "scaleStart": 0.4, "scaleEnd": 0.1, "blendMode": "ADD" }],
-     "enemyReaction": { "type": "bounce", "durationMs": 500 } },
-   "impactDelayMs": 380, "staggerMs": 110
-  },
-  "star": {
-   "cast": { "at": "wand_tip", "durationMs": 260, "glow": { "texture": "star_small", "scaleFrom": 0.5, "scaleTo": 1.6, "alpha": 0.95, "blendMode": "ADD" } },
-   "projectile": { "texture": "shooting_star", "path": "falls_from_sky", "from": "sky_upper_left_of_target", "to": "target_center", "travelMs": 480, "scale": 0.9, "count": 1 },
-   "impact": { "texture": "starburst", "at": "target_center", "scaleFrom": 0.3, "scaleTo": 1.0, "growMs": 120, "holdMs": 0, "fadeMs": 380, "blendMode": "ADD",
-     "particles": [{ "texture": "star_small", "count": 9, "speedMin": 160, "speedMax": 280, "angleMin": 200, "angleMax": 340, "lifespanMs": 750, "gravityY": 700, "scaleStart": 0.55, "scaleEnd": 0.3, "spinDegPerSec": 360, "blendMode": "ADD" }],
-     "enemyReaction": { "type": "hurt_shake", "durationMs": 450 } },
-   "staggerMs": 140
+  "elementFallback": {
+    "fire": "small_fireball",
+    "water": "bubble_spell",
+    "ice": "snowball_volley",
+    "thunder": "little_lightning",
+    "wind": "whirlwind",
+    "light": "sunbeam",
+    "star": "meteor"
   }
- }
 }

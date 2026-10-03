@@ -1,0 +1,2827 @@
+{
+ "about": "Visual recipes for the 16 spells (one per spell id, same order as desy/data/spells_full.json). Reference frame: 1280x720 canvas, hero ~230 px tall, feet (origin bottom-centre) at y=420. Times in ms. Positions are anchors (+ offsets as fractions of the target/hero height, \"...Rel\"), or screen fractions (\"...Frac\"). Speeds/gravity are px/s on the 1280x720 frame. \"scale\" multiplies the texture's on-screen size at 1280x720 (stored px x 0.667). Texture keys = fx/manifest.json textures; status keys = fx/manifest.json status. Schema: README.md.",
+ "referenceFrame": {
+  "width": 1280,
+  "height": 720,
+  "textureScale": 0.6667,
+  "heroHeightPx": 230,
+  "groundY": 420,
+  "heroX": 0.22,
+  "enemyX": [
+   0.62,
+   0.74,
+   0.86
+  ]
+ },
+ "anchors": {
+  "wand_tip": "hero right edge, 40% down from the hero top (hero sprite visible bounds)",
+  "above_hero": "hero top-centre, offset by offsetYRel x hero height",
+  "target_center": "centre of the enemy's visible body",
+  "target_head": "top of the enemy's visible body",
+  "target_feet": "enemy ground point (sprite origin)",
+  "air_near_target": "0.6 target heights left of and 0.6 above the target centre",
+  "sky_upper_left_of_target": "above the top edge of the screen, 0.25 screen widths left of the target",
+  "hero_front_ground": "0.3 hero heights right of the hero feet, on the ground line",
+  "targets_sweep": "travels left to right through every target and exits right"
+ },
+ "paths": {
+  "straight": "linear from->to",
+  "arc": "parabola from->to, peak arcHeightRel x target height above the line",
+  "falls_from_sky": "diagonal down-right from the sky anchor to the target, eased in",
+  "none": "no projectile",
+  "sweep": "ground-level travel through all targets (impact fires as it passes each one)"
+ },
+ "reactions": {
+  "hurt_shake": "hurt frame (enemyReaction.hurtFrame) + horizontal shake decaying",
+  "shiver": "fast small horizontal jitter, idle frame",
+  "lift_spin": "rise liftRel x height, spin like a top (scaleX = cos), drop, optional squash",
+  "bounce": "happy single hop",
+  "hop": "hops times, heightRel x height",
+  "freeze": "hold still with faceFrame (surprised) under the frozen overlay"
+ },
+ "flashRule": "at most 1 camera flash per cast, white only, under 100 ms, never red, never more than 3 flashes per second",
+ "fizzle": "none (casting is a free action; no fizzle effect)",
+ "spells": [
+  {
+   "id": "small_fireball",
+   "zh": "小火球术",
+   "en": "Small Fireball",
+   "element": "fire",
+   "town": 2,
+   "tier": "early",
+   "brief": "plum-sized orange fireball, curly tail of sparks, from the wand tip; warm orange puff + a few floating embers",
+   "icon": {
+    "key": "spell_small_fireball",
+    "file": "icons/spell_small_fireball.png",
+    "file64": "icons/64/spell_small_fireball.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "ember_1",
+     "scaleFrom": 0.6,
+     "scaleTo": 2.4,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "ember_2",
+      "count": 7,
+      "speedMin": 25,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 450,
+      "gravityY": -50,
+      "scaleStart": 1,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 320,
+      "spawnRadius": 8
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "fireball_small",
+    "path": "straight",
+    "from": "wand_tip",
+    "to": "target_center",
+    "travelMs": 560,
+    "spinDegPerSec": 0,
+    "scale": 1.0,
+    "scaleFrom": 1.0,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.04,
+    "trail": {
+     "texture": "ember_1",
+     "count": 18,
+     "speedMin": 15,
+     "speedMax": 55,
+     "angleMin": 140,
+     "angleMax": 220,
+     "lifespanMs": 420,
+     "gravityY": -40,
+     "scaleStart": 0.9,
+     "scaleEnd": 0.2,
+     "alphaStart": 1.0,
+     "alphaEnd": 0.0,
+     "blendMode": "ADD",
+     "spinDegPerSec": 0,
+     "emitOverMs": 560,
+     "spawnRadius": 8
+    },
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "fire_impact",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.8,
+    "growMs": 120,
+    "holdMs": 0,
+    "fadeMs": 420,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "ember_3",
+      "count": 7,
+      "speedMin": 40,
+      "speedMax": 105,
+      "angleMin": 200,
+      "angleMax": 340,
+      "lifespanMs": 900,
+      "gravityY": -80,
+      "scaleStart": 1.0,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 450,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "ember_2",
+     "count": 7,
+     "blendMode": "ADD",
+     "lifespanMs": 450
+    },
+    {
+     "phase": "projectile",
+     "texture": "ember_1",
+     "count": 18,
+     "blendMode": "ADD",
+     "lifespanMs": 420
+    },
+    {
+     "phase": "impact",
+     "texture": "ember_3",
+     "count": 7,
+     "blendMode": "ADD",
+     "lifespanMs": 900
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "totalMs": 1780,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    1200,
+    2000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "bubble_spell",
+   "zh": "泡泡术",
+   "en": "Bubble Spell",
+   "element": "water",
+   "town": 2,
+   "tier": "early",
+   "brief": "stream of rainbow soap bubbles wraps the enemy in a big wobbly bubble; pop -> dripping, little water cloud over its head",
+   "icon": {
+    "key": "spell_bubble_spell",
+    "file": "icons/spell_bubble_spell.png",
+    "file64": "icons/64/spell_bubble_spell.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 300,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.1,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "bubble",
+      "count": 3,
+      "speedMin": 25,
+      "speedMax": 65,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 450,
+      "gravityY": -40,
+      "scaleStart": 0.3,
+      "scaleEnd": 0.2,
+      "alphaStart": 0.9,
+      "alphaEnd": 0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 0,
+      "emitOverMs": 300,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "bubble",
+    "path": "straight",
+    "from": "wand_tip",
+    "to": "target_center",
+    "travelMs": 520,
+    "spinDegPerSec": 0,
+    "scale": 0.55,
+    "scaleFrom": 0.25,
+    "count": 7,
+    "intervalMs": 50,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.08,
+    "trail": null,
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "bubble_big",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": 1.25,
+    "scaleFrom": 0.6,
+    "scaleTo": 1.0,
+    "growMs": 200,
+    "holdMs": 420,
+    "fadeMs": 90,
+    "alpha": 0.9,
+    "spinDegPerSec": 0,
+    "blendMode": "NORMAL",
+    "glow": null,
+    "wobble": {
+     "amount": 0.06,
+     "periodMs": 160
+    },
+    "particles": [
+     {
+      "texture": "drip",
+      "count": 10,
+      "speedMin": 80,
+      "speedMax": 210,
+      "angleMin": 200,
+      "angleMax": 340,
+      "lifespanMs": 550,
+      "gravityY": 650,
+      "scaleStart": 1,
+      "scaleEnd": 0.8,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     },
+     {
+      "texture": "bubble",
+      "count": 6,
+      "speedMin": 80,
+      "speedMax": 185,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 500,
+      "gravityY": -80,
+      "scaleStart": 0.3,
+      "scaleEnd": 0.1,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 380,
+     "hurtFrame": 5
+    },
+    "popOut": {
+     "atEnd": true
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "bubble",
+     "count": 3,
+     "blendMode": "NORMAL",
+     "lifespanMs": 450
+    },
+    {
+     "phase": "impact",
+     "texture": "drip",
+     "count": 10,
+     "blendMode": "NORMAL",
+     "lifespanMs": 550
+    },
+    {
+     "phase": "impact",
+     "texture": "bubble",
+     "count": 6,
+     "blendMode": "NORMAL",
+     "lifespanMs": 500
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": {
+    "key": "soaked",
+    "applyAt": "end_of_impact",
+    "removeAt": "game rule (status expires)",
+    "manifest": "fx/manifest.json status.soaked",
+    "textures": [
+     "drip",
+     "soaked_cloud"
+    ]
+   },
+   "flash": null,
+   "totalMs": 1830,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    1200,
+    2000
+   ],
+   "status": "soaked",
+   "cameraFlash": null
+  },
+  {
+   "id": "snowball_volley",
+   "zh": "雪球术",
+   "en": "Snowball Volley",
+   "element": "ice",
+   "town": 3,
+   "tier": "early",
+   "brief": "fluffy snowballs pop out of the air and pelt every enemy of the chosen kind; soft white bursts, sprinkle of snowflakes; comic shiver",
+   "icon": {
+    "key": "spell_snowball_volley",
+    "file": "icons/spell_snowball_volley.png",
+    "file64": "icons/64/spell_snowball_volley.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "same_type",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 140,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 300,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.2,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 5,
+      "speedMin": 30,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 450,
+      "gravityY": 0,
+      "scaleStart": 0.4,
+      "scaleEnd": 0.15,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 180,
+      "emitOverMs": 300,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "snowball",
+    "path": "straight",
+    "from": "air_near_target",
+    "to": "target_center",
+    "travelMs": 300,
+    "spinDegPerSec": 260,
+    "scale": 1.0,
+    "scaleFrom": 0.2,
+    "count": 3,
+    "intervalMs": 110,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.0,
+    "trail": null,
+    "impactEach": true,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "snow_puff",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.25,
+    "scaleTo": 0.7,
+    "growMs": 100,
+    "holdMs": 0,
+    "fadeMs": 360,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "NORMAL",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 8,
+      "speedMin": 55,
+      "speedMax": 160,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 700,
+      "gravityY": 160,
+      "scaleStart": 0.6,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 180,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "shiver",
+     "durationMs": 500,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "snowflake_small",
+     "count": 5,
+     "blendMode": "NORMAL",
+     "lifespanMs": 450
+    },
+    {
+     "phase": "impact",
+     "texture": "snowflake_small",
+     "count": 8,
+     "blendMode": "NORMAL",
+     "lifespanMs": 700
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "totalMs": 1800,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    1200,
+    2000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "little_lightning",
+   "zh": "小闪电术",
+   "en": "Little Lightning",
+   "element": "thunder",
+   "town": 3,
+   "tier": "early",
+   "brief": "small zig-zag bolt from a palm-sized storm cloud; yellow flash, hair stands up, little stars circle the head when dazed",
+   "icon": {
+    "key": "spell_little_lightning",
+    "file": "icons/spell_little_lightning.png",
+    "file64": "icons/64/spell_little_lightning.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 450,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 300,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.2,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "bolt_small",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "bolt_tip",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.75,
+    "scaleTo": 0.75,
+    "growMs": 40,
+    "holdMs": 140,
+    "fadeMs": 200,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": {
+     "texture": "starburst",
+     "scale": 0.45,
+     "alpha": 0.7,
+     "fadeMs": 260,
+     "blendMode": "ADD"
+    },
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 5,
+      "speedMin": 80,
+      "speedMax": 185,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 500,
+      "gravityY": 0,
+      "scaleStart": 0.45,
+      "scaleEnd": 0.1,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 600,
+     "hurtFrame": 5
+    },
+    "spanFromCloud": true
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 5,
+     "blendMode": "ADD",
+     "lifespanMs": 500
+    }
+   ],
+   "ambient": [
+    {
+     "type": "cloud_above_target",
+     "texture": "storm_cloud",
+     "scale": 0.42,
+     "offsetYRel": -0.45,
+     "inMs": 220,
+     "holdMs": 900,
+     "outMs": 250,
+     "startMs": 150,
+     "blendMode": "NORMAL"
+    }
+   ],
+   "statusOverlay": {
+    "key": "dazed",
+    "applyAt": "end_of_impact",
+    "removeAt": "game rule (status expires)",
+    "manifest": "fx/manifest.json status.dazed",
+    "textures": [
+     "dazed_ring"
+    ]
+   },
+   "flash": null,
+   "notes": "the yellow flash is a local starburst glow on the target, not a camera flash",
+   "totalMs": 1520,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    1200,
+    2000
+   ],
+   "status": "dazed",
+   "cameraFlash": null
+  },
+  {
+   "id": "fireball",
+   "zh": "火球术",
+   "en": "Fireball",
+   "element": "fire",
+   "town": 4,
+   "tier": "mid",
+   "brief": "melon-sized fireball, bright yellow core, spiral trail; round orange flash and a ring of sparks",
+   "icon": {
+    "key": "spell_fireball",
+    "file": "icons/spell_fireball.png",
+    "file64": "icons/64/spell_fireball.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 340,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "ember_1",
+     "scaleFrom": 0.6,
+     "scaleTo": 3.0,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "ember_2",
+      "count": 9,
+      "speedMin": 25,
+      "speedMax": 90,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 480,
+      "gravityY": -50,
+      "scaleStart": 1,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 340,
+      "spawnRadius": 10
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "fireball",
+    "path": "straight",
+    "from": "wand_tip",
+    "to": "target_center",
+    "travelMs": 680,
+    "spinDegPerSec": 0,
+    "scale": 0.9,
+    "scaleFrom": 0.9,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.03,
+    "trail": {
+     "texture": "ember_1",
+     "count": 28,
+     "speedMin": 15,
+     "speedMax": 65,
+     "angleMin": 140,
+     "angleMax": 220,
+     "lifespanMs": 480,
+     "gravityY": -25,
+     "scaleStart": 1.0,
+     "scaleEnd": 0.2,
+     "alphaStart": 1.0,
+     "alphaEnd": 0.0,
+     "blendMode": "ADD",
+     "spinDegPerSec": 0,
+     "emitOverMs": 680,
+     "spawnRadius": 12
+    },
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "fire_impact",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.45,
+    "scaleTo": 1.1,
+    "growMs": 120,
+    "holdMs": 0,
+    "fadeMs": 450,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "ember_2",
+      "count": 16,
+      "speedMin": 240,
+      "speedMax": 320,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 500,
+      "gravityY": 0,
+      "scaleStart": 1.1,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     },
+     {
+      "texture": "ember_4",
+      "count": 6,
+      "speedMin": 25,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 1000,
+      "gravityY": -65,
+      "scaleStart": 0.9,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 480,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "ember_2",
+     "count": 9,
+     "blendMode": "ADD",
+     "lifespanMs": 480
+    },
+    {
+     "phase": "projectile",
+     "texture": "ember_1",
+     "count": 28,
+     "blendMode": "ADD",
+     "lifespanMs": 480
+    },
+    {
+     "phase": "impact",
+     "texture": "ember_2",
+     "count": 16,
+     "blendMode": "ADD",
+     "lifespanMs": 500
+    },
+    {
+     "phase": "impact",
+     "texture": "ember_4",
+     "count": 6,
+     "blendMode": "ADD",
+     "lifespanMs": 1000
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "notes": "ring of sparks: emit the 16 ember_2 at evenly spaced angles",
+   "totalMs": 2020,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "whirlwind",
+   "zh": "旋风术",
+   "en": "Whirlwind",
+   "element": "wind",
+   "town": 4,
+   "tier": "mid",
+   "brief": "green-white spinning gust with leaves lifts every enemy of the chosen kind, spins them like tops, drops them dizzy",
+   "icon": {
+    "key": "spell_whirlwind",
+    "file": "icons/spell_whirlwind.png",
+    "file64": "icons/64/spell_whirlwind.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "same_type",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 160,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.3,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "leaf",
+      "count": 5,
+      "speedMin": 50,
+      "speedMax": 120,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 500,
+      "gravityY": 0,
+      "scaleStart": 0.8,
+      "scaleEnd": 0.5,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 360,
+      "emitOverMs": 320,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "whirlwind_gust",
+    "path": "straight",
+    "from": "wand_tip",
+    "to": "target_center",
+    "travelMs": 560,
+    "spinDegPerSec": -540,
+    "scale": 0.55,
+    "scaleFrom": 0.55,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.0,
+    "trail": {
+     "texture": "leaf",
+     "count": 8,
+     "speedMin": 40,
+     "speedMax": 95,
+     "angleMin": 0,
+     "angleMax": 360,
+     "lifespanMs": 500,
+     "gravityY": 50,
+     "scaleStart": 0.9,
+     "scaleEnd": 0.6,
+     "alphaStart": 1.0,
+     "alphaEnd": 0.0,
+     "blendMode": "NORMAL",
+     "spinDegPerSec": 400,
+     "emitOverMs": 560,
+     "spawnRadius": 26
+    },
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "whirlwind_gust",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.6,
+    "scaleTo": 0.95,
+    "growMs": 150,
+    "holdMs": 600,
+    "fadeMs": 260,
+    "alpha": 0.9,
+    "spinDegPerSec": -720,
+    "blendMode": "NORMAL",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "leaf",
+      "count": 7,
+      "speedMin": 105,
+      "speedMax": 210,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 800,
+      "gravityY": 160,
+      "scaleStart": 1,
+      "scaleEnd": 0.6,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 500,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "lift_spin",
+     "durationMs": 950,
+     "hurtFrame": 5,
+     "liftRel": 0.22,
+     "turns": 2
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "leaf",
+     "count": 5,
+     "blendMode": "NORMAL",
+     "lifespanMs": 500
+    },
+    {
+     "phase": "projectile",
+     "texture": "leaf",
+     "count": 8,
+     "blendMode": "NORMAL",
+     "lifespanMs": 500
+    },
+    {
+     "phase": "impact",
+     "texture": "leaf",
+     "count": 7,
+     "blendMode": "NORMAL",
+     "lifespanMs": 800
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "totalMs": 2210,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "snowflake_dance",
+   "zh": "雪花术",
+   "en": "Snowflake Dance",
+   "element": "ice",
+   "town": 5,
+   "tier": "mid",
+   "brief": "big sparkling snowflakes swirl across the whole screen and tap each enemy with a soft chime; frost glitter on shoulders",
+   "icon": {
+    "key": "spell_snowflake_dance",
+    "file": "icons/spell_snowflake_dance.png",
+    "file64": "icons/64/spell_snowflake_dance.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "all",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 230,
+    "impactDelayMs": 650,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.4,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 7,
+      "speedMin": 40,
+      "speedMax": 105,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 550,
+      "gravityY": 0,
+      "scaleStart": 0.5,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 180,
+      "emitOverMs": 320,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "snowflake_big",
+    "at": "target_head",
+    "offsetYRel": 0.2,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.25,
+    "scaleTo": 0.5,
+    "growMs": 150,
+    "holdMs": 120,
+    "fadeMs": 300,
+    "alpha": 0.95,
+    "spinDegPerSec": 180,
+    "blendMode": "NORMAL",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 10,
+      "speedMin": 25,
+      "speedMax": 95,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 700,
+      "gravityY": 40,
+      "scaleStart": 0.35,
+      "scaleEnd": 0.05,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     },
+     {
+      "texture": "snowflake_small",
+      "count": 5,
+      "speedMin": 25,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 700,
+      "gravityY": 80,
+      "scaleStart": 0.4,
+      "scaleEnd": 0.15,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 120,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "shiver",
+     "durationMs": 380,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "snowflake_small",
+     "count": 7,
+     "blendMode": "NORMAL",
+     "lifespanMs": 550
+    },
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 10,
+     "blendMode": "ADD",
+     "lifespanMs": 700
+    },
+    {
+     "phase": "impact",
+     "texture": "snowflake_small",
+     "count": 5,
+     "blendMode": "NORMAL",
+     "lifespanMs": 700
+    }
+   ],
+   "ambient": [
+    {
+     "type": "swirl_emitter",
+     "texture": "snowflake_big",
+     "count": 12,
+     "scaleMin": 0.35,
+     "scaleMax": 0.6,
+     "durationMs": 2050,
+     "fromXFrac": -0.04,
+     "toXFrac": 1.04,
+     "yMinFrac": 0.15,
+     "yMaxFrac": 0.62,
+     "swirlAmpRel": 0.25,
+     "swirlPeriodMs": 800,
+     "spinDegPerSec": 120,
+     "alpha": 0.9,
+     "blendMode": "NORMAL",
+     "startMs": 250
+    }
+   ],
+   "statusOverlay": null,
+   "flash": null,
+   "sound": "soft chime per tap",
+   "totalMs": 2300,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "lightning",
+   "zh": "闪电术",
+   "en": "Lightning Bolt",
+   "element": "thunder",
+   "town": 5,
+   "tier": "mid",
+   "brief": "tall bright bolt from a dark-blue cloud; screen flashes white for a frame; spiky hair and circling stars",
+   "icon": {
+    "key": "spell_lightning",
+    "file": "icons/spell_lightning.png",
+    "file64": "icons/64/spell_lightning.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 700,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.5,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "bolt_tall",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "bolt_tip",
+    "fitTargetHeight": null,
+    "scaleFrom": 1.0,
+    "scaleTo": 1.0,
+    "growMs": 30,
+    "holdMs": 160,
+    "fadeMs": 220,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": {
+     "texture": "starburst",
+     "scale": 0.6,
+     "alpha": 0.8,
+     "fadeMs": 300,
+     "blendMode": "ADD"
+    },
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 9,
+      "speedMin": 105,
+      "speedMax": 240,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 550,
+      "gravityY": 80,
+      "scaleStart": 0.5,
+      "scaleEnd": 0.1,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 700,
+     "hurtFrame": 5
+    },
+    "spanFromCloud": true
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 9,
+     "blendMode": "ADD",
+     "lifespanMs": 550
+    }
+   ],
+   "ambient": [
+    {
+     "type": "cloud_above_target",
+     "texture": "storm_cloud",
+     "scale": 0.85,
+     "offsetYRel": -0.75,
+     "inMs": 260,
+     "holdMs": 1350,
+     "outMs": 280,
+     "startMs": 150,
+     "blendMode": "NORMAL"
+    },
+    {
+     "type": "tint",
+     "color": "#0b1030",
+     "alpha": 0.25,
+     "inMs": 260,
+     "holdMs": 1200,
+     "outMs": 300,
+     "startMs": 100
+    }
+   ],
+   "statusOverlay": {
+    "key": "dazed",
+    "applyAt": "end_of_impact",
+    "removeAt": "game rule (status expires)",
+    "manifest": "fx/manifest.json status.dazed",
+    "textures": [
+     "dazed_ring"
+    ]
+   },
+   "flash": {
+    "color": "#ffffff",
+    "alpha": 0.6,
+    "durationMs": 70,
+    "count": 1,
+    "atImpact": true
+   },
+   "notes": "the only spell with a camera flash: one white flash, 70 ms, never red; spiky hair = enemy hurt frame",
+   "totalMs": 2040,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": "dazed",
+   "cameraFlash": {
+    "color": "#ffffff",
+    "alpha": 0.6,
+    "durationMs": 70,
+    "count": 1,
+    "atImpact": true
+   }
+  },
+  {
+   "id": "sunbeam",
+   "zh": "阳光术",
+   "en": "Sunbeam",
+   "element": "light",
+   "town": 6,
+   "tier": "mid",
+   "brief": "golden sunbeams break through grey clouds onto every enemy of the chosen kind; they sneeze and look more cheerful",
+   "icon": {
+    "key": "spell_sunbeam",
+    "file": "icons/spell_sunbeam.png",
+    "file64": "icons/64/spell_sunbeam.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "same_type",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 160,
+    "impactDelayMs": 700,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.5,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "sunbeam_shaft",
+    "at": "target_feet",
+    "offsetYRel": 0.03,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.9,
+    "scaleTo": 1.0,
+    "growMs": 220,
+    "holdMs": 600,
+    "fadeMs": 380,
+    "alpha": 0.95,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 10,
+      "speedMin": 25,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 800,
+      "gravityY": -55,
+      "scaleStart": 0.4,
+      "scaleEnd": 0.1,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "bounce",
+     "durationMs": 650,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 10,
+     "blendMode": "ADD",
+     "lifespanMs": 800
+    }
+   ],
+   "ambient": [
+    {
+     "type": "cloud_bank",
+     "texture": "grey_cloud",
+     "count": 4,
+     "scale": 0.75,
+     "yFrac": 0.07,
+     "fromXFrac": 1.15,
+     "spreadFrac": 0.24,
+     "inMs": 520,
+     "holdMs": 1500,
+     "outMs": 420,
+     "startMs": 0,
+     "alpha": 0.95,
+     "blendMode": "NORMAL",
+     "parting": true
+    },
+    {
+     "type": "tint",
+     "color": "#3a3a48",
+     "alpha": 0.18,
+     "inMs": 400,
+     "holdMs": 800,
+     "outMs": 500,
+     "startMs": 0
+    }
+   ],
+   "statusOverlay": null,
+   "flash": null,
+   "notes": "sneeze / cheerful face are enemy-side animations, not fx",
+   "totalMs": 2540,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "big_fireball",
+   "zh": "大火球术",
+   "en": "Big Fireball",
+   "element": "fire",
+   "town": 6,
+   "tier": "mid",
+   "brief": "big round fireball with a smiling glow grows above the hero, then is thrown; big orange burst with confetti-like sparks",
+   "icon": {
+    "key": "spell_big_fireball",
+    "file": "icons/spell_big_fireball.png",
+    "file64": "icons/64/spell_big_fireball.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "above_hero",
+    "offsetYRel": -0.28,
+    "durationMs": 950,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "fireball_big",
+     "scaleFrom": 0.15,
+     "scaleTo": 0.9,
+     "alpha": 0.95,
+     "blendMode": "NORMAL"
+    },
+    "particles": [
+     {
+      "texture": "ember_1",
+      "count": 18,
+      "speedMin": 25,
+      "speedMax": 80,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 500,
+      "gravityY": -40,
+      "scaleStart": 1,
+      "scaleEnd": 0.3,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 950,
+      "spawnRadius": 40
+     }
+    ],
+    "notes": "the smiling fireball grows above the hero before it is thrown"
+   },
+   "projectile": {
+    "texture": "fireball_big",
+    "path": "arc",
+    "from": "above_hero",
+    "to": "target_center",
+    "travelMs": 700,
+    "spinDegPerSec": 90,
+    "scale": 0.9,
+    "scaleFrom": 0.9,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.45,
+    "wobbleRel": 0.0,
+    "trail": {
+     "texture": "ember_2",
+     "count": 24,
+     "speedMin": 15,
+     "speedMax": 65,
+     "angleMin": 0,
+     "angleMax": 360,
+     "lifespanMs": 480,
+     "gravityY": -25,
+     "scaleStart": 1.1,
+     "scaleEnd": 0.2,
+     "alphaStart": 1.0,
+     "alphaEnd": 0.0,
+     "blendMode": "ADD",
+     "spinDegPerSec": 0,
+     "emitOverMs": 700,
+     "spawnRadius": 24
+    },
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "fire_impact",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.6,
+    "scaleTo": 1.5,
+    "growMs": 150,
+    "holdMs": 0,
+    "fadeMs": 600,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "ember_1",
+      "count": 24,
+      "speedMin": 200,
+      "speedMax": 400,
+      "angleMin": 180,
+      "angleMax": 360,
+      "lifespanMs": 850,
+      "gravityY": 270,
+      "scaleStart": 1.2,
+      "scaleEnd": 0.4,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     },
+     {
+      "texture": "star_small",
+      "count": 10,
+      "speedMin": 160,
+      "speedMax": 320,
+      "angleMin": 180,
+      "angleMax": 360,
+      "lifespanMs": 850,
+      "gravityY": 350,
+      "scaleStart": 0.4,
+      "scaleEnd": 0.15,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 360,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 560,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "ember_1",
+     "count": 18,
+     "blendMode": "ADD",
+     "lifespanMs": 500
+    },
+    {
+     "phase": "projectile",
+     "texture": "ember_2",
+     "count": 24,
+     "blendMode": "ADD",
+     "lifespanMs": 480
+    },
+    {
+     "phase": "impact",
+     "texture": "ember_1",
+     "count": 24,
+     "blendMode": "ADD",
+     "lifespanMs": 850
+    },
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 10,
+     "blendMode": "ADD",
+     "lifespanMs": 850
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "totalMs": 2500,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "blizzard",
+   "zh": "暴风雪术",
+   "en": "Blizzard",
+   "element": "ice",
+   "town": 7,
+   "tier": "mid",
+   "brief": "sideways snowstorm sweeps over all enemies; snow hats (and icicle eyebrows) when chilled; blue-white palette, soft wind",
+   "icon": {
+    "key": "spell_blizzard",
+    "file": "icons/spell_blizzard.png",
+    "file64": "icons/64/spell_blizzard.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "all",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 260,
+    "impactDelayMs": 900,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.5,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 9,
+      "speedMin": 55,
+      "speedMax": 135,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 550,
+      "gravityY": 0,
+      "scaleStart": 0.5,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 180,
+      "emitOverMs": 320,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "snow_puff",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.8,
+    "growMs": 140,
+    "holdMs": 0,
+    "fadeMs": 380,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "NORMAL",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 9,
+      "speedMin": 55,
+      "speedMax": 145,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 700,
+      "gravityY": 105,
+      "scaleStart": 0.5,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 200,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "shiver",
+     "durationMs": 550,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "snowflake_small",
+     "count": 9,
+     "blendMode": "NORMAL",
+     "lifespanMs": 550
+    },
+    {
+     "phase": "impact",
+     "texture": "snowflake_small",
+     "count": 9,
+     "blendMode": "NORMAL",
+     "lifespanMs": 700
+    }
+   ],
+   "ambient": [
+    {
+     "type": "sideways_emitter",
+     "textures": [
+      "snowflake_small",
+      "snowflake_small",
+      "snowflake_small",
+      "snowball"
+     ],
+     "count": 120,
+     "direction": "left_to_right",
+     "speedMin": 700,
+     "speedMax": 1000,
+     "scaleMin": 0.2,
+     "scaleMax": 0.5,
+     "yMinFrac": 0.05,
+     "yMaxFrac": 0.78,
+     "driftY": 80,
+     "durationMs": 2400,
+     "startMs": 200,
+     "alpha": 0.9,
+     "blendMode": "NORMAL"
+    },
+    {
+     "type": "tint",
+     "color": "#cfe6ff",
+     "alpha": 0.16,
+     "inMs": 350,
+     "holdMs": 1650,
+     "outMs": 450,
+     "startMs": 150
+    }
+   ],
+   "statusOverlay": {
+    "key": "chilled",
+    "applyAt": "end_of_impact",
+    "removeAt": "game rule (status expires)",
+    "manifest": "fx/manifest.json status.chilled",
+    "textures": [
+     "snow_hat",
+     "snowflake_small"
+    ]
+   },
+   "flash": null,
+   "sound": "soft wind",
+   "notes": "icicle eyebrows have no texture; snow_hat + drifting snowflakes carry \"chilled\"",
+   "totalMs": 2600,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": "chilled",
+   "cameraFlash": null
+  },
+  {
+   "id": "tornado",
+   "zh": "龙卷风术",
+   "en": "Tornado",
+   "element": "wind",
+   "town": 7,
+   "tier": "mid",
+   "brief": "tall friendly tornado (leaves, feathers, a lost hat) gathers every enemy of the chosen kind, spins them up and plops them down",
+   "icon": {
+    "key": "spell_tornado",
+    "file": "icons/spell_tornado.png",
+    "file64": "icons/64/spell_tornado.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "same_type",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "when the funnel reaches each target"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 340,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.5,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "leaf",
+      "count": 6,
+      "speedMin": 50,
+      "speedMax": 120,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 550,
+      "gravityY": 0,
+      "scaleStart": 0.8,
+      "scaleEnd": 0.5,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 360,
+      "emitOverMs": 340,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": "tornado",
+    "path": "sweep",
+    "from": "hero_front_ground",
+    "to": "targets_sweep",
+    "travelMs": 1400,
+    "spinDegPerSec": 0,
+    "scale": 1.0,
+    "scaleFrom": 1.0,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.05,
+    "trail": {
+     "texture": "feather",
+     "count": 12,
+     "speedMin": 50,
+     "speedMax": 145,
+     "angleMin": 0,
+     "angleMax": 360,
+     "lifespanMs": 750,
+     "gravityY": -25,
+     "scaleStart": 1,
+     "scaleEnd": 0.7,
+     "alphaStart": 1.0,
+     "alphaEnd": 0.0,
+     "blendMode": "NORMAL",
+     "spinDegPerSec": 300,
+     "emitOverMs": 1400,
+     "spawnRadius": 65
+    },
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": null,
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "growMs": 0,
+    "holdMs": 0,
+    "fadeMs": 0,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": null,
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "leaf",
+      "count": 7,
+      "speedMin": 130,
+      "speedMax": 265,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 800,
+      "gravityY": 200,
+      "scaleStart": 1,
+      "scaleEnd": 0.6,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 500,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     },
+     {
+      "texture": "feather",
+      "count": 4,
+      "speedMin": 105,
+      "speedMax": 210,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 900,
+      "gravityY": 105,
+      "scaleStart": 1,
+      "scaleEnd": 0.7,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 300,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "lift_spin",
+     "durationMs": 1100,
+     "hurtFrame": 5,
+     "liftRel": 0.35,
+     "turns": 2,
+     "plopSquash": 0.15
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "leaf",
+     "count": 6,
+     "blendMode": "NORMAL",
+     "lifespanMs": 550
+    },
+    {
+     "phase": "projectile",
+     "texture": "feather",
+     "count": 12,
+     "blendMode": "NORMAL",
+     "lifespanMs": 750
+    },
+    {
+     "phase": "impact",
+     "texture": "leaf",
+     "count": 7,
+     "blendMode": "NORMAL",
+     "lifespanMs": 800
+    },
+    {
+     "phase": "impact",
+     "texture": "feather",
+     "count": 4,
+     "blendMode": "NORMAL",
+     "lifespanMs": 900
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "notes": "one tornado travels through all targets (path \"sweep\"); each impact fires as it passes. The lost hat is left out: there is no plain-hat texture (snow_hat would read as chilled)",
+   "totalMs": 2840,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "meteor",
+   "zh": "流星术",
+   "en": "Meteor",
+   "element": "star",
+   "town": 8,
+   "tier": "mid",
+   "brief": "a shooting star with a long rainbow tail falls on one enemy; starburst flash, tiny stars bouncing off; no crater",
+   "icon": {
+    "key": "spell_meteor",
+    "file": "icons/spell_meteor.png",
+    "file64": "icons/64/spell_meteor.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "single",
+    "maxTargets": 1,
+    "order": "left_to_right",
+    "staggerMs": 0,
+    "impactDelayMs": 0,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 450,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.5,
+     "scaleTo": 1.7,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": "shooting_star",
+    "path": "falls_from_sky",
+    "from": "sky_upper_left_of_target",
+    "to": "target_center",
+    "travelMs": 750,
+    "spinDegPerSec": 0,
+    "scale": 1.0,
+    "scaleFrom": 1.0,
+    "count": 1,
+    "intervalMs": 0,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.0,
+    "trail": null,
+    "impactEach": false,
+    "blendMode": "NORMAL"
+   },
+   "impact": {
+    "texture": "starburst",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.3,
+    "scaleTo": 1.2,
+    "growMs": 140,
+    "holdMs": 0,
+    "fadeMs": 600,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 10,
+      "speedMin": 210,
+      "speedMax": 370,
+      "angleMin": 200,
+      "angleMax": 340,
+      "lifespanMs": 1100,
+      "gravityY": 930,
+      "scaleStart": 0.55,
+      "scaleEnd": 0.3,
+      "alphaStart": 1,
+      "alphaEnd": 0.6,
+      "blendMode": "ADD",
+      "spinDegPerSec": 360,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 500,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 10,
+     "blendMode": "ADD",
+     "lifespanMs": 1100
+    }
+   ],
+   "ambient": [],
+   "statusOverlay": null,
+   "flash": null,
+   "notes": "the stars bounce once off the ground line (target feet) with 45% restitution",
+   "totalMs": 2300,
+   "totalMsFor": "1 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "thunderstorm",
+   "zh": "雷雨术",
+   "en": "Thunderstorm",
+   "element": "thunder",
+   "town": 8,
+   "tier": "mid",
+   "brief": "small storm cloud rains on all enemies with friendly zig-zag bolts; puddles form under them and they hop around",
+   "icon": {
+    "key": "spell_thunderstorm",
+    "file": "icons/spell_thunderstorm.png",
+    "file64": "icons/64/spell_thunderstorm.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "all",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 420,
+    "impactDelayMs": 700,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 320,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.4,
+     "scaleTo": 1.5,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": "bolt_small",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "bolt_tip",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.7,
+    "scaleTo": 0.7,
+    "growMs": 40,
+    "holdMs": 130,
+    "fadeMs": 180,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": {
+     "texture": "starburst",
+     "scale": 0.35,
+     "alpha": 0.6,
+     "fadeMs": 240,
+     "blendMode": "ADD"
+    },
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "drip",
+      "count": 8,
+      "speedMin": 105,
+      "speedMax": 240,
+      "angleMin": 200,
+      "angleMax": 340,
+      "lifespanMs": 550,
+      "gravityY": 800,
+      "scaleStart": 1.0,
+      "scaleEnd": 0.4,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 0,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hop",
+     "durationMs": 900,
+     "hurtFrame": 5,
+     "hops": 2,
+     "heightRel": 0.12
+    },
+    "spanFromCloud": true
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "drip",
+     "count": 8,
+     "blendMode": "NORMAL",
+     "lifespanMs": 550
+    },
+    {
+     "phase": "ambient",
+     "texture": "drip",
+     "count": 45,
+     "blendMode": "NORMAL",
+     "lifespanMs": 420
+    }
+   ],
+   "ambient": [
+    {
+     "type": "cloud_above_target",
+     "texture": "storm_cloud",
+     "scale": 0.6,
+     "offsetYRel": -0.6,
+     "inMs": 280,
+     "holdMs": 2200,
+     "outMs": 320,
+     "startMs": 150,
+     "blendMode": "NORMAL",
+     "rain": {
+      "texture": "drip",
+      "count": 45,
+      "speedMin": 500,
+      "speedMax": 640,
+      "angleMin": 88,
+      "angleMax": 92,
+      "lifespanMs": 420,
+      "gravityY": 800,
+      "scaleStart": 1,
+      "scaleEnd": 1,
+      "alphaStart": 0.9,
+      "alphaEnd": 0.6,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 0,
+      "emitOverMs": 2100,
+      "spawnRadius": 60
+     }
+    },
+    {
+     "type": "puddle_under_target",
+     "texture": "puddle",
+     "scale": 0.7,
+     "inMs": 600,
+     "holdMs": 1450,
+     "outMs": 400,
+     "startMs": 500
+    }
+   ],
+   "statusOverlay": {
+    "key": "dazed",
+    "applyAt": "end_of_impact",
+    "removeAt": "game rule (status expires)",
+    "manifest": "fx/manifest.json status.dazed",
+    "textures": [
+     "dazed_ring"
+    ]
+   },
+   "flash": null,
+   "notes": "bolts staggered 420 ms (well under 3 per second); no camera flash, bolt glows are local",
+   "totalMs": 2950,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    2000,
+    3000
+   ],
+   "status": "dazed",
+   "cameraFlash": null
+  },
+  {
+   "id": "super_blizzard",
+   "zh": "超暴风雪术",
+   "en": "Super Blizzard",
+   "element": "ice",
+   "town": 9,
+   "tier": "finale",
+   "brief": "screen fills with a huge swirling snowstorm and a giant snowflake emblem; every enemy frozen in a clear ice cube, then pops out",
+   "icon": {
+    "key": "spell_super_blizzard",
+    "file": "icons/spell_super_blizzard.png",
+    "file64": "icons/64/spell_super_blizzard.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "all",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 180,
+    "impactDelayMs": 1000,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 400,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.5,
+     "scaleTo": 2.0,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 12,
+      "speedMin": 55,
+      "speedMax": 160,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 600,
+      "gravityY": 0,
+      "scaleStart": 0.5,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 180,
+      "emitOverMs": 400,
+      "spawnRadius": 0
+     }
+    ]
+   },
+   "projectile": {
+    "texture": null,
+    "path": "none",
+    "from": null,
+    "to": null,
+    "travelMs": 0,
+    "spinDegPerSec": 0,
+    "scale": 0,
+    "scaleFrom": 0,
+    "count": 0,
+    "intervalMs": 0,
+    "arcHeightRel": 0,
+    "wobbleRel": 0,
+    "trail": null,
+    "blendMode": null
+   },
+   "impact": {
+    "texture": null,
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "growMs": 0,
+    "holdMs": 0,
+    "fadeMs": 0,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": null,
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "snowflake_small",
+      "count": 12,
+      "speedMin": 80,
+      "speedMax": 200,
+      "angleMin": 0,
+      "angleMax": 360,
+      "lifespanMs": 750,
+      "gravityY": 105,
+      "scaleStart": 0.6,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "NORMAL",
+      "spinDegPerSec": 200,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "freeze",
+     "durationMs": 1720,
+     "hurtFrame": 5,
+     "faceFrame": 5
+    },
+    "overlay": {
+     "status": "frozen",
+     "enterMs": 220,
+     "holdMs": 1500,
+     "scaleFrom": 0.6
+    },
+    "popOut": {
+     "atEnd": true,
+     "particles": [
+      {
+       "texture": "snow_puff",
+       "count": 1,
+       "speedMin": 0,
+       "speedMax": 0,
+       "angleMin": 0,
+       "angleMax": 360,
+       "lifespanMs": 350,
+       "gravityY": 0,
+       "scaleStart": 0.5,
+       "scaleEnd": 1.1,
+       "alphaStart": 1,
+       "alphaEnd": 0,
+       "blendMode": "NORMAL",
+       "spinDegPerSec": 0,
+       "emitOverMs": 0,
+       "spawnRadius": 0
+      },
+      {
+       "texture": "snowflake_small",
+       "count": 10,
+       "speedMin": 130,
+       "speedMax": 265,
+       "angleMin": 0,
+       "angleMax": 360,
+       "lifespanMs": 600,
+       "gravityY": 260,
+       "scaleStart": 0.5,
+       "scaleEnd": 0.2,
+       "alphaStart": 1.0,
+       "alphaEnd": 0.0,
+       "blendMode": "NORMAL",
+       "spinDegPerSec": 200,
+       "emitOverMs": 0,
+       "spawnRadius": 0
+      }
+     ]
+    }
+   },
+   "particles": [
+    {
+     "phase": "cast",
+     "texture": "snowflake_small",
+     "count": 12,
+     "blendMode": "NORMAL",
+     "lifespanMs": 600
+    },
+    {
+     "phase": "impact",
+     "texture": "snowflake_small",
+     "count": 12,
+     "blendMode": "NORMAL",
+     "lifespanMs": 750
+    },
+    {
+     "phase": "impact.popOut",
+     "texture": "snow_puff",
+     "count": 1,
+     "blendMode": "NORMAL",
+     "lifespanMs": 350
+    },
+    {
+     "phase": "impact.popOut",
+     "texture": "snowflake_small",
+     "count": 10,
+     "blendMode": "NORMAL",
+     "lifespanMs": 600
+    }
+   ],
+   "ambient": [
+    {
+     "type": "tint",
+     "color": "#dcefff",
+     "alpha": 0.28,
+     "inMs": 450,
+     "holdMs": 2300,
+     "outMs": 600,
+     "startMs": 150
+    },
+    {
+     "type": "sideways_emitter",
+     "textures": [
+      "snowflake_small",
+      "snowflake_small",
+      "snowflake_small",
+      "snowflake_big"
+     ],
+     "count": 220,
+     "direction": "left_to_right",
+     "speedMin": 800,
+     "speedMax": 1200,
+     "scaleMin": 0.2,
+     "scaleMax": 0.6,
+     "yMinFrac": 0.0,
+     "yMaxFrac": 1.0,
+     "driftY": 160,
+     "swirlAmpRel": 0.2,
+     "durationMs": 2600,
+     "startMs": 200,
+     "alpha": 0.9,
+     "blendMode": "NORMAL"
+    },
+    {
+     "type": "emblem",
+     "texture": "snowflake_big",
+     "xFrac": 0.5,
+     "yFrac": 0.3,
+     "scaleFrom": 0.2,
+     "scaleTo": 2.1,
+     "inMs": 600,
+     "holdMs": 1000,
+     "outMs": 600,
+     "startMs": 300,
+     "spinDegPerSec": 40,
+     "alpha": 0.85,
+     "blendMode": "NORMAL",
+     "glow": {
+      "texture": "starburst",
+      "scale": 1.4,
+      "alpha": 0.35,
+      "blendMode": "ADD"
+     }
+    }
+   ],
+   "statusOverlay": {
+    "key": "frozen",
+    "applyAt": "impact",
+    "removeAt": "end_of_cast (pops out, impact.popOut)",
+    "enterMs": 220,
+    "holdMs": 1500,
+    "manifest": "fx/manifest.json status.frozen",
+    "textures": [
+     "frozen_back",
+     "frozen_front",
+     "snow_puff"
+    ],
+    "layering": "back layer behind the enemy, front layer in front of it"
+   },
+   "flash": null,
+   "notes": "frozen is shown inside the cast (front/back cube layers) and pops at the end; whether the \"frozen\" status stays visible on the enemy afterwards is the game's call (status key \"frozen\")",
+   "totalMs": 4230,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    3000,
+    5000
+   ],
+   "status": null,
+   "cameraFlash": null
+  },
+  {
+   "id": "meteor_shower",
+   "zh": "流星雨术",
+   "en": "Meteor Shower",
+   "element": "star",
+   "town": 9,
+   "tier": "finale",
+   "brief": "sky turns deep violet, a shower of colourful shooting stars rains on all enemies; each hit makes a star-shaped sparkle",
+   "icon": {
+    "key": "spell_meteor_shower",
+    "file": "icons/spell_meteor_shower.png",
+    "file64": "icons/64/spell_meteor_shower.png",
+    "locked": "icons/spell_locked.png"
+   },
+   "targeting": {
+    "target": "all",
+    "maxTargets": 3,
+    "order": "left_to_right",
+    "staggerMs": 170,
+    "impactDelayMs": 150,
+    "impactTiming": "after cast + impactDelayMs + projectile travel; target i is offset by i x staggerMs"
+   },
+   "cast": {
+    "at": "wand_tip",
+    "offsetYRel": 0.0,
+    "durationMs": 400,
+    "heroAnim": "attack",
+    "glow": {
+     "texture": "star_small",
+     "scaleFrom": 0.5,
+     "scaleTo": 2.0,
+     "alpha": 0.95,
+     "blendMode": "ADD"
+    },
+    "particles": []
+   },
+   "projectile": {
+    "texture": "shooting_star",
+    "path": "falls_from_sky",
+    "from": "sky_upper_left_of_target",
+    "to": "target_center",
+    "travelMs": 600,
+    "spinDegPerSec": 0,
+    "scale": 0.75,
+    "scaleFrom": 0.75,
+    "count": 4,
+    "intervalMs": 260,
+    "arcHeightRel": 0.0,
+    "wobbleRel": 0.0,
+    "trail": null,
+    "impactEach": true,
+    "blendMode": "NORMAL",
+    "tint": [
+     "#ffffff",
+     "#ffd0f0",
+     "#c8f0ff",
+     "#fff0b0",
+     "#d8c8ff"
+    ]
+   },
+   "impact": {
+    "texture": "starburst",
+    "at": "target_center",
+    "offsetYRel": 0.0,
+    "anchor": "origin",
+    "fitTargetHeight": null,
+    "scaleFrom": 0.25,
+    "scaleTo": 0.8,
+    "growMs": 100,
+    "holdMs": 0,
+    "fadeMs": 360,
+    "alpha": 1.0,
+    "spinDegPerSec": 0,
+    "blendMode": "ADD",
+    "glow": null,
+    "wobble": null,
+    "particles": [
+     {
+      "texture": "star_small",
+      "count": 6,
+      "speedMin": 160,
+      "speedMax": 290,
+      "angleMin": 200,
+      "angleMax": 340,
+      "lifespanMs": 700,
+      "gravityY": 530,
+      "scaleStart": 0.45,
+      "scaleEnd": 0.2,
+      "alphaStart": 1.0,
+      "alphaEnd": 0.0,
+      "blendMode": "ADD",
+      "spinDegPerSec": 360,
+      "emitOverMs": 0,
+      "spawnRadius": 0
+     }
+    ],
+    "enemyReaction": {
+     "type": "hurt_shake",
+     "durationMs": 380,
+     "hurtFrame": 5
+    }
+   },
+   "particles": [
+    {
+     "phase": "impact",
+     "texture": "star_small",
+     "count": 6,
+     "blendMode": "ADD",
+     "lifespanMs": 700
+    }
+   ],
+   "ambient": [
+    {
+     "type": "tint",
+     "color": "#2a0b5e",
+     "alpha": 0.5,
+     "inMs": 450,
+     "holdMs": 2900,
+     "outMs": 600,
+     "startMs": 0
+    },
+    {
+     "type": "twinkle_emitter",
+     "texture": "star_small",
+     "count": 34,
+     "scaleMin": 0.15,
+     "scaleMax": 0.35,
+     "yMinFrac": 0.02,
+     "yMaxFrac": 0.42,
+     "durationMs": 3600,
+     "alpha": 0.9,
+     "blendMode": "ADD",
+     "startMs": 150
+    },
+    {
+     "type": "background_stars",
+     "texture": "shooting_star",
+     "count": 6,
+     "scale": 0.35,
+     "durationMs": 2600,
+     "startMs": 300,
+     "alpha": 0.6,
+     "blendMode": "ADD",
+     "notes": "a few small decorative shooting stars crossing the sky, not aimed at targets"
+    }
+   ],
+   "statusOverlay": null,
+   "flash": null,
+   "notes": "each target gets 4 colourful shooting stars; every hit makes a star-shaped sparkle",
+   "totalMs": 3950,
+   "totalMsFor": "3 target(s)",
+   "budgetMs": [
+    3000,
+    5000
+   ],
+   "status": null,
+   "cameraFlash": null
+  }
+ ]
+}

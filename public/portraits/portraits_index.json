@@ -1,0 +1,309 @@
+{
+ "version": 2,
+ "canvas": [
+  512,
+  768
+ ],
+ "facing": "right",
+ "mirrorNote": "portraits face screen-right; engine flips (setFlipX) for the right-hand slot",
+ "origin": "bottom-centre (setOrigin(0.5,1)); bottom edge is the cut line",
+ "anchorYNote": "eye-line y in canvas px",
+ "characters": [
+  {
+   "id": "hero",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "{hero}",
+    "en": "{hero}"
+   },
+   "portraitJson": "hero.portrait.json",
+   "anchorY": 258,
+   "scale": 1.0515,
+   "files": {
+    "neutral": "hero_neutral.webp",
+    "happy": "hero_happy.webp",
+    "sad": "hero_sad.webp",
+    "surprised": "hero_surprised.webp",
+    "angry": "hero_angry.webp",
+    "worried": "hero_worried.webp",
+    "thinking": "hero_thinking.webp"
+   },
+   "source": "src_v2/hero/"
+  },
+  {
+   "id": "granny_bai",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   },
+   "portraitJson": "granny_bai.portrait.json",
+   "anchorY": 230,
+   "scale": 1.107,
+   "files": {
+    "neutral": "granny_bai_neutral.webp",
+    "happy": "granny_bai_happy.webp",
+    "sad": "granny_bai_sad.webp",
+    "surprised": "granny_bai_surprised.webp",
+    "angry": "granny_bai_angry.webp",
+    "worried": "granny_bai_worried.webp",
+    "thinking": "granny_bai_thinking.webp",
+    "wink": "granny_bai_wink.webp"
+   },
+   "source": "src_v2/granny_bai/"
+  },
+  {
+   "id": "xiaolong",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "小龙",
+    "en": "Little Dragon"
+   },
+   "portraitJson": "xiaolong.portrait.json",
+   "anchorY": 230,
+   "scale": 1.0,
+   "files": {
+    "neutral": "xiaolong_neutral.webp",
+    "happy": "xiaolong_happy.webp",
+    "sad": "xiaolong_sad.webp",
+    "surprised": "xiaolong_surprised.webp",
+    "angry": "xiaolong_angry.webp",
+    "worried": "xiaolong_worried.webp",
+    "thinking": "xiaolong_thinking.webp",
+    "hungry": "xiaolong_hungry.webp",
+    "brave": "xiaolong_brave.webp"
+   },
+   "source": "src_v2/xiaolong/"
+  },
+  {
+   "id": "pipi",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "皮皮",
+    "en": "Pipi"
+   },
+   "portraitJson": "pipi.portrait.json",
+   "anchorY": 260,
+   "scale": 1.1116,
+   "files": {
+    "neutral": "pipi_neutral.webp",
+    "happy": "pipi_happy.webp",
+    "sad": "pipi_sad.webp",
+    "surprised": "pipi_surprised.webp",
+    "angry": "pipi_angry.webp",
+    "worried": "pipi_worried.webp",
+    "thinking": "pipi_thinking.webp",
+    "smug": "pipi_smug.webp"
+   },
+   "source": "src_v2/pipi/"
+  },
+  {
+   "id": "farmer_li",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "李农夫",
+    "en": "Farmer Li"
+   },
+   "portraitJson": "farmer_li.portrait.json",
+   "anchorY": 230,
+   "scale": 1.0346,
+   "files": {
+    "neutral": "farmer_li_neutral.webp",
+    "happy": "farmer_li_happy.webp",
+    "worried": "farmer_li_worried.webp",
+    "surprised": "farmer_li_surprised.webp"
+   },
+   "source": "src_v2/farmer_li/"
+  },
+  {
+   "id": "xiaoming",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "小明",
+    "en": "Xiaoming"
+   },
+   "portraitJson": "xiaoming.portrait.json",
+   "anchorY": 230,
+   "scale": 1.1255,
+   "files": {
+    "neutral": "xiaoming_neutral.webp",
+    "happy": "xiaoming_happy.webp",
+    "worried": "xiaoming_worried.webp",
+    "surprised": "xiaoming_surprised.webp"
+   },
+   "source": "src_v2/xiaoming/"
+  },
+  {
+   "id": "innkeeper_panda",
+   "group": "realm1_cast",
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda innkeeper"
+   },
+   "portraitJson": "innkeeper_panda.portrait.json",
+   "anchorY": 230,
+   "big": true,
+   "scale": 1.12,
+   "files": {
+    "neutral": "innkeeper_panda_neutral.webp",
+    "happy": "innkeeper_panda_happy.webp",
+    "worried": "innkeeper_panda_worried.webp",
+    "surprised": "innkeeper_panda_surprised.webp",
+    "sad": "innkeeper_panda_sad.webp"
+   },
+   "source": "src_v2/panda/"
+  },
+  {
+   "id": "elder_m",
+   "group": "generic_base",
+   "name": {
+    "zh": "老爷爷",
+    "en": "Grandpa"
+   },
+   "portraitJson": "elder_m.portrait.json",
+   "anchorY": 401,
+   "scale": 1.15,
+   "files": {
+    "neutral": "elder_m_neutral.webp",
+    "happy": "elder_m_happy.webp",
+    "sad": "elder_m_sad.webp",
+    "angry": "elder_m_angry.webp",
+    "surprised": "elder_m_surprised.webp"
+   },
+   "source": "elder/ (v1 512x512)"
+  },
+  {
+   "id": "elder_f",
+   "group": "generic_base",
+   "name": {
+    "zh": "老奶奶",
+    "en": "Grandma"
+   },
+   "portraitJson": "elder_f.portrait.json",
+   "anchorY": 441,
+   "scale": 1.15,
+   "files": {
+    "neutral": "elder_f_neutral.webp",
+    "happy": "elder_f_happy.webp",
+    "sad": "elder_f_sad.webp",
+    "angry": "elder_f_angry.webp",
+    "surprised": "elder_f_surprised.webp"
+   },
+   "source": "granny/ (v1 512x512)"
+  },
+  {
+   "id": "kid_girl",
+   "group": "generic_base",
+   "name": {
+    "zh": "小女孩",
+    "en": "Girl"
+   },
+   "portraitJson": "kid_girl.portrait.json",
+   "anchorY": 468,
+   "scale": 1.15,
+   "files": {
+    "neutral": "kid_girl_neutral.webp",
+    "happy": "kid_girl_happy.webp",
+    "sad": "kid_girl_sad.webp",
+    "angry": "kid_girl_angry.webp",
+    "surprised": "kid_girl_surprised.webp"
+   },
+   "source": "kid/ (v1 512x512)"
+  },
+  {
+   "id": "villager_f",
+   "group": "generic_base",
+   "name": {
+    "zh": "村民",
+    "en": "Villager (woman)"
+   },
+   "portraitJson": "villager_f.portrait.json",
+   "anchorY": 421,
+   "scale": 1.15,
+   "files": {
+    "neutral": "villager_f_neutral.webp",
+    "happy": "villager_f_happy.webp",
+    "sad": "villager_f_sad.webp",
+    "angry": "villager_f_angry.webp",
+    "surprised": "villager_f_surprised.webp"
+   },
+   "source": "villager/ (v1 512x512)"
+  },
+  {
+   "id": "guard",
+   "group": "generic_base",
+   "name": {
+    "zh": "守卫",
+    "en": "Guard"
+   },
+   "portraitJson": "guard.portrait.json",
+   "anchorY": 414,
+   "scale": 1.15,
+   "files": {
+    "neutral": "guard_neutral.webp",
+    "happy": "guard_happy.webp",
+    "sad": "guard_sad.webp",
+    "angry": "guard_angry.webp",
+    "surprised": "guard_surprised.webp"
+   },
+   "source": "guard/ (v1 512x512)"
+  },
+  {
+   "id": "merchant",
+   "group": "generic_base",
+   "name": {
+    "zh": "商人",
+    "en": "Merchant"
+   },
+   "portraitJson": "merchant.portrait.json",
+   "anchorY": 401,
+   "scale": 1.15,
+   "files": {
+    "neutral": "merchant_neutral.webp",
+    "happy": "merchant_happy.webp",
+    "sad": "merchant_sad.webp",
+    "angry": "merchant_angry.webp",
+    "surprised": "merchant_surprised.webp"
+   },
+   "source": "merchant/ (v1 512x512)"
+  },
+  {
+   "id": "bandit",
+   "group": "generic_base",
+   "name": {
+    "zh": "山贼",
+    "en": "Bandit"
+   },
+   "portraitJson": "bandit.portrait.json",
+   "anchorY": 428,
+   "scale": 1.15,
+   "files": {
+    "neutral": "bandit_neutral.webp",
+    "happy": "bandit_happy.webp",
+    "sad": "bandit_sad.webp",
+    "angry": "bandit_angry.webp",
+    "surprised": "bandit_surprised.webp"
+   },
+   "source": "bandit/ (v1 512x512)"
+  },
+  {
+   "id": "villager_m",
+   "group": "generic_base",
+   "name": {
+    "zh": "村民",
+    "en": "Villager (man)"
+   },
+   "portraitJson": "villager_m.portrait.json",
+   "anchorY": 401,
+   "scale": 1.15,
+   "files": {
+    "neutral": "villager_m_neutral.webp",
+    "happy": "villager_m_happy.webp",
+    "sad": "villager_m_sad.webp",
+    "angry": "villager_m_angry.webp",
+    "surprised": "villager_m_surprised.webp"
+   },
+   "source": "innkeeper/ (v1 512x512)"
+  }
+ ]
+}
