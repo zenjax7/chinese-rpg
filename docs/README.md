@@ -4,7 +4,7 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 
 - **Play the live prototype:** https://zenjax7.github.io/chinese-rpg/
 - **Start here:** [design/plan.md](design/plan.md), the research summary, plan and early decisions.
-- **Backend proposal:** [architecture.md](architecture.md) is the design proposal (not built yet) for parent accounts, cloud saves, COPPA, hosting (Supabase with Vercel), per-graph content delivery, and the node-graph world.
+- **Backend architecture (approved):** [architecture.md](architecture.md) is the approved design (not built yet) for parent accounts, cloud saves, COPPA, hosting at $0 (Vercel Hobby, Neon Postgres and Auth.js with Google), static per-graph content on the CDN, the node-graph world, and the dialogue and quest data hooks.
 
 This folder holds design docs, data tables, reference images and Desy's design tools. It is **not** part of the game build: Vite only bundles `src/` and copies `public/`, so nothing under `docs/` goes to GitHub Pages. The layout follows Desy's repo manifest. Docs are Markdown and tables are CSV (UTF-8; some CSVs have a BOM for Excel). JSON twins are kept for code. HTML and XLSX exports are left out because they are generated from the Markdown and CSV files.
 
