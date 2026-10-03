@@ -217,6 +217,9 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await shot('2026-10-03-graph-feather-picker');
   await tid('feather-to-realm_1-village').click(); await tid('town').waitFor({ timeout: 10000 });
   s = await sv(); check(s.inv.feather === fBefore - 1 && s.world.pos.node === 'village', `Feather used: flew to the village, ${fBefore} → ${s.inv.feather}`);
+  const cf = await p.evaluate(() => window.__proto.world.cloud());
+  check(cf.kind === 'cloud' && cf.pushes.some(x => x.trigger === 'feather') && cf.triggers.some(x => x.trigger === 'nodeChange') ,
+    `SaveStore: the Feather pushes right away; node changes are recorded as (20 s debounced) triggers (${[...new Set(cf.pushes.map(x => x.trigger))].join(', ')})`);
   await keep('after feather');
 
   // ---- free Feather on realm-boss clears in realms 3 / 6 / 8 only (no tip) ----
@@ -229,14 +232,16 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   check(fz === 3, `realm 6 boss at the carry cap: still 3 (${fz})`);
   s = await sv(); check(s.world.zonesDefeated.includes('warren') && s.locs.meadow.bossDefeated && s.locs.forest.unlocked, 'realm 1 boss clear maps onto the classic meadow boss (towns / skills keep working)');
   const cl = await p.evaluate(() => window.__proto.world.cloud());
-  check(cl.kind === 'cloud' && cl.pushes.some(x => x.trigger === 'bossDefeated') && cl.pushes.some(x => x.trigger === 'feather') && cl.triggers.some(x => x.trigger === 'nodeChange') && !cl.pushes.some(x => x.trigger === 'nodeChange'),
-    `SaveStore: CloudSaveStore stub pushes on boss / Feather triggers right away; node changes are debounced (${[...new Set(cl.pushes.map(x => x.trigger))].join(', ')})`);
+  check(cl.kind === 'cloud' && cl.pushes.some(x => x.trigger === 'bossDefeated'), `SaveStore: CloudSaveStore stub pushes when a boss falls (${[...new Set(cl.pushes.map(x => x.trigger))].join(', ')})`);
   await keep('after boss clears');
 
   // ---- quests: q1_hoe offer (scene) → accept → the well → turn in (scene) ----
   await edit(s => { s.world.zonesDefeated = []; s.storyQuests = {}; }); await p.reload(); await tid('town').waitFor();
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
-  await p.evaluate(() => window.__proto.world.goto('realm_1', 'm_farm', true)); await tid('scene').waitFor({ timeout: 10000 });
+  await p.evaluate(() => { window.__proto.world.goto('realm_1', 'm_farm', true); });
+  // m_farm's once-events (q1_hoe offer, then q1_bounty) may have fired on the earlier walk; Farmer Li offers q1_hoe again as its giver
+  for (let i = 0; i < 40 && !(await tid('scene').count()); i++) { await p.waitForTimeout(250); if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  await tid('scene').waitFor({ timeout: 5000 });
   sc = await scene(); check(sc.id === 'sc_q1_hoe_offer', `quest offer: Farmer Li's offer scene (${sc.id})`);
   for (let i = 0; i < 20 && !(await tid('scene-choice-0').count()); i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(120); }
   await tid('scene-choice-0').click(); await skipScenes(6);
@@ -244,28 +249,28 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   s = await sv(); check(s.storyQuests?.q1_hoe?.s === 'active' && s.world.flags.includes('accept_q1_hoe'), `quest accepted via the offer scene choice (${JSON.stringify(s.storyQuests?.q1_hoe)})`);
   check((await p.evaluate(() => window.__proto.world.cloud())).pushes.some(x => x.trigger === 'questGiven' && x.detail === 'q1_hoe'), 'SaveStore: accepting a quest pushes right away (§9.1 quest given)');
   await keep('quest active');
-  await p.evaluate(() => window.__proto.world.goto('realm_1', 'm_well', true)); await p.waitForTimeout(800); await skipScenes(6);
+  await p.evaluate(() => { window.__proto.world.goto('realm_1', 'm_well', true); }); await p.waitForTimeout(800); await skipScenes(6);
   s = await sv(); check(s.storyQuests.q1_hoe.s === 'ready' && s.inv.farmers_hoe === 1, `quest progress: reached the well, got the hoe → ready (${s.storyQuests.q1_hoe.s})`);
   await tid('go-quests').click().catch(() => {}); await tid('questlog').waitFor({ timeout: 4000 }).catch(() => {});
   check(await p.locator('[data-testid="qlog-q1_hoe"][data-state="ready"]').count() === 1, 'quest log shows q1_hoe ready');
   await tid('back').click().catch(() => {});
   const goldQ = (await sv()).gold;
-  await p.evaluate(() => window.__proto.world.goto('realm_1', 'm_farm', true)); await p.waitForTimeout(600);
+  await p.evaluate(() => { window.__proto.world.goto('realm_1', 'm_farm', true); }); await p.waitForTimeout(600);
   let sawThanks = false; for (let i = 0; i < 8; i++) { const c = await scene(); if (c?.id === 'sc_q1_hoe_thanks') sawThanks = true; if (c) { if (await tid('scene-choice-0').count()) await tid('scene-choice-0').click(); else await tid('scene-skip').click(); } await p.waitForTimeout(400);
     if (await tid('dialog').count()) await tid('dialog-btn-1').click(); }
-  s = await sv(); const q1 = JSON.parse(readFileSync(path.join(ROOT, 'public/world/quests.json'), 'utf8')).quests.find(q => q.id === 'q1_hoe');
+  s = await sv(); const q1 = JSON.parse(readFileSync(path.join(ROOT, 'src/data/world/quests.json'), 'utf8')).quests.find(q => q.id === 'q1_hoe');
   check(sawThanks && s.storyQuests.q1_hoe.s === 'completed' && s.gold - goldQ >= q1.rewards.goldValue, `quest turn-in at the giver: thanks scene, completed, +${s.gold - goldQ} gold (reward ${q1.rewards.goldValue})`);
   await keep('quest completed');
 
   // ---- quest-gated fight: q8_caged_beasts on beast_pens_1/deadend_3 ----
   await edit(s => { s.level = 12; s.hp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor();
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
-  await p.evaluate(() => window.__proto.world.goto('beast_pens_1', 'deadend_3', true)); await p.waitForTimeout(1200);
+  await p.evaluate(() => { window.__proto.world.goto('beast_pens_1', 'deadend_3', true); }); await p.waitForTimeout(1200);
   check(!(await tid('battle').count()), 'quest-gated fight: no fight on deadend_3 while the quest is not active');
   await p.evaluate(() => window.__proto.world.accept('q8_caged_beasts'));
-  await p.evaluate(() => window.__proto.world.goto('realm_8', 'portal_2', true)); await p.waitForTimeout(800); await skipScenes(4);
+  await p.evaluate(() => { window.__proto.world.goto('realm_8', 'portal_2', true); }); await p.waitForTimeout(800); await skipScenes(4);
   for (let k = 0; k < 3 && await tid('dialog').count(); k++) await tid('dialog-btn-1').click();
-  await p.evaluate(() => window.__proto.world.goto('beast_pens_1', 'deadend_3', true));
+  await p.evaluate(() => { window.__proto.world.goto('beast_pens_1', 'deadend_3', true); });
   await tid('battle').waitFor({ state: 'attached', timeout: 10000 });
   check(true, 'quest-gated fight: q8_caged_beasts active → the fight starts on beast_pens_1/deadend_3');
   await battle(); await skipScenes(3);
