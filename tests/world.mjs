@@ -106,7 +106,7 @@ export async function worldUnitTests({ check, log = console.log }) {
 export async function worldTests({ browser, BASE, check, log = console.log, shots = '' }) {
   const B = BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph';
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const p = await ctx.newPage();
-  const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+  const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('response', r => { if (r.status() >= 400) errs.push(`${r.status()} ${r.url()}`); });
   const tid = id => p.locator(`[data-testid="${id}"]`);
   const sv = () => p.evaluate(k => JSON.parse(localStorage.getItem(k)), KEY4);
   const edit = fn => p.evaluate(([k, src]) => { const s = JSON.parse(localStorage.getItem(k)); (0, eval)(src)(s); localStorage.setItem(k, JSON.stringify(s)); }, [KEY4, fn.toString()]);

@@ -24,8 +24,10 @@ export interface SceneResult { skipped: boolean; choices: Record<string, string>
 export interface PChar { id: string; anchorY: number; mirror?: boolean; big?: boolean; defaultExpr?: string; expressions?: string[] }
 const PC: Record<string, PChar | null> = {}; let UIM: any = null; let uiLoaded = false;
 const SCALE = 0.62, BIG = 1.15, BOX = { x: 50, y: 510, w: 1180, h: 190 };
+let KNOWN: Promise<Set<string>> | null = null;   // ids that have a portrait (portraits_index.json), so unknown speakers never 404
 export async function loadPortrait(id: string): Promise<PChar | null> {
-  if (!(id in PC)) PC[id] = await fetch(`portraits/${id}.portrait.json`).then(r => r.ok ? r.json() : null).catch(() => null);
+  KNOWN ??= fetch('portraits/portraits_index.json').then(r => r.json()).then(j => new Set<string>(j.characters.map((c: { id: string }) => c.id))).catch(() => new Set<string>());
+  if (!(id in PC)) PC[id] = (await KNOWN).has(id) ? await fetch(`portraits/${id}.portrait.json`).then(r => r.ok ? r.json() : null).catch(() => null) : null;
   return PC[id];
 }
 export async function loadSceneArt(chars: string[] = []) {
