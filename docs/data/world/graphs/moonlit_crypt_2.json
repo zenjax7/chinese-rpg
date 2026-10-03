@@ -1,0 +1,1611 @@
+{
+ "schema": "graph/0.3",
+ "id": "moonlit_crypt_2",
+ "kind": "dungeon_level",
+ "realm": 6,
+ "dungeon": "moonlit_crypt",
+ "level": 2,
+ "title": {
+  "zh": "月光地穴 第2层",
+  "en": "Moonlit Crypt - level 2"
+ },
+ "status": "reference",
+ "entry": "stairs_1",
+ "idxMax": 33,
+ "levels": 2,
+ "optional": false,
+ "background": {
+  "map": "bg_map_moonlit_crypt_2",
+  "battle": "bg_battle_r6"
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 60,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 176,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 292,
+   "y": 250,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 408,
+   "y": 305,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 4,
+   "kind": "fork",
+   "x": 524,
+   "y": 195,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 5,
+   "kind": "inn",
+   "x": 640,
+   "y": 76,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_6",
+   "idx": 6,
+   "kind": "boss",
+   "x": 756,
+   "y": 80,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "病魔",
+    "en": "Sickness Fiend"
+   },
+   "boss": "moonlit_graveyard"
+  },
+  {
+   "id": "path_5",
+   "idx": 7,
+   "kind": "fork",
+   "x": 640,
+   "y": 147,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 524,
+   "y": 305,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 9,
+   "kind": "miniboss",
+   "x": 524,
+   "y": 415,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 10,
+   "kind": "story",
+   "x": 640,
+   "y": 218,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 160,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_8",
+   "idx": 12,
+   "kind": "inn",
+   "x": 872,
+   "y": 305,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 13,
+   "kind": "chest",
+   "x": 988,
+   "y": 305,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 14,
+   "kind": "story",
+   "x": 640,
+   "y": 289,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_9",
+   "idx": 15,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 240,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_3",
+   "idx": 16,
+   "kind": "story",
+   "x": 640,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 17,
+   "kind": "chest",
+   "x": 756,
+   "y": 320,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_10",
+   "idx": 18,
+   "kind": "waypoint",
+   "x": 292,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 19,
+   "kind": "npc",
+   "x": 408,
+   "y": 415,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "inn_2",
+   "idx": 20,
+   "kind": "inn",
+   "x": 292,
+   "y": 470,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_3",
+   "idx": 21,
+   "kind": "chest",
+   "x": 640,
+   "y": 431,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_11",
+   "idx": 22,
+   "kind": "waypoint",
+   "x": 640,
+   "y": 502,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_12",
+   "idx": 23,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 400,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_13",
+   "idx": 24,
+   "kind": "waypoint",
+   "x": 872,
+   "y": 415,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 25,
+   "kind": "waypoint",
+   "x": 988,
+   "y": 415,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 26,
+   "kind": "npc",
+   "x": 756,
+   "y": 480,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "deadend_3",
+   "idx": 27,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 560,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_14",
+   "idx": 28,
+   "kind": "waypoint",
+   "x": 524,
+   "y": 525,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_4",
+   "idx": 29,
+   "kind": "story",
+   "x": 640,
+   "y": 573,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_15",
+   "idx": 30,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 640,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_5",
+   "idx": 31,
+   "kind": "story",
+   "x": 640,
+   "y": 644,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_16",
+   "idx": 32,
+   "kind": "inn",
+   "x": 1104,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_4",
+   "idx": 33,
+   "kind": "chest",
+   "x": 1220,
+   "y": 360,
+   "zone": "moonlit_graveyard",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "moonlit_crypt_1",
+    "node": "stairs_2"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e5",
+   "from": "path_4",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e6",
+   "from": "inn_1",
+   "to": "boss_6",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach"
+  },
+  {
+   "id": "e7",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e8",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e9",
+   "from": "path_6",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e10",
+   "from": "deadend_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop"
+  },
+  {
+   "id": "e11",
+   "from": "deadend_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e12",
+   "from": "story_1",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e13",
+   "from": "path_7",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e14",
+   "from": "path_8",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e15",
+   "from": "path_6",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e16",
+   "from": "path_5",
+   "to": "path_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e17",
+   "from": "path_9",
+   "to": "story_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e18",
+   "from": "story_3",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop"
+  },
+  {
+   "id": "e19",
+   "from": "story_3",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e20",
+   "from": "path_1",
+   "to": "path_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e21",
+   "from": "path_10",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e22",
+   "from": "npc_1",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop"
+  },
+  {
+   "id": "e23",
+   "from": "path_1",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e24",
+   "from": "path_4",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e25",
+   "from": "deadend_1",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e26",
+   "from": "path_11",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e27",
+   "from": "path_12",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e28",
+   "from": "path_13",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e29",
+   "from": "path_5",
+   "to": "npc_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e30",
+   "from": "story_2",
+   "to": "deadend_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e31",
+   "from": "npc_1",
+   "to": "path_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e32",
+   "from": "path_14",
+   "to": "story_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e33",
+   "from": "story_1",
+   "to": "path_15",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e34",
+   "from": "path_15",
+   "to": "story_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e35",
+   "from": "story_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop"
+  },
+  {
+   "id": "e36",
+   "from": "deadend_2",
+   "to": "path_16",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e37",
+   "from": "path_16",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "zombie_knight"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "moonlit_crypt_2.deadend_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.2",
+   "node": "deadend_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_2.story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_2.story_2"
+    }
+   ]
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_3.1",
+   "node": "story_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_2.story_3"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_10.1",
+   "node": "path_10",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q6_moonlit_crypt_2_npc_1"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_11.1",
+   "node": "path_11",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_12.1",
+   "node": "path_12",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_13.1",
+   "node": "path_13",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_2.1",
+   "node": "npc_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q6_moonlit_crypt_2_npc_2"
+    }
+   ]
+  },
+  {
+   "id": "npc_2.2",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "deadend_3.1",
+   "node": "deadend_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_14.1",
+   "node": "path_14",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_4.1",
+   "node": "story_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_2.story_4"
+    }
+   ]
+  },
+  {
+   "id": "path_15.1",
+   "node": "path_15",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_5.1",
+   "node": "story_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_2.story_5"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ],
+  "moonlit_crypt_2.story_1": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "moonlit_crypt_2.story_2": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "moonlit_crypt_2.story_3": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "moonlit_crypt_2.story_4": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "moonlit_crypt_2.story_5": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

@@ -1,0 +1,745 @@
+{
+ "_note": "v3.8 zones: one per location (word pool + boss). Field names follow src/data/locations.json (roster, packs, elite, unlockRequires, desyPool); new: realm, order, bossNode, gateEdge, bossKind, scriptedElite. The roster replaces locations.json roster/packs/elite and the old scripted/pathFights/mapNodes fields.",
+ "version": "v3.8",
+ "zones": [
+  {
+   "id": "meadow",
+   "realm": 1,
+   "order": 1,
+   "title": {
+    "en": "Village Meadow",
+    "zh": "村边草地"
+   },
+   "location": "meadow",
+   "desyPool": "L1.1",
+   "pool": "meadow",
+   "tier": 1,
+   "bossNode": {
+    "graph": "realm_1",
+    "node": "m_crow"
+   },
+   "gateEdge": {
+    "graph": "realm_1",
+    "edge": "g1"
+   },
+   "bossKind": "locboss",
+   "boss": "big_beak_crow",
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "roster": [
+    {
+     "enemy": "horned_rabbit",
+     "weight": 3
+    },
+    {
+     "enemy": "mushroom_imp",
+     "weight": 2
+    }
+   ],
+   "packs": {},
+   "elite": "swift_horned_rabbit",
+   "unlockRequires": []
+  },
+  {
+   "id": "clover_hills",
+   "realm": 1,
+   "order": 2,
+   "title": {
+    "en": "Clover Hills",
+    "zh": "三叶草山坡"
+   },
+   "location": "clover_hills",
+   "desyPool": "L1.2",
+   "pool": "clover_hills",
+   "tier": 1,
+   "bossNode": {
+    "graph": "realm_1",
+    "node": "c_den"
+   },
+   "gateEdge": {
+    "graph": "realm_1",
+    "edge": "g2"
+   },
+   "bossKind": "locboss",
+   "boss": "big_grey_wolf",
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "roster": [
+    {
+     "enemy": "horned_rabbit",
+     "weight": 3
+    },
+    {
+     "enemy": "mushroom_imp",
+     "weight": 2
+    },
+    {
+     "enemy": "wolf_pup",
+     "weight": 1
+    }
+   ],
+   "packs": {
+    "wolf_pup": 2
+   },
+   "elite": "swift_horned_rabbit",
+   "unlockRequires": [
+    "meadow"
+   ]
+  },
+  {
+   "id": "warren",
+   "realm": 1,
+   "order": 3,
+   "title": {
+    "en": "Horned Rabbit Warren",
+    "zh": "角兔窝"
+   },
+   "location": "warren",
+   "desyPool": "L1.3",
+   "pool": "warren",
+   "tier": 1,
+   "bossNode": {
+    "graph": "realm_1",
+    "node": "w_throne"
+   },
+   "gateEdge": {
+    "graph": "realm_1",
+    "edge": "g3"
+   },
+   "bossKind": "realmboss",
+   "boss": "horned_rabbit_king",
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "roster": [
+    {
+     "enemy": "horned_rabbit",
+     "weight": 3
+    },
+    {
+     "enemy": "wolf_pup",
+     "weight": 2
+    }
+   ],
+   "packs": {
+    "wolf_pup": 2
+   },
+   "elite": "swift_horned_rabbit",
+   "scriptedElite": "swift_horned_rabbit",
+   "unlockRequires": [
+    "clover_hills"
+   ]
+  },
+  {
+   "id": "forest",
+   "realm": 2,
+   "order": 1,
+   "title": {
+    "en": "Flower Glade",
+    "zh": "花海林地"
+   },
+   "location": "forest",
+   "desyPool": "L2.1",
+   "pool": "forest",
+   "tier": 2,
+   "bossNode": {
+    "graph": "realm_2",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_2",
+    "edge": "e5"
+   },
+   "bossKind": "locboss",
+   "boss": "greedy_bear",
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "elite": "royal_guard_bee",
+   "roster": [
+    {
+     "enemy": "giant_bee",
+     "weight": 1
+    },
+    {
+     "enemy": "sapling_sprite",
+     "weight": 1
+    },
+    {
+     "enemy": "forest_spider",
+     "weight": 1
+    }
+   ],
+   "packs": {},
+   "unlockRequires": [
+    "warren"
+   ]
+  },
+  {
+   "id": "great_hive",
+   "realm": 2,
+   "order": 2,
+   "title": {
+    "en": "Great Hive",
+    "zh": "大蜂巢"
+   },
+   "location": "great_hive",
+   "desyPool": "L2.2",
+   "pool": "great_hive",
+   "tier": 2,
+   "bossNode": {
+    "graph": "great_hive_1",
+    "node": "boss_2"
+   },
+   "gateEdge": {
+    "graph": "great_hive_1",
+    "edge": "e5"
+   },
+   "bossKind": "realmboss",
+   "boss": "queen_bee",
+   "enemiesPerBattle": [
+    1,
+    2
+   ],
+   "elite": "royal_guard_bee",
+   "roster": [
+    {
+     "enemy": "giant_bee",
+     "weight": 1
+    },
+    {
+     "enemy": "forest_spider",
+     "weight": 1
+    }
+   ],
+   "packs": {},
+   "scriptedElite": "royal_guard_bee",
+   "unlockRequires": [
+    "forest"
+   ]
+  },
+  {
+   "id": "crossroads_highway",
+   "realm": 3,
+   "order": 1,
+   "title": {
+    "en": "Crossroads Highway",
+    "zh": "十字大道"
+   },
+   "location": "crossroads_highway",
+   "desyPool": "L3.1",
+   "pool": "crossroads_highway",
+   "tier": 3,
+   "bossNode": {
+    "graph": "realm_3",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_3",
+    "edge": "e5"
+   },
+   "bossKind": "locboss",
+   "boss": "bandit_boss",
+   "enemiesPerBattle": [
+    2,
+    2
+   ],
+   "elite": "mimic",
+   "fromRoster": {
+    "location": "L3.1"
+   },
+   "unlockRequires": [
+    "great_hive"
+   ]
+  },
+  {
+   "id": "night_bazaar",
+   "realm": 3,
+   "order": 2,
+   "title": {
+    "en": "Night Bazaar",
+    "zh": "夜市"
+   },
+   "location": "night_bazaar",
+   "desyPool": "L3.2",
+   "pool": "night_bazaar",
+   "tier": 3,
+   "bossNode": {
+    "graph": "bazaar_cellars_1",
+    "node": "boss_3"
+   },
+   "gateEdge": {
+    "graph": "bazaar_cellars_1",
+    "edge": "e5"
+   },
+   "bossKind": "realmboss",
+   "boss": "mimic_king",
+   "enemiesPerBattle": [
+    2,
+    2
+   ],
+   "elite": "mimic",
+   "fromRoster": {
+    "location": "L3.2"
+   },
+   "scriptedElite": "mimic",
+   "unlockRequires": [
+    "crossroads_highway"
+   ]
+  },
+  {
+   "id": "cave_mouth",
+   "realm": 4,
+   "order": 1,
+   "title": {
+    "en": "Cave Mouth",
+    "zh": "洞口"
+   },
+   "location": "cave_mouth",
+   "desyPool": "L4.1",
+   "pool": "cave_mouth",
+   "tier": 4,
+   "bossNode": {
+    "graph": "goblin_caves_1",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "goblin_caves_1",
+    "edge": "e5"
+   },
+   "bossKind": "locboss",
+   "boss": "echo_bat",
+   "enemiesPerBattle": [
+    2,
+    3
+   ],
+   "elite": "goblin_brute",
+   "fromRoster": {
+    "location": "L4.1"
+   },
+   "unlockRequires": [
+    "night_bazaar"
+   ]
+  },
+  {
+   "id": "crystal_tunnels",
+   "realm": 4,
+   "order": 2,
+   "title": {
+    "en": "Crystal Tunnels",
+    "zh": "水晶隧道"
+   },
+   "location": "crystal_tunnels",
+   "desyPool": "L4.2",
+   "pool": "crystal_tunnels",
+   "tier": 4,
+   "bossNode": {
+    "graph": "goblin_caves_2",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "goblin_caves_2",
+    "edge": "e5"
+   },
+   "bossKind": "locboss",
+   "boss": "goblin_warden",
+   "enemiesPerBattle": [
+    2,
+    3
+   ],
+   "elite": "goblin_brute",
+   "fromRoster": {
+    "location": "L4.2"
+   },
+   "scriptedElite": "goblin_brute",
+   "unlockRequires": [
+    "cave_mouth"
+   ]
+  },
+  {
+   "id": "goblin_school",
+   "realm": 4,
+   "order": 3,
+   "title": {
+    "en": "Goblin 'School'",
+    "zh": "哥布林学校"
+   },
+   "location": "goblin_school",
+   "desyPool": "L4.3",
+   "pool": "goblin_school",
+   "tier": 4,
+   "bossNode": {
+    "graph": "goblin_caves_3",
+    "node": "boss_4"
+   },
+   "gateEdge": {
+    "graph": "goblin_caves_3",
+    "edge": "e5"
+   },
+   "bossKind": "realmboss",
+   "boss": "goblin_king",
+   "enemiesPerBattle": [
+    2,
+    3
+   ],
+   "elite": "goblin_brute",
+   "fromRoster": {
+    "location": "L4.3"
+   },
+   "unlockRequires": [
+    "crystal_tunnels"
+   ]
+  },
+  {
+   "id": "misty_marsh",
+   "realm": 5,
+   "order": 1,
+   "title": {
+    "en": "Misty Marsh",
+    "zh": "迷雾沼泽"
+   },
+   "location": "misty_marsh",
+   "desyPool": "L5.1",
+   "pool": "misty_marsh",
+   "tier": 5,
+   "bossNode": {
+    "graph": "realm_5",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_5",
+    "edge": "e8"
+   },
+   "bossKind": "locboss",
+   "boss": "bog_toad",
+   "enemiesPerBattle": [
+    2,
+    3
+   ],
+   "elite": "swamp_wisp",
+   "fromRoster": {
+    "location": "L5.1"
+   },
+   "scriptedElite": "swamp_wisp",
+   "unlockRequires": [
+    "goblin_school"
+   ]
+  },
+  {
+   "id": "hydra_s_lair",
+   "realm": 5,
+   "order": 2,
+   "title": {
+    "en": "Hydra's Lair",
+    "zh": "九头蛇巢穴"
+   },
+   "location": "hydra_s_lair",
+   "desyPool": "L5.2",
+   "pool": "hydra_s_lair",
+   "tier": 5,
+   "bossNode": {
+    "graph": "hydra_lair_2",
+    "node": "boss_5"
+   },
+   "gateEdge": {
+    "graph": "hydra_lair_2",
+    "edge": "e5"
+   },
+   "bossKind": "realmboss",
+   "boss": "hydra",
+   "enemiesPerBattle": [
+    2,
+    3
+   ],
+   "elite": "swamp_wisp",
+   "fromRoster": {
+    "location": "L5.2"
+   },
+   "unlockRequires": [
+    "misty_marsh"
+   ]
+  },
+  {
+   "id": "gloomy_village",
+   "realm": 6,
+   "order": 1,
+   "title": {
+    "en": "Gloomy Village",
+    "zh": "灰雾村"
+   },
+   "location": "gloomy_village",
+   "desyPool": "L6.1",
+   "pool": "gloomy_village",
+   "tier": 6,
+   "bossNode": {
+    "graph": "realm_6",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_6",
+    "edge": "e10"
+   },
+   "bossKind": "locboss",
+   "boss": "zombie_mayor",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "zombie_knight",
+   "fromRoster": {
+    "location": "L6.1"
+   },
+   "unlockRequires": [
+    "hydra_s_lair"
+   ]
+  },
+  {
+   "id": "moonlit_graveyard",
+   "realm": 6,
+   "order": 2,
+   "title": {
+    "en": "Moonlit Graveyard",
+    "zh": "月光墓园"
+   },
+   "location": "moonlit_graveyard",
+   "desyPool": "L6.2",
+   "pool": "moonlit_graveyard",
+   "tier": 6,
+   "bossNode": {
+    "graph": "moonlit_crypt_2",
+    "node": "boss_6"
+   },
+   "gateEdge": {
+    "graph": "moonlit_crypt_2",
+    "edge": "e6"
+   },
+   "bossKind": "realmboss",
+   "boss": "sickness_fiend",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "zombie_knight",
+   "fromRoster": {
+    "location": "L6.2"
+   },
+   "scriptedElite": "zombie_knight",
+   "unlockRequires": [
+    "gloomy_village"
+   ]
+  },
+  {
+   "id": "windy_cliffs",
+   "realm": 7,
+   "order": 1,
+   "title": {
+    "en": "Windy Cliffs",
+    "zh": "大风悬崖"
+   },
+   "location": "windy_cliffs",
+   "desyPool": "L7.1",
+   "pool": "windy_cliffs",
+   "tier": 7,
+   "bossNode": {
+    "graph": "realm_7",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_7",
+    "edge": "e10"
+   },
+   "bossKind": "locboss",
+   "boss": "wind_dragon",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "cliff_golem",
+   "fromRoster": {
+    "location": "L7.1"
+   },
+   "scriptedElite": "cliff_golem",
+   "unlockRequires": [
+    "moonlit_graveyard"
+   ]
+  },
+  {
+   "id": "griffin_summit",
+   "realm": 7,
+   "order": 2,
+   "title": {
+    "en": "Griffin Summit",
+    "zh": "狮鹫之巅"
+   },
+   "location": "griffin_summit",
+   "desyPool": "L7.2",
+   "pool": "griffin_summit",
+   "tier": 7,
+   "bossNode": {
+    "graph": "griffin_spire_3",
+    "node": "boss_7"
+   },
+   "gateEdge": {
+    "graph": "griffin_spire_3",
+    "edge": "e4"
+   },
+   "bossKind": "realmboss",
+   "boss": "griffin_king",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "cliff_golem",
+   "fromRoster": {
+    "location": "L7.2"
+   },
+   "unlockRequires": [
+    "windy_cliffs"
+   ]
+  },
+  {
+   "id": "training_pits",
+   "realm": 8,
+   "order": 1,
+   "title": {
+    "en": "Training Pits",
+    "zh": "训练场"
+   },
+   "location": "training_pits",
+   "desyPool": "L8.1",
+   "pool": "training_pits",
+   "tier": 8,
+   "bossNode": {
+    "graph": "realm_8",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "realm_8",
+    "edge": "e10"
+   },
+   "bossKind": "locboss",
+   "boss": "minotaur",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "fire_elemental",
+   "fromRoster": {
+    "location": "L8.1"
+   },
+   "unlockRequires": [
+    "griffin_summit"
+   ]
+  },
+  {
+   "id": "grand_colosseum",
+   "realm": 8,
+   "order": 2,
+   "title": {
+    "en": "Grand Colosseum",
+    "zh": "大角斗场"
+   },
+   "location": "grand_colosseum",
+   "desyPool": "L8.2",
+   "pool": "grand_colosseum",
+   "tier": 8,
+   "bossNode": {
+    "graph": "undercroft_3",
+    "node": "boss_8"
+   },
+   "gateEdge": {
+    "graph": "undercroft_3",
+    "edge": "e4"
+   },
+   "bossKind": "realmboss",
+   "boss": "ogre_champion",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "fire_elemental",
+   "fromRoster": {
+    "location": "L8.2"
+   },
+   "scriptedElite": "fire_elemental",
+   "unlockRequires": [
+    "training_pits"
+   ]
+  },
+  {
+   "id": "demon_king_s_gate",
+   "realm": 9,
+   "order": 1,
+   "title": {
+    "en": "Demon King's Gate",
+    "zh": "魔王城门"
+   },
+   "location": "demon_king_s_gate",
+   "desyPool": "L9.1",
+   "pool": "demon_king_s_gate",
+   "tier": 9,
+   "bossNode": {
+    "graph": "demon_castle_2",
+    "node": "boss_1"
+   },
+   "gateEdge": {
+    "graph": "demon_castle_2",
+    "edge": "e6"
+   },
+   "bossKind": "locboss",
+   "boss": "shadow_dragon",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "gargoyle",
+   "fromRoster": {
+    "location": "L9.1"
+   },
+   "scriptedElite": "gargoyle",
+   "unlockRequires": [
+    "grand_colosseum"
+   ]
+  },
+  {
+   "id": "throne_hall",
+   "realm": 9,
+   "order": 2,
+   "title": {
+    "en": "Throne Hall",
+    "zh": "王座大厅"
+   },
+   "location": "throne_hall",
+   "desyPool": "L9.2",
+   "pool": "throne_hall",
+   "tier": 9,
+   "bossNode": {
+    "graph": "demon_castle_5",
+    "node": "boss_9"
+   },
+   "gateEdge": {
+    "graph": "demon_castle_5",
+    "edge": "e4"
+   },
+   "bossKind": "realmboss",
+   "boss": "demon_king",
+   "enemiesPerBattle": [
+    3,
+    3
+   ],
+   "elite": "gargoyle",
+   "fromRoster": {
+    "location": "L9.2"
+   },
+   "unlockRequires": [
+    "demon_king_s_gate"
+   ]
+  }
+ ]
+}

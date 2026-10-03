@@ -1,0 +1,120 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/world_rules.schema.json",
+ "title": "Encounter and travel knobs (may merge into balance.json as 'world')",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "version": {
+   "type": "string"
+  },
+  "encounterRate": {
+   "type": "object",
+   "patternProperties": {
+    "^[0-3]$": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    }
+   },
+   "required": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "additionalProperties": false
+  },
+  "depthStep": {
+   "type": "number",
+   "minimum": 0
+  },
+  "maxRate": {
+   "type": "number",
+   "minimum": 0,
+   "maximum": 1
+  },
+  "safe": {
+   "type": "object"
+  },
+  "clearedStepMult": {
+   "type": "number",
+   "minimum": 0,
+   "maximum": 1
+  },
+  "zoneBattleBudget": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "budgetSpentMult": {
+   "type": "number",
+   "minimum": 0,
+   "maximum": 1
+  },
+  "pityRolls": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "repel": {
+   "type": "object",
+   "properties": {
+    "item": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "hops": {
+     "type": "integer",
+     "minimum": 1
+    }
+   },
+   "required": [
+    "item",
+    "hops"
+   ]
+  },
+  "walkSecPerHop": {
+   "type": "number"
+  },
+  "walkSecPerStep": {
+   "type": "number"
+  },
+  "eventSec": {
+   "type": "object"
+  },
+  "beelineBattleTarget": {
+   "type": "number"
+  },
+  "beelineBattleRange": {
+   "type": "array",
+   "items": {
+    "type": "number"
+   },
+   "minItems": 2,
+   "maxItems": 2
+  },
+  "maxHopsToInn": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "innWarp": {
+   "type": "object"
+  },
+  "seed": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "encounterRate",
+  "depthStep",
+  "maxRate",
+  "safe",
+  "clearedStepMult",
+  "zoneBattleBudget",
+  "budgetSpentMult",
+  "pityRolls",
+  "maxHopsToInn"
+ ],
+ "additionalProperties": false
+}

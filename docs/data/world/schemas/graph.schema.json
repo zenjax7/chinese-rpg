@@ -1,0 +1,565 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/graph.schema.json",
+ "title": "World graph (graph/0.3): one file per world map, realm overworld or dungeon level",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "schema": {
+   "const": "graph/0.3"
+  },
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_]+$"
+  },
+  "kind": {
+   "enum": [
+    "world",
+    "overworld",
+    "dungeon_level"
+   ]
+  },
+  "realm": {
+   "type": [
+    "integer",
+    "null"
+   ],
+   "minimum": 1,
+   "maximum": 9
+  },
+  "dungeon": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "level": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "levels": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "optional": {
+   "type": "boolean"
+  },
+  "title": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "en"
+   ],
+   "additionalProperties": false
+  },
+  "status": {
+   "enum": [
+    "authored",
+    "reference"
+   ]
+  },
+  "entry": {
+   "type": "string",
+   "pattern": "^[a-z0-9_]+$"
+  },
+  "idxMax": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "background": {
+   "type": "object",
+   "properties": {
+    "map": {
+     "type": "string"
+    },
+    "battle": {
+     "type": "string"
+    }
+   }
+  },
+  "music": {
+   "type": "string"
+  },
+  "nodes": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "idx": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "stable, never reused (save bitsets)"
+     },
+     "kind": {
+      "enum": [
+       "town",
+       "village",
+       "inn",
+       "waypoint",
+       "fork",
+       "chest",
+       "npc",
+       "story",
+       "miniboss",
+       "boss",
+       "lever",
+       "stairs_up",
+       "stairs_down",
+       "portal",
+       "exit",
+       "shop"
+      ]
+     },
+     "x": {
+      "type": "number"
+     },
+     "y": {
+      "type": "number"
+     },
+     "zone": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "title": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "en"
+      ],
+      "additionalProperties": false
+     },
+     "save": {
+      "type": "boolean"
+     },
+     "services": {
+      "type": "array",
+      "items": {
+       "enum": [
+        "inn",
+        "save",
+        "shop",
+        "potions",
+        "magic",
+        "school",
+        "practice",
+        "board",
+        "smith"
+       ]
+      }
+     },
+     "hub": {
+      "type": "string",
+      "description": "town screen id (screens.ts)"
+     },
+     "town": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9,
+      "description": "towns.json number (prices)"
+     },
+     "shops": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "campfire": {
+      "type": "boolean"
+     },
+     "boss": {
+      "type": "string",
+      "description": "zone id"
+     },
+     "npc": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "inBuild": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "idx",
+     "kind",
+     "x",
+     "y"
+    ],
+    "additionalProperties": false
+   },
+   "minItems": 1
+  },
+  "edges": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "idx": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "from": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "to": {
+      "oneOf": [
+       {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+       },
+       {
+        "$ref": "common.schema.json#/$defs/nodeRef"
+       }
+      ]
+     },
+     "kind": {
+      "enum": [
+       "path",
+       "oneway",
+       "shortcut",
+       "stairs",
+       "portal",
+       "exit"
+      ]
+     },
+     "danger": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+     },
+     "steps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8
+     },
+     "terrain": {
+      "type": "string"
+     },
+     "patrol": {
+      "type": "boolean",
+      "description": "boss approach: no random battles; Train/patrol rule applies (spec §7.4)"
+     },
+     "scripted": {
+      "type": "object",
+      "properties": {
+       "enemies": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^[a-z0-9_]+$"
+        }
+       },
+       "fill": {
+        "type": "boolean"
+       },
+       "once": {
+        "type": "boolean"
+       },
+       "step": {
+        "type": "integer",
+        "minimum": 1
+       }
+      },
+      "required": [
+       "enemies"
+      ],
+      "additionalProperties": false
+     },
+     "cond": {
+      "$ref": "common.schema.json#/$defs/cond"
+     },
+     "opens": {
+      "type": "string",
+      "description": "shortcut id this edge belongs to"
+     },
+     "label": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "en"
+      ],
+      "additionalProperties": false
+     },
+     "note": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "from",
+     "to",
+     "kind"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "kind": {
+         "enum": [
+          "stairs",
+          "portal",
+          "exit"
+         ]
+        }
+       }
+      },
+      "then": {
+       "properties": {
+        "to": {
+         "$ref": "common.schema.json#/$defs/nodeRef"
+        }
+       }
+      },
+      "else": {
+       "properties": {
+        "to": {
+         "type": "string",
+         "pattern": "^[a-z0-9_]+$"
+        }
+       },
+       "required": [
+        "danger",
+        "steps"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "events": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "node": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "on": {
+      "enum": [
+       "enter",
+       "firstEnter",
+       "clear",
+       "leave",
+       "rest"
+      ]
+     },
+     "outcome": {
+      "$ref": "common.schema.json#/$defs/outcome"
+     },
+     "once": {
+      "type": "boolean"
+     },
+     "cooldown": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "visits to this node before it can fire again"
+     },
+     "cond": {
+      "$ref": "common.schema.json#/$defs/cond"
+     },
+     "do": {
+      "type": "array",
+      "items": {
+       "$ref": "common.schema.json#/$defs/action"
+      }
+     },
+     "pick": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "properties": {
+        "weight": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "outcome": {
+         "$ref": "common.schema.json#/$defs/outcome"
+        },
+        "once": {
+         "type": "boolean"
+        },
+        "cooldown": {
+         "type": "integer",
+         "minimum": 1,
+         "description": "visits to this node before it can fire again"
+        },
+        "cond": {
+         "$ref": "common.schema.json#/$defs/cond"
+        },
+        "do": {
+         "type": "array",
+         "items": {
+          "$ref": "common.schema.json#/$defs/action"
+         }
+        }
+       },
+       "required": [
+        "weight",
+        "do"
+       ],
+       "additionalProperties": false
+      }
+     }
+    },
+    "required": [
+     "id",
+     "node",
+     "on"
+    ],
+    "oneOf": [
+     {
+      "required": [
+       "do"
+      ],
+      "not": {
+       "required": [
+        "pick"
+       ]
+      }
+     },
+     {
+      "required": [
+       "pick"
+      ],
+      "not": {
+       "required": [
+        "do"
+       ]
+      }
+     }
+    ],
+    "additionalProperties": false
+   }
+  },
+  "dialogue": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "speaker": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      },
+      "zh": {
+       "type": "string"
+      },
+      "en": {
+       "type": "string"
+      },
+      "vo": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "speaker",
+      "en"
+     ],
+     "additionalProperties": false
+    },
+    "minItems": 1
+   }
+  },
+  "npcs": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "en"
+      ],
+      "additionalProperties": false
+     },
+     "portrait": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "name"
+    ]
+   }
+  }
+ },
+ "required": [
+  "schema",
+  "id",
+  "kind",
+  "title",
+  "entry",
+  "idxMax",
+  "nodes",
+  "edges"
+ ],
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "kind": {
+      "const": "dungeon_level"
+     }
+    }
+   },
+   "then": {
+    "required": [
+     "dungeon",
+     "level"
+    ],
+    "properties": {
+     "level": {
+      "minimum": 1
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+flowchart LR
+  stairs_1[\"Stairs up<br/><i>stairs_up</i>"/]
+  path_1["Goblin 'School' path<br/><i>fork</i>"]
+  path_2["Goblin 'School' path<br/><i>waypoint</i>"]
+  path_3["Goblin 'School' path<br/><i>waypoint</i>"]
+  inn_1[("Boss-approach inn<br/><i>inn</i>")]
+  boss_4{{"Goblin King (the 'Headmaster')<br/><i>boss</i>"}}
+  treasure_1[/"Treasure spot<br/><i>chest</i>"/]
+  path_4["Winding path<br/><i>fork</i>"]
+  deadend_1["Dead end<br/><i>waypoint</i>"]
+  story_1>"Story spot<br/><i>story</i>"]
+  path_5["Winding path<br/><i>waypoint</i>"]
+  deadend_2[("Campfire inn<br/><i>inn</i>")]
+  treasure_2[/"Treasure spot<br/><i>chest</i>"/]
+  path_6["Winding path<br/><i>waypoint</i>"]
+  treasure_3[/"Treasure spot<br/><i>chest</i>"/]
+  path_7["Winding path<br/><i>waypoint</i>"]
+  treasure_4[/"Treasure spot<br/><i>chest</i>"/]
+  treasure_5[("Campfire inn<br/><i>inn</i>")]
+  treasure_6[/"Treasure spot<br/><i>chest</i>"/]
+  stairs_1 -. "stairs" .-> X_goblin_caves_2["→ goblin_caves_2/stairs_2"]
+  stairs_1 ---|"d2×2"| path_1
+  path_1 ---|"d2×2"| path_2
+  path_2 ---|"d2×2"| path_3
+  path_3 ---|"safe"| inn_1
+  inn_1 -.-|"boss approach"| boss_4
+  path_1 ---|"d1×1"| treasure_1
+  path_3 ---|"d1×1"| path_4
+  path_4 ---|"d1×1"| deadend_1
+  deadend_1 ---|"d1×1"| story_1
+  treasure_1 ---|"d1×1"| path_5
+  path_5 ---|"safe"| deadend_2
+  path_4 ---|"d1×1"| treasure_2
+  path_1 ---|"d1×1"| path_6
+  path_6 ---|"d1×1"| treasure_3
+  deadend_1 ---|"d1×1"| path_7
+  path_7 ---|"d1×1"| treasure_4
+  treasure_3 ---|"safe"| treasure_5
+  path_4 ---|"d1×1"| treasure_6

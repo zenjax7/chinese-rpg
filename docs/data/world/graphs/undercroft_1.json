@@ -1,0 +1,482 @@
+{
+ "schema": "graph/0.3",
+ "id": "undercroft_1",
+ "kind": "dungeon_level",
+ "realm": 8,
+ "dungeon": "undercroft",
+ "level": 1,
+ "title": {
+  "zh": "角斗场地下 第1层",
+  "en": "Colosseum Undercroft - level 1"
+ },
+ "status": "reference",
+ "entry": "stairs_1",
+ "idxMax": 9,
+ "levels": 3,
+ "optional": false,
+ "background": {
+  "map": "bg_map_undercroft_1",
+  "battle": "bg_battle_r8"
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 60,
+   "y": 360,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 292,
+   "y": 360,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 524,
+   "y": 305,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 305,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 988,
+   "y": 305,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 988,
+   "y": 415,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 1220,
+   "y": 305,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 7,
+   "kind": "story",
+   "x": 524,
+   "y": 415,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 8,
+   "kind": "chest",
+   "x": 756,
+   "y": 415,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 9,
+   "kind": "chest",
+   "x": 1220,
+   "y": 415,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "realm_8",
+    "node": "portal_1"
+   }
+  },
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "undercroft_2",
+    "node": "stairs_1"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e5",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e6",
+   "from": "path_4",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e8",
+   "from": "story_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e9",
+   "from": "path_4",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "undercroft_1.story_1"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ],
+  "undercroft_1.story_1": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

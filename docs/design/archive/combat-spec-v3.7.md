@@ -1,6 +1,6 @@
 # Combat and Progression Spec (v3)
 
-Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7). **v3.8 update 2026-10-02 (PT, Jack):** every map is a graph (world, realm overworlds, dungeon levels); random battles happen on edges with safe edges near towns, inns and boss approaches; 7 kinds of arrival event; locations become zones on the graphs; inn warp; beeline pacing within +3–6% of v3.7 for savers (§12, `world-graph.md`).
+Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7).
 Previous versions: `combat-spec-v2.md` and `combat-spec-v1.md` (both kept unchanged).
 Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1,051 items, 9 realms, 20 locations, 60-item slice), `enemies.json` (50-enemy roster), and `chinese-rpg-design-memo.md`.
 
@@ -23,7 +23,6 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | practice_modes, practice_rewards | practice_modes.csv, practice_rewards.csv | §8 |
 | spells, quests (v3.3–v3.5) | spells, spell_falloff, spell_mp_check, mp_potions, cast_rule, quests (.csv / .json; + spells_full.json, quests_full.json) | §6.7, §7.11 |
 | sim results | `data/sim/*.csv` | §7.6–7.10 |
-| world graph (v3.8) | `data/world/` (graphs/*.json, zones.json, world_rules.json, quests_world.json, schemas/), `data/world/world_realm_table.csv`, `data/sim/sim_world_v38.csv` | §12 |
 | curriculum pools | curriculum_location_pools.csv | §5 |
 
 **Simulator.** `build/combat_sim.py` (v3), driven by `build/sim_v3_runner.py`. Full output: `build/combat_sim_out.txt`, with 150 simulated realm playthroughs per row, or 1,500 single battles per row for the special-mechanic and elite tables. The v2 simulator and its output are kept as `combat_sim_v2.py` / `combat_sim_v2_out.txt`.
@@ -62,7 +61,6 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 28 | **Boss ATK × 0.8 (v3.6, Director's default):** with the longer fights, boss ATK is cut by 20% so first-try wins and defeats for 50% kids stay close to v3.5. | §2.3 |
 | 29 | **No MP hints (v3.6, Jack):** no inn or boss-gate "Save your MP" tip, no casts-ready count at the boss gate, and no boss tip on the Preview page. | §6.7, §8.2 |
 | 30 | **Location bosses ~15 correct answers (v3.7, Jack 2026-10-02 PT).** Even with a full MP bar spent on spells, a location boss needs about 15 correct answers and a realm boss about 20. Location boss HP × 1.2–1.9 by tier (v3.6: × 2.0–2.7); realm bosses unchanged; boss ATK × 0.8 kept, because 50% kids' defeats don't rise. | §2.3, §6.7 |
-| 31 | **World graph (v3.8, Jack 2026-10-02 PT).** Every map is a graph; random battles happen on edges (danger × steps, safe near towns, inns, boss approaches and on the way home after a boss clear); 7 arrival outcomes; locations become zones on the graphs; patrol rule at the approach inn; inn warp to towns. Pacing for a beeline player stays within +3–6% of v3.7 for savers. | §12 |
 | – | Scripted path fights per location go from 6 to 8, because pools are about 1.75× larger. | §5, §7.4 |
 
 Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration" (back in v3.6, row 26), the open questions Jack answered, and the unlimited Queen Bee summon.
@@ -1596,46 +1594,3 @@ Also in v3.2: **no pinyin anywhere in the game UI**, with audio-only answer feed
 - **Parent-entered errors and Web Speech drift:** unchanged. Keep the reading ways first-class for the reading-mode fallback.
 - **Spells (v3.3–v3.5):** if kids ignore the Blacksmith-first warning and buy spells before gear, defeats rise sharply in the sim: spell-first saver at 65%, 1.3% → 12.5%; spender at 75%, 0.4% → 7.4%. Keep the warning prominent, or make it a hard lock. In v3.7, boss HP is tuned so that even a full MP bar spent on spells leaves about 15 correct answers per location boss and 20 per realm boss.
 - **Long boss fights for low-accuracy kids (v3.6–v3.7):** in a single fight, a 50% kid needs 27–28 questions for a location boss and 33–36 for a realm boss with full-MP spells (up to 35.5 and 44.7 without spells), so a realm boss without spells can reach the Tired cap of 45. Campaign boss battles for a 50% saver average 31–41 questions per realm (v3.6: 37–46). If playtests show fatigue, lower the realm-boss target next.
-
----
-
-## 12. World graph (v3.8)
-
-v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/world-graph.md`); data in `data/world/` (repo `docs/data/world/`); sim in `build/world/`. This section summarises it and replaces the linear path of §7.10 (inn, 4 fights, inn, 4 fights, inn, gate, boss) as the map model. The battle, learning and economy rules of §2–§7 are unchanged.
-
-**Model.**
-- **Graphs:**
-  - 1 world graph and 9 realm overworld graphs.
-  - 26 dungeon levels in 12 dungeons, one graph per level, joined by two-way stairs or portals.
-  - Towns and villages are nodes that open the town screen.
-- **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster, elite and boss. Zones are placed on the graphs, and one zone can span several levels.
-- **Battles on edges:** random battles happen on edges, with `danger` 0–3 and `steps` encounter rolls per edge.
-- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 7 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, portal, story and treasure. Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, edge, crossing and step, so reloading never re-rolls.
-
-**Encounter rules** (`data/world/world_rules.json`):
-
-| rule | value |
-|---|---|
-| rate per step by danger 0/1/2/3 | 0 / 0.60 / 0.85 / 0.95; × (1 + 0.1 × (dungeon level − 1)), max 0.95 |
-| enemies per encounter | zone `enemiesPerBattle`, max 3 (balance.json `combat.maxEnemies`) |
-| safe edges (no rolls) | touching a town, village or inn; the boss-approach edge (`patrol: true`); stairs and portals; after a boss or mini-boss clear, the way you came back to the nearest inn, for 20 hops or until the next inn rest |
-| walked edge | × 0.05 per step |
-| zone budget | after 8 fresh battles in a zone, fresh steps × 0.1 |
-| pity | after 2 empty fresh steps the next fresh step fights |
-| turn back | after a won battle mid-edge, a low-HP hero may turn back (walked steps stay walked) |
-| repel (`bell`, proposed) | 6 hops without random battles on danger ≤ 2 |
-| inns | every node ≤ 5 hops from an inn or town (stairs count 0); an approach inn next to every boss |
-| inn warp (new) | from any inn to a visited town to shop, then back to the same inn |
-| authoring target | each zone's shortest route expects 6.5–9.5 battles (v3.7: 8 path fights) |
-
-**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. The Return Feather flies to the last inn. Defeat wakes you at the last inn.
-
-**Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 30–38% dead ends, 1–3 villages, 2–22 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
-
-**Sim** (100 runs per profile, speech on unless noted; `data/sim/sim_world_v38.csv`):
-- **Beeline** (straight to each boss) against the v3.7 loop: savers take +3–6% (75% saver 17.96 → 18.52 h), spenders +1–12%, reading kids +5–6%.
-  - Path battles per zone: 7.4 (v3.7: 8). Patrols, readiness at the gate, gold and inn stays are about the same.
-  - 50% kids have +9 to +11 defeats per campaign (saver 40.5 → 49.6).
-- **Explorer** (every node): +16–26% for savers (75% saver 22.3 h) and +49–61% for spenders and reading kids. That is optional content, worth 2–3× the gold, more chests and better readiness.
-
-**Data format.** One JSON file per graph (`graph/0.3`, building on GameDev's `graph/0.2` in architecture.md §6), JSON Schemas in `data/world/schemas/`, and `build/world/validate_world.py`. Answers to GameDev's 14 questions are in world-graph.md §13 and `world-graph-schema-answers.md`.

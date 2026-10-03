@@ -1,0 +1,32 @@
+flowchart LR
+  stairs_1[\"Stairs up<br/><i>stairs_up</i>"/]
+  path_1["Crystal Tunnels path<br/><i>fork</i>"]
+  campfire_1[("Midpoint campfire inn<br/><i>inn</i>")]
+  path_2["Crystal Tunnels path<br/><i>waypoint</i>"]
+  inn_1[("Boss-approach inn<br/><i>inn</i>")]
+  boss_1{{"Goblin Warden<br/><i>boss</i>"}}
+  stairs_2[/"Stairs down<br/><i>stairs_down</i>"\]
+  deadend_1{{"Mini-boss lair<br/><i>miniboss</i>"}}
+  path_3["Winding path<br/><i>waypoint</i>"]
+  miniboss_1{{"Mini-boss lair<br/><i>miniboss</i>"}}
+  story_1>"Story spot<br/><i>story</i>"]
+  treasure_1[/"Treasure spot<br/><i>chest</i>"/]
+  path_4["Winding path<br/><i>waypoint</i>"]
+  path_5[("Campfire inn<br/><i>inn</i>")]
+  treasure_2[/"Treasure spot<br/><i>chest</i>"/]
+  stairs_1 -. "stairs" .-> X_goblin_caves_1["→ goblin_caves_1/stairs_2"]
+  stairs_2 -. "stairs" .-> X_goblin_caves_3["→ goblin_caves_3/stairs_1"]
+  stairs_1 ---|"d2×4"| path_1
+  path_1 ---|"safe"| campfire_1
+  campfire_1 ---|"safe"| path_2
+  path_2 ---|"safe"| inn_1
+  inn_1 -.-|"boss approach"| boss_1
+  boss_1 ---|"d2×3"| stairs_2
+  path_1 ---|"d1×1"| deadend_1
+  path_1 ---|"d1×1"| path_3
+  path_3 ---|"d2×1"| miniboss_1
+  deadend_1 ---|"d1×1"| story_1
+  path_3 ---|"d1×1"| treasure_1
+  treasure_1 ---|"d1×2"| path_4
+  path_4 ---|"safe"| path_5
+  path_5 ---|"safe"| treasure_2

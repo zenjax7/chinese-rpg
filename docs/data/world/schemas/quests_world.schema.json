@@ -1,0 +1,132 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/quests_world.schema.json",
+ "title": "NPC quest hooks and quest items placed on the world graphs",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "version": {
+   "type": "string"
+  },
+  "questHooks": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "status": {
+      "enum": [
+       "hook",
+       "final"
+      ]
+     },
+     "type": {
+      "enum": [
+       "fetch",
+       "kill",
+       "talk",
+       "delivery",
+       "words",
+       "miniboss"
+      ]
+     },
+     "titleZh": {
+      "type": "string"
+     },
+     "titleEn": {
+      "type": "string"
+     },
+     "giver": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+/[a-z0-9_]+$"
+     },
+     "target": {
+      "type": "object"
+     },
+     "turnIn": {
+      "type": "string"
+     },
+     "rewardG": {
+      "type": "number",
+      "minimum": 0
+     },
+     "rewardItem": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "scope": {
+      "type": "object",
+      "description": "kill counts: default realm-wide; optional graph or zone filter",
+      "properties": {
+       "realm": {
+        "type": "integer"
+       },
+       "graph": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+       },
+       "zone": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+       }
+      }
+     }
+    },
+    "required": [
+     "id",
+     "type",
+     "titleEn",
+     "giver",
+     "target"
+    ],
+    "additionalProperties": false
+   }
+  },
+  "questItems": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "zh": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     },
+     "emoji": {
+      "type": "string"
+     },
+     "quest": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     }
+    },
+    "required": [
+     "id",
+     "en",
+     "quest"
+    ],
+    "additionalProperties": false
+   }
+  },
+  "speakers": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "questHooks",
+  "questItems"
+ ],
+ "additionalProperties": false
+}

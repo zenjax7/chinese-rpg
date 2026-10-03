@@ -1,0 +1,269 @@
+{
+ "_note": "Per-realm layout targets used by build/world/world_gen.py. nodes = overworld + dungeon levels (town hub screens are not graphs).",
+ "version": "v3.8",
+ "realms": {
+  "2": {
+   "nodes": 25,
+   "towns": 1,
+   "minis": 1,
+   "loop": 0.25,
+   "dungeons": [
+    {
+     "id": "great_hive",
+     "name": "Great Hive",
+     "zh": "大蜂巢",
+     "levels": 1,
+     "zones": [
+      [
+       2
+      ]
+     ],
+     "innLevels": []
+    }
+   ]
+  },
+  "3": {
+   "nodes": 40,
+   "towns": 2,
+   "minis": 2,
+   "loop": 0.25,
+   "dungeons": [
+    {
+     "id": "bazaar_cellars",
+     "name": "Bazaar Cellars",
+     "zh": "夜市地窖",
+     "levels": 1,
+     "zones": [
+      [
+       2
+      ]
+     ],
+     "innLevels": []
+    }
+   ]
+  },
+  "4": {
+   "nodes": 60,
+   "towns": 2,
+   "minis": 3,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "goblin_caves",
+     "name": "Goblin Caves",
+     "zh": "哥布林洞穴",
+     "levels": 3,
+     "zones": [
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       3
+      ]
+     ],
+     "innLevels": [
+      2
+     ]
+    }
+   ]
+  },
+  "5": {
+   "nodes": 80,
+   "towns": 2,
+   "minis": 3,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "hydra_lair",
+     "name": "Hydra's Lair",
+     "zh": "九头蛇巢穴",
+     "levels": 2,
+     "zones": [
+      [
+       2
+      ],
+      [
+       2
+      ]
+     ],
+     "innLevels": [
+      1
+     ]
+    }
+   ]
+  },
+  "6": {
+   "nodes": 105,
+   "towns": 3,
+   "minis": 4,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "moonlit_crypt",
+     "name": "Moonlit Crypt",
+     "zh": "月光地穴",
+     "levels": 2,
+     "zones": [
+      [
+       2
+      ],
+      [
+       2
+      ]
+     ],
+     "innLevels": [
+      1
+     ]
+    },
+    {
+     "id": "old_mine",
+     "name": "Old Mine (optional)",
+     "zh": "旧矿洞",
+     "levels": 1,
+     "zones": [
+      []
+     ],
+     "innLevels": [],
+     "optional": true
+    }
+   ]
+  },
+  "7": {
+   "nodes": 130,
+   "towns": 3,
+   "minis": 4,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "griffin_spire",
+     "name": "Griffin Spire",
+     "zh": "狮鹫塔",
+     "levels": 3,
+     "zones": [
+      [
+       2
+      ],
+      [
+       2
+      ],
+      [
+       2
+      ]
+     ],
+     "innLevels": [
+      2
+     ]
+    },
+    {
+     "id": "cloud_caves",
+     "name": "Cloud Caves (optional)",
+     "zh": "云洞",
+     "levels": 1,
+     "zones": [
+      []
+     ],
+     "innLevels": [],
+     "optional": true
+    }
+   ]
+  },
+  "8": {
+   "nodes": 165,
+   "towns": 4,
+   "minis": 5,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "undercroft",
+     "name": "Colosseum Undercroft",
+     "zh": "角斗场地下",
+     "levels": 3,
+     "zones": [
+      [
+       2
+      ],
+      [
+       2
+      ],
+      [
+       2
+      ]
+     ],
+     "innLevels": [
+      2
+     ]
+    },
+    {
+     "id": "beast_pens",
+     "name": "Beast Pens (optional)",
+     "zh": "兽栏",
+     "levels": 2,
+     "zones": [
+      [],
+      []
+     ],
+     "innLevels": [
+      1
+     ],
+     "optional": true
+    }
+   ]
+  },
+  "9": {
+   "nodes": 200,
+   "towns": 4,
+   "minis": 6,
+   "loop": 0.3,
+   "dungeons": [
+    {
+     "id": "demon_castle",
+     "name": "Demon King's Castle",
+     "zh": "魔王城",
+     "levels": 5,
+     "zones": [
+      [
+       1
+      ],
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       2
+      ],
+      [
+       2
+      ]
+     ],
+     "innLevels": [
+      2,
+      4
+     ]
+    },
+    {
+     "id": "shadow_vault",
+     "name": "Shadow Vault (optional)",
+     "zh": "暗影宝库",
+     "levels": 2,
+     "zones": [
+      [],
+      []
+     ],
+     "innLevels": [
+      1
+     ],
+     "optional": true
+    }
+   ]
+  }
+ },
+ "realm1": {
+  "nodes": 17,
+  "authored": true
+ }
+}

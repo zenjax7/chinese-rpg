@@ -1,0 +1,670 @@
+{
+ "schema": "graph/0.3",
+ "id": "bazaar_cellars_1",
+ "kind": "dungeon_level",
+ "realm": 3,
+ "dungeon": "bazaar_cellars",
+ "level": 1,
+ "title": {
+  "zh": "夜市地窖 第1层",
+  "en": "Bazaar Cellars - level 1"
+ },
+ "status": "reference",
+ "entry": "stairs_1",
+ "idxMax": 14,
+ "levels": 1,
+ "optional": false,
+ "background": {
+  "map": "bg_map_bazaar_cellars_1",
+  "battle": "bg_battle_r3"
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 60,
+   "y": 360,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 292,
+   "y": 360,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 524,
+   "y": 305,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 756,
+   "y": 305,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 988,
+   "y": 140,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_3",
+   "idx": 5,
+   "kind": "boss",
+   "x": 1220,
+   "y": 195,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "宝箱怪王",
+    "en": "Mimic King"
+   },
+   "boss": "night_bazaar"
+  },
+  {
+   "id": "treasure_1",
+   "idx": 6,
+   "kind": "chest",
+   "x": 988,
+   "y": 250,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 7,
+   "kind": "chest",
+   "x": 988,
+   "y": 360,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 8,
+   "kind": "npc",
+   "x": 524,
+   "y": 415,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 9,
+   "kind": "miniboss",
+   "x": 1220,
+   "y": 305,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 415,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 11,
+   "kind": "inn",
+   "x": 988,
+   "y": 470,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 12,
+   "kind": "story",
+   "x": 1220,
+   "y": 415,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 13,
+   "kind": "story",
+   "x": 1220,
+   "y": 525,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 14,
+   "kind": "chest",
+   "x": 988,
+   "y": 580,
+   "zone": "night_bazaar",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "realm_3",
+    "node": "portal_1"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_3",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach"
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e8",
+   "from": "path_1",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e9",
+   "from": "treasure_2",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e10",
+   "from": "npc_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e11",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e12",
+   "from": "path_5",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e13",
+   "from": "treasure_2",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e14",
+   "from": "path_3",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q3_bazaar_cellars_1_npc_1"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "mimic"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "bazaar_cellars_1.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "bazaar_cellars_1.story_1"
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "bazaar_cellars_1.story_2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ],
+  "bazaar_cellars_1.story_1": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "bazaar_cellars_1.story_2": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

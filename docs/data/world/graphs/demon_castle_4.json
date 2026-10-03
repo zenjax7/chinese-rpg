@@ -1,0 +1,519 @@
+{
+ "schema": "graph/0.3",
+ "id": "demon_castle_4",
+ "kind": "dungeon_level",
+ "realm": 9,
+ "dungeon": "demon_castle",
+ "level": 4,
+ "title": {
+  "zh": "魔王城 第4层",
+  "en": "Demon King's Castle - level 4"
+ },
+ "status": "reference",
+ "entry": "stairs_1",
+ "idxMax": 10,
+ "levels": 5,
+ "optional": false,
+ "background": {
+  "map": "bg_map_demon_castle_4",
+  "battle": "bg_battle_r9"
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 60,
+   "y": 360,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 292,
+   "y": 360,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 2,
+   "kind": "inn",
+   "x": 524,
+   "y": 195,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_2",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 756,
+   "y": 305,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 988,
+   "y": 305,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 5,
+   "kind": "chest",
+   "x": 988,
+   "y": 415,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 6,
+   "kind": "story",
+   "x": 1220,
+   "y": 360,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 7,
+   "kind": "miniboss",
+   "x": 524,
+   "y": 305,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 8,
+   "kind": "chest",
+   "x": 524,
+   "y": 415,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 524,
+   "y": 525,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 10,
+   "kind": "story",
+   "x": 756,
+   "y": 415,
+   "zone": "throne_hall",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_3",
+    "node": "stairs_2"
+   }
+  },
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_5",
+    "node": "stairs_1"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e3",
+   "from": "campfire_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e4",
+   "from": "path_2",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e5",
+   "from": "path_2",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e6",
+   "from": "treasure_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e8",
+   "from": "path_1",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e9",
+   "from": "path_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e10",
+   "from": "path_3",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e11",
+   "from": "story_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "demon_castle_4.story_1"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "gargoyle"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "demon_castle_4.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "demon_castle_4.story_2"
+    }
+   ]
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ],
+  "demon_castle_4.story_1": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "demon_castle_4.story_2": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

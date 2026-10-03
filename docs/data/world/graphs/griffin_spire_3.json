@@ -1,0 +1,326 @@
+{
+ "schema": "graph/0.3",
+ "id": "griffin_spire_3",
+ "kind": "dungeon_level",
+ "realm": 7,
+ "dungeon": "griffin_spire",
+ "level": 3,
+ "title": {
+  "zh": "狮鹫塔 第3层",
+  "en": "Griffin Spire - level 3"
+ },
+ "status": "reference",
+ "entry": "stairs_1",
+ "idxMax": 6,
+ "levels": 3,
+ "optional": false,
+ "background": {
+  "map": "bg_map_griffin_spire_3",
+  "battle": "bg_battle_r7"
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 60,
+   "y": 360,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 350,
+   "y": 360,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 640,
+   "y": 305,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 3,
+   "kind": "inn",
+   "x": 930,
+   "y": 305,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_7",
+   "idx": 4,
+   "kind": "boss",
+   "x": 1220,
+   "y": 360,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "狮鹫王",
+    "en": "Griffin King"
+   },
+   "boss": "griffin_summit"
+  },
+  {
+   "id": "path_3",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 640,
+   "y": 415,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 6,
+   "kind": "npc",
+   "x": 930,
+   "y": 415,
+   "zone": "griffin_summit",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "griffin_spire_2",
+    "node": "stairs_2"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e4",
+   "from": "inn_1",
+   "to": "boss_7",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach"
+  },
+  {
+   "id": "e5",
+   "from": "path_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q7_griffin_spire_3_npc_1"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

@@ -1,0 +1,273 @@
+        # ---------------------------------------------------------------- v3.8 world graph (world_sim.py only)
+        def world_zone(loc):
+            nonlocal uid, prior, q_words_pool, drops
+            T = WG.realm(t); RU = WG.RULES; Z = T.zones[loc]; zi = loc
+            cmult = opt.get('cleared_mult', RU['clearedStepMult']); pity_n = RU['pityRolls']
+            budget = opt.get('budget', RU['zoneBattleBudget']); bmult = opt.get('budget_mult', RU['budgetSpentMult']); pmult = opt.get('rate_mult', 1.0)
+            safe_hops = RU['safe']['afterBossClear']['hops']
+            explorer = world == 'explore'
+            if loc == 0:
+                S['_wr'] = dict(pos=T.entry, last_inn=T.entry, cleared=set(), prog={}, pity=0, scripted=set(), visited={T.entry}, armed=True, last_fire={},
+                                visits=collections.Counter({T.entry: 1}), once=set(), qa=set(), qd=set(), items=collections.Counter(), safe_until={}, hops=0, enc=0)
+            W = S['_wr']; W['enc'] = 0; W['armed'] = True
+            n_local = C.LOC_SIZES[t][loc]
+            local = [C.Item(uid+k, L.ways) for k in range(n_local)]; uid += n_local; q_words_pool += local
+            m0 = tq_minutes()
+            ways = ['rZE', 'sEZ'] if speech else ['rZE', 'rEZ']
+            for it in local:
+                for w in ways: L.answer(it, w, practice=True); stats['practice_q'] += 1
+            rslots = 0 if (t == 1 and loc == 0) else C.REVIEW_SLOTS[t]
+            def add_sec(s): stats['walk_sec'] = stats.get('walk_sec', 0) + s
+            ready = lambda: C.pool_score(L, local, 'items') >= thresh
+            def cond(c):
+                if not c: return True
+                k, v = next(iter(c.items()))
+                if k == 'all': return all(cond(x) for x in v)
+                if k == 'any': return any(cond(x) for x in v)
+                if k == 'not': return not cond(v)
+                if k == 'questActive': return v in W['qa'] and v not in W['qd']
+                if k in ('questDone', 'questClaimed'): return v in W['qd']
+                if k == 'bossDefeated': return v in [z['id'] for z in T.zones[:zi]] or v in W.get('zones_done', set())
+                if k in ('readinessAtLeast', 'wordsReady'): return ready()
+                if k == 'hasItem': return W['items'][v] > 0
+                if k == 'visited': return v in W['visited']
+                if k == 'flag': return v in W.get('flags', set())
+                return False
+            def eligible(e, node, first):
+                if not cond(e.get('cond')): return False
+                if e.get('on') == 'firstEnter' and not first: return False
+                key = e.get('_key')
+                if e.get('once'): return key not in W['once']
+                if e.get('cooldown'): return W['visits'][node] - W['last_fire'].get(key, -99) >= e['cooldown']
+                return True
+            def complete(q):
+                if q in W['qd'] or q not in WG.HOOKS: return
+                W['qd'].add(q); hk = WG.HOOKS[q]; g = round(hk['rewardG']*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
+                if hk.get('rewardItem') == 'honey': S['potions'] += 1
+                if hk.get('rewardItem') == 'feather': S['feather'] = min(3, S.get('feather', 0) + 1)
+            def safe_home(node):       # after a boss / mini-boss clear: the way you came (walked edges) back to the nearest inn stays quiet
+                prev = {node: None}; q = collections.deque([node]); hit = None
+                while q:
+                    u = q.popleft()
+                    if u in T.inns and u != node: hit = u; break
+                    for e, v in T.adj[u]:
+                        if v in prev or not (e in W['cleared'] or T.E[e]['safe']): continue
+                        prev[v] = (u, e); q.append(v)
+                v = hit
+                while v is not None and prev[v]:
+                    u, e = prev[v]; W['safe_until'][e] = W['hops'] + safe_hops; v = u
+            def run(e, node, outcome):
+                add_sec(RU['eventSec'].get(outcome, 0))
+                for a in e.get('do', []):
+                    k = next(iter(a))
+                    if k == 'offerQuest':
+                        if explorer: W['qa'].add(a[k])
+                    elif k == 'giveItem':
+                        it = a[k]; R['items_found'] += 1
+                        if it == 'honey': S['potions'] += a.get('qty', 1)
+                        elif it == 'feather': S['feather'] = min(3, S.get('feather', 0) + 1)
+                        else:
+                            W['items'][it] += 1
+                            if a.get('quest') in W['qa']: complete(a['quest'])
+                    elif k == 'openChest':
+                        R['items_found'] += 1; C.open_chest(t, S, 'normal' if a[k] == 'chest_normal' else 'locboss', rng)
+                    elif k == 'fight':
+                        won, _ = fight('normal', local, rslots, loc, elite=True); R['side_battles'] += 1; R['minis'] += 1
+                        if not won: wake(); return False
+                        if a.get('quest'): complete(a['quest'])
+                        safe_home(node)
+                    elif k == 'giveGold':
+                        g = round(a[k]['G']*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
+                    elif k == 'setFlag': W.setdefault('flags', set()).add(a[k])
+                return True
+            def arrive(node):
+                first = node not in W['visited']
+                W['visited'].add(node); W['visits'][node] += 1
+                n = T.N[node]
+                if n['kind'] in ('town', 'village') and opt.get('village_shop', True): shop()
+                for e in T.EV.get(node, []):
+                    if e.get('on', 'enter') not in ('enter', 'firstEnter'): continue
+                    e['_key'] = f"{node}#{e['id']}"
+                    if not eligible(e, node, first): continue
+                    if 'pick' in e:
+                        cand = []
+                        for j, p in enumerate(e['pick']):
+                            p['_key'] = f"{e['_key']}#{j}"
+                            if eligible(p, node, first): cand.append(p)
+                        if not cand: continue
+                        x = rng.random()*sum(p['weight'] for p in cand); ch = cand[-1]
+                        for p in cand:
+                            x -= p['weight']
+                            if x <= 0: ch = p; break
+                        if ch.get('once'): W['once'].add(ch['_key'])
+                        W['last_fire'][ch['_key']] = W['visits'][node]
+                        return run(ch, node, ch.get('outcome', 'nothing'))
+                    ok = run(e, node, e.get('outcome', 'nothing'))
+                    if ok:
+                        if e.get('once'): W['once'].add(e['_key'])
+                        W['last_fire'][e['_key']] = W['visits'][node]
+                    return ok
+                return True
+            def wake():
+                W['pos'] = W['last_inn']; W['safe_until'].clear()
+                if W['last_inn'] != Z['approach']: W['armed'] = True
+            def hop(e, backtrack=False):
+                opt.get('trace') and print('hop', e, 'bt' if backtrack else '', 'fresh' if e not in W['cleared'] else 'cleared', 'safe' if T.E[e]['safe'] else '', W['enc'])
+                E = T.E[e]; add_sec(RU['walkSecPerHop'] + RU['walkSecPerStep']*E['steps']*(E['kind'] not in ('stairs', 'portal'))); R['hops'] += 1; W['hops'] += 1
+                fresh0 = e not in W['cleared']; done0 = W['prog'].get(e, 0) if not backtrack else 0
+                for step in range(E['steps']):
+                    fresh = fresh0 and step >= done0
+                    forced = bool(E.get('scripted')) and bool(Z.get('scriptedElite')) and e not in W['scripted'] and step + 1 >= E['scripted'].get('step', 1)
+                    if E['safe'] or (W['safe_until'].get(e, -1) >= W['hops'] and not forced): continue
+                    spent = W['enc'] >= budget
+                    rate = E['p'] * pmult * (cmult if not fresh else bmult if spent else 1)
+                    if fresh and not spent and W['pity'] >= pity_n: rate = 1.0
+                    if opt.get('trace'): print('  roll', e, step, round(rate,2), 'safe_until' if W['safe_until'].get(e,-1)>=W['hops'] else '')
+                    if forced or rng.random() < min(1.0, rate):
+                        won, _ = fight('normal', local, rslots, loc, elite=bool(forced))
+                        if forced: W['scripted'].add(e)
+                        elif fresh: W['enc'] += 1
+                        if backtrack or not fresh: R['back_battles'] += 1
+                        elif e in MAIN: R['path_battles'] += 1
+                        else: R['side_battles'] += 1
+                        if not won: wake(); return False
+                        W['pity'] = 0
+                        if not backtrack and fresh0 and step < E['steps'] - 1 and opt.get('turn_back', True) and need_rest():
+                            W['prog'][e] = step + 1; add_sec(RU['walkSecPerStep']*(step + 1)); R['turn_backs'] = R.get('turn_backs', 0) + 1
+                            return None          # turn back to the start node (steps already walked stay 'cleared')
+                    elif fresh: W['pity'] += 1
+                W['cleared'].add(e); W['prog'].pop(e, None)
+                return True
+            def need_rest(before_boss=False):
+                tea_kid = v34 and style.endswith('tea')
+                if tea_kid and before_boss and S['bigtea'] > 0 and S['spells'] and S['mp'] < 0.6*h['MP']:
+                    R['tea_used'] += 1; S['bigtea'] -= 1; S['mp'] = h['MP']
+                if S['tea'] > 0 and S['spells'] and before_boss and S['mp'] < (0.75 if tea_kid else 0.5)*h['MP'] and S['hp'] >= pol['inn_below']*h['HP']:
+                    R['tea_used'] += 1; S['tea'] -= 1; S['mp'] = min(h['MP'], S['mp'] + 0.5*h['MP'])
+                low = S['hp'] < (opt.get('boss_inn_below', 0.8) if before_boss else pol['inn_below'])*h['HP'] or (S['mp'] < C.MPCFG['heal'] and S['heal'] and S['hp'] < 0.7*h['HP'])
+                if before_boss and v34 and style.startswith('save') and S['spells'] and S['mp'] < opt.get('boss_inn_mp', 0.6)*h['MP']: low = True
+                return low
+            def rest_at(n):
+                price = C.inn_price(t)
+                if S['gold'] >= price:
+                    S['gold'] -= price; R['inn_paid'] += 1; restore()
+                    while S['potions'] < pol['keep_potions'] and S['gold'] >= C.potion_price(t) + price:
+                        S['gold'] -= C.potion_price(t); S['potions'] += 1
+                    if pol['keep_potions'] and S.get('feather', 0) < 1 and S['gold'] >= C.potion_price(t) + price:
+                        S['gold'] -= C.potion_price(t); S['feather'] = 1; R['feather_gold'] = R.get('feather_gold', 0) + C.potion_price(t)
+                else:
+                    R['inn_free'] += 1; restore()
+                    if S['potions'] == 0: S['potions'] = 1
+                if opt.get('inn_warp', True) and T.N[n]['kind'] not in ('town', 'village'):   # inn warp: hop to any visited town to shop, then back (world_rules.innWarp)
+                    g0 = S['gold']; shop()
+                    if S['gold'] < g0: add_sec(RU['innWarp']['sec']); R['warps'] = R.get('warps', 0) + 1   # only warp when something is bought
+                W['last_inn'] = n; W['safe_until'].clear()
+                if n != Z['approach']: W['armed'] = True
+            def risk_path(a, b):
+                bl = T.blocked(zi); best = {a: (0.0, None)}; pq = [(0.0, a)]; done = set()
+                while pq:
+                    c, u = heapq.heappop(pq)
+                    if u in done: continue
+                    done.add(u)
+                    if u == b: break
+                    for e, v in T.adj[u]:
+                        if e in bl: continue
+                        E = T.E[e]; r = 0 if E['safe'] or W['safe_until'].get(e, -1) >= W['hops'] else E['p']*(cmult if e in W['cleared'] else 1)
+                        nc = c + 1 + 6*r*E['steps']
+                        if v not in best or nc < best[v][0]: best[v] = (nc, (u, e)); heapq.heappush(pq, (nc, v))
+                if b not in best: return 1e9, None
+                out = []; v = b
+                while best[v][1]: u, e = best[v][1]; out.append((e, v)); v = u
+                return best[b][0], out[::-1]
+            def trip_to(targets, kind):
+                """Go to the cheapest of targets (inns or towns): walk back over cleared ground, or fly with a Return Feather when far."""
+                if W['pos'] in targets: return W['pos']
+                best = min((risk_path(W['pos'], i)[0], i) for i in targets); dest = best[1]; rp = risk_path(W['pos'], dest)[1]
+                if rp is None: return None
+                dist = len(rp)
+                if S.get('feather', 0) > 0 and (dist >= 4 or best[0] - dist >= 3) and W['last_inn'] in targets:
+                    S['feather'] -= 1; R['feathers'] += 1; W['pos'] = W['last_inn']; return W['pos']
+                R['inn_walk_hops'] += dist
+                for e, nxt in rp:
+                    if not hop(e, backtrack=True): return None
+                    W['pos'] = nxt; arrive(nxt)
+                    if W['pos'] != nxt: return None
+                return dest
+            def rest_trip():
+                R['inn_trips'] += 1
+                d = trip_to(T.inns, 'inn')
+                if d: rest_at(d)
+            def goto(target):
+                for _ in range(2000):
+                    if W['pos'] == target: return True
+                    p = T.path(W['pos'], target, zi)
+                    if not p: return False
+                    e, nxt = p[0]
+                    r = hop(e)
+                    if r is None: rest_trip(); continue
+                    if not r: continue
+                    W['pos'] = nxt
+                    arrive(nxt)
+                    if W['pos'] == nxt and need_rest(): rest_trip()
+                return W['pos'] == target
+            MAIN = {e for e, _ in (T.path(W['pos'], Z['approach'], zi) or [])}
+            if loc == 0:
+                arrive(T.entry); between()
+            elif need_rest(): rest_trip()
+            # ---- walk the zone
+            if explorer:
+                todo = [k for k, n in T.N.items() if n.get('zone') == Z['id'] and n['kind'] != 'boss']
+                for _ in range(len(todo) + 5):
+                    left = [k for k in todo if k not in W['visited'] and T.path(W['pos'], k, zi) is not None]
+                    if not left: break
+                    goto(min(left, key=lambda k: (len(T.path(W['pos'], k, zi)), todo.index(k))))
+            assert goto(Z['approach']), ('no route to approach', Z['id'], W['pos'])
+            # ---- boss approach (Train happens at the approach node; the gate edge itself has no random battles)
+            pat = 0; first = True; kind = Z['bossKind']
+            def patrol():
+                nonlocal pat
+                won, _ = fight('normal', local, rslots, loc, elite=rng.random() < C.ELITE_PATROL_CHANCE); pat += 1
+                if not won: wake()
+                return won
+            def at_gate():
+                nonlocal first
+                for _ in range(60):
+                    if W['pos'] != Z['approach']: goto(Z['approach'])
+                    if first: R['ready_gate'].append(C.pool_score(L, local, 'items')); first = False
+                    if W['armed'] and not ready():
+                        W['armed'] = False; ok = True
+                        for i in range(opt.get('forced', 2)):
+                            if not patrol(): ok = False; break
+                        if not ok: continue
+                    W['armed'] = False
+                    return
+            at_gate()
+            for _ in range(300):
+                if ready() or pat >= pol['max_patrols']: break
+                at_gate()
+                if need_rest(): rest_trip(); continue
+                patrol()
+            at_gate()
+            if need_rest(before_boss=True): rest_trip(); at_gate()
+            R['ready_boss'].append(C.pool_score(L, local, 'items'))
+            resume = False
+            for attempt in range(12):
+                at_gate(); add_sec(RU['walkSecPerHop']); R['hops'] += 1
+                won, cp = fight(kind, local, rslots + 1, loc, resume)
+                if attempt == 0: R['boss_first'] += won
+                if won: break
+                wake(); resume = resume or cp
+            zi = loc + 1
+            W['pos'] = Z['boss']; W['visited'].add(Z['boss']); safe_home(Z['boss'])
+            R['patrols'] += pat
+            prior += local
+            # gear trip: after a zone boss, a kid who can now afford missing gear heads to the nearest town
+            if opt.get('village_shop', True) and T.towns and loc < C.LOCS[t] - 1:
+                gear = [('weapon', C.gear_prices(t)[0]), ('armor', C.gear_prices(t)[1]), ('shield', C.gear_prices(t)[2])] if t > 1 else [('shield', 35)]
+                miss = [(sl, pr) for sl, pr in gear if sl not in owned_gear]
+                if miss and S['gold'] - pol['reserve_inns']*C.inn_price(t) >= miss[0][1]:
+                    R['town_trips'] = R.get('town_trips', 0) + 1
+                    d = trip_to(T.towns, 'town')
+                    if d: arrive(d); between(); W['last_inn'] = d
+                    goto(Z['boss']) if d else None
+            R['loc_min'].append(tq_minutes() - m0)

@@ -82,6 +82,7 @@ out += ['## 10. Parent editor data model\n', s91, s92, new['10.3'], new['10.4'],
 s102 = renum(old('### 10.2')).replace('### 10.2', '### 11.2')
 s102 = re.sub(r'\nKPIs:.*\n', '\n', s102).rstrip('\n') + '\n' + new['11.2ADD']
 out += ['## 11. Tuning knobs, analytics, open questions\n', new['11.1'], s102, new['11.3'], new['11.4']]
+out += ['---\n', new['12']]   # v3.8 world graph
 doc = '\n'.join(x.rstrip('\n') + '\n' for x in out)
 def tab(m):
     return open(f'{V3}/tables/{m.group(1)}.md', encoding='utf-8').read().rstrip('\n')

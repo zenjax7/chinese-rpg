@@ -1,0 +1,45 @@
+flowchart LR
+  stairs_1[\"Dungeon mouth<br/><i>stairs_up</i>"/]
+  path_1["Cave Mouth path<br/><i>fork</i>"]
+  path_2["Cave Mouth path<br/><i>waypoint</i>"]
+  path_3["Cave Mouth path<br/><i>fork</i>"]
+  inn_1[("Boss-approach inn<br/><i>inn</i>")]
+  boss_1{{"Giant Echo Bat<br/><i>boss</i>"}}
+  stairs_2[/"Stairs down<br/><i>stairs_down</i>"\]
+  path_4["Winding path<br/><i>fork</i>"]
+  story_1>"Story spot<br/><i>story</i>"]
+  path_5["Winding path<br/><i>waypoint</i>"]
+  path_6["Winding path<br/><i>waypoint</i>"]
+  npc_1(["Traveller<br/><i>npc</i>"])
+  path_7["Winding path<br/><i>waypoint</i>"]
+  deadend_1["Dead end<br/><i>waypoint</i>"]
+  deadend_2["Dead end<br/><i>waypoint</i>"]
+  treasure_1[/"Treasure spot<br/><i>chest</i>"/]
+  deadend_3["Dead end<br/><i>waypoint</i>"]
+  story_2>"Story spot<br/><i>story</i>"]
+  treasure_2[/"Treasure spot<br/><i>chest</i>"/]
+  miniboss_1{{"Mini-boss lair<br/><i>miniboss</i>"}}
+  treasure_3[/"Treasure spot<br/><i>chest</i>"/]
+  stairs_1 -. "stairs" .-> X_realm_4["→ realm_4/portal_1"]
+  stairs_2 -. "stairs" .-> X_goblin_caves_2["→ goblin_caves_2/stairs_1"]
+  stairs_1 ---|"d2×3"| path_1
+  path_1 ---|"d2×3"| path_2
+  path_2 ---|"d2×3"| path_3
+  path_3 ---|"safe"| inn_1
+  inn_1 -.-|"boss approach"| boss_1
+  boss_1 ---|"d2×4 +elite"| stairs_2
+  path_3 ---|"d1×1"| path_4
+  path_4 ---|"d1×1"| story_1
+  story_1 ---|"d1×1"| path_1
+  path_4 ---|"d1×2"| path_5
+  path_5 ---|"d1×1"| path_6
+  path_6 ---|"d1×1"| npc_1
+  path_1 ---|"d1×1"| path_7
+  path_7 ---|"d1×1"| deadend_1
+  path_3 ---|"d1×1"| deadend_2
+  path_2 ---|"d1×1"| treasure_1
+  path_4 ---|"d1×1"| deadend_3
+  deadend_1 ---|"d1×1"| story_2
+  treasure_1 ---|"d1×1"| treasure_2
+  deadend_3 ---|"d2×1"| miniboss_1
+  path_7 ---|"d1×1"| treasure_3

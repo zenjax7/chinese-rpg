@@ -1,0 +1,308 @@
+{
+ "schema": "graph/0.3",
+ "id": "world",
+ "kind": "world",
+ "realm": null,
+ "dungeon": null,
+ "level": 0,
+ "title": {
+  "zh": "世界地图",
+  "en": "World map"
+ },
+ "status": "authored",
+ "entry": "realm_1",
+ "idxMax": 8,
+ "_note": "One node per realm; a realm edge opens when the previous realm boss is beaten. Add a realm = add a node, an edge and a realm graph file.",
+ "nodes": [
+  {
+   "id": "realm_1",
+   "idx": 0,
+   "kind": "portal",
+   "x": 120,
+   "y": 600,
+   "title": {
+    "zh": "新手草原",
+    "en": "Starter Meadow"
+   },
+   "inBuild": true
+  },
+  {
+   "id": "realm_2",
+   "idx": 1,
+   "kind": "portal",
+   "x": 250,
+   "y": 545,
+   "title": {
+    "zh": "蜂巢森林",
+    "en": "Honeycomb Forest"
+   },
+   "inBuild": true
+  },
+  {
+   "id": "realm_3",
+   "idx": 2,
+   "kind": "portal",
+   "x": 380,
+   "y": 490,
+   "title": {
+    "zh": "十字路口集市",
+    "en": "Crossroads Market"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_4",
+   "idx": 3,
+   "kind": "portal",
+   "x": 510,
+   "y": 435,
+   "title": {
+    "zh": "哥布林洞穴",
+    "en": "Goblin Caves"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_5",
+   "idx": 4,
+   "kind": "portal",
+   "x": 640,
+   "y": 380,
+   "title": {
+    "zh": "九头蛇沼泽",
+    "en": "Hydra Swamp"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_6",
+   "idx": 5,
+   "kind": "portal",
+   "x": 770,
+   "y": 325,
+   "title": {
+    "zh": "僵尸之地",
+    "en": "Zombie Lands"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_7",
+   "idx": 6,
+   "kind": "portal",
+   "x": 900,
+   "y": 270,
+   "title": {
+    "zh": "狮鹫山峰",
+    "en": "Griffin Peaks"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_8",
+   "idx": 7,
+   "kind": "portal",
+   "x": 1030,
+   "y": 215,
+   "title": {
+    "zh": "食人魔角斗场",
+    "en": "Ogre Colosseum"
+   },
+   "inBuild": false
+  },
+  {
+   "id": "realm_9",
+   "idx": 8,
+   "kind": "portal",
+   "x": 1160,
+   "y": 160,
+   "title": {
+    "zh": "魔王城",
+    "en": "Demon King's Castle"
+   },
+   "inBuild": false
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_realm_1",
+   "from": "realm_1",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_1",
+    "node": "village"
+   }
+  },
+  {
+   "id": "x_realm_2",
+   "from": "realm_2",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_2",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_3",
+   "from": "realm_3",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_3",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_4",
+   "from": "realm_4",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_4",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_5",
+   "from": "realm_5",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_5",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_6",
+   "from": "realm_6",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_6",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_7",
+   "from": "realm_7",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_7",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_8",
+   "from": "realm_8",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_8",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "x_realm_9",
+   "from": "realm_9",
+   "kind": "portal",
+   "to": {
+    "graph": "realm_9",
+    "node": "entry_town"
+   }
+  },
+  {
+   "id": "w12",
+   "from": "realm_1",
+   "to": "realm_2",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "warren"
+   }
+  },
+  {
+   "id": "w23",
+   "from": "realm_2",
+   "to": "realm_3",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "great_hive"
+   }
+  },
+  {
+   "id": "w34",
+   "from": "realm_3",
+   "to": "realm_4",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "night_bazaar"
+   }
+  },
+  {
+   "id": "w45",
+   "from": "realm_4",
+   "to": "realm_5",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "goblin_school"
+   }
+  },
+  {
+   "id": "w56",
+   "from": "realm_5",
+   "to": "realm_6",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "hydra_s_lair"
+   }
+  },
+  {
+   "id": "w67",
+   "from": "realm_6",
+   "to": "realm_7",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "moonlit_graveyard"
+   }
+  },
+  {
+   "id": "w78",
+   "from": "realm_7",
+   "to": "realm_8",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "griffin_summit"
+   }
+  },
+  {
+   "id": "w89",
+   "from": "realm_8",
+   "to": "realm_9",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "cond": {
+    "bossDefeated": "grand_colosseum"
+   }
+  }
+ ],
+ "events": [],
+ "dialogue": {},
+ "npcs": {}
+}

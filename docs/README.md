@@ -12,8 +12,8 @@ This folder holds design docs, data tables, reference images and Desy's design t
 
 When documents disagree, use this order:
 
-1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.7)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests.
-2. **The CSV tables in [data/](#data-tables)**, which match spec v3.7. The game data in `src/data` is built from them.
+1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.8)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.8)** with the data in [data/world/](data/world/) for the node-graph world.
+2. **The CSV tables and world JSON in [data/](#data-tables)**, which match spec v3.8. The game data in `src/data` is built from them.
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
 4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
 
@@ -23,7 +23,9 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
-| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.7 (no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints). |
+| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.8. New in v3.8: §12, the world graph (every map is a graph, random battles on edges, safe edges, 7 arrival event kinds, zones, inn warp). Kept from v3.7: no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints. |
+| [world-graph.md](design/world-graph.md) | **Source of truth for the world.** World graph design, v3.8: map hierarchy, node and edge kinds, encounters on edges, arrival events, realm sizes, sim results, Realm 1 and Goblin Caves examples, and the `graph/0.3` data format. |
+| [world-graph-schema-answers.md](design/world-graph-schema-answers.md) | Desy's short answers to GameDev's 14 schema questions (architecture.md §17.2). |
 | [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.7 (no cast caps, MP only; MP costs 1.25 × v3.4). |
 | [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
 | [enemies-art-brief.md](design/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
@@ -38,6 +40,7 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
+| [combat-spec-v3.7.md](design/archive/combat-spec-v3.7.md) | Combat spec v3.7 (before the §12 world graph). |
 | [combat-spec-v3.6.md](design/archive/combat-spec-v3.6.md) | Combat spec v3.6 (~20-answer target for all bosses). |
 | [spells-v3.6.md](design/archive/spells-v3.6.md) | Spells and quests v3.6. |
 | [combat-spec-v3.5.md](design/archive/combat-spec-v3.5.md) | Combat spec v3.5 (MP regen, MP hints, v3.5 boss stats). |
@@ -107,9 +110,25 @@ These are the spec tables.
 | [skills_mp.csv](data/combat/skills_mp.csv) | Skills and their MP costs |
 | [special_mechanics.csv](data/combat/special_mechanics.csv) | Special enemy and boss mechanics |
 
+### World graph ([data/world/](data/world/))
+
+The v3.8 world data, in `graph/0.3` format. Realm 1 and the world map are authored by hand; realms 2–9 and their dungeons are generated reference layouts (`status: "reference"`) for the writers to replace.
+
+| File | What it is |
+|---|---|
+| [index.json](data/world/index.json) | Index of every file the loader reads: the graphs (id, kind, realm, dungeon level, file), the rule/zone/quest files and the start position |
+| [world_rules.json](data/world/world_rules.json) | Encounter rate per danger, depth step, safe-edge rules, softeners (walked edges, zone battle budget, pity rolls), walk times, inn warp and seed rules |
+| [zones.json](data/world/zones.json) | The 20 zones (one per location): word pool, roster, elite, boss, order and unlock rules |
+| [quests_world.json](data/world/quests_world.json) | Quest hooks placed on the graphs (`offerQuest` targets), quest items and speakers |
+| [layout_targets.json](data/world/layout_targets.json) | Size and shape targets per realm (nodes, dead ends, inn distance) |
+| [world_realm_table.csv](data/world/world_realm_table.csv) | Per-realm table: graph size and shape, towns, inns, dungeons, zones, and sim battles and minutes (beeline, explorer, v3.7) |
+| [graphs/](data/world/graphs/) | 36 graph files: [world.json](data/world/graphs/world.json), [realm_1.json](data/world/graphs/realm_1.json) … `realm_9.json`, and 26 dungeon levels (for example [goblin_caves_1.json](data/world/graphs/goblin_caves_1.json)) |
+| [schemas/](data/world/schemas/) | 6 JSON Schemas (2020-12): common, graph, index, quests_world, world_rules, zones |
+| [diagrams/](data/world/diagrams/) | Diagrams of realm 1, realm 4, realm 8 and the Goblin Caves (PNG and mermaid) |
+
 ### Simulation output ([data/sim/](data/sim/))
 
-There are 28 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
+There are 29 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The v3.8 world sim (v3.7 loop vs beeline vs explorer) is [sim_world_v38.csv](data/sim/sim_world_v38.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
 
 ### JSON twins ([data/json/](data/json/))
 
@@ -180,6 +199,30 @@ These are Desy's sim and data-generation scripts. **They live in `docs/tools/`, 
 | [spells_data.py](tools/data/spells_data.py) | Spell and quest source data and design formulas |
 | [spells_md_template.md](tools/data/spells_md_template.md) | spells.md template |
 | [write_spells_md.py](tools/data/write_spells_md.py) | Generates spells.md |
+| [write_html.py](tools/data/write_html.py) | Renders combat-spec-v3.html from combat-spec.md |
+| [sync_check.py](tools/sync_check.py) | Manifest sync check plus the world validator |
+
+#### World tools ([tools/world/](tools/world/))
+
+The v3.8 world-graph tools. Like the other design tools they use Desy's absolute `/workspace/desy/` paths.
+
+| File | What it is |
+|---|---|
+| [make_world_data.py](tools/world/make_world_data.py) | Hand-authored data: realm 1, the world map, rules, zones and quest hooks |
+| [world_gen.py](tools/world/world_gen.py) | Generates the reference realms 2–9 and the index |
+| [v03.py](tools/world/v03.py) | Converts the internal format to `graph/0.3` |
+| [world_graph.py](tools/world/world_graph.py) | Loader (a realm is an overworld plus its dungeon levels) |
+| [validate_world.py](tools/world/validate_world.py) | World data validator (schemas and graph rules) |
+| [make_schemas.py](tools/world/make_schemas.py) | Writes the JSON Schemas in data/world/schemas |
+| [render_world.py](tools/world/render_world.py) | Draws the diagrams (PNG and mermaid) |
+| [world_loop.py.txt](tools/world/world_loop.py.txt) | The sim's graph loop, spliced into world_sim.py |
+| [build_world_sim.py](tools/world/build_world_sim.py) | Builds world_sim.py from spells_sim.py plus the loop |
+| [world_runner.py](tools/world/world_runner.py) | v3.8 sim runner (main run and sweep) |
+| [tables.py](tools/world/tables.py) | Writes the tables for world-graph.md and the CSVs |
+| [write_world_doc.py](tools/world/write_world_doc.py) | Builds world-graph.md from the source below |
+| [doc/world-graph.src.md](tools/world/doc/world-graph.src.md) | world-graph.md source with placeholders (its image links resolve only in the built doc in design/) |
+| [doc/spec12.md](tools/world/doc/spec12.md) | The text of combat-spec §12 |
+| [sim/world_summary.json](tools/world/sim/world_summary.json) | v3.8 main sim output (100 runs per profile) |
 
 ## How to update
 

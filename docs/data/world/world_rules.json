@@ -1,0 +1,61 @@
+{
+ "_note": "v3.8 world-graph knobs (combat-spec §12, world-graph.md §5). camelCase like balance.json; GameDev may merge this object into balance.json as \"world\". Tuned with build/world/world_sim.py. Not repeated here (already in balance.json): patrol trigger learning.bossTrigger / bossTriggerSpeech, forced patrols learning.patrolsPerTrip, patrol elite learning.eliteReplaceChance, max enemies combat.maxEnemies, Return Feather = shop.json 'feather'.",
+ "version": "v3.8",
+ "encounterRate": {
+  "0": 0.0,
+  "1": 0.6,
+  "2": 0.85,
+  "3": 0.95
+ },
+ "depthStep": 0.1,
+ "maxRate": 0.95,
+ "safe": {
+  "townAdjacent": true,
+  "innAdjacent": true,
+  "bossApproach": true,
+  "portals": true,
+  "afterBossClear": {
+   "scope": "the way you came: the shortest route over already-walked (or safe) edges from the cleared boss / mini-boss node back to the nearest inn or town; never the unexplored way forward",
+   "hops": 20,
+   "endsOnInnRest": true
+  }
+ },
+ "clearedStepMult": 0.05,
+ "zoneBattleBudget": 8,
+ "budgetSpentMult": 0.1,
+ "pityRolls": 2,
+ "repel": {
+  "item": "bell",
+  "hops": 6,
+  "maxDanger": 2,
+  "blocksScripted": false,
+  "blocksPatrols": false
+ },
+ "walkSecPerHop": 1.0,
+ "walkSecPerStep": 1.5,
+ "eventSec": {
+  "nothing": 0,
+  "story": 12,
+  "quest_offer": 10,
+  "item": 4,
+  "treasure": 5,
+  "portal": 3,
+  "miniboss": 0
+ },
+ "beelineBattleTarget": 8.0,
+ "beelineBattleRange": [
+  6.5,
+  9.5
+ ],
+ "maxHopsToInn": 5,
+ "innWarp": {
+  "toTowns": "visited",
+  "sec": 20,
+  "note": "from any inn the hero can warp to a visited town (shops, magic shop, smith) and back to the same inn for free (sec = time cost when used); this keeps shopping as easy as v3.7 deep in a dungeon"
+ },
+ "seed": {
+  "algorithm": "mulberry32",
+  "key": "saveSeed|graphId|edgeId|crossing|step",
+  "note": "every roll is a pure function of the save seed and how many times that edge was crossed, so reloading never re-rolls"
+ }
+}

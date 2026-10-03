@@ -1,0 +1,175 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/zones.schema.json",
+ "title": "Zones = locations: word pool, roster and boss, placed on graphs",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "version": {
+   "type": "string"
+  },
+  "zones": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "realm": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+     },
+     "order": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "title": {
+      "type": "object",
+      "properties": {
+       "zh": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "en"
+      ],
+      "additionalProperties": false
+     },
+     "location": {
+      "type": "string",
+      "description": "src/data/locations.json id"
+     },
+     "desyPool": {
+      "type": "string",
+      "pattern": "^L[1-9]\\.[1-9]$"
+     },
+     "pool": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "tier": {
+      "type": "integer"
+     },
+     "bossNode": {
+      "$ref": "common.schema.json#/$defs/nodeRef"
+     },
+     "gateEdge": {
+      "$ref": "common.schema.json#/$defs/edgeRef"
+     },
+     "bossKind": {
+      "enum": [
+       "locboss",
+       "realmboss"
+      ]
+     },
+     "boss": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "enemiesPerBattle": {
+      "type": "array",
+      "items": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 3
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "roster": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "enemy": {
+         "type": "string",
+         "pattern": "^[a-z0-9_]+$"
+        },
+        "weight": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        }
+       },
+       "required": [
+        "enemy",
+        "weight"
+       ],
+       "additionalProperties": false
+      }
+     },
+     "fromRoster": {
+      "type": "object",
+      "properties": {
+       "location": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "location"
+      ]
+     },
+     "packs": {
+      "type": "object"
+     },
+     "elite": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "scriptedElite": {
+      "type": [
+       "string",
+       "boolean"
+      ]
+     },
+     "unlockRequires": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    "required": [
+     "id",
+     "realm",
+     "order",
+     "title",
+     "desyPool",
+     "pool",
+     "bossNode",
+     "gateEdge",
+     "bossKind",
+     "boss",
+     "enemiesPerBattle",
+     "unlockRequires"
+    ],
+    "oneOf": [
+     {
+      "required": [
+       "roster"
+      ]
+     },
+     {
+      "required": [
+       "fromRoster"
+      ]
+     }
+    ],
+    "additionalProperties": false
+   },
+   "minItems": 1
+  }
+ },
+ "required": [
+  "zones"
+ ],
+ "additionalProperties": false
+}

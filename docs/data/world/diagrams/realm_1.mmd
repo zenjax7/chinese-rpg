@@ -1,0 +1,37 @@
+flowchart LR
+  village[["Little Hill Village<br/><i>town</i>"]]
+  m_fork["Meadow crossroads<br/><i>fork</i>"]
+  m_farm(["Farmer Li's field<br/><i>npc</i>"])
+  m_well[/"Old well<br/><i>chest</i>"/]
+  m_field["Long grass<br/><i>waypoint</i>"]
+  m_grass["Hill road<br/><i>waypoint</i>"]
+  m_crow{{"Crow's tree<br/><i>boss</i>"}}
+  c_hills["Clover Hills<br/><i>waypoint</i>"]
+  c_camp[("Midpoint campfire inn<br/><i>inn</i>")]
+  c_ridge["Windy ridge<br/><i>waypoint</i>"]
+  c_den{{"Wolf den<br/><i>boss</i>"}}
+  w_path["Burrow path<br/><i>waypoint</i>"]
+  w_lake[/"Clover lake<br/><i>chest</i>"/]
+  w_tunnel["Warren tunnels<br/><i>fork</i>"]
+  w_nest{{"Thief's nest<br/><i>miniboss</i>"}}
+  w_camp[("Boss-approach inn<br/><i>inn</i>")]
+  w_throne{{"Rabbit King's throne<br/><i>boss</i>"}}
+  w_throne -. "exit" .-> X_world["→ world/realm_1"]
+  village ---|"safe"| m_fork
+  m_fork ---|"d1×1"| m_farm
+  m_fork ---|"d1×2"| m_well
+  m_fork ---|"d2×5"| m_field
+  m_farm ---|"d1×2"| m_field
+  m_field ---|"d2×4"| m_grass
+  m_grass -.-|"boss approach"| m_crow
+  m_crow ---|"d2×5"| c_hills
+  c_hills ---|"safe"| c_camp
+  c_hills ---|"d2×4"| c_ridge
+  c_camp ---|"safe"| c_ridge
+  c_ridge -.-|"boss approach"| c_den
+  c_den ---|"d2×4 +elite"| w_path
+  w_path ---|"d1×1"| w_lake
+  w_path ---|"d2×4"| w_tunnel
+  w_tunnel ---|"d2×2"| w_nest
+  w_tunnel ---|"safe"| w_camp
+  w_camp -.-|"boss approach"| w_throne

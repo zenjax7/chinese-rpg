@@ -1,0 +1,222 @@
+{
+ "schema": "graph/0.3",
+ "id": "realm_4",
+ "kind": "overworld",
+ "realm": 4,
+ "dungeon": null,
+ "level": 0,
+ "title": {
+  "zh": "哥布林洞穴",
+  "en": "Goblin Caves"
+ },
+ "status": "reference",
+ "entry": "entry_town",
+ "idxMax": 4,
+ "background": {
+  "map": "bg_map_realm_4",
+  "battle": "bg_battle_r4"
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 60,
+   "y": 360,
+   "zone": "cave_mouth",
+   "title": {
+    "zh": "矿工营地",
+    "en": "Miner's Camp"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 4
+  },
+  {
+   "id": "portal_1",
+   "idx": 1,
+   "kind": "portal",
+   "x": 640,
+   "y": 305,
+   "zone": "cave_mouth",
+   "title": {
+    "zh": "地牢入口",
+    "en": "Dungeon door"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 640,
+   "y": 415,
+   "zone": "cave_mouth",
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_2",
+   "idx": 3,
+   "kind": "village",
+   "x": 1220,
+   "y": 305,
+   "zone": "cave_mouth",
+   "title": {
+    "zh": "矿工营地分站",
+    "en": "Miner's Camp outpost 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ]
+  },
+  {
+   "id": "deadend_1",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 1220,
+   "y": 415,
+   "zone": "cave_mouth",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_portal_1",
+   "from": "portal_1",
+   "kind": "portal",
+   "to": {
+    "graph": "goblin_caves_1",
+    "node": "stairs_1"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "portal_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e2",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e3",
+   "from": "path_1",
+   "to": "town_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road"
+  },
+  {
+   "id": "e4",
+   "from": "path_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}

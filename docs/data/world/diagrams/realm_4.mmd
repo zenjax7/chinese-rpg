@@ -1,0 +1,11 @@
+flowchart LR
+  entry_town[["Miner's Camp<br/><i>town</i>"]]
+  portal_1(("Dungeon door<br/><i>portal</i>"))
+  path_1["Side road<br/><i>waypoint</i>"]
+  town_2[["Miner's Camp outpost 1<br/><i>village</i>"]]
+  deadend_1["Dead end<br/><i>waypoint</i>"]
+  portal_1 -. "portal" .-> X_goblin_caves_1["→ goblin_caves_1/stairs_1"]
+  entry_town ---|"safe"| portal_1
+  entry_town ---|"safe"| path_1
+  path_1 ---|"safe"| town_2
+  path_1 ---|"d1×1"| deadend_1

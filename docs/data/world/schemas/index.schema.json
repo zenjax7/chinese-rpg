@@ -1,0 +1,100 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/index.schema.json",
+ "title": "World data index",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "schema": {
+   "const": "index/0.3"
+  },
+  "version": {
+   "type": "string"
+  },
+  "start": {
+   "$ref": "common.schema.json#/$defs/nodeRef"
+  },
+  "files": {
+   "type": "object",
+   "properties": {
+    "rules": {
+     "type": "string"
+    },
+    "zones": {
+     "type": "string"
+    },
+    "quests": {
+     "type": "string"
+    },
+    "layoutTargets": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rules",
+    "zones",
+    "quests"
+   ]
+  },
+  "renames": {
+   "type": "object",
+   "description": "old id -> new id for graphs/nodes/edges ('graph/node' keys) so old saves load",
+   "additionalProperties": {
+    "type": "string"
+   }
+  },
+  "graphs": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "realm": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "dungeon": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "level": {
+      "type": "integer"
+     },
+     "status": {
+      "type": "string"
+     },
+     "nodes": {
+      "type": "integer"
+     },
+     "file": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "file"
+    ],
+    "additionalProperties": false
+   }
+  }
+ },
+ "required": [
+  "schema",
+  "start",
+  "files",
+  "graphs"
+ ],
+ "additionalProperties": false
+}

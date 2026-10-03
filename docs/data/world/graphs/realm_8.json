@@ -1,0 +1,4175 @@
+{
+ "schema": "graph/0.3",
+ "id": "realm_8",
+ "kind": "overworld",
+ "realm": 8,
+ "dungeon": null,
+ "level": 0,
+ "title": {
+  "zh": "食人魔角斗场",
+  "en": "Ogre Colosseum"
+ },
+ "status": "reference",
+ "entry": "entry_town",
+ "idxMax": 92,
+ "background": {
+  "map": "bg_map_realm_8",
+  "battle": "bg_battle_r8"
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 60,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "角斗场镇",
+    "en": "Arena Town"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 8
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 149,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "fork",
+   "x": 238,
+   "y": 195,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 328,
+   "y": 195,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 417,
+   "y": 86,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 5,
+   "kind": "inn",
+   "x": 506,
+   "y": 93,
+   "zone": "training_pits",
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 65,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 7,
+   "kind": "fork",
+   "x": 685,
+   "y": 80,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 65,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Training Pits path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 9,
+   "kind": "inn",
+   "x": 863,
+   "y": 63,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 10,
+   "kind": "boss",
+   "x": 952,
+   "y": 72,
+   "zone": "training_pits",
+   "title": {
+    "zh": "牛头人",
+    "en": "Minotaur"
+   },
+   "boss": "training_pits"
+  },
+  {
+   "id": "portal_1",
+   "idx": 11,
+   "kind": "portal",
+   "x": 1042,
+   "y": 86,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "地牢入口",
+    "en": "Dungeon door"
+   }
+  },
+  {
+   "id": "portal_2",
+   "idx": 12,
+   "kind": "portal",
+   "x": 774,
+   "y": 114,
+   "zone": "training_pits",
+   "title": {
+    "zh": "兽栏",
+    "en": "Beast Pens (optional) door"
+   }
+  },
+  {
+   "id": "path_8",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 328,
+   "y": 305,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_2",
+   "idx": 14,
+   "kind": "village",
+   "x": 417,
+   "y": 177,
+   "zone": "training_pits",
+   "title": {
+    "zh": "角斗场镇分站",
+    "en": "Arena Town outpost 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ]
+  },
+  {
+   "id": "path_9",
+   "idx": 15,
+   "kind": "fork",
+   "x": 506,
+   "y": 200,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_3",
+   "idx": 16,
+   "kind": "village",
+   "x": 595,
+   "y": 114,
+   "zone": "training_pits",
+   "title": {
+    "zh": "角斗场镇分站",
+    "en": "Arena Town outpost 2"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ]
+  },
+  {
+   "id": "path_10",
+   "idx": 17,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 163,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_4",
+   "idx": 18,
+   "kind": "village",
+   "x": 863,
+   "y": 109,
+   "zone": "training_pits",
+   "title": {
+    "zh": "角斗场镇分站",
+    "en": "Arena Town outpost 3"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ]
+  },
+  {
+   "id": "inn_2",
+   "idx": 19,
+   "kind": "inn",
+   "x": 238,
+   "y": 305,
+   "zone": "training_pits",
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_11",
+   "idx": 20,
+   "kind": "fork",
+   "x": 774,
+   "y": 212,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 21,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 154,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_12",
+   "idx": 22,
+   "kind": "waypoint",
+   "x": 952,
+   "y": 136,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 23,
+   "kind": "story",
+   "x": 1042,
+   "y": 177,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 24,
+   "kind": "chest",
+   "x": 238,
+   "y": 415,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_13",
+   "idx": 25,
+   "kind": "fork",
+   "x": 417,
+   "y": 269,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 26,
+   "kind": "waypoint",
+   "x": 506,
+   "y": 307,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "deadend_3",
+   "idx": 27,
+   "kind": "waypoint",
+   "x": 238,
+   "y": 525,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_14",
+   "idx": 28,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 163,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 29,
+   "kind": "story",
+   "x": 685,
+   "y": 160,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_15",
+   "idx": 30,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 200,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_16",
+   "idx": 31,
+   "kind": "fork",
+   "x": 952,
+   "y": 200,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 32,
+   "kind": "chest",
+   "x": 1042,
+   "y": 269,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 33,
+   "kind": "npc",
+   "x": 328,
+   "y": 415,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "story_3",
+   "idx": 34,
+   "kind": "story",
+   "x": 595,
+   "y": 212,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "story_4",
+   "idx": 35,
+   "kind": "story",
+   "x": 1042,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_4",
+   "idx": 36,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 246,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 37,
+   "kind": "miniboss",
+   "x": 774,
+   "y": 262,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "deadend_5",
+   "idx": 38,
+   "kind": "waypoint",
+   "x": 685,
+   "y": 240,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_17",
+   "idx": 39,
+   "kind": "waypoint",
+   "x": 506,
+   "y": 413,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 40,
+   "kind": "npc",
+   "x": 595,
+   "y": 262,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 41,
+   "kind": "chest",
+   "x": 417,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_5",
+   "idx": 42,
+   "kind": "story",
+   "x": 774,
+   "y": 311,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_4",
+   "idx": 43,
+   "kind": "chest",
+   "x": 506,
+   "y": 520,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_18",
+   "idx": 44,
+   "kind": "inn",
+   "x": 1131,
+   "y": 250,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_5",
+   "idx": 45,
+   "kind": "chest",
+   "x": 1220,
+   "y": 305,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_3",
+   "idx": 46,
+   "kind": "npc",
+   "x": 595,
+   "y": 311,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "path_19",
+   "idx": 47,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_20",
+   "idx": 48,
+   "kind": "waypoint",
+   "x": 685,
+   "y": 320,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_6",
+   "idx": 49,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_6",
+   "idx": 50,
+   "kind": "chest",
+   "x": 1131,
+   "y": 360,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_21",
+   "idx": 51,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 409,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_22",
+   "idx": 52,
+   "kind": "waypoint",
+   "x": 685,
+   "y": 400,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_23",
+   "idx": 53,
+   "kind": "fork",
+   "x": 774,
+   "y": 409,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_24",
+   "idx": 54,
+   "kind": "inn",
+   "x": 863,
+   "y": 291,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_6",
+   "idx": 55,
+   "kind": "story",
+   "x": 952,
+   "y": 264,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_25",
+   "idx": 56,
+   "kind": "inn",
+   "x": 952,
+   "y": 328,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_7",
+   "idx": 57,
+   "kind": "chest",
+   "x": 1042,
+   "y": 451,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_26",
+   "idx": 58,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 337,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_8",
+   "idx": 59,
+   "kind": "chest",
+   "x": 952,
+   "y": 392,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_7",
+   "idx": 60,
+   "kind": "story",
+   "x": 595,
+   "y": 458,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_27",
+   "idx": 61,
+   "kind": "waypoint",
+   "x": 328,
+   "y": 525,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_7",
+   "idx": 62,
+   "kind": "waypoint",
+   "x": 417,
+   "y": 451,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "npc_4",
+   "idx": 63,
+   "kind": "npc",
+   "x": 863,
+   "y": 383,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "path_28",
+   "idx": 64,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 508,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_29",
+   "idx": 65,
+   "kind": "inn",
+   "x": 685,
+   "y": 480,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_8",
+   "idx": 66,
+   "kind": "story",
+   "x": 774,
+   "y": 458,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_30",
+   "idx": 67,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 429,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_31",
+   "idx": 68,
+   "kind": "waypoint",
+   "x": 952,
+   "y": 456,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_32",
+   "idx": 69,
+   "kind": "inn",
+   "x": 1042,
+   "y": 543,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "npc_5",
+   "idx": 70,
+   "kind": "npc",
+   "x": 1131,
+   "y": 470,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "path_33",
+   "idx": 71,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 508,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_9",
+   "idx": 72,
+   "kind": "story",
+   "x": 863,
+   "y": 474,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_9",
+   "idx": 73,
+   "kind": "chest",
+   "x": 595,
+   "y": 557,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_34",
+   "idx": 74,
+   "kind": "waypoint",
+   "x": 417,
+   "y": 543,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_8",
+   "idx": 75,
+   "kind": "waypoint",
+   "x": 506,
+   "y": 627,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_10",
+   "idx": 76,
+   "kind": "chest",
+   "x": 952,
+   "y": 520,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_10",
+   "idx": 77,
+   "kind": "story",
+   "x": 685,
+   "y": 560,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "npc_6",
+   "idx": 78,
+   "kind": "npc",
+   "x": 595,
+   "y": 606,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "deadend_9",
+   "idx": 79,
+   "kind": "waypoint",
+   "x": 952,
+   "y": 584,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_11",
+   "idx": 80,
+   "kind": "chest",
+   "x": 417,
+   "y": 634,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_7",
+   "idx": 81,
+   "kind": "npc",
+   "x": 863,
+   "y": 520,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "deadend_10",
+   "idx": 82,
+   "kind": "inn",
+   "x": 1220,
+   "y": 415,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_12",
+   "idx": 83,
+   "kind": "chest",
+   "x": 774,
+   "y": 557,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_35",
+   "idx": 84,
+   "kind": "waypoint",
+   "x": 595,
+   "y": 655,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_36",
+   "idx": 85,
+   "kind": "waypoint",
+   "x": 685,
+   "y": 640,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_37",
+   "idx": 86,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 606,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_11",
+   "idx": 87,
+   "kind": "story",
+   "x": 863,
+   "y": 566,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_38",
+   "idx": 88,
+   "kind": "inn",
+   "x": 863,
+   "y": 611,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_13",
+   "idx": 89,
+   "kind": "chest",
+   "x": 952,
+   "y": 648,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_39",
+   "idx": 90,
+   "kind": "waypoint",
+   "x": 774,
+   "y": 655,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_11",
+   "idx": 91,
+   "kind": "waypoint",
+   "x": 863,
+   "y": 657,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_14",
+   "idx": 92,
+   "kind": "chest",
+   "x": 1042,
+   "y": 634,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_portal_1",
+   "from": "portal_1",
+   "kind": "portal",
+   "to": {
+    "graph": "undercroft_1",
+    "node": "stairs_1"
+   }
+  },
+  {
+   "id": "x_portal_2",
+   "from": "portal_2",
+   "kind": "portal",
+   "to": {
+    "graph": "beast_pens_1",
+    "node": "stairs_1"
+   }
+  },
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e5",
+   "from": "path_4",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e6",
+   "from": "campfire_1",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e7",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e8",
+   "from": "path_6",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e9",
+   "from": "path_7",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e10",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach"
+  },
+  {
+   "id": "e11",
+   "from": "boss_1",
+   "to": "portal_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "scripted": {
+    "enemies": [
+     "fire_elemental"
+    ],
+    "fill": true,
+    "once": true,
+    "step": 1
+   }
+  },
+  {
+   "id": "e12",
+   "from": "path_6",
+   "to": "portal_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e13",
+   "from": "path_2",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e14",
+   "from": "path_8",
+   "to": "town_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road"
+  },
+  {
+   "id": "e15",
+   "from": "path_4",
+   "to": "path_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e16",
+   "from": "path_9",
+   "to": "town_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road"
+  },
+  {
+   "id": "e17",
+   "from": "path_6",
+   "to": "path_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e18",
+   "from": "path_10",
+   "to": "town_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road"
+  },
+  {
+   "id": "e19",
+   "from": "path_1",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e20",
+   "from": "path_6",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e21",
+   "from": "path_11",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e22",
+   "from": "deadend_1",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e23",
+   "from": "path_12",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e24",
+   "from": "path_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e25",
+   "from": "path_3",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e26",
+   "from": "path_13",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e27",
+   "from": "path_1",
+   "to": "deadend_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e28",
+   "from": "campfire_1",
+   "to": "path_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e29",
+   "from": "path_14",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e30",
+   "from": "path_10",
+   "to": "path_15",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e31",
+   "from": "path_15",
+   "to": "path_16",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e32",
+   "from": "path_16",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e33",
+   "from": "path_2",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e34",
+   "from": "campfire_1",
+   "to": "story_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e35",
+   "from": "path_16",
+   "to": "story_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e36",
+   "from": "path_11",
+   "to": "deadend_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e37",
+   "from": "path_6",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e38",
+   "from": "path_14",
+   "to": "deadend_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e39",
+   "from": "path_13",
+   "to": "path_17",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e40",
+   "from": "path_17",
+   "to": "npc_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e41",
+   "from": "path_3",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e42",
+   "from": "deadend_5",
+   "to": "story_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e43",
+   "from": "path_13",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e44",
+   "from": "story_4",
+   "to": "path_18",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e45",
+   "from": "path_18",
+   "to": "treasure_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e46",
+   "from": "path_9",
+   "to": "npc_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e47",
+   "from": "deadend_2",
+   "to": "path_19",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e48",
+   "from": "path_19",
+   "to": "path_20",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e49",
+   "from": "path_20",
+   "to": "deadend_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e50",
+   "from": "story_1",
+   "to": "treasure_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e51",
+   "from": "path_9",
+   "to": "path_21",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e52",
+   "from": "path_21",
+   "to": "path_22",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e53",
+   "from": "path_22",
+   "to": "path_23",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e54",
+   "from": "path_23",
+   "to": "path_24",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e55",
+   "from": "path_24",
+   "to": "story_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e56",
+   "from": "deadend_1",
+   "to": "path_25",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e57",
+   "from": "path_25",
+   "to": "treasure_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e58",
+   "from": "path_23",
+   "to": "path_26",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e59",
+   "from": "path_26",
+   "to": "treasure_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e60",
+   "from": "treasure_4",
+   "to": "story_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e61",
+   "from": "deadend_3",
+   "to": "path_27",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e62",
+   "from": "path_27",
+   "to": "deadend_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e63",
+   "from": "path_23",
+   "to": "npc_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e64",
+   "from": "treasure_4",
+   "to": "path_28",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e65",
+   "from": "path_28",
+   "to": "path_29",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e66",
+   "from": "path_29",
+   "to": "story_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e67",
+   "from": "path_11",
+   "to": "path_30",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e68",
+   "from": "path_30",
+   "to": "path_31",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e69",
+   "from": "path_31",
+   "to": "path_32",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e70",
+   "from": "path_32",
+   "to": "npc_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e71",
+   "from": "deadend_5",
+   "to": "path_33",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e72",
+   "from": "path_33",
+   "to": "story_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e73",
+   "from": "campfire_1",
+   "to": "treasure_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e74",
+   "from": "path_27",
+   "to": "path_34",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e75",
+   "from": "path_34",
+   "to": "deadend_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e76",
+   "from": "deadend_4",
+   "to": "treasure_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e77",
+   "from": "treasure_9",
+   "to": "story_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e78",
+   "from": "campfire_1",
+   "to": "npc_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e79",
+   "from": "deadend_1",
+   "to": "deadend_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e80",
+   "from": "path_3",
+   "to": "treasure_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e81",
+   "from": "path_7",
+   "to": "npc_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e82",
+   "from": "treasure_6",
+   "to": "deadend_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e83",
+   "from": "deadend_5",
+   "to": "treasure_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e84",
+   "from": "campfire_1",
+   "to": "path_35",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass"
+  },
+  {
+   "id": "e85",
+   "from": "path_35",
+   "to": "path_36",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e86",
+   "from": "path_36",
+   "to": "path_37",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e87",
+   "from": "path_37",
+   "to": "story_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e88",
+   "from": "deadend_6",
+   "to": "path_38",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e89",
+   "from": "path_38",
+   "to": "treasure_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e90",
+   "from": "path_36",
+   "to": "path_39",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e91",
+   "from": "path_39",
+   "to": "deadend_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  },
+  {
+   "id": "e92",
+   "from": "path_16",
+   "to": "treasure_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_10.1",
+   "node": "path_10",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_11.1",
+   "node": "path_11",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_12.1",
+   "node": "path_12",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_1"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_13.1",
+   "node": "path_13",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_3.1",
+   "node": "deadend_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_14.1",
+   "node": "path_14",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_2"
+    }
+   ]
+  },
+  {
+   "id": "path_15.1",
+   "node": "path_15",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_16.1",
+   "node": "path_16",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_1"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "story_3.1",
+   "node": "story_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_3"
+    }
+   ]
+  },
+  {
+   "id": "story_4.1",
+   "node": "story_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_4"
+    }
+   ]
+  },
+  {
+   "id": "deadend_4.1",
+   "node": "deadend_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "fire_elemental"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_8.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_5.1",
+   "node": "deadend_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_17.1",
+   "node": "path_17",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_2.1",
+   "node": "npc_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_2"
+    }
+   ]
+  },
+  {
+   "id": "npc_2.2",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_5.1",
+   "node": "story_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_5"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_5.1",
+   "node": "treasure_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_5.2",
+   "node": "treasure_5",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_3.1",
+   "node": "npc_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_3"
+    }
+   ]
+  },
+  {
+   "id": "npc_3.2",
+   "node": "npc_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_19.1",
+   "node": "path_19",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_20.1",
+   "node": "path_20",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_6.1",
+   "node": "deadend_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_6.1",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_6.2",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_21.1",
+   "node": "path_21",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_22.1",
+   "node": "path_22",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_23.1",
+   "node": "path_23",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_6.1",
+   "node": "story_6",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_6"
+    }
+   ]
+  },
+  {
+   "id": "treasure_7.1",
+   "node": "treasure_7",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_7.2",
+   "node": "treasure_7",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_26.1",
+   "node": "path_26",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_8.1",
+   "node": "treasure_8",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_8.2",
+   "node": "treasure_8",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_7.1",
+   "node": "story_7",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_7"
+    }
+   ]
+  },
+  {
+   "id": "path_27.1",
+   "node": "path_27",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_7.1",
+   "node": "deadend_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_4.1",
+   "node": "npc_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_4"
+    }
+   ]
+  },
+  {
+   "id": "npc_4.2",
+   "node": "npc_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_28.1",
+   "node": "path_28",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_8.1",
+   "node": "story_8",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_8"
+    }
+   ]
+  },
+  {
+   "id": "path_30.1",
+   "node": "path_30",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_31.1",
+   "node": "path_31",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_5.1",
+   "node": "npc_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_5"
+    }
+   ]
+  },
+  {
+   "id": "npc_5.2",
+   "node": "npc_5",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_33.1",
+   "node": "path_33",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_9.1",
+   "node": "story_9",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_9"
+    }
+   ]
+  },
+  {
+   "id": "treasure_9.1",
+   "node": "treasure_9",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_9.2",
+   "node": "treasure_9",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_34.1",
+   "node": "path_34",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_8.1",
+   "node": "deadend_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_10.1",
+   "node": "treasure_10",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_10.2",
+   "node": "treasure_10",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_10.1",
+   "node": "story_10",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_10"
+    }
+   ]
+  },
+  {
+   "id": "npc_6.1",
+   "node": "npc_6",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_6"
+    }
+   ]
+  },
+  {
+   "id": "npc_6.2",
+   "node": "npc_6",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "deadend_9.1",
+   "node": "deadend_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_11.1",
+   "node": "treasure_11",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_11.2",
+   "node": "treasure_11",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_7.1",
+   "node": "npc_7",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q8_realm_8_npc_7"
+    }
+   ]
+  },
+  {
+   "id": "npc_7.2",
+   "node": "npc_7",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_12.1",
+   "node": "treasure_12",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_12.2",
+   "node": "treasure_12",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_35.1",
+   "node": "path_35",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_36.1",
+   "node": "path_36",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_37.1",
+   "node": "path_37",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_11.1",
+   "node": "story_11",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_11"
+    }
+   ]
+  },
+  {
+   "id": "treasure_13.1",
+   "node": "treasure_13",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_13.2",
+   "node": "treasure_13",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_39.1",
+   "node": "path_39",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_11.1",
+   "node": "deadend_11",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_14.1",
+   "node": "treasure_14",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_14.2",
+   "node": "treasure_14",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "dialogue": {
+  "ambient": [
+   {
+    "speaker": "panda",
+    "zh": "我们走吧！",
+    "en": "Let's keep going!"
+   }
+  ],
+  "realm_8.story_1": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_2": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_3": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_4": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_5": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_6": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_7": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_8": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_9": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_10": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.story_11": [
+   {
+    "speaker": "panda",
+    "zh": "（故事待写）",
+    "en": "(story beat to write)"
+   }
+  ]
+ },
+ "npcs": {
+  "panda": {
+   "name": {
+    "zh": "熊猫",
+    "en": "Panda (companion)"
+   }
+  }
+ }
+}
