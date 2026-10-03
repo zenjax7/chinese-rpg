@@ -1,6 +1,8 @@
 import { startView } from './phaser/view';
 import { S } from './engine/state';
-import { consentScreen, town, enterLocation, debugPanel, locationScreen, pauseMenu } from './ui/screens';
+import { consentScreen, town, enterLocation, debugPanel, locationScreen, pauseMenu, graphHooks } from './ui/screens';
+import { isGraph } from './world/mode';
+import { startGraph, graphScreen } from './ui/graph';
 import { hud, $, DEBUG, ui } from './ui/dom';
 import { watchFrame } from './ui/frame';
 import { playSfx, toggleMute, audioSettings, onAudioSettings } from './audio/audio';
@@ -15,7 +17,9 @@ async function boot() {
   watchFrame(game as any);
   hud();
   if (DEBUG) $('#debugBtn').classList.remove('hidden');
+  if (isGraph()) { graphHooks.start = () => { startGraph(); }; document.body.dataset.world = 'graph'; }
   if (!S.consent.given) consentScreen();
+  else if (isGraph()) startGraph();
   else if (S.where !== 'town' && S.locs[S.where]) enterLocation(S.where);
   else town();
 }
@@ -26,7 +30,7 @@ if (DEBUG) Object.assign(((window as any).__proto = (window as any).__proto || {
   findItem: (zh: string) => ITEMS.find(i => i.zh === zh)?.id ?? null });
 
 const inBattle = () => !!document.querySelector('[data-testid="battle"]');
-$('#debugBtn').addEventListener('click', () => debugPanel(() => { hud(); if (inBattle() || !document.querySelector('[data-testid="town"],[data-testid="location"],[data-testid="worldmap"]')) return; if (S.where !== 'town' && S.locs[S.where]) locationScreen(S.where); else if (S.consent.given) town(); }));
+$('#debugBtn').addEventListener('click', () => debugPanel(() => { hud(); if (isGraph()) { if (document.querySelector('[data-testid="graph"]')) graphScreen(); return; } if (inBattle() || !document.querySelector('[data-testid="town"],[data-testid="location"],[data-testid="worldmap"]')) return; if (S.where !== 'town' && S.locs[S.where]) locationScreen(S.where); else if (S.consent.given) town(); }));
 $('#pauseBtn').addEventListener('click', () => pauseMenu());
 
 // Sound: mute toggle (persisted) + a click sound for ordinary buttons. Answer buttons, the mic and 🔊 buttons get their own sounds.

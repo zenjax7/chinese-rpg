@@ -11,6 +11,7 @@ import { BG, assets, spellIcon, itemIcon } from '../assets';
 import { view } from '../phaser/view';
 import { $, $$, esc, render, on, hud, toast, dialog, modal, closeModal, sleep, zh, dlg, setTitle, bookHtml, wireBook, chunk } from './dom';
 import { practiceMenu } from './practice';
+import { WORLD_MODE, setWorldMode } from '../world/mode';
 
 const bgUrl = (keys: string[]) => { const k = keys.find(x => assets().bg[x]); return k ? assets().bg[k] : ''; };
 const locTitle = (l: LocationDef) => `${l.emoji} ${zh(l.zh)} ${esc(l.name)}`;
@@ -38,7 +39,7 @@ export function consentScreen() {
       else if (!(await requestMic())) { toast('Microphone permission was denied, so we\'ll use tapping.'); session.speechBlocked = true; }
       else S.consent.speech = true;
     }
-    save(); hud(); town();
+    save(); hud(); if (graphHooks.start) return graphHooks.start(); town();
   });
 }
 
@@ -54,25 +55,29 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   magic: { sign: [960, 404], hot: [880, 470, 170, 100], z: '🔮 魔法店', e: 'Magic shop', tid: 'go-magic' },   // v3.3
   quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
+/** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
+export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[] } = {};
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
-  setTitle(`🏘️ ${zh('小山村')} Little Hill Village`);
+  setTitle(graphHooks.title || `🏘️ ${zh('小山村')} Little Hill Village`);
   const h = heroStats(); const fl = frontier();
   // one suggestion at a time
   const potionP = consPrice('honey');
   const hasPotion = (S.inv.honey || 0) + (S.inv.bighoney || 0) > 0;
-  const tip: { at: keyof typeof VILLAGE; line: string } =
+  let tip: { at: keyof typeof VILLAGE; line: string } =
     S.hp < h.maxHp * 0.5 ? { at: 'inn', line: `The inn is warm! Rest, then let's go to the ${esc(fl.name.split(' ').pop()!.toLowerCase())}.` }
     : !S.locs[fl.id].previewSeen ? { at: 'words', line: `New words wait in ${zh(fl.zh)} ${esc(fl.name)}! Let's peek in the 学堂 first.`.replace('学堂', zh('学堂')) }
     : !hasPotion && S.gold >= potionP ? { at: 'shop', line: `We have ${S.gold} 🪙. A honey potion (${potionP} 🪙) would help us!` }
     : claimable().length ? { at: 'quests', line: `A quest is finished! Let's get our reward at the ${zh('任务板')}.` }
     : { at: 'gate', line: `Ready? Let's go to ${zh(fl.zh)} ${esc(fl.name)}!` };
+  const shown = (Object.keys(VILLAGE) as (keyof typeof VILLAGE)[]).filter(k => !graphHooks.hide?.includes(k));   // graph-mode villages: no magic shop
+  if (!shown.includes(tip.at)) tip = { at: 'gate', line: tip.line };
   const sign = (k: keyof typeof VILLAGE) => { const v = VILLAGE[k]; const [z1, z2] = v.z.split(' ');
     return `<button class="hot" data-go="${k}" aria-label="${v.e}" style="left:${v.hot[0]}px;top:${v.hot[1]}px;width:${v.hot[2]}px;height:${v.hot[3]}px"></button>
       <button class="sign${k === 'gate' ? ' gold' : ''}" data-go="${k}" data-testid="${v.tid}" style="left:${v.sign[0]}px;top:${v.sign[1]}px"><span class="z">${z1} <span lang="zh-CN">${z2}</span></span><span class="e">${v.e}</span></button>`; };
   const bang = VILLAGE[tip.at].sign;
   render(`<div data-testid="town" class="screen">
-    ${(Object.keys(VILLAGE) as (keyof typeof VILLAGE)[]).map(sign).join('')}
+    ${shown.map(sign).join('')}
     <div class="bang" data-testid="suggest" data-at="${tip.at}" style="left:${bang[0] + 62}px;top:${bang[1] - 52}px">❗</div>
     ${session.speechBlocked && S.consent.speech ? `<div class="tip warn" style="left:440px;top:92px">🔇 ${esc(session.speechBlockReason || 'Speech is off for this session.')}</div>` : ''}
     <div class="bottombar panel">
@@ -85,11 +90,11 @@ export function town() {
     if (g === 'inn') return inn();
     if (g === 'shop') return shop();
     if (g === 'magic') return magicShop();
-    if (g === 'quests') return questBoard();
+    if (g === 'quests') return graphHooks.questLog ? graphHooks.questLog() : questBoard();
     if (g === 'equip') return equip(town);
-    if (g === 'bag') return itemsScreen(town);
+    if (g === 'bag') return graphHooks.bag ? graphHooks.bag() : itemsScreen(town);
     if (g === 'words') { setCurrentLoc(fl.id); return preview(fl.id).then(() => { S.locs[fl.id].previewSeen = true; save(); town(); }); }
-    if (g === 'gate') return worldMap();
+    if (g === 'gate') return graphHooks.exit ? graphHooks.exit() : worldMap();
   });
 }
 
@@ -146,7 +151,7 @@ export function inn(msg = '', place = 'town', node = 0) {
       S.stats.freeInn++; m = `🐼 “Rest, little hero, pay me later!” (free stay)`;
       if ((S.inv.honey || 0) + (S.inv.bighoney || 0) === 0) { S.inv[B.economy.brokePotion] = (S.inv[B.economy.brokePotion] || 0) + 1; m += `<br>🍯 The innkeeper slips you a free ${CONS[B.economy.brokePotion].en}.`; }
     } else { S.gold -= price; S.stats.paidInn++; m = `You paid ${price} 🪙 and slept well.`; }
-    S.hp = hs.maxHp; S.mp = hs.maxMp; S.lastInn = { place, node };
+    S.hp = hs.maxHp; S.mp = hs.maxMp; S.lastInn = { place, node }; if (place === 'town') graphHooks.onRest?.();
     // resting away from the boss approach re-arms the approach patrols; the approach inn itself does not (spec v3 §7.3/§7.4)
     if (!(place !== 'town' && node >= LOC[place].pathFights)) for (const l of LOCATIONS) S.locs[l.id].approachArmed = true;
     save(); toast('💤 HP and MP restored!'); inn(m, place, node);
@@ -503,7 +508,7 @@ async function doBattle(id: string, kind: BattleKind) {
 }
 
 /** Results card inside the frame (spec §4.4): EXP, gold, questions, improved words as big Chinese chips. */
-function rewards(r: BattleResult, extra: string): Promise<void> {
+export function rewards(r: BattleResult, extra: string): Promise<void> {
   hud();
   return new Promise(res => {
     render(dlg({ testid: 'victory', cls: 'results', close: false, title: '🎉 Victory!', body: `
@@ -594,6 +599,7 @@ export function debugPanel(onChange: () => void) {
       <button class="secondary" id="dbgquests" data-testid="dbg-quests" title="Fills the counters of accepted bounty / collect quests">📋 Finish quests</button>
       <button class="secondary" id="dbgspells" data-testid="dbg-spells">🔮 Spells of open towns</button>
       <button class="secondary" id="export">Export save JSON</button>
+      <button class="secondary" id="worldmode" data-testid="dbg-worldmode">🗺️ World: ${WORLD_MODE === 'graph' ? 'graph (v3.9) → switch to classic' : 'classic → switch to graph (v3.9)'}</button>
       <button class="danger" id="reset" data-testid="dbg-reset">Reset everything</button>
       <button id="close" data-testid="dbg-close">Close</button></div>
     <p class="muted">Speech: consent ${S.consent.speech ? 'yes' : 'no'}, session ${session.speechBlocked ? 'paused (' + esc(session.speechBlockReason) + ')' : 'ok'}, voids ${session.voids}. Stats: ${esc(JSON.stringify(S.stats))}. Courage ${S.courage}.
@@ -622,6 +628,7 @@ export function debugPanel(onChange: () => void) {
   on('#unlock', () => { for (const l of LOCATIONS) S.locs[l.id].unlocked = true; save(); closeModal(); onChange(); }, m);
   on('#export', () => { const t = $('#exp') as HTMLTextAreaElement; t.classList.remove('hidden'); t.value = JSON.stringify(S); }, m);
   on('#reset', async () => { closeModal(); if ((await dialog('Reset?', 'Delete all progress and start over?', ['Yes, reset', 'Cancel'])) === 0) { resetAll(); location.reload(); } }, m);
+  on('#worldmode', () => setWorldMode(WORLD_MODE === 'graph' ? 'classic' : 'graph'), m);
   on('#close', () => closeModal(), m);
   void bossPool; void replaceState; void distractors; void speak;
 }

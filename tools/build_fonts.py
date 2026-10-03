@@ -19,6 +19,8 @@ cjk = re.compile(r'[\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F]')
 for f in glob.glob(os.path.join(ROOT, 'src', '**', '*.*'), recursive=True):
     if f.endswith(('.ts', '.json', '.css')): han.update(cjk.findall(open(f, encoding='utf-8').read()))
 han.update(cjk.findall(open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()))
+# v3.9.1 graph world: graph titles, dialogue, quest titles and scenes shown at run time (public/world/, tools/world/build_world.py)
+for f in glob.glob(os.path.join(ROOT, 'public', 'world', '**', '*.json'), recursive=True): han.update(cjk.findall(open(f, encoding='utf-8').read()))
 cur = os.path.join(ROOT, '..', '..', 'desy', 'core-curriculum.csv')
 if os.path.exists(cur):
     for r in csv.DictReader(open(cur, encoding='utf-8-sig')): han.update(cjk.findall(r.get('simplified', '')))

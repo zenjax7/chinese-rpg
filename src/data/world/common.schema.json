@@ -1,0 +1,412 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/common.schema.json",
+ "title": "Shared definitions for the world data",
+ "$defs": {
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_]+$"
+  },
+  "text": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "en"
+   ],
+   "additionalProperties": false
+  },
+  "nodeRef": {
+   "description": "A node in another graph",
+   "type": "object",
+   "properties": {
+    "graph": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "node": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    }
+   },
+   "required": [
+    "graph",
+    "node"
+   ],
+   "additionalProperties": false
+  },
+  "edgeRef": {
+   "type": "object",
+   "properties": {
+    "graph": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "edge": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    }
+   },
+   "required": [
+    "graph",
+    "edge"
+   ],
+   "additionalProperties": false
+  },
+  "cond": {
+   "description": "Condition tree (GameDev §6 names). Exactly one key per object.",
+   "type": "object",
+   "minProperties": 1,
+   "maxProperties": 1,
+   "properties": {
+    "all": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/cond"
+     },
+     "minItems": 1
+    },
+    "any": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/cond"
+     },
+     "minItems": 1
+    },
+    "not": {
+     "$ref": "#/$defs/cond"
+    },
+    "flag": {
+     "type": "string"
+    },
+    "questActive": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "questClaimed": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "questDone": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "bossDefeated": {
+     "description": "zone id from zones.json",
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "visited": {
+     "type": "string"
+    },
+    "wordsReady": {
+     "type": "object",
+     "properties": {
+      "pool": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      },
+      "n": {
+       "type": "integer",
+       "minimum": 1
+      }
+     },
+     "required": [
+      "pool"
+     ],
+     "additionalProperties": false
+    },
+    "readinessAtLeast": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "levelAtLeast": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "hasItem": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "shortcutOpen": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    }
+   },
+   "additionalProperties": false
+  },
+  "action": {
+   "description": "One action per object; extra keys are its arguments.",
+   "type": "object",
+   "oneOf": [
+    {
+     "required": [
+      "dialogue"
+     ],
+     "properties": {
+      "dialogue": {
+       "type": "string",
+       "pattern": "^[a-z0-9_.]+$",
+       "description": "id that may carry a graph prefix, e.g. realm_1.crowBeaten"
+      }
+     }
+    },
+    {
+     "required": [
+      "toast"
+     ],
+     "properties": {
+      "toast": {
+       "type": "object",
+       "properties": {
+        "zh": {
+         "type": "string"
+        },
+        "en": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "en"
+       ],
+       "additionalProperties": false
+      }
+     }
+    },
+    {
+     "required": [
+      "offerQuest"
+     ],
+     "properties": {
+      "offerQuest": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "scene"
+     ],
+     "properties": {
+      "scene": {
+       "type": "string",
+       "pattern": "^sc_[a-z0-9_]+$",
+       "description": "v3.9: play a story scene from data/dialogue/<id>.json (scene/0.2)"
+      }
+     }
+    },
+    {
+     "required": [
+      "startQuest"
+     ],
+     "properties": {
+      "startQuest": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "giveItem"
+     ],
+     "properties": {
+      "giveItem": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      },
+      "qty": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "quest": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "giveGear"
+     ],
+     "properties": {
+      "giveGear": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "giveSkill"
+     ],
+     "properties": {
+      "giveSkill": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "giveGold"
+     ],
+     "properties": {
+      "giveGold": {
+       "type": "object",
+       "properties": {
+        "G": {
+         "type": "number",
+         "minimum": 0
+        }
+       },
+       "required": [
+        "G"
+       ]
+      }
+     }
+    },
+    {
+     "required": [
+      "openChest"
+     ],
+     "properties": {
+      "openChest": {
+       "enum": [
+        "chest_normal",
+        "chest_fine",
+        "chest_boss"
+       ]
+      }
+     }
+    },
+    {
+     "required": [
+      "fight"
+     ],
+     "properties": {
+      "fight": {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "enum": [
+          "miniboss",
+          "elite",
+          "scripted",
+          "tutorial"
+         ]
+        },
+        "enemies": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+         }
+        },
+        "fill": {
+         "type": "boolean"
+        },
+        "canLose": {
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "kind"
+       ]
+      },
+      "quest": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "setFlag"
+     ],
+     "properties": {
+      "setFlag": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "required": [
+      "openShortcut"
+     ],
+     "properties": {
+      "openShortcut": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "unlockGraph"
+     ],
+     "properties": {
+      "unlockGraph": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    },
+    {
+     "required": [
+      "heal"
+     ],
+     "properties": {
+      "heal": {
+       "enum": [
+        "full",
+        "hp",
+        "mp"
+       ]
+      }
+     }
+    },
+    {
+     "required": [
+      "teleport"
+     ],
+     "properties": {
+      "teleport": {
+       "$ref": "#/$defs/nodeRef"
+      }
+     }
+    },
+    {
+     "required": [
+      "defeatBoss"
+     ],
+     "properties": {
+      "defeatBoss": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     }
+    }
+   ]
+  },
+  "outcome": {
+   "enum": [
+    "nothing",
+    "quest_offer",
+    "miniboss",
+    "item",
+    "portal",
+    "story",
+    "treasure"
+   ]
+  }
+ }
+}

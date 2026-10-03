@@ -2,6 +2,7 @@
 import { chromium } from 'playwright-core';
 import { spellTests } from './spells.mjs';
 import { speechTests } from './speech.mjs';
+import { worldUnitTests, worldTests } from './world.mjs';
 const BASE0 = process.argv[2] || 'http://127.0.0.1:8795/';
 const BASE = BASE0 + (BASE0.includes('?') ? '&' : '?') + 'debug';   // ?debug shows the 🐞 debug panel button
 const log = (...a) => console.log('•', ...a);
@@ -432,6 +433,11 @@ await spellTests({ browser, BASE, check, log, shots: process.env.SPELL_SHOTS || 
 
 // ================= spoken answers (stubbed recogniser + TTS) and music continuity =================
 await speechTests({ browser, BASE, check, log });
+
+// ================= v3.9.1 graph world (?world=graph): engine units + browser flow (tests/world.mjs) =================
+await worldUnitTests({ check, log });
+try { await worldTests({ browser, BASE: BASE0, check, log, shots: process.env.WORLD_SHOTS || '' }); }
+catch (e) { check(false, 'world tests crashed: ' + (e.stack || e.message).split('\n').slice(0, 3).join(' ')); }
 
 check(pinyinSeen.size === 0, 'no pinyin (tone-marked Latin) in battle / practice / results DOM' + (pinyinSeen.size ? ': ' + [...pinyinSeen].slice(0, 5).join(' | ') : ''));
 check(focusSeen.size === 0, 'no "Focus words" panel / scout screen in battle' + (focusSeen.size ? ': ' + [...focusSeen].join(', ') : ''));
