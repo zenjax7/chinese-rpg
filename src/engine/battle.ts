@@ -80,6 +80,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   /** Why a spell can't be cast now (null = it can): only MP. */
   const castBlock = (sp?: SpellDef): { why: 'mp'; text: string } | null => (sp && S.mp < sp.mp ? { why: 'mp', text: `needs ${sp.mp} MP` } : null);
   let bookTab: 'skills' | 'spells' = 'skills'; let bookPage = 0;
+  (window as any).__proto.foes = () => foes.map(f => ({ id: f.d.id, kind: f.d.kind, hp: f.hp, maxHp: f.maxHp, atk: f.d.atk, def: f.d.def_, alive: f.alive }));
   (window as any).__proto.castState = () => ({ casts: bs.casts, kind: castKind, correct: res.correct, q: bs.q, lastCastQ: bs.lastCastQ, streak: bs.streak, round: bs.round });
   const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
   /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
@@ -569,7 +570,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
             ${pages > 1 ? `<button class="ghost back" data-page="1" data-testid="spell-more">▶ ${zh('更多')} More<span class="en">${bookPage + 1}/${pages}</span></button>` : ''}
             <button class="ghost back" data-back="1" data-testid="act-back" data-key="${shown.length + 1}">◀ ${zh('返回')} Back</button></div>`);
           on('#bmain [data-page]', () => { bookPage = (bookPage + 1) % pages; sub('skills'); });
-          if (shown.every(sp => S.mp < sp.mp)) msg(`📖 Not enough MP for a spell (🔷 ${S.mp}). Right answers give +1 MP.`, 'spell-nomp');
+          if (shown.every(sp => S.mp < sp.mp)) msg(`📖 Not enough MP for a spell (🔷 ${S.mp}). ${C().mpPerCorrect ? ` Right answers give +${C().mpPerCorrect} MP.` : ' MP comes back at the inn or with Mana Tea.'}`, 'spell-nomp');
           wire(); return;
         }
         if (which === 'skills') {

@@ -475,7 +475,7 @@ function feather(id: string) {
 }
 
 async function doBattle(id: string, kind: BattleKind) {
-  const st = S.locs[id];
+  const st = S.locs[id]; const skillsBefore = S.skills.slice();
   const res = await runBattle(id, kind, kind === 'path' ? st.pathCleared + 1 : 0);
   if (res.outcome === 'defeat') return defeat(id);
   if (res.outcome === 'flee') return kind === 'walk' ? town() : locationScreen(id, '🏃 You got away safely.');
@@ -486,7 +486,14 @@ async function doBattle(id: string, kind: BattleKind) {
     const first = !st.bossDefeated; st.bossDefeated = true;
     const i = LOCATIONS.findIndex(l => l.id === id); const next = LOCATIONS[i + 1];
     if (next && !S.locs[next.id].unlocked) { S.locs[next.id].unlocked = true; extra += `<p>🗺️ <b>${next.emoji} ${zh(next.zh)} ${esc(next.name)}</b> is now unlocked!</p>`; }
-    if (first) { refreshSkills(S); extra += `<p>${esc(LOC[id].bossReward.text)}</p>`; }
+    if (first) {
+      refreshSkills(S);
+      // The boss reward counts as earned before a level-up skill from the same victory (the boss kill's EXP can level the hero
+      // mid-battle), so a later slot opening (L8) takes Guardian Shield first, as the spec says.
+      const fresh = S.skills.filter(x => !skillsBefore.includes(x)); const bossSk = fresh.filter(x => SKILLS.find(k => k.id === x)?.unlock.boss);
+      S.skills = [...skillsBefore, ...bossSk, ...fresh.filter(x => !bossSk.includes(x))];
+      extra += `<p>${esc(LOC[id].bossReward.text)}</p>`;
+    }
   }
   save();
   await rewards(res, extra);

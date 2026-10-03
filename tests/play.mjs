@@ -198,8 +198,8 @@ if (r.result === 'defeat') await tid(p, 'back').click();
 // defeat: set HP to 1 and gold 100, answer everything wrong
 if (await tid(p, 'town').count()) await goLoc(p, 'meadow');
 await tid(p, 'location').waitFor();
-await debugSet(p, { gold: 100, hp: 1 });
-const g0 = await gold(p);
+await tid(p, 'debug-open').click(); await tid(p, 'debug').waitFor(); await tid(p, 'dbg-gold').fill('100'); await tid(p, 'dbg-hp').fill('1'); await p.locator('#dm').fill('0'); await tid(p, 'dbg-apply').click();
+const g0 = await gold(p); const mpLow = +(await tid(p, 'hud-mp').innerText());
 await tid(p, 'act-path').click(); r = await playBattle(p, () => false);
 check(r.result === 'defeat', 'defeat when HP hits 0');
 const g1 = await gold(p); const fee = g0 - g1;
@@ -207,6 +207,7 @@ check(fee === 12 || fee > 0, `defeat fee = max(10% of ${g0}, inn 12) = ${fee}`);
 check(await p.locator('[data-testid="defeat-msg"]').count() === 1, 'woke up at the inn after defeat');
 const dm = await tid(p, 'defeat-msg').innerText(); log(dm.replace(/\n/g, ' | '));
 check(/Courage \+20%/.test(dm), 'Courage +20% after 1 defeat');
+check(mpLow === 0 && +(await tid(p, 'hud-mp').innerText()) === +(await p.locator('#hud .mpmax').innerText()) && +(await p.locator('#hud .mpmax').innerText()) > 0, `waking after a defeat restores full MP (0 → ${await tid(p, 'hud-mp').innerText()}/${await p.locator('#hud .mpmax').innerText()})`);
 // defeat floor: gold 30 (< 2 inns + fee) -> keeps 24
 await tid(p, 'back').click(); await goLoc(p, 'meadow'); await tid(p, 'location').waitFor();
 await debugSet(p, { gold: 30, hp: 1 });
@@ -315,7 +316,15 @@ if (await tid(p, 'act-inn').count()) { await tid(p, 'act-inn').click(); await ti
 }
 // Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L8), 75% (every 4th answer wrong), potion/Heal below 40% HP
 let qn = 0; survive.used = { potion: 0, heal: 0 }; await p.screenshot({ path: '/tmp/proto-forest-gate.png' }); await tid(p, 'act-boss').click();
-r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png', action: survive(0.4) });
+let queenStats = null; const qAct = survive(0.4);
+r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png', action: async pg => { if (!queenStats) queenStats = await pg.evaluate(() => window.__proto.foes().find(f => f.id === 'queenbee')); return qAct(pg); } });
+check(queenStats && queenStats.maxHp === 104 && queenStats.atk === 8, `v3.7 Queen Bee stats: ${queenStats?.maxHp} HP / ${queenStats?.atk} ATK (boss_hp.csv realm tier 2: 104 / 8)`);
+{ // v3.7: location bosses target ~15 correct answers (boss_hp.csv hp/atk: tier 1 location 34/4, tier 2 location 70/8); realm bosses ~20 (rabbitking 57/4)
+  const { createRequire } = await import('node:module'); const en = createRequire(import.meta.url)('../src/data/enemies.json').enemies;
+  const st = id => { const e = en.find(x => x.id === id); return e ? `${e.hp}/${e.atk}` : '?'; };
+  const got = ['crow', 'greywolf', 'bear', 'rabbitking'].map(st).join(' ');
+  check(got === '34/4 34/4 70/8 57/4', `v3.7 boss table: crow, grey wolf, bear, rabbit king = ${got} (boss_hp.csv: 34/4 34/4 70/8 57/4)`);
+}
 const summons = await p.evaluate(() => [...document.querySelectorAll('#blog div')].filter(d => /calls for help/.test(d.textContent)).length).catch(() => -1);
 log('queen battle', r.result, JSON.stringify(r.stats));
 check(r.result === 'win', `beat the Queen Bee at L8 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);

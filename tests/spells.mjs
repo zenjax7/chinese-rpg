@@ -29,6 +29,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   const rules = await p.evaluate(() => window.__proto.spellRules);
   check(rules.castRequiresAnswer === false && !('castLimit' in rules) && !('bossMagicWard' in rules) && !('wardMult' in rules) && rules.statusBossMultBy?.freeze === 0,
     'spells: rules loaded (free cast, no cast cap / unlock, no Magic Ward, freeze never on bosses)');
+  const hintFree = async where => { const t = await p.evaluate(() => document.body.innerText); check(!/留着魔力|Save your MP|casts? ready/i.test(t) && !(await p.locator('[data-testid*="mp-tip"],[data-testid="boss-gate-tip"],[data-testid="casts-ready"],[data-testid="preview-boss"],[data-testid^="casts-"]').count()), `v3.6+: no MP hint / cast counter on the ${where}`); };
 
   // ---- general shop: no MP potions (they live in the magic shop) ----
   await tid('go-shop').click(); await tid('shop').waitFor();
@@ -42,7 +43,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   let g = await goldNow(); await tid('magic-buy-manatea').click();
   const teaP = g - await goldNow(); check(teaP === 6 * G && (await sv()).inv.manatea === 1, `magic shop: bought Mana Tea for 6×G (${teaP} = 6 × ${G})`);
   const card = await tid('spellcard-small_fireball').innerText();
-  check(/小火球/.test(card) && /Small Fireball/i.test(card) && /🔷 7 MP/.test(card) && /💥 20/.test(card), 'magic shop: spell card bilingual, 7 MP (v3.4 cost; 1.25x on hold), power 20');
+  check(/小火球/.test(card) && /Small Fireball/i.test(card) && /🔷 9 MP/.test(card) && /💥 20/.test(card), 'magic shop: spell card bilingual, 9 MP (v3.5+: 1.25 × v3.4), power 20');
   await shot('magic-shop');
   g = await goldNow(); await tid('buy-spell-small_fireball').click();
   if (await tid('blacksmith-first').count()) await tid('dialog-btn-0').click();
@@ -99,6 +100,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   
   // ---- forest path battles: cast on turn 1, back to back, MP the only limit; tap skips; MP potions not in battle ----
   await tid('go-adventure').click(); await tid('loc-forest').click(); await tid('location').waitFor();
+  await tid('act-preview').click(); await tid('preview').waitFor(); await hintFree('Preview page'); await tid('preview-done').click(); await tid('location').waitFor();
   const potsBefore = (await sv()).inv.manatea;
   const casts = []; let gateChecked = false, itemsChecked = false, sawRound1 = null;
   const done = () => casts.length >= 3 && gateChecked;
@@ -117,12 +119,13 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
       if (!casts.length) {
         sawRound1 = c;
         check(c.correct === 0 && await tid('spell-small_fireball').isEnabled(), `spellbook: open and castable on turn 1 (round ${c.round}, ${c.correct} right answers)`);
+        const bookTxt = await tid('spellbook').innerText(); check(!/×\s*\d/.test(bookTxt) && !(await p.locator('[data-testid^="casts-"]').count()), 'spellbook: no ×N cast counts (v3.6+)');
         await shot('spellbook');
       }
       if (await tid('spell-small_fireball').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('small_fireball', { skip: casts.length > 0, midShot: !casts.length && shots ? shots + 'spell-cast.png' : '' })) }); return true; }
       if (!gateChecked) { gateChecked = true;
-        check(await tid('spell-small_fireball').getAttribute('data-block') === 'mp' && /needs 7 MP/.test(await tid('spell-small_fireball').innerText()),
-          `MP gate: with ${mp} MP Small Fireball (7) is disabled and shows "needs 7 MP"`); }
+        check(await tid('spell-small_fireball').getAttribute('data-block') === 'mp' && /needs 9 MP/.test(await tid('spell-small_fireball').innerText()),
+          `MP gate: with ${mp} MP Small Fireball (9) is disabled and shows "needs 9 MP"`); }
       if (await tid('spell-bubble_spell').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('bubble_spell', { skip: true })) }); return true; }
       check(true, `MP gate: with ${mp} MP every spell is disabled`); await closeBook(); return false;
     }, q => q.turn !== 'attack' || done());   // miss attack questions until the casts are done so the enemies stay around
@@ -139,12 +142,13 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     const want = Math.max(1, Math.round(ls.power * (ls.tired ? 1.5 : 1) - h.def));
     check(!ls.asked && asked === 0, 'cast: instant, no question asked');
     check(h.dmg === want || h.wax, `cast: damage = max(1, round(P ${ls.power}${ls.tired ? ' × 1.5' : ''} − DEF ${h.def})) = ${want} (got ${h.dmg})`);
-    check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0 && ls.mpCost === 7, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
+    check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0 && ls.mpCost === 9, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
     check(ls.streakAfter === ls.streakBefore && ls.streakBefore === before.streak, `cast: streak unchanged (${ls.streakBefore} → ${ls.streakAfter})`);
     check(ls.qAfter === ls.qBefore, 'cast: no question counted for the cast turn');
-    check(ls.animMs >= 1950 && ls.animMs <= 3400, `cast: animation runs 2–3 s (${ls.animMs} ms)`);
+    check(first.total >= 2000 && first.total <= 3000 && ls.animMs >= 1950, `cast: animation timeline 2–3 s (${first.total} ms planned, ${ls.animMs} ms wall incl. the screenshot)`);
   }
   check(second && second.ls.skippedAt != null && second.ls.animMs - second.ls.skippedAt < 400 && second.ls.animMs < second.total - 50, `cast: tap skips the animation (tap at ${second?.ls.skippedAt} ms, ended at ${second?.ls.animMs} of ${second?.total} ms)`);
+  await tid('act-inn').click().catch(() => {}); if (await tid('inn').count()) { await hintFree('inn'); await tid('back').click(); await tid('location').waitFor(); }
   // Mana Tea works on the map (bag)
   await rest(3); await tid('location').waitFor(); const mpA = (await sv()).mp; const teaA = (await sv()).inv.manatea;   // chests can drop Mana Tea too
   await tid('act-bag').click(); await tid('items').waitFor({ timeout: 4000 }).catch(() => {});
@@ -157,6 +161,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     await battle(async () => false); if (await tid('victory-ok').count()) await tid('victory-ok').click(); await tid('location').waitFor(); }
   const qn = (await sv()).quests.q2_bounty.n; check(qn > 0, `quests: Giant Bee bounty progressed from kills (${qn}/8)`);
   await edit(s => { s.quests.q2_bounty.n = 8; s.where = 'town'; }); await p.reload(); await tid('town').waitFor({ timeout: 10000 });
+  await tid('go-inn').click(); await tid('inn').waitFor(); await hintFree('village inn'); await tid('back').click(); await tid('town').waitFor();
   await tid('go-quests').click(); await tid('quest-board').waitFor(); if (await tid('board-town-2').count()) await tid('board-town-2').click();
   g = await goldNow(); await tid('quest-claim-q2_bounty').click(); await tid('quest-claimed-q2_bounty').waitFor();
   const sC = await sv(); check(sC.quests.q2_bounty.s === 'claimed' && await goldNow() > g, `quests: claimed the bounty (+${await goldNow() - g} 🪙)`);
@@ -166,13 +171,17 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await edit(s => { s.level = 12; s.where = 'forest'; s.locs.forest.pathCleared = 8; s.locs.forest.patrolsLeft = 0; s.locs.forest.approachArmed = false; s.locs.forest.bossCheckpoint = false; });
   await p.reload(); await tid('location').waitFor(); await rest(34); await tid('location').waitFor();
   if (await tid('act-boss').count()) {
-    const bc = [];
+    await hintFree('boss gate');
+    const bc = []; const mpSeen = [];
     await tid('act-boss').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-    await battle(async () => { const c = await cs(); if (c.kind !== 'boss' || bc.length >= 2) return false;
+    await battle(async () => { const c = await cs(); if (c.kind !== 'boss') return false;
+      if (bc.length >= 2) { mpSeen.push({ mp: +(await tid('hud-mp').innerText()), correct: c.correct }); if (mpSeen.length === 1) await shot('queen-battle'); return false; }
       await openBook(); if (await tid('spell-small_fireball').isDisabled()) { await closeBook(); return false; }
       bc.push({ c, r: await cast('small_fireball', { skip: true }) }); return true; });
     check(bc.length === 2 && bc[0].c.correct === 0 && bc[1].r.ls.round === bc[0].r.ls.round + 1, `boss: cast on turn 1 and again right after (${bc.length} casts, ${bc[0]?.c.correct} right answers before)`);
     check(bc.every(x => x.r.ls.hits.every(h => !h.status || h.status !== 'frozen')), 'boss: no freeze on bosses');
+    const qb = bc[0]?.r.ls.hits.find(h => h.boss); log('boss hit', JSON.stringify(qb));
+    check(mpSeen.length >= 3 && mpSeen.every(x => x.mp === mpSeen[0].mp) && mpSeen[mpSeen.length - 1].correct > mpSeen[0].correct, `v3.6+: no MP regen on right answers (MP stays ${mpSeen[0]?.mp} over ${mpSeen.length} turns, ${mpSeen[0]?.correct} → ${mpSeen[mpSeen.length - 1]?.correct} right)`);
   } else check(false, 'boss: forest boss reachable');
   check(errs.length === 0, 'spells: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await ctx.close();
