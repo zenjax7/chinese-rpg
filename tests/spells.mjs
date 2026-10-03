@@ -27,9 +27,8 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await p.reload(); await tid('town').waitFor();
   const s0 = await sv(); check(Array.isArray(s0.spells) && typeof s0.quests === 'object', 'spells: an old save without spells/quests loads (spells [] / quests {})');
   const rules = await p.evaluate(() => window.__proto.spellRules);
-  check(rules.castRequiresAnswer === false && rules.bossMagicWard === false && rules.castLimit.normal === 1 && rules.castLimit.boss === 2 && rules.castLimit.minCorrect === 3 && rules.castLimit.bossGapQuestions === 12,
-    'spells: v3.4 rules loaded (free cast, no Magic Ward, cap 1 / boss 2, unlock after 3, boss gap 12)');
-  log('spells: Magic Ward test skipped (bossMagicWard = false by director default)');
+  check(rules.castRequiresAnswer === false && !('castLimit' in rules) && !('bossMagicWard' in rules) && !('wardMult' in rules) && rules.statusBossMultBy?.freeze === 0,
+    'spells: rules loaded (free cast, no cast cap / unlock, no Magic Ward, freeze never on bosses)');
 
   // ---- general shop: no MP potions (they live in the magic shop) ----
   await tid('go-shop').click(); await tid('shop').waitFor();
@@ -43,7 +42,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   let g = await goldNow(); await tid('magic-buy-manatea').click();
   const teaP = g - await goldNow(); check(teaP === 6 * G && (await sv()).inv.manatea === 1, `magic shop: bought Mana Tea for 6×G (${teaP} = 6 × ${G})`);
   const card = await tid('spellcard-small_fireball').innerText();
-  check(/小火球/.test(card) && /Small Fireball/i.test(card) && /MP/.test(card), 'magic shop: spell card bilingual with MP + power');
+  check(/小火球/.test(card) && /Small Fireball/i.test(card) && /🔷 7 MP/.test(card) && /💥 20/.test(card), 'magic shop: spell card bilingual, 7 MP (v3.4 cost; 1.25x on hold), power 20');
   await shot('magic-shop');
   g = await goldNow(); await tid('buy-spell-small_fireball').click();
   if (await tid('blacksmith-first').count()) await tid('dialog-btn-0').click();
@@ -98,69 +97,58 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     return { ls: await p.evaluate(() => window.__proto.lastSpell), total: await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0]?.totalMs), before, mp0, asked };
   }
   
-  // ---- battle 1 (forest path): locked → unlock after 3 right answers → instant cast → cap ----
+  // ---- forest path battles: cast on turn 1, back to back, MP the only limit; tap skips; MP potions not in battle ----
   await tid('go-adventure').click(); await tid('loc-forest').click(); await tid('location').waitFor();
-  const potsBefore = (await sv()).inv.manatea; let r1 = null;
-  await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-  await battle(async n => {
-    const c = await cs();
-    if (n === 0) {
-      await openBook();
-      check(await tid('spellbook').getAttribute('data-locked') === '1' && await tid('spell-small_fireball').isDisabled() && /3/.test(await tid('spell-small_fireball').innerText()),
-        `spellbook: locked before 3 right answers, with a hint (${c.correct}/3)`);
-      if (shots) await shot('spellbook-locked');
-      await closeBook();
-      // MP potions never usable in battle
-      await tid('act-itemsmenu').click().catch(() => {});
-      check(!(await tid('act-potion-manatea').count()) && !(await tid('act-potion-bigmanatea').count()), `battle items: Mana Tea not offered in battle (have ${potsBefore})`);
-      if (await tid('act-back').count()) await tid('act-back').click(); await tid('action-menu').waitFor();
-      return false;
-    }
-    if (!r1 && c.correct >= 3) {
-      await openBook(); check(await tid('spellbook').getAttribute('data-locked') === '0' && await tid('spell-small_fireball').isEnabled(), `spellbook: unlocked after ${c.correct} right answers`);
-      await shot('spellbook');
-      r1 = await cast('small_fireball', { midShot: shots ? shots + 'spell-cast.png' : '' });
-      return true;
-    }
-    if (r1 && !r1.capChecked) { r1.capChecked = 1; await openBook();
-      check(await tid('spellbook').getAttribute('data-block') === 'cap' && await tid('spell-small_fireball').isDisabled() && await tid('spell-bubble_spell').isDisabled(), 'cast cap: 1 cast per normal battle (Spellbook shows "used")');
-      await closeBook(); }
-    return false;
-  }, q => q.turn !== 'attack' || !!r1);
-  check(!!r1, 'spells: cast happened in the forest battle');
-  if (r1) {
-    const { ls, before, mp0, asked } = r1; const h = ls.hits[0];
+  const potsBefore = (await sv()).inv.manatea;
+  const casts = []; let gateChecked = false, itemsChecked = false, sawRound1 = null;
+  const done = () => casts.length >= 3 && gateChecked;
+  for (let b = 0; b < 6 && !done(); b++) {
+    await rest(b === 0 ? 26 : 8); await tid('location').waitFor();   // later battles start low so the MP gate is reached before the enemies fall
+    await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
+    let inBattle = 0;
+    await battle(async () => {
+      if (done()) return false;
+      const c = await cs();
+      if (!itemsChecked) { itemsChecked = true;   // MP potions never usable in battle
+        await tid('act-itemsmenu').click().catch(() => {});
+        check(!(await tid('act-potion-manatea').count()) && !(await tid('act-potion-bigmanatea').count()), `battle items: Mana Tea not offered in battle (have ${potsBefore})`);
+        if (await tid('act-back').count()) await tid('act-back').click(); await tid('action-menu').waitFor(); }
+      await openBook(); const mp = +(await tid('hud-mp').innerText());
+      if (!casts.length) {
+        sawRound1 = c;
+        check(c.correct === 0 && await tid('spell-small_fireball').isEnabled(), `spellbook: open and castable on turn 1 (round ${c.round}, ${c.correct} right answers)`);
+        await shot('spellbook');
+      }
+      if (await tid('spell-small_fireball').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('small_fireball', { skip: casts.length > 0, midShot: !casts.length && shots ? shots + 'spell-cast.png' : '' })) }); return true; }
+      if (!gateChecked) { gateChecked = true;
+        check(await tid('spell-small_fireball').getAttribute('data-block') === 'mp' && /needs 7 MP/.test(await tid('spell-small_fireball').innerText()),
+          `MP gate: with ${mp} MP Small Fireball (7) is disabled and shows "needs 7 MP"`); }
+      if (await tid('spell-bubble_spell').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('bubble_spell', { skip: true })) }); return true; }
+      check(true, `MP gate: with ${mp} MP every spell is disabled`); await closeBook(); return false;
+    }, q => q.turn !== 'attack' || done());   // miss attack questions until the casts are done so the enemies stay around
+    if (await tid('victory-ok').count()) await tid('victory-ok').click();
+    await tid('location').waitFor({ timeout: 8000 }).catch(async () => { await p.screenshot({ path: '/tmp/sp-stall.png' }); log('STALL UI', (await p.locator('#ui').innerText()).slice(0, 400)); });
+  }
+  const [first, second] = casts; const same = casts.filter(x => x.b === casts[casts.length - 1].b);
+  check(gateChecked, 'MP gate reached after casting until MP ran out');
+  check(same.length >= 3 || casts.length >= 3, `casts: ${casts.length} casts (${same.length} in one battle), no per-battle cap`);
+  check(casts.slice(1).some((x, i) => x.b === casts[i].b && x.ls.round === casts[i].ls.round + 1), 'casts: back to back on consecutive turns');
+  check(!!first, 'spells: cast happened in a forest battle');
+  if (first) {
+    const { ls, before, mp0, asked } = first; const h = ls.hits[0];
     const want = Math.max(1, Math.round(ls.power * (ls.tired ? 1.5 : 1) - h.def));
     check(!ls.asked && asked === 0, 'cast: instant, no question asked');
     check(h.dmg === want || h.wax, `cast: damage = max(1, round(P ${ls.power}${ls.tired ? ' × 1.5' : ''} − DEF ${h.def})) = ${want} (got ${h.dmg})`);
-    check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
+    check(ls.mpEnd === mp0 - ls.mpCost && ls.mpBefore === mp0 && ls.mpCost === 7, `cast: MP spent ${mp0} → ${ls.mpEnd} (−${ls.mpCost}), no regen`);
     check(ls.streakAfter === ls.streakBefore && ls.streakBefore === before.streak, `cast: streak unchanged (${ls.streakBefore} → ${ls.streakAfter})`);
     check(ls.qAfter === ls.qBefore, 'cast: no question counted for the cast turn');
     check(ls.animMs >= 1950 && ls.animMs <= 3400, `cast: animation runs 2–3 s (${ls.animMs} ms)`);
   }
-  if (await tid('victory-ok').count()) await tid('victory-ok').click();
-  const q2 = (await sv()).quests.q2_bounty; log('bee bounty after battle 1', JSON.stringify(q2));
-
-  // ---- battle 2: skip the animation by tapping; MP gate ----
-  await tid('location').waitFor(); await rest(); await tid('location').waitFor();
-  let r2 = null, gated = false;
-  await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-  await battle(async () => { const c = await cs(); if (r2 || c.correct < 3) return false;
-    await openBook(); r2 = await cast('bubble_spell', { skip: true }); return true; }, q => q.turn !== 'attack' || !!r2);   // keep the enemy alive until the cast
-  check(r2 && r2.ls.skippedAt != null && r2.ls.animMs - r2.ls.skippedAt < 400 && r2.ls.animMs < r2.total - 50, `cast: tap skips the animation (tap at ${r2?.ls.skippedAt} ms, ended at ${r2?.ls.animMs} of ${r2?.total} ms)`);
-  if (await tid('victory-ok').count()) await tid('victory-ok').click();
-  await tid('location').waitFor(); await rest(1); await tid('location').waitFor();
-  await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-  await battle(async () => { const c = await cs(); if (gated || c.correct < 3) return false; gated = true;
-    await openBook(); const b = await tid('spell-small_fireball').getAttribute('data-block');
-    check(b === 'mp' && await tid('spell-small_fireball').isDisabled() && /needs \d+ MP/.test(await tid('spell-small_fireball').innerText()), `MP gate: spell disabled with "needs N MP" (block ${b})`);
-    await closeBook(); return false; });
-  if (await tid('victory-ok').count()) await tid('victory-ok').click();
-  await tid('location').waitFor({ timeout: 8000 }).catch(async () => { await p.screenshot({ path: '/tmp/sp-stall.png' }); log('STALL UI', (await p.locator('#ui').innerText()).slice(0, 400)); });
+  check(second && second.ls.skippedAt != null && second.ls.animMs - second.ls.skippedAt < 400 && second.ls.animMs < second.total - 50, `cast: tap skips the animation (tap at ${second?.ls.skippedAt} ms, ended at ${second?.ls.animMs} of ${second?.total} ms)`);
   // Mana Tea works on the map (bag)
-  await tid('location').waitFor(); const mpA = (await sv()).mp;
+  await rest(3); await tid('location').waitFor(); const mpA = (await sv()).mp; const teaA = (await sv()).inv.manatea;   // chests can drop Mana Tea too
   await tid('act-bag').click(); await tid('items').waitFor({ timeout: 4000 }).catch(() => {});
-  if (await tid('use-manatea').count()) { await tid('use-manatea').click(); await p.waitForTimeout(200); const sB = await sv(); check(sB.mp > mpA && sB.inv.manatea === potsBefore - 1, `map: Mana Tea restores MP from the bag (${mpA} → ${sB.mp})`); await tid('back').click().catch(() => {}); }
+  if (await tid('use-manatea').count()) { await tid('use-manatea').click(); await p.waitForTimeout(200); const sB = await sv(); check(sB.mp > mpA && sB.inv.manatea === teaA - 1, `map: Mana Tea restores MP from the bag (${mpA} → ${sB.mp})`); await tid('back').click().catch(() => {}); }
   else check(false, 'map: bag with Mana Tea reachable from the location');
 
   // ---- quest progress + claim ----
@@ -174,24 +162,18 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   const sC = await sv(); check(sC.quests.q2_bounty.s === 'claimed' && await goldNow() > g, `quests: claimed the bounty (+${await goldNow() - g} 🪙)`);
   await tid('back').click();
 
-  // ---- boss battle: 2 casts, the 2nd ≥ 12 questions after the 1st ----
+  // ---- boss battle: cast on turn 1, back to back ----
   await edit(s => { s.level = 12; s.where = 'forest'; s.locs.forest.pathCleared = 8; s.locs.forest.patrolsLeft = 0; s.locs.forest.approachArmed = false; s.locs.forest.bossCheckpoint = false; });
-  await p.reload(); await tid('location').waitFor(); await rest(40); await tid('location').waitFor();
-  if (!(await tid('act-boss').count())) { await p.screenshot({ path: '/tmp/sp-noboss.png' }); log('no boss button:', (await tid('location').innerText()).slice(0, 300)); }
+  await p.reload(); await tid('location').waitFor(); await rest(34); await tid('location').waitFor();
   if (await tid('act-boss').count()) {
-    let first = null, gapSeen = false, second = null, capSeen = false;
+    const bc = [];
     await tid('act-boss').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-    await battle(async () => { const c = await cs();
-      if (c.kind !== 'boss') return false;
-      if (!first && c.correct >= 3) { await openBook(); first = await cast('small_fireball', { skip: true }); return true; }
-      if (first && !second && c.q - c.lastCastQ < 12) { if (!gapSeen) { gapSeen = true; await openBook();
-          check(await tid('spellbook').getAttribute('data-block') === 'gap' && /ready in \d+ questions/.test(await tid('spellbook').innerText()), `boss: 2nd cast waits 12 questions ("ready in N")`); await closeBook(); } return false; }
-      if (first && !second) { await openBook(); second = await cast('small_fireball', { skip: true }); check(second.ls.qBefore - first.ls.qBefore >= 12, `boss: 2nd cast allowed after ${second.ls.qBefore - first.ls.qBefore} questions`); return true; }
-      if (second && !capSeen) { capSeen = true; await openBook(); check(await tid('spellbook').getAttribute('data-block') === 'cap', 'boss: cap of 2 casts per boss battle'); await closeBook(); }
-      return false;
-    }, q => q.turn !== 'attack' || !first || !!second);   // after the 1st cast, miss attack questions so the boss lasts 12+ questions
-    check(!!first && !!second && gapSeen, 'boss: two casts with the 12-question gap');
-  } else check(false, 'boss: forest boss reachable for the cast-cap test');
+    await battle(async () => { const c = await cs(); if (c.kind !== 'boss' || bc.length >= 2) return false;
+      await openBook(); if (await tid('spell-small_fireball').isDisabled()) { await closeBook(); return false; }
+      bc.push({ c, r: await cast('small_fireball', { skip: true }) }); return true; });
+    check(bc.length === 2 && bc[0].c.correct === 0 && bc[1].r.ls.round === bc[0].r.ls.round + 1, `boss: cast on turn 1 and again right after (${bc.length} casts, ${bc[0]?.c.correct} right answers before)`);
+    check(bc.every(x => x.r.ls.hits.every(h => !h.status || h.status !== 'frozen')), 'boss: no freeze on bosses');
+  } else check(false, 'boss: forest boss reachable');
   check(errs.length === 0, 'spells: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await ctx.close();
 }
