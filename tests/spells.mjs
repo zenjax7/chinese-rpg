@@ -93,9 +93,9 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 });
     const asked = await p.locator('[data-testid="opt"]:not([disabled])').count();
     if (midShot) { await p.waitForTimeout(900); await p.screenshot({ path: midShot }); log('saved', midShot); }
-    if (skip) { await p.waitForTimeout(250); await tid('fx-skip').click({ force: true }); }
+    if (skip) { await p.waitForTimeout(150); await p.evaluate(() => document.querySelector('[data-testid="fx-skip"]')?.click()); }
     await p.waitForFunction(() => window.__proto.lastSpell?.done, null, { timeout: 8000 });
-    return { ls: await p.evaluate(() => window.__proto.lastSpell), before, mp0, asked };
+    return { ls: await p.evaluate(() => window.__proto.lastSpell), total: await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0]?.totalMs), before, mp0, asked };
   }
   
   // ---- battle 1 (forest path): locked → unlock after 3 right answers → instant cast → cap ----
@@ -147,7 +147,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   await battle(async () => { const c = await cs(); if (r2 || c.correct < 3) return false;
     await openBook(); r2 = await cast('bubble_spell', { skip: true }); return true; }, q => q.turn !== 'attack' || !!r2);   // keep the enemy alive until the cast
-  check(r2 && r2.ls.animMs < 1500, `cast: tap skips the animation (${r2?.ls.animMs} ms)`);
+  check(r2 && r2.ls.skippedAt != null && r2.ls.animMs - r2.ls.skippedAt < 400 && r2.ls.animMs < r2.total - 50, `cast: tap skips the animation (tap at ${r2?.ls.skippedAt} ms, ended at ${r2?.ls.animMs} of ${r2?.total} ms)`);
   if (await tid('victory-ok').count()) await tid('victory-ok').click();
   await tid('location').waitFor(); await rest(1); await tid('location').waitFor();
   await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });

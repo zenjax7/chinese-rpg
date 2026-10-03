@@ -405,10 +405,10 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     setTimeout(() => playSpellSfx(sp.id), 300);
     // the animation (2–3 s, src/data/spellfx.json castAnim) can be skipped with a tap anywhere / Enter / Space
     const sk = document.createElement('button'); sk.id = 'fxskip'; sk.className = 'fxskip'; sk.dataset.testid = 'fx-skip'; sk.setAttribute('aria-label', 'Skip');
-    sk.innerHTML = '<span>▶▶ <span lang="zh-CN">跳过</span> Tap to skip</span>'; sk.onclick = () => view.skipCast();
-    const key = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') view.skipCast(); };
-    $('[data-testid="battle"]')?.appendChild(sk); document.addEventListener('keydown', key);
+    sk.innerHTML = '<span>▶▶ <span lang="zh-CN">跳过</span> Tap to skip</span>'; sk.onclick = () => { info.skippedAt ??= Math.round(performance.now() - t0); view.skipCast(); };
+    const key = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { info.skippedAt ??= Math.round(performance.now() - t0); view.skipCast(); } };
     const t0 = performance.now();
+    $('[data-testid="battle"]')?.appendChild(sk); document.addEventListener('keydown', key);
     await view.castSpell(sp, hitList.map(f => foes.indexOf(f)), dmgs, hitList.map(f => f.hp), { status, tag: ward ? '🛡️ ×' + R.wardMult : undefined });
     info.animMs = Math.round(performance.now() - t0);
     sk.remove(); document.removeEventListener('keydown', key);
