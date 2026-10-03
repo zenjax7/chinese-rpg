@@ -139,7 +139,7 @@ SHD = {1: 35, 2: 70, 3: 130, 4: 230, 5: 390, 6: 540, 7: 690, 8: 840, 9: 1020}
 rows = []
 for t in T:
     g = G(t)
-    rows.append((t, REALMS[t][0], g, C.inn_price(t), g, 2 * g if t >= 5 else '', 6 * g, 15 * g if t >= 5 else '', g, WPN[t], ARM[t], SHD[t], 2 * g, 5 * g, 10 * g,
+    rows.append((t, REALMS[t][0], g, C.inn_price(t), g, 2 * g if t >= 5 else '', 6 * g, 15 * g if t >= 5 else '', 2 * g, WPN[t], ARM[t], SHD[t], 2 * g, 5 * g, 10 * g,
                  max(0, 0) or 'max(10% of gold, 1 inn)', 2 * C.inn_price(t)))
 emit('economy_prices', ['tier', 'realm', 'gold_per_normal', 'inn', 'honey_potion', 'big_honey', 'mana_tea', 'big_mana_tea', 'return_feather', 'weapon', 'armor', 'shield',
                         'elite_gold', 'location_boss_gold', 'realm_boss_gold', 'defeat_fee', 'defeat_gold_floor'], rows,
@@ -150,7 +150,7 @@ rows = [
     ('big_honey', 'Big Honey', '大蜂蜜', '+70% max HP', 'yes (uses the turn, no question)', '2 × G', 'no limit (shares the 3 per battle belt)', 'shop from tier 5; chests'),
     ('mana_tea', 'Mana Tea', '魔力茶', '+50% max MP', 'no: map only (v3.4)', '6 × G (v3.4; was 1 × G)', 'no limit', 'shop; normal/elite chest; words quest'),
     ('big_mana_tea', 'Big Mana Tea', '大魔力茶', 'refills MP to full', 'no: map only', '15 × G', 'no limit', 'shop from town 5; boss chests'),
-    ('return_feather', 'Return Feather', '回城羽毛', 'Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room', 'no', '1 × G', '3', 'shop; normal/elite chest (5%); 1 free in the tutorial'),
+    ('return_feather', 'Return Feather', '回城羽毛', 'Fly to the last inn you used or any visited town/village; anywhere on the map, not in battle or the boss room (v3.9)', 'no', '2 × G', '3', 'town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1)'),
 ]
 emit('consumables', ['item_id', 'name_en', 'name_zh', 'effect', 'battle_use', 'price', 'carry_limit', 'sources'], rows)
 

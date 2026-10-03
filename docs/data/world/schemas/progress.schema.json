@@ -1,0 +1,187 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/progress.schema.json",
+ "title": "Player world progress (save). Fog of war, walked edges and event state live here, never in graph files.",
+ "type": "object",
+ "properties": {
+  "schema": {
+   "const": "progress/0.3"
+  },
+  "dataVersion": {
+   "type": "string"
+  },
+  "seed": {
+   "type": "integer",
+   "description": "save seed for all encounter / event rolls"
+  },
+  "pos": {
+   "type": "object",
+   "properties": {
+    "graph": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "node": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "edge": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "step": {
+     "type": "integer",
+     "minimum": 0
+    }
+   },
+   "required": [
+    "graph",
+    "node"
+   ]
+  },
+  "lastInn": {
+   "$ref": "common.schema.json#/$defs/nodeRef"
+  },
+  "visitedTowns": {
+   "type": "array",
+   "items": {
+    "$ref": "common.schema.json#/$defs/nodeRef"
+   },
+   "description": "Return Feather destinations"
+  },
+  "graphs": {
+   "type": "object",
+   "description": "per graph id",
+   "additionalProperties": {
+    "type": "object",
+    "properties": {
+     "visited": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+      "description": "base64 bitset, bit i = node/edge idx i"
+     },
+     "walked": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+      "description": "edges fully walked once (x clearedStepMult)"
+     },
+     "revealed": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+      "description": "optional extra reveals (map items, story); fog = visited + neighbours of visited + landmarks + revealed"
+     },
+     "crossings": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "description": "edge idx -> times crossed (roll seed)"
+     },
+     "edgeProgress": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "description": "edge idx -> steps already walked after a turn-back"
+     },
+     "visits": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "description": "node idx -> arrivals (cooldowns, weighted-event seed)"
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  "eventsDone": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   },
+   "description": "'graph/eventId' or 'graph/eventId#pick' for once-events"
+  },
+  "eventLastFired": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "integer"
+   }
+  },
+  "shortcuts": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "zonesDefeated": {
+   "type": "array",
+   "items": {
+    "type": "string",
+    "pattern": "^[a-z0-9_]+$"
+   }
+  },
+  "flags": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "zone": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "freshBattles": {
+     "type": "integer"
+    },
+    "pity": {
+     "type": "integer"
+    },
+    "approachArmed": {
+     "type": "boolean"
+    },
+    "patrolsLeft": {
+     "type": "integer"
+    },
+    "bossCheckpoint": {
+     "type": [
+      "object",
+      "null"
+     ]
+    }
+   }
+  },
+  "safeUntil": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "integer"
+   },
+   "description": "'graph/edgeIdx' -> hop count until which the post-clear safety holds"
+  },
+  "hops": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "feathers": {
+   "type": "integer",
+   "minimum": 0,
+   "maximum": 3
+  }
+ },
+ "required": [
+  "schema",
+  "seed",
+  "pos",
+  "lastInn",
+  "graphs"
+ ],
+ "additionalProperties": false
+}

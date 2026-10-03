@@ -18,13 +18,15 @@
   "map": "bg_map_goblin_caves_1",
   "battle": "bg_battle_r4"
  },
+ "edgeIdxMax": 22,
+ "aspect": 2.172,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "地牢口",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 253,
-   "y": 360,
+   "x": 0.1997,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 447,
-   "y": 250,
+   "x": 0.3503,
+   "y": 0.3146,
    "zone": "cave_mouth",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "fork",
-   "x": 640,
-   "y": 140,
+   "x": 0.5,
+   "y": 0.1292,
    "zone": "cave_mouth",
    "title": {
     "zh": "小路",
@@ -71,8 +73,8 @@
    "id": "inn_1",
    "idx": 4,
    "kind": "inn",
-   "x": 833,
-   "y": 93,
+   "x": 0.6497,
+   "y": 0.05,
    "zone": "cave_mouth",
    "title": {
     "zh": "营地客栈",
@@ -90,21 +92,22 @@
    "id": "boss_1",
    "idx": 5,
    "kind": "boss",
-   "x": 1027,
-   "y": 250,
+   "x": 0.8003,
+   "y": 0.3146,
    "zone": "cave_mouth",
    "title": {
     "zh": "回声大蝙蝠",
     "en": "Giant Echo Bat"
    },
-   "boss": "cave_mouth"
+   "boss": "cave_mouth",
+   "fog": "landmark"
   },
   {
    "id": "stairs_2",
    "idx": 6,
    "kind": "stairs_down",
-   "x": 1220,
-   "y": 305,
+   "x": 0.95,
+   "y": 0.4073,
    "zone": "crystal_tunnels",
    "title": {
     "zh": "下楼梯",
@@ -115,8 +118,8 @@
    "id": "path_4",
    "idx": 7,
    "kind": "fork",
-   "x": 640,
-   "y": 250,
+   "x": 0.5,
+   "y": 0.3146,
    "zone": "cave_mouth",
    "title": {
     "zh": "弯路",
@@ -127,8 +130,8 @@
    "id": "story_1",
    "idx": 8,
    "kind": "story",
-   "x": 447,
-   "y": 360,
+   "x": 0.3503,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "故事点",
@@ -139,8 +142,8 @@
    "id": "path_5",
    "idx": 9,
    "kind": "waypoint",
-   "x": 833,
-   "y": 200,
+   "x": 0.6497,
+   "y": 0.2303,
    "zone": "cave_mouth",
    "title": {
     "zh": "弯路",
@@ -151,8 +154,8 @@
    "id": "path_6",
    "idx": 10,
    "kind": "waypoint",
-   "x": 1027,
-   "y": 360,
+   "x": 0.8003,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "弯路",
@@ -163,8 +166,8 @@
    "id": "npc_1",
    "idx": 11,
    "kind": "npc",
-   "x": 1220,
-   "y": 415,
+   "x": 0.95,
+   "y": 0.5927,
    "zone": "cave_mouth",
    "title": {
     "zh": "旅人",
@@ -175,8 +178,8 @@
    "id": "path_7",
    "idx": 12,
    "kind": "waypoint",
-   "x": 447,
-   "y": 470,
+   "x": 0.3503,
+   "y": 0.6854,
    "zone": "cave_mouth",
    "title": {
     "zh": "弯路",
@@ -187,8 +190,8 @@
    "id": "deadend_1",
    "idx": 13,
    "kind": "waypoint",
-   "x": 640,
-   "y": 360,
+   "x": 0.5,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "死胡同",
@@ -199,8 +202,8 @@
    "id": "deadend_2",
    "idx": 14,
    "kind": "waypoint",
-   "x": 833,
-   "y": 307,
+   "x": 0.6497,
+   "y": 0.4107,
    "zone": "cave_mouth",
    "title": {
     "zh": "死胡同",
@@ -211,8 +214,8 @@
    "id": "treasure_1",
    "idx": 15,
    "kind": "chest",
-   "x": 640,
-   "y": 470,
+   "x": 0.5,
+   "y": 0.6854,
    "zone": "cave_mouth",
    "title": {
     "zh": "宝藏",
@@ -223,8 +226,8 @@
    "id": "deadend_3",
    "idx": 16,
    "kind": "waypoint",
-   "x": 833,
-   "y": 413,
+   "x": 0.6497,
+   "y": 0.5893,
    "zone": "cave_mouth",
    "title": {
     "zh": "死胡同",
@@ -235,8 +238,8 @@
    "id": "story_2",
    "idx": 17,
    "kind": "story",
-   "x": 833,
-   "y": 520,
+   "x": 0.6497,
+   "y": 0.7697,
    "zone": "cave_mouth",
    "title": {
     "zh": "故事点",
@@ -247,8 +250,8 @@
    "id": "treasure_2",
    "idx": 18,
    "kind": "chest",
-   "x": 833,
-   "y": 627,
+   "x": 0.6497,
+   "y": 0.95,
    "zone": "cave_mouth",
    "title": {
     "zh": "宝藏",
@@ -259,8 +262,8 @@
    "id": "miniboss_1",
    "idx": 19,
    "kind": "miniboss",
-   "x": 1027,
-   "y": 470,
+   "x": 0.8003,
+   "y": 0.6854,
    "zone": "cave_mouth",
    "title": {
     "zh": "小头目",
@@ -271,8 +274,8 @@
    "id": "treasure_3",
    "idx": 20,
    "kind": "chest",
-   "x": 640,
-   "y": 580,
+   "x": 0.5,
+   "y": 0.8708,
    "zone": "cave_mouth",
    "title": {
     "zh": "宝藏",
@@ -288,7 +291,8 @@
    "to": {
     "graph": "realm_4",
     "node": "portal_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_stairs_2",
@@ -297,7 +301,8 @@
    "to": {
     "graph": "goblin_caves_2",
     "node": "stairs_1"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "e1",
@@ -306,7 +311,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 3,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e2",
@@ -315,7 +321,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 3,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e3",
@@ -324,7 +331,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 3,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e4",
@@ -333,7 +341,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e5",
@@ -343,7 +352,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 6
   },
   {
    "id": "e6",
@@ -360,7 +370,8 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 7
   },
   {
    "id": "e7",
@@ -369,7 +380,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e8",
@@ -378,7 +390,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -388,7 +401,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 10
   },
   {
    "id": "e10",
@@ -397,7 +411,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
    "id": "e11",
@@ -406,7 +421,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   },
   {
    "id": "e12",
@@ -415,7 +431,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 13
   },
   {
    "id": "e13",
@@ -424,7 +441,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 14
   },
   {
    "id": "e14",
@@ -433,7 +451,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 15
   },
   {
    "id": "e15",
@@ -442,7 +461,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 16
   },
   {
    "id": "e16",
@@ -451,7 +471,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 17
   },
   {
    "id": "e17",
@@ -460,7 +481,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 18
   },
   {
    "id": "e18",
@@ -469,7 +491,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 19
   },
   {
    "id": "e19",
@@ -478,7 +501,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 20
   },
   {
    "id": "e20",
@@ -487,7 +511,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 21
   },
   {
    "id": "e21",
@@ -496,7 +521,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 22
   }
  ],
  "events": [
@@ -724,7 +750,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q4_goblin_caves_1_npc_1"
+     "offerQuest": "q4_glow_moss"
     }
    ]
   },
@@ -959,31 +985,28 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ],
   "goblin_caves_1.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "goblin_caves_1.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

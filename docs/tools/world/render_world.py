@@ -9,7 +9,7 @@ COL = {'town': '#e4572e', 'village': '#f3a712', 'inn': '#29335c', 'boss': '#7b08
 SHAPE = {'town': 's', 'village': 's', 'inn': 'h', 'boss': '*', 'miniboss': 'P', 'chest': 'D', 'story': 'p', 'npc': 'o', 'stairs_up': '^', 'stairs_down': 'v', 'portal': '8'}
 DCOL = {0: '#27ae60', 1: '#f1c40f', 2: '#e67e22', 3: '#c0392b'}
 def draw(ax, g, title):
-    N = {n['id']: n for n in g['nodes']}
+    A = g.get('aspect', 1.0); N = {n['id']: dict(n, x=n['x']*1000*A, y=n['y']*1000) for n in g['nodes']}
     T = WG.realm(g['realm']) if g.get('realm') else None
     for e in g['edges']:
         if isinstance(e['to'], dict): continue
@@ -20,9 +20,9 @@ def draw(ax, g, title):
         if e.get('steps', 1) > 1 and not safe: ax.text((a['x']+b['x'])/2, -(a['y']+b['y'])/2, str(e['steps']), fontsize=6, ha='center', va='center', color='#333', zorder=3,
                                                      bbox=dict(boxstyle='round,pad=0.1', fc='white', ec='none', alpha=0.7))
         if e.get('scripted'): ax.text((a['x']+b['x'])/2, -(a['y']+b['y'])/2 - 18, 'elite', fontsize=6, ha='center', color='#c0392b')
-    for n in g['nodes']:
+    for n in N.values():
         ax.scatter(n['x'], -n['y'], s=260 if n['kind'] in ('boss', 'town') else 140, c=COL.get(n['kind'], '#999'), marker=SHAPE.get(n['kind'], 'o'), zorder=2, edgecolors='black', linewidths=0.5)
-        ax.text(n['x'], -n['y'] - 26, n['title']['en'] if len(g['nodes']) <= 30 else n['id'], fontsize=6 if len(g['nodes']) <= 30 else 4.5, ha='center', va='top', zorder=4)
+        ax.text(n['x'], -n['y'] - 26, (n['title']['en'] if len(g['nodes']) <= 30 else n['id']) + (' ⌂' if n.get('fog') == 'landmark' and False else ''), fontsize=6 if len(g['nodes']) <= 30 else 4.5, ha='center', va='top', zorder=4)
     for e in g['edges']:
         if isinstance(e['to'], dict):
             a = N[e['from']]; ax.annotate(f"→ {e['to']['graph']}", (a['x'], -a['y']), xytext=(8, 8), textcoords='offset points', fontsize=6, color='#2e86c1')

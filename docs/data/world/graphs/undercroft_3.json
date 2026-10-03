@@ -11,20 +11,22 @@
  },
  "status": "reference",
  "entry": "stairs_1",
- "idxMax": 11,
+ "idxMax": 16,
  "levels": 3,
  "optional": false,
  "background": {
   "map": "bg_map_undercroft_3",
   "battle": "bg_battle_r8"
  },
+ "edgeIdxMax": 17,
+ "aspect": 2.636,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "grand_colosseum",
    "title": {
     "zh": "上楼梯",
@@ -34,9 +36,9 @@
   {
    "id": "path_1",
    "idx": 1,
-   "kind": "waypoint",
-   "x": 292,
-   "y": 360,
+   "kind": "fork",
+   "x": 0.23,
+   "y": 0.5,
    "zone": "grand_colosseum",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "fork",
-   "x": 524,
-   "y": 360,
+   "x": 0.41,
+   "y": 0.1625,
    "zone": "grand_colosseum",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "inn_1",
    "idx": 3,
    "kind": "inn",
-   "x": 756,
-   "y": 195,
+   "x": 0.59,
+   "y": 0.05,
    "zone": "grand_colosseum",
    "title": {
     "zh": "营地客栈",
@@ -78,21 +80,22 @@
    "id": "boss_8",
    "idx": 4,
    "kind": "boss",
-   "x": 988,
-   "y": 250,
+   "x": 0.77,
+   "y": 0.1625,
    "zone": "grand_colosseum",
    "title": {
     "zh": "食人魔冠军",
     "en": "Ogre Champion"
    },
-   "boss": "grand_colosseum"
+   "boss": "grand_colosseum",
+   "fog": "landmark"
   },
   {
    "id": "miniboss_1",
    "idx": 5,
    "kind": "miniboss",
-   "x": 756,
-   "y": 305,
+   "x": 0.59,
+   "y": 0.275,
    "zone": "grand_colosseum",
    "title": {
     "zh": "小头目",
@@ -100,11 +103,23 @@
    }
   },
   {
-   "id": "story_1",
+   "id": "path_3",
    "idx": 6,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.5,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 7,
    "kind": "story",
-   "x": 756,
-   "y": 415,
+   "x": 0.77,
+   "y": 0.3875,
    "zone": "grand_colosseum",
    "title": {
     "zh": "故事点",
@@ -113,34 +128,10 @@
   },
   {
    "id": "story_2",
-   "idx": 7,
-   "kind": "story",
-   "x": 756,
-   "y": 525,
-   "zone": "grand_colosseum",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "path_3",
    "idx": 8,
-   "kind": "waypoint",
-   "x": 988,
-   "y": 360,
-   "zone": "grand_colosseum",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "story_3",
-   "idx": 9,
    "kind": "story",
-   "x": 1220,
-   "y": 305,
+   "x": 0.41,
+   "y": 0.3875,
    "zone": "grand_colosseum",
    "title": {
     "zh": "故事点",
@@ -149,10 +140,40 @@
   },
   {
    "id": "path_4",
-   "idx": 10,
+   "idx": 9,
    "kind": "waypoint",
-   "x": 988,
-   "y": 470,
+   "x": 0.59,
+   "y": 0.725,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "inn_2",
+   "idx": 10,
+   "kind": "inn",
+   "x": 0.41,
+   "y": 0.6125,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.6125,
    "zone": "grand_colosseum",
    "title": {
     "zh": "弯路",
@@ -161,14 +182,62 @@
   },
   {
    "id": "npc_1",
-   "idx": 11,
+   "idx": 12,
    "kind": "npc",
-   "x": 1220,
-   "y": 415,
+   "x": 0.95,
+   "y": 0.3875,
    "zone": "grand_colosseum",
    "title": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.8375,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 14,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.95,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_8",
+   "idx": 15,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.8375,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 16,
+   "kind": "chest",
+   "x": 0.95,
+   "y": 0.6125,
+   "zone": "grand_colosseum",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
    }
   }
  ],
@@ -180,7 +249,8 @@
    "to": {
     "graph": "undercroft_2",
     "node": "stairs_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -189,7 +259,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -198,7 +269,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -207,7 +279,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -217,7 +290,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -226,61 +300,129 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e6",
    "from": "path_2",
-   "to": "story_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "tunnel"
-  },
-  {
-   "id": "e7",
-   "from": "path_2",
-   "to": "story_2",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "tunnel"
-  },
-  {
-   "id": "e8",
-   "from": "story_1",
    "to": "path_3",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
-   "id": "e9",
+   "id": "e7",
    "from": "path_3",
-   "to": "story_3",
+   "to": "story_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
-   "id": "e10",
+   "id": "e8",
+   "from": "path_1",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
    "from": "story_1",
    "to": "path_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "path_4",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
   },
   {
    "id": "e11",
-   "from": "path_4",
+   "from": "inn_2",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_3",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "path_5",
    "to": "npc_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e14",
+   "from": "path_1",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e15",
+   "from": "path_6",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e16",
+   "from": "path_7",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 16
+  },
+  {
+   "id": "e17",
+   "from": "path_8",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 17
   }
  ],
  "events": [
@@ -353,6 +495,19 @@
    ]
   },
   {
+   "id": "boss_8.1",
+   "node": "boss_8",
+   "on": "clear",
+   "once": true,
+   "outcome": "item",
+   "do": [
+    {
+     "giveItem": "feather",
+     "qty": 1
+    }
+   ]
+  },
+  {
    "id": "miniboss_1.1",
    "node": "miniboss_1",
    "on": "enter",
@@ -390,30 +545,6 @@
    "do": []
   },
   {
-   "id": "story_1.1",
-   "node": "story_1",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "undercroft_3.story_1"
-    }
-   ]
-  },
-  {
-   "id": "story_2.1",
-   "node": "story_2",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "undercroft_3.story_2"
-    }
-   ]
-  },
-  {
    "id": "path_3.1",
    "node": "path_3",
    "on": "enter",
@@ -448,14 +579,41 @@
    ]
   },
   {
-   "id": "story_3.1",
-   "node": "story_3",
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_singer_escort"
+   },
+   "do": [
+    {
+     "dialogue": "undercroft_3.story_1.step_q8_singer_escort"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
    "on": "enter",
    "once": true,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "undercroft_3.story_3"
+     "dialogue": "undercroft_3.story_1"
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "undercroft_3.story_2"
     }
    ]
   },
@@ -494,14 +652,51 @@
    ]
   },
   {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "npc_1.1",
    "node": "npc_1",
    "on": "enter",
    "once": true,
-   "outcome": "quest_offer",
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_fan_letters"
+   },
    "do": [
     {
-     "offerQuest": "q8_undercroft_3_npc_1"
+     "dialogue": "undercroft_3.npc_1.step_q8_fan_letters"
     }
    ]
   },
@@ -516,43 +711,173 @@
      "dialogue": "ambient"
     }
    ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
   }
  ],
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "undercroft_3.story_1.step_q8_singer_escort": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_singer_escort: scene from data/dialogue)"
    }
   ],
   "undercroft_3.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "undercroft_3.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
-  "undercroft_3.story_3": [
+  "undercroft_3.npc_1.step_q8_fan_letters": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
-    "en": "(story beat to write)"
+    "speaker": "traveller",
+    "en": "(quest step for q8_fan_letters: scene from data/dialogue)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

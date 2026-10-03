@@ -16,13 +16,15 @@
   "map": "bg_map_realm_7",
   "battle": "bg_battle_r7"
  },
+ "edgeIdxMax": 79,
+ "aspect": 1.933,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "云岭镇",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 7
+   "town": 7,
+   "fog": "landmark"
   },
   {
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 176,
-   "y": 360,
+   "x": 0.14,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -53,8 +56,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "fork",
-   "x": 292,
-   "y": 305,
+   "x": 0.23,
+   "y": 0.4175,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "fork",
-   "x": 408,
-   "y": 140,
+   "x": 0.32,
+   "y": 0.17,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -77,8 +80,8 @@
    "id": "path_4",
    "idx": 4,
    "kind": "fork",
-   "x": 524,
-   "y": 93,
+   "x": 0.41,
+   "y": 0.0995,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -89,8 +92,8 @@
    "id": "campfire_1",
    "idx": 5,
    "kind": "inn",
-   "x": 640,
-   "y": 67,
+   "x": 0.5,
+   "y": 0.0605,
    "zone": "windy_cliffs",
    "title": {
     "zh": "半路营火",
@@ -109,8 +112,8 @@
    "id": "path_5",
    "idx": 6,
    "kind": "fork",
-   "x": 524,
-   "y": 200,
+   "x": 0.41,
+   "y": 0.26,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -121,8 +124,8 @@
    "id": "path_6",
    "idx": 7,
    "kind": "fork",
-   "x": 640,
-   "y": 120,
+   "x": 0.5,
+   "y": 0.14,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -133,8 +136,8 @@
    "id": "path_7",
    "idx": 8,
    "kind": "waypoint",
-   "x": 756,
-   "y": 60,
+   "x": 0.59,
+   "y": 0.05,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -145,8 +148,8 @@
    "id": "inn_1",
    "idx": 9,
    "kind": "inn",
-   "x": 872,
-   "y": 65,
+   "x": 0.68,
+   "y": 0.0575,
    "zone": "windy_cliffs",
    "title": {
     "zh": "营地客栈",
@@ -164,21 +167,22 @@
    "id": "boss_1",
    "idx": 10,
    "kind": "boss",
-   "x": 988,
-   "y": 76,
+   "x": 0.77,
+   "y": 0.074,
    "zone": "windy_cliffs",
    "title": {
     "zh": "风龙",
     "en": "Wild Wind Dragon"
    },
-   "boss": "windy_cliffs"
+   "boss": "windy_cliffs",
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 11,
    "kind": "portal",
-   "x": 1104,
-   "y": 86,
+   "x": 0.86,
+   "y": 0.089,
    "zone": "griffin_summit",
    "title": {
     "zh": "地牢入口",
@@ -189,8 +193,8 @@
    "id": "portal_2",
    "idx": 12,
    "kind": "portal",
-   "x": 524,
-   "y": 307,
+   "x": 0.41,
+   "y": 0.4205,
    "zone": "windy_cliffs",
    "title": {
     "zh": "云洞",
@@ -201,8 +205,8 @@
    "id": "path_8",
    "idx": 13,
    "kind": "waypoint",
-   "x": 524,
-   "y": 413,
+   "x": 0.41,
+   "y": 0.5795,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -213,8 +217,8 @@
    "id": "town_2",
    "idx": 14,
    "kind": "village",
-   "x": 640,
-   "y": 173,
+   "x": 0.5,
+   "y": 0.2195,
    "zone": "windy_cliffs",
    "title": {
     "zh": "云岭镇分站",
@@ -228,14 +232,15 @@
    ],
    "shops": [
     "items"
-   ]
+   ],
+   "fog": "landmark"
   },
   {
    "id": "path_9",
    "idx": 15,
    "kind": "fork",
-   "x": 640,
-   "y": 227,
+   "x": 0.5,
+   "y": 0.3005,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小路",
@@ -246,8 +251,8 @@
    "id": "town_3",
    "idx": 16,
    "kind": "village",
-   "x": 756,
-   "y": 100,
+   "x": 0.59,
+   "y": 0.11,
    "zone": "windy_cliffs",
    "title": {
     "zh": "云岭镇分站",
@@ -261,14 +266,15 @@
    ],
    "shops": [
     "items"
-   ]
+   ],
+   "fog": "landmark"
   },
   {
    "id": "path_10",
    "idx": 17,
    "kind": "waypoint",
-   "x": 292,
-   "y": 415,
+   "x": 0.23,
+   "y": 0.5825,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -279,8 +285,8 @@
    "id": "npc_1",
    "idx": 18,
    "kind": "npc",
-   "x": 408,
-   "y": 250,
+   "x": 0.32,
+   "y": 0.335,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -291,8 +297,8 @@
    "id": "treasure_1",
    "idx": 19,
    "kind": "chest",
-   "x": 640,
-   "y": 280,
+   "x": 0.5,
+   "y": 0.38,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -303,8 +309,8 @@
    "id": "path_11",
    "idx": 20,
    "kind": "waypoint",
-   "x": 640,
-   "y": 333,
+   "x": 0.5,
+   "y": 0.4595,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -315,8 +321,8 @@
    "id": "path_12",
    "idx": 21,
    "kind": "waypoint",
-   "x": 756,
-   "y": 140,
+   "x": 0.59,
+   "y": 0.17,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -327,8 +333,8 @@
    "id": "miniboss_1",
    "idx": 22,
    "kind": "miniboss",
-   "x": 872,
-   "y": 114,
+   "x": 0.68,
+   "y": 0.131,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小头目",
@@ -339,8 +345,8 @@
    "id": "treasure_2",
    "idx": 23,
    "kind": "chest",
-   "x": 640,
-   "y": 387,
+   "x": 0.5,
+   "y": 0.5405,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -351,8 +357,8 @@
    "id": "treasure_3",
    "idx": 24,
    "kind": "chest",
-   "x": 524,
-   "y": 520,
+   "x": 0.41,
+   "y": 0.74,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -363,8 +369,8 @@
    "id": "path_13",
    "idx": 25,
    "kind": "waypoint",
-   "x": 756,
-   "y": 180,
+   "x": 0.59,
+   "y": 0.23,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -375,8 +381,8 @@
    "id": "treasure_4",
    "idx": 26,
    "kind": "chest",
-   "x": 872,
-   "y": 163,
+   "x": 0.68,
+   "y": 0.2045,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -387,8 +393,8 @@
    "id": "treasure_5",
    "idx": 27,
    "kind": "chest",
-   "x": 756,
-   "y": 220,
+   "x": 0.59,
+   "y": 0.29,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -399,8 +405,8 @@
    "id": "miniboss_2",
    "idx": 28,
    "kind": "miniboss",
-   "x": 756,
-   "y": 260,
+   "x": 0.59,
+   "y": 0.35,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小头目",
@@ -411,8 +417,8 @@
    "id": "story_1",
    "idx": 29,
    "kind": "story",
-   "x": 872,
-   "y": 212,
+   "x": 0.68,
+   "y": 0.278,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -423,8 +429,8 @@
    "id": "story_2",
    "idx": 30,
    "kind": "story",
-   "x": 408,
-   "y": 360,
+   "x": 0.32,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -435,8 +441,8 @@
    "id": "deadend_1",
    "idx": 31,
    "kind": "waypoint",
-   "x": 640,
-   "y": 440,
+   "x": 0.5,
+   "y": 0.62,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -447,8 +453,8 @@
    "id": "story_3",
    "idx": 32,
    "kind": "story",
-   "x": 408,
-   "y": 470,
+   "x": 0.32,
+   "y": 0.665,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -459,8 +465,8 @@
    "id": "inn_2",
    "idx": 33,
    "kind": "inn",
-   "x": 756,
-   "y": 300,
+   "x": 0.59,
+   "y": 0.41,
    "zone": "windy_cliffs",
    "title": {
     "zh": "隐藏客栈",
@@ -477,8 +483,8 @@
    "id": "path_14",
    "idx": 34,
    "kind": "waypoint",
-   "x": 640,
-   "y": 493,
+   "x": 0.5,
+   "y": 0.6995,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -489,8 +495,8 @@
    "id": "deadend_2",
    "idx": 35,
    "kind": "waypoint",
-   "x": 756,
-   "y": 340,
+   "x": 0.59,
+   "y": 0.47,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -501,8 +507,8 @@
    "id": "treasure_6",
    "idx": 36,
    "kind": "chest",
-   "x": 756,
-   "y": 380,
+   "x": 0.59,
+   "y": 0.53,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -513,8 +519,8 @@
    "id": "story_4",
    "idx": 37,
    "kind": "story",
-   "x": 524,
-   "y": 627,
+   "x": 0.41,
+   "y": 0.9005,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -525,8 +531,8 @@
    "id": "treasure_7",
    "idx": 38,
    "kind": "chest",
-   "x": 640,
-   "y": 547,
+   "x": 0.5,
+   "y": 0.7805,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -537,8 +543,8 @@
    "id": "path_15",
    "idx": 39,
    "kind": "waypoint",
-   "x": 756,
-   "y": 420,
+   "x": 0.59,
+   "y": 0.59,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -549,8 +555,8 @@
    "id": "npc_2",
    "idx": 40,
    "kind": "npc",
-   "x": 872,
-   "y": 262,
+   "x": 0.68,
+   "y": 0.353,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -561,8 +567,8 @@
    "id": "treasure_8",
    "idx": 41,
    "kind": "chest",
-   "x": 756,
-   "y": 460,
+   "x": 0.59,
+   "y": 0.65,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -573,8 +579,8 @@
    "id": "path_16",
    "idx": 42,
    "kind": "waypoint",
-   "x": 756,
-   "y": 500,
+   "x": 0.59,
+   "y": 0.71,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -585,8 +591,8 @@
    "id": "treasure_9",
    "idx": 43,
    "kind": "chest",
-   "x": 872,
-   "y": 311,
+   "x": 0.68,
+   "y": 0.4265,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -597,8 +603,8 @@
    "id": "npc_3",
    "idx": 44,
    "kind": "npc",
-   "x": 756,
-   "y": 540,
+   "x": 0.59,
+   "y": 0.77,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -609,8 +615,8 @@
    "id": "story_5",
    "idx": 45,
    "kind": "story",
-   "x": 640,
-   "y": 600,
+   "x": 0.5,
+   "y": 0.86,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -621,8 +627,8 @@
    "id": "deadend_3",
    "idx": 46,
    "kind": "waypoint",
-   "x": 872,
-   "y": 360,
+   "x": 0.68,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -633,8 +639,8 @@
    "id": "npc_4",
    "idx": 47,
    "kind": "npc",
-   "x": 988,
-   "y": 147,
+   "x": 0.77,
+   "y": 0.1805,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -645,8 +651,8 @@
    "id": "npc_5",
    "idx": 48,
    "kind": "npc",
-   "x": 988,
-   "y": 218,
+   "x": 0.77,
+   "y": 0.287,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -657,8 +663,8 @@
    "id": "path_17",
    "idx": 49,
    "kind": "waypoint",
-   "x": 756,
-   "y": 580,
+   "x": 0.59,
+   "y": 0.83,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -669,8 +675,8 @@
    "id": "treasure_10",
    "idx": 50,
    "kind": "chest",
-   "x": 872,
-   "y": 409,
+   "x": 0.68,
+   "y": 0.5735,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -681,8 +687,8 @@
    "id": "path_18",
    "idx": 51,
    "kind": "waypoint",
-   "x": 872,
-   "y": 458,
+   "x": 0.68,
+   "y": 0.647,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -693,8 +699,8 @@
    "id": "path_19",
    "idx": 52,
    "kind": "waypoint",
-   "x": 988,
-   "y": 289,
+   "x": 0.77,
+   "y": 0.3935,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -705,8 +711,8 @@
    "id": "npc_6",
    "idx": 53,
    "kind": "npc",
-   "x": 1104,
-   "y": 177,
+   "x": 0.86,
+   "y": 0.2255,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -717,8 +723,8 @@
    "id": "path_20",
    "idx": 54,
    "kind": "waypoint",
-   "x": 872,
-   "y": 508,
+   "x": 0.68,
+   "y": 0.722,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -729,8 +735,8 @@
    "id": "deadend_4",
    "idx": 55,
    "kind": "waypoint",
-   "x": 988,
-   "y": 360,
+   "x": 0.77,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -741,8 +747,8 @@
    "id": "path_21",
    "idx": 56,
    "kind": "waypoint",
-   "x": 988,
-   "y": 431,
+   "x": 0.77,
+   "y": 0.6065,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -753,8 +759,8 @@
    "id": "path_22",
    "idx": 57,
    "kind": "waypoint",
-   "x": 872,
-   "y": 557,
+   "x": 0.68,
+   "y": 0.7955,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -765,8 +771,8 @@
    "id": "inn_3",
    "idx": 58,
    "kind": "inn",
-   "x": 756,
-   "y": 620,
+   "x": 0.59,
+   "y": 0.89,
    "zone": "windy_cliffs",
    "title": {
     "zh": "隐藏客栈",
@@ -783,8 +789,8 @@
    "id": "path_23",
    "idx": 59,
    "kind": "waypoint",
-   "x": 872,
-   "y": 606,
+   "x": 0.68,
+   "y": 0.869,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -795,8 +801,8 @@
    "id": "path_24",
    "idx": 60,
    "kind": "waypoint",
-   "x": 988,
-   "y": 502,
+   "x": 0.77,
+   "y": 0.713,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -807,8 +813,8 @@
    "id": "path_25",
    "idx": 61,
    "kind": "inn",
-   "x": 1104,
-   "y": 269,
+   "x": 0.86,
+   "y": 0.3635,
    "zone": "windy_cliffs",
    "title": {
     "zh": "营火",
@@ -826,8 +832,8 @@
    "id": "story_6",
    "idx": 62,
    "kind": "story",
-   "x": 1220,
-   "y": 250,
+   "x": 0.95,
+   "y": 0.335,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -838,8 +844,8 @@
    "id": "story_7",
    "idx": 63,
    "kind": "story",
-   "x": 1104,
-   "y": 360,
+   "x": 0.86,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -850,8 +856,8 @@
    "id": "treasure_11",
    "idx": 64,
    "kind": "chest",
-   "x": 640,
-   "y": 653,
+   "x": 0.5,
+   "y": 0.9395,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -862,8 +868,8 @@
    "id": "deadend_5",
    "idx": 65,
    "kind": "waypoint",
-   "x": 408,
-   "y": 580,
+   "x": 0.32,
+   "y": 0.83,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -874,8 +880,8 @@
    "id": "path_26",
    "idx": 66,
    "kind": "waypoint",
-   "x": 988,
-   "y": 573,
+   "x": 0.77,
+   "y": 0.8195,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -886,8 +892,8 @@
    "id": "path_27",
    "idx": 67,
    "kind": "waypoint",
-   "x": 1104,
-   "y": 451,
+   "x": 0.86,
+   "y": 0.6365,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -898,8 +904,8 @@
    "id": "path_28",
    "idx": 68,
    "kind": "waypoint",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -910,8 +916,8 @@
    "id": "inn_4",
    "idx": 69,
    "kind": "inn",
-   "x": 1104,
-   "y": 543,
+   "x": 0.86,
+   "y": 0.7745,
    "zone": "windy_cliffs",
    "title": {
     "zh": "隐藏客栈",
@@ -928,8 +934,8 @@
    "id": "path_29",
    "idx": 70,
    "kind": "waypoint",
-   "x": 756,
-   "y": 660,
+   "x": 0.59,
+   "y": 0.95,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -940,8 +946,8 @@
    "id": "path_30",
    "idx": 71,
    "kind": "waypoint",
-   "x": 872,
-   "y": 655,
+   "x": 0.68,
+   "y": 0.9425,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -952,8 +958,8 @@
    "id": "path_31",
    "idx": 72,
    "kind": "waypoint",
-   "x": 988,
-   "y": 644,
+   "x": 0.77,
+   "y": 0.926,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -964,8 +970,8 @@
    "id": "path_32",
    "idx": 73,
    "kind": "inn",
-   "x": 1104,
-   "y": 634,
+   "x": 0.86,
+   "y": 0.911,
    "zone": "windy_cliffs",
    "title": {
     "zh": "营火",
@@ -983,8 +989,8 @@
    "id": "treasure_12",
    "idx": 74,
    "kind": "chest",
-   "x": 1220,
-   "y": 470,
+   "x": 0.95,
+   "y": 0.665,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -1000,7 +1006,8 @@
    "to": {
     "graph": "griffin_spire_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_portal_2",
@@ -1009,7 +1016,8 @@
    "to": {
     "graph": "cloud_caves_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "e1",
@@ -1018,7 +1026,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e2",
@@ -1027,7 +1036,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e3",
@@ -1036,7 +1046,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e4",
@@ -1045,7 +1056,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 5
   },
   {
    "id": "e5",
@@ -1054,7 +1066,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 6
   },
   {
    "id": "e6",
@@ -1063,7 +1076,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 7
   },
   {
    "id": "e7",
@@ -1072,7 +1086,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 8
   },
   {
    "id": "e8",
@@ -1081,7 +1096,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -1090,7 +1106,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
    "id": "e10",
@@ -1100,7 +1117,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 11
   },
   {
    "id": "e11",
@@ -1109,7 +1127,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 12
   },
   {
    "id": "e12",
@@ -1118,7 +1137,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 13
   },
   {
    "id": "e13",
@@ -1127,7 +1147,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 14
   },
   {
    "id": "e14",
@@ -1136,7 +1157,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 15
   },
   {
    "id": "e15",
@@ -1145,7 +1167,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 16
   },
   {
    "id": "e16",
@@ -1154,7 +1177,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 17
   },
   {
    "id": "e17",
@@ -1171,7 +1195,8 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 18
   },
   {
    "id": "e18",
@@ -1180,7 +1205,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 19
   },
   {
    "id": "e19",
@@ -1190,7 +1216,8 @@
    "danger": 1,
    "steps": 2,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 20
   },
   {
    "id": "e20",
@@ -1199,7 +1226,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 21
   },
   {
    "id": "e21",
@@ -1208,7 +1236,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 22
   },
   {
    "id": "e22",
@@ -1217,7 +1246,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 23
   },
   {
    "id": "e23",
@@ -1226,7 +1256,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 24
   },
   {
    "id": "e24",
@@ -1235,7 +1266,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 25
   },
   {
    "id": "e25",
@@ -1244,7 +1276,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 26
   },
   {
    "id": "e26",
@@ -1253,7 +1286,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 27
   },
   {
    "id": "e27",
@@ -1262,7 +1296,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 28
   },
   {
    "id": "e28",
@@ -1271,7 +1306,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 29
   },
   {
    "id": "e29",
@@ -1280,7 +1316,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 30
   },
   {
    "id": "e30",
@@ -1289,7 +1326,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 31
   },
   {
    "id": "e31",
@@ -1298,7 +1336,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 32
   },
   {
    "id": "e32",
@@ -1307,7 +1346,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 33
   },
   {
    "id": "e33",
@@ -1316,7 +1356,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 34
   },
   {
    "id": "e34",
@@ -1325,7 +1366,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 35
   },
   {
    "id": "e35",
@@ -1334,7 +1376,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 36
   },
   {
    "id": "e36",
@@ -1343,7 +1386,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 37
   },
   {
    "id": "e37",
@@ -1353,7 +1397,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 38
   },
   {
    "id": "e38",
@@ -1362,7 +1407,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 39
   },
   {
    "id": "e39",
@@ -1371,7 +1417,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 40
   },
   {
    "id": "e40",
@@ -1380,7 +1427,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 41
   },
   {
    "id": "e41",
@@ -1389,7 +1437,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 42
   },
   {
    "id": "e42",
@@ -1398,7 +1447,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 43
   },
   {
    "id": "e43",
@@ -1407,7 +1457,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 44
   },
   {
    "id": "e44",
@@ -1416,7 +1467,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 45
   },
   {
    "id": "e45",
@@ -1425,7 +1477,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 46
   },
   {
    "id": "e46",
@@ -1434,7 +1487,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 47
   },
   {
    "id": "e47",
@@ -1443,7 +1497,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 48
   },
   {
    "id": "e48",
@@ -1452,7 +1507,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 49
   },
   {
    "id": "e49",
@@ -1461,7 +1517,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 50
   },
   {
    "id": "e50",
@@ -1470,7 +1527,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 51
   },
   {
    "id": "e51",
@@ -1479,7 +1537,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 52
   },
   {
    "id": "e52",
@@ -1488,7 +1547,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 53
   },
   {
    "id": "e53",
@@ -1497,7 +1557,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 54
   },
   {
    "id": "e54",
@@ -1506,7 +1567,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 55
   },
   {
    "id": "e55",
@@ -1515,7 +1577,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 56
   },
   {
    "id": "e56",
@@ -1524,7 +1587,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 57
   },
   {
    "id": "e57",
@@ -1533,7 +1597,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 58
   },
   {
    "id": "e58",
@@ -1542,7 +1607,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 59
   },
   {
    "id": "e59",
@@ -1551,7 +1617,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 60
   },
   {
    "id": "e60",
@@ -1560,7 +1627,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 61
   },
   {
    "id": "e61",
@@ -1570,7 +1638,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 62
   },
   {
    "id": "e62",
@@ -1579,7 +1648,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 63
   },
   {
    "id": "e63",
@@ -1588,7 +1658,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 64
   },
   {
    "id": "e64",
@@ -1597,7 +1668,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 65
   },
   {
    "id": "e65",
@@ -1606,7 +1678,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 66
   },
   {
    "id": "e66",
@@ -1615,7 +1688,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 67
   },
   {
    "id": "e67",
@@ -1624,7 +1698,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 68
   },
   {
    "id": "e68",
@@ -1633,7 +1708,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 69
   },
   {
    "id": "e69",
@@ -1642,7 +1718,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 70
   },
   {
    "id": "e70",
@@ -1651,7 +1728,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 71
   },
   {
    "id": "e71",
@@ -1660,7 +1738,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 72
   },
   {
    "id": "e72",
@@ -1669,7 +1748,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 73
   },
   {
    "id": "e73",
@@ -1679,7 +1759,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 74
   },
   {
    "id": "e74",
@@ -1688,7 +1769,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 75
   },
   {
    "id": "e75",
@@ -1697,7 +1779,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 76
   },
   {
    "id": "e76",
@@ -1706,7 +1789,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 77
   },
   {
    "id": "e77",
@@ -1715,7 +1799,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 78
   },
   {
    "id": "e78",
@@ -1724,7 +1809,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 79
   }
  ],
  "events": [
@@ -1967,6 +2053,21 @@
    ]
   },
   {
+   "id": "portal_2.1",
+   "node": "portal_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_glacier_roses"
+   },
+   "do": [
+    {
+     "dialogue": "realm_7.portal_2.step_q7_glacier_roses"
+    }
+   ]
+  },
+  {
    "id": "path_8.1",
    "node": "path_8",
    "on": "enter",
@@ -2076,7 +2177,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q7_realm_7_npc_1"
+     "offerQuest": "q7_lost_mapmaker"
     }
    ]
   },
@@ -2186,6 +2287,32 @@
    "on": "enter",
    "once": true,
    "outcome": "miniboss",
+   "cond": {
+    "questActive": "q7_golem_sign"
+   },
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "cliff_golem",
+       "harpy",
+       "harpy"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q7_golem_sign"
+    },
+    {
+     "setFlag": "q7_golem_sign.s2"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
    "do": [
     {
      "fight": {
@@ -2210,7 +2337,7 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
+   "id": "miniboss_1.3",
    "node": "miniboss_1",
    "on": "enter",
    "once": false,
@@ -2580,7 +2707,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q7_realm_7_npc_2"
+     "offerQuest": "q7_golem_sign"
     }
    ]
   },
@@ -2674,23 +2801,11 @@
    "id": "npc_3.1",
    "node": "npc_3",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_realm_7_npc_3"
-    }
-   ]
-  },
-  {
-   "id": "npc_3.2",
-   "node": "npc_3",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "realm_7.npc_3.banter"
     }
    ]
   },
@@ -2734,23 +2849,11 @@
    "id": "npc_4.1",
    "node": "npc_4",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_realm_7_npc_4"
-    }
-   ]
-  },
-  {
-   "id": "npc_4.2",
-   "node": "npc_4",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "realm_7.npc_4.banter"
     }
    ]
   },
@@ -2758,23 +2861,11 @@
    "id": "npc_5.1",
    "node": "npc_5",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_realm_7_npc_5"
-    }
-   ]
-  },
-  {
-   "id": "npc_5.2",
-   "node": "npc_5",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "realm_7.npc_5.banter"
     }
    ]
   },
@@ -2904,23 +2995,11 @@
    "id": "npc_6.1",
    "node": "npc_6",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_realm_7_npc_6"
-    }
-   ]
-  },
-  {
-   "id": "npc_6.2",
-   "node": "npc_6",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "realm_7.npc_6.banter"
     }
    ]
   },
@@ -3414,66 +3493,94 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_7.portal_2.step_q7_glacier_roses": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_glacier_roses: scene from data/dialogue)"
    }
   ],
   "realm_7.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_7.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_7.story_3": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_7.story_4": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_7.npc_3.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "realm_7.story_5": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_7.npc_4.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
+   }
+  ],
+  "realm_7.npc_5.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
+   }
+  ],
+  "realm_7.npc_6.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "realm_7.story_6": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_7.story_7": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

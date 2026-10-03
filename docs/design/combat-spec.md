@@ -1,6 +1,6 @@
 # Combat and Progression Spec (v3)
 
-Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7). **v3.8 update 2026-10-02 (PT, Jack):** every map is a graph (world, realm overworlds, dungeon levels); random battles happen on edges with safe edges near towns, inns and boss approaches; 7 kinds of arrival event; locations become zones on the graphs; inn warp; beeline pacing within +3–6% of v3.7 for savers (§12, `world-graph.md`).
+Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7). **v3.8 update 2026-10-02 (PT, Jack):** every map is a graph (world, realm overworlds, dungeon levels); random battles happen on edges with safe edges near towns, inns and boss approaches; 7 kinds of arrival event; locations become zones on the graphs; inn warp; beeline pacing within +3–6% of v3.7 for savers (§12, `world-graph.md`). **v3.9 update 2026-10-02 (PT), Jack:** the free inn warp is removed. The Return Feather (now 2 × G) is the only fast way back to a town: to the last inn or any visited town/village, anywhere outside battle and the boss room, sold in town and village shops only, 2 at the start. Town/village density goes from about 1 per 20 nodes (realm 1) to 1 per 60 (realm 9). Inns are within 3 hops in realms 1–3. Fog of war is approved. Node x/y are normalised. The tutorial is a village event. Story alignment: companion `xiaolong`, panda innkeepers, D1 density in realm 1. Quest hooks are reconciled with the v2 quests (§12.1). **v3.9.1 update 2026-10-02 (PT), Director's defaults:** a free Return Feather in the realm-boss chests of realms 3, 6 and 8 (no shop nudge). Town/village density is ceil(nodes / ramp 20…60), giving 1,1,2,2,2,3,3,3,4 (§12.2).
 Previous versions: `combat-spec-v2.md` and `combat-spec-v1.md` (both kept unchanged).
 Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1,051 items, 9 realms, 20 locations, 60-item slice), `enemies.json` (50-enemy roster), and `chinese-rpg-design-memo.md`.
 
@@ -23,7 +23,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | practice_modes, practice_rewards | practice_modes.csv, practice_rewards.csv | §8 |
 | spells, quests (v3.3–v3.5) | spells, spell_falloff, spell_mp_check, mp_potions, cast_rule, quests (.csv / .json; + spells_full.json, quests_full.json) | §6.7, §7.11 |
 | sim results | `data/sim/*.csv` | §7.6–7.10 |
-| world graph (v3.8) | `data/world/` (graphs/*.json, zones.json, world_rules.json, quests_world.json, schemas/), `data/world/world_realm_table.csv`, `data/sim/sim_world_v38.csv` | §12 |
+| world graph (v3.9) | `data/world/` (graphs/*.json, zones.json, world_rules.json, quests_world.json, schemas/ incl. progress.schema.json, examples/progress_example.json), `data/world/world_realm_table.csv`, `data/sim/sim_world_v39.csv` (v3.8: `sim_world_v38.csv`) | §12 |
 | curriculum pools | curriculum_location_pools.csv | §5 |
 
 **Simulator.** `build/combat_sim.py` (v3), driven by `build/sim_v3_runner.py`. Full output: `build/combat_sim_out.txt`, with 150 simulated realm playthroughs per row, or 1,500 single battles per row for the special-mechanic and elite tables. The v2 simulator and its output are kept as `combat_sim_v2.py` / `combat_sim_v2_out.txt`.
@@ -38,7 +38,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 4 | Mic handling as proposed. **`nomatch` (heard speech but got no words) counts as wrong.** | §9.1 |
 | 5 | Items proficient under 2 ways **stay proficient** if speech is turned on later. | §3.1 |
 | 6 | ~~**MP regen: +1 MP per correct answer.**~~ **Removed in v3.6 (row 26).** MP costs are rebalanced: Heal 12 MP for 30% HP, once per battle. | §6.4 |
-| 7 | Inns stay close. There's a new **Return Feather** (1 × G). | §6.4, §7.3 |
+| 7 | Inns stay close. There's a new **Return Feather** (1 × G; **2 × G from v3.9**). | §6.4, §7.3 |
 | 8 | The **companion team attack** is in, with a full spec (Friendship gauge 20/5/100, 1.25 × ATK). | §6.6 |
 | 9 | No tone checking and no timers. Parent-entered words use **browser TTS**. | §8.2, §10.1 |
 | 10 | All safety nets plus **Courage** are accepted. Defeat fee = **max(10% of gold, 1 inn price)**. | §7.5 |
@@ -63,6 +63,8 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 29 | **No MP hints (v3.6, Jack):** no inn or boss-gate "Save your MP" tip, no casts-ready count at the boss gate, and no boss tip on the Preview page. | §6.7, §8.2 |
 | 30 | **Location bosses ~15 correct answers (v3.7, Jack 2026-10-02 PT).** Even with a full MP bar spent on spells, a location boss needs about 15 correct answers and a realm boss about 20. Location boss HP × 1.2–1.9 by tier (v3.6: × 2.0–2.7); realm bosses unchanged; boss ATK × 0.8 kept, because 50% kids' defeats don't rise. | §2.3, §6.7 |
 | 31 | **World graph (v3.8, Jack 2026-10-02 PT).** Every map is a graph; random battles happen on edges (danger × steps, safe near towns, inns, boss approaches and on the way home after a boss clear); 7 arrival outcomes; locations become zones on the graphs; patrol rule at the approach inn; inn warp to towns. Pacing for a beeline player stays within +3–6% of v3.7 for savers. | §12 |
+| 32 | **No free warp; Feather as a budget (v3.9, Jack 2026-10-02 PT).** The inn warp is removed. The Return Feather costs 2 × G (2 kills at every tier). It flies to the last inn or any visited town/village, from anywhere outside battle and the boss room. It is sold in town and village item shops (not inns), carry 3, 2 at the start. Towns + villages per realm = max(1, round(nodes / (20 + 5(t−1)))), i.e. 1,1,1,2,2,2,3,3,3. `maxHopsToInn` is 3 in realms 1–3 and 5 later. Fog of war: visited nodes plus "?" neighbours, state in player progress. Sim: time and spells within 1% of v3.8; 50% savers on beeline +2.5 to +3.8 defeats per campaign. | §7.3, §12.1 |
+| 33 | **Realm-boss Feathers and density ramp (v3.9.1, Director's defaults 2026-10-02 23:15 PT).** The realm-boss chests of realms 3, 6 and 8 hold a free Return Feather. There is no shop nudge or tip. Towns + villages = max(1, ceil(nodes / (20 + 5(t−1)))) = 1,1,2,2,2,3,3,3,4. 3 villages were added without changing any existing id. Sim vs v3.9: time ±0.6% (spender explorers +2%); defeats −0.1 to −0.5 for 50% savers. | §7.3, §12.2 |
 | – | Scripted path fights per location go from 6 to 8, because pools are about 1.75× larger. | §5, §7.4 |
 
 Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration" (back in v3.6, row 26), the open questions Jack answered, and the unlimited Queen Bee summon.
@@ -543,7 +545,7 @@ What changed from v2:
 - Enemies: 3 on screen, plus `floor((t−9)/2)` reinforcements (max 6 total).
 - MC options capped at 6.
 - Review share: `min(0.5, 3/7 + 0.03(t−9))`.
-- Prices: G = 3 × L_rec(t); inn = 2 × G; Honey Potion = Return Feather = 1 × G.
+- Prices: G = 3 × L_rec(t); inn = 2 × G; Honey Potion = 1 × G; Return Feather = 2 × G (v3.9; was 1 × G).
 - Prompt hardening: confusable distractors at t ≥ 12. (Pinyin is never shown, v3.2, so there's no pinyin-hiding step.)
 
 ---
@@ -666,7 +668,7 @@ The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, beca
 | big_honey | Big Honey | 大蜂蜜 | +70% max HP | yes (uses the turn, no question) | 2 × G | no limit (shares the 3 per battle belt) | shop from tier 5; chests |
 | mana_tea | Mana Tea | 魔力茶 | +50% max MP | no: map only (v3.4) | 6 × G (v3.4; was 1 × G) | no limit | shop; normal/elite chest; words quest |
 | big_mana_tea | Big Mana Tea | 大魔力茶 | refills MP to full | no: map only | 15 × G | no limit | shop from town 5; boss chests |
-| return_feather | Return Feather | 回城羽毛 | Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room | no | 1 × G | 3 | shop; normal/elite chest (5%); 1 free in the tutorial |
+| return_feather | Return Feather | 回城羽毛 | Fly to the last inn you used or any visited town/village; anywhere on the map, not in battle or the boss room (v3.9) | no | 2 × G | 3 | town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1) |
 
 ### 6.5 How gear is earned (no pay-to-win)
 
@@ -891,15 +893,15 @@ Gold, prices and multiples by tier (`data/economy_prices.csv`):
 
 | tier | gold_per_normal | inn | honey_potion | big_honey | mana_tea | big_mana_tea | return_feather | weapon | armor | shield | elite_gold | location_boss_gold | realm_boss_gold | defeat_gold_floor |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | 6 | 12 | 6 |  | 36 |  | 6 | 60 | 50 | 35 | 12 | 30 | 60 | 24 |
-| 2 | 12 | 24 | 12 |  | 72 |  | 12 | 120 | 95 | 70 | 24 | 60 | 120 | 48 |
-| 3 | 18 | 36 | 18 |  | 108 |  | 18 | 220 | 175 | 130 | 36 | 90 | 180 | 72 |
-| 4 | 27 | 54 | 27 |  | 162 |  | 27 | 380 | 300 | 230 | 54 | 135 | 270 | 108 |
-| 5 | 36 | 72 | 36 | 72 | 216 | 540 | 36 | 650 | 520 | 390 | 72 | 180 | 360 | 144 |
-| 6 | 45 | 90 | 45 | 90 | 270 | 675 | 45 | 900 | 720 | 540 | 90 | 225 | 450 | 180 |
-| 7 | 54 | 108 | 54 | 108 | 324 | 810 | 54 | 1150 | 920 | 690 | 108 | 270 | 540 | 216 |
-| 8 | 63 | 126 | 63 | 126 | 378 | 945 | 63 | 1400 | 1120 | 840 | 126 | 315 | 630 | 252 |
-| 9 | 72 | 144 | 72 | 144 | 432 | 1080 | 72 | 1700 | 1360 | 1020 | 144 | 360 | 720 | 288 |
+| 1 | 6 | 12 | 6 |  | 36 |  | 12 | 60 | 50 | 35 | 12 | 30 | 60 | 24 |
+| 2 | 12 | 24 | 12 |  | 72 |  | 24 | 120 | 95 | 70 | 24 | 60 | 120 | 48 |
+| 3 | 18 | 36 | 18 |  | 108 |  | 36 | 220 | 175 | 130 | 36 | 90 | 180 | 72 |
+| 4 | 27 | 54 | 27 |  | 162 |  | 54 | 380 | 300 | 230 | 54 | 135 | 270 | 108 |
+| 5 | 36 | 72 | 36 | 72 | 216 | 540 | 72 | 650 | 520 | 390 | 72 | 180 | 360 | 144 |
+| 6 | 45 | 90 | 45 | 90 | 270 | 675 | 90 | 900 | 720 | 540 | 90 | 225 | 450 | 180 |
+| 7 | 54 | 108 | 54 | 108 | 324 | 810 | 108 | 1150 | 920 | 690 | 108 | 270 | 540 | 216 |
+| 8 | 63 | 126 | 63 | 126 | 378 | 945 | 126 | 1400 | 1120 | 840 | 126 | 315 | 630 | 252 |
+| 9 | 72 | 144 | 72 | 144 | 432 | 1080 | 144 | 1700 | 1360 | 1020 | 144 | 360 | 720 | 288 |
 
 Chest contents (`data/chest_contents.csv`). Elites use the normal chest table at a 25% chance.
 
@@ -923,9 +925,12 @@ EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's reco
 
 - **Inn price = 2 × G** (t1 12 gold … t9 144 gold). A stay gives full HP and MP.
 - **Inns stay close** (decided): every village has an inn, and every location map has an inn or campfire-inn at its entrance, one at about the midpoint of the 8 path fights, and one at the boss approach. The sim assumes an inn is reachable between any two fights.
-- **Return Feather 回城羽毛 (new): 1 × G.** Out of battle only; it warps to the last inn used (or the location's entrance inn). You can carry at most 3, and it can't be used in the boss room. Sources: the shop, 5% of normal and elite chests, and 1 free in the tutorial.
-  - Pricing: it equals 1 Honey Potion. It saves walking time, not HP, so it shouldn't cost more than a potion. It's cheaper than the inn it leads to, so a kid never pays more for the trip than for the stay.
-- Starting kit: 24 gold (2 inn stays) plus 1 free Honey Potion.
+- **Return Feather 回城羽毛: 2 × G (v3.9; v3 had 1 × G).**
+  - **Use:** out of battle only, anywhere on the map, but not in the boss room. It flies to the last inn used or to any visited town or village (the player picks).
+  - **Carry:** at most 3.
+  - **Sources:** town and village item shops (not inns), 5% of normal and elite chests, quest rewards, 2 free in the tutorial, and (v3.9.1) 1 free in the realm-boss chest of realms 3, 6 and 8.
+  - **Pricing (v3.9):** it costs the same as one inn night, which is 2 kills at every tier. With the v3.8 inn warp gone, it is the only fast way back to a town, so it is a budgeting choice. In the sim, a 75% saver buying spells spends about 3% of income on about 15 Feathers per campaign (§12.1). Price barely changes behaviour: at 1 × G the sim plays the same.
+- Starting kit: 24 gold (2 inn stays) plus 1 free Honey Potion, plus 2 Return Feathers from the tutorial (v3.9).
 
 ### 7.4 Boss-approach patrols (extra encounters)
 
@@ -1521,8 +1526,8 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | G(t) | 6, 12, 18, 27, 36, 45, 54, 63, 72 (±20%, floor 80%) | gold multipliers: normal 1, elite 2, location boss 5, realm boss 10 |
 | EXP | 6 / 10 / 20 / 50 × L_rec (normal / elite / location boss / realm boss) | XP curve 100 × L |
 | Chest chance | 10% normal, 25% elite, 100% boss | §7.2 |
-| Inn / Honey Potion / Big Honey / Mana Tea / Big Mana Tea / Return Feather | 2×G / 1×G / 2×G / **6×G** / **15×G** (town 5+) / 1×G; MP potions are map-only (v3.4; confirmed v3.5) | §6.4, §6.7, §7.3 |
-| Start kit | 24 gold + 1 free Honey Potion (+1 Return Feather in the tutorial) | |
+| Inn / Honey Potion / Big Honey / Mana Tea / Big Mana Tea / Return Feather | 2×G / 1×G / 2×G / **6×G** / **15×G** (town 5+) / **2×G** (v3.9); MP potions are map-only (v3.4; confirmed v3.5) | §6.4, §6.7, §7.3 |
+| Start kit | 24 gold + 1 free Honey Potion (+2 Return Feathers in the tutorial, v3.9) | |
 | MP | 10 + 2L; **no regen (v3.6)**: inn, waking after a defeat, map-only Mana Tea; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20 | §6.4 |
 | Companion | gauge 100; +20 per wrong, +5 per correct; attack 1.25 × ATK_h − 0.5 × DEF_e; resets each battle | §6.6 |
 | Defeat fee | max(10% of gold, inn price), never below 2 × inn; free inn when gold < inn | §7.5 |
@@ -1599,7 +1604,7 @@ Also in v3.2: **no pinyin anywhere in the game UI**, with audio-only answer feed
 
 ---
 
-## 12. World graph (v3.8)
+## 12. World graph (v3.8, updated v3.9)
 
 v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/world-graph.md`); data in `data/world/` (repo `docs/data/world/`); sim in `build/world/`. This section summarises it and replaces the linear path of §7.10 (inn, 4 fights, inn, 4 fights, inn, gate, boss) as the map model. The battle, learning and economy rules of §2–§7 are unchanged.
 
@@ -1624,13 +1629,15 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 | pity | after 2 empty fresh steps the next fresh step fights |
 | turn back | after a won battle mid-edge, a low-HP hero may turn back (walked steps stay walked) |
 | repel (`bell`, proposed) | 6 hops without random battles on danger ≤ 2 |
-| inns | every node ≤ 5 hops from an inn or town (stairs count 0); an approach inn next to every boss |
-| inn warp (new) | from any inn to a visited town to shop, then back to the same inn |
+| inns | every node ≤ `maxHopsToInn` hops from an inn or town (v3.9: 3 in realms 1–3, 5 in realms 4–9; stairs count 0); an approach inn next to every boss |
+| ~~inn warp~~ | v3.8 only; removed in v3.9 (§12.1). Return Feather instead |
+| towns + villages (v3.9.1) | max(1, ceil(nodes / (20 + 5(t−1)))), counting the main town: 1,1,2,2,2,3,3,3,4 (v3.9: round, 1,1,1,2,2,2,3,3,3) |
+| fog of war (v3.9) | visited nodes + "?" neighbours; towns, villages and bosses are landmarks; state in player progress (`progress.schema.json`) |
 | authoring target | each zone's shortest route expects 6.5–9.5 battles (v3.7: 8 path fights) |
 
-**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. The Return Feather flies to the last inn. Defeat wakes you at the last inn.
+**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns; §12.1.)
 
-**Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 30–38% dead ends, 1–3 villages, 2–22 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
+**Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 28–35% dead ends, 0–2 villages (v3.9), 2–21 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
 
 **Sim** (100 runs per profile, speech on unless noted; `data/sim/sim_world_v38.csv`):
 - **Beeline** (straight to each boss) against the v3.7 loop: savers take +3–6% (75% saver 17.96 → 18.52 h), spenders +1–12%, reading kids +5–6%.
@@ -1639,3 +1646,59 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 - **Explorer** (every node): +16–26% for savers (75% saver 22.3 h) and +49–61% for spenders and reading kids. That is optional content, worth 2–3× the gold, more chests and better readiness.
 
 **Data format.** One JSON file per graph (`graph/0.3`, building on GameDev's `graph/0.2` in architecture.md §6), JSON Schemas in `data/world/schemas/`, and `build/world/validate_world.py`. Answers to GameDev's 14 questions are in world-graph.md §13 and `world-graph-schema-answers.md`.
+
+**v3.9 sim** (100 runs per profile, `data/sim/sim_world_v39.csv` (v3.9.1: `sim_world_v391.csv`, §12.2), no warp, Feathers bought, new density). Kids keep 1 Feather in reserve for the trip to a shop; without that reserve the 75% saver bought 3.9 spells instead of 4.9.
+
+| profile (beeline) | hours v3.8 → v3.9 | defeats v3.8 → v3.9 | spells | Feathers bought (% of income) |
+|---|---|---|---|---|
+| 75% saver, no spells | 18.52 → 18.50 | 0.0 → 0.1 | – | 5.5 (1.2%) |
+| 75% saver, buys spells | 18.64 → 18.66 | 0.0 → 0.0 | 4.9 → 4.8 | 15.2 (3.2%) |
+| 50% saver, buys spells | 27.92 → 28.02 | 47.8 → 51.6 | 0.3 → 0.2 | 8.3 (1.5%) |
+| 50% saver, no spells | 27.93 → 27.97 | 49.6 → 52.2 | – | 7.6 (1.4%) |
+| 50% spender | 20.47 → 20.50 | 70.8 → 71.1 | 0 | 0.1 (0%) |
+
+- **Explorers:** within ±0.6% of v3.8 on time; they buy 12–25 Feathers (3–5.5% of income).
+- **Possible fixes if the 50%-saver defeats (+5–8%) matter:**
+  - inns ≤ 3 hops in realms 4–6 too;
+  - a "keep one Feather" shop nudge;
+  - a Feather in the realm-boss chests of realms 3, 6 and 8.
+  - A village magic shop did not help, because beeline kids never pass the villages.
+
+### 12.1 v3.9 changes (Jack 2026-10-02 PT)
+
+- **Return Feather** (`world_rules.returnFeather`):
+  - Costs 2 × G: 12, 24, 36, 54, 72, 90, 108, 126, 144 gold in realms 1–9, which is 2 kills at every tier.
+  - Destinations: the last inn or any visited town/village. Usable anywhere outside battle and the boss room.
+  - Sold in town and village item shops (not inns). Carry 3, start 2.
+  - A typical beeline kid buys 1–2 per realm; a no-spell saver buys 0.5–1.
+  - The 2 free Feathers are a small conflict with budgeting: one free round trip, which delays the first purchase by about one realm.
+- **Density and inns:** towns + villages 1,1,1,2,2,2,3,3,3 (v3.8: 1,1,2,2,2,3,3,4,4); `maxHopsToInn` 3/3/3 then 5.
+- **Fog of war:** visited plus "?" neighbours; landmarks (`fog: "landmark"`); bitsets in `progress.schema.json`.
+- **Format (GameDev's answers):**
+  - x/y normalised 0–1 with `aspect`; edges get a stable `idx`.
+  - `world_rules.json` stays its own file.
+  - The tutorial is the realm-1 village `firstEnter` event: scene `sc_r1_opening` → `meadow_intro` → tutorial battle (`canLose: false`) → after-line.
+  - New action `scene`.
+- **Story alignment:**
+  - Companion speaker `xiaolong` (小龙); pandas are innkeepers (`innkeeper_panda`).
+  - Realm-1 lines follow D1: English with at most one `{Cxxx}` word token per line, tokens in ≤ 30% of lines.
+  - `quests_world.json` lists 55 NPC slots: 29 used by `data/quests.json` (v2), 26 ambient.
+
+### 12.2 v3.9.1 changes (Director's defaults, 2026-10-02 23:15 PT)
+
+- **Realm-boss Feather:** the realm-boss chests of realms 3, 6 and 8 hold 1 free Return Feather (`world_rules.realmBossFeather`; an `on: clear` event on the boss node). There is no shop nudge or tip.
+- **Density ramp:** nodes per settlement ramp 20, 25, 30 … 60 across realms 1–9, and target = max(1, ceil(nodes / ramp)).
+
+| realm | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| nodes | 17 | 25 | 41 | 60 | 80 | 106 | 130 | 165 | 201 |
+| ramp | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 55 | 60 |
+| target = actual towns + villages | 1 | 1 | 2 | 2 | 2 | 3 | 3 | 3 | 4 |
+| actual nodes per settlement | 17 | 25 | 20.5 | 30 | 40 | 35.3 | 43.3 | 55 | 50.2 |
+
+- **New villages:** 3, one each in realms 3, 6 and 9. Each is a new leaf node with one safe road edge off the main route; no existing id, kind or idx changed. Inns stay within 3 hops in realms 1–3 and 5 in realms 4–9.
+- **Sim vs v3.9 (100 runs):**
+  - Time: within ±0.6%; spender explorers +1.6–2.0%.
+  - Defeats: 50% savers on beeline −0.1 to −0.5 (51.5 / 51.7), spenders −0.2.
+  - Spells on beeline unchanged (75% saver 4.9). Explorers +0.6–0.7 spells.
+  - Feathers bought fall by about 2–2.5 per campaign, because the boss Feathers replace purchases.

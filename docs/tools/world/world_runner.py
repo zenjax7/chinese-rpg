@@ -27,7 +27,12 @@ def metrics(rs):
         loc_min=[mean([st.mean(r['realms'][t-1]['loc_min']) for r in rs]) for t in range(1, 10)],
         patrols_t=[mean([r['realms'][t-1]['patrols']/C.LOCS[t] for r in rs]) for t in range(1, 10)],
         ready_t=[mean([v for r in rs for v in r['realms'][t-1]['ready_gate']]) for t in range(1, 10)],
-        battles_t=[mean([r['realms'][t-1]['battles']/C.LOCS[t] for r in rs]) for t in range(1, 10)])
+        battles_t=[mean([r['realms'][t-1]['battles']/C.LOCS[t] for r in rs]) for t in range(1, 10)],
+        feathers_bought=tot(lambda x: x.get('feathers_bought', 0)), feather_gold=tot(lambda x: x.get('feather_gold', 0)), shop_flights=tot(lambda x: x.get('shop_flights', 0)),
+        shop_walks=tot(lambda x: x.get('shop_walks', 0)), shop_skipped=tot(lambda x: x.get('shop_skipped', 0)),
+        feathers_bought_t=[mean([r['realms'][t-1].get('feathers_bought', 0) for r in rs]) for t in range(1, 10)],
+        feathers_used_t=[mean([r['realms'][t-1]['feathers'] for r in rs]) for t in range(1, 10)],
+        spells_t=[mean([len(r['realms'][t-1]['spells_owned']) for r in rs]) for t in range(1, 10)])
 MODES = {'v3.7': {}, 'beeline': dict(world='beeline'), 'explore': dict(world='explore')}
 def profiles(full=True):
     out = []

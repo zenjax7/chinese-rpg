@@ -16,13 +16,15 @@
   "map": "bg_map_realm_2",
   "battle": "bg_battle_r2"
  },
+ "edgeIdxMax": 11,
+ "aspect": 5.273,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "forest",
    "title": {
     "zh": "蜂蜜镇",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 2
+   "town": 2,
+   "fog": "landmark"
   },
   {
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 253,
-   "y": 360,
+   "x": 0.1997,
+   "y": 0.5,
    "zone": "forest",
    "title": {
     "zh": "小路",
@@ -53,8 +56,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 447,
-   "y": 305,
+   "x": 0.3503,
+   "y": 0.275,
    "zone": "forest",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "waypoint",
-   "x": 640,
-   "y": 250,
+   "x": 0.5,
+   "y": 0.05,
    "zone": "forest",
    "title": {
     "zh": "小路",
@@ -77,8 +80,8 @@
    "id": "inn_1",
    "idx": 4,
    "kind": "inn",
-   "x": 833,
-   "y": 305,
+   "x": 0.6497,
+   "y": 0.275,
    "zone": "forest",
    "title": {
     "zh": "营地客栈",
@@ -96,21 +99,22 @@
    "id": "boss_1",
    "idx": 5,
    "kind": "boss",
-   "x": 1027,
-   "y": 305,
+   "x": 0.8003,
+   "y": 0.275,
    "zone": "forest",
    "title": {
     "zh": "贪吃熊",
     "en": "Greedy Bear"
    },
-   "boss": "forest"
+   "boss": "forest",
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 6,
    "kind": "portal",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "地牢入口",
@@ -121,8 +125,8 @@
    "id": "path_4",
    "idx": 7,
    "kind": "waypoint",
-   "x": 447,
-   "y": 415,
+   "x": 0.3503,
+   "y": 0.725,
    "zone": "forest",
    "title": {
     "zh": "弯路",
@@ -133,8 +137,8 @@
    "id": "treasure_1",
    "idx": 8,
    "kind": "chest",
-   "x": 640,
-   "y": 360,
+   "x": 0.5,
+   "y": 0.5,
    "zone": "forest",
    "title": {
     "zh": "宝藏",
@@ -145,8 +149,8 @@
    "id": "treasure_2",
    "idx": 9,
    "kind": "chest",
-   "x": 640,
-   "y": 470,
+   "x": 0.5,
+   "y": 0.95,
    "zone": "forest",
    "title": {
     "zh": "宝藏",
@@ -157,8 +161,8 @@
    "id": "path_5",
    "idx": 10,
    "kind": "waypoint",
-   "x": 833,
-   "y": 415,
+   "x": 0.6497,
+   "y": 0.725,
    "zone": "forest",
    "title": {
     "zh": "弯路",
@@ -169,8 +173,8 @@
    "id": "treasure_3",
    "idx": 11,
    "kind": "chest",
-   "x": 1027,
-   "y": 415,
+   "x": 0.8003,
+   "y": 0.725,
    "zone": "forest",
    "title": {
     "zh": "宝藏",
@@ -186,7 +190,8 @@
    "to": {
     "graph": "great_hive_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -195,7 +200,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -204,7 +210,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 5,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -213,7 +220,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 4,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -222,7 +230,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -232,7 +241,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -249,7 +259,8 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 6
   },
   {
    "id": "e7",
@@ -258,7 +269,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 7
   },
   {
    "id": "e8",
@@ -267,7 +279,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 8
   },
   {
    "id": "e9",
@@ -276,7 +289,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 9
   },
   {
    "id": "e10",
@@ -285,7 +299,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
    "id": "e11",
@@ -294,7 +309,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 11
   }
  ],
  "events": [
@@ -532,17 +548,16 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

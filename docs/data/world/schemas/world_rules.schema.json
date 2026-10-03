@@ -95,11 +95,107 @@
    "maxItems": 2
   },
   "maxHopsToInn": {
-   "type": "integer",
-   "minimum": 1
+   "oneOf": [
+    {
+     "type": "integer",
+     "minimum": 1
+    },
+    {
+     "type": "object",
+     "properties": {
+      "default": {
+       "type": "integer",
+       "minimum": 1
+      }
+     },
+     "patternProperties": {
+      "^[1-9]$": {
+       "type": "integer",
+       "minimum": 1
+      }
+     },
+     "required": [
+      "default"
+     ],
+     "additionalProperties": false
+    }
+   ]
   },
-  "innWarp": {
+  "townDensity": {
    "type": "object"
+  },
+  "fog": {
+   "type": "object"
+  },
+  "realmBossFeather": {
+   "type": "object",
+   "properties": {
+    "realms": {
+     "type": "array",
+     "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+     }
+    },
+    "qty": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "note": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "realms"
+   ],
+   "additionalProperties": false
+  },
+  "returnFeather": {
+   "type": "object",
+   "properties": {
+    "item": {
+     "type": "string",
+     "pattern": "^[a-z0-9_]+$"
+    },
+    "priceG": {
+     "type": "number",
+     "minimum": 0
+    },
+    "carry": {
+     "type": "integer"
+    },
+    "start": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "useSec": {
+     "type": "number"
+    },
+    "destinations": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "lastInn",
+       "visitedTown"
+      ]
+     }
+    },
+    "usable": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "item",
+    "priceG",
+    "carry",
+    "start",
+    "destinations"
+   ],
+   "additionalProperties": false
   },
   "seed": {
    "type": "object"
@@ -114,7 +210,8 @@
   "zoneBattleBudget",
   "budgetSpentMult",
   "pityRolls",
-  "maxHopsToInn"
+  "maxHopsToInn",
+  "returnFeather"
  ],
  "additionalProperties": false
 }

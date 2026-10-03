@@ -18,13 +18,15 @@
   "map": "bg_map_griffin_spire_1",
   "battle": "bg_battle_r7"
  },
+ "edgeIdxMax": 10,
+ "aspect": 10.545,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "地牢口",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 253,
-   "y": 360,
+   "x": 0.1997,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 447,
-   "y": 305,
+   "x": 0.3503,
+   "y": 0.05,
    "zone": "griffin_summit",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "waypoint",
-   "x": 640,
-   "y": 360,
+   "x": 0.5,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "小路",
@@ -71,8 +73,8 @@
    "id": "stairs_2",
    "idx": 4,
    "kind": "stairs_down",
-   "x": 833,
-   "y": 305,
+   "x": 0.6497,
+   "y": 0.05,
    "zone": "griffin_summit",
    "title": {
     "zh": "下楼梯",
@@ -83,8 +85,8 @@
    "id": "path_4",
    "idx": 5,
    "kind": "waypoint",
-   "x": 833,
-   "y": 415,
+   "x": 0.6497,
+   "y": 0.95,
    "zone": "griffin_summit",
    "title": {
     "zh": "弯路",
@@ -95,8 +97,8 @@
    "id": "path_5",
    "idx": 6,
    "kind": "inn",
-   "x": 1027,
-   "y": 305,
+   "x": 0.8003,
+   "y": 0.05,
    "zone": "griffin_summit",
    "title": {
     "zh": "营火",
@@ -114,8 +116,8 @@
    "id": "npc_1",
    "idx": 7,
    "kind": "npc",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "旅人",
@@ -126,8 +128,8 @@
    "id": "treasure_1",
    "idx": 8,
    "kind": "chest",
-   "x": 1027,
-   "y": 415,
+   "x": 0.8003,
+   "y": 0.95,
    "zone": "griffin_summit",
    "title": {
     "zh": "宝藏",
@@ -138,8 +140,8 @@
    "id": "story_1",
    "idx": 9,
    "kind": "story",
-   "x": 447,
-   "y": 415,
+   "x": 0.3503,
+   "y": 0.95,
    "zone": "griffin_summit",
    "title": {
     "zh": "故事点",
@@ -155,7 +157,8 @@
    "to": {
     "graph": "realm_7",
     "node": "portal_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_stairs_2",
@@ -164,7 +167,8 @@
    "to": {
     "graph": "griffin_spire_2",
     "node": "stairs_1"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "e1",
@@ -173,7 +177,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e2",
@@ -182,7 +187,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e3",
@@ -191,7 +197,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e4",
@@ -200,7 +207,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e5",
@@ -209,7 +217,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e6",
@@ -218,7 +227,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e7",
@@ -227,7 +237,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e8",
@@ -236,7 +247,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -245,7 +257,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 10
   }
  ],
  "events": [
@@ -393,7 +406,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q7_griffin_spire_1_npc_1"
+     "offerQuest": "q7_griffin_feathers"
     }
    ]
   },
@@ -445,24 +458,22 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ],
   "griffin_spire_1.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

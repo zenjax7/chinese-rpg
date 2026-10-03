@@ -17,13 +17,15 @@
   "battle": "bg_battle_r1"
  },
  "_note": "Hand-authored example (17 nodes, 3 zones = the 3 locations L1.1-L1.3). Each zone ends at a boss node behind a gate edge (patrol rule, no random battles). Grass edges carry the random battles; 'steps' = encounter rolls along the edge. Prototype mode: the prototype's single 'meadow' location = this graph with all 3 zones on the meadow pool (see world-graph.md §9).",
+ "edgeIdxMax": 18,
+ "aspect": 1.61,
  "nodes": [
   {
    "id": "village",
    "idx": 0,
    "kind": "town",
-   "x": 150,
-   "y": 560,
+   "x": 0.05,
+   "y": 0.8127,
    "zone": "meadow",
    "title": {
     "zh": "小山村",
@@ -36,14 +38,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 1
+   "town": 1,
+   "fog": "landmark"
   },
   {
    "id": "m_fork",
    "idx": 1,
    "kind": "fork",
-   "x": 330,
-   "y": 520,
+   "x": 0.2205,
+   "y": 0.7517,
    "zone": "meadow",
    "title": {
     "zh": "草地路口",
@@ -54,8 +57,8 @@
    "id": "m_farm",
    "idx": 2,
    "kind": "npc",
-   "x": 300,
-   "y": 650,
+   "x": 0.1921,
+   "y": 0.95,
    "zone": "meadow",
    "title": {
     "zh": "李农夫的田",
@@ -67,8 +70,8 @@
    "id": "m_well",
    "idx": 3,
    "kind": "chest",
-   "x": 470,
-   "y": 650,
+   "x": 0.3532,
+   "y": 0.95,
    "zone": "meadow",
    "title": {
     "zh": "老井",
@@ -79,8 +82,8 @@
    "id": "m_field",
    "idx": 4,
    "kind": "waypoint",
-   "x": 520,
-   "y": 470,
+   "x": 0.4005,
+   "y": 0.6754,
    "zone": "meadow",
    "title": {
     "zh": "长草地",
@@ -91,8 +94,8 @@
    "id": "m_grass",
    "idx": 5,
    "kind": "waypoint",
-   "x": 640,
-   "y": 400,
+   "x": 0.5142,
+   "y": 0.5686,
    "zone": "meadow",
    "title": {
     "zh": "山路",
@@ -103,21 +106,22 @@
    "id": "m_crow",
    "idx": 6,
    "kind": "boss",
-   "x": 700,
-   "y": 300,
+   "x": 0.5711,
+   "y": 0.4161,
    "zone": "meadow",
    "title": {
     "zh": "乌鸦树",
     "en": "Crow's tree"
    },
-   "boss": "meadow"
+   "boss": "meadow",
+   "fog": "landmark"
   },
   {
    "id": "c_hills",
    "idx": 7,
    "kind": "waypoint",
-   "x": 840,
-   "y": 330,
+   "x": 0.7037,
+   "y": 0.4619,
    "zone": "clover_hills",
    "title": {
     "zh": "三叶草山坡",
@@ -128,8 +132,8 @@
    "id": "c_camp",
    "idx": 8,
    "kind": "inn",
-   "x": 900,
-   "y": 450,
+   "x": 0.7605,
+   "y": 0.6449,
    "zone": "clover_hills",
    "title": {
     "zh": "半路营火",
@@ -148,8 +152,8 @@
    "id": "c_ridge",
    "idx": 9,
    "kind": "waypoint",
-   "x": 980,
-   "y": 250,
+   "x": 0.8363,
+   "y": 0.3398,
    "zone": "clover_hills",
    "title": {
     "zh": "风岭",
@@ -160,21 +164,22 @@
    "id": "c_den",
    "idx": 10,
    "kind": "boss",
-   "x": 1100,
-   "y": 200,
+   "x": 0.95,
+   "y": 0.2636,
    "zone": "clover_hills",
    "title": {
     "zh": "狼窝",
     "en": "Wolf den"
    },
-   "boss": "clover_hills"
+   "boss": "clover_hills",
+   "fog": "landmark"
   },
   {
    "id": "w_path",
    "idx": 11,
    "kind": "waypoint",
-   "x": 1000,
-   "y": 120,
+   "x": 0.8553,
+   "y": 0.1415,
    "zone": "warren",
    "title": {
     "zh": "兔洞小路",
@@ -186,8 +191,8 @@
    "id": "w_lake",
    "idx": 12,
    "kind": "chest",
-   "x": 860,
-   "y": 60,
+   "x": 0.7226,
+   "y": 0.05,
    "zone": "warren",
    "title": {
     "zh": "三叶湖",
@@ -198,8 +203,8 @@
    "id": "w_tunnel",
    "idx": 13,
    "kind": "fork",
-   "x": 780,
-   "y": 150,
+   "x": 0.6468,
+   "y": 0.1873,
    "zone": "warren",
    "title": {
     "zh": "兔窝隧道",
@@ -210,8 +215,8 @@
    "id": "w_nest",
    "idx": 14,
    "kind": "miniboss",
-   "x": 620,
-   "y": 60,
+   "x": 0.4953,
+   "y": 0.05,
    "zone": "warren",
    "title": {
     "zh": "小偷窝",
@@ -222,8 +227,8 @@
    "id": "w_camp",
    "idx": 15,
    "kind": "inn",
-   "x": 560,
-   "y": 200,
+   "x": 0.4384,
+   "y": 0.2636,
    "zone": "warren",
    "title": {
     "zh": "营地客栈",
@@ -241,14 +246,15 @@
    "id": "w_throne",
    "idx": 16,
    "kind": "boss",
-   "x": 420,
-   "y": 260,
+   "x": 0.3058,
+   "y": 0.3551,
    "zone": "warren",
    "title": {
     "zh": "角兔王座",
     "en": "Rabbit King's throne"
    },
-   "boss": "warren"
+   "boss": "warren",
+   "fog": "landmark"
   }
  ],
  "edges": [
@@ -262,7 +268,8 @@
    },
    "cond": {
     "bossDefeated": "warren"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -271,7 +278,8 @@
    "kind": "path",
    "danger": 0,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -280,7 +288,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -289,7 +298,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -298,7 +308,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 5,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -308,7 +319,8 @@
    "danger": 1,
    "steps": 2,
    "terrain": "grass",
-   "note": "loop: the farm track rejoins the long grass"
+   "note": "loop: the farm track rejoins the long grass",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -317,7 +329,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 4,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 6
   },
   {
    "id": "g1",
@@ -327,7 +340,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 7
   },
   {
    "id": "e7",
@@ -339,7 +353,8 @@
    "terrain": "grass",
    "cond": {
     "bossDefeated": "meadow"
-   }
+   },
+   "idx": 8
   },
   {
    "id": "e8",
@@ -348,7 +363,8 @@
    "kind": "path",
    "danger": 0,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -357,7 +373,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 4,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
    "id": "e10",
@@ -367,7 +384,8 @@
    "danger": 1,
    "steps": 2,
    "terrain": "grass",
-   "note": "loop past the campfire"
+   "note": "loop past the campfire",
+   "idx": 11
   },
   {
    "id": "g2",
@@ -377,7 +395,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 12
   },
   {
    "id": "e11",
@@ -397,7 +416,8 @@
    },
    "cond": {
     "bossDefeated": "clover_hills"
-   }
+   },
+   "idx": 13
   },
   {
    "id": "e12",
@@ -406,7 +426,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 14
   },
   {
    "id": "e13",
@@ -415,7 +436,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 4,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 15
   },
   {
    "id": "e14",
@@ -424,7 +446,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 16
   },
   {
    "id": "e15",
@@ -433,7 +456,8 @@
    "kind": "path",
    "danger": 0,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 17
   },
   {
    "id": "g3",
@@ -443,19 +467,55 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 18
   }
  ],
  "events": [
   {
    "id": "village.1",
    "node": "village",
+   "on": "firstEnter",
+   "once": true,
+   "outcome": "story",
+   "tutorial": true,
+   "do": [
+    {
+     "scene": "sc_r1_opening"
+    },
+    {
+     "dialogue": "meadow_intro"
+    },
+    {
+     "dialogue": "tutorial_first_battle"
+    },
+    {
+     "fight": {
+      "kind": "tutorial",
+      "enemies": [
+       "horned_rabbit"
+      ],
+      "fill": false,
+      "canLose": false
+     }
+    },
+    {
+     "dialogue": "tutorial_first_battle_after"
+    }
+   ]
+  },
+  {
+   "id": "village.2",
+   "node": "village",
    "on": "enter",
    "once": true,
    "outcome": "story",
+   "cond": {
+    "bossDefeated": "clover_hills"
+   },
    "do": [
     {
-     "dialogue": "meadow_intro"
+     "scene": "sc_r1_village_banter"
     }
    ]
   },
@@ -933,80 +993,94 @@
  "dialogue": {
   "meadow_intro": [
    {
-    "speaker": "panda",
-    "zh": "这里是新手草原！",
+    "speaker": "xiaolong",
     "en": "This is Starter Meadow! Tap a place to walk there. Monsters hide in the long grass."
+   }
+  ],
+  "tutorial_first_battle": [
+   {
+    "speaker": "xiaolong",
+    "en": "Look out, a horned rabbit! Answer the questions to fight it."
+   }
+  ],
+  "tutorial_first_battle_after": [
+   {
+    "speaker": "xiaolong",
+    "en": "You won your first battle! Now let's explore."
    }
   ],
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ],
   "farmer_thanks": [
    {
     "speaker": "farmer_li",
-    "zh": "谢谢你！",
-    "en": "Thank you, little hero!"
+    "en": "{C007}, little hero!",
+    "tokens": [
+     "C007"
+    ]
    }
   ],
   "well_hint": [
    {
-    "speaker": "panda",
-    "zh": "井里有东西在发光。",
+    "speaker": "xiaolong",
     "en": "Something shiny is down in the old well... Farmer Li lost something!"
    }
   ],
   "crow_boss_intro": [
    {
-    "speaker": "panda",
-    "zh": "大嘴乌鸦！",
+    "speaker": "xiaolong",
     "en": "The Big-Beak Crow guards the hill road!"
    }
   ],
   "clover_sign": [
    {
-    "speaker": "panda",
-    "zh": "一、二、三……",
-    "en": "The old sign counts the hills: 一, 二, 三!"
+    "speaker": "xiaolong",
+    "en": "The old sign counts the hills. Number {C066} is this one!",
+    "tokens": [
+     "C066"
+    ]
    }
   ],
   "camp_welcome": [
    {
-    "speaker": "panda",
-    "zh": "营火真暖和。",
-    "en": "A campfire inn! We can rest and save here."
+    "speaker": "innkeeper_panda",
+    "en": "Welcome to my campfire inn! Every inn's panda is my cousin, you know."
    }
   ],
   "thief_gone": [
    {
-    "speaker": "panda",
-    "zh": "小偷跑了。",
+    "speaker": "xiaolong",
     "en": "The carrot thief's nest is empty now."
    }
   ],
   "king_warning": [
    {
-    "speaker": "panda",
-    "zh": "角兔王就在前面！",
+    "speaker": "xiaolong",
     "en": "The Horned Rabbit King is just ahead! Rest here first."
    }
   ],
   "king_beaten": [
    {
-    "speaker": "panda",
-    "zh": "你赢了！",
+    "speaker": "xiaolong",
     "en": "You did it! The road to Honeycomb Forest is open."
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "innkeeper_panda": {
+   "name": {
+    "zh": "熊猫掌柜",
+    "en": "Panda innkeeper"
    }
   },
   "farmer_li": {

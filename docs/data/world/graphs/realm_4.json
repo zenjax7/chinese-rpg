@@ -16,13 +16,15 @@
   "map": "bg_map_realm_4",
   "battle": "bg_battle_r4"
  },
+ "edgeIdxMax": 4,
+ "aspect": 10.545,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "cave_mouth",
    "title": {
     "zh": "矿工营地",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 4
+   "town": 4,
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 1,
    "kind": "portal",
-   "x": 640,
-   "y": 305,
+   "x": 0.5,
+   "y": 0.05,
    "zone": "cave_mouth",
    "title": {
     "zh": "地牢入口",
@@ -53,8 +56,8 @@
    "id": "path_1",
    "idx": 2,
    "kind": "waypoint",
-   "x": 640,
-   "y": 415,
+   "x": 0.5,
+   "y": 0.95,
    "zone": "cave_mouth",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "town_2",
    "idx": 3,
    "kind": "village",
-   "x": 1220,
-   "y": 305,
+   "x": 0.95,
+   "y": 0.05,
    "zone": "cave_mouth",
    "title": {
     "zh": "矿工营地分站",
@@ -80,14 +83,15 @@
    ],
    "shops": [
     "items"
-   ]
+   ],
+   "fog": "landmark"
   },
   {
    "id": "deadend_1",
    "idx": 4,
    "kind": "waypoint",
-   "x": 1220,
-   "y": 415,
+   "x": 0.95,
+   "y": 0.95,
    "zone": "cave_mouth",
    "title": {
     "zh": "死胡同",
@@ -103,7 +107,8 @@
    "to": {
     "graph": "goblin_caves_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -112,7 +117,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -121,7 +127,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -130,7 +137,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -139,10 +147,41 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   }
  ],
  "events": [
+  {
+   "id": "portal_1.1",
+   "node": "portal_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q4_lost_schoolbag"
+   },
+   "do": [
+    {
+     "dialogue": "realm_4.portal_1.step_q4_lost_schoolbag"
+    }
+   ]
+  },
+  {
+   "id": "portal_1.2",
+   "node": "portal_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q4_school_bell"
+   },
+   "do": [
+    {
+     "dialogue": "realm_4.portal_1.step_q4_school_bell"
+    }
+   ]
+  },
   {
    "id": "path_1.1",
    "node": "path_1",
@@ -203,19 +242,36 @@
   }
  ],
  "dialogue": {
+  "realm_4.portal_1.step_q4_lost_schoolbag": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q4_lost_schoolbag: scene from data/dialogue)"
+   }
+  ],
+  "realm_4.portal_1.step_q4_school_bell": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q4_school_bell: scene from data/dialogue)"
+   }
+  ],
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

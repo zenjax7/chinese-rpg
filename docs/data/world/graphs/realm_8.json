@@ -11,18 +11,20 @@
  },
  "status": "reference",
  "entry": "entry_town",
- "idxMax": 92,
+ "idxMax": 90,
  "background": {
   "map": "bg_map_realm_8",
   "battle": "bg_battle_r8"
  },
+ "edgeIdxMax": 91,
+ "aspect": 1.98,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "角斗场镇",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 8
+   "town": 8,
+   "fog": "landmark"
   },
   {
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 149,
-   "y": 360,
+   "x": 0.1144,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -53,8 +56,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "fork",
-   "x": 238,
-   "y": 195,
+   "x": 0.1788,
+   "y": 0.3311,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "fork",
-   "x": 328,
-   "y": 195,
+   "x": 0.2432,
+   "y": 0.1621,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -77,8 +80,8 @@
    "id": "path_4",
    "idx": 4,
    "kind": "waypoint",
-   "x": 417,
-   "y": 86,
+   "x": 0.3068,
+   "y": 0.0577,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -89,8 +92,8 @@
    "id": "campfire_1",
    "idx": 5,
    "kind": "inn",
-   "x": 506,
-   "y": 93,
+   "x": 0.3712,
+   "y": 0.0531,
    "zone": "training_pits",
    "title": {
     "zh": "半路营火",
@@ -109,8 +112,8 @@
    "id": "path_5",
    "idx": 6,
    "kind": "waypoint",
-   "x": 595,
-   "y": 65,
+   "x": 0.4356,
+   "y": 0.0531,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -121,8 +124,8 @@
    "id": "path_6",
    "idx": 7,
    "kind": "fork",
-   "x": 685,
-   "y": 80,
+   "x": 0.5,
+   "y": 0.0792,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -133,8 +136,8 @@
    "id": "path_7",
    "idx": 8,
    "kind": "waypoint",
-   "x": 774,
-   "y": 65,
+   "x": 0.5644,
+   "y": 0.05,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -145,8 +148,8 @@
    "id": "inn_1",
    "idx": 9,
    "kind": "inn",
-   "x": 863,
-   "y": 63,
+   "x": 0.6288,
+   "y": 0.07,
    "zone": "training_pits",
    "title": {
     "zh": "营地客栈",
@@ -164,21 +167,22 @@
    "id": "boss_1",
    "idx": 10,
    "kind": "boss",
-   "x": 952,
-   "y": 72,
+   "x": 0.6932,
+   "y": 0.0899,
    "zone": "training_pits",
    "title": {
     "zh": "牛头人",
     "en": "Minotaur"
    },
-   "boss": "training_pits"
+   "boss": "training_pits",
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 11,
    "kind": "portal",
-   "x": 1042,
-   "y": 86,
+   "x": 0.7568,
+   "y": 0.07,
    "zone": "grand_colosseum",
    "title": {
     "zh": "地牢入口",
@@ -189,8 +193,8 @@
    "id": "portal_2",
    "idx": 12,
    "kind": "portal",
-   "x": 774,
-   "y": 114,
+   "x": 0.5644,
+   "y": 0.1314,
    "zone": "training_pits",
    "title": {
     "zh": "兽栏",
@@ -201,8 +205,8 @@
    "id": "path_8",
    "idx": 13,
    "kind": "waypoint",
-   "x": 328,
-   "y": 305,
+   "x": 0.3068,
+   "y": 0.156,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -213,8 +217,8 @@
    "id": "town_2",
    "idx": 14,
    "kind": "village",
-   "x": 417,
-   "y": 177,
+   "x": 0.3712,
+   "y": 0.1422,
    "zone": "training_pits",
    "title": {
     "zh": "角斗场镇分站",
@@ -228,14 +232,15 @@
    ],
    "shops": [
     "items"
-   ]
+   ],
+   "fog": "landmark"
   },
   {
    "id": "path_9",
    "idx": 15,
    "kind": "fork",
-   "x": 506,
-   "y": 200,
+   "x": 0.5,
+   "y": 0.2189,
    "zone": "training_pits",
    "title": {
     "zh": "小路",
@@ -246,8 +251,8 @@
    "id": "town_3",
    "idx": 16,
    "kind": "village",
-   "x": 595,
-   "y": 114,
+   "x": 0.5644,
+   "y": 0.2128,
    "zone": "training_pits",
    "title": {
     "zh": "角斗场镇分站",
@@ -261,47 +266,15 @@
    ],
    "shops": [
     "items"
-   ]
-  },
-  {
-   "id": "path_10",
-   "idx": 17,
-   "kind": "waypoint",
-   "x": 774,
-   "y": 163,
-   "zone": "training_pits",
-   "title": {
-    "zh": "小路",
-    "en": "Side road"
-   }
-  },
-  {
-   "id": "town_4",
-   "idx": 18,
-   "kind": "village",
-   "x": 863,
-   "y": 109,
-   "zone": "training_pits",
-   "title": {
-    "zh": "角斗场镇分站",
-    "en": "Arena Town outpost 3"
-   },
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "shop"
    ],
-   "shops": [
-    "items"
-   ]
+   "fog": "landmark"
   },
   {
    "id": "inn_2",
-   "idx": 19,
+   "idx": 17,
    "kind": "inn",
-   "x": 238,
-   "y": 305,
+   "x": 0.1788,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "隐藏客栈",
@@ -315,11 +288,11 @@
    ]
   },
   {
-   "id": "path_11",
-   "idx": 20,
-   "kind": "fork",
-   "x": 774,
-   "y": 212,
+   "id": "path_10",
+   "idx": 18,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.2957,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -328,286 +301,46 @@
   },
   {
    "id": "deadend_1",
-   "idx": 21,
+   "idx": 19,
    "kind": "waypoint",
-   "x": 863,
-   "y": 154,
+   "x": 0.6288,
+   "y": 0.1928,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
     "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_11",
+   "idx": 20,
+   "kind": "fork",
+   "x": 0.2432,
+   "y": 0.3311,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
    }
   },
   {
    "id": "path_12",
-   "idx": 22,
+   "idx": 21,
    "kind": "waypoint",
-   "x": 952,
-   "y": 136,
+   "x": 0.3068,
+   "y": 0.2543,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
     "en": "Winding path"
-   }
-  },
-  {
-   "id": "story_1",
-   "idx": 23,
-   "kind": "story",
-   "x": 1042,
-   "y": 177,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "treasure_1",
-   "idx": 24,
-   "kind": "chest",
-   "x": 238,
-   "y": 415,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
    }
   },
   {
    "id": "path_13",
-   "idx": 25,
-   "kind": "fork",
-   "x": 417,
-   "y": 269,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "deadend_2",
-   "idx": 26,
-   "kind": "waypoint",
-   "x": 506,
-   "y": 307,
-   "zone": "training_pits",
-   "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
-  },
-  {
-   "id": "deadend_3",
-   "idx": 27,
-   "kind": "waypoint",
-   "x": 238,
-   "y": 525,
-   "zone": "training_pits",
-   "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
-  },
-  {
-   "id": "path_14",
-   "idx": 28,
-   "kind": "waypoint",
-   "x": 595,
-   "y": 163,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "story_2",
-   "idx": 29,
-   "kind": "story",
-   "x": 685,
-   "y": 160,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "path_15",
-   "idx": 30,
-   "kind": "waypoint",
-   "x": 863,
-   "y": 200,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "path_16",
-   "idx": 31,
-   "kind": "fork",
-   "x": 952,
-   "y": 200,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "treasure_2",
-   "idx": 32,
-   "kind": "chest",
-   "x": 1042,
-   "y": 269,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "npc_1",
-   "idx": 33,
-   "kind": "npc",
-   "x": 328,
-   "y": 415,
-   "zone": "training_pits",
-   "title": {
-    "zh": "旅人",
-    "en": "Traveller"
-   }
-  },
-  {
-   "id": "story_3",
-   "idx": 34,
-   "kind": "story",
-   "x": 595,
-   "y": 212,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "story_4",
-   "idx": 35,
-   "kind": "story",
-   "x": 1042,
-   "y": 360,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "deadend_4",
-   "idx": 36,
-   "kind": "waypoint",
-   "x": 863,
-   "y": 246,
-   "zone": "training_pits",
-   "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
-  },
-  {
-   "id": "miniboss_1",
-   "idx": 37,
-   "kind": "miniboss",
-   "x": 774,
-   "y": 262,
-   "zone": "training_pits",
-   "title": {
-    "zh": "小头目",
-    "en": "Mini-boss lair"
-   }
-  },
-  {
-   "id": "deadend_5",
-   "idx": 38,
-   "kind": "waypoint",
-   "x": 685,
-   "y": 240,
-   "zone": "training_pits",
-   "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
-  },
-  {
-   "id": "path_17",
-   "idx": 39,
-   "kind": "waypoint",
-   "x": 506,
-   "y": 413,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "npc_2",
-   "idx": 40,
-   "kind": "npc",
-   "x": 595,
-   "y": 262,
-   "zone": "training_pits",
-   "title": {
-    "zh": "旅人",
-    "en": "Traveller"
-   }
-  },
-  {
-   "id": "treasure_3",
-   "idx": 41,
-   "kind": "chest",
-   "x": 417,
-   "y": 360,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "story_5",
-   "idx": 42,
-   "kind": "story",
-   "x": 774,
-   "y": 311,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "treasure_4",
-   "idx": 43,
-   "kind": "chest",
-   "x": 506,
-   "y": 520,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "path_18",
-   "idx": 44,
+   "idx": 22,
    "kind": "inn",
-   "x": 1131,
-   "y": 250,
+   "x": 0.3712,
+   "y": 0.2312,
    "zone": "training_pits",
    "title": {
     "zh": "营火",
@@ -622,11 +355,300 @@
    ]
   },
   {
-   "id": "treasure_5",
-   "idx": 45,
+   "id": "story_1",
+   "idx": 23,
+   "kind": "story",
+   "x": 0.4356,
+   "y": 0.1422,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 24,
+   "kind": "miniboss",
+   "x": 0.4356,
+   "y": 0.2312,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_14",
+   "idx": 25,
+   "kind": "fork",
+   "x": 0.3068,
+   "y": 0.3526,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 26,
+   "kind": "waypoint",
+   "x": 0.3712,
+   "y": 0.3218,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "deadend_3",
+   "idx": 27,
+   "kind": "waypoint",
+   "x": 0.1788,
+   "y": 0.6689,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_15",
+   "idx": 28,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.3218,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 29,
+   "kind": "story",
+   "x": 0.5,
+   "y": 0.3602,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_16",
+   "idx": 30,
+   "kind": "waypoint",
+   "x": 0.2432,
+   "y": 0.5,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_17",
+   "idx": 31,
+   "kind": "fork",
+   "x": 0.3068,
+   "y": 0.4509,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 32,
    "kind": "chest",
-   "x": 1220,
-   "y": 305,
+   "x": 0.3712,
+   "y": 0.4109,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 33,
+   "kind": "npc",
+   "x": 0.2432,
+   "y": 0.6689,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "story_3",
+   "idx": 34,
+   "kind": "story",
+   "x": 0.4356,
+   "y": 0.4109,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "story_4",
+   "idx": 35,
+   "kind": "story",
+   "x": 0.3712,
+   "y": 0.5,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_4",
+   "idx": 36,
+   "kind": "inn",
+   "x": 0.6932,
+   "y": 0.2543,
+   "zone": "training_pits",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "miniboss_2",
+   "idx": 37,
+   "kind": "miniboss",
+   "x": 0.5644,
+   "y": 0.3771,
+   "zone": "training_pits",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "deadend_5",
+   "idx": 38,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "zone": "training_pits",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_18",
+   "idx": 39,
+   "kind": "waypoint",
+   "x": 0.3712,
+   "y": 0.5891,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 40,
+   "kind": "npc",
+   "x": 0.4356,
+   "y": 0.5,
+   "zone": "training_pits",
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "inn_3",
+   "idx": 41,
+   "kind": "inn",
+   "x": 0.3712,
+   "y": 0.6782,
+   "zone": "training_pits",
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_2",
+   "idx": 42,
+   "kind": "chest",
+   "x": 0.3068,
+   "y": 0.5491,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_5",
+   "idx": 43,
+   "kind": "story",
+   "x": 0.5644,
+   "y": 0.4585,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 44,
+   "kind": "chest",
+   "x": 0.3712,
+   "y": 0.7688,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_19",
+   "idx": 45,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.5891,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_4",
+   "idx": 46,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.6398,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -635,10 +657,10 @@
   },
   {
    "id": "npc_3",
-   "idx": 46,
+   "idx": 47,
    "kind": "npc",
-   "x": 595,
-   "y": 311,
+   "x": 0.5644,
+   "y": 0.5415,
    "zone": "training_pits",
    "title": {
     "zh": "旅人",
@@ -646,11 +668,11 @@
    }
   },
   {
-   "id": "path_19",
-   "idx": 47,
+   "id": "path_20",
+   "idx": 48,
    "kind": "waypoint",
-   "x": 595,
-   "y": 360,
+   "x": 0.4356,
+   "y": 0.6782,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -658,11 +680,11 @@
    }
   },
   {
-   "id": "path_20",
-   "idx": 48,
+   "id": "path_21",
+   "idx": 49,
    "kind": "waypoint",
-   "x": 685,
-   "y": 320,
+   "x": 0.5,
+   "y": 0.7811,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -671,10 +693,10 @@
   },
   {
    "id": "deadend_6",
-   "idx": 49,
+   "idx": 50,
    "kind": "waypoint",
-   "x": 774,
-   "y": 360,
+   "x": 0.5644,
+   "y": 0.6229,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
@@ -682,11 +704,11 @@
    }
   },
   {
-   "id": "treasure_6",
-   "idx": 50,
+   "id": "treasure_5",
+   "idx": 51,
    "kind": "chest",
-   "x": 1131,
-   "y": 360,
+   "x": 0.4356,
+   "y": 0.7688,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -694,23 +716,11 @@
    }
   },
   {
-   "id": "path_21",
-   "idx": 51,
-   "kind": "waypoint",
-   "x": 595,
-   "y": 409,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
    "id": "path_22",
    "idx": 52,
    "kind": "waypoint",
-   "x": 685,
-   "y": 400,
+   "x": 0.5644,
+   "y": 0.7043,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -720,9 +730,9 @@
   {
    "id": "path_23",
    "idx": 53,
-   "kind": "fork",
-   "x": 774,
-   "y": 409,
+   "kind": "waypoint",
+   "x": 0.6288,
+   "y": 0.3157,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -732,9 +742,21 @@
   {
    "id": "path_24",
    "idx": 54,
+   "kind": "waypoint",
+   "x": 0.6932,
+   "y": 0.4186,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_25",
+   "idx": 55,
    "kind": "inn",
-   "x": 863,
-   "y": 291,
+   "x": 0.7568,
+   "y": 0.1928,
    "zone": "training_pits",
    "title": {
     "zh": "营火",
@@ -750,10 +772,10 @@
   },
   {
    "id": "story_6",
-   "idx": 55,
+   "idx": 56,
    "kind": "story",
-   "x": 952,
-   "y": 264,
+   "x": 0.8212,
+   "y": 0.1621,
    "zone": "training_pits",
    "title": {
     "zh": "故事点",
@@ -761,42 +783,11 @@
    }
   },
   {
-   "id": "path_25",
-   "idx": 56,
-   "kind": "inn",
-   "x": 952,
-   "y": 328,
-   "zone": "training_pits",
-   "title": {
-    "zh": "营火",
-    "en": "Campfire inn"
-   },
-   "campfire": true,
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "potions"
-   ]
-  },
-  {
-   "id": "treasure_7",
-   "idx": 57,
-   "kind": "chest",
-   "x": 1042,
-   "y": 451,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
    "id": "path_26",
-   "idx": 58,
+   "idx": 57,
    "kind": "waypoint",
-   "x": 863,
-   "y": 337,
+   "x": 0.3068,
+   "y": 0.6474,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -804,11 +795,35 @@
    }
   },
   {
-   "id": "treasure_8",
-   "idx": 59,
+   "id": "treasure_6",
+   "idx": 58,
    "kind": "chest",
-   "x": 952,
-   "y": 392,
+   "x": 0.3712,
+   "y": 0.8578,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_27",
+   "idx": 59,
+   "kind": "waypoint",
+   "x": 0.6932,
+   "y": 0.5814,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_7",
+   "idx": 60,
+   "kind": "chest",
+   "x": 0.7568,
+   "y": 0.3157,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -817,10 +832,10 @@
   },
   {
    "id": "story_7",
-   "idx": 60,
+   "idx": 61,
    "kind": "story",
-   "x": 595,
-   "y": 458,
+   "x": 0.6288,
+   "y": 0.4386,
    "zone": "training_pits",
    "title": {
     "zh": "故事点",
@@ -828,11 +843,11 @@
    }
   },
   {
-   "id": "path_27",
-   "idx": 61,
+   "id": "path_28",
+   "idx": 62,
    "kind": "waypoint",
-   "x": 328,
-   "y": 525,
+   "x": 0.2432,
+   "y": 0.8379,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -841,10 +856,10 @@
   },
   {
    "id": "deadend_7",
-   "idx": 62,
+   "idx": 63,
    "kind": "waypoint",
-   "x": 417,
-   "y": 451,
+   "x": 0.3068,
+   "y": 0.7457,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
@@ -852,23 +867,11 @@
    }
   },
   {
-   "id": "npc_4",
-   "idx": 63,
-   "kind": "npc",
-   "x": 863,
-   "y": 383,
-   "zone": "training_pits",
-   "title": {
-    "zh": "旅人",
-    "en": "Traveller"
-   }
-  },
-  {
-   "id": "path_28",
+   "id": "path_29",
    "idx": 64,
    "kind": "waypoint",
-   "x": 595,
-   "y": 508,
+   "x": 0.6932,
+   "y": 0.7457,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -876,42 +879,11 @@
    }
   },
   {
-   "id": "path_29",
-   "idx": 65,
-   "kind": "inn",
-   "x": 685,
-   "y": 480,
-   "zone": "training_pits",
-   "title": {
-    "zh": "营火",
-    "en": "Campfire inn"
-   },
-   "campfire": true,
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "potions"
-   ]
-  },
-  {
-   "id": "story_8",
-   "idx": 66,
-   "kind": "story",
-   "x": 774,
-   "y": 458,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
    "id": "path_30",
-   "idx": 67,
+   "idx": 65,
    "kind": "waypoint",
-   "x": 863,
-   "y": 429,
+   "x": 0.7568,
+   "y": 0.4386,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -920,10 +892,10 @@
   },
   {
    "id": "path_31",
-   "idx": 68,
+   "idx": 66,
    "kind": "waypoint",
-   "x": 952,
-   "y": 456,
+   "x": 0.8212,
+   "y": 0.3311,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -932,10 +904,10 @@
   },
   {
    "id": "path_32",
-   "idx": 69,
+   "idx": 67,
    "kind": "inn",
-   "x": 1042,
-   "y": 543,
+   "x": 0.8856,
+   "y": 0.4155,
    "zone": "training_pits",
    "title": {
     "zh": "营火",
@@ -950,47 +922,11 @@
    ]
   },
   {
-   "id": "npc_5",
-   "idx": 70,
-   "kind": "npc",
-   "x": 1131,
-   "y": 470,
-   "zone": "training_pits",
-   "title": {
-    "zh": "旅人",
-    "en": "Traveller"
-   }
-  },
-  {
-   "id": "path_33",
-   "idx": 71,
-   "kind": "waypoint",
-   "x": 774,
-   "y": 508,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "story_9",
-   "idx": 72,
-   "kind": "story",
-   "x": 863,
-   "y": 474,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "treasure_9",
-   "idx": 73,
+   "id": "treasure_8",
+   "idx": 68,
    "kind": "chest",
-   "x": 595,
-   "y": 557,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -998,11 +934,11 @@
    }
   },
   {
-   "id": "path_34",
-   "idx": 74,
+   "id": "path_33",
+   "idx": 69,
    "kind": "waypoint",
-   "x": 417,
-   "y": 543,
+   "x": 0.7568,
+   "y": 0.5614,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -1010,11 +946,23 @@
    }
   },
   {
+   "id": "treasure_9",
+   "idx": 70,
+   "kind": "chest",
+   "x": 0.8212,
+   "y": 0.5,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
    "id": "deadend_8",
-   "idx": 75,
+   "idx": 71,
    "kind": "waypoint",
-   "x": 506,
-   "y": 627,
+   "x": 0.8212,
+   "y": 0.6689,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
@@ -1022,11 +970,23 @@
    }
   },
   {
+   "id": "path_34",
+   "idx": 72,
+   "kind": "waypoint",
+   "x": 0.7568,
+   "y": 0.6843,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
    "id": "treasure_10",
-   "idx": 76,
+   "idx": 73,
    "kind": "chest",
-   "x": 952,
-   "y": 520,
+   "x": 0.8212,
+   "y": 0.8379,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -1034,11 +994,23 @@
    }
   },
   {
-   "id": "story_10",
-   "idx": 77,
+   "id": "treasure_11",
+   "idx": 74,
+   "kind": "chest",
+   "x": 0.7568,
+   "y": 0.8072,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_8",
+   "idx": 75,
    "kind": "story",
-   "x": 685,
-   "y": 560,
+   "x": 0.8856,
+   "y": 0.5845,
    "zone": "training_pits",
    "title": {
     "zh": "故事点",
@@ -1046,11 +1018,11 @@
    }
   },
   {
-   "id": "npc_6",
-   "idx": 78,
+   "id": "npc_4",
+   "idx": 76,
    "kind": "npc",
-   "x": 595,
-   "y": 606,
+   "x": 0.4356,
+   "y": 0.8578,
    "zone": "training_pits",
    "title": {
     "zh": "旅人",
@@ -1059,10 +1031,10 @@
   },
   {
    "id": "deadend_9",
-   "idx": 79,
+   "idx": 77,
    "kind": "waypoint",
-   "x": 952,
-   "y": 584,
+   "x": 0.3068,
+   "y": 0.844,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
@@ -1070,11 +1042,11 @@
    }
   },
   {
-   "id": "treasure_11",
-   "idx": 80,
+   "id": "treasure_12",
+   "idx": 78,
    "kind": "chest",
-   "x": 417,
-   "y": 634,
+   "x": 0.3068,
+   "y": 0.9423,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -1082,11 +1054,11 @@
    }
   },
   {
-   "id": "npc_7",
-   "idx": 81,
+   "id": "npc_5",
+   "idx": 79,
    "kind": "npc",
-   "x": 863,
-   "y": 520,
+   "x": 0.6288,
+   "y": 0.5614,
    "zone": "training_pits",
    "title": {
     "zh": "旅人",
@@ -1095,89 +1067,10 @@
   },
   {
    "id": "deadend_10",
-   "idx": 82,
+   "idx": 80,
    "kind": "inn",
-   "x": 1220,
-   "y": 415,
-   "zone": "training_pits",
-   "title": {
-    "zh": "营火",
-    "en": "Campfire inn"
-   },
-   "campfire": true,
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "potions"
-   ]
-  },
-  {
-   "id": "treasure_12",
-   "idx": 83,
-   "kind": "chest",
-   "x": 774,
-   "y": 557,
-   "zone": "training_pits",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "path_35",
-   "idx": 84,
-   "kind": "waypoint",
-   "x": 595,
-   "y": 655,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "path_36",
-   "idx": 85,
-   "kind": "waypoint",
-   "x": 685,
-   "y": 640,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "path_37",
-   "idx": 86,
-   "kind": "waypoint",
-   "x": 774,
-   "y": 606,
-   "zone": "training_pits",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "story_11",
-   "idx": 87,
-   "kind": "story",
-   "x": 863,
-   "y": 566,
-   "zone": "training_pits",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "path_38",
-   "idx": 88,
-   "kind": "inn",
-   "x": 863,
-   "y": 611,
+   "x": 0.6288,
+   "y": 0.6843,
    "zone": "training_pits",
    "title": {
     "zh": "营火",
@@ -1193,10 +1086,82 @@
   },
   {
    "id": "treasure_13",
-   "idx": 89,
+   "idx": 81,
    "kind": "chest",
-   "x": 952,
-   "y": 648,
+   "x": 0.5644,
+   "y": 0.7872,
+   "zone": "training_pits",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_35",
+   "idx": 82,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.9469,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_36",
+   "idx": 83,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.9208,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_37",
+   "idx": 84,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.8686,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_9",
+   "idx": 85,
+   "kind": "story",
+   "x": 0.6288,
+   "y": 0.8072,
+   "zone": "training_pits",
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_38",
+   "idx": 86,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.95,
+   "zone": "training_pits",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_14",
+   "idx": 87,
+   "kind": "chest",
+   "x": 0.6288,
+   "y": 0.93,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -1205,10 +1170,10 @@
   },
   {
    "id": "path_39",
-   "idx": 90,
+   "idx": 88,
    "kind": "waypoint",
-   "x": 774,
-   "y": 655,
+   "x": 0.6932,
+   "y": 0.9101,
    "zone": "training_pits",
    "title": {
     "zh": "弯路",
@@ -1217,22 +1182,29 @@
   },
   {
    "id": "deadend_11",
-   "idx": 91,
-   "kind": "waypoint",
-   "x": 863,
-   "y": 657,
+   "idx": 89,
+   "kind": "inn",
+   "x": 0.7568,
+   "y": 0.93,
    "zone": "training_pits",
    "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
   },
   {
-   "id": "treasure_14",
-   "idx": 92,
+   "id": "treasure_15",
+   "idx": 90,
    "kind": "chest",
-   "x": 1042,
-   "y": 634,
+   "x": 0.3712,
+   "y": 0.9469,
    "zone": "training_pits",
    "title": {
     "zh": "宝藏",
@@ -1248,7 +1220,8 @@
    "to": {
     "graph": "undercroft_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_portal_2",
@@ -1257,7 +1230,8 @@
    "to": {
     "graph": "beast_pens_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "e1",
@@ -1266,7 +1240,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e2",
@@ -1275,7 +1250,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e3",
@@ -1284,7 +1260,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e4",
@@ -1293,7 +1270,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 5
   },
   {
    "id": "e5",
@@ -1302,7 +1280,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 6
   },
   {
    "id": "e6",
@@ -1311,7 +1290,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 7
   },
   {
    "id": "e7",
@@ -1320,7 +1300,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 8
   },
   {
    "id": "e8",
@@ -1329,7 +1310,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -1338,7 +1320,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
    "id": "e10",
@@ -1348,7 +1331,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 11
   },
   {
    "id": "e11",
@@ -1365,7 +1349,8 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 12
   },
   {
    "id": "e12",
@@ -1374,16 +1359,18 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 13
   },
   {
    "id": "e13",
-   "from": "path_2",
+   "from": "path_3",
    "to": "path_8",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 14
   },
   {
    "id": "e14",
@@ -1392,16 +1379,18 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 15
   },
   {
    "id": "e15",
-   "from": "path_4",
+   "from": "path_5",
    "to": "path_9",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 16
   },
   {
    "id": "e16",
@@ -1410,97 +1399,108 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 17
   },
   {
    "id": "e17",
-   "from": "path_6",
-   "to": "path_10",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e18",
-   "from": "path_10",
-   "to": "town_4",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "road"
-  },
-  {
-   "id": "e19",
    "from": "path_1",
    "to": "inn_2",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 18
   },
   {
-   "id": "e20",
+   "id": "e18",
    "from": "path_6",
-   "to": "path_11",
+   "to": "path_10",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 19
   },
   {
-   "id": "e21",
-   "from": "path_11",
+   "id": "e19",
+   "from": "path_10",
    "to": "deadend_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 20
   },
   {
-   "id": "e22",
-   "from": "deadend_1",
+   "id": "e20",
+   "from": "path_2",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 21
+  },
+  {
+   "id": "e21",
+   "from": "path_11",
    "to": "path_12",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 22
   },
   {
-   "id": "e23",
+   "id": "e22",
    "from": "path_12",
-   "to": "story_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e24",
-   "from": "path_1",
-   "to": "treasure_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e25",
-   "from": "path_3",
    "to": "path_13",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 23
+  },
+  {
+   "id": "e23",
+   "from": "path_13",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 24
+  },
+  {
+   "id": "e24",
+   "from": "campfire_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 25
+  },
+  {
+   "id": "e25",
+   "from": "path_3",
+   "to": "path_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 26
   },
   {
    "id": "e26",
-   "from": "path_13",
+   "from": "path_14",
    "to": "deadend_2",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 27
   },
   {
    "id": "e27",
@@ -1509,52 +1509,58 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 28
   },
   {
    "id": "e28",
    "from": "campfire_1",
-   "to": "path_14",
+   "to": "path_15",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 29
   },
   {
    "id": "e29",
-   "from": "path_14",
+   "from": "path_15",
    "to": "story_2",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 30
   },
   {
    "id": "e30",
-   "from": "path_10",
-   "to": "path_15",
-   "kind": "path",
-   "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
-  },
-  {
-   "id": "e31",
-   "from": "path_15",
+   "from": "inn_2",
    "to": "path_16",
    "kind": "path",
    "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 31
   },
   {
-   "id": "e32",
+   "id": "e31",
    "from": "path_16",
-   "to": "treasure_2",
+   "to": "path_17",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 32
+  },
+  {
+   "id": "e32",
+   "from": "path_17",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 33
   },
   {
    "id": "e33",
@@ -1563,7 +1569,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 34
   },
   {
    "id": "e34",
@@ -1572,169 +1579,188 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 35
   },
   {
    "id": "e35",
-   "from": "path_16",
+   "from": "path_17",
    "to": "story_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 36
   },
   {
    "id": "e36",
-   "from": "path_11",
+   "from": "deadend_1",
    "to": "deadend_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 37
   },
   {
    "id": "e37",
    "from": "path_6",
-   "to": "miniboss_1",
+   "to": "miniboss_2",
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 38
   },
   {
    "id": "e38",
-   "from": "path_14",
+   "from": "path_15",
    "to": "deadend_5",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 39
   },
   {
    "id": "e39",
-   "from": "path_13",
-   "to": "path_17",
+   "from": "path_14",
+   "to": "path_18",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 40
   },
   {
    "id": "e40",
-   "from": "path_17",
+   "from": "path_18",
    "to": "npc_2",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 41
   },
   {
    "id": "e41",
-   "from": "path_3",
-   "to": "treasure_3",
+   "from": "path_14",
+   "to": "inn_3",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 42
   },
   {
    "id": "e42",
+   "from": "path_3",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 43
+  },
+  {
+   "id": "e43",
    "from": "deadend_5",
    "to": "story_5",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 44
   },
   {
-   "id": "e43",
-   "from": "path_13",
+   "id": "e44",
+   "from": "path_14",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 45
+  },
+  {
+   "id": "e45",
+   "from": "story_4",
+   "to": "path_19",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 46
+  },
+  {
+   "id": "e46",
+   "from": "path_19",
    "to": "treasure_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 47
   },
   {
-   "id": "e44",
-   "from": "story_4",
-   "to": "path_18",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e45",
-   "from": "path_18",
-   "to": "treasure_5",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e46",
+   "id": "e47",
    "from": "path_9",
    "to": "npc_3",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e47",
-   "from": "deadend_2",
-   "to": "path_19",
-   "kind": "path",
-   "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 48
   },
   {
    "id": "e48",
-   "from": "path_19",
+   "from": "deadend_2",
    "to": "path_20",
    "kind": "path",
    "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 49
   },
   {
    "id": "e49",
    "from": "path_20",
+   "to": "path_21",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 50
+  },
+  {
+   "id": "e50",
+   "from": "path_21",
    "to": "deadend_6",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e50",
-   "from": "story_1",
-   "to": "treasure_6",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 51
   },
   {
    "id": "e51",
-   "from": "path_9",
-   "to": "path_21",
-   "kind": "path",
-   "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
-  },
-  {
-   "id": "e52",
-   "from": "path_21",
-   "to": "path_22",
+   "from": "path_13",
+   "to": "treasure_5",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 52
+  },
+  {
+   "id": "e52",
+   "from": "path_9",
+   "to": "path_22",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 53
   },
   {
    "id": "e53",
@@ -1743,7 +1769,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 54
   },
   {
    "id": "e54",
@@ -1752,349 +1779,368 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 55
   },
   {
    "id": "e55",
    "from": "path_24",
-   "to": "story_6",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e56",
-   "from": "deadend_1",
    "to": "path_25",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 56
   },
   {
-   "id": "e57",
+   "id": "e56",
    "from": "path_25",
-   "to": "treasure_7",
+   "to": "story_6",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 57
   },
   {
-   "id": "e58",
-   "from": "path_23",
+   "id": "e57",
+   "from": "path_11",
    "to": "path_26",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 58
+  },
+  {
+   "id": "e58",
+   "from": "path_26",
+   "to": "treasure_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 59
   },
   {
    "id": "e59",
-   "from": "path_26",
-   "to": "treasure_8",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e60",
-   "from": "treasure_4",
-   "to": "story_7",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e61",
-   "from": "deadend_3",
+   "from": "path_23",
    "to": "path_27",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 60
+  },
+  {
+   "id": "e60",
+   "from": "path_27",
+   "to": "treasure_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 61
+  },
+  {
+   "id": "e61",
+   "from": "story_5",
+   "to": "story_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 62
   },
   {
    "id": "e62",
-   "from": "path_27",
+   "from": "deadend_3",
+   "to": "path_28",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 63
+  },
+  {
+   "id": "e63",
+   "from": "path_28",
    "to": "deadend_7",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e63",
-   "from": "path_23",
-   "to": "npc_4",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 64
   },
   {
    "id": "e64",
-   "from": "treasure_4",
-   "to": "path_28",
-   "kind": "path",
-   "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
-  },
-  {
-   "id": "e65",
-   "from": "path_28",
+   "from": "deadend_1",
    "to": "path_29",
    "kind": "path",
    "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 65
   },
   {
-   "id": "e66",
+   "id": "e65",
    "from": "path_29",
-   "to": "story_8",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e67",
-   "from": "path_11",
    "to": "path_30",
    "kind": "path",
    "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 66
   },
   {
-   "id": "e68",
+   "id": "e66",
    "from": "path_30",
    "to": "path_31",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 67
   },
   {
-   "id": "e69",
+   "id": "e67",
    "from": "path_31",
    "to": "path_32",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 68
   },
   {
-   "id": "e70",
+   "id": "e68",
    "from": "path_32",
-   "to": "npc_5",
+   "to": "treasure_8",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 69
   },
   {
-   "id": "e71",
-   "from": "deadend_5",
+   "id": "e69",
+   "from": "path_27",
    "to": "path_33",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 70
   },
   {
-   "id": "e72",
+   "id": "e70",
    "from": "path_33",
-   "to": "story_9",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e73",
-   "from": "campfire_1",
    "to": "treasure_9",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 71
   },
   {
-   "id": "e74",
-   "from": "path_27",
-   "to": "path_34",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e75",
-   "from": "path_34",
+   "id": "e71",
+   "from": "treasure_7",
    "to": "deadend_8",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 72
   },
   {
-   "id": "e76",
-   "from": "deadend_4",
+   "id": "e72",
+   "from": "path_29",
+   "to": "path_34",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 73
+  },
+  {
+   "id": "e73",
+   "from": "path_34",
    "to": "treasure_10",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 74
   },
   {
-   "id": "e77",
-   "from": "treasure_9",
-   "to": "story_10",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e78",
-   "from": "campfire_1",
-   "to": "npc_6",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e79",
-   "from": "deadend_1",
-   "to": "deadend_9",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e80",
-   "from": "path_3",
+   "id": "e74",
+   "from": "deadend_4",
    "to": "treasure_11",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 75
   },
   {
-   "id": "e81",
-   "from": "path_7",
-   "to": "npc_7",
+   "id": "e75",
+   "from": "treasure_10",
+   "to": "story_8",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 76
   },
   {
-   "id": "e82",
-   "from": "treasure_6",
-   "to": "deadend_10",
+   "id": "e76",
+   "from": "campfire_1",
+   "to": "npc_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 77
   },
   {
-   "id": "e83",
-   "from": "deadend_5",
+   "id": "e77",
+   "from": "path_11",
+   "to": "deadend_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 78
+  },
+  {
+   "id": "e78",
+   "from": "path_3",
    "to": "treasure_12",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 79
   },
   {
-   "id": "e84",
+   "id": "e79",
+   "from": "path_7",
+   "to": "npc_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 80
+  },
+  {
+   "id": "e80",
+   "from": "deadend_6",
+   "to": "deadend_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 81
+  },
+  {
+   "id": "e81",
+   "from": "deadend_5",
+   "to": "treasure_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 82
+  },
+  {
+   "id": "e82",
    "from": "campfire_1",
    "to": "path_35",
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 83
   },
   {
-   "id": "e85",
+   "id": "e83",
    "from": "path_35",
    "to": "path_36",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 84
   },
   {
-   "id": "e86",
+   "id": "e84",
    "from": "path_36",
    "to": "path_37",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 85
   },
   {
-   "id": "e87",
+   "id": "e85",
    "from": "path_37",
-   "to": "story_11",
+   "to": "story_9",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 86
   },
   {
-   "id": "e88",
-   "from": "deadend_6",
+   "id": "e86",
+   "from": "path_21",
    "to": "path_38",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 87
   },
   {
-   "id": "e89",
+   "id": "e87",
    "from": "path_38",
-   "to": "treasure_13",
+   "to": "treasure_14",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 88
   },
   {
-   "id": "e90",
-   "from": "path_36",
+   "id": "e88",
+   "from": "story_9",
    "to": "path_39",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 89
   },
   {
-   "id": "e91",
+   "id": "e89",
    "from": "path_39",
    "to": "deadend_11",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 90
   },
   {
-   "id": "e92",
-   "from": "path_16",
-   "to": "treasure_14",
+   "id": "e90",
+   "from": "path_17",
+   "to": "treasure_15",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 91
   }
  ],
  "events": [
@@ -2337,6 +2383,51 @@
    ]
   },
   {
+   "id": "portal_1.1",
+   "node": "portal_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_fan_letters"
+   },
+   "do": [
+    {
+     "dialogue": "realm_8.portal_1.step_q8_fan_letters"
+    }
+   ]
+  },
+  {
+   "id": "portal_2.1",
+   "node": "portal_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_lost_ball"
+   },
+   "do": [
+    {
+     "dialogue": "realm_8.portal_2.step_q8_lost_ball"
+    }
+   ]
+  },
+  {
+   "id": "portal_2.2",
+   "node": "portal_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_caged_beasts"
+   },
+   "do": [
+    {
+     "dialogue": "realm_8.portal_2.step_q8_caged_beasts"
+    }
+   ]
+  },
+  {
    "id": "path_8.1",
    "node": "path_8",
    "on": "enter",
@@ -2439,6 +2530,30 @@
    ]
   },
   {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "path_11.1",
    "node": "path_11",
    "on": "enter",
@@ -2461,30 +2576,6 @@
     },
     {
      "weight": 15,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "deadend_1.1",
-   "node": "deadend_1",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 80,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 20,
      "outcome": "item",
      "cooldown": 4,
      "do": [
@@ -2536,6 +2627,21 @@
    "on": "enter",
    "once": true,
    "outcome": "story",
+   "cond": {
+    "questActive": "q8_fire_demon"
+   },
+   "do": [
+    {
+     "dialogue": "realm_8.story_1.step_q8_fire_demon"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
    "do": [
     {
      "dialogue": "realm_8.story_1"
@@ -2543,28 +2649,71 @@
    ]
   },
   {
-   "id": "treasure_1.1",
-   "node": "treasure_1",
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
    "on": "enter",
    "once": true,
-   "outcome": "treasure",
+   "outcome": "miniboss",
+   "cond": {
+    "questActive": "q8_fire_demon"
+   },
    "do": [
     {
-     "openChest": "chest_normal"
+     "fight": {
+      "enemies": [
+       "fire_elemental",
+       "arena_troll",
+       "arena_troll"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q8_fire_demon"
+    },
+    {
+     "setFlag": "q8_fire_demon.s3"
     }
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "fire_elemental"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_8.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
    "do": []
   },
   {
-   "id": "path_13.1",
-   "node": "path_13",
+   "id": "path_14.1",
+   "node": "path_14",
    "on": "enter",
    "pick": [
     {
@@ -2645,8 +2794,8 @@
    ]
   },
   {
-   "id": "path_14.1",
-   "node": "path_14",
+   "id": "path_15.1",
+   "node": "path_15",
    "on": "enter",
    "pick": [
     {
@@ -2691,40 +2840,6 @@
    ]
   },
   {
-   "id": "path_15.1",
-   "node": "path_15",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 70,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
    "id": "path_16.1",
    "node": "path_16",
    "on": "enter",
@@ -2747,159 +2862,6 @@
     },
     {
      "weight": 15,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "treasure_2.1",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "npc_1.1",
-   "node": "npc_1",
-   "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q8_realm_8_npc_1"
-    }
-   ]
-  },
-  {
-   "id": "npc_1.2",
-   "node": "npc_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "ambient"
-    }
-   ]
-  },
-  {
-   "id": "story_3.1",
-   "node": "story_3",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_8.story_3"
-    }
-   ]
-  },
-  {
-   "id": "story_4.1",
-   "node": "story_4",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_8.story_4"
-    }
-   ]
-  },
-  {
-   "id": "deadend_4.1",
-   "node": "deadend_4",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 80,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 20,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "miniboss_1.1",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": true,
-   "outcome": "miniboss",
-   "do": [
-    {
-     "fight": {
-      "enemies": [
-       "fire_elemental"
-      ],
-      "kind": "miniboss"
-     }
-    },
-    {
-     "giveGold": {
-      "G": 2
-     }
-    },
-    {
-     "giveItem": "honey",
-     "qty": 1
-    },
-    {
-     "setFlag": "realm_8.miniboss_1.beaten"
-    }
-   ]
-  },
-  {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "deadend_5.1",
-   "node": "deadend_5",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 80,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 20,
      "outcome": "item",
      "cooldown": 4,
      "do": [
@@ -2946,26 +2908,209 @@
    ]
   },
   {
-   "id": "npc_2.1",
-   "node": "npc_2",
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
    "on": "enter",
    "once": true,
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q8_realm_8_npc_2"
+     "offerQuest": "q8_lost_ball"
     }
    ]
   },
   {
-   "id": "npc_2.2",
-   "node": "npc_2",
+   "id": "npc_1.2",
+   "node": "npc_1",
    "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
      "dialogue": "ambient"
+    }
+   ]
+  },
+  {
+   "id": "story_3.1",
+   "node": "story_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_3"
+    }
+   ]
+  },
+  {
+   "id": "story_4.1",
+   "node": "story_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_4"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_2.1",
+   "node": "miniboss_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "fire_elemental"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_8.miniboss_2.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_2.2",
+   "node": "miniboss_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_5.1",
+   "node": "deadend_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_18.1",
+   "node": "path_18",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_2.1",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.npc_2.banter"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_5.1",
+   "node": "story_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.story_5"
     }
    ]
   },
@@ -2988,82 +3133,6 @@
    "once": false,
    "outcome": "nothing",
    "do": []
-  },
-  {
-   "id": "story_5.1",
-   "node": "story_5",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_8.story_5"
-    }
-   ]
-  },
-  {
-   "id": "treasure_4.1",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "treasure_5.1",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "npc_3.1",
-   "node": "npc_3",
-   "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q8_realm_8_npc_3"
-    }
-   ]
-  },
-  {
-   "id": "npc_3.2",
-   "node": "npc_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "ambient"
-    }
-   ]
   },
   {
    "id": "path_19.1",
@@ -3100,8 +3169,74 @@
    ]
   },
   {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_3.1",
+   "node": "npc_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.npc_3.banter"
+    }
+   ]
+  },
+  {
    "id": "path_20.1",
    "node": "path_20",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_21.1",
+   "node": "path_21",
    "on": "enter",
    "pick": [
     {
@@ -3158,8 +3293,8 @@
    ]
   },
   {
-   "id": "treasure_6.1",
-   "node": "treasure_6",
+   "id": "treasure_5.1",
+   "node": "treasure_5",
    "on": "enter",
    "once": true,
    "outcome": "treasure",
@@ -3170,46 +3305,12 @@
    ]
   },
   {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
+   "id": "treasure_5.2",
+   "node": "treasure_5",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
    "do": []
-  },
-  {
-   "id": "path_21.1",
-   "node": "path_21",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 70,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
   },
   {
    "id": "path_22.1",
@@ -3280,6 +3381,40 @@
    ]
   },
   {
+   "id": "path_24.1",
+   "node": "path_24",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "story_6.1",
    "node": "story_6",
    "on": "enter",
@@ -3290,26 +3425,6 @@
      "dialogue": "realm_8.story_6"
     }
    ]
-  },
-  {
-   "id": "treasure_7.1",
-   "node": "treasure_7",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_7.2",
-   "node": "treasure_7",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_26.1",
@@ -3346,8 +3461,8 @@
    ]
   },
   {
-   "id": "treasure_8.1",
-   "node": "treasure_8",
+   "id": "treasure_6.1",
+   "node": "treasure_6",
    "on": "enter",
    "once": true,
    "outcome": "treasure",
@@ -3358,8 +3473,62 @@
    ]
   },
   {
-   "id": "treasure_8.2",
-   "node": "treasure_8",
+   "id": "treasure_6.2",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_27.1",
+   "node": "path_27",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_7.1",
+   "node": "treasure_7",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_7.2",
+   "node": "treasure_7",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
@@ -3378,8 +3547,8 @@
    ]
   },
   {
-   "id": "path_27.1",
-   "node": "path_27",
+   "id": "path_28.1",
+   "node": "path_28",
    "on": "enter",
    "pick": [
     {
@@ -3436,32 +3605,8 @@
    ]
   },
   {
-   "id": "npc_4.1",
-   "node": "npc_4",
-   "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q8_realm_8_npc_4"
-    }
-   ]
-  },
-  {
-   "id": "npc_4.2",
-   "node": "npc_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "ambient"
-    }
-   ]
-  },
-  {
-   "id": "path_28.1",
-   "node": "path_28",
+   "id": "path_29.1",
+   "node": "path_29",
    "on": "enter",
    "pick": [
     {
@@ -3490,18 +3635,6 @@
        "qty": 1
       }
      ]
-    }
-   ]
-  },
-  {
-   "id": "story_8.1",
-   "node": "story_8",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_8.story_8"
     }
    ]
   },
@@ -3574,28 +3707,24 @@
    ]
   },
   {
-   "id": "npc_5.1",
-   "node": "npc_5",
+   "id": "treasure_8.1",
+   "node": "treasure_8",
    "on": "enter",
    "once": true,
-   "outcome": "quest_offer",
+   "outcome": "treasure",
    "do": [
     {
-     "offerQuest": "q8_realm_8_npc_5"
+     "openChest": "chest_normal"
     }
    ]
   },
   {
-   "id": "npc_5.2",
-   "node": "npc_5",
+   "id": "treasure_8.2",
+   "node": "treasure_8",
    "on": "enter",
    "once": false,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "ambient"
-    }
-   ]
+   "outcome": "nothing",
+   "do": []
   },
   {
    "id": "path_33.1",
@@ -3632,18 +3761,6 @@
    ]
   },
   {
-   "id": "story_9.1",
-   "node": "story_9",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_8.story_9"
-    }
-   ]
-  },
-  {
    "id": "treasure_9.1",
    "node": "treasure_9",
    "on": "enter",
@@ -3662,6 +3779,30 @@
    "once": false,
    "outcome": "nothing",
    "do": []
+  },
+  {
+   "id": "deadend_8.1",
+   "node": "deadend_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
   },
   {
    "id": "path_34.1",
@@ -3698,30 +3839,6 @@
    ]
   },
   {
-   "id": "deadend_8.1",
-   "node": "deadend_8",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 80,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 20,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
    "id": "treasure_10.1",
    "node": "treasure_10",
    "on": "enter",
@@ -3742,38 +3859,46 @@
    "do": []
   },
   {
-   "id": "story_10.1",
-   "node": "story_10",
+   "id": "treasure_11.1",
+   "node": "treasure_11",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_11.2",
+   "node": "treasure_11",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_8.1",
+   "node": "story_8",
    "on": "enter",
    "once": true,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "realm_8.story_10"
+     "dialogue": "realm_8.story_8"
     }
    ]
   },
   {
-   "id": "npc_6.1",
-   "node": "npc_6",
-   "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q8_realm_8_npc_6"
-    }
-   ]
-  },
-  {
-   "id": "npc_6.2",
-   "node": "npc_6",
+   "id": "npc_4.1",
+   "node": "npc_4",
    "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "realm_8.npc_4.banter"
     }
    ]
   },
@@ -3802,50 +3927,6 @@
    ]
   },
   {
-   "id": "treasure_11.1",
-   "node": "treasure_11",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_11.2",
-   "node": "treasure_11",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "npc_7.1",
-   "node": "npc_7",
-   "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q8_realm_8_npc_7"
-    }
-   ]
-  },
-  {
-   "id": "npc_7.2",
-   "node": "npc_7",
-   "on": "enter",
-   "once": false,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "ambient"
-    }
-   ]
-  },
-  {
    "id": "treasure_12.1",
    "node": "treasure_12",
    "on": "enter",
@@ -3860,6 +3941,38 @@
   {
    "id": "treasure_12.2",
    "node": "treasure_12",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_5.1",
+   "node": "npc_5",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_8.npc_5.banter"
+    }
+   ]
+  },
+  {
+   "id": "treasure_13.1",
+   "node": "treasure_13",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_13.2",
+   "node": "treasure_13",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
@@ -3968,20 +4081,54 @@
    ]
   },
   {
-   "id": "story_11.1",
-   "node": "story_11",
+   "id": "story_9.1",
+   "node": "story_9",
    "on": "enter",
    "once": true,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "realm_8.story_11"
+     "dialogue": "realm_8.story_9"
     }
    ]
   },
   {
-   "id": "treasure_13.1",
-   "node": "treasure_13",
+   "id": "path_38.1",
+   "node": "path_38",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_14.1",
+   "node": "treasure_14",
    "on": "enter",
    "once": true,
    "outcome": "treasure",
@@ -3992,8 +4139,8 @@
    ]
   },
   {
-   "id": "treasure_13.2",
-   "node": "treasure_13",
+   "id": "treasure_14.2",
+   "node": "treasure_14",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
@@ -4034,32 +4181,8 @@
    ]
   },
   {
-   "id": "deadend_11.1",
-   "node": "deadend_11",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 80,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 20,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "treasure_14.1",
-   "node": "treasure_14",
+   "id": "treasure_15.1",
+   "node": "treasure_15",
    "on": "enter",
    "once": true,
    "outcome": "treasure",
@@ -4070,8 +4193,8 @@
    ]
   },
   {
-   "id": "treasure_14.2",
-   "node": "treasure_14",
+   "id": "treasure_15.2",
+   "node": "treasure_15",
    "on": "enter",
    "once": false,
    "outcome": "nothing",
@@ -4081,94 +4204,124 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_8.portal_1.step_q8_fan_letters": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_fan_letters: scene from data/dialogue)"
+   }
+  ],
+  "realm_8.portal_2.step_q8_lost_ball": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_lost_ball: scene from data/dialogue)"
+   }
+  ],
+  "realm_8.portal_2.step_q8_caged_beasts": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_caged_beasts: scene from data/dialogue)"
+   }
+  ],
+  "realm_8.story_1.step_q8_fire_demon": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_fire_demon: scene from data/dialogue)"
    }
   ],
   "realm_8.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_8.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_8.story_3": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_8.story_4": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.npc_2.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "realm_8.story_5": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.npc_3.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "realm_8.story_6": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_8.story_7": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "realm_8.story_8": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_8.npc_4.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
+   }
+  ],
+  "realm_8.npc_5.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "realm_8.story_9": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
-    "en": "(story beat to write)"
-   }
-  ],
-  "realm_8.story_10": [
-   {
-    "speaker": "panda",
-    "zh": "（故事待写）",
-    "en": "(story beat to write)"
-   }
-  ],
-  "realm_8.story_11": [
-   {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

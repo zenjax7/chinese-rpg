@@ -3,4 +3,4 @@ honey_potion,Honey Potion,蜂蜜药水,+40% max HP,"yes (uses the turn, no quest
 big_honey,Big Honey,大蜂蜜,+70% max HP,"yes (uses the turn, no question)",2 × G,no limit (shares the 3 per battle belt),shop from tier 5; chests
 mana_tea,Mana Tea,魔力茶,+50% max MP,no: map only (v3.4),6 × G (v3.4; was 1 × G),no limit,shop; normal/elite chest; words quest
 big_mana_tea,Big Mana Tea,大魔力茶,refills MP to full,no: map only,15 × G,no limit,shop from town 5; boss chests
-return_feather,Return Feather,回城羽毛,"Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room",no,1 × G,3,shop; normal/elite chest (5%); 1 free in the tutorial
+return_feather,Return Feather,回城羽毛,"Fly to the last inn you used or any visited town/village; anywhere on the map, not in battle or the boss room (v3.9)",no,2 × G,3,town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1)

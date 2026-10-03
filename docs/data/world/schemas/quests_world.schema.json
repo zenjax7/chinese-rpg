@@ -14,6 +14,7 @@
    "type": "array",
    "items": {
     "type": "object",
+    "description": "v3.9: an NPC slot on the graphs. status quest = used by data/quests.json (quest/0.2; quest content lives there); ambient = free slot, a repeatable one-line banter NPC.",
     "properties": {
      "id": {
       "type": "string",
@@ -21,70 +22,46 @@
      },
      "status": {
       "enum": [
-       "hook",
-       "final"
+       "quest",
+       "ambient"
       ]
-     },
-     "type": {
-      "enum": [
-       "fetch",
-       "kill",
-       "talk",
-       "delivery",
-       "words",
-       "miniboss"
-      ]
-     },
-     "titleZh": {
-      "type": "string"
-     },
-     "titleEn": {
-      "type": "string"
      },
      "giver": {
       "type": "string",
       "pattern": "^[a-z0-9_]+/[a-z0-9_]+$"
      },
-     "target": {
-      "type": "object"
-     },
      "turnIn": {
       "type": "string"
      },
-     "rewardG": {
-      "type": "number",
-      "minimum": 0
+     "quests": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      },
+      "description": "data/quests.json ids that use this node (giver or step)"
      },
-     "rewardItem": {
-      "type": [
-       "string",
-       "null"
-      ]
+     "offers": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      },
+      "description": "quests offered here (offerQuest in the node's events)"
      },
-     "scope": {
-      "type": "object",
-      "description": "kill counts: default realm-wide; optional graph or zone filter",
-      "properties": {
-       "realm": {
-        "type": "integer"
-       },
-       "graph": {
-        "type": "string",
-        "pattern": "^[a-z0-9_]+$"
-       },
-       "zone": {
-        "type": "string",
-        "pattern": "^[a-z0-9_]+$"
-       }
-      }
+     "banter": {
+      "type": "string",
+      "description": "ambient: dialogue/event id of the banter line"
+     },
+     "note": {
+      "type": "string"
      }
     },
     "required": [
      "id",
-     "type",
-     "titleEn",
+     "status",
      "giver",
-     "target"
+     "quests"
     ],
     "additionalProperties": false
    }

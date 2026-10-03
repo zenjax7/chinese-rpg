@@ -1,0 +1,20 @@
+{
+ "schema": "progress/0.3",
+ "dataVersion": "v3.9",
+ "seed": 20261002,
+ "pos": {"graph": "realm_1", "node": "m_field", "edge": null, "step": 0},
+ "lastInn": {"graph": "realm_1", "node": "village"},
+ "visitedTowns": [{"graph": "realm_1", "node": "village"}],
+ "graphs": {
+  "realm_1": {"visited": "Fw==", "walked": "Bw==", "revealed": "", "crossings": {"0": 2, "2": 1, "3": 1}, "edgeProgress": {}, "visits": {"0": 2, "1": 2, "4": 1}}
+ },
+ "eventsDone": ["realm_1/village.1"],
+ "eventLastFired": {"realm_1/m_fork.1#2": 1},
+ "shortcuts": [],
+ "zonesDefeated": [],
+ "flags": [],
+ "zone": {"id": "meadow", "freshBattles": 4, "pity": 0, "approachArmed": true, "patrolsLeft": 2, "bossCheckpoint": null},
+ "safeUntil": {},
+ "hops": 6,
+ "feathers": 2
+}

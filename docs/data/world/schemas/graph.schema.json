@@ -75,6 +75,15 @@
    "type": "integer",
    "minimum": 0
   },
+  "edgeIdxMax": {
+   "type": "integer",
+   "minimum": -1
+  },
+  "aspect": {
+   "type": "number",
+   "exclusiveMinimum": 0,
+   "description": "width/height of the layout box (x/y are normalised separately)"
+  },
   "background": {
    "type": "object",
    "properties": {
@@ -124,10 +133,24 @@
       ]
      },
      "x": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "normalised 0-1 across the graph (v3.9); multiply by the map width"
      },
      "y": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "normalised 0-1, 0 = top"
+     },
+     "fog": {
+      "enum": [
+       "normal",
+       "landmark",
+       "secret"
+      ],
+      "description": "default normal: shown as ? once a neighbour is visited; landmark: shown once the graph is open; secret: never shown as ?"
      },
      "zone": {
       "type": "string",
@@ -220,7 +243,8 @@
      },
      "idx": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "description": "stable, never reused (progress bitsets)"
      },
      "from": {
       "type": "string",
@@ -318,6 +342,7 @@
     },
     "required": [
      "id",
+     "idx",
      "from",
      "to",
      "kind"
@@ -379,6 +404,9 @@
        "leave",
        "rest"
       ]
+     },
+     "tutorial": {
+      "type": "boolean"
      },
      "outcome": {
       "$ref": "common.schema.json#/$defs/outcome"
@@ -475,6 +503,7 @@
     "type": "array",
     "items": {
      "type": "object",
+     "description": "v3.9: en may hold {Cxxx} word-token placeholders (core-curriculum ids) listed in tokens, as in data/dialogue scenes; zh optional. Realm 1 follows density D1 (validator).",
      "properties": {
       "speaker": {
        "type": "string",
@@ -485,6 +514,13 @@
       },
       "en": {
        "type": "string"
+      },
+      "tokens": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^C[0-9]{3}$"
+       }
       },
       "vo": {
        "type": "string"
@@ -536,6 +572,8 @@
   "title",
   "entry",
   "idxMax",
+  "edgeIdxMax",
+  "aspect",
   "nodes",
   "edges"
  ],

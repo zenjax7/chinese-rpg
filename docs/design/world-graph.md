@@ -1,7 +1,59 @@
-# World graph design (v3.8)
+# World graph design (v3.9.1)
 
 Repo path: `docs/design/world-graph.md` · Data: `docs/data/world/` · Tools: `docs/tools/world/` · Spec summary: combat-spec.md §12.
-Written 2026-10-02 (PT) by Desy. It builds on GameDev's graph schema in `docs/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
+Written 2026-10-02 (PT) by Desy; v3.9 update the same night (§0.1). It builds on GameDev's graph schema in `docs/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
+
+## 0.0 What changed in v3.9.1 (Director's defaults, 2026-10-02 23:15 PT)
+
+- **Free Return Feather in the realm-boss chests of realms 3, 6 and 8** (`world_rules.realmBossFeather`; an `on: clear` event `giveItem feather` on boss nodes `bazaar_cellars_1/boss_3`, `moonlit_crypt_2/boss_6` and `undercroft_3/boss_8`). There is no shop nudge or tip.
+- **Density follows Jack's ramp:** nodes per settlement ramp 20, 25, 30 … 60 across realms 1–9. Target = `max(1, ceil(nodes / ramp))`, so no settlement serves more than the ramp. That gives 1, 1, 2, 2, 2, 3, 3, 3, 4 (v3.9: 1, 1, 1, 2, 2, 2, 3, 3, 3).
+  - 3 villages were added (`realm_3/village_1x`, `realm_6/village_2x`, `realm_9/village_3x`). Each is a new leaf node with one safe road edge (`v1x`, `v2x`, `v3x`) off a main-route waypoint.
+  - All existing node, edge and hook ids, node kinds and idx are unchanged. The validator now requires the exact target (+1 is a warning).
+- **Inn-hop rule re-checked:** max hops to an inn are 3, 3, 3 in realms 1–3 and 5 in realms 4–9. The new villages are inns too, so coverage only improves.
+- **q8_caged_beasts:** the pen-keeper fight is now a quest-gated `fight` on `beast_pens_1/deadend_3`. `beast_pens_1/miniboss_1` stays a campfire inn with no quest event. The cage step on `beast_pens_2/deadend_1` is a quest-gated story step. In general, kill steps in `data/quests.json` that list enemies become quest-gated fights.
+
+| Realm | Nodes | Ramp (nodes per settlement) | Target = ceil(nodes / ramp) | Actual towns + villages | Actual nodes per settlement | v3.9 count |
+|---|---|---|---|---|---|---|
+| 1 | 17 | 20 | 1 (17/20 = 0.85) | 1 | 17.0 | 1 |
+| 2 | 25 | 25 | 1 (25/25 = 1.00) | 1 | 25.0 | 1 |
+| 3 | 41 | 30 | 2 (40/30 = 1.33) | 2 | 20.5 | 1 |
+| 4 | 60 | 35 | 2 (60/35 = 1.71) | 2 | 30.0 | 2 |
+| 5 | 80 | 40 | 2 (80/40 = 2.00) | 2 | 40.0 | 2 |
+| 6 | 106 | 45 | 3 (105/45 = 2.33) | 3 | 35.3 | 2 |
+| 7 | 130 | 50 | 3 (130/50 = 2.60) | 3 | 43.3 | 3 |
+| 8 | 165 | 55 | 3 (165/55 = 3.00) | 3 | 55.0 | 3 |
+| 9 | 201 | 60 | 4 (200/60 = 3.33) | 4 | 50.2 | 3 |
+
+Sim, v3.9 → v3.9.1 (100 seeds per profile):
+
+| Profile | Mode | Hours v3.9 → v3.9.1 | Defeats v3.9 → v3.9.1 | Spells v3.9 → v3.9.1 | Feathers bought v3.9 → v3.9.1 | Feathers used v3.9 → v3.9.1 |
+|---|---|---|---|---|---|---|
+| 75% saver no spells | beeline | 18.50 → 18.50 (+0.0%) | 0.1 → 0.1 (-0.0) | 0.0 → 0.0 | 5.5 → 3.6 | 6.5 → 7.6 |
+| 75% saver no spells | explore | 22.25 → 22.36 (+0.5%) | 0.0 → 0.0 (+0.0) | 0.0 → 0.0 | 11.8 → 9.4 | 13.8 → 14.3 |
+| 75% saver free | beeline | 18.66 → 18.64 (-0.1%) | 0.0 → 0.0 (+0.0) | 4.8 → 4.9 | 15.2 → 12.6 | 16.6 → 16.9 |
+| 75% saver free | explore | 22.12 → 22.23 (+0.5%) | 0.1 → 0.0 (-0.0) | 8.0 → 8.6 | 25.3 → 23.9 | 27.5 → 29.1 |
+| 50% saver free | beeline | 28.02 → 28.02 (-0.0%) | 51.6 → 51.5 (-0.1) | 0.2 → 0.2 | 8.3 → 5.9 | 9.3 → 10.0 |
+| 50% saver free | explore | 31.24 → 31.28 (+0.1%) | 14.1 → 13.6 (-0.5) | 4.8 → 5.5 | 24.2 → 22.9 | 26.4 → 28.0 |
+| 50% saver no spells | beeline | 27.97 → 27.97 (+0.0%) | 52.2 → 51.7 (-0.5) | 0.0 → 0.0 | 7.6 → 5.5 | 8.7 → 9.5 |
+| 50% saver no spells | explore | 31.37 → 31.56 (+0.6%) | 25.0 → 25.5 (+0.5) | 0.0 → 0.0 | 14.6 → 11.9 | 16.6 → 16.9 |
+| 50% spender free | beeline | 20.50 → 20.46 (-0.2%) | 71.1 → 70.9 (-0.2) | 0.0 → 0.0 | 0.1 → 0.1 | 1.1 → 4.2 |
+| 50% spender free | explore | 25.92 → 26.34 (+1.6%) | 30.0 → 29.3 (-0.7) | 3.2 → 3.8 | 4.9 → 4.4 | 7.3 → 9.8 |
+
+- **Time:** within ±0.6% for savers; spender explorers +1.6–2.0% (more villages to visit).
+- **Defeats:** −0.1 to −0.5 for 50% savers on beeline. The boss Feathers replace about 2–2.5 bought Feathers (5.9 vs 8.3 for 50% savers) rather than adding many extra flights. The +3–4 defeats vs v3.8 (§8.1) mostly remain.
+- **Spells:** unchanged on beeline (75% saver 4.9). Explorers buy a little more (75% saver 8.0 → 8.6; 50% saver 4.8 → 5.5).
+
+## 0.1 What changed in v3.9
+
+- **No free inn warp.** The Return Feather (`world_rules.returnFeather`) is the only fast way back to a town. It costs **2×G** (2 normal kills at every tier; 12 gold in realm 1 → 144 in realm 9). It flies to the **last inn used or any visited town or village**, and works anywhere on the map outside battle and the boss room. Carry limit 3. Sold in town and village item shops, **not at inns**. Kids start with 2 (§12.1).
+- **Town/village density:** towns + villages = `max(1, round(nodes / (20 + 5(t−1))))` in v3.9, which gave 1, 1, 1, 2, 2, 2, 3, 3, 3 (v3.8 had 1, 1, 2, 2, 2, 3, 3, 4, 4). **v3.9.1 uses `ceil` → 1, 1, 2, 2, 2, 3, 3, 3, 4 (§0.0).** Extra settlements are villages (inn + save + item shop with Feathers).
+- **Inn rule per realm:** `maxHopsToInn` is 3 in realms 1–3 and 5 in realms 4–9. Standalone campfire inns fill the gaps (realm 3 now has 8 inns, realm 9 has 21).
+- **Fog of war (approved):** visited nodes plus "?" for nodes one open edge away. Towns, villages and bosses are landmarks (`fog: "landmark"`): shown once their zone is open. Revealed state lives in player progress (`progress.schema.json`), never in the graph file.
+- **graph/0.3 accepted by GameDev.** Node `x`/`y` are now normalised 0–1 per graph (0.05–0.95, with the graph's `aspect` = width/height). Edges carry a stable `idx` (`edgeIdxMax`) for the `walked` bitset. `world_rules.json` stays its own file.
+- **Tutorial as data:** the realm-1 village `firstEnter` event plays scene `sc_r1_opening` (data/dialogue), then `meadow_intro`, then the tutorial battle (`fight {kind: tutorial, canLose: false}`, one horned rabbit), then the after-line. A later `enter` event plays `sc_r1_village_banter` once Clover Hills is beaten. New action `scene`.
+- **Story alignment:** the companion speaker is `xiaolong` (小龙, the baby dragon). Pandas are the innkeepers (`innkeeper_panda`, "every inn's panda is a cousin"). Realm-1 lines follow story density D1 (English lines with at most one `{Cxxx}` word token, tokens in at most 30% of lines); the validator checks it.
+- **Quest hooks reconciled with `data/quests.json` (quest/0.2):** 55 NPC slots in `quests_world.json`; 29 are `status: "quest"` (giver or step of a v2 quest; givers carry `offerQuest <v2 id>`), 26 are `status: "ambient"` (repeatable one-line banter).
+- **Sim:** with no warp, the time and spell numbers match v3.8 within 1% once kids keep 1 Feather in reserve for the shop trip. 50% savers on beeline take +2.5 to +3.8 defeats over the campaign (§8.1).
 
 ## 0. Summary
 
@@ -10,12 +62,12 @@ Written 2026-10-02 (PT) by Desy. It builds on GameDev's graph schema in `docs/ar
 - **Arriving at a node runs at most one event.** There are 7 outcomes: quest offer (hook only), nothing, quest-linked mini-boss, quest item, portal, story, and treasure. Each event is fixed or weighted, and once, cooldown or repeatable. All randomness is seeded, so reloading never re-rolls.
 - **Zone = location.** Each of the 20 locations (L1.1…L9.2) is a zone with its own word pool, roster and boss, placed on the graphs through `zones.json`. One zone can span several dungeon levels. All learning rules stay as they are: 7-item sets, at most 3 new items, the patrol rule (speech 20%, reading 40%), forced patrols and boss gates.
 - **Safe edges:** no random battles on edges that touch a town or inn, on the boss-approach edge, or on stairs and portals. After a boss or mini-boss is cleared, the way you came back to the nearest inn stays safe for 20 hops or until the next inn rest. Walked edges drop to 5% of their rate, and each zone has a budget of 8 fresh battles. Encounter rates rise by 10% per dungeon level.
-- **Size grows from 17 nodes in realm 1 to 200 in realm 9.** Later realms get more villages, deeper dungeons (up to 5 levels) with inns inside them, dead ends (about 30–38% of nodes) and optional treasure, story and mini-boss branches. Every node is at most 5 hops from an inn.
+- **Size grows from 17 nodes in realm 1 to 200 in realm 9.** Later realms get more villages, deeper dungeons (up to 5 levels) with inns inside them, dead ends (about 30–38% of nodes) and optional treasure, story and mini-boss branches. Every node is at most 3 hops from an inn in realms 1–3 and 5 hops in realms 4–9.
 - **Sim results (100 seeds per profile):**
   - **Beeline** (straight to each boss): pacing stays close to v3.7. The 75% saver takes 18.5 h (v3.7 17.96 h), with about 7.4 path battles per zone where v3.7 had 8. Patrols, readiness at the gate and gold barely move.
-  - **Explorer** (visits every node): takes 22.3 h, because of optional branches with about 4.7 extra battles per zone. That is optional content, not required time.
+  - **Explorer** (visits every node): takes 22.4 h, because of optional branches with about 4.7 extra battles per zone. That is optional content, not required time.
   - **Time:** beeline adds 1–12% to the time (+0.6 h for the 75% saver).
-- **Cost:** 50% kids get about 9–11 more defeats over the campaign, because walking to an inn is no longer free.
+- **Cost:** 50% kids get about 11–15 more defeats over the campaign than v3.7 (v3.8: 9–11), because walking to an inn is no longer free and v3.9 has no warp.
 - **Format:** one JSON file per graph, checked against JSON Schemas (`data/world/schemas/`). A validator (`validate_world.py`) checks references, two-way stairs, reachability, inn coverage and the battle budget. Realm 1 is authored by hand. Realms 2–9 are generated reference layouts (`status: "reference"`) for the writers to replace.
 
 ## 1. Map hierarchy
@@ -36,8 +88,8 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `kind` | Meaning | Typical event | Save / rest | Notes |
 |---|---|---|---|---|
 | `town` | Main town of the realm | story on first visit | inn + save + all shops | `hub`, `town` (prices from towns.json G). One per realm, at the entry |
-| `village` | Outpost in a big realm | story | inn + save + item shop | No magic shop or smith (use the inn warp). Realms 3–9 have 1–3 |
-| `inn` | Inn or campfire (`campfire: true`) | story on first visit | rest + save | Every node is ≤ 5 hops from an inn or town. Each boss has an **approach inn** next to its gate edge |
+| `village` | Outpost in a big realm | story | inn + save + item shop (sells Return Feathers) | No magic shop or smith: fly to a town with a Feather. Density rule (v3.9.1): 1 village in realms 3–5, 2 in realms 6–8, 3 in realm 9 |
+| `inn` | Inn or campfire (`campfire: true`) | story on first visit | rest + save | Every node is ≤ `maxHopsToInn` hops from an inn or town (3 in realms 1–3, 5 in 4–9). No Feathers for sale. Each boss has an **approach inn** next to its gate edge |
 | `waypoint` | Plain spot on a path | weighted (nothing / ambient / honey) | – | Replaces GameDev's `fight` node |
 | `fork` | Waypoint with 3+ edges | weighted | – | Kind is cosmetic (map icon); the loader treats it like a waypoint |
 | `chest` | Treasure spot (outcome 7) | `openChest` once | – | Often at the end of a dead-end branch; may hide a quest item |
@@ -139,8 +191,8 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
   - Mini-bosses stay beaten.
   - Weighted spots keep rolling, seeded by the visit count.
 - **Conditions** (GameDev §6 names): `all / any / not`, `flag`, `questActive`, `questClaimed` (also `questDone`), `bossDefeated: <zone id>`, `wordsReady {pool, n}`, `readinessAtLeast`, `levelAtLeast`, `hasItem`, `shortcutOpen`, `visited`.
-- **Actions** (GameDev's list plus 2): `dialogue`, `toast`, `fight`, `giveItem`, `giveGear`, `giveSkill`, `giveGold {G}` (gold in G units, × towns.json G of the realm), `startQuest`, **`offerQuest`** (new: the hook shows Accept/Later), `setFlag`, `openShortcut`, `defeatBoss`, `unlockGraph`, `heal`, `teleport`, **`openChest`** (new).
-- **Dialogue:** GameDev's `dialogue` map in each graph file: `{id: [{speaker, zh, en, vo?}]}`. Speakers come from the graph's `npcs` map or the shared `speakers` (`panda`, `narrator`, `hero`). Events only reference dialogue ids.
+- **Actions** (GameDev's list plus 3): **`scene`** (v3.9: play a `data/dialogue/<id>.json` scene), `dialogue`, `toast`, `fight`, `giveItem`, `giveGear`, `giveSkill`, `giveGold {G}` (gold in G units, × towns.json G of the realm), `startQuest`, **`offerQuest`** (new: the hook shows Accept/Later), `setFlag`, `openShortcut`, `defeatBoss`, `unlockGraph`, `heal`, `teleport`, **`openChest`** (new).
+- **Dialogue:** GameDev's `dialogue` map in each graph file: `{id: [{speaker, en, tokens?, zh?, vo?}]}`. As in the story scenes, `en` may hold `{Cxxx}` word-token placeholders listed in `tokens`; `zh` is optional. Speakers come from the graph's `npcs` map or the shared `speakers` (`xiaolong`, `innkeeper_panda`, `narrator`, `hero`…). Events only reference dialogue ids; longer story beats are `scene` actions.
 
 ## 6. Existing systems on the graph
 
@@ -150,10 +202,10 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
 | Enemy tiers, elites | Zone `tier`, `roster`, `elite`; scripted elites on edges (`scripted`) replace prototype "fight 4 = elite" |
 | Patrol rule (speech 20%, reading 40%; 2 forced patrols per trip) | At the **approach inn**: the boss edge has `patrol: true`. Train/patrol happens there (§13 Q8). Re-armed by resting at any *other* inn (save `graphState.approachArmed`, as in the prototype) |
 | Boss gates and unlocks | A boss node blocks every edge through it until its zone is beaten. Next-zone edges carry `cond: {bossDefeated}`. Realm unlocks are on the world graph |
-| Inns, midpoint inn, save points | `inn` nodes (`save: true`), ≤ 5 hops apart; campfires are inns. Inn price = towns.json G of the realm |
-| Return Feather | Flies to the last inn used (`lastInn`). Carry limit 3 |
-| Magic shop, gear smith | In towns. **Inn warp** (new, `world_rules.innWarp`): from any inn, warp to a visited town to shop and back to the same inn (20 s in the sim, only when buying). Without it, buying spells drops by more than half in the sim and 50% kids lose more often |
-| Quests (q1–q9 board quests) | The board stays in towns (quests.json). NPC hooks (`offerQuest`) come on top. Quest items sit on chest/dead-end nodes with `cond: questActive` |
+| Inns, midpoint inn, save points | `inn` nodes (`save: true`), ≤ 3 hops away in realms 1–3 and ≤ 5 in realms 4–9; campfires are inns. Inn price = towns.json G of the realm |
+| Return Feather | v3.9: flies to the last inn used or any visited town/village; usable anywhere outside battle and the boss room. 2×G, carry 3, start with 2. Town/village item shops only |
+| Magic shop, gear smith | In towns only. v3.9: the v3.8 inn warp is **removed**. To shop from deep in a dungeon, walk (≤ 6 hops) or fly to a town with a Feather and fly (or walk) back to the last inn |
+| Quests | v3.9: the 50 v2 quests live in `data/quests.json` (quest/0.2). Their givers and steps point at graph nodes; `quests_world.json` lists the NPC slots (29 quest, 26 ambient). Quest items sit on chest/dead-end nodes with `cond: questActive` |
 | Chests from battles | Unchanged; `chest` nodes are extra (`openChest`) |
 
 ## 7. Size and shape per realm
@@ -164,15 +216,15 @@ Realm 1 is authored. Realms 2–9 come from `world_gen.py` (seeded), driven by t
 
 | Realm | Graphs (levels) | Nodes | Edges | Edges/node | Branch nodes | Dead-end share | Loops | Town + villages | Inns | Dungeons | Zones (bosses) | Mini-bosses | Chests | Story/NPC | Max hops to inn | Beeline battles/zone (expected) | Battles/zone beeline · explore | Min/zone beeline · explore |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | 1 (0) | 17 | 18 | 1.06 | 6 | 29% | 2 | 1 + 0 | 2 | 0 | 3 | 1 | 2 | 0/1 | ≤5 | 7.7/7.7/6.8 | 18.1 · 18.0 (v3.7 17.5) | 44.3 · 45.0 (v3.7 41.6) |
-| 2 | 2 (1) | 25 | 23 | 0.92 | 4 | 32% | 0 | 1 + 0 | 3 | 1 | 2 | 1 | 3 | 1/1 | ≤5 | 7.7/6.8 | 19.9 · 19.7 (v3.7 19.7) | 50.5 · 52.0 (v3.7 48.9) |
-| 3 | 2 (1) | 40 | 38 | 0.95 | 7 | 38% | 0 | 1 + 1 | 5 | 1 | 2 | 2 | 9 | 4/1 | ≤5 | 7.7/6.8 | 18.4 · 17.9 (v3.7 18.4) | 55.9 · 58.8 (v3.7 54.6) |
-| 4 | 4 (3) | 60 | 57 | 0.95 | 12 | 30% | 1 | 1 + 1 | 7 | 1 | 3 | 3 | 10 | 4/1 | ≤5 | 7.6/7.1/8.5 | 15.7 · 15.9 (v3.7 15.5) | 50.8 · 55.2 (v3.7 49.6) |
-| 5 | 3 (2) | 80 | 79 | 0.99 | 20 | 30% | 2 | 1 + 1 | 9 | 1 | 2 | 3 | 14 | 1/4 | ≤5 | 6.8/7.9 | 15.6 · 16.0 (v3.7 15.5) | 51.2 · 59.6 (v3.7 49.6) |
-| 6 | 4 (3) | 105 | 107 | 1.02 | 28 | 31% | 6 | 1 + 2 | 11 | 2 | 2 | 4 | 11 | 14/7 | ≤5 | 7.6/7.1 | 15.7 · 16.9 (v3.7 15.8) | 58.7 · 72.8 (v3.7 57.6) |
-| 7 | 5 (4) | 130 | 130 | 1.0 | 36 | 35% | 5 | 1 + 2 | 14 | 2 | 2 | 4 | 19 | 12/11 | ≤5 | 7.0/8.0 | 18.6 · 19.7 (v3.7 18.4) | 69.9 · 86.0 (v3.7 68.4) |
-| 8 | 6 (5) | 165 | 163 | 0.99 | 34 | 36% | 4 | 1 + 3 | 15 | 2 | 2 | 4 | 25 | 17/10 | ≤5 | 7.6/8.0 | 17.6 · 19.6 (v3.7 17.4) | 65.3 · 87.6 (v3.7 63.4) |
-| 9 | 8 (7) | 200 | 199 | 0.99 | 52 | 32% | 7 | 1 + 3 | 22 | 2 | 2 | 6 | 29 | 20/13 | ≤5 | 7.0/8.5 | 16.4 · 22.9 (v3.7 16.4) | 61.4 · 101.9 (v3.7 59.7) |
+| 1 | 1 (0) | 17 | 18 | 1.06 | 6 | 29% | 2 | 1 + 0 | 2 | 0 | 3 | 1 | 2 | 0/1 | ≤3 | 7.7/7.7/6.8 | 18.1 · 18.0 (v3.7 17.5) | 44.2 · 44.9 (v3.7 41.6) |
+| 2 | 2 (1) | 25 | 23 | 0.92 | 4 | 32% | 0 | 1 + 0 | 3 | 1 | 2 | 1 | 3 | 1/1 | ≤3 | 7.7/6.8 | 19.9 · 19.5 (v3.7 19.7) | 50.5 · 51.9 (v3.7 48.9) |
+| 3 | 2 (1) | 41 | 40 | 0.98 | 7 | 29% | 1 | 1 + 1 | 8 | 1 | 2 | 2 | 5 | 4/1 | ≤3 | 7.7/6.8 | 18.5 · 18.0 (v3.7 18.4) | 56.5 · 58.7 (v3.7 54.6) |
+| 4 | 4 (3) | 60 | 57 | 0.95 | 12 | 30% | 1 | 1 + 1 | 7 | 1 | 3 | 3 | 10 | 4/1 | ≤5 | 7.6/7.1/8.5 | 15.6 · 15.8 (v3.7 15.5) | 50.6 · 55.0 (v3.7 49.6) |
+| 5 | 3 (2) | 80 | 79 | 0.99 | 20 | 30% | 2 | 1 + 1 | 9 | 1 | 2 | 3 | 14 | 1/4 | ≤5 | 6.8/7.9 | 15.5 · 16.2 (v3.7 15.5) | 50.7 · 60.5 (v3.7 49.6) |
+| 6 | 4 (3) | 106 | 110 | 1.04 | 26 | 30% | 8 | 1 + 2 | 13 | 2 | 2 | 6 | 13 | 12/4 | ≤5 | 7.6/7.1 | 15.7 · 17.9 (v3.7 15.8) | 58.5 · 76.2 (v3.7 57.6) |
+| 7 | 5 (4) | 130 | 130 | 1.0 | 36 | 35% | 5 | 1 + 2 | 14 | 2 | 2 | 4 | 19 | 12/11 | ≤5 | 7.0/8.0 | 18.6 · 19.7 (v3.7 18.4) | 69.8 · 86.3 (v3.7 68.4) |
+| 8 | 6 (5) | 165 | 163 | 0.99 | 38 | 35% | 4 | 1 + 2 | 18 | 2 | 2 | 4 | 22 | 18/12 | ≤5 | 7.6/8.0 | 17.4 · 19.2 (v3.7 17.4) | 64.7 · 86.5 (v3.7 63.4) |
+| 9 | 8 (7) | 201 | 198 | 0.99 | 59 | 35% | 5 | 1 + 3 | 21 | 2 | 2 | 6 | 37 | 23/16 | ≤5 | 7.0/8.5 | 16.5 · 22.1 (v3.7 16.4) | 62.0 · 101.0 (v3.7 59.7) |
 
 Notes:
 - **Shape:** edges per node is about 1.0, so the layouts are tree-like mazes with a few loops. Dead ends are 30–38% of nodes. Branch nodes (3+ edges) grow from 6 to 52.
@@ -180,7 +232,7 @@ Notes:
   - The dungeons and their levels are great_hive 1, bazaar_cellars 1, goblin_caves 3, hydra_lair 2, moonlit_crypt 2, old_mine 1, griffin_spire 3, cloud_caves 1, undercroft 3, beast_pens 2, demon_castle 5 and shadow_vault 2.
   - old_mine, cloud_caves, beast_pens and shadow_vault are `optional: true` treasure dungeons.
 - **Explorer time:**
-  - Explorer minutes per zone grow with the graph (realm 9: 102 min against 61 beeline).
+  - Explorer minutes per zone grow with the graph (realm 9: 101 min against 62 beeline).
   - Big realms hold optional content, not required time. If the 75% saver should stay near 18 h for explorers too, cut side branches in realms 6–9 or move them into the optional dungeons (§15 J2).
 
 ## 8. Encounter tuning and sim
@@ -194,71 +246,133 @@ Notes:
   - Chosen: budget 8, ×0.1 after the budget, ×0.05 on walked edges. That cut explorer time from 25.0 h to 22.3 h with beeline unchanged (18.4 h; 8 seeds, before the inn warp).
 - **Fixes found while simming:**
   - **Post-clear safety:** "path home" must mean the way you came. As first written, it made the next zone's route safe and cut beeline battles to about 4.6 per zone.
-  - **Inn warp:** needed to keep spell buying at v3.7 levels.
+  - **Inn warp (v3.8):** was needed to keep spell buying at v3.7 levels. v3.9 removes it; see §8.1 for what replaces it.
   - **Turn back mid-edge:** cuts 50% defeats.
 - **Main run:** 100 seeds per profile. "Battles/zone" splits into path (the shortest route to the boss), side (branches), back (walked again: inn trips, backtracking) and patrol.
 
 | Profile | Mode | Hours | Δ vs v3.7 | Battles/zone (path · side · back · patrol) | Defeats (campaign) | Ready at gate | Inn stays | Feathers | Gold at end | Lowest gold |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 50% saver no spells | v3.7 | 26.9 | +0.0% | 21.6 (8.0 · 0.0 · 0.0 · 11.5) | 40.5 | 0.04 | 225+0 | 0 | 5727 | 28 |
-| 50% saver no spells | beeline | 27.93 | +3.8% | 22.2 (7.7 · 0.0 · 1.1 · 12.3) | 49.6 | 0.03 | 204+0 | 18.5 | 5570 | 28 |
-| 50% saver no spells | explore | 31.42 | +16.8% | 22.1 (6.9 · 4.8 · 2.6 · 6.7) | 24.1 | 0.12 | 223+0 | 35.1 | 17747 | 29 |
+| 50% saver no spells | beeline | 27.97 | +4.0% | 22.2 (7.6 · 0.0 · 1.3 · 12.2) | 51.7 | 0.03 | 201+0 | 9.5 | 5593 | 28 |
+| 50% saver no spells | explore | 31.56 | +17.3% | 22.1 (7.0 · 5.0 · 2.7 · 6.4) | 25.5 | 0.13 | 222+0 | 16.9 | 18418 | 29 |
 | 50% saver free | v3.7 | 26.92 | +0.0% | 22.1 (8.0 · 0.0 · 0.0 · 12.0) | 36.7 | 0.03 | 255+0 | 0 | 5405 | 28 |
-| 50% saver free | beeline | 27.92 | +3.7% | 22.4 (7.7 · 0.0 · 1.1 · 12.5) | 47.8 | 0.03 | 216+0 | 19.6 | 5531 | 28 |
-| 50% saver free | explore | 31.14 | +15.6% | 24.1 (6.6 · 5.1 · 2.9 · 8.4) | 13 | 0.1 | 320+0 | 47.5 | 6496 | 29 |
+| 50% saver free | beeline | 28.02 | +4.1% | 22.4 (7.6 · 0.0 · 1.3 · 12.4) | 51.5 | 0.03 | 210+0 | 10.0 | 5576 | 28 |
+| 50% saver free | explore | 31.28 | +16.2% | 24.1 (6.7 · 5.2 · 3.1 · 8.1) | 13.6 | 0.11 | 319+0 | 28.0 | 6543 | 29 |
 | 50% spender no spells | v3.7 | 18.27 | +0.0% | 13.6 (8.0 · 0.0 · 0.0 · 2.0) | 59.7 | 0.05 | 139+1 | 0 | 3834 | 12 |
-| 50% spender no spells | beeline | 20.47 | +12.0% | 15.2 (7.8 · 0.0 · 1.3 · 4.5) | 70.8 | 0.03 | 116+1 | 1 | 4415 | 20 |
-| 50% spender no spells | explore | 27.28 | +49.3% | 17.8 (7.1 · 4.8 · 2.7 · 2.0) | 40.2 | 0.12 | 173+0 | 2 | 15275 | 20 |
+| 50% spender no spells | beeline | 20.46 | +12.0% | 15.1 (7.8 · 0.0 · 1.4 · 4.4) | 70.9 | 0.03 | 116+1 | 4.2 | 4579 | 20 |
+| 50% spender no spells | explore | 27.53 | +50.7% | 18.0 (7.1 · 5.0 · 2.7 · 2.0) | 40.4 | 0.13 | 176+0 | 5 | 15454 | 20 |
 | 65% saver no spells | v3.7 | 20.65 | +0.0% | 18.1 (8.0 · 0.0 · 0.0 · 9.0) | 2.7 | 0.05 | 161+0 | 0 | 20877 | 29 |
-| 65% saver no spells | beeline | 21.33 | +3.3% | 18.3 (7.4 · 0.0 · 0.7 · 9.2) | 3.1 | 0.05 | 155+0 | 15.2 | 21242 | 30 |
-| 65% saver no spells | explore | 25.17 | +21.9% | 19.2 (6.7 · 4.7 · 2.2 · 4.5) | 0.8 | 0.15 | 165+0 | 29.4 | 41647 | 31 |
+| 65% saver no spells | beeline | 21.39 | +3.6% | 18.3 (7.4 · 0.0 · 0.8 · 9.1) | 3.3 | 0.05 | 154+0 | 8.7 | 21258 | 30 |
+| 65% saver no spells | explore | 25.31 | +22.5% | 19.2 (6.7 · 4.9 · 2.2 · 4.4) | 0.9 | 0.16 | 164+0 | 15.8 | 43082 | 31 |
 | 65% saver free | v3.7 | 20.76 | +0.0% | 19.8 (8.0 · 0.0 · 0.0 · 10.8) | 0.8 | 0.03 | 237+0 | 0 | 4123 | 29 |
-| 65% saver free | beeline | 21.48 | +3.5% | 19.8 (7.4 · 0.0 · 0.8 · 10.5) | 1.1 | 0.04 | 218+0 | 20.2 | 5782 | 30 |
-| 65% saver free | explore | 24.96 | +20.2% | 20.6 (6.6 · 4.8 · 2.5 · 5.8) | 0.2 | 0.13 | 232+0 | 40.0 | 4488 | 31 |
+| 65% saver free | beeline | 21.57 | +3.9% | 19.8 (7.4 · 0.0 · 1.0 · 10.4) | 1.2 | 0.04 | 217+0 | 16.6 | 5181 | 30 |
+| 65% saver free | explore | 25.14 | +21.1% | 20.6 (6.6 · 5.0 · 2.7 · 5.3) | 0.5 | 0.14 | 231+0 | 29.9 | 5160 | 31 |
 | 65% spender no spells | v3.7 | 14.29 | +0.0% | 11.3 (8.0 · 0.0 · 0.0 · 2.0) | 7.7 | 0.05 | 106+0 | 0 | 9785 | 14 |
-| 65% spender no spells | beeline | 15.19 | +6.3% | 11.7 (7.5 · 0.0 · 0.8 · 2.4) | 8.0 | 0.05 | 95+0 | 1 | 11193 | 25 |
-| 65% spender no spells | explore | 22.98 | +60.8% | 16.4 (6.7 · 4.7 · 2.3 · 1.7) | 1.6 | 0.15 | 143+0 | 2 | 40461 | 25 |
+| 65% spender no spells | beeline | 15.24 | +6.6% | 11.7 (7.5 · 0.0 · 0.8 · 2.4) | 8.0 | 0.05 | 95+0 | 4 | 11087 | 25 |
+| 65% spender no spells | explore | 23.09 | +61.5% | 16.4 (6.7 · 4.9 · 2.2 · 1.6) | 2.1 | 0.16 | 143+0 | 5 | 41099 | 25 |
 | 75% saver no spells | v3.7 | 17.96 | +0.0% | 17.1 (8.0 · 0.0 · 0.0 · 8.1) | 0.1 | 0.06 | 120+0 | 0 | 27386 | 30 |
-| 75% saver no spells | beeline | 18.52 | +3.1% | 17.3 (7.4 · 0.0 · 0.4 · 8.4) | 0.0 | 0.05 | 117+0 | 11.2 | 27795 | 32 |
-| 75% saver no spells | explore | 22.3 | +24.1% | 18.4 (6.8 · 4.7 · 2.0 · 4.0) | 0.0 | 0.16 | 126+0 | 23.4 | 45292 | 32 |
+| 75% saver no spells | beeline | 18.5 | +3.0% | 17.2 (7.4 · 0.0 · 0.5 · 8.3) | 0.1 | 0.05 | 116+0 | 7.6 | 27882 | 32 |
+| 75% saver no spells | explore | 22.36 | +24.5% | 18.3 (6.8 · 4.7 · 1.9 · 3.9) | 0.0 | 0.17 | 126+0 | 14.3 | 47419 | 32 |
 | 75% saver free | v3.7 | 17.96 | +0.0% | 18.2 (8.0 · 0.0 · 0.0 · 9.2) | 0.0 | 0.05 | 170+0 | 0 | 4665 | 30 |
-| 75% saver free | beeline | 18.64 | +3.8% | 18.3 (7.4 · 0.0 · 0.6 · 9.3) | 0.0 | 0.05 | 163+0 | 15.6 | 4370 | 32 |
-| 75% saver free | explore | 22.08 | +22.9% | 19.2 (6.7 · 4.7 · 2.2 · 4.7) | 0.0 | 0.15 | 171+0 | 29.7 | 4439 | 32 |
+| 75% saver free | beeline | 18.64 | +3.8% | 18.3 (7.4 · 0.0 · 0.7 · 9.3) | 0.0 | 0.05 | 161+0 | 16.9 | 4196 | 32 |
+| 75% saver free | explore | 22.23 | +23.8% | 19.3 (6.7 · 4.9 · 2.2 · 4.5) | 0.0 | 0.15 | 171+0 | 29.1 | 4783 | 32 |
 | 75% spender no spells | v3.7 | 12.86 | +0.0% | 11.0 (8.0 · 0.0 · 0.0 · 2.0) | 0.3 | 0.06 | 81+0 | 0 | 15213 | 14 |
-| 75% spender no spells | beeline | 13.4 | +4.2% | 11.1 (7.4 · 0.0 · 0.5 · 2.2) | 0.2 | 0.05 | 75+0 | 1 | 15967 | 31 |
-| 75% spender no spells | explore | 20.62 | +60.3% | 16.0 (6.8 · 4.6 · 2.0 · 1.6) | 0.1 | 0.16 | 112+0 | 2 | 44926 | 31 |
+| 75% spender no spells | beeline | 13.4 | +4.2% | 11.1 (7.4 · 0.0 · 0.5 · 2.2) | 0.2 | 0.05 | 74+0 | 4 | 15964 | 31 |
+| 75% spender no spells | explore | 20.76 | +61.4% | 16.0 (6.8 · 4.8 · 2.0 · 1.5) | 0.1 | 0.17 | 114+0 | 5 | 46643 | 31 |
 | 90% saver no spells | v3.7 | 14.86 | +0.0% | 16.2 (8.0 · 0.0 · 0.0 · 7.2) | 0 | 0.07 | 58+0 | 0 | 31248 | 33 |
-| 90% saver no spells | beeline | 15.28 | +2.8% | 16.4 (7.4 · 0.0 · 0.2 · 7.7) | 0 | 0.06 | 56+0 | 5.3 | 31404 | 35 |
-| 90% saver no spells | explore | 18.68 | +25.7% | 17.5 (6.9 · 4.5 · 1.6 · 3.5) | 0 | 0.17 | 61+0 | 11.3 | 49787 | 35 |
+| 90% saver no spells | beeline | 15.26 | +2.7% | 16.3 (7.4 · 0.0 · 0.2 · 7.7) | 0 | 0.06 | 56+0 | 5.0 | 31488 | 35 |
+| 90% saver no spells | explore | 18.78 | +26.3% | 17.5 (6.9 · 4.7 · 1.5 · 3.4) | 0 | 0.17 | 62+0 | 9.3 | 51582 | 35 |
 | 90% saver free | v3.7 | 14.86 | +0.0% | 16.6 (8.0 · 0.0 · 0.0 · 7.6) | 0 | 0.06 | 79+0 | 0 | 5556 | 33 |
-| 90% saver free | beeline | 15.38 | +3.5% | 16.8 (7.4 · 0.0 · 0.3 · 8.1) | 0 | 0.05 | 76+0 | 7.2 | 6613 | 35 |
-| 90% saver free | explore | 18.76 | +26.3% | 17.9 (6.8 · 4.6 · 1.7 · 3.8) | 0 | 0.16 | 83+0 | 14.9 | 5105 | 35 |
+| 90% saver free | beeline | 15.35 | +3.3% | 16.8 (7.5 · 0.0 · 0.3 · 8.0) | 0 | 0.06 | 76+0 | 15.0 | 6929 | 35 |
+| 90% saver free | explore | 18.86 | +26.9% | 18.0 (6.8 · 4.7 · 1.8 · 3.7) | 0 | 0.17 | 83+0 | 24.7 | 5231 | 35 |
 | 90% spender no spells | v3.7 | 11.18 | +0.0% | 11.0 (8.0 · 0.0 · 0.0 · 2.0) | 0 | 0.06 | 41+0 | 0 | 18785 | 17 |
-| 90% spender no spells | beeline | 11.34 | +1.4% | 10.8 (7.4 · 0.0 · 0.3 · 2.2) | 0 | 0.05 | 39+0 | 1 | 18208 | 35 |
-| 90% spender no spells | explore | 17.44 | +55.9% | 15.4 (6.9 · 4.5 · 1.6 · 1.5) | 0 | 0.17 | 57+0 | 2 | 48407 | 35 |
+| 90% spender no spells | beeline | 11.34 | +1.4% | 10.8 (7.4 · 0.0 · 0.2 · 2.1) | 0 | 0.05 | 39+0 | 3.8 | 18312 | 35 |
+| 90% spender no spells | explore | 17.55 | +57.0% | 15.5 (6.9 · 4.6 · 1.5 · 1.5) | 0 | 0.17 | 57+0 | 4.8 | 50504 | 35 |
 | 75% saver reading | v3.7 | 11.48 | +0.0% | 10.5 (8.0 · 0.0 · 0.0 · 1.5) | 0 | 0.36 | 60+0 | 0 | 17560 | 32 |
-| 75% saver reading | beeline | 12.14 | +5.8% | 10.9 (7.4 · 0.0 · 0.4 · 2.1) | 0 | 0.34 | 59+0 | 9.1 | 18295 | 33 |
-| 75% saver reading | explore | 17.97 | +56.5% | 14.7 (6.8 · 4.6 · 1.7 · 0.6) | 0 | 0.6 | 82+0 | 17.7 | 43759 | 33 |
+| 75% saver reading | beeline | 12.18 | +6.1% | 10.9 (7.4 · 0.0 · 0.4 · 2.1) | 0 | 0.35 | 59+0 | 7.0 | 18493 | 33 |
+| 75% saver reading | explore | 18.24 | +58.8% | 14.9 (6.9 · 4.7 · 1.7 · 0.6) | 0 | 0.62 | 83+0 | 12.1 | 46349 | 33 |
 | 75% spender reading | v3.7 | 11.25 | +0.0% | 10.2 (8.0 · 0.0 · 0.0 · 1.2) | 0 | 0.36 | 59+0 | 0 | 17324 | 17 |
-| 75% spender reading | beeline | 11.82 | +5.0% | 10.3 (7.4 · 0.0 · 0.4 · 1.5) | 0.0 | 0.35 | 57+0 | 1 | 18005 | 33 |
-| 75% spender reading | explore | 17.96 | +59.6% | 14.6 (6.8 · 4.5 · 1.8 · 0.5) | 0 | 0.6 | 81+0 | 2 | 44768 | 33 |
+| 75% spender reading | beeline | 11.8 | +4.8% | 10.3 (7.4 · 0.0 · 0.4 · 1.5) | 0 | 0.34 | 57+0 | 4.0 | 18160 | 33 |
+| 75% spender reading | explore | 18.18 | +61.6% | 14.8 (6.8 · 4.7 · 1.8 · 0.4) | 0 | 0.62 | 83+0 | 5.0 | 47119 | 33 |
 
-Reading the table:
+Reading the table (v3.9 data; the v3.8 → v3.9 comparison is in §8.1):
 - **Beeline vs v3.7:**
   - Time rises 3–6% for savers and reading kids (75% saver: 17.96 → 18.52 h) and 1–12% for spenders. The cost is walking time plus 0.3–1.3 back battles per zone.
   - Path battles are about 7.4 against v3.7's 8, so patrols make up the gap and readiness at the gate is unchanged.
   - Gold and inn stays are close. Savers now use Feathers (5–20 per campaign); spenders use 1.
-- **50% kids:** about +9 to +11 defeats per campaign on beeline (49.6 vs 40.5 for savers). Inns are a walk away now instead of instant. Mitigations to consider: start with 2 Feathers, or make inns at most 3 hops apart in realms 1–3.
+- **50% kids:** about +11 to +15 defeats per campaign on beeline vs v3.7 (52.2 vs 40.5 for savers without spells). Inns are a walk away instead of instant. v3.9 already starts kids with 2 Feathers and keeps inns ≤ 3 hops in realms 1–3.
 - **Explorers:**
   - Explorers pay +16 to +26% (savers) and +49 to +61% (spenders and reading kids, who barely patrol in v3.7).
   - In return they gain gold (2–3× at the end), more chests, quest rewards and readiness at the gate (0.15 vs 0.05).
   - Patrols drop by half, because exploring battles teach the same pool.
 
+### 8.1 v3.9 run: no warp, Feathers bought, new density (100 seeds)
+
+Kid policy in the sim:
+- Feathers are bought in town and village shops up to 2 (savers) or 1 (spenders). Kids start with 2.
+- After a rest at a non-town inn, and after each zone boss, the kid shops if it can afford missing gear or the next spell.
+  - Walk if a town is ≤ 6 hops away.
+  - Otherwise fly there with a Feather and fly (or walk) back to the last inn.
+- Kids keep 1 Feather in reserve for that trip. They only spend a Feather to fly back to an inn for rest when they hold 2 or more.
+  - Without the reserve, spell buying for the 75% saver fell from 4.9 to 3.9 and gold piled up (10.7k unspent at the end). The Feathers had gone on rest trips, so there was none left to reach a town.
+  - With the reserve, spell buying returns to v3.8 levels.
+- Tried and rejected:
+  - A Feather price of 1×G changed nothing: price is not the limit, carrying one is.
+  - Keeping 3 Feathers gave 4.6 spells.
+  - Walking up to 10 hops changed nothing.
+  - A magic shop in villages (`village_magic`) changed nothing, because beeline kids never pass the villages (they sit on branch ends).
+
+| Profile | Mode | Hours v3.8 → v3.9.1 | Defeats v3.8 → v3.9.1 | Spells owned at end | Feathers bought (per realm 1–9) | Feathers used | Feather gold (% of income) | Gold at end v3.8 → v3.9.1 |
+|---|---|---|---|---|---|---|---|---|
+| 75% saver no spells | beeline | 18.52 → 18.50 (-0.1%) | 0.0 → 0.1 (+0.0) | 0.0 → 0.0 | 3.6 (0.0 · 0.4 · 0.7 · 0.1 · 1.0 · 0.6 · 0.0 · 0.8 · 0.1) | 11.2 → 7.6 | 269 (0.7%) | 27795 → 27882 |
+| 75% saver no spells | explore | 22.30 → 22.36 (+0.3%) | 0.0 → 0.0 (+0.0) | 0.0 → 0.0 | 9.4 (0.1 · 0.0 · 0.4 · 0.9 · 1.0 · 0.8 · 1.3 · 1.6 · 3.2) | 23.4 → 14.3 | 1012 (2.4%) | 45292 → 47419 |
+| 75% saver free | beeline | 18.64 → 18.64 (-0.0%) | 0.0 → 0.0 (+0.0) | 4.9 → 4.9 | 12.6 (0.0 · 1.8 · 1.1 · 2.2 · 1.0 · 2.3 · 0.3 · 2.2 · 1.6) | 15.6 → 16.9 | 1024 (2.5%) | 4370 → 4196 |
+| 75% saver free | explore | 22.08 → 22.23 (+0.7%) | 0.0 → 0.0 (+0.0) | 8.1 → 8.6 | 23.9 (0.1 · 1.1 · 1.9 · 3.1 · 2.3 · 3.3 · 3.5 · 3.3 · 5.2) | 29.7 → 29.1 | 2280 (5.1%) | 4439 → 4783 |
+| 50% saver free | beeline | 27.92 → 28.02 (+0.3%) | 47.8 → 51.5 (+3.7) | 0.3 → 0.2 | 5.9 (0.4 · 0.9 · 1.0 · 0.7 · 0.9 · 0.7 · 0.0 · 0.9 · 0.4) | 19.6 → 10.0 | 406 (0.9%) | 5531 → 5576 |
+| 50% saver free | explore | 31.14 → 31.28 (+0.5%) | 13.0 → 13.6 (+0.6) | 4.9 → 5.5 | 22.9 (0.4 · 1.9 · 1.0 · 3.2 · 1.7 · 2.8 · 3.3 · 3.2 · 5.4) | 47.5 → 28.0 | 2166 (4.0%) | 6496 → 6543 |
+| 50% saver no spells | beeline | 27.93 → 27.97 (+0.2%) | 49.6 → 51.7 (+2.0) | 0.0 → 0.0 | 5.5 (0.4 · 0.5 · 1.0 · 0.6 · 0.9 · 0.6 · 0.0 · 1.0 · 0.5) | 18.5 → 9.5 | 394 (0.9%) | 5570 → 5593 |
+| 50% saver no spells | explore | 31.42 → 31.56 (+0.4%) | 24.1 → 25.5 (+1.4) | 0.0 → 0.0 | 11.9 (0.4 · 0.1 · 0.9 · 1.4 · 1.0 · 0.8 · 1.4 · 1.8 · 4.0) | 35.1 → 16.9 | 1223 (2.6%) | 17747 → 18418 |
+| 50% spender free | beeline | 20.47 → 20.46 (-0.0%) | 70.8 → 70.9 (+0.0) | 0.0 → 0.0 | 0.1 (0.0 · 0.0 · 0.0 · 0.0 · 0.0 · 0.0 · 0.0 · 0.0 · 0.1) | 1.0 → 4.2 | 16 (0.1%) | 4415 → 4579 |
+| 50% spender free | explore | 26.08 → 26.34 (+1.0%) | 30.4 → 29.3 (-1.1) | 3.2 → 3.8 | 4.4 (0.0 · 0.2 · 0.2 · 0.3 · 0.6 · 1.0 · 0.3 · 0.7 · 1.0) | 2.0 → 9.8 | 434 (1.0%) | 6369 → 5810 |
+
+Feather price per tier (G = gold for 1 normal kill; Feather = 2×G = 2 kills at every tier):
+
+| Realm (tier) | G = 1 normal kill | Return Feather (2×G) | = kills | Potion | Inn night |
+|---|---|---|---|---|---|
+| 1 | 6 | 12 | 2 | 6 | 12 |
+| 2 | 12 | 24 | 2 | 12 | 24 |
+| 3 | 18 | 36 | 2 | 18 | 36 |
+| 4 | 27 | 54 | 2 | 27 | 54 |
+| 5 | 36 | 72 | 2 | 36 | 72 |
+| 6 | 45 | 90 | 2 | 45 | 90 |
+| 7 | 54 | 108 | 2 | 54 | 108 |
+| 8 | 63 | 126 | 2 | 63 | 126 |
+| 9 | 72 | 144 | 2 | 72 | 144 |
+
+Reading it:
+- **Time:** within ±0.6% of v3.8 for every profile, on both beeline and explore.
+- **Spells bought:**
+  - 75% saver: 4.8 beeline (4.9 in v3.8), 8.0 explore (8.1).
+  - 50% saver: 0.2 beeline (0.3), 4.8 explore (4.9).
+- **Feathers as a budget:**
+  - The 75% saver on beeline buys about 15 Feathers per campaign (≈ 1.7 per realm, 3.2 in realm 4) when buying spells. That is 3.2% of income.
+  - A no-spell saver buys 5.5 (1.2%). Explorers buy 12–25 (3–5.5%).
+  - Spenders on beeline buy almost none: they walk.
+  - So a Feather is a real but small choice: 2 kills each, about 1–2 per realm.
+- **Defeats:**
+  - 50% savers on beeline: +3.8 (with spells) and +2.5 (no spells) over the whole campaign, about +5–8%. They fly back to inns about half as often as with the free warp.
+  - 50% spenders: +0.3.
+  - Explorers: −0.4 to +1.1.
+- **Possible fixes if the +3–4 defeats matter** (no free warp; v3.9.1 applied fix 3 only, which moved defeats by −0.1 to −0.5, §0.0):
+  1. `maxHopsToInn` 3 in realms 4–6 too. More campfires; regenerating changes node kinds, so it needs the quest team's ids re-checked.
+  2. A "keep one Feather" nudge in the shop UI (the sim's reserve policy).
+  3. 1 Feather in the realm-boss chest of realms 3, 6 and 8.
+
 ## 9. Converting the prototype
 
 The prototype has 2 locations (`meadow` L1.1, `forest` L2.1). Each has 13 `mapNodes` in this order: inn, 4 fights, inn, 4 fights, inn, gate, boss. It also has `pathFights: 8` and `scripted` fights at positions 1/3/4/6.
 
-| Prototype | v3.8 |
+| Prototype | v3.9 |
 |---|---|
 | `locations.json` `meadow` | Zone `meadow` in `zones.json` (`location: "meadow"`, `desyPool: "L1.1"`), placed on `realm_1` (boss node `m_crow`, gate edge `g1`). The authored realm 1 has all 3 realm-1 zones; to ship meadow only, set realm 1's `world` exit on `m_crow` (or mark zones 2–3 `inBuild: false`) |
 | `forest` | Zone `forest` (L2.1) on `realm_2` (boss `boss_1`, gate edge `e5`), entry town = Honey Town (town 2) |
@@ -266,11 +380,11 @@ The prototype has 2 locations (`meadow` L1.1, `forest` L2.1). Each has 13 `mapNo
 | `mapNodes` fight × 8, `pathFights: 8` | Removed. Battles come from `danger × steps` on edges (target about 8 per zone, §4.5) |
 | `gate` node | `patrol: true` on the approach edge into the boss |
 | `boss` node | `boss` node (`boss: <zone id>`); enemy, kind and reward stay in zones.json / locations.json `bossReward` |
-| `scripted` fight 1 (first-ever rabbit) | Tutorial: the first `enter` event in the village (or keep the hard-coded tutorial) |
+| `scripted` fight 1 (first-ever rabbit) | v3.9 (GameDev agreed): data-driven village `firstEnter` event `village.1` (`tutorial: true`): `scene sc_r1_opening` → `dialogue meadow_intro` → `dialogue tutorial_first_battle` → `fight {kind: tutorial, enemies: [horned_rabbit], fill: false, canLose: false}` → `dialogue tutorial_first_battle_after` |
 | `scripted` fights 3/6 (crow, grey wolf) | These are the L1.1/L1.2 bosses in v3.7, so they become boss nodes |
 | `scripted` 4 / `elite` (swift rabbit, guard bee) | `scripted` on an edge (`e11` in realm 1, the edge after the first boss in realm 2) |
 | `roster`, `packs`, `elite`, `enemiesPerBattle`, `unlockRequires` | Same fields in zones.json. Enemy ids are the desy ids (`horned_rabbit`…); `build_data.py` maps them with `desyId`, as for enemies.json |
-| `mapNodes` x/y | Node `x`/`y` in the graph file (map pixels, 0,0 = top left) |
+| `mapNodes` x/y | Node `x`/`y` in the graph file, normalised 0–1 (0,0 = top left; graph `aspect` = width/height). Divide the prototype's pixel x/y by the background size |
 | `screens.ts` village (Little Hill Village, inn, shop, magic shop, 学堂, board, gate) | `town` node `village` with `hub: "village"`, `town: 1`; the gate = leaving the town node |
 | balance.json `inns.nodes` | Obsolete (inns are nodes) |
 
@@ -327,7 +441,7 @@ flowchart LR
   w_camp -.-|"boss approach"| w_throne
 ```
 
-**The village** (town node `village`, `hub: "village"`): it opens the existing screen with the Sleepy Panda Inn (rest/save), Grandma Wu's shop, the magic shop, the 学堂 (words), the quest board and the gate (back to the map). It is not a graph: the old `village_1/2` interior graphs were dropped. Its first `enter` event plays `meadow_intro`.
+**The village** (town node `village`, `hub: "village"`): it opens the existing screen with the Sleepy Panda Inn (rest/save), Grandma Wu's shop, the magic shop, the 学堂 (words), the quest board and the gate (back to the map). It is not a graph: the old `village_1/2` interior graphs were dropped. Its `firstEnter` event plays the opening scene `sc_r1_opening`, then `meadow_intro` and the tutorial battle; a second event plays `sc_r1_village_banter` after Clover Hills. The Sleepy Panda Inn's panda is the first `innkeeper_panda` (the campfire at `c_camp` is run by a cousin).
 
 ## 11. Example: Goblin Caves (realm 4, 3 levels, inn inside)
 
@@ -474,8 +588,23 @@ The biggest single graph (the realm 8 overworld, 93 nodes) is in `data/world/dia
   - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed, bossCheckpoint}`, and `graph_progress` bitsets by node `idx`.
   - Added: `edgeCrossings` (for seeding) and `edgeProgress` (turn-back).
 - **Defeat:** wake at `lastInn`, which can be on another level or in the town. Gold loss as in v3.7. Edges stay walked.
-- **Feather:** to `lastInn`. **Inn warp:** inn ↔ visited towns.
+- **Feather (v3.9):** to `lastInn` or any visited town/village, from anywhere outside battle and the boss room. No inn warp.
+- **Fog of war:** player progress keeps `visited`, `walked` and `revealed` bitsets per graph (node `idx` / edge `idx`). The UI shows visited nodes, "?" for nodes one open edge away, and landmark nodes (`fog: "landmark"`) once their zone is open. Schema: `progress.schema.json`, example `examples/progress_example.json`.
 - **Boss retry:** `bossCheckpoint` as in v3.7 (spec §7.4).
+
+### 12.1 Return Feather rules (v3.9)
+
+| Field (`world_rules.returnFeather`) | Value |
+|---|---|
+| Price | 2×G (2 normal kills at every tier): 12, 24, 36, 54, 72, 90, 108, 126, 144 gold in realms 1–9 |
+| Destinations | The last inn used, or any visited town/village (the player picks) |
+| Usable | Anywhere on the map outside battle and the boss room (dungeon levels included) |
+| Sold | Town and village item shops. Not at inns |
+| Carry | 3 |
+| Start | 2 (from the tutorial) |
+| Other sources | 5% of chests; quest rewards (e.g. q1_carrot); v3.9.1: 1 free in the realm-boss chest of realms 3, 6 and 8 |
+
+**Start with 2 vs Feathers as a budget:** there is a small conflict. 2 free Feathers are one free round trip, worth 4 kills (24 gold) in realm 1. In the sim, realm-1 kids use 0.4–1.1 of them and carry the rest into realm 2. That delays the first purchase by about one realm. After that, the budgeting choice is intact: every later Feather is bought. Starting with 1 would make the first purchase come sooner. I kept 2 (Jack's call).
 
 ## 13. Answers to GameDev's 14 questions (architecture.md §17.2)
 
@@ -485,14 +614,14 @@ One graph per realm overworld. A realm's 25–200 nodes are split between the ov
 **2. Is the node type list right, and how do town and village differ?**
 Mostly. Fights, elites and gates move to edges (`danger`/`steps`, `scripted`, `patrol`). `waypoint`, `miniboss` and `story` are added. `fight`/`elite`/`gate` node kinds are dropped, and `chest`, `npc`, `lever`, `fork`, `stairs_*`, `portal` and `exit` are kept (§2).
 - **Town:** the realm's main hub, with the full screen (inn, item shop, magic shop, smith, 学堂, board) and towns.json prices.
-- **Village:** a smaller outpost with inn, save and item shop only. Magic and gear come through the inn warp.
+- **Village:** a smaller outpost with inn, save and item shop only (Return Feathers on sale). For magic and gear, fly to a town with a Feather (v3.9; the inn warp is gone).
 
 **3. Maze rules: dead ends, loops, one-way drops, backtracking, fog of war?**
 - **Dead ends:** yes, 30–38% of nodes, usually ending in a chest, story spot, NPC or mini-boss.
 - **Loops:** allowed (a few per realm).
 - **One-way drops:** allowed only if an inn stays reachable; the validator checks for one-way traps.
 - **Backtracking:** always allowed. Walked edges roll at ×0.05.
-- **Fog of war:** visited nodes are shown, plus the neighbours of visited nodes as "?" (kind icon hidden until visited). Boss nodes are always shown once their zone is open.
+- **Fog of war (approved in v3.9):** visited nodes are shown, plus the neighbours of visited nodes as "?" (kind icon hidden until visited). Towns, villages and bosses (`fog: "landmark"`) are always shown once their zone is open. The revealed state is player progress, not graph data.
 
 **4. How do shortcuts open, and are they two-way after?**
 By a `lever` node, an event action `openShortcut`, or a boss clear (`on: clear` → `openShortcut`). Before that the `shortcut` edge is closed (`cond: {shortcutOpen: id}`). After opening it is two-way and permanent (save `shortcuts`).
@@ -500,10 +629,10 @@ By a `lever` node, an event action `openShortcut`, or a boss clear (`on: clear` 
 **5. Are stairs and portals always two-way, and can portals skip levels or cross realms?**
 - Stairs and dungeon portals are always two-way, and both graphs list the link (validator). They are never dangerous.
 - Portals may skip levels (for example an L1↔L3 return portal opened by beating the L3 boss) and may cross realms (world map ↔ realm, and post-game warps).
-- Apart from these, travel goes by the inn warp: from any inn to any visited town.
+- Apart from these, fast travel is the Return Feather (v3.9): to the last inn or any visited town/village.
 
 **6. Where does a defeated hero respawn, especially on a dungeon level with no inn?**
-At `lastInn`, the last inn rested at, with towns and villages counting as inns. If the current level has no inn, that is an inn on an earlier level or the town; the walk back is over walked edges (×0.05). The rule that every node is ≤ 5 hops from an inn (stairs count as 0) keeps this short. Big dungeons get an inn inside, such as Goblin Caves L2.
+At `lastInn`, the last inn rested at, with towns and villages counting as inns. If the current level has no inn, that is an inn on an earlier level or the town; the walk back is over walked edges (×0.05). The rule that every node is ≤ 3 hops (realms 1–3) or ≤ 5 hops (realms 4–9) from an inn (stairs count as 0) keeps this short. Big dungeons get an inn inside, such as Goblin Caves L2.
 
 **7. Are the event triggers and actions enough, and what format for dialogue?**
 Yes, with 2 actions added (`offerQuest`, `openChest`) and 3 event fields (`outcome`, `cooldown`, weighted `pick`). The conditions also gain `questDone`, `readinessAtLeast` and `visited`. Dialogue uses your `dialogue` map exactly as written: `{id: [{speaker, zh, en, vo}]}` per graph, with speakers from `npcs`.
@@ -512,7 +641,7 @@ Yes, with 2 actions added (`offerQuest`, `openChest`) and 3 event fields (`outco
 No blocking condition. The boss edge carries `patrol: true` and is never blocked. Train/patrols happen at the approach inn per spec §7.4: forced patrols (2) when the pool is below the trigger (speech 20%, reading 40%), and `approachArmed` is re-armed by resting at any other inn. Keep your `graphState.patrolsLeft`/`approachArmed`.
 
 **9. Where do node positions live, and does a 200-node level scroll or zoom?**
-`x`/`y` live on each node in the graph file, in map pixels with 0,0 at the top left (the generator lays them out by BFS depth). Graphs of more than about 30 nodes scroll (drag or pan), with pinch zoom between 0.5× and 1.5×. The camera follows the hero, and fog of war keeps the view small. A single 200-node graph never happens: overworlds have at most 93 nodes and dungeon levels 4–55.
+`x`/`y` live on each node in the graph file, normalised 0–1 with 0,0 at the top left (v3.9, GameDev's choice; the graph's `aspect` gives width/height, and the generator lays nodes out by BFS depth). Graphs of more than about 30 nodes scroll (drag or pan), with pinch zoom between 0.5× and 1.5×. The camera follows the hero, and fog of war keeps the view small. A single 200-node graph never happens: overworlds have at most 93 nodes and dungeon levels 4–55.
 
 **10. Are word pools per graph, per dungeon or per node?**
 Per **zone** (= location, `zones.json`). A zone can cover part of a graph, a whole graph or several dungeon levels, and every node carries `zone`. Your graph-level `pool` field is left out of graph files on purpose.
@@ -521,7 +650,7 @@ Per **zone** (= location, `zones.json`). A zone can cover part of a graph, a who
 Yes. Node `idx` is stable and never reused (`idxMax` grows), and save bitsets use it. String ids (graph, node, edge, zone, event) are stable too. `index.json` has `renames: {"old": "new"}` (`graph/node` keys) so old saves load. The validator checks that ids and idx are unique.
 
 **12. Quests on town boards or from NPCs, and are kill counts level-specific?**
-Both: the q1–q9 board quests stay on town boards, and NPC hooks come from `npc` nodes (`offerQuest`, placeholders in `quests_world.json`). Kill counts are realm-wide by default. A quest may narrow them with `scope: {graph}` or `{zone}`.
+Both. v3.9: the 50 quests in `data/quests.json` (quest/0.2) name their giver and step nodes; NPC nodes carry `offerQuest <v2 id>`, and `quests_world.json` lists each NPC slot as `quest` or `ambient`. Kill counts are realm-wide by default. A quest may narrow them with `scope: {graph}` or `{zone}`.
 
 **13. Are chests nodes or events, and are there random encounters on paths?**
 Chests are `chest` nodes that carry a `once` event (`openChest`, or a quest item first when `cond: questActive`). Random encounters happen on paths: per-step rolls on edges (§4). Battle chests stay as in v3.7.
@@ -538,7 +667,8 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 | `index.json` | `index.schema.json` | `schema: index/0.3`, `start {graph,node}`, file list, `graphs[]` (id, kind, realm, dungeon, level, status, nodes, file), `renames` |
 | `world_rules.json` | `world_rules.schema.json` | Encounter and travel knobs (§4); may merge into balance.json as `world` |
 | `zones.json` | `zones.schema.json` | 20 zones: id, realm, order, title, location, desyPool, pool, tier, bossNode, gateEdge, bossKind, boss, enemiesPerBattle, roster or fromRoster, packs, elite, scriptedElite, unlockRequires |
-| `quests_world.json` | `quests_world.schema.json` | NPC quest hooks (giver/turnIn as `graph/node`), quest items, shared speakers |
+| `quests_world.json` | `quests_world.schema.json` | NPC slots (id, giver/turnIn `graph/node`, `status` quest/ambient, `quests`, `offers`, `banter`), quest items, shared speakers |
+| `examples/progress_example.json` | `progress.schema.json` | Player progress example (`progress/0.3`): pos, lastInn, visitedTowns, per-graph visited/walked/revealed bitsets, eventsDone, feathers |
 | `graphs/<id>.json` | `graph.schema.json` | 36 graphs: `world`, `realm_1…9`, 26 dungeon levels |
 | `layout_targets.json` | – | Generator targets per realm |
 | `world_realm_table.csv` | – | The §7 table |
@@ -549,18 +679,19 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 
 ```json
 {"schema": "graph/0.3", "id": "realm_1", "kind": "overworld", "realm": 1, "dungeon": null, "level": 0,
- "title": {"zh": "新手草原", "en": "Starter Meadow"}, "status": "authored", "entry": "village", "idxMax": 16,
+ "title": {"zh": "新手草原", "en": "Starter Meadow"}, "status": "authored", "entry": "village", "idxMax": 16, "edgeIdxMax": 18, "aspect": 1.61,
  "background": {"map": "bg_map_realm_1", "battle": "bg_battle_r1"},
- "nodes": [{"id": "village", "idx": 0, "kind": "town", "x": 150, "y": 560, "zone": "meadow", "title": {"zh": "小山村", "en": "Little Hill Village"},
+ "nodes": [{"id": "village", "idx": 0, "kind": "town", "x": 0.05, "y": 0.8127, "fog": "landmark", "zone": "meadow", "title": {"zh": "小山村", "en": "Little Hill Village"},
             "save": true, "services": ["inn", "save", "shop"], "hub": "village", "town": 1}, "..."],
- "edges": [{"id": "e1", "from": "village", "to": "m_fork", "kind": "path", "danger": 0, "steps": 1, "terrain": "road"},
+ "edges": [{"id": "e1", "from": "village", "to": "m_fork", "kind": "path", "danger": 0, "steps": 1, "terrain": "road", "idx": 1},
            {"id": "g1", "from": "m_grass", "to": "m_crow", "kind": "path", "danger": 0, "steps": 1, "patrol": true, "terrain": "boss_approach"},
            {"id": "x_w_throne", "from": "w_throne", "kind": "exit", "to": {"graph": "world", "node": "realm_1"}, "cond": {"bossDefeated": "warren"}}, "..."],
  "events": [{"id": "m_well.1", "node": "m_well", "on": "enter", "once": true, "outcome": "item", "cond": {"questActive": "q1_hoe"},
              "do": [{"giveItem": "farmers_hoe", "qty": 1, "quest": "q1_hoe"}]},
             {"id": "m_fork.1", "node": "m_fork", "on": "enter", "pick": [{"weight": 70, "outcome": "nothing", "do": []},
               {"weight": 15, "outcome": "story", "do": [{"dialogue": "ambient"}]}, {"weight": 15, "outcome": "item", "cooldown": 4, "do": [{"giveItem": "honey", "qty": 1}]}]}],
- "dialogue": {"meadow_intro": [{"speaker": "panda", "zh": "这里是新手草原！", "en": "This is Starter Meadow! ..."}]},
+ "dialogue": {"meadow_intro": [{"speaker": "xiaolong", "en": "This is Starter Meadow! Tap a place to walk there. ..."}],
+              "farmer_thanks": [{"speaker": "farmer_li", "en": "{C007}, little hero!", "tokens": ["C007"]}]},
  "npcs": {"farmer_li": {"name": {"zh": "李农夫", "en": "Farmer Li"}}}}
 ```
 
@@ -576,13 +707,14 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 | Event fields `outcome`, `cooldown`, `pick`; actions `offerQuest`, `openChest` | The 7 outcomes, weighted events |
 | `roster` moved to zones.json | One roster per zone |
 | Save: `edgeCrossings`, `edgeProgress` added | Seeding, turn-back |
+| v3.9: x/y normalised 0–1 + `aspect`; edge `idx` + `edgeIdxMax`; node `fog`; action `scene`; fight kind `tutorial` + `canLose`; event `tutorial`; dialogue `tokens` | GameDev's answers, story alignment |
 
 ### 14.4 IDs and references
 
 - **Id format:** ids are lowercase snake_case. Node and edge ids are unique within their graph. Global references use `{graph, node}` or `"graph/node"`.
 - **Enemy ids** are desy enemies.csv ids; `build_data.py` maps them to runtime ids with `desyId`.
 - **Item ids** are runtime shop.json ids (`honey`, `feather`…) plus quest items and the proposed `bell`.
-- **Quest ids:** quests.json (board) or quests_world.json (hooks).
+- **Quest ids:** `data/quests.json` (v2, quest/0.2) ids; also accepted: the prototype board quests.json and quests_world.json hook ids.
 - **`bossDefeated`** takes a zone id.
 
 ### 14.5 Validation (`docs/tools/world/validate_world.py`)
@@ -604,22 +736,30 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
    - No one-way traps.
    - Every node is ≤ `maxHopsToInn` from an inn or town (stairs count as 0).
    - Each zone's beeline route expects battles within `beelineBattleRange`.
+   - Towns + villages match the density rule (±1 is a warning).
+7. **v3.9:**
+   - Edge `idx` unique and ≤ `edgeIdxMax`. `scene` actions exist in `data/dialogue/`.
+   - Speaker `panda` is an error (use `xiaolong` or `innkeeper_panda`).
+   - Realm-1 lines follow D1, and `{Cxxx}` placeholders match `tokens`.
+   - Every hook's giver exists. `quest` hooks list v2 ids, and their `offers` have an `offerQuest` on the node.
+   - Every v2 quest's hook, giver and step nodes exist, and every giver node offers its quest.
+   - The progress example validates.
 
-Run it with `python validate_world.py [data_dir] [-v]`; exit code 1 means errors. Current data: 36 graphs, 20 zones, 0 errors, 0 warnings.
+Run it with `python validate_world.py [data_dir] [-v]`; exit code 1 means errors. Current data: 36 graphs, 20 zones, 55 hooks (29 quest, 26 ambient), 0 errors, 0 warnings. GameDev is porting it to CI with repo-relative paths (`QUESTS_V2`, `DIALOGUE_DIR` env vars override the data paths).
 
 ## 15. Open questions
 
 **For Jack**
 - J1. Accept beeline +3–6% time for savers (75% saver +0.6 h, 18.5 h) and +9–11 defeats for 50% kids? Or should inns sit closer in realms 1–3, or should players start with 2 Feathers?
 - J2. Explorer time is +16–26% for savers (75% saver 22.3 h) and +49–61% for spenders and reading kids. Keep the optional branches as they are, trim branches in realms 6–9, or move most of them into the 4 optional dungeons?
-- J3. Is the inn warp OK? It is needed to keep spell buying and the economy at v3.7 levels.
-- J4. Fog of war (visited nodes plus "?" neighbours): yes or no? Should the repel item (`bell`) go in the shop?
-- J5. Realm 1 has 17 nodes and 3 zones in one overworld. Prototype mode ships meadow only. OK?
+- J3. ~~Inn warp~~ removed in v3.9. Feather at 2×G with kids keeping 1 in reserve keeps spell buying at v3.8 levels. Accept +2.5 to +3.8 defeats for 50% savers on beeline, or apply a §8.1 fix?
+- J4. Fog of war: approved (v3.9). Still open: should the repel item (`bell`) go in the shop?
+- J5. Realm 1 keeps all 3 zones and all branches; the prototype ships meadow only (approved). Start with 2 Feathers (approved; see §12.1 for the small conflict).
 
 **For GameDev**
-- G1. Is `graph/0.3` OK as the published format? It keeps your names, moves fights to edges, adds `zones.json`, and adds 2 actions and 3 event fields.
-- G2. Node x/y space: pixels on a per-graph background, or normalised 0–1? The reference layouts use pixels and roughly 120 px per BFS layer.
-- G3. Merge `world_rules.json` into balance.json as `world`, or keep a separate file?
+- G1. ~~graph/0.3~~ accepted.
+- G2. ~~x/y~~ normalised 0–1 (done in v3.9, with `aspect`).
+- G3. ~~world_rules~~ stays its own file (`src/data/world/world_rules.json`).
 - G4. Should build_data.py generate `src/data/world/*.json` (camelCase as here) from `docs/data/world/`, with the validator in CI?
-- G5. Is the inn warp UI (inn menu → "Go to town") OK?
-- G6. Keep the hard-coded first-battle tutorial, or move it to a village `firstEnter` event?
+- G5. Return Feather UI: item menu → pick "last inn" or a visited town/village from a list. OK?
+- G6. ~~Tutorial~~ moved to the village `firstEnter` event (v3.9). New action `scene` plays `data/dialogue` scenes; please support it in the event runner.

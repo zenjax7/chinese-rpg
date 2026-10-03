@@ -2,25 +2,30 @@
 also written to data/world/layout_targets.json). Realm 1 is hand-authored (make_world_data.py). The generated graphs are
 reference layouts for the sim and for level designers to replace with authored maps; they follow every validator rule.
 Run after make_world_data.py:  /workspace/desy/.venv/bin/python world_gen.py"""
-import json, os, random, csv, re, collections
-OUT = '/workspace/desy/data/world'; VERSION = 'v3.8'
+import math, json, os, random, csv, re, collections
+OUT = '/workspace/desy/data/world'; VERSION = 'v3.9.1'
 RULES = json.load(open(f'{OUT}/world_rules.json'))
 def dump(path, obj):
     p = os.path.join(OUT, path); os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, 'w', encoding='utf-8') as f: json.dump(obj, f, ensure_ascii=False, indent=1); f.write('\n')
 # ---- layout targets per realm: nodes = realm graph + its dungeon levels (town interiors not counted)
+def max_hops(t):
+    m = RULES['maxHopsToInn']; return m.get(str(t), m['default']) if isinstance(m, dict) else m
+def town_ramp(t): return 20 + 5*(t - 1)   # nodes per settlement: 20, 25 ... 60
+def town_count(t, nodes):   # v3.9.1 density rule (world_rules.townDensity): at least 1 town/village per town_ramp(t) nodes
+    return max(1, math.ceil(nodes/town_ramp(t)))
 LAYOUT = {
  2: dict(nodes=25,  towns=1, minis=1, loop=0.25, dungeons=[dict(id='great_hive', name='Great Hive', zh='大蜂巢', levels=1, zones=[[2]], innLevels=[])]),
- 3: dict(nodes=40,  towns=2, minis=2, loop=0.25, dungeons=[dict(id='bazaar_cellars', name='Bazaar Cellars', zh='夜市地窖', levels=1, zones=[[2]], innLevels=[])]),
+ 3: dict(nodes=40,  towns=1, minis=2, loop=0.25, dungeons=[dict(id='bazaar_cellars', name='Bazaar Cellars', zh='夜市地窖', levels=1, zones=[[2]], innLevels=[])]),
  4: dict(nodes=60,  towns=2, minis=3, loop=0.3,  dungeons=[dict(id='goblin_caves', name='Goblin Caves', zh='哥布林洞穴', levels=3, zones=[[1], [2], [3]], innLevels=[2])]),
  5: dict(nodes=80,  towns=2, minis=3, loop=0.3,  dungeons=[dict(id='hydra_lair', name="Hydra's Lair", zh='九头蛇巢穴', levels=2, zones=[[2], [2]], innLevels=[1])]),
- 6: dict(nodes=105, towns=3, minis=4, loop=0.3,  dungeons=[dict(id='moonlit_crypt', name='Moonlit Crypt', zh='月光地穴', levels=2, zones=[[2], [2]], innLevels=[1]),
+ 6: dict(nodes=105, towns=2, minis=4, loop=0.3,  dungeons=[dict(id='moonlit_crypt', name='Moonlit Crypt', zh='月光地穴', levels=2, zones=[[2], [2]], innLevels=[1]),
                                                      dict(id='old_mine', name='Old Mine (optional)', zh='旧矿洞', levels=1, zones=[[]], innLevels=[], optional=True)]),
  7: dict(nodes=130, towns=3, minis=4, loop=0.3,  dungeons=[dict(id='griffin_spire', name='Griffin Spire', zh='狮鹫塔', levels=3, zones=[[2], [2], [2]], innLevels=[2]),
                                                      dict(id='cloud_caves', name='Cloud Caves (optional)', zh='云洞', levels=1, zones=[[]], innLevels=[], optional=True)]),
- 8: dict(nodes=165, towns=4, minis=5, loop=0.3,  dungeons=[dict(id='undercroft', name='Colosseum Undercroft', zh='角斗场地下', levels=3, zones=[[2], [2], [2]], innLevels=[2]),
+ 8: dict(nodes=165, towns=3, minis=5, loop=0.3,  dungeons=[dict(id='undercroft', name='Colosseum Undercroft', zh='角斗场地下', levels=3, zones=[[2], [2], [2]], innLevels=[2]),
                                                      dict(id='beast_pens', name='Beast Pens (optional)', zh='兽栏', levels=2, zones=[[], []], innLevels=[1], optional=True)]),
- 9: dict(nodes=200, towns=4, minis=6, loop=0.3,  dungeons=[dict(id='demon_castle', name="Demon King's Castle", zh='魔王城', levels=5, zones=[[1], [1], [2], [2], [2]], innLevels=[2, 4]),
+ 9: dict(nodes=200, towns=3, minis=6, loop=0.3,  dungeons=[dict(id='demon_castle', name="Demon King's Castle", zh='魔王城', levels=5, zones=[[1], [1], [2], [2], [2]], innLevels=[2, 4]),
                                                      dict(id='shadow_vault', name='Shadow Vault (optional)', zh='暗影宝库', levels=2, zones=[[], []], innLevels=[1], optional=True)]),
 }
 TOWNS = json.load(open('/workspace/chinese-rpg/prototype/src/data/towns.json'))['towns']
@@ -33,6 +38,41 @@ END_W = [('treasure', 32), ('story', 20), ('npc', 13), ('deadend', 15), ('minibo
 EVG, HOOKS = [], []
 def rate(d, level): return min(RULES['maxRate'], RULES['encounterRate'][str(d)] * (1 + RULES['depthStep']*max(0, level - 1)))
 
+
+# ---- v3.9: pin nodes that story/quests reference (data/quests.json where.ref, quests.md §6 hook table) so regeneration keeps them
+import re as _re
+QV2 = json.load(open('/workspace/desy/data/quests.json', encoding='utf-8'))['quests']
+HOOK_TABLE = []
+for _m in _re.finditer(r"^\| `(q\d_[a-z0-9_]+)` \| `([a-z0-9_]+/[a-z0-9_]+)` \| ([^|]*) \|", open('/workspace/desy/quests.md', encoding='utf-8').read(), _re.M):
+    uses = [(_u.group(1), _u.group(2)) for _u in _re.finditer(r"(q\d_[a-z0-9_]+) \(([^)]*)\)", _m.group(3))]
+    HOOK_TABLE.append(dict(hook=_m.group(1), giver=_m.group(2), uses=uses))
+PUB2INT = {'npc': 'npc', 'story': 'story', 'miniboss': 'miniboss', 'chest': 'treasure', 'portal': 'portal', 'waypoint': 'deadend', 'deadend': 'deadend'}
+def required_refs(t):
+    """refs from data/quests.json (giver.ref + objective where.ref). The quests.md §6 table is not used for pinning:
+    data/quests.json (rebuilt 22:52 PT) is checked against the v3.9 graphs and is the source of truth."""
+    req = {}
+    for q in QV2:
+        if q['realm'] != t: continue
+        for w in [q.get('giver') or {}] + [o.get('where') or {} for o in q['objectives']]:
+            if w.get('ref') and '/' in w['ref']: req.setdefault(w['ref'], dict(kind=PUB2INT.get(w.get('nodeKind'), w.get('nodeKind')), zone=w.get('zone'), by=q['id']))
+    return req
+def quest_uses(t):
+    """node ref -> (quests given there, quests with a step there)"""
+    giv, step = collections.defaultdict(list), collections.defaultdict(list)
+    for q in QV2:
+        if q['realm'] != t: continue
+        g = (q.get('giver') or {}).get('ref')
+        if q.get('hook') and q['hook'].startswith(f'q{t}_'):
+            hk = q['hook'][len(f'q{t}_'):]; m_ = _re.match(r'(.+_\d+)_((?:npc|story|miniboss|deadend|treasure)_\d+x?)$', hk)
+            if m_ and not g: g = f"{m_.group(1)}/{m_.group(2)}"
+        if g and q['id'] not in giv[g]: giv[g].append(q['id'])
+        for o in q['objectives']:
+            r = (o.get('where') or {}).get('ref')
+            if r and r != g and q['id'] not in step[r]: step[r].append(q['id'])
+            if r and r != g: STEP_OBJ[(r, q['id'])] = o
+    return giv, step
+STEP_OBJ = {}   # (node ref, quest id) -> objective (v3.9.1: kill/fight steps become quest-gated fights)
+PIN_LOG = []
 def gen(t):
     rng = random.Random(4100 + t); spec = LAYOUT[t]
     rid = f'realm_{t}'; town = TOWNS[t-1]
@@ -170,7 +210,7 @@ def gen(t):
             u = dq.popleft()
             for v, w in A[u]:
                 if v not in dist or dist[u] + w < dist[v]: dist[v] = dist[u] + w; dq.append(v)
-        far = [k_ for k_ in NODE if dist.get(k_, 99) > RULES['maxHopsToInn']]
+        far = [k_ for k_ in NODE if dist.get(k_, 99) > max_hops(t)]
         if not far: break
         f = max(far, key=lambda k_: dist.get(k_, 99))
         # walk 2 hops back toward an inn and turn a plain node there into a campfire inn
@@ -178,21 +218,109 @@ def gen(t):
         c = next((x for x in cand if NODE[x]['kind'] in ('path', 'deadend', 'crossroads')), None)
         if c is None: c = f
         NODE[c]['kind'] = 'campfire'; NODE[c]['name'] = 'Campfire inn'; NODE[c]['zh'] = '营火'; NODE[c]['services'] = ["inn", "save", "potions"]
-    # events
+    # v3.9 pinning pass (before events): every referenced graph/node exists with the referenced kind and zone
+    req = required_refs(t); reqkeys = {tuple(k.split('/')) for k in req}
+    FREE = ('deadend', 'path', 'treasure', 'story', 'npc', 'miniboss')
+    def rename(old, new):
+        n = NODE.pop(old); n['id'] = new[1]; NODE[new] = n
+        for e in G[old[0]]['edges']:
+            if e['from'] == old[1]: e['from'] = new[1]
+            if e['to'] == old[1]: e['to'] = new[1]
+        for m in NODE.values():
+            if m.get('portal') == {"toGraph": old[0], "toNode": old[1]}: m['portal'] = {"toGraph": new[0], "toNode": new[1]}
+    deg = collections.Counter()
+    for g in G.values():
+        for e in g['edges']: deg[(g['id'], e['from'])] += 1; deg[(g['id'], e['to'])] += 1
+    for ref, r in sorted(req.items()):
+        key = tuple(ref.split('/'))
+        if key[0] not in G: PIN_LOG.append(f"{ref}: graph missing"); continue
+        n = NODE.get(key)
+        if n is None:
+            if r['kind'] not in FREE: PIN_LOG.append(f"{ref}: MISSING {r['kind']} (not pinned)"); continue
+            cands = [k_ for k_, m in NODE.items() if k_[0] == key[0] and m['kind'] in FREE and k_ not in reqkeys and (not r['zone'] or m.get('zone') == r['zone'])] \
+                or [k_ for k_, m in NODE.items() if k_[0] == key[0] and m['kind'] in FREE and k_ not in reqkeys]
+            if not cands: PIN_LOG.append(f"{ref}: MISSING, no candidate"); continue
+            pref = {r['kind']: 0, 'deadend': 1, 'story': 2, 'npc': 2, 'treasure': 3, 'miniboss': 3, 'path': 4}
+            c = min(cands, key=lambda k_: (pref.get(NODE[k_]['kind'], 5), -(deg[k_] == 1), k_[1]))
+            NODE[c]['kind'] = r['kind']; rename(c, key); PIN_LOG.append(f"{ref}: renamed {c[1]} -> {key[1]} ({r['kind']})"); continue
+        if n['kind'] == r['kind'] or (r['kind'] == 'portal' and n.get('portal')) or (r['kind'] == 'town' and n['kind'] == 'village'): continue
+        if n['kind'] in FREE and r['kind'] in FREE:
+            PIN_LOG.append(f"{ref}: retyped {n['kind']} -> {r['kind']} (for {r['by']})"); n['kind'] = r['kind']
+        else: PIN_LOG.append(f"{ref}: is {n['kind']}, quest says {r['kind']} (kept; events attached)")
+    # v3.9.1: add villages until the density rule holds. New leaf node + one road edge off the main route; nothing existing is renamed or retyped.
+    def settlements(): return [k_ for k_, m in NODE.items() if k_[0] == rid and m['kind'] == 'town']
+    vk = sum(1 for k_ in settlements() if NODE[k_].get('village'))
+    while len(settlements()) < town_count(t, spec['nodes']):   # target from the layout node count (17, 25, 40 ... 200)
+        A = collections.defaultdict(set)
+        for e in G[rid]['edges']: A[e['from']].add(e['to']); A[e['to']].add(e['from'])
+        dist = {k_[1]: 0 for k_ in settlements()}; dq = collections.deque(dist)
+        while dq:
+            u = dq.popleft()
+            for v in A[u]:
+                if v not in dist: dist[v] = dist[u] + 1; dq.append(v)
+        gate_nodes = {e['from'] for e in G[rid]['edges'] if e.get('patrolGate')} | {e['to'] for e in G[rid]['edges'] if e.get('patrolGate')}
+        cand = [k_ for k_ in spine_nodes if k_[0] == rid and NODE[k_]['kind'] in ('path', 'crossroads') and k_ not in reqkeys and k_[1] not in gate_nodes]
+        if not cand: cand = [(rid, m['id']) for m in G[rid]['nodes'] if m['kind'] in ('path', 'crossroads') and (rid, m['id']) not in reqkeys and m['id'] not in gate_nodes]
+        if not cand: PIN_LOG.append(f"{rid}: no spot for an extra village"); break
+        att = max(cand, key=lambda k_: (dist.get(k_[1], 0), k_[1]))
+        vk += 1; vid = (rid, f"village_{vk}x")
+        NODE[vid] = dict(id=vid[1], kind='town', name=f"{town['en']} village {vk}", zh=f"{town['zh']}村{vk}", x=0, y=0, zone=NODE[att]['zone'],
+                         services=["inn", "save", "shop"], village={"shops": ["items"], "note": "v3.9.1 density village: inn + item shop (Feathers)"})
+        G[rid]['nodes'].append(NODE[vid]); ecnt[rid] += 1
+        G[rid]['edges'].append(dict(id=f"v{vk}x", **{'from': att[1], 'to': vid[1]}, danger=0, steps=1, kind='road'))
+        PIN_LOG.append(f"{rid}: added {vid[1]} off {att[1]} (main route, {dist.get(att[1])} hops from the nearest settlement)")
+    for (gid, nid), n in NODE.items():
+        if n['kind'] == 'npc': n['name'], n['zh'] = 'Traveller', '旅人'
+        if n['kind'] == 'story': n['name'], n['zh'] = 'Story spot', '故事点'
+        if n['kind'] == 'miniboss': n['name'], n['zh'] = 'Mini-boss lair', '小头目'
+    # events (v3.9: npc nodes are quest hooks reconciled with data/quests.json, or ambient NPCs)
+    GIV, STEP = quest_uses(t)
+    def npc_events(t, gid, nid, eid, hook=True):
+        ref = f"{gid}/{nid}"; q = f"q{t}_{gid}_{nid}"; giv, st = GIV.get(ref, []), STEP.get(ref, [])
+        h = {"id": q, "giver": ref, "turnIn": ref}
+        if giv or st:
+            h |= {"status": "quest", "quests": giv + [x for x in st if x not in giv], "offers": giv}
+            if hook or giv: HOOKS.append(h)
+            out = []
+            for i, qid in enumerate(giv):
+                EVG.append({"id": f"{eid}.offer_{qid}", "type": "quest_offer", "repeat": {"mode": "once"}, "quest": qid, "npc": "traveller"}); out.append({"event": f"{eid}.offer_{qid}"})
+            for qid in st:
+                if qid in giv: continue
+                ob = STEP_OBJ.get((ref, qid), {}); oo = ob.get('objective') or {}
+                if oo.get('enemies') and (oo.get('type') == 'kill' or oo.get('desyType') == 'fight'):
+                    EVG.append({"id": f"{eid}.fight_{qid}", "type": "miniboss", "repeat": {"mode": "once"}, "requires": [{"questActive": qid}],
+                                "enemies": [PROTO.get(x, x) for x in oo['enemies']][:3], "quest": qid, "setFlags": [f"{qid}.{ob.get('id', 'step')}"]})
+                    out.append({"event": f"{eid}.fight_{qid}"}); continue
+                EVG.append({"id": f"{eid}.step_{qid}", "type": "story", "repeat": {"mode": "once"}, "requires": [{"questActive": qid}],
+                            "lines": [{"speaker": "traveller", "en": f"(quest step for {qid}: scene from data/dialogue)"}]}); out.append({"event": f"{eid}.step_{qid}"})
+            return out + ([{"event": "ambient"}] if hook else [])
+        h |= {"status": "ambient", "quests": [], "banter": f"{eid}.banter"}; HOOKS.append(h)
+        EVG.append({"id": f"{eid}.banter", "type": "story", "repeat": {"mode": "always"}, "lines": [{"speaker": "traveller", "en": "(one-line ambient banter to write)"}]})
+        return [{"event": f"{eid}.banter"}]
     for (gid, nid), n in NODE.items():
         k = n['kind']
         if k in ('path', 'crossroads'): n['onArrive'] = PATH
         elif k == 'treasure': n['onArrive'] = [{"event": 'chest_fine' if lv_of[gid] >= 2 else 'chest_normal'}, {"event": "nothing"}]
         elif k in ('story', 'deadend', 'npc', 'miniboss'):
             eid = f"{gid}.{nid}"
-            if k == 'story': EVG.append({"id": eid, "type": "story", "repeat": {"mode": "once"}, "lines": [{"speaker": "panda", "zh": "（故事待写）", "en": "(story beat to write)"}]}); n['onArrive'] = [{"event": eid}]
+            if k == 'story': EVG.append({"id": eid, "type": "story", "repeat": {"mode": "once"}, "lines": [{"speaker": "xiaolong", "en": "(story beat to write)"}]}); n['onArrive'] = [{"event": eid}]
             elif k == 'deadend': n['onArrive'] = [{"pick": [{"event": "nothing", "weight": 80}, {"event": "find_honey", "weight": 20}]}]
             elif k == 'npc':
-                q = f"q{t}_{gid}_{nid}"; HOOKS.append({"id": q, "status": "hook", "type": "fetch", "titleZh": "（任务待写）", "titleEn": "(quest to write)", "giver": f"{gid}/{nid}", "target": {"item": None, "n": 1}, "turnIn": f"{gid}/{nid}", "rewardG": 2, "rewardItem": None})
-                EVG.append({"id": eid, "type": "quest_offer", "repeat": {"mode": "once"}, "quest": q, "npc": "traveller"}); n['onArrive'] = [{"event": eid}, {"event": "ambient"}]
+                n['onArrive'] = npc_events(t, gid, nid, eid)
             else:
                 el = next(e['id'] for e in ENEM.values() if e['role'] == 'elite' and e['realm'] == str(t))
                 EVG.append({"id": eid, "type": "miniboss", "repeat": {"mode": "once"}, "enemies": [PROTO.get(el, el)], "reward": {"goldG": 2, "item": "honey"}, "setFlags": [f"{eid}.beaten"]}); n['onArrive'] = [{"event": eid}, {"event": "nothing"}]
+    for (gid, nid), n in NODE.items():
+        if n['kind'] != 'npc' and (GIV.get(f"{gid}/{nid}") or STEP.get(f"{gid}/{nid}")):
+            n['onArrive'] = npc_events(t, gid, nid, f"{gid}.{nid}", hook=False) + list(n.get('onArrive') or [])
+    # v3.9.1: free Return Feather in the realm-boss chest of the realms listed in world_rules.realmBossFeather
+    rbf = RULES.get('realmBossFeather', {})
+    if t in rbf.get('realms', []):
+        for z in zones:
+            if z['bossKind'] == 'realmboss':
+                bk = tuple(z['boss'].split('/')); eid = f"{bk[0]}.{bk[1]}.chest_feather"
+                EVG.append({"id": eid, "type": "item", "repeat": {"mode": "once"}, "item": "feather", "qty": rbf.get('qty', 1)})
+                NODE[bk]['onArrive'] = [{"event": eid}] + list(NODE[bk].get('onArrive') or [])
     # beeline step sizing: per zone, battle edges on the shortest path (zone start -> approach inn) share ~beelineBattleTarget rolls
     return G, zones, NODE, lv_of, start
 
@@ -303,7 +431,10 @@ def main():
         if e.get('from') == 'realm_1' and e['kind'] != 'portal': e['cond'] = {"bossDefeated": "warren"}
     for e in world['edges']:
         if e['kind'] == 'portal' and e['to']['graph'] != 'realm_1': e['to']['node'] = 'entry_town'
+    qfile['_note'] = MW.QW_NOTE if hasattr(MW, 'QW_NOTE') else qfile.get('_note')
     dump('graphs/world.json', world); dump('zones.json', zfile); dump('quests_world.json', qfile)
+    print('PIN_LOG:'); [print('  ', l) for l in PIN_LOG]
+    hs = qfile['questHooks']; print('hooks', len(hs), 'quest', sum(h['status'] == 'quest' for h in hs), 'ambient', sum(h['status'] == 'ambient' for h in hs))
     dump('layout_targets.json', {"_note": "Per-realm layout targets used by build/world/world_gen.py. nodes = overworld + dungeon levels (town hub screens are not graphs).", "version": VERSION,
                                  "realms": {str(t): v for t, v in LAYOUT.items()}, "realm1": {"nodes": 17, "authored": True}})
     graphs = sorted(f[:-5] for f in os.listdir(f'{OUT}/graphs') if f.endswith('.json'))

@@ -18,13 +18,15 @@
   "map": "bg_map_goblin_caves_3",
   "battle": "bg_battle_r4"
  },
+ "edgeIdxMax": 18,
+ "aspect": 3.515,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "goblin_school",
    "title": {
     "zh": "上楼梯",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 226,
-   "y": 360,
+   "x": 0.1788,
+   "y": 0.5,
    "zone": "goblin_school",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 391,
-   "y": 250,
+   "x": 0.3068,
+   "y": 0.2,
    "zone": "goblin_school",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "waypoint",
-   "x": 557,
-   "y": 250,
+   "x": 0.4356,
+   "y": 0.2,
    "zone": "goblin_school",
    "title": {
     "zh": "小路",
@@ -71,8 +73,8 @@
    "id": "inn_1",
    "idx": 4,
    "kind": "inn",
-   "x": 723,
-   "y": 195,
+   "x": 0.5644,
+   "y": 0.05,
    "zone": "goblin_school",
    "title": {
     "zh": "营地客栈",
@@ -90,21 +92,22 @@
    "id": "boss_4",
    "idx": 5,
    "kind": "boss",
-   "x": 889,
-   "y": 195,
+   "x": 0.6932,
+   "y": 0.05,
    "zone": "goblin_school",
    "title": {
     "zh": "哥布林大王",
     "en": "Goblin King (the 'Headmaster')"
    },
-   "boss": "goblin_school"
+   "boss": "goblin_school",
+   "fog": "landmark"
   },
   {
    "id": "treasure_1",
    "idx": 6,
    "kind": "chest",
-   "x": 391,
-   "y": 360,
+   "x": 0.3068,
+   "y": 0.5,
    "zone": "goblin_school",
    "title": {
     "zh": "宝藏",
@@ -115,8 +118,8 @@
    "id": "path_4",
    "idx": 7,
    "kind": "fork",
-   "x": 723,
-   "y": 305,
+   "x": 0.5644,
+   "y": 0.35,
    "zone": "goblin_school",
    "title": {
     "zh": "弯路",
@@ -127,8 +130,8 @@
    "id": "deadend_1",
    "idx": 8,
    "kind": "waypoint",
-   "x": 889,
-   "y": 305,
+   "x": 0.6932,
+   "y": 0.35,
    "zone": "goblin_school",
    "title": {
     "zh": "死胡同",
@@ -139,8 +142,8 @@
    "id": "story_1",
    "idx": 9,
    "kind": "story",
-   "x": 1054,
-   "y": 305,
+   "x": 0.8212,
+   "y": 0.35,
    "zone": "goblin_school",
    "title": {
     "zh": "故事点",
@@ -151,8 +154,8 @@
    "id": "path_5",
    "idx": 10,
    "kind": "waypoint",
-   "x": 557,
-   "y": 360,
+   "x": 0.4356,
+   "y": 0.5,
    "zone": "goblin_school",
    "title": {
     "zh": "弯路",
@@ -163,8 +166,8 @@
    "id": "deadend_2",
    "idx": 11,
    "kind": "inn",
-   "x": 723,
-   "y": 415,
+   "x": 0.5644,
+   "y": 0.65,
    "zone": "goblin_school",
    "title": {
     "zh": "营火",
@@ -182,8 +185,8 @@
    "id": "treasure_2",
    "idx": 12,
    "kind": "chest",
-   "x": 889,
-   "y": 415,
+   "x": 0.6932,
+   "y": 0.65,
    "zone": "goblin_school",
    "title": {
     "zh": "宝藏",
@@ -194,8 +197,8 @@
    "id": "path_6",
    "idx": 13,
    "kind": "waypoint",
-   "x": 391,
-   "y": 470,
+   "x": 0.3068,
+   "y": 0.8,
    "zone": "goblin_school",
    "title": {
     "zh": "弯路",
@@ -206,8 +209,8 @@
    "id": "treasure_3",
    "idx": 14,
    "kind": "chest",
-   "x": 557,
-   "y": 470,
+   "x": 0.4356,
+   "y": 0.8,
    "zone": "goblin_school",
    "title": {
     "zh": "宝藏",
@@ -218,8 +221,8 @@
    "id": "path_7",
    "idx": 15,
    "kind": "waypoint",
-   "x": 1054,
-   "y": 415,
+   "x": 0.8212,
+   "y": 0.65,
    "zone": "goblin_school",
    "title": {
     "zh": "弯路",
@@ -230,8 +233,8 @@
    "id": "treasure_4",
    "idx": 16,
    "kind": "chest",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "goblin_school",
    "title": {
     "zh": "宝藏",
@@ -242,8 +245,8 @@
    "id": "treasure_5",
    "idx": 17,
    "kind": "inn",
-   "x": 723,
-   "y": 525,
+   "x": 0.5644,
+   "y": 0.95,
    "zone": "goblin_school",
    "title": {
     "zh": "营火",
@@ -261,8 +264,8 @@
    "id": "treasure_6",
    "idx": 18,
    "kind": "chest",
-   "x": 889,
-   "y": 525,
+   "x": 0.6932,
+   "y": 0.95,
    "zone": "goblin_school",
    "title": {
     "zh": "宝藏",
@@ -278,7 +281,8 @@
    "to": {
     "graph": "goblin_caves_2",
     "node": "stairs_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -287,7 +291,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -296,7 +301,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -305,7 +311,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -314,7 +321,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -324,7 +332,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -333,7 +342,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e7",
@@ -342,7 +352,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e8",
@@ -351,7 +362,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e9",
@@ -360,7 +372,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e10",
@@ -369,7 +382,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 10
   },
   {
    "id": "e11",
@@ -378,7 +392,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
    "id": "e12",
@@ -387,7 +402,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   },
   {
    "id": "e13",
@@ -396,7 +412,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 13
   },
   {
    "id": "e14",
@@ -405,7 +422,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 14
   },
   {
    "id": "e15",
@@ -414,7 +432,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 15
   },
   {
    "id": "e16",
@@ -423,7 +442,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 16
   },
   {
    "id": "e17",
@@ -432,7 +452,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 17
   },
   {
    "id": "e18",
@@ -441,7 +462,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 18
   }
  ],
  "events": [
@@ -627,6 +649,18 @@
   },
   {
    "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q4_homework"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
    "node": "story_1",
    "on": "enter",
    "once": true,
@@ -823,24 +857,22 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ],
   "goblin_caves_3.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

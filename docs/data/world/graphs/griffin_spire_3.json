@@ -18,13 +18,15 @@
   "map": "bg_map_griffin_spire_3",
   "battle": "bg_battle_r7"
  },
+ "edgeIdxMax": 6,
+ "aspect": 10.545,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "上楼梯",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 350,
-   "y": 360,
+   "x": 0.275,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 640,
-   "y": 305,
+   "x": 0.5,
+   "y": 0.05,
    "zone": "griffin_summit",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "inn_1",
    "idx": 3,
    "kind": "inn",
-   "x": 930,
-   "y": 305,
+   "x": 0.725,
+   "y": 0.05,
    "zone": "griffin_summit",
    "title": {
     "zh": "营地客栈",
@@ -78,21 +80,22 @@
    "id": "boss_7",
    "idx": 4,
    "kind": "boss",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "griffin_summit",
    "title": {
     "zh": "狮鹫王",
     "en": "Griffin King"
    },
-   "boss": "griffin_summit"
+   "boss": "griffin_summit",
+   "fog": "landmark"
   },
   {
    "id": "path_3",
    "idx": 5,
    "kind": "waypoint",
-   "x": 640,
-   "y": 415,
+   "x": 0.5,
+   "y": 0.95,
    "zone": "griffin_summit",
    "title": {
     "zh": "弯路",
@@ -103,8 +106,8 @@
    "id": "npc_1",
    "idx": 6,
    "kind": "npc",
-   "x": 930,
-   "y": 415,
+   "x": 0.725,
+   "y": 0.95,
    "zone": "griffin_summit",
    "title": {
     "zh": "旅人",
@@ -120,7 +123,8 @@
    "to": {
     "graph": "griffin_spire_2",
     "node": "stairs_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -129,7 +133,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -138,7 +143,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -147,7 +153,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -157,7 +164,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -166,7 +174,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -175,7 +184,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   }
  ],
  "events": [
@@ -286,10 +296,13 @@
    "node": "npc_1",
    "on": "enter",
    "once": true,
-   "outcome": "quest_offer",
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_griffin_chick"
+   },
    "do": [
     {
-     "offerQuest": "q7_griffin_spire_3_npc_1"
+     "dialogue": "griffin_spire_3.npc_1.step_q7_griffin_chick"
     }
    ]
   },
@@ -309,17 +322,28 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "griffin_spire_3.npc_1.step_q7_griffin_chick": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_griffin_chick: scene from data/dialogue)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

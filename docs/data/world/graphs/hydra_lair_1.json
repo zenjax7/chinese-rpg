@@ -18,13 +18,15 @@
   "map": "bg_map_hydra_lair_1",
   "battle": "bg_battle_r5"
  },
+ "edgeIdxMax": 34,
+ "aspect": 2.172,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "地牢口",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 165,
-   "y": 360,
+   "x": 0.1315,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "campfire_1",
    "idx": 2,
    "kind": "inn",
-   "x": 271,
-   "y": 195,
+   "x": 0.2137,
+   "y": 0.2219,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "半路营火",
@@ -67,8 +69,8 @@
    "id": "path_2",
    "idx": 3,
    "kind": "fork",
-   "x": 376,
-   "y": 195,
+   "x": 0.2952,
+   "y": 0.2219,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "小路",
@@ -79,8 +81,8 @@
    "id": "stairs_2",
    "idx": 4,
    "kind": "stairs_down",
-   "x": 482,
-   "y": 93,
+   "x": 0.3774,
+   "y": 0.05,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "下楼梯",
@@ -91,8 +93,8 @@
    "id": "miniboss_1",
    "idx": 5,
    "kind": "miniboss",
-   "x": 271,
-   "y": 305,
+   "x": 0.2137,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "小头目",
@@ -103,8 +105,8 @@
    "id": "treasure_1",
    "idx": 6,
    "kind": "chest",
-   "x": 271,
-   "y": 415,
+   "x": 0.2137,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -115,8 +117,8 @@
    "id": "path_3",
    "idx": 7,
    "kind": "waypoint",
-   "x": 376,
-   "y": 305,
+   "x": 0.2952,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -127,8 +129,8 @@
    "id": "deadend_1",
    "idx": 8,
    "kind": "waypoint",
-   "x": 482,
-   "y": 200,
+   "x": 0.3774,
+   "y": 0.2303,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "死胡同",
@@ -139,8 +141,8 @@
    "id": "deadend_2",
    "idx": 9,
    "kind": "waypoint",
-   "x": 482,
-   "y": 307,
+   "x": 0.3774,
+   "y": 0.4107,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "死胡同",
@@ -151,8 +153,8 @@
    "id": "treasure_2",
    "idx": 10,
    "kind": "chest",
-   "x": 482,
-   "y": 413,
+   "x": 0.3774,
+   "y": 0.5893,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -163,8 +165,8 @@
    "id": "treasure_3",
    "idx": 11,
    "kind": "chest",
-   "x": 587,
-   "y": 250,
+   "x": 0.4589,
+   "y": 0.3146,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -175,8 +177,8 @@
    "id": "path_4",
    "idx": 12,
    "kind": "waypoint",
-   "x": 376,
-   "y": 415,
+   "x": 0.2952,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -187,8 +189,8 @@
    "id": "npc_1",
    "idx": 13,
    "kind": "npc",
-   "x": 482,
-   "y": 520,
+   "x": 0.3774,
+   "y": 0.7697,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "旅人",
@@ -199,8 +201,8 @@
    "id": "path_5",
    "idx": 14,
    "kind": "waypoint",
-   "x": 376,
-   "y": 525,
+   "x": 0.2952,
+   "y": 0.7781,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -211,8 +213,8 @@
    "id": "path_6",
    "idx": 15,
    "kind": "waypoint",
-   "x": 482,
-   "y": 627,
+   "x": 0.3774,
+   "y": 0.95,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -223,8 +225,8 @@
    "id": "path_7",
    "idx": 16,
    "kind": "waypoint",
-   "x": 587,
-   "y": 360,
+   "x": 0.4589,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -235,8 +237,8 @@
    "id": "path_8",
    "idx": 17,
    "kind": "waypoint",
-   "x": 693,
-   "y": 250,
+   "x": 0.5411,
+   "y": 0.3146,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -247,8 +249,8 @@
    "id": "npc_2",
    "idx": 18,
    "kind": "npc",
-   "x": 798,
-   "y": 305,
+   "x": 0.6226,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "旅人",
@@ -259,8 +261,8 @@
    "id": "path_9",
    "idx": 19,
    "kind": "waypoint",
-   "x": 904,
-   "y": 305,
+   "x": 0.7048,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -271,8 +273,8 @@
    "id": "treasure_4",
    "idx": 20,
    "kind": "chest",
-   "x": 1009,
-   "y": 195,
+   "x": 0.7863,
+   "y": 0.2219,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -283,8 +285,8 @@
    "id": "path_10",
    "idx": 21,
    "kind": "waypoint",
-   "x": 1009,
-   "y": 305,
+   "x": 0.7863,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -295,8 +297,8 @@
    "id": "path_11",
    "idx": 22,
    "kind": "inn",
-   "x": 1115,
-   "y": 305,
+   "x": 0.8685,
+   "y": 0.4073,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "营火",
@@ -314,8 +316,8 @@
    "id": "treasure_5",
    "idx": 23,
    "kind": "chest",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -326,8 +328,8 @@
    "id": "path_12",
    "idx": 24,
    "kind": "waypoint",
-   "x": 587,
-   "y": 470,
+   "x": 0.4589,
+   "y": 0.6854,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -338,8 +340,8 @@
    "id": "path_13",
    "idx": 25,
    "kind": "waypoint",
-   "x": 693,
-   "y": 360,
+   "x": 0.5411,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -350,8 +352,8 @@
    "id": "treasure_6",
    "idx": 26,
    "kind": "chest",
-   "x": 798,
-   "y": 415,
+   "x": 0.6226,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -362,8 +364,8 @@
    "id": "path_14",
    "idx": 27,
    "kind": "waypoint",
-   "x": 904,
-   "y": 415,
+   "x": 0.7048,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "弯路",
@@ -374,8 +376,8 @@
    "id": "path_15",
    "idx": 28,
    "kind": "inn",
-   "x": 1009,
-   "y": 415,
+   "x": 0.7863,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "营火",
@@ -393,8 +395,8 @@
    "id": "treasure_7",
    "idx": 29,
    "kind": "chest",
-   "x": 1115,
-   "y": 415,
+   "x": 0.8685,
+   "y": 0.5927,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -405,8 +407,8 @@
    "id": "treasure_8",
    "idx": 30,
    "kind": "inn",
-   "x": 693,
-   "y": 470,
+   "x": 0.5411,
+   "y": 0.6854,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "营火",
@@ -424,8 +426,8 @@
    "id": "treasure_9",
    "idx": 31,
    "kind": "chest",
-   "x": 271,
-   "y": 525,
+   "x": 0.2137,
+   "y": 0.7781,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "宝藏",
@@ -436,8 +438,8 @@
    "id": "npc_3",
    "idx": 32,
    "kind": "npc",
-   "x": 1009,
-   "y": 525,
+   "x": 0.7863,
+   "y": 0.7781,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "旅人",
@@ -453,7 +455,8 @@
    "to": {
     "graph": "realm_5",
     "node": "portal_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_stairs_2",
@@ -462,7 +465,8 @@
    "to": {
     "graph": "hydra_lair_2",
     "node": "stairs_1"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "e1",
@@ -471,7 +475,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e2",
@@ -480,7 +485,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e3",
@@ -489,7 +495,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e4",
@@ -498,7 +505,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e5",
@@ -507,7 +515,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e6",
@@ -516,7 +525,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e7",
@@ -525,7 +535,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e8",
@@ -534,7 +545,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e9",
@@ -544,7 +556,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 10
   },
   {
    "id": "e10",
@@ -553,7 +566,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
    "id": "e11",
@@ -562,7 +576,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   },
   {
    "id": "e12",
@@ -571,7 +586,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 13
   },
   {
    "id": "e13",
@@ -580,7 +596,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 14
   },
   {
    "id": "e14",
@@ -589,7 +606,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 15
   },
   {
    "id": "e15",
@@ -598,7 +616,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 16
   },
   {
    "id": "e16",
@@ -607,7 +626,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 17
   },
   {
    "id": "e17",
@@ -616,7 +636,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 18
   },
   {
    "id": "e18",
@@ -625,7 +646,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 19
   },
   {
    "id": "e19",
@@ -634,7 +656,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 20
   },
   {
    "id": "e20",
@@ -643,7 +666,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 21
   },
   {
    "id": "e21",
@@ -652,7 +676,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 22
   },
   {
    "id": "e22",
@@ -661,7 +686,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 23
   },
   {
    "id": "e23",
@@ -670,7 +696,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 24
   },
   {
    "id": "e24",
@@ -679,7 +706,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 25
   },
   {
    "id": "e25",
@@ -688,7 +716,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 26
   },
   {
    "id": "e26",
@@ -697,7 +726,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 27
   },
   {
    "id": "e27",
@@ -706,7 +736,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 28
   },
   {
    "id": "e28",
@@ -715,7 +746,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 29
   },
   {
    "id": "e29",
@@ -724,7 +756,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 30
   },
   {
    "id": "e30",
@@ -733,7 +766,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 31
   },
   {
    "id": "e31",
@@ -742,7 +776,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 32
   },
   {
    "id": "e32",
@@ -751,7 +786,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 33
   },
   {
    "id": "e33",
@@ -760,7 +796,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 34
   }
  ],
  "events": [
@@ -838,6 +875,31 @@
    "on": "enter",
    "once": true,
    "outcome": "miniboss",
+   "cond": {
+    "questActive": "q5_lost_fishers"
+   },
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "swamp_wisp",
+       "bog_lizard"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q5_lost_fishers"
+    },
+    {
+     "setFlag": "q5_lost_fishers.s4"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
    "do": [
     {
      "fight": {
@@ -862,7 +924,7 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
+   "id": "miniboss_1.3",
    "node": "miniboss_1",
    "on": "enter",
    "once": false,
@@ -1053,12 +1115,27 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q5_hydra_lair_1_npc_1"
+     "offerQuest": "q5_lost_fishers"
     }
    ]
   },
   {
    "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q5_invitations"
+   },
+   "do": [
+    {
+     "dialogue": "hydra_lair_1.npc_1.step_q5_invitations"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.3",
    "node": "npc_1",
    "on": "enter",
    "once": false,
@@ -1210,10 +1287,13 @@
    "node": "npc_2",
    "on": "enter",
    "once": true,
-   "outcome": "quest_offer",
+   "outcome": "story",
+   "cond": {
+    "questActive": "q5_lost_fishers"
+   },
    "do": [
     {
-     "offerQuest": "q5_hydra_lair_1_npc_2"
+     "dialogue": "hydra_lair_1.npc_2.step_q5_lost_fishers"
     }
    ]
   },
@@ -1504,10 +1584,13 @@
    "node": "npc_3",
    "on": "enter",
    "once": true,
-   "outcome": "quest_offer",
+   "outcome": "story",
+   "cond": {
+    "questActive": "q5_lost_fishers"
+   },
    "do": [
     {
-     "offerQuest": "q5_hydra_lair_1_npc_3"
+     "dialogue": "hydra_lair_1.npc_3.step_q5_lost_fishers"
     }
    ]
   },
@@ -1527,17 +1610,40 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "hydra_lair_1.npc_1.step_q5_invitations": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_invitations: scene from data/dialogue)"
+   }
+  ],
+  "hydra_lair_1.npc_2.step_q5_lost_fishers": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_lost_fishers: scene from data/dialogue)"
+   }
+  ],
+  "hydra_lair_1.npc_3.step_q5_lost_fishers": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_lost_fishers: scene from data/dialogue)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

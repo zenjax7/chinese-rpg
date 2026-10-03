@@ -43,10 +43,10 @@
   "item_id": "return_feather",
   "name_en": "Return Feather",
   "name_zh": "回城羽毛",
-  "effect": "Warp to the last inn you used (or the location entrance inn); map only, not in battle or the boss room",
+  "effect": "Fly to the last inn you used or any visited town/village; anywhere on the map, not in battle or the boss room (v3.9)",
   "battle_use": "no",
-  "price": "1 × G",
+  "price": "2 × G",
   "carry_limit": "3",
-  "sources": "shop; normal/elite chest (5%); 1 free in the tutorial"
+  "sources": "town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1)"
  }
 ]

@@ -11,20 +11,22 @@
  },
  "status": "reference",
  "entry": "stairs_1",
- "idxMax": 14,
+ "idxMax": 12,
  "levels": 1,
  "optional": true,
  "background": {
   "map": "bg_map_old_mine_1",
   "battle": "bg_battle_r6"
  },
+ "edgeIdxMax": 13,
+ "aspect": 3.515,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "gloomy_village",
    "title": {
     "zh": "楼梯",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 253,
-   "y": 360,
+   "x": 0.23,
+   "y": 0.5,
    "zone": "gloomy_village",
    "title": {
     "zh": "暗厅",
@@ -47,8 +49,8 @@
    "id": "treasure_1",
    "idx": 2,
    "kind": "chest",
-   "x": 447,
-   "y": 250,
+   "x": 0.41,
+   "y": 0.2,
    "zone": "gloomy_village",
    "title": {
     "zh": "宝库",
@@ -59,8 +61,8 @@
    "id": "path_2",
    "idx": 3,
    "kind": "waypoint",
-   "x": 447,
-   "y": 360,
+   "x": 0.41,
+   "y": 0.5,
    "zone": "gloomy_village",
    "title": {
     "zh": "弯路",
@@ -71,8 +73,8 @@
    "id": "path_3",
    "idx": 4,
    "kind": "waypoint",
-   "x": 640,
-   "y": 250,
+   "x": 0.59,
+   "y": 0.05,
    "zone": "gloomy_village",
    "title": {
     "zh": "弯路",
@@ -83,8 +85,8 @@
    "id": "treasure_2",
    "idx": 5,
    "kind": "chest",
-   "x": 833,
-   "y": 250,
+   "x": 0.77,
+   "y": 0.2,
    "zone": "gloomy_village",
    "title": {
     "zh": "宝藏",
@@ -95,8 +97,8 @@
    "id": "deadend_1",
    "idx": 6,
    "kind": "miniboss",
-   "x": 640,
-   "y": 360,
+   "x": 0.59,
+   "y": 0.35,
    "zone": "gloomy_village",
    "title": {
     "zh": "小头目",
@@ -106,88 +108,9 @@
   {
    "id": "story_1",
    "idx": 7,
-   "kind": "story",
-   "x": 1027,
-   "y": 305,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "故事点",
-    "en": "Story spot"
-   }
-  },
-  {
-   "id": "npc_1",
-   "idx": 8,
-   "kind": "npc",
-   "x": 447,
-   "y": 470,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "旅人",
-    "en": "Traveller"
-   }
-  },
-  {
-   "id": "path_4",
-   "idx": 9,
    "kind": "inn",
-   "x": 640,
-   "y": 470,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "营火",
-    "en": "Campfire inn"
-   },
-   "campfire": true,
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "potions"
-   ]
-  },
-  {
-   "id": "path_5",
-   "idx": 10,
-   "kind": "waypoint",
-   "x": 833,
-   "y": 360,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "deadend_2",
-   "idx": 11,
-   "kind": "waypoint",
-   "x": 833,
-   "y": 470,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "死胡同",
-    "en": "Dead end"
-   }
-  },
-  {
-   "id": "path_6",
-   "idx": 12,
-   "kind": "waypoint",
-   "x": 1027,
-   "y": 415,
-   "zone": "gloomy_village",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "deadend_3",
-   "idx": 13,
-   "kind": "inn",
-   "x": 1220,
-   "y": 305,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "gloomy_village",
    "title": {
     "zh": "营火",
@@ -203,14 +126,69 @@
   },
   {
    "id": "story_2",
-   "idx": 14,
+   "idx": 8,
    "kind": "story",
-   "x": 1220,
-   "y": 415,
+   "x": 0.41,
+   "y": 0.8,
    "zone": "gloomy_village",
    "title": {
     "zh": "故事点",
     "en": "Story spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 9,
+   "kind": "inn",
+   "x": 0.59,
+   "y": 0.65,
+   "zone": "gloomy_village",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.95,
+   "zone": "gloomy_village",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.5,
+   "zone": "gloomy_village",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 12,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.8,
+   "zone": "gloomy_village",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
    }
   }
  ],
@@ -222,7 +200,8 @@
    "to": {
     "graph": "realm_6",
     "node": "portal_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -231,7 +210,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -240,7 +220,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -249,7 +230,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -258,7 +240,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -267,7 +250,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -276,7 +260,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e7",
@@ -285,80 +270,69 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e8",
    "from": "path_1",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "treasure_1",
    "to": "npc_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
-   "id": "e9",
-   "from": "npc_1",
+   "id": "e10",
+   "from": "story_2",
    "to": "path_4",
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 10
   },
   {
-   "id": "e10",
+   "id": "e11",
    "from": "path_4",
    "to": "path_5",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
-   "id": "e11",
+   "id": "e12",
    "from": "path_5",
    "to": "deadend_2",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   },
   {
-   "id": "e12",
+   "id": "e13",
    "from": "deadend_2",
    "to": "path_3",
    "kind": "path",
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
-  },
-  {
-   "id": "e13",
-   "from": "treasure_2",
-   "to": "path_6",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "tunnel"
-  },
-  {
-   "id": "e14",
-   "from": "path_6",
-   "to": "deadend_3",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "tunnel"
-  },
-  {
-   "id": "e15",
-   "from": "path_6",
-   "to": "story_2",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "tunnel"
+   "note": "loop",
+   "idx": 13
   }
  ],
  "events": [
@@ -510,6 +484,32 @@
    "on": "enter",
    "once": true,
    "outcome": "miniboss",
+   "cond": {
+    "questActive": "q6_old_mine"
+   },
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "zombie",
+       "zombie",
+       "zombie_knight"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q6_old_mine"
+    },
+    {
+     "setFlag": "q6_old_mine.s3"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.2",
+   "node": "deadend_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
    "do": [
     {
      "fight": {
@@ -534,7 +534,7 @@
    ]
   },
   {
-   "id": "deadend_1.2",
+   "id": "deadend_1.3",
    "node": "deadend_1",
    "on": "enter",
    "once": false,
@@ -542,14 +542,29 @@
    "do": []
   },
   {
-   "id": "story_1.1",
-   "node": "story_1",
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q6_old_mine"
+   },
+   "do": [
+    {
+     "dialogue": "old_mine_1.story_2.step_q6_old_mine"
+    }
+   ]
+  },
+  {
+   "id": "story_2.2",
+   "node": "story_2",
    "on": "enter",
    "once": true,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "old_mine_1.story_1"
+     "dialogue": "old_mine_1.story_2"
     }
    ]
   },
@@ -561,19 +576,41 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q6_old_mine_1_npc_1"
+     "offerQuest": "q6_old_mine"
     }
    ]
   },
   {
-   "id": "npc_1.2",
-   "node": "npc_1",
+   "id": "path_4.1",
+   "node": "path_4",
    "on": "enter",
-   "once": false,
-   "outcome": "story",
-   "do": [
+   "pick": [
     {
-     "dialogue": "ambient"
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
     }
    ]
   },
@@ -634,82 +671,39 @@
      ]
     }
    ]
-  },
-  {
-   "id": "path_6.1",
-   "node": "path_6",
-   "on": "enter",
-   "pick": [
-    {
-     "weight": 70,
-     "outcome": "nothing",
-     "once": false,
-     "do": []
-    },
-    {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
-     "outcome": "item",
-     "cooldown": 4,
-     "do": [
-      {
-       "giveItem": "honey",
-       "qty": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "story_2.1",
-   "node": "story_2",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "old_mine_1.story_2"
-    }
-   ]
   }
  ],
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
   ],
-  "old_mine_1.story_1": [
+  "old_mine_1.story_2.step_q6_old_mine": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
-    "en": "(story beat to write)"
+    "speaker": "traveller",
+    "en": "(quest step for q6_old_mine: scene from data/dialogue)"
    }
   ],
   "old_mine_1.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

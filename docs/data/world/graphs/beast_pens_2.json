@@ -18,13 +18,15 @@
   "map": "bg_map_beast_pens_2",
   "battle": "bg_battle_r8"
  },
+ "edgeIdxMax": 3,
+ "aspect": 10.545,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_down",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "楼梯",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 640,
-   "y": 360,
+   "x": 0.5,
+   "y": 0.5,
    "zone": "training_pits",
    "title": {
     "zh": "暗厅",
@@ -47,8 +49,8 @@
    "id": "treasure_1",
    "idx": 2,
    "kind": "chest",
-   "x": 1220,
-   "y": 305,
+   "x": 0.95,
+   "y": 0.05,
    "zone": "training_pits",
    "title": {
     "zh": "宝库",
@@ -59,8 +61,8 @@
    "id": "deadend_1",
    "idx": 3,
    "kind": "waypoint",
-   "x": 1220,
-   "y": 415,
+   "x": 0.95,
+   "y": 0.95,
    "zone": "training_pits",
    "title": {
     "zh": "死胡同",
@@ -76,7 +78,8 @@
    "to": {
     "graph": "beast_pens_1",
     "node": "stairs_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -85,7 +88,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -94,7 +98,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -103,7 +108,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   }
  ],
  "events": [
@@ -165,6 +171,21 @@
    "id": "deadend_1.1",
    "node": "deadend_1",
    "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_caged_beasts"
+   },
+   "do": [
+    {
+     "dialogue": "beast_pens_2.deadend_1.step_q8_caged_beasts"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.2",
+   "node": "deadend_1",
+   "on": "enter",
    "pick": [
     {
      "weight": 80,
@@ -189,17 +210,28 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "beast_pens_2.deadend_1.step_q8_caged_beasts": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_caged_beasts: scene from data/dialogue)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

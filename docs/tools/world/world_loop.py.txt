@@ -10,6 +10,51 @@
                 S['_wr'] = dict(pos=T.entry, last_inn=T.entry, cleared=set(), prog={}, pity=0, scripted=set(), visited={T.entry}, armed=True, last_fire={},
                                 visits=collections.Counter({T.entry: 1}), once=set(), qa=set(), qd=set(), items=collections.Counter(), safe_until={}, hops=0, enc=0)
             W = S['_wr']; W['enc'] = 0; W['armed'] = True
+            RF = RU['returnFeather']; fprice = max(1, round(opt.get('feather_G', RF['priceG'])*C.gold_per_enemy(t)))
+            if t == 1 and loc == 0: S['feather'] = opt.get('start_feathers', RF['start'])
+            fkeep = opt.get('feather_keep', {'saver': 2, 'spender': 1}.get(kid, 1))
+            def full_shop(k):     # v3.9: magic shop + smith only in towns (and villages if opt village_magic)
+                return T.N[k]['kind'] == 'town' or (T.N[k]['kind'] == 'village' and opt.get('village_magic', False))
+            def buy_feathers():
+                while S.get('feather', 0) < min(RF['carry'], fkeep) and S['gold'] - fprice >= reserve():
+                    S['gold'] -= fprice; S['feather'] = S.get('feather', 0) + 1
+                    R['feathers_bought'] = R.get('feathers_bought', 0) + 1; R['feather_gold'] = R.get('feather_gold', 0) + fprice
+            def shop_at(k):
+                if not opt.get('village_shop', True): return
+                if full_shop(k): shop()
+                buy_feathers()
+            def want_shop():
+                gear = [('weapon', C.gear_prices(t)[0]), ('armor', C.gear_prices(t)[1]), ('shield', C.gear_prices(t)[2])] if t > 1 else [('shield', 35)]
+                miss = [(sl, pr) for sl, pr in gear if sl not in owned_gear]
+                if miss and S['gold'] - reserve() >= miss[0][1]: return True
+                if spells_on and not miss:
+                    a = avail_spells()
+                    keep = reserve() + (sum(C.gear_prices(t+1)) if opt.get('save_next_gear') and t < 9 else 0)
+                    if a and S['gold'] - a[0]['price'] >= keep: return True
+                return False
+            def shop_trip(home):
+                """v3.9 (no free warp): walk to a town if it is close, else fly there with a Return Feather and fly (or walk) back to the last inn."""
+                if W.get('in_trip') or not want_shop(): return
+                towns = [k for k in T.towns if full_shop(k) and k in W['visited'] and k != W['pos']]
+                if not towns: return
+                W['in_trip'] = True
+                try:
+                    best = min((len(risk_path(W['pos'], k)[1] or [0]*99), k) for k in towns); dist, town = best
+                    if dist <= opt.get('walk_shop_max', 6):
+                        R['shop_walks'] = R.get('shop_walks', 0) + 1
+                        rp = risk_path(W['pos'], town)[1]
+                        for e, nxt in rp:
+                            if not hop(e, backtrack=True): return
+                            W['pos'] = nxt; arrive(nxt)
+                        if W['pos'] == town: goto(home)
+                    elif S.get('feather', 0) >= 1:
+                        S['feather'] -= 1; R['feathers'] += 1; R['shop_flights'] = R.get('shop_flights', 0) + 1; add_sec(RF.get('useSec', 3))
+                        W['pos'] = town; arrive(town)
+                        if S.get('feather', 0) >= 1:
+                            S['feather'] -= 1; R['feathers'] += 1; add_sec(RF.get('useSec', 3)); W['pos'] = W['last_inn']
+                        else: goto(W['last_inn'])
+                    else: R['shop_skipped'] = R.get('shop_skipped', 0) + 1
+                finally: W['in_trip'] = False
             n_local = C.LOC_SIZES[t][loc]
             local = [C.Item(uid+k, L.ways) for k in range(n_local)]; uid += n_local; q_words_pool += local
             m0 = tq_minutes()
@@ -41,10 +86,11 @@
                 if e.get('cooldown'): return W['visits'][node] - W['last_fire'].get(key, -99) >= e['cooldown']
                 return True
             def complete(q):
-                if q in W['qd'] or q not in WG.HOOKS: return
-                W['qd'].add(q); hk = WG.HOOKS[q]; g = round(hk['rewardG']*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
-                if hk.get('rewardItem') == 'honey': S['potions'] += 1
-                if hk.get('rewardItem') == 'feather': S['feather'] = min(3, S.get('feather', 0) + 1)
+                if q in W['qd'] or q not in WG.QV2: return
+                W['qd'].add(q); rw = WG.QV2[q].get('rewards', {}); g = round(rw.get('gold', {}).get('G', 0)*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
+                its = rw.get('items') or {}
+                S['potions'] += its.get('honey', 0)
+                if its.get('feather'): S['feather'] = min(RF['carry'], S.get('feather', 0) + its['feather'])
             def safe_home(node):       # after a boss / mini-boss clear: the way you came (walked edges) back to the nearest inn stays quiet
                 prev = {node: None}; q = collections.deque([node]); hit = None
                 while q:
@@ -71,6 +117,8 @@
                             if a.get('quest') in W['qa']: complete(a['quest'])
                     elif k == 'openChest':
                         R['items_found'] += 1; C.open_chest(t, S, 'normal' if a[k] == 'chest_normal' else 'locboss', rng)
+                    elif k == 'fight' and a[k].get('kind') == 'tutorial':
+                        fight('normal', local, rslots, loc, elite=False); R['path_battles'] += 1; R['tutorial'] = 1
                     elif k == 'fight':
                         won, _ = fight('normal', local, rslots, loc, elite=True); R['side_battles'] += 1; R['minis'] += 1
                         if not won: wake(); return False
@@ -84,7 +132,7 @@
                 first = node not in W['visited']
                 W['visited'].add(node); W['visits'][node] += 1
                 n = T.N[node]
-                if n['kind'] in ('town', 'village') and opt.get('village_shop', True): shop()
+                if n['kind'] in ('town', 'village'): shop_at(node)
                 for e in T.EV.get(node, []):
                     if e.get('on', 'enter') not in ('enter', 'firstEnter'): continue
                     e['_key'] = f"{node}#{e['id']}"
@@ -153,16 +201,12 @@
                     S['gold'] -= price; R['inn_paid'] += 1; restore()
                     while S['potions'] < pol['keep_potions'] and S['gold'] >= C.potion_price(t) + price:
                         S['gold'] -= C.potion_price(t); S['potions'] += 1
-                    if pol['keep_potions'] and S.get('feather', 0) < 1 and S['gold'] >= C.potion_price(t) + price:
-                        S['gold'] -= C.potion_price(t); S['feather'] = 1; R['feather_gold'] = R.get('feather_gold', 0) + C.potion_price(t)
                 else:
                     R['inn_free'] += 1; restore()
                     if S['potions'] == 0: S['potions'] = 1
-                if opt.get('inn_warp', True) and T.N[n]['kind'] not in ('town', 'village'):   # inn warp: hop to any visited town to shop, then back (world_rules.innWarp)
-                    g0 = S['gold']; shop()
-                    if S['gold'] < g0: add_sec(RU['innWarp']['sec']); R['warps'] = R.get('warps', 0) + 1   # only warp when something is bought
                 W['last_inn'] = n; W['safe_until'].clear()
                 if n != Z['approach']: W['armed'] = True
+                if T.N[n]['kind'] not in ('town', 'village'): shop_trip(n)
             def risk_path(a, b):
                 bl = T.blocked(zi); best = {a: (0.0, None)}; pq = [(0.0, a)]; done = set()
                 while pq:
@@ -185,7 +229,7 @@
                 best = min((risk_path(W['pos'], i)[0], i) for i in targets); dest = best[1]; rp = risk_path(W['pos'], dest)[1]
                 if rp is None: return None
                 dist = len(rp)
-                if S.get('feather', 0) > 0 and (dist >= 4 or best[0] - dist >= 3) and W['last_inn'] in targets:
+                if S.get('feather', 0) > opt.get('rest_feather_reserve', 1) and (dist >= 4 or best[0] - dist >= 3) and W['last_inn'] in targets:
                     S['feather'] -= 1; R['feathers'] += 1; W['pos'] = W['last_inn']; return W['pos']
                 R['inn_walk_hops'] += dist
                 for e, nxt in rp:
@@ -259,15 +303,10 @@
                 wake(); resume = resume or cp
             zi = loc + 1
             W['pos'] = Z['boss']; W['visited'].add(Z['boss']); safe_home(Z['boss'])
+            if Z['bossKind'] == 'realmboss' and t in RU.get('realmBossFeather', {}).get('realms', []) and not opt.get('no_boss_feather'):
+                S['feather'] = min(RF['carry'], S.get('feather', 0) + RU['realmBossFeather'].get('qty', 1)); R['feathers_found'] = R.get('feathers_found', 0) + 1
             R['patrols'] += pat
             prior += local
-            # gear trip: after a zone boss, a kid who can now afford missing gear heads to the nearest town
-            if opt.get('village_shop', True) and T.towns and loc < C.LOCS[t] - 1:
-                gear = [('weapon', C.gear_prices(t)[0]), ('armor', C.gear_prices(t)[1]), ('shield', C.gear_prices(t)[2])] if t > 1 else [('shield', 35)]
-                miss = [(sl, pr) for sl, pr in gear if sl not in owned_gear]
-                if miss and S['gold'] - pol['reserve_inns']*C.inn_price(t) >= miss[0][1]:
-                    R['town_trips'] = R.get('town_trips', 0) + 1
-                    d = trip_to(T.towns, 'town')
-                    if d: arrive(d); between(); W['last_inn'] = d
-                    goto(Z['boss']) if d else None
+            # shopping after a zone boss (v3.9: walk if a town is close, else Return Feather there and back)
+            if loc < C.LOCS[t] - 1: shop_trip(W['last_inn'])
             R['loc_min'].append(tq_minutes() - m0)

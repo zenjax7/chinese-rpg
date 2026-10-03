@@ -11,18 +11,20 @@
  },
  "status": "reference",
  "entry": "entry_town",
- "idxMax": 24,
+ "idxMax": 26,
  "background": {
   "map": "bg_map_realm_3",
   "battle": "bg_battle_r3"
  },
+ "edgeIdxMax": 27,
+ "aspect": 2.117,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "crossroads_highway",
    "title": {
     "zh": "十字路口集市",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 3
+   "town": 3,
+   "fog": "landmark"
   },
   {
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 253,
-   "y": 360,
+   "x": 0.1625,
+   "y": 0.5,
    "zone": "crossroads_highway",
    "title": {
     "zh": "小路",
@@ -52,9 +55,9 @@
   {
    "id": "path_2",
    "idx": 2,
-   "kind": "fork",
-   "x": 447,
-   "y": 360,
+   "kind": "waypoint",
+   "x": 0.275,
+   "y": 0.5,
    "zone": "crossroads_highway",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "fork",
-   "x": 640,
-   "y": 140,
+   "x": 0.3875,
+   "y": 0.5,
    "zone": "crossroads_highway",
    "title": {
     "zh": "小路",
@@ -77,8 +80,8 @@
    "id": "inn_1",
    "idx": 4,
    "kind": "inn",
-   "x": 833,
-   "y": 80,
+   "x": 0.5,
+   "y": 0.229,
    "zone": "crossroads_highway",
    "title": {
     "zh": "营地客栈",
@@ -96,21 +99,22 @@
    "id": "boss_1",
    "idx": 5,
    "kind": "boss",
-   "x": 1027,
-   "y": 93,
+   "x": 0.6125,
+   "y": 0.1387,
    "zone": "crossroads_highway",
    "title": {
     "zh": "山贼头目",
     "en": "Bandit Boss"
    },
-   "boss": "crossroads_highway"
+   "boss": "crossroads_highway",
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 6,
    "kind": "portal",
-   "x": 1220,
-   "y": 250,
+   "x": 0.725,
+   "y": 0.05,
    "zone": "night_bazaar",
    "title": {
     "zh": "地牢入口",
@@ -120,42 +124,45 @@
   {
    "id": "path_4",
    "idx": 7,
-   "kind": "waypoint",
-   "x": 640,
-   "y": 250,
+   "kind": "fork",
+   "x": 0.5,
+   "y": 0.4097,
    "zone": "crossroads_highway",
    "title": {
-    "zh": "小路",
-    "en": "Side road"
+    "zh": "弯路",
+    "en": "Winding path"
    }
   },
   {
-   "id": "town_2",
+   "id": "path_5",
    "idx": 8,
-   "kind": "village",
-   "x": 833,
-   "y": 160,
+   "kind": "waypoint",
+   "x": 0.6125,
+   "y": 0.3193,
    "zone": "crossroads_highway",
    "title": {
-    "zh": "十字路口集市分站",
-    "en": "Crossroads Market outpost 1"
-   },
-   "save": true,
-   "services": [
-    "inn",
-    "save",
-    "shop"
-   ],
-   "shops": [
-    "items"
-   ]
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 0.725,
+   "y": 0.1995,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
   },
   {
    "id": "story_1",
-   "idx": 9,
+   "idx": 10,
    "kind": "story",
-   "x": 640,
-   "y": 360,
+   "x": 0.8375,
+   "y": 0.0615,
    "zone": "crossroads_highway",
    "title": {
     "zh": "故事点",
@@ -163,71 +170,11 @@
    }
   },
   {
-   "id": "treasure_1",
-   "idx": 10,
-   "kind": "chest",
-   "x": 833,
-   "y": 240,
-   "zone": "crossroads_highway",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "path_5",
+   "id": "path_7",
    "idx": 11,
-   "kind": "waypoint",
-   "x": 833,
-   "y": 320,
-   "zone": "crossroads_highway",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "miniboss_1",
-   "idx": 12,
-   "kind": "miniboss",
-   "x": 1027,
-   "y": 200,
-   "zone": "crossroads_highway",
-   "title": {
-    "zh": "小头目",
-    "en": "Mini-boss lair"
-   }
-  },
-  {
-   "id": "path_6",
-   "idx": 13,
-   "kind": "waypoint",
-   "x": 640,
-   "y": 470,
-   "zone": "crossroads_highway",
-   "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
-  },
-  {
-   "id": "treasure_2",
-   "idx": 14,
-   "kind": "chest",
-   "x": 833,
-   "y": 400,
-   "zone": "crossroads_highway",
-   "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
-  },
-  {
-   "id": "deadend_1",
-   "idx": 15,
    "kind": "inn",
-   "x": 1027,
-   "y": 307,
+   "x": 0.725,
+   "y": 0.3505,
    "zone": "crossroads_highway",
    "title": {
     "zh": "营火",
@@ -242,11 +189,23 @@
    ]
   },
   {
-   "id": "path_7",
-   "idx": 16,
+   "id": "miniboss_1",
+   "idx": 12,
+   "kind": "miniboss",
+   "x": 0.8375,
+   "y": 0.2372,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_8",
+   "idx": 13,
    "kind": "waypoint",
-   "x": 833,
-   "y": 480,
+   "x": 0.6125,
+   "y": 0.5,
    "zone": "crossroads_highway",
    "title": {
     "zh": "弯路",
@@ -254,11 +213,54 @@
    }
   },
   {
-   "id": "treasure_3",
+   "id": "treasure_1",
+   "idx": 14,
+   "kind": "chest",
+   "x": 0.725,
+   "y": 0.5,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 15,
+   "kind": "inn",
+   "x": 0.95,
+   "y": 0.5,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_9",
+   "idx": 16,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5903,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_2",
    "idx": 17,
    "kind": "chest",
-   "x": 1027,
-   "y": 413,
+   "x": 0.6125,
+   "y": 0.6807,
    "zone": "crossroads_highway",
    "title": {
     "zh": "宝藏",
@@ -266,23 +268,30 @@
    }
   },
   {
-   "id": "treasure_4",
+   "id": "treasure_3",
    "idx": 18,
-   "kind": "chest",
-   "x": 1220,
-   "y": 360,
+   "kind": "inn",
+   "x": 0.8375,
+   "y": 0.413,
    "zone": "crossroads_highway",
    "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
-   }
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
   },
   {
-   "id": "path_8",
+   "id": "path_10",
    "idx": 19,
    "kind": "inn",
-   "x": 1027,
-   "y": 520,
+   "x": 0.725,
+   "y": 0.6495,
    "zone": "crossroads_highway",
    "title": {
     "zh": "营火",
@@ -300,8 +309,8 @@
    "id": "story_2",
    "idx": 20,
    "kind": "story",
-   "x": 1220,
-   "y": 470,
+   "x": 0.8375,
+   "y": 0.587,
    "zone": "crossroads_highway",
    "title": {
     "zh": "故事点",
@@ -309,11 +318,11 @@
    }
   },
   {
-   "id": "path_9",
+   "id": "path_11",
    "idx": 21,
    "kind": "waypoint",
-   "x": 640,
-   "y": 580,
+   "x": 0.6125,
+   "y": 0.8613,
    "zone": "crossroads_highway",
    "title": {
     "zh": "弯路",
@@ -321,23 +330,30 @@
    }
   },
   {
-   "id": "path_10",
+   "id": "path_12",
    "idx": 22,
-   "kind": "waypoint",
-   "x": 833,
-   "y": 560,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.8005,
    "zone": "crossroads_highway",
    "title": {
-    "zh": "弯路",
-    "en": "Winding path"
-   }
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
   },
   {
-   "id": "treasure_5",
+   "id": "treasure_4",
    "idx": 23,
    "kind": "chest",
-   "x": 1027,
-   "y": 627,
+   "x": 0.8375,
+   "y": 0.7628,
    "zone": "crossroads_highway",
    "title": {
     "zh": "宝藏",
@@ -345,16 +361,50 @@
    }
   },
   {
-   "id": "treasure_6",
+   "id": "path_13",
    "idx": 24,
-   "kind": "chest",
-   "x": 833,
-   "y": 640,
+   "kind": "waypoint",
+   "x": 0.8375,
+   "y": 0.9385,
    "zone": "crossroads_highway",
    "title": {
-    "zh": "宝藏",
-    "en": "Treasure spot"
+    "zh": "弯路",
+    "en": "Winding path"
    }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 25,
+   "kind": "waypoint",
+   "x": 0.725,
+   "y": 0.95,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "village_1x",
+   "idx": 26,
+   "kind": "village",
+   "x": 0.5,
+   "y": 0.771,
+   "zone": "crossroads_highway",
+   "title": {
+    "zh": "十字路口集市村1",
+    "en": "Crossroads Market village 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ],
+   "fog": "landmark"
   }
  ],
  "edges": [
@@ -365,7 +415,8 @@
    "to": {
     "graph": "bazaar_cellars_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -374,7 +425,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -383,7 +435,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 5,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -392,7 +445,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 4,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -401,7 +455,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -411,7 +466,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -428,169 +484,219 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 6
   },
   {
    "id": "e7",
-   "from": "path_2",
+   "from": "path_3",
    "to": "path_4",
    "kind": "path",
    "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 7
   },
   {
    "id": "e8",
    "from": "path_4",
-   "to": "town_2",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "road"
-  },
-  {
-   "id": "e9",
-   "from": "path_2",
-   "to": "story_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e10",
-   "from": "path_4",
-   "to": "treasure_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e11",
-   "from": "story_1",
    "to": "path_5",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 8
   },
   {
-   "id": "e12",
+   "id": "e9",
    "from": "path_5",
-   "to": "miniboss_1",
-   "kind": "path",
-   "danger": 2,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e13",
-   "from": "path_2",
    "to": "path_6",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 9
   },
   {
-   "id": "e14",
+   "id": "e10",
    "from": "path_6",
-   "to": "treasure_2",
+   "to": "story_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
-   "id": "e15",
+   "id": "e11",
    "from": "path_5",
-   "to": "deadend_1",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e16",
-   "from": "path_3",
    "to": "path_7",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 11
   },
   {
-   "id": "e17",
+   "id": "e12",
    "from": "path_7",
-   "to": "treasure_3",
+   "to": "miniboss_1",
    "kind": "path",
-   "danger": 1,
+   "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 12
   },
   {
-   "id": "e18",
-   "from": "deadend_1",
-   "to": "treasure_4",
-   "kind": "path",
-   "danger": 1,
-   "steps": 1,
-   "terrain": "grass"
-  },
-  {
-   "id": "e19",
-   "from": "treasure_2",
+   "id": "e13",
+   "from": "path_4",
    "to": "path_8",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 13
   },
   {
-   "id": "e20",
+   "id": "e14",
    "from": "path_8",
-   "to": "story_2",
+   "to": "treasure_1",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 14
   },
   {
-   "id": "e21",
-   "from": "path_2",
+   "id": "e15",
+   "from": "story_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 15
+  },
+  {
+   "id": "e16",
+   "from": "path_3",
    "to": "path_9",
    "kind": "path",
    "danger": 1,
-   "steps": 2,
-   "terrain": "grass"
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 16
   },
   {
-   "id": "e22",
+   "id": "e17",
    "from": "path_9",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 17
+  },
+  {
+   "id": "e18",
+   "from": "treasure_1",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 18
+  },
+  {
+   "id": "e19",
+   "from": "path_8",
    "to": "path_10",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 19
+  },
+  {
+   "id": "e20",
+   "from": "path_10",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 20
+  },
+  {
+   "id": "e21",
+   "from": "path_4",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 21
+  },
+  {
+   "id": "e22",
+   "from": "path_11",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 22
   },
   {
    "id": "e23",
-   "from": "path_10",
-   "to": "treasure_5",
+   "from": "path_12",
+   "to": "treasure_4",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 23
   },
   {
    "id": "e24",
-   "from": "path_3",
-   "to": "treasure_6",
+   "from": "treasure_4",
+   "to": "path_13",
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 24
+  },
+  {
+   "id": "e25",
+   "from": "path_13",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 25
+  },
+  {
+   "id": "e26",
+   "from": "deadend_2",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 26
+  },
+  {
+   "id": "v1x",
+   "from": "path_3",
+   "to": "village_1x",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 27
   }
  ],
  "events": [
@@ -731,38 +837,6 @@
    ]
   },
   {
-   "id": "story_1.1",
-   "node": "story_1",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_3.story_1"
-    }
-   ]
-  },
-  {
-   "id": "treasure_1.1",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_5.1",
    "node": "path_5",
    "on": "enter",
@@ -797,7 +871,83 @@
    ]
   },
   {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q3_rescue_fei"
+   },
+   "do": [
+    {
+     "dialogue": "realm_3.story_1.step_q3_rescue_fei"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_3.story_1"
+    }
+   ]
+  },
+  {
    "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q3_rescue_fei"
+   },
+   "do": [
+    {
+     "dialogue": "realm_3.miniboss_1.step_q3_rescue_fei"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
    "node": "miniboss_1",
    "on": "enter",
    "once": true,
@@ -826,7 +976,7 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
+   "id": "miniboss_1.3",
    "node": "miniboss_1",
    "on": "enter",
    "once": false,
@@ -834,8 +984,62 @@
    "do": []
   },
   {
-   "id": "path_6.1",
-   "node": "path_6",
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "dialogue": "ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
    "on": "enter",
    "pick": [
     {
@@ -888,8 +1092,35 @@
    "do": []
   },
   {
-   "id": "path_7.1",
-   "node": "path_7",
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q3_caravan"
+   },
+   "do": [
+    {
+     "dialogue": "realm_3.story_2.step_q3_caravan"
+    }
+   ]
+  },
+  {
+   "id": "story_2.2",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "dialogue": "realm_3.story_2"
+    }
+   ]
+  },
+  {
+   "id": "path_11.1",
+   "node": "path_11",
    "on": "enter",
    "pick": [
     {
@@ -920,26 +1151,6 @@
      ]
     }
    ]
-  },
-  {
-   "id": "treasure_3.1",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "treasure_4.1",
@@ -962,20 +1173,8 @@
    "do": []
   },
   {
-   "id": "story_2.1",
-   "node": "story_2",
-   "on": "enter",
-   "once": true,
-   "outcome": "story",
-   "do": [
-    {
-     "dialogue": "realm_3.story_2"
-    }
-   ]
-  },
-  {
-   "id": "path_9.1",
-   "node": "path_9",
+   "id": "path_13.1",
+   "node": "path_13",
    "on": "enter",
    "pick": [
     {
@@ -1008,28 +1207,18 @@
    ]
   },
   {
-   "id": "path_10.1",
-   "node": "path_10",
+   "id": "deadend_2.1",
+   "node": "deadend_2",
    "on": "enter",
    "pick": [
     {
-     "weight": 70,
+     "weight": 80,
      "outcome": "nothing",
      "once": false,
      "do": []
     },
     {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
+     "weight": 20,
      "outcome": "item",
      "cooldown": 4,
      "do": [
@@ -1040,76 +1229,57 @@
      ]
     }
    ]
-  },
-  {
-   "id": "treasure_5.1",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
-   "id": "treasure_6.1",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": true,
-   "outcome": "treasure",
-   "do": [
-    {
-     "openChest": "chest_normal"
-    }
-   ]
-  },
-  {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_3.story_1.step_q3_rescue_fei": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q3_rescue_fei: scene from data/dialogue)"
    }
   ],
   "realm_3.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "realm_3.miniboss_1.step_q3_rescue_fei": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q3_rescue_fei: scene from data/dialogue)"
+   }
+  ],
+  "realm_3.story_2.step_q3_caravan": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q3_caravan: scene from data/dialogue)"
    }
   ],
   "realm_3.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

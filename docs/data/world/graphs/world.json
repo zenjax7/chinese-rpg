@@ -13,13 +13,15 @@
  "entry": "realm_1",
  "idxMax": 8,
  "_note": "One node per realm; a realm edge opens when the previous realm boss is beaten. Add a realm = add a node, an edge and a realm graph file.",
+ "edgeIdxMax": 16,
+ "aspect": 2.364,
  "nodes": [
   {
    "id": "realm_1",
    "idx": 0,
    "kind": "portal",
-   "x": 120,
-   "y": 600,
+   "x": 0.05,
+   "y": 0.95,
    "title": {
     "zh": "新手草原",
     "en": "Starter Meadow"
@@ -30,8 +32,8 @@
    "id": "realm_2",
    "idx": 1,
    "kind": "portal",
-   "x": 250,
-   "y": 545,
+   "x": 0.1625,
+   "y": 0.8375,
    "title": {
     "zh": "蜂巢森林",
     "en": "Honeycomb Forest"
@@ -42,8 +44,8 @@
    "id": "realm_3",
    "idx": 2,
    "kind": "portal",
-   "x": 380,
-   "y": 490,
+   "x": 0.275,
+   "y": 0.725,
    "title": {
     "zh": "十字路口集市",
     "en": "Crossroads Market"
@@ -54,8 +56,8 @@
    "id": "realm_4",
    "idx": 3,
    "kind": "portal",
-   "x": 510,
-   "y": 435,
+   "x": 0.3875,
+   "y": 0.6125,
    "title": {
     "zh": "哥布林洞穴",
     "en": "Goblin Caves"
@@ -66,8 +68,8 @@
    "id": "realm_5",
    "idx": 4,
    "kind": "portal",
-   "x": 640,
-   "y": 380,
+   "x": 0.5,
+   "y": 0.5,
    "title": {
     "zh": "九头蛇沼泽",
     "en": "Hydra Swamp"
@@ -78,8 +80,8 @@
    "id": "realm_6",
    "idx": 5,
    "kind": "portal",
-   "x": 770,
-   "y": 325,
+   "x": 0.6125,
+   "y": 0.3875,
    "title": {
     "zh": "僵尸之地",
     "en": "Zombie Lands"
@@ -90,8 +92,8 @@
    "id": "realm_7",
    "idx": 6,
    "kind": "portal",
-   "x": 900,
-   "y": 270,
+   "x": 0.725,
+   "y": 0.275,
    "title": {
     "zh": "狮鹫山峰",
     "en": "Griffin Peaks"
@@ -102,8 +104,8 @@
    "id": "realm_8",
    "idx": 7,
    "kind": "portal",
-   "x": 1030,
-   "y": 215,
+   "x": 0.8375,
+   "y": 0.1625,
    "title": {
     "zh": "食人魔角斗场",
     "en": "Ogre Colosseum"
@@ -114,8 +116,8 @@
    "id": "realm_9",
    "idx": 8,
    "kind": "portal",
-   "x": 1160,
-   "y": 160,
+   "x": 0.95,
+   "y": 0.05,
    "title": {
     "zh": "魔王城",
     "en": "Demon King's Castle"
@@ -131,7 +133,8 @@
    "to": {
     "graph": "realm_1",
     "node": "village"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "x_realm_2",
@@ -140,7 +143,8 @@
    "to": {
     "graph": "realm_2",
     "node": "entry_town"
-   }
+   },
+   "idx": 1
   },
   {
    "id": "x_realm_3",
@@ -149,7 +153,8 @@
    "to": {
     "graph": "realm_3",
     "node": "entry_town"
-   }
+   },
+   "idx": 2
   },
   {
    "id": "x_realm_4",
@@ -158,7 +163,8 @@
    "to": {
     "graph": "realm_4",
     "node": "entry_town"
-   }
+   },
+   "idx": 3
   },
   {
    "id": "x_realm_5",
@@ -167,7 +173,8 @@
    "to": {
     "graph": "realm_5",
     "node": "entry_town"
-   }
+   },
+   "idx": 4
   },
   {
    "id": "x_realm_6",
@@ -176,7 +183,8 @@
    "to": {
     "graph": "realm_6",
     "node": "entry_town"
-   }
+   },
+   "idx": 5
   },
   {
    "id": "x_realm_7",
@@ -185,7 +193,8 @@
    "to": {
     "graph": "realm_7",
     "node": "entry_town"
-   }
+   },
+   "idx": 6
   },
   {
    "id": "x_realm_8",
@@ -194,7 +203,8 @@
    "to": {
     "graph": "realm_8",
     "node": "entry_town"
-   }
+   },
+   "idx": 7
   },
   {
    "id": "x_realm_9",
@@ -203,7 +213,8 @@
    "to": {
     "graph": "realm_9",
     "node": "entry_town"
-   }
+   },
+   "idx": 8
   },
   {
    "id": "w12",
@@ -215,7 +226,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "warren"
-   }
+   },
+   "idx": 9
   },
   {
    "id": "w23",
@@ -227,7 +239,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "great_hive"
-   }
+   },
+   "idx": 10
   },
   {
    "id": "w34",
@@ -239,7 +252,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "night_bazaar"
-   }
+   },
+   "idx": 11
   },
   {
    "id": "w45",
@@ -251,7 +265,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "goblin_school"
-   }
+   },
+   "idx": 12
   },
   {
    "id": "w56",
@@ -263,7 +278,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "hydra_s_lair"
-   }
+   },
+   "idx": 13
   },
   {
    "id": "w67",
@@ -275,7 +291,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "moonlit_graveyard"
-   }
+   },
+   "idx": 14
   },
   {
    "id": "w78",
@@ -287,7 +304,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "griffin_summit"
-   }
+   },
+   "idx": 15
   },
   {
    "id": "w89",
@@ -299,7 +317,8 @@
    "terrain": "road",
    "cond": {
     "bossDefeated": "grand_colosseum"
-   }
+   },
+   "idx": 16
   }
  ],
  "events": [],

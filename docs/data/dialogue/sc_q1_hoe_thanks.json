@@ -1,0 +1,114 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q1_hoe_thanks",
+ "title": "The lost hoe (turn-in)",
+ "realm": 1,
+ "zone": "meadow",
+ "density": "D1",
+ "trigger": {
+  "graph": "realm_1",
+  "node": "m_farm",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q1_hoe"
+  },
+  "replaces": "farmer_thanks"
+ },
+ "background": "bg_farm",
+ "music": "village_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "farmer_li",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C595",
+  "C007",
+  "C008",
+  "C005"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "farmer_li",
+   "side": "R1",
+   "expr": "surprised",
+   "en": "My hoe! It was down {C595}, in the old well?",
+   "tokens": [
+    "C595"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "farmer_li",
+   "side": "R1",
+   "expr": "happy",
+   "en": "{C007}, little hero! Here, this is for you.",
+   "tokens": [
+    "C007"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "thinking",
+   "en": "What do you say back?",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "{C008}",
+     "tokens": [
+      "C008"
+     ],
+     "goto": "l4",
+     "correct": true
+    },
+    {
+     "id": "c2",
+     "en": "{C005}",
+     "tokens": [
+      "C005"
+     ],
+     "goto": "l5"
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "speaker": "farmer_li",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Ha! Such good manners.",
+   "vo": null,
+   "end": true
+  },
+  {
+   "id": "l5",
+   "speaker": "farmer_li",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Leaving already? Don't forget: when someone says thank you, you can say you're welcome.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q1_hoe"
+  }
+ ]
+}

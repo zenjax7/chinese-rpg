@@ -12,8 +12,8 @@ This folder holds design docs, data tables, reference images and Desy's design t
 
 When documents disagree, use this order:
 
-1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.8)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.8)** with the data in [data/world/](data/world/) for the node-graph world.
-2. **The CSV tables and world JSON in [data/](#data-tables)**, which match spec v3.8. The game data in `src/data` is built from them.
+1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.9.1)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.9.1)** with the data in [data/world/](data/world/) for the node-graph world, and **[design/quests.md](design/quests.md)** / **[design/story.md](design/story.md)** with [data/quests/](data/quests/) and [data/dialogue/](data/dialogue/) for quests and story scenes.
+2. **The CSV tables and world JSON in [data/](#data-tables)**, which match spec v3.9.1. The game data in `src/data` is built from them.
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
 4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
 
@@ -23,8 +23,8 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
-| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.8. New in v3.8: §12, the world graph (every map is a graph, random battles on edges, safe edges, 7 arrival event kinds, zones, inn warp). Kept from v3.7: no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints. |
-| [world-graph.md](design/world-graph.md) | **Source of truth for the world.** World graph design, v3.8: map hierarchy, node and edge kinds, encounters on edges, arrival events, realm sizes, sim results, Realm 1 and Goblin Caves examples, and the `graph/0.3` data format. |
+| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.9.1. New in v3.9/v3.9.1: no free inn warp (the Return Feather, 2 × G, start 2, carry 3, is the only fast way back; a free Feather for the realm boss in realms 3, 6 and 8), town density from 1 per 20 nodes (realm 1) to 1 per 60 (realm 9) with 3 added villages, inns within 3 hops in realms 1–3, fog of war (`progress.schema.json`), the tutorial village event and dialogue scenes. New in v3.8: §12, the world graph (every map is a graph, random battles on edges, safe edges, 7 arrival event kinds, zones, inn warp). Kept from v3.7: no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints. |
+| [world-graph.md](design/world-graph.md) | **Source of truth for the world.** World graph design, v3.9.1 (fog of war, Return Feather, town density): map hierarchy, node and edge kinds, encounters on edges, arrival events, realm sizes, sim results, Realm 1 and Goblin Caves examples, and the `graph/0.3` data format. |
 | [world-graph-schema-answers.md](design/world-graph-schema-answers.md) | Desy's short answers to GameDev's 14 schema questions (architecture.md §17.2). |
 | [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.7 (no cast caps, MP only; MP costs 1.25 × v3.4). |
 | [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
@@ -33,6 +33,9 @@ Everything in an `archive/` folder is superseded and kept for history only.
 | [design-memo.md](design/design-memo.md) | Design findings memo: reference games (Prodigy, Miitopia), HSK levels, learning design. |
 | [plan.md](design/plan.md) | Research summary, plan and early decisions. Older than the spec. |
 | [research-tech-market.md](design/research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
+| [story.md](design/story.md) | Story: the 9-realm plot, scenes and how dialogue teaches words (scene/0.2). |
+| [quests.md](design/quests.md) | Quests v2: 50 NPC and story quests on world-graph nodes (quest/0.2), givers by position, the quest state machine. |
+| [characters.md](design/characters.md) | Characters: the realm 1 cast and generic NPCs (portrait ids match Arty's v2 portraits). |
 | [art-direction-memo.md](design/art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
 | [ai-art-pipeline-proposal.md](design/ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
 
@@ -40,6 +43,7 @@ Everything in an `archive/` folder is superseded and kept for history only.
 
 | File | What it is |
 |---|---|
+| [combat-spec-v3.8.md](design/archive/combat-spec-v3.8.md) | Combat spec v3.8 (world graph with the free inn warp). |
 | [combat-spec-v3.7.md](design/archive/combat-spec-v3.7.md) | Combat spec v3.7 (before the §12 world graph). |
 | [combat-spec-v3.6.md](design/archive/combat-spec-v3.6.md) | Combat spec v3.6 (~20-answer target for all bosses). |
 | [spells-v3.6.md](design/archive/spells-v3.6.md) | Spells and quests v3.6. |
@@ -112,7 +116,7 @@ These are the spec tables.
 
 ### World graph ([data/world/](data/world/))
 
-The v3.8 world data, in `graph/0.3` format. Realm 1 and the world map are authored by hand; realms 2–9 and their dungeons are generated reference layouts (`status: "reference"`) for the writers to replace.
+The v3.9.1 world data, in `graph/0.3` format (towns + villages per realm = ceil(nodes / (20 … 60)); new leaf villages realm_3/village_1x, realm_6/village_2x, realm_9/village_3x). Realm 1 and the world map are authored by hand; realms 2–9 and their dungeons are generated reference layouts (`status: "reference"`) for the writers to replace.
 
 | File | What it is |
 |---|---|
@@ -123,12 +127,26 @@ The v3.8 world data, in `graph/0.3` format. Realm 1 and the world map are author
 | [layout_targets.json](data/world/layout_targets.json) | Size and shape targets per realm (nodes, dead ends, inn distance) |
 | [world_realm_table.csv](data/world/world_realm_table.csv) | Per-realm table: graph size and shape, towns, inns, dungeons, zones, and sim battles and minutes (beeline, explorer, v3.7) |
 | [graphs/](data/world/graphs/) | 36 graph files: [world.json](data/world/graphs/world.json), [realm_1.json](data/world/graphs/realm_1.json) … `realm_9.json`, and 26 dungeon levels (for example [goblin_caves_1.json](data/world/graphs/goblin_caves_1.json)) |
-| [schemas/](data/world/schemas/) | 6 JSON Schemas (2020-12): common, graph, index, quests_world, world_rules, zones |
+| [schemas/](data/world/schemas/) | 7 JSON Schemas (2020-12): common, graph, index, progress (the save's world part, fog of war), quests_world, world_rules, zones |
+| [examples/](data/world/examples/) | [progress_example.json](data/world/examples/progress_example.json): a save's world progress that validates against progress.schema.json |
 | [diagrams/](data/world/diagrams/) | Diagrams of realm 1, realm 4, realm 8 and the Goblin Caves (PNG and mermaid) |
+
+### Quests ([data/quests/](data/quests/))
+
+| File | What it is |
+|---|---|
+| [quests.json](data/quests/quests.json) | Quests v2 (quest/0.2): 50 NPC and story quests; givers are positions (`entry_town`, `outpost_k`, `village_k`) resolved against the realm graph |
+| [quests.csv](data/quests/quests.csv) | The same as a sheet |
+| [quests.schema.json](data/quests/quests.schema.json) | JSON Schema for quest/0.2 |
+| [quests_v1.json](data/quests/quests_v1.json), [quests_v1.csv](data/quests/quests_v1.csv) | The v1 town-board quests (backup) |
+
+### Dialogue ([data/dialogue/](data/dialogue/))
+
+Dialogue scenes in scene/0.2 ([scene.schema.json](data/dialogue/scene.schema.json)): [sc_r1_opening.json](data/dialogue/sc_r1_opening.json) (the tutorial opening), [sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json), [sc_q1_hoe_offer.json](data/dialogue/sc_q1_hoe_offer.json), [sc_q1_hoe_thanks.json](data/dialogue/sc_q1_hoe_thanks.json), [sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json), [sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json).
 
 ### Simulation output ([data/sim/](data/sim/))
 
-There are 29 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The v3.8 world sim (v3.7 loop vs beeline vs explorer) is [sim_world_v38.csv](data/sim/sim_world_v38.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
+There are 29 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The world sims (v3.7 loop vs beeline vs explorer) are [sim_world_v38.csv](data/sim/sim_world_v38.csv), [sim_world_v39.csv](data/sim/sim_world_v39.csv) and [sim_world_v391.csv](data/sim/sim_world_v391.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
 
 ### JSON twins ([data/json/](data/json/))
 
@@ -223,6 +241,19 @@ The v3.8 world-graph tools. Like the other design tools they use Desy's absolute
 | [doc/world-graph.src.md](tools/world/doc/world-graph.src.md) | world-graph.md source with placeholders (its image links resolve only in the built doc in design/) |
 | [doc/spec12.md](tools/world/doc/spec12.md) | The text of combat-spec §12 |
 | [sim/world_summary.json](tools/world/sim/world_summary.json) | v3.8 main sim output (100 runs per profile) |
+
+#### Story tools ([tools/story/](tools/story/))
+
+Unlike the other design tools these run from the repo: [_paths.py](tools/story/_paths.py) maps Desy's paths to `docs/` with [desy_paths.json](tools/desy_paths.json) (generated from her repo-manifest; set `DESY_ROOT=/workspace/desy` to run them on her tree).
+
+| File | What it is |
+|---|---|
+| [quests_def.py](tools/story/quests_def.py) | The 50 quest definitions |
+| [build_quests.py](tools/story/build_quests.py) | Builds and checks data/quests/quests.json and .csv (positions, hooks, words) |
+| [make_dialogue.py](tools/story/make_dialogue.py) | Writes the data/dialogue scenes |
+| [validate_dialogue.py](tools/story/validate_dialogue.py) | Checks the scenes: schema, word tokens, met-word rule, density, gotos |
+
+The game build keeps its own repo-relative copy of the world validator in `tools/world/` (`npm run validate:world`).
 
 ## How to update
 

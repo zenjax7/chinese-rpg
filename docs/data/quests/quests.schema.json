@@ -1,0 +1,39 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "quest/0.2 (GameDev quest/0.1 + Desy fields)",
+ "type": "object",
+ "required": ["version", "schema", "quests"],
+ "properties": {
+  "version": {"type": "string"}, "schema": {"const": "quest/0.2"},
+  "quests": {"type": "array", "items": {"$ref": "#/$defs/quest"}}
+ },
+ "$defs": {
+  "quest": {
+   "type": "object",
+   "required": ["schema", "id", "realm", "zone", "story", "type", "title", "giver", "turnIn", "order", "objectives", "scenes", "rewards", "words", "repeatable"],
+   "properties": {
+    "schema": {"const": "quest/0.2"},
+    "id": {"type": "string", "pattern": "^q[1-9]_[a-z0-9_]+$"},
+    "realm": {"type": "integer", "minimum": 1, "maximum": 9},
+    "zone": {"type": "string"}, "pool": {"type": "string"},
+    "story": {"enum": ["main", "side"]},
+    "type": {"enum": ["fetch", "slay", "rescue", "find", "deliver", "escort"]},
+    "title": {"type": "object", "required": ["zh", "en"]},
+    "giver": {"type": "object", "required": ["npc"], "properties": {"npc": {"type": "string"}, "graph": {"type": "string"}, "node": {"type": "string"},
+       "zone": {"type": "string"}, "nodeKind": {"type": "string"}, "position": {"type": "string"}, "ref": {"type": "string"}}},
+    "alsoOnBoard": {"type": "boolean"},
+    "turnIn": {"oneOf": [{"enum": ["giver", "auto"]}, {"type": "object", "required": ["npc"]}]},
+    "returnToGiver": {"type": "boolean"},
+    "requires": {"type": ["object", "null"]},
+    "order": {"enum": ["any", "sequence"]},
+    "objectives": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "event", "objective", "where"],
+      "properties": {"event": {"enum": ["quest_offer", "nothing", "miniboss", "item", "portal", "story", "treasure", "edge_battle", "boss"]},
+        "objective": {"type": "object", "required": ["type"], "properties": {"type": {"enum": ["kill", "collect", "reach", "talk", "words", "deliver", "escort"]}}}}}},
+    "scenes": {"type": "object"},
+    "rewards": {"type": "object", "required": ["gold", "exp", "items", "gear", "spells", "skills"]},
+    "words": {"type": "array", "items": {"type": "string", "pattern": "^C[0-9]{3,4}$"}},
+    "repeatable": {"const": false}
+   }
+  }
+ }
+}

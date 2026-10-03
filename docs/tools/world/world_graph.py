@@ -1,4 +1,4 @@
-"""Loads the v3.8 world data (data/world, format graph/0.3) for world_sim.py, the validator and the renderer.
+"""Loads the v3.9 world data (data/world, format graph/0.3) for world_sim.py, the validator and the renderer.
 A Realm = the realm's overworld graph plus every dungeon level reachable from it by stairs/portal edges, merged into one node
 space ('graph/node'). Zones (one per location/word pool) come from zones.json."""
 import json, collections, os
@@ -6,6 +6,8 @@ ROOT = os.environ.get('WORLD_DATA', '/workspace/desy/data/world')
 J = lambda p: json.load(open(os.path.join(ROOT, p), encoding='utf-8'))
 RULES = J('world_rules.json'); INDEX = J('index.json'); ZONES = J(INDEX['files']['zones'])['zones']
 QF = J(INDEX['files']['quests']); HOOKS = {q['id']: q for q in QF['questHooks']}
+_QV2 = os.environ.get('QUESTS_V2', os.path.join(ROOT, '..', 'quests.json'))   # v3.9: quest content (rewards) lives in data/quests.json (quest/0.2)
+QV2 = {q['id']: q for q in json.load(open(_QV2, encoding='utf-8'))['quests']} if os.path.exists(_QV2) else {}
 GRAPHS = {g['id']: J(g['file']) for g in INDEX['graphs']}
 def rate(d, level):
     return min(RULES['maxRate'], RULES['encounterRate'][str(d)] * (1 + RULES['depthStep']*max(0, level - 1)))

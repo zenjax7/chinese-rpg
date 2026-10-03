@@ -14,6 +14,7 @@ def cond(reqs):
         out.append({k: v})
     return out[0] if len(out) == 1 else {"all": out}
 ZONE_OF_BOSS = {}
+EVS_REF = {}
 def actions(ev, dlg):
     ty = ev['type']; do = []
     if ty == 'story':
@@ -28,11 +29,20 @@ def actions(ev, dlg):
         if rw.get('item'): do.append({"giveItem": rw['item'], "qty": 1})
         for f in ev.get('setFlags', []): do.append({"setFlag": f})
     elif ty == 'portal': do.append({"teleport": {"graph": ev['toGraph'], "node": ev['toNode']}})
+    elif ty == 'scene': do.append({"scene": ev['scene']})
+    elif ty == 'tutorial':
+        if ev.get('scene'): do.append({"scene": ev['scene']})
+        if ev.get('intro'):
+            dlg[ev['intro']] = EVS_REF[ev['intro']]['lines']; do.append({"dialogue": ev['intro']})
+        dlg[ev['id']] = ev['lines']; do.append({"dialogue": ev['id']})
+        do.append({"fight": {"kind": "tutorial", "enemies": ev['enemies'], "fill": False, "canLose": False}})
+        if ev.get('after'): dlg[ev['id'] + '_after'] = ev['after']; do.append({"dialogue": ev['id'] + '_after'})
     return do
 def rep(ev):
     m = ev['repeat']['mode']
     return {"once": True} if m == 'once' else {"cooldown": ev['repeat']['visits']} if m == 'cooldown' else {"once": False}
 def convert(g, EVS, speakers=None, graph_kind=None):
+    EVS_REF.update(EVS)
     gid = g['id']; idx = {n['id']: i for i, n in enumerate(g['nodes'])}
     kind = graph_kind or {'realm': 'overworld', 'dungeon': 'dungeon_level', 'world': 'world'}[g['kind']]
     out = {"schema": "graph/0.3", "id": gid, "kind": kind, "realm": g.get('tier'), "dungeon": (g.get('dungeon') or {}).get('id'), "level": g.get('level', 0),
@@ -66,7 +76,9 @@ def convert(g, EVS, speakers=None, graph_kind=None):
             c = cond(slot.get('requires'))
             if 'event' in slot:
                 ev = EVS[slot['event']]
-                e.update(rep(ev)); e["outcome"] = ev['type']
+                e.update(rep(ev)); e["outcome"] = 'story' if ev['type'] in ('tutorial', 'scene') else ev['type']
+                if ev.get('on'): e["on"] = ev['on']
+                if ev['type'] == 'tutorial': e["tutorial"] = True
                 cc = cond((slot.get('requires') or []) + ev.get('requires', []))
                 if cc: e["cond"] = cc
                 if ev['type'] == 'story' and ev['id'].endswith(('beaten',)) or (n['kind'] == 'boss'): e["on"] = "clear"
@@ -90,6 +102,16 @@ def convert(g, EVS, speakers=None, graph_kind=None):
         if c: ee["cond"] = c
         if e.get('note'): ee["note"] = e['note']
         edges.append(ee)
+    for i, ee in enumerate(edges): ee["idx"] = i                      # v3.9: stable edge idx (progress bitsets)
+    out["edgeIdxMax"] = len(edges) - 1
+    # v3.9: x/y normalised to 0-1 per graph (GameDev); 'aspect' = width/height of the layout box so art can keep the shape
+    xs = [n['x'] for n in nodes]; ys = [n['y'] for n in nodes]; w = (max(xs) - min(xs)) or 1; hgt = (max(ys) - min(ys)) or 1
+    side = max(w, hgt)
+    for n in nodes:
+        n['x'] = round(0.05 + 0.9*(n['x'] - min(xs))/w, 4) if w > 1 else 0.5
+        n['y'] = round(0.05 + 0.9*(n['y'] - min(ys))/hgt, 4) if hgt > 1 else 0.5
+        if n['kind'] in ('town', 'village', 'boss'): n['fog'] = 'landmark'
+    out["aspect"] = round(w/hgt, 3) if hgt > 1 else 1.0
     out["nodes"] = nodes; out["edges"] = edges; out["events"] = events; out["dialogue"] = dlg
     if speakers:
         used = {l['speaker'] for v in dlg.values() for l in v}

@@ -1,6 +1,6 @@
 {
  "_note": "v3.8 zones: one per location (word pool + boss). Field names follow src/data/locations.json (roster, packs, elite, unlockRequires, desyPool); new: realm, order, bossNode, gateEdge, bossKind, scriptedElite. The roster replaces locations.json roster/packs/elite and the old scripted/pathFights/mapNodes fields.",
- "version": "v3.8",
+ "version": "v3.9.1",
  "zones": [
   {
    "id": "meadow",

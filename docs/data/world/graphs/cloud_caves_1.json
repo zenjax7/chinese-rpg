@@ -18,13 +18,15 @@
   "map": "bg_map_cloud_caves_1",
   "battle": "bg_battle_r7"
  },
+ "edgeIdxMax": 23,
+ "aspect": 3.515,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "楼梯",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 205,
-   "y": 360,
+   "x": 0.1625,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "暗厅",
@@ -47,8 +49,8 @@
    "id": "treasure_1",
    "idx": 2,
    "kind": "chest",
-   "x": 350,
-   "y": 250,
+   "x": 0.275,
+   "y": 0.2,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝库",
@@ -59,8 +61,8 @@
    "id": "deadend_1",
    "idx": 3,
    "kind": "waypoint",
-   "x": 495,
-   "y": 250,
+   "x": 0.3875,
+   "y": 0.2,
    "zone": "windy_cliffs",
    "title": {
     "zh": "死胡同",
@@ -71,8 +73,8 @@
    "id": "miniboss_1",
    "idx": 4,
    "kind": "miniboss",
-   "x": 350,
-   "y": 360,
+   "x": 0.275,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "小头目",
@@ -83,8 +85,8 @@
    "id": "story_1",
    "idx": 5,
    "kind": "story",
-   "x": 495,
-   "y": 360,
+   "x": 0.3875,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -95,8 +97,8 @@
    "id": "path_2",
    "idx": 6,
    "kind": "waypoint",
-   "x": 350,
-   "y": 470,
+   "x": 0.275,
+   "y": 0.8,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -107,8 +109,8 @@
    "id": "path_3",
    "idx": 7,
    "kind": "inn",
-   "x": 495,
-   "y": 470,
+   "x": 0.3875,
+   "y": 0.8,
    "zone": "windy_cliffs",
    "title": {
     "zh": "营火",
@@ -126,8 +128,8 @@
    "id": "treasure_2",
    "idx": 8,
    "kind": "chest",
-   "x": 640,
-   "y": 195,
+   "x": 0.5,
+   "y": 0.05,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -138,8 +140,8 @@
    "id": "path_4",
    "idx": 9,
    "kind": "waypoint",
-   "x": 640,
-   "y": 305,
+   "x": 0.5,
+   "y": 0.35,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -150,8 +152,8 @@
    "id": "path_5",
    "idx": 10,
    "kind": "waypoint",
-   "x": 785,
-   "y": 250,
+   "x": 0.6125,
+   "y": 0.2,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -162,8 +164,8 @@
    "id": "path_6",
    "idx": 11,
    "kind": "inn",
-   "x": 930,
-   "y": 195,
+   "x": 0.725,
+   "y": 0.05,
    "zone": "windy_cliffs",
    "title": {
     "zh": "营火",
@@ -181,8 +183,8 @@
    "id": "treasure_3",
    "idx": 12,
    "kind": "chest",
-   "x": 1075,
-   "y": 250,
+   "x": 0.8375,
+   "y": 0.2,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -193,8 +195,8 @@
    "id": "path_7",
    "idx": 13,
    "kind": "waypoint",
-   "x": 640,
-   "y": 415,
+   "x": 0.5,
+   "y": 0.65,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -205,8 +207,8 @@
    "id": "npc_1",
    "idx": 14,
    "kind": "npc",
-   "x": 785,
-   "y": 360,
+   "x": 0.6125,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -217,8 +219,8 @@
    "id": "treasure_4",
    "idx": 15,
    "kind": "chest",
-   "x": 930,
-   "y": 305,
+   "x": 0.725,
+   "y": 0.35,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -229,8 +231,8 @@
    "id": "inn_1",
    "idx": 16,
    "kind": "inn",
-   "x": 640,
-   "y": 525,
+   "x": 0.5,
+   "y": 0.95,
    "zone": "windy_cliffs",
    "title": {
     "zh": "隐藏客栈",
@@ -247,8 +249,8 @@
    "id": "treasure_5",
    "idx": 17,
    "kind": "chest",
-   "x": 1075,
-   "y": 360,
+   "x": 0.8375,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "宝藏",
@@ -259,8 +261,8 @@
    "id": "path_8",
    "idx": 18,
    "kind": "waypoint",
-   "x": 785,
-   "y": 470,
+   "x": 0.6125,
+   "y": 0.8,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -271,8 +273,8 @@
    "id": "story_2",
    "idx": 19,
    "kind": "story",
-   "x": 930,
-   "y": 415,
+   "x": 0.725,
+   "y": 0.65,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -283,8 +285,8 @@
    "id": "path_9",
    "idx": 20,
    "kind": "waypoint",
-   "x": 930,
-   "y": 525,
+   "x": 0.725,
+   "y": 0.95,
    "zone": "windy_cliffs",
    "title": {
     "zh": "弯路",
@@ -295,8 +297,8 @@
    "id": "story_3",
    "idx": 21,
    "kind": "story",
-   "x": 1075,
-   "y": 470,
+   "x": 0.8375,
+   "y": 0.8,
    "zone": "windy_cliffs",
    "title": {
     "zh": "故事点",
@@ -307,8 +309,8 @@
    "id": "npc_2",
    "idx": 22,
    "kind": "npc",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "windy_cliffs",
    "title": {
     "zh": "旅人",
@@ -324,7 +326,8 @@
    "to": {
     "graph": "realm_7",
     "node": "portal_2"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -333,7 +336,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -342,7 +346,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -351,7 +356,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -360,7 +366,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -369,7 +376,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -378,7 +386,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e7",
@@ -387,7 +396,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e8",
@@ -396,7 +406,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e9",
@@ -405,7 +416,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e10",
@@ -414,7 +426,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 10
   },
   {
    "id": "e11",
@@ -423,7 +436,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
    "id": "e12",
@@ -432,7 +446,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   },
   {
    "id": "e13",
@@ -441,7 +456,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 13
   },
   {
    "id": "e14",
@@ -450,7 +466,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 14
   },
   {
    "id": "e15",
@@ -459,7 +476,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 15
   },
   {
    "id": "e16",
@@ -468,7 +486,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 16
   },
   {
    "id": "e17",
@@ -477,7 +496,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 17
   },
   {
    "id": "e18",
@@ -486,7 +506,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 18
   },
   {
    "id": "e19",
@@ -495,7 +516,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 19
   },
   {
    "id": "e20",
@@ -505,7 +527,8 @@
    "danger": 1,
    "steps": 1,
    "terrain": "grass",
-   "note": "loop"
+   "note": "loop",
+   "idx": 20
   },
   {
    "id": "e21",
@@ -514,7 +537,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 21
   },
   {
    "id": "e22",
@@ -523,7 +547,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 22
   },
   {
    "id": "e23",
@@ -532,7 +557,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 23
   }
  ],
  "events": [
@@ -620,6 +646,31 @@
    "on": "enter",
    "once": true,
    "outcome": "miniboss",
+   "cond": {
+    "questActive": "q7_glacier_roses"
+   },
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "cliff_golem",
+       "harpy"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q7_glacier_roses"
+    },
+    {
+     "setFlag": "q7_glacier_roses.s5"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
    "do": [
     {
      "fight": {
@@ -644,7 +695,7 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
+   "id": "miniboss_1.3",
    "node": "miniboss_1",
    "on": "enter",
    "once": false,
@@ -653,6 +704,21 @@
   },
   {
    "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_glacier_roses"
+   },
+   "do": [
+    {
+     "dialogue": "cloud_caves_1.story_1.step_q7_glacier_roses"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
    "node": "story_1",
    "on": "enter",
    "once": true,
@@ -843,23 +909,11 @@
    "id": "npc_1.1",
    "node": "npc_1",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_cloud_caves_1_npc_1"
-    }
-   ]
-  },
-  {
-   "id": "npc_1.2",
-   "node": "npc_1",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "cloud_caves_1.npc_1.banter"
     }
    ]
   },
@@ -999,23 +1053,11 @@
    "id": "npc_2.1",
    "node": "npc_2",
    "on": "enter",
-   "once": true,
-   "outcome": "quest_offer",
-   "do": [
-    {
-     "offerQuest": "q7_cloud_caves_1_npc_2"
-    }
-   ]
-  },
-  {
-   "id": "npc_2.2",
-   "node": "npc_2",
-   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
     {
-     "dialogue": "ambient"
+     "dialogue": "cloud_caves_1.npc_2.banter"
     }
    ]
   }
@@ -1023,38 +1065,58 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "cloud_caves_1.story_1.step_q7_glacier_roses": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_glacier_roses: scene from data/dialogue)"
    }
   ],
   "cloud_caves_1.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "cloud_caves_1.npc_1.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ],
   "cloud_caves_1.story_2": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ],
   "cloud_caves_1.story_3": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "cloud_caves_1.npc_2.banter": [
+   {
+    "speaker": "traveller",
+    "en": "(one-line ambient banter to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

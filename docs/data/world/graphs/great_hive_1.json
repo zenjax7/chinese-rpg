@@ -18,13 +18,15 @@
   "map": "bg_map_great_hive_1",
   "battle": "bg_battle_r2"
  },
+ "edgeIdxMax": 12,
+ "aspect": 3.515,
  "nodes": [
   {
    "id": "stairs_1",
    "idx": 0,
    "kind": "stairs_up",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "地牢口",
@@ -35,8 +37,8 @@
    "id": "path_1",
    "idx": 1,
    "kind": "waypoint",
-   "x": 226,
-   "y": 360,
+   "x": 0.1788,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "小路",
@@ -47,8 +49,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 391,
-   "y": 360,
+   "x": 0.3068,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "小路",
@@ -59,8 +61,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "fork",
-   "x": 557,
-   "y": 360,
+   "x": 0.4356,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "小路",
@@ -71,8 +73,8 @@
    "id": "inn_1",
    "idx": 4,
    "kind": "inn",
-   "x": 723,
-   "y": 195,
+   "x": 0.5644,
+   "y": 0.05,
    "zone": "great_hive",
    "title": {
     "zh": "营地客栈",
@@ -90,21 +92,22 @@
    "id": "boss_2",
    "idx": 5,
    "kind": "boss",
-   "x": 889,
-   "y": 250,
+   "x": 0.6932,
+   "y": 0.2,
    "zone": "great_hive",
    "title": {
     "zh": "蜂后",
     "en": "Queen Bee"
    },
-   "boss": "great_hive"
+   "boss": "great_hive",
+   "fog": "landmark"
   },
   {
    "id": "npc_1",
    "idx": 6,
    "kind": "npc",
-   "x": 723,
-   "y": 305,
+   "x": 0.5644,
+   "y": 0.35,
    "zone": "great_hive",
    "title": {
     "zh": "旅人",
@@ -115,8 +118,8 @@
    "id": "path_4",
    "idx": 7,
    "kind": "waypoint",
-   "x": 723,
-   "y": 415,
+   "x": 0.5644,
+   "y": 0.65,
    "zone": "great_hive",
    "title": {
     "zh": "弯路",
@@ -127,8 +130,8 @@
    "id": "path_5",
    "idx": 8,
    "kind": "waypoint",
-   "x": 889,
-   "y": 360,
+   "x": 0.6932,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "弯路",
@@ -139,8 +142,8 @@
    "id": "inn_2",
    "idx": 9,
    "kind": "inn",
-   "x": 1054,
-   "y": 360,
+   "x": 0.8212,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "隐藏客栈",
@@ -157,8 +160,8 @@
    "id": "story_1",
    "idx": 10,
    "kind": "story",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "great_hive",
    "title": {
     "zh": "故事点",
@@ -169,8 +172,8 @@
    "id": "path_6",
    "idx": 11,
    "kind": "waypoint",
-   "x": 723,
-   "y": 525,
+   "x": 0.5644,
+   "y": 0.95,
    "zone": "great_hive",
    "title": {
     "zh": "弯路",
@@ -181,8 +184,8 @@
    "id": "miniboss_1",
    "idx": 12,
    "kind": "miniboss",
-   "x": 889,
-   "y": 470,
+   "x": 0.6932,
+   "y": 0.8,
    "zone": "great_hive",
    "title": {
     "zh": "小头目",
@@ -198,7 +201,8 @@
    "to": {
     "graph": "realm_2",
     "node": "portal_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -207,7 +211,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -216,7 +221,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 2
   },
   {
    "id": "e3",
@@ -225,7 +231,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -234,7 +241,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -244,7 +252,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -253,7 +262,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 6
   },
   {
    "id": "e7",
@@ -262,7 +272,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 7
   },
   {
    "id": "e8",
@@ -271,7 +282,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 8
   },
   {
    "id": "e9",
@@ -280,7 +292,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 9
   },
   {
    "id": "e10",
@@ -289,7 +302,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 10
   },
   {
    "id": "e11",
@@ -298,7 +312,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 11
   },
   {
    "id": "e12",
@@ -307,7 +322,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "tunnel"
+   "terrain": "tunnel",
+   "idx": 12
   }
  ],
  "events": [
@@ -421,7 +437,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q2_great_hive_1_npc_1"
+     "offerQuest": "q2_royal_jelly"
     }
    ]
   },
@@ -511,6 +527,21 @@
    "on": "enter",
    "once": true,
    "outcome": "story",
+   "cond": {
+    "questActive": "q2_royal_jelly"
+   },
+   "do": [
+    {
+     "dialogue": "great_hive_1.story_1.step_q2_royal_jelly"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
    "do": [
     {
      "dialogue": "great_hive_1.story_1"
@@ -557,6 +588,31 @@
    "on": "enter",
    "once": true,
    "outcome": "miniboss",
+   "cond": {
+    "questActive": "q2_royal_jelly"
+   },
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "royal_guard_bee",
+       "giant_bee"
+      ],
+      "kind": "miniboss"
+     },
+     "quest": "q2_royal_jelly"
+    },
+    {
+     "setFlag": "q2_royal_jelly.s2"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
    "do": [
     {
      "fight": {
@@ -581,7 +637,7 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
+   "id": "miniboss_1.3",
    "node": "miniboss_1",
    "on": "enter",
    "once": false,
@@ -592,24 +648,34 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "great_hive_1.story_1.step_q2_royal_jelly": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_royal_jelly: scene from data/dialogue)"
    }
   ],
   "great_hive_1.story_1": [
    {
-    "speaker": "panda",
-    "zh": "（故事待写）",
+    "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

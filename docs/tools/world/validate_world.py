@@ -1,6 +1,6 @@
-"""v3.8 world data validator: python validate_world.py [data_dir]  -> exit 1 on errors.
+"""v3.9 world data validator: python validate_world.py [data_dir]  -> exit 1 on errors.
 Checks: JSON Schema (data/world/schemas), unique ids/idx, edge and event references, two-way stairs/portals, enemy/item/quest/pool refs,
-zones (one boss node + one patrol edge each), reachability with one-way edges, inn coverage (<= maxHopsToInn hops), beeline battle budget per zone."""
+zones (one boss node + one patrol edge each), v2 quests (data/quests.json) and hooks, scene refs (data/dialogue), realm-1 word density D1, speakers,, reachability with one-way edges, inn coverage (<= maxHopsToInn hops), beeline battle budget per zone."""
 import json, os, sys, csv, glob, collections
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
@@ -21,6 +21,7 @@ rules = J(f"{D}/{idx['files']['rules']}"); check('world_rules', rules, 'world_ru
 zf = J(f"{D}/{idx['files']['zones']}"); check('zones', zf, 'zones.json')
 qf = J(f"{D}/{idx['files']['quests']}"); check('quests_world', qf, 'quests_world.json')
 G = {}
+if os.path.exists(f'{D}/examples/progress_example.json'): check('progress', J(f'{D}/examples/progress_example.json'), 'examples/progress_example.json')
 for g in idx['graphs']:
     p = f"{D}/{g['file']}"
     if not os.path.exists(p): E(f"index: missing file {g['file']}"); continue
@@ -37,6 +38,12 @@ QITEMS = {q['id']: q for q in qf['questItems']}; HOOKS = {q['id']: q for q in qf
 BOARD = {q['id'] for q in J(f'{PROTO}/quests.json')['quests']} if os.path.exists(f'{PROTO}/quests.json') else set()
 ZONES = {z['id']: z for z in zf['zones']}
 SPEAKERS = set(qf.get('speakers', {}))
+QV2P = os.environ.get('QUESTS_V2', f'{DESY}/quests.json'); DLG = os.environ.get('DIALOGUE_DIR', f'{DESY}/dialogue')
+QV2 = {q['id']: q for q in J(QV2P)['quests']} if os.path.exists(QV2P) else {}
+BOARD |= set(QV2)
+OFFERS = collections.defaultdict(set)   # graph/node -> quest ids offered there
+import re as _re
+TOK = _re.compile(r'\{C\d{3}\}'); CJK = _re.compile(r'[\u4e00-\u9fff]{2,}')
 # ---- per graph
 def node_ok(gid, nid): return gid in G and any(n['id'] == nid for n in G[gid]['nodes'])
 def conds(c, where):
@@ -52,6 +59,7 @@ def acts(lst, g, where):
         k = next(iter(a)); v = a[k]
         if k == 'dialogue' and v not in g.get('dialogue', {}): E(f"{where}: dialogue '{v}' not in the graph's dialogue map")
         if k == 'offerQuest' and v not in HOOKS and v not in BOARD: E(f"{where}: offerQuest '{v}' unknown")
+        if k == 'scene' and not os.path.exists(f"{DLG}/{v}.json"): E(f"{where}: scene '{v}' not in {DLG}")
         if k == 'giveItem' and v not in ITEMS and v not in QITEMS: E(f"{where}: giveItem '{v}' unknown")
         if k == 'giveItem' and v in QITEMS and a.get('quest') and QITEMS[v]['quest'] != a['quest']: E(f"{where}: item {v} belongs to quest {QITEMS[v]['quest']}")
         if k == 'fight':
@@ -70,6 +78,9 @@ for gid, g in G.items():
     if g['entry'] not in N: E(f"{gid}: entry {g['entry']} missing")
     for x, c in collections.Counter(e['id'] for e in g['edges']).items():
         if c > 1: E(f"{gid}: duplicate edge id {x}")
+    for x, c in collections.Counter(e.get('idx') for e in g['edges']).items():
+        if c > 1: E(f"{gid}: duplicate edge idx {x}")
+    if g['edges'] and max(e.get('idx', 0) for e in g['edges']) > g.get('edgeIdxMax', -1): E(f"{gid}: edge idx > edgeIdxMax")
     for e in g['edges']:
         if e['from'] not in N: E(f"{gid}/{e['id']}: from '{e['from']}' missing")
         if isinstance(e['to'], dict): XL.append((gid, e))
@@ -83,6 +94,8 @@ for gid, g in G.items():
         w = f"{gid}/event {v['id']}"
         if v['node'] not in N: E(f"{w}: node '{v['node']}' missing")
         conds(v.get('cond'), w); acts(v.get('do', []), g, w)
+        for a in v.get('do', []) + [a for p in v.get('pick', []) for a in p['do']]:
+            if 'offerQuest' in a: OFFERS[f"{gid}/{v['node']}"].add(a['offerQuest'])
         for p in v.get('pick', []): conds(p.get('cond'), w); acts(p['do'], g, w)
     evk = collections.defaultdict(set)
     for v in g.get('events', []):
@@ -93,10 +106,19 @@ for gid, g in G.items():
         if n['kind'] in ('npc', 'story') and not evk[n['id']]: W(f"{gid}/{n['id']}: {n['kind']} node has no event")
         if n.get('zone') and n['zone'] not in ZONES: E(f"{gid}/{n['id']}: zone '{n['zone']}' unknown")
         if n['kind'] == 'boss' and n.get('boss') and n['boss'] not in ZONES: E(f"{gid}/{n['id']}: boss zone '{n['boss']}' unknown")
-    spk = set(g.get('npcs', {})) | SPEAKERS | {'panda', 'narrator', 'hero'}
+    spk = set(g.get('npcs', {})) | SPEAKERS | {'xiaolong', 'narrator', 'hero'}
+    nl = nt = 0
     for did, lines in g.get('dialogue', {}).items():
         for l in lines:
-            if l['speaker'] not in spk: W(f"{gid}: dialogue {did} speaker '{l['speaker']}' not in npcs/speakers")
+            if l['speaker'] == 'panda': E(f"{gid}: dialogue {did} speaker 'panda' (v3.9: companion is xiaolong; pandas are innkeeper_panda)")
+            elif l['speaker'] not in spk: W(f"{gid}: dialogue {did} speaker '{l['speaker']}' not in npcs/speakers")
+            ph = TOK.findall(l.get('en', '')); tk = l.get('tokens', [])
+            if sorted(p_[1:-1] for p_ in ph) != sorted(tk): E(f"{gid}: dialogue {did}: placeholders {ph} do not match tokens {tk}")
+            if g.get('realm') == 1:   # story.md density D1
+                nl += 1; nt += bool(tk)
+                if len(tk) > 1: E(f"{gid}: dialogue {did}: {len(tk)} word tokens in one line (D1 max 1)")
+                if CJK.search(l.get('en', '') + l.get('zh', '')): E(f"{gid}: dialogue {did}: Chinese text in a realm-1 line (D1: English + at most one {{Cxxx}} token)")
+    if g.get('realm') == 1 and nt > max(2, 0.3*nl): E(f"{gid}: {nt}/{nl} dialogue lines carry a word token (D1 max 30%)")
 # ---- cross-graph links: target exists; stairs/portal between non-world graphs must be two-way
 for gid, e in XL:
     t = e['to']
@@ -171,8 +193,24 @@ if not schema_or_ref_errors:
                 w = 0 if T.E[e]['kind'] in ('stairs', 'portal') else 1
                 if dist[u] + w < dist.get(v, 99):
                     dist[v] = dist[u] + w; q.appendleft(v) if w == 0 else q.append(v)
-        far = [k for k in T.N if dist.get(k, 99) > rules['maxHopsToInn'] and T.N[k]['kind'] != 'boss']
-        for k in far: E(f"realm {t}: {k} is {dist.get(k)} hops from the nearest inn (max {rules['maxHopsToInn']})")
+        mh = rules['maxHopsToInn']; mh = mh.get(str(t), mh['default']) if isinstance(mh, dict) else mh
+        far = [k for k in T.N if dist.get(k, 99) > mh and T.N[k]['kind'] != 'boss']
+        for k in far: E(f"realm {t}: {k} is {dist.get(k)} hops from the nearest inn (max {mh})")
+        # town density (world_rules.townDensity)
+        # v3.9.1: max(1, ceil(nodes / (20 + 5(t-1)))) exactly (a settlement serves at most 20, 25 ... 60 nodes)
+        want = max(1, -(-len(T.N) // (20 + 5*(t - 1)))); have = len(T.towns)
+        if have < want: E(f"realm {t}: {have} towns/villages, density rule wants {want}")
+        elif have > want + 1: E(f"realm {t}: {have} towns/villages, density rule wants {want}")
+        elif have != want: W(f"realm {t}: {have} towns/villages, density rule wants {want}")
+        stats[t]['nodes_per_settlement'] = round(len(T.N)/max(1, have), 1)
+        rbf = rules.get('realmBossFeather', {})
+        if t in rbf.get('realms', []):
+            rb = next((z for z in zf['zones'] if z['realm'] == t and z['bossKind'] == 'realmboss'), None)
+            if rb:
+                bg, bn = rb['bossNode']['graph'], rb['bossNode']['node']
+                if not any(v['node'] == bn and v.get('on') == 'clear' and any(a.get('giveItem') == 'feather' for a in v.get('do', [])) for v in G[bg].get('events', [])):
+                    E(f"realm {t}: realm boss {bg}/{bn} has no clear event giving a Return Feather (world_rules.realmBossFeather)")
+        stats[t]['towns_villages'] = have
         stats[t]['max_hops_to_inn'] = max(dist.get(k, 99) for k in T.N)
         # beeline battle budget per zone (expected random battles on the shortest route from the previous boss to the approach node)
         pos = T.entry; lo, hi = rules['beelineBattleRange']; zb = []
@@ -183,7 +221,29 @@ if not schema_or_ref_errors:
             if not lo <= ex <= hi: E(f"realm {t}: zone {z['id']} beeline expects {ex:.2f} battles (range {lo}-{hi})")
             pos = z['boss']
         stats[t]['beeline_expected'] = zb
-print(json.dumps({'graphs': len(G), 'zones': len(ZONES), 'errors': len(err), 'warnings': len(warn)}))
+# ---- v3.9 hooks <-> data/quests.json
+for h in HOOKS.values():
+    gg, nn = h['giver'].split('/')
+    if not node_ok(gg, nn): E(f"hook {h['id']}: giver {h['giver']} missing"); continue
+    if h['status'] == 'quest':
+        if not h['quests']: E(f"hook {h['id']}: status quest without quests")
+        for q in h['quests']:
+            if q not in BOARD: E(f"hook {h['id']}: quest {q} not in data/quests.json")
+        for q in h.get('offers', []):
+            if q not in OFFERS[h['giver']]: E(f"hook {h['id']}: {h['giver']} has no offerQuest {q}")
+    elif h['quests']: E(f"hook {h['id']}: ambient hook lists quests")
+for q in QV2.values():
+    if q.get('hook') and q['hook'] not in HOOKS: E(f"quest {q['id']}: hook {q['hook']} not in quests_world.json")
+    for w in [q.get('giver') or {}] + [o.get('where') or {} for o in q.get('objectives', [])]:
+        r = w.get('ref') or (f"{w['graph']}/{w['node']}" if w.get('graph') and w.get('node') else None)
+        if not r: continue
+        if '/' in r and not node_ok(*r.split('/', 1)): E(f"quest {q['id']}: node {r} missing")
+        elif '/' not in r and r not in G: E(f"quest {q['id']}: graph {r} missing")
+    gr = (q.get('giver') or {}).get('ref')
+    if gr and '/' in gr and q['id'] not in OFFERS[gr]: E(f"quest {q['id']}: giver node {gr} has no offerQuest {q['id']}")
+stats_h = collections.Counter(h['status'] for h in HOOKS.values())
+if '-v' in sys.argv: print('hooks', dict(stats_h), 'v2 quests', len(QV2))
+print(json.dumps({'graphs': len(G), 'zones': len(ZONES), 'hooks': dict(stats_h), 'errors': len(err), 'warnings': len(warn)}))
 for m in err[:60]: print('ERROR', m)
 for m in warn[:20]: print('WARN', m)
 if stats and '-v' in sys.argv:

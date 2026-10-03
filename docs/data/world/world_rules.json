@@ -1,6 +1,6 @@
 {
- "_note": "v3.8 world-graph knobs (combat-spec §12, world-graph.md §5). camelCase like balance.json; GameDev may merge this object into balance.json as \"world\". Tuned with build/world/world_sim.py. Not repeated here (already in balance.json): patrol trigger learning.bossTrigger / bossTriggerSpeech, forced patrols learning.patrolsPerTrip, patrol elite learning.eliteReplaceChance, max enemies combat.maxEnemies, Return Feather = shop.json 'feather'.",
- "version": "v3.8",
+ "_note": "v3.9 world-graph knobs (combat-spec §12-§13, world-graph.md §4). camelCase like balance.json; stays its own file (src/data/world/world_rules.json, GameDev). Tuned with build/world/world_sim.py. Not repeated here (already in balance.json): patrol trigger learning.bossTrigger / bossTriggerSpeech, forced patrols learning.patrolsPerTrip, patrol elite learning.eliteReplaceChance, max enemies combat.maxEnemies, Return Feather item = shop.json 'feather' (its v3.9 price and rules are in returnFeather below).",
+ "version": "v3.9.1",
  "encounterRate": {
   "0": 0.0,
   "1": 0.6,
@@ -47,11 +47,48 @@
   6.5,
   9.5
  ],
- "maxHopsToInn": 5,
- "innWarp": {
-  "toTowns": "visited",
-  "sec": 20,
-  "note": "from any inn the hero can warp to a visited town (shops, magic shop, smith) and back to the same inn for free (sec = time cost when used); this keeps shopping as easy as v3.7 deep in a dungeon"
+ "maxHopsToInn": {
+  "1": 3,
+  "2": 3,
+  "3": 3,
+  "default": 5
+ },
+ "townDensity": {
+  "nodesPerTownRealm1": 20,
+  "nodesPerTownRealm9": 60,
+  "rampPerRealm": 5,
+  "rule": "v3.9.1: towns + villages per realm = max(1, ceil(nodes / (20 + 5 x (realm - 1)))), counting the main town, so a settlement never serves more than 20, 25 ... 60 nodes"
+ },
+ "realmBossFeather": {
+  "realms": [
+   3,
+   6,
+   8
+  ],
+  "qty": 1,
+  "note": "v3.9.1: the realm-boss chest of these realms also holds a free Return Feather (on: clear event on the boss node). No shop nudge or tip."
+ },
+ "returnFeather": {
+  "item": "feather",
+  "priceG": 2,
+  "carry": 3,
+  "start": 2,
+  "useSec": 3,
+  "destinations": [
+   "lastInn",
+   "visitedTown"
+  ],
+  "usable": "anywhere on the map outside battle and outside a boss room",
+  "note": "v3.9: no free warp. A Feather is the only fast way back to a town (and from a town back to the last inn). Sold in town and village item shops, not at inns."
+ },
+ "fog": {
+  "reveal": "visited nodes + every node one open edge away from a visited node (shown as '?', kind hidden)",
+  "landmarkKinds": [
+   "town",
+   "village",
+   "boss"
+  ],
+  "state": "player progress (progress.schema.json: visited / walked bitsets by idx); never stored in the graph file"
  },
  "seed": {
   "algorithm": "mulberry32",

@@ -193,6 +193,18 @@
     },
     {
      "required": [
+      "scene"
+     ],
+     "properties": {
+      "scene": {
+       "type": "string",
+       "pattern": "^sc_[a-z0-9_]+$",
+       "description": "v3.9: play a story scene from data/dialogue/<id>.json (scene/0.2)"
+      }
+     }
+    },
+    {
+     "required": [
       "startQuest"
      ],
      "properties": {
@@ -288,7 +300,8 @@
          "enum": [
           "miniboss",
           "elite",
-          "scripted"
+          "scripted",
+          "tutorial"
          ]
         },
         "enemies": {
@@ -299,6 +312,9 @@
          }
         },
         "fill": {
+         "type": "boolean"
+        },
+        "canLose": {
          "type": "boolean"
         }
        },

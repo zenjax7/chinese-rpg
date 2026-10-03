@@ -1,0 +1,215 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_r7_wind_dragon_truth",
+ "title": "Uncle Wind remembers",
+ "realm": 7,
+ "zone": "windy_cliffs",
+ "density": "D5",
+ "trigger": {
+  "graph": "realm_7",
+  "node": "boss_1",
+  "on": "clear",
+  "zone": "windy_cliffs",
+  "nodeKind": "boss",
+  "cond": {
+   "bossDefeated": "windy_cliffs"
+  }
+ },
+ "background": "bg_windy_cliffs_dusk",
+ "music": "sad_wind",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "neutral"
+  },
+  "R1": {
+   "char": "wind_dragon",
+   "expr": "sad"
+  }
+ },
+ "words": [
+  "C010",
+  "C599",
+  "C617",
+  "C903"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "narrator",
+   "side": "none",
+   "expr": "neutral",
+   "en": "The wind stops howling. The great blue dragon lands on the cliff edge... and bows its head.",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "sad",
+   "en": "Sorry. The fog was inside my head. I didn't know what I was doing.",
+   "zh": "对不起。我不知道我在做什么。",
+   "zhTrad": "對不起。我不知道我在做什麼。",
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "worried",
+   "en": "{C010}. Are you okay now?",
+   "tokens": [
+    "C010"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "surprised",
+   "en": "Wait... that little golden one. Come closer, small one. Let me see your scales.",
+   "vo": null
+  },
+  {
+   "id": "l5",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "surprised",
+   "en": "Who are you?",
+   "zh": "你是谁？",
+   "zhTrad": "你是誰？",
+   "zhId": "C599",
+   "tokens": [
+    "C599"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l6",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Your mother is my friend. Golden scales, just like yours. I'd know them anywhere.",
+   "zh": "你的妈妈是我的朋友。",
+   "zhTrad": "你的媽媽是我的朋友。",
+   "vo": null
+  },
+  {
+   "id": "l7",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "surprised",
+   "en": "Mom? Where is she?",
+   "zh": "妈妈？她在哪儿？",
+   "zhTrad": "媽媽？她在哪兒？",
+   "vo": null
+  },
+  {
+   "id": "l8",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "worried",
+   "en": "She is very far away. The Demon King's fog took her, and they bound her with a chain of shadow.",
+   "zh": "她在很远的地方。",
+   "zhTrad": "她在很遠的地方。",
+   "vo": null
+  },
+  {
+   "id": "l9",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "sad",
+   "en": "She hid her last egg in a quiet village, so the fog would never find it. I tried to stop them. Then the fog found me too.",
+   "vo": null
+  },
+  {
+   "id": "l10",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "thinking",
+   "en": "What do we do?",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "{C617}",
+     "tokens": [
+      "C617"
+     ],
+     "goto": "l11",
+     "setFlags": [
+      "r7_lets_go"
+     ]
+    },
+    {
+     "id": "c2",
+     "en": "{C903}",
+     "tokens": [
+      "C903"
+     ],
+     "goto": "l11b"
+    }
+   ]
+  },
+  {
+   "id": "l11b",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Far. Very far. But you have many friends now.",
+   "vo": null,
+   "goto": "l11"
+  },
+  {
+   "id": "l11",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Go north. Keep going straight: past the Griffin Peaks, past the Ogre Colosseum, all the way to the Demon King's castle.",
+   "zh": "往北走。一直走。",
+   "zhTrad": "往北走。一直走。",
+   "vo": null
+  },
+  {
+   "id": "l12",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "angry",
+   "en": "I want to find Mom!",
+   "zh": "我要找妈妈！",
+   "zhTrad": "我要找媽媽！",
+   "vo": null
+  },
+  {
+   "id": "l13",
+   "speaker": "wind_dragon",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Brave, like her. When you reach her, call my name into the wind and I will come.",
+   "vo": null
+  },
+  {
+   "id": "l14",
+   "speaker": "narrator",
+   "side": "none",
+   "expr": "neutral",
+   "en": "Xiaolong stares north for a long time. Then he eats three snacks, very bravely.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "setFlag": "knows_mom_captured"
+  },
+  {
+   "setFlag": "wind_dragon_promise"
+  }
+ ]
+}

@@ -16,13 +16,15 @@
   "map": "bg_map_realm_5",
   "battle": "bg_battle_r5"
  },
+ "edgeIdxMax": 33,
+ "aspect": 2.071,
  "nodes": [
   {
    "id": "entry_town",
    "idx": 0,
    "kind": "town",
-   "x": 60,
-   "y": 360,
+   "x": 0.05,
+   "y": 0.5,
    "zone": "misty_marsh",
    "title": {
     "zh": "芦苇村",
@@ -35,14 +37,15 @@
     "shop"
    ],
    "hub": "village",
-   "town": 5
+   "town": 5,
+   "fog": "landmark"
   },
   {
    "id": "path_1",
    "idx": 1,
    "kind": "fork",
-   "x": 189,
-   "y": 360,
+   "x": 0.1501,
+   "y": 0.5,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -53,8 +56,8 @@
    "id": "path_2",
    "idx": 2,
    "kind": "waypoint",
-   "x": 318,
-   "y": 195,
+   "x": 0.2502,
+   "y": 0.2348,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -65,8 +68,8 @@
    "id": "path_3",
    "idx": 3,
    "kind": "waypoint",
-   "x": 447,
-   "y": 195,
+   "x": 0.3503,
+   "y": 0.2348,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -77,8 +80,8 @@
    "id": "campfire_1",
    "idx": 4,
    "kind": "inn",
-   "x": 576,
-   "y": 140,
+   "x": 0.4503,
+   "y": 0.1464,
    "zone": "misty_marsh",
    "title": {
     "zh": "半路营火",
@@ -97,8 +100,8 @@
    "id": "path_4",
    "idx": 5,
    "kind": "waypoint",
-   "x": 704,
-   "y": 80,
+   "x": 0.5497,
+   "y": 0.05,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -109,8 +112,8 @@
    "id": "path_5",
    "idx": 6,
    "kind": "waypoint",
-   "x": 833,
-   "y": 86,
+   "x": 0.6497,
+   "y": 0.0596,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -121,8 +124,8 @@
    "id": "inn_1",
    "idx": 7,
    "kind": "inn",
-   "x": 962,
-   "y": 305,
+   "x": 0.7498,
+   "y": 0.4116,
    "zone": "misty_marsh",
    "title": {
     "zh": "营地客栈",
@@ -140,21 +143,22 @@
    "id": "boss_1",
    "idx": 8,
    "kind": "boss",
-   "x": 1091,
-   "y": 360,
+   "x": 0.8499,
+   "y": 0.5,
    "zone": "misty_marsh",
    "title": {
     "zh": "泥潭巨蛙",
     "en": "Giant Bog Toad"
    },
-   "boss": "misty_marsh"
+   "boss": "misty_marsh",
+   "fog": "landmark"
   },
   {
    "id": "portal_1",
    "idx": 9,
    "kind": "portal",
-   "x": 1220,
-   "y": 360,
+   "x": 0.95,
+   "y": 0.5,
    "zone": "hydra_s_lair",
    "title": {
     "zh": "地牢入口",
@@ -165,8 +169,8 @@
    "id": "path_6",
    "idx": 10,
    "kind": "waypoint",
-   "x": 576,
-   "y": 250,
+   "x": 0.4503,
+   "y": 0.3232,
    "zone": "misty_marsh",
    "title": {
     "zh": "小路",
@@ -177,8 +181,8 @@
    "id": "town_2",
    "idx": 11,
    "kind": "village",
-   "x": 704,
-   "y": 160,
+   "x": 0.5497,
+   "y": 0.1786,
    "zone": "misty_marsh",
    "title": {
     "zh": "芦苇村分站",
@@ -192,14 +196,15 @@
    ],
    "shops": [
     "items"
-   ]
+   ],
+   "fog": "landmark"
   },
   {
    "id": "path_7",
    "idx": 12,
    "kind": "waypoint",
-   "x": 318,
-   "y": 305,
+   "x": 0.2502,
+   "y": 0.4116,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -210,8 +215,8 @@
    "id": "path_8",
    "idx": 13,
    "kind": "waypoint",
-   "x": 447,
-   "y": 305,
+   "x": 0.3503,
+   "y": 0.4116,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -222,8 +227,8 @@
    "id": "path_9",
    "idx": 14,
    "kind": "waypoint",
-   "x": 576,
-   "y": 360,
+   "x": 0.4503,
+   "y": 0.5,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -234,8 +239,8 @@
    "id": "path_10",
    "idx": 15,
    "kind": "waypoint",
-   "x": 704,
-   "y": 240,
+   "x": 0.5497,
+   "y": 0.3071,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -246,8 +251,8 @@
    "id": "deadend_1",
    "idx": 16,
    "kind": "inn",
-   "x": 833,
-   "y": 177,
+   "x": 0.6497,
+   "y": 0.2059,
    "zone": "misty_marsh",
    "title": {
     "zh": "营火",
@@ -265,8 +270,8 @@
    "id": "path_11",
    "idx": 17,
    "kind": "waypoint",
-   "x": 318,
-   "y": 415,
+   "x": 0.2502,
+   "y": 0.5884,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -277,8 +282,8 @@
    "id": "path_12",
    "idx": 18,
    "kind": "waypoint",
-   "x": 447,
-   "y": 415,
+   "x": 0.3503,
+   "y": 0.5884,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -289,8 +294,8 @@
    "id": "path_13",
    "idx": 19,
    "kind": "waypoint",
-   "x": 576,
-   "y": 470,
+   "x": 0.4503,
+   "y": 0.6768,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -301,8 +306,8 @@
    "id": "path_14",
    "idx": 20,
    "kind": "inn",
-   "x": 704,
-   "y": 320,
+   "x": 0.5497,
+   "y": 0.4357,
    "zone": "misty_marsh",
    "title": {
     "zh": "营火",
@@ -320,8 +325,8 @@
    "id": "miniboss_1",
    "idx": 21,
    "kind": "miniboss",
-   "x": 833,
-   "y": 269,
+   "x": 0.6497,
+   "y": 0.3537,
    "zone": "misty_marsh",
    "title": {
     "zh": "小头目",
@@ -332,8 +337,8 @@
    "id": "path_15",
    "idx": 22,
    "kind": "waypoint",
-   "x": 318,
-   "y": 525,
+   "x": 0.2502,
+   "y": 0.7652,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -344,8 +349,8 @@
    "id": "npc_1",
    "idx": 23,
    "kind": "npc",
-   "x": 447,
-   "y": 525,
+   "x": 0.3503,
+   "y": 0.7652,
    "zone": "misty_marsh",
    "title": {
     "zh": "旅人",
@@ -356,8 +361,8 @@
    "id": "treasure_1",
    "idx": 24,
    "kind": "chest",
-   "x": 704,
-   "y": 400,
+   "x": 0.5497,
+   "y": 0.5643,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -368,8 +373,8 @@
    "id": "path_16",
    "idx": 25,
    "kind": "fork",
-   "x": 704,
-   "y": 480,
+   "x": 0.5497,
+   "y": 0.6929,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -380,8 +385,8 @@
    "id": "path_17",
    "idx": 26,
    "kind": "waypoint",
-   "x": 833,
-   "y": 360,
+   "x": 0.6497,
+   "y": 0.5,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -392,8 +397,8 @@
    "id": "treasure_2",
    "idx": 27,
    "kind": "chest",
-   "x": 962,
-   "y": 415,
+   "x": 0.7498,
+   "y": 0.5884,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -404,8 +409,8 @@
    "id": "path_18",
    "idx": 28,
    "kind": "waypoint",
-   "x": 576,
-   "y": 580,
+   "x": 0.4503,
+   "y": 0.8536,
    "zone": "misty_marsh",
    "title": {
     "zh": "弯路",
@@ -416,8 +421,8 @@
    "id": "treasure_3",
    "idx": 29,
    "kind": "chest",
-   "x": 704,
-   "y": 560,
+   "x": 0.5497,
+   "y": 0.8214,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -428,8 +433,8 @@
    "id": "treasure_4",
    "idx": 30,
    "kind": "chest",
-   "x": 704,
-   "y": 640,
+   "x": 0.5497,
+   "y": 0.95,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -440,8 +445,8 @@
    "id": "deadend_2",
    "idx": 31,
    "kind": "waypoint",
-   "x": 833,
-   "y": 451,
+   "x": 0.6497,
+   "y": 0.6463,
    "zone": "misty_marsh",
    "title": {
     "zh": "死胡同",
@@ -452,8 +457,8 @@
    "id": "treasure_5",
    "idx": 32,
    "kind": "chest",
-   "x": 833,
-   "y": 543,
+   "x": 0.6497,
+   "y": 0.7941,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -464,8 +469,8 @@
    "id": "treasure_6",
    "idx": 33,
    "kind": "chest",
-   "x": 833,
-   "y": 634,
+   "x": 0.6497,
+   "y": 0.9404,
    "zone": "misty_marsh",
    "title": {
     "zh": "宝藏",
@@ -481,7 +486,8 @@
    "to": {
     "graph": "hydra_lair_1",
     "node": "stairs_1"
-   }
+   },
+   "idx": 0
   },
   {
    "id": "e1",
@@ -490,7 +496,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 1
   },
   {
    "id": "e2",
@@ -507,7 +514,8 @@
     "fill": true,
     "once": true,
     "step": 1
-   }
+   },
+   "idx": 2
   },
   {
    "id": "e3",
@@ -516,7 +524,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 3,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 3
   },
   {
    "id": "e4",
@@ -525,7 +534,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 4
   },
   {
    "id": "e5",
@@ -534,7 +544,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 5
   },
   {
    "id": "e6",
@@ -543,7 +554,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 6
   },
   {
    "id": "e7",
@@ -552,7 +564,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 7
   },
   {
    "id": "e8",
@@ -562,7 +575,8 @@
    "danger": 0,
    "steps": 1,
    "patrol": true,
-   "terrain": "boss_approach"
+   "terrain": "boss_approach",
+   "idx": 8
   },
   {
    "id": "e9",
@@ -571,7 +585,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 9
   },
   {
    "id": "e10",
@@ -580,7 +595,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 10
   },
   {
    "id": "e11",
@@ -589,7 +605,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "road"
+   "terrain": "road",
+   "idx": 11
   },
   {
    "id": "e12",
@@ -598,7 +615,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 12
   },
   {
    "id": "e13",
@@ -607,7 +625,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 13
   },
   {
    "id": "e14",
@@ -616,7 +635,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 14
   },
   {
    "id": "e15",
@@ -625,7 +645,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 15
   },
   {
    "id": "e16",
@@ -634,7 +655,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 16
   },
   {
    "id": "e17",
@@ -643,7 +665,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 17
   },
   {
    "id": "e18",
@@ -652,7 +675,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 18
   },
   {
    "id": "e19",
@@ -661,7 +685,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 19
   },
   {
    "id": "e20",
@@ -670,7 +695,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 20
   },
   {
    "id": "e21",
@@ -679,7 +705,8 @@
    "kind": "path",
    "danger": 2,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 21
   },
   {
    "id": "e22",
@@ -688,7 +715,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 22
   },
   {
    "id": "e23",
@@ -697,7 +725,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 23
   },
   {
    "id": "e24",
@@ -706,7 +735,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 24
   },
   {
    "id": "e25",
@@ -715,7 +745,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 2,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 25
   },
   {
    "id": "e26",
@@ -724,7 +755,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 26
   },
   {
    "id": "e27",
@@ -733,7 +765,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 27
   },
   {
    "id": "e28",
@@ -742,7 +775,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 28
   },
   {
    "id": "e29",
@@ -751,7 +785,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 29
   },
   {
    "id": "e30",
@@ -760,7 +795,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 30
   },
   {
    "id": "e31",
@@ -769,7 +805,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 31
   },
   {
    "id": "e32",
@@ -778,7 +815,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 32
   },
   {
    "id": "e33",
@@ -787,7 +825,8 @@
    "kind": "path",
    "danger": 1,
    "steps": 1,
-   "terrain": "grass"
+   "terrain": "grass",
+   "idx": 33
   }
  ],
  "events": [
@@ -958,6 +997,21 @@
        "qty": 1
       }
      ]
+    }
+   ]
+  },
+  {
+   "id": "portal_1.1",
+   "node": "portal_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q5_fog_bottle"
+   },
+   "do": [
+    {
+     "dialogue": "realm_5.portal_1.step_q5_fog_bottle"
     }
    ]
   },
@@ -1312,7 +1366,7 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q5_realm_5_npc_1"
+     "offerQuest": "q5_escort_xiaohe"
     }
    ]
   },
@@ -1578,17 +1632,28 @@
  "dialogue": {
   "ambient": [
    {
-    "speaker": "panda",
-    "zh": "我们走吧！",
+    "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_5.portal_1.step_q5_fog_bottle": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_fog_bottle: scene from data/dialogue)"
    }
   ]
  },
  "npcs": {
-  "panda": {
+  "xiaolong": {
    "name": {
-    "zh": "熊猫",
-    "en": "Panda (companion)"
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

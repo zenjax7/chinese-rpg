@@ -1,0 +1,41 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "scene/0.2 — GameDev scene/0.1 (architecture.md §11.1) + realm/zone/density/trigger/tokens/zhTrad",
+ "type": "object",
+ "required": ["schema", "id", "realm", "density", "trigger", "slots", "lines"],
+ "properties": {
+  "schema": {"const": "scene/0.2"},
+  "id": {"type": "string", "pattern": "^sc_[a-z0-9_]+$"},
+  "realm": {"type": "integer", "minimum": 1, "maximum": 9},
+  "zone": {"type": "string"},
+  "density": {"enum": ["D1", "D2", "D3", "D4", "D5", "D6"]},
+  "title": {"type": "string"},
+  "trigger": {"type": "object", "required": ["on"], "properties": {
+    "on": {"enum": ["enter", "firstEnter", "clear", "leave", "rest", "talk", "questOffer", "questTurnIn"]},
+    "graph": {"type": "string"}, "node": {"type": "string"},
+    "zone": {"type": "string"}, "nodeKind": {"type": "string"}, "position": {"type": "string"},
+    "cond": {"type": "object"}, "replaces": {"type": "string"}}},
+  "background": {"type": "string"}, "music": {"type": "string"},
+  "once": {"type": "boolean"},
+  "slots": {"type": "object", "propertyNames": {"enum": ["L1", "L2", "R1", "R2"]},
+    "additionalProperties": {"type": "object", "required": ["char"], "properties": {"char": {"type": "string"}, "expr": {"type": "string"}}}},
+  "words": {"type": "array", "items": {"type": "string", "pattern": "^C[0-9]{3,4}$"}},
+  "teaches": {"type": "array", "items": {"type": "string"}, "maxItems": 3},
+  "lines": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/line"}},
+  "onEnd": {"type": "array"}
+ },
+ "$defs": {
+  "line": {"type": "object", "required": ["id", "speaker", "en"], "properties": {
+    "id": {"type": "string"}, "speaker": {"type": "string"}, "portrait": {"type": "string"},
+    "side": {"enum": ["L1", "L2", "R1", "R2", "none"]}, "expr": {"type": "string"},
+    "en": {"type": "string"}, "zh": {"type": "string"}, "zhTrad": {"type": "string"}, "zhId": {"type": "string"},
+    "tokens": {"type": "array", "items": {"type": "string"}},
+    "vo": {"type": ["string", "null"]},
+    "if": {"type": "object"}, "else": {"type": "string"},
+    "setFlags": {"type": "array"}, "clearFlags": {"type": "array"},
+    "goto": {"type": "string"}, "end": {"type": "boolean"},
+    "choices": {"type": "array", "items": {"type": "object", "required": ["id", "en"], "properties": {
+       "id": {"type": "string"}, "en": {"type": "string"}, "tokens": {"type": "array"}, "goto": {"type": "string"},
+       "setFlags": {"type": "array"}, "correct": {"type": "boolean"}}}}}}
+ }
+}

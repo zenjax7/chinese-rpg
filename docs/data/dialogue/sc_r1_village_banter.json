@@ -1,0 +1,180 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_r1_village_banter",
+ "title": "Counting rabbits",
+ "realm": 1,
+ "zone": "clover_hills",
+ "density": "D1",
+ "trigger": {
+  "graph": "realm_1",
+  "node": "village",
+  "on": "enter",
+  "cond": {
+   "bossDefeated": "clover_hills"
+  }
+ },
+ "background": "bg_village_afternoon",
+ "music": "village_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "xiaoming",
+   "expr": "happy"
+  },
+  "R2": {
+   "char": "farmer_li",
+   "expr": "neutral"
+  }
+ },
+ "words": [
+  "C043",
+  "C070",
+  "C046",
+  "C068",
+  "C071"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "xiaoming",
+   "side": "R1",
+   "expr": "happy",
+   "en": "{hero}! You beat the wolf in Clover Hills? Everyone is talking about it!",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "{C043}! {C043}!",
+   "tokens": [
+    "C043"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "surprised",
+   "en": "Whoa, Xiaolong. You learned a new word!",
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "farmer_li",
+   "side": "R2",
+   "expr": "happy",
+   "en": "The fog is thinner now. Three rabbits came back to my field this morning. Watch, I'll count them.",
+   "vo": null
+  },
+  {
+   "id": "l5",
+   "speaker": "farmer_li",
+   "side": "R2",
+   "expr": "thinking",
+   "en": "One... two... {C070}!",
+   "tokens": [
+    "C070"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l6",
+   "speaker": "xiaoming",
+   "side": "R1",
+   "expr": "surprised",
+   "en": "{C046}!",
+   "tokens": [
+    "C046"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l7",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "thinking",
+   "en": "What comes after two?",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "{C068}",
+     "tokens": [
+      "C068"
+     ],
+     "goto": "l8",
+     "correct": true,
+     "setFlags": [
+      "r1_counted_rabbits"
+     ]
+    },
+    {
+     "id": "c2",
+     "en": "{C071}",
+     "tokens": [
+      "C071"
+     ],
+     "goto": "l9"
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "speaker": "farmer_li",
+   "side": "R2",
+   "expr": "happy",
+   "en": "Ha! Yes, that's the one. My brain is still a little foggy.",
+   "vo": null,
+   "goto": "l10"
+  },
+  {
+   "id": "l9",
+   "speaker": "xiaoming",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Hmm, that's more rabbits than we have! It's three. Count with me.",
+   "vo": null
+  },
+  {
+   "id": "l10",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "(He counts on his claws, gets to three, then eats a carrot.)",
+   "vo": null
+  },
+  {
+   "id": "l11",
+   "speaker": "xiaoming",
+   "side": "R1",
+   "expr": "worried",
+   "en": "There's a Horned Rabbit with a shiny crown in the Warren now. A red imp put it on his head!",
+   "vo": null
+  },
+  {
+   "id": "l12",
+   "speaker": "farmer_li",
+   "side": "R2",
+   "expr": "worried",
+   "en": "Be careful in those tunnels, little hero.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "setFlag": "heard_about_crown"
+  }
+ ]
+}

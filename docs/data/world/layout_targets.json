@@ -1,6 +1,6 @@
 {
  "_note": "Per-realm layout targets used by build/world/world_gen.py. nodes = overworld + dungeon levels (town hub screens are not graphs).",
- "version": "v3.8",
+ "version": "v3.9.1",
  "realms": {
   "2": {
    "nodes": 25,
@@ -24,7 +24,7 @@
   },
   "3": {
    "nodes": 40,
-   "towns": 2,
+   "towns": 1,
    "minis": 2,
    "loop": 0.25,
    "dungeons": [
@@ -97,7 +97,7 @@
   },
   "6": {
    "nodes": 105,
-   "towns": 3,
+   "towns": 2,
    "minis": 4,
    "loop": 0.3,
    "dungeons": [
@@ -172,7 +172,7 @@
   },
   "8": {
    "nodes": 165,
-   "towns": 4,
+   "towns": 3,
    "minis": 5,
    "loop": 0.3,
    "dungeons": [
@@ -214,7 +214,7 @@
   },
   "9": {
    "nodes": 200,
-   "towns": 4,
+   "towns": 3,
    "minis": 6,
    "loop": 0.3,
    "dungeons": [

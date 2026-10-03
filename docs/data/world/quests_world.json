@@ -1,756 +1,549 @@
 {
- "_note": "Quest hooks given by NPC nodes (placeholders until the quest system; quests.json board quests stay as they are) and quest items.",
- "version": "v3.8",
+ "_note": "v3.9: NPC slots on the graphs, reconciled with data/quests.json (quest/0.2). status quest = used by a v2 quest (giver or step; offers = offerQuest events on the node); ambient = free slot that is a one-line banter NPC. Quest items.",
+ "version": "v3.9.1",
  "questHooks": [
   {
    "id": "q1_hoe",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "找回锄头",
-   "titleEn": "Find Farmer Li's hoe",
+   "status": "quest",
    "giver": "realm_1/m_farm",
-   "target": {
-    "item": "farmers_hoe",
-    "n": 1
-   },
    "turnIn": "realm_1/m_farm",
-   "rewardG": 2,
-   "rewardItem": "honey"
+   "quests": [
+    "q1_hoe",
+    "q1_bounty"
+   ],
+   "offers": [
+    "q1_hoe",
+    "q1_bounty"
+   ]
   },
   {
    "id": "q1_carrot",
-   "status": "hook",
-   "type": "miniboss",
-   "titleZh": "金萝卜",
-   "titleEn": "The golden carrot thief",
+   "status": "quest",
    "giver": "realm_1/w_path",
-   "target": {
-    "event": "thief_miniboss",
-    "n": 1
-   },
    "turnIn": "realm_1/village",
-   "rewardG": 3,
-   "rewardItem": "feather"
+   "quests": [
+    "q1_carrot"
+   ],
+   "offers": [
+    "q1_carrot"
+   ]
   },
   {
    "id": "q2_great_hive_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "great_hive_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "great_hive_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q2_royal_jelly"
+   ],
+   "offers": [
+    "q2_royal_jelly"
+   ]
   },
   {
    "id": "q3_bazaar_cellars_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "bazaar_cellars_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "bazaar_cellars_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q3_lost_wallet"
+   ],
+   "offers": [
+    "q3_lost_wallet"
+   ]
   },
   {
    "id": "q4_goblin_caves_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "goblin_caves_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "goblin_caves_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q4_glow_moss"
+   ],
+   "offers": [
+    "q4_glow_moss"
+   ]
+  },
+  {
+   "id": "q4_goblin_caves_3_story_1",
+   "giver": "goblin_caves_3/story_1",
+   "turnIn": "goblin_caves_3/story_1",
+   "status": "quest",
+   "quests": [
+    "q4_homework"
+   ],
+   "offers": [
+    "q4_homework"
+   ]
+  },
+  {
+   "id": "q4_goblin_caves_2_story_1",
+   "giver": "goblin_caves_2/story_1",
+   "turnIn": "goblin_caves_2/story_1",
+   "status": "quest",
+   "quests": [
+    "q4_free_classmates"
+   ],
+   "offers": [
+    "q4_free_classmates"
+   ]
   },
   {
    "id": "q5_realm_5_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_5/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_5/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q5_escort_xiaohe"
+   ],
+   "offers": [
+    "q5_escort_xiaohe"
+   ]
   },
   {
    "id": "q5_hydra_lair_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "hydra_lair_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "hydra_lair_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q5_lost_fishers",
+    "q5_invitations"
+   ],
+   "offers": [
+    "q5_lost_fishers"
+   ]
   },
   {
    "id": "q5_hydra_lair_1_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "hydra_lair_1/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "hydra_lair_1/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q5_lost_fishers"
+   ],
+   "offers": []
   },
   {
    "id": "q5_hydra_lair_1_npc_3",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "hydra_lair_1/npc_3",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "hydra_lair_1/npc_3",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q5_lost_fishers"
+   ],
+   "offers": []
   },
   {
    "id": "q6_moonlit_crypt_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "moonlit_crypt_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "moonlit_crypt_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q6_lost_dog",
+    "q6_rattle_bones"
+   ],
+   "offers": [
+    "q6_lost_dog",
+    "q6_rattle_bones"
+   ]
   },
   {
    "id": "q6_moonlit_crypt_2_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "moonlit_crypt_2/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "moonlit_crypt_2/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q6_knight_dad"
+   ],
+   "offers": [
+    "q6_knight_dad"
+   ]
   },
   {
    "id": "q6_realm_6_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_6/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_6/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q6_old_mine_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "old_mine_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "old_mine_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q6_realm_6_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "realm_6/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "realm_6/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q6_hot_soup"
+   ],
+   "offers": []
   },
   {
    "id": "q6_moonlit_crypt_2_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "moonlit_crypt_2/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "moonlit_crypt_2/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q6_knight_dad"
+   ],
+   "offers": []
   },
   {
-   "id": "q6_moonlit_crypt_1_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "moonlit_crypt_1/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "moonlit_crypt_1/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "id": "q6_old_mine_1_npc_1",
+   "giver": "old_mine_1/npc_1",
+   "turnIn": "old_mine_1/npc_1",
+   "status": "quest",
+   "quests": [
+    "q6_old_mine"
+   ],
+   "offers": [
+    "q6_old_mine"
+   ]
   },
   {
    "id": "q7_realm_7_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q7_lost_mapmaker"
+   ],
+   "offers": [
+    "q7_lost_mapmaker"
+   ]
   },
   {
    "id": "q7_griffin_spire_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "griffin_spire_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "griffin_spire_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q7_griffin_feathers"
+   ],
+   "offers": [
+    "q7_griffin_feathers"
+   ]
   },
   {
    "id": "q7_griffin_spire_2_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "griffin_spire_2/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "griffin_spire_2/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q7_griffin_chick"
+   ],
+   "offers": [
+    "q7_griffin_chick"
+   ]
   },
   {
    "id": "q7_griffin_spire_3_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "griffin_spire_3/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "griffin_spire_3/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q7_griffin_chick"
+   ],
+   "offers": []
   },
   {
    "id": "q7_realm_7_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q7_golem_sign"
+   ],
+   "offers": [
+    "q7_golem_sign"
+   ]
   },
   {
    "id": "q7_realm_7_npc_3",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_3",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_3",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_7.npc_3.banter"
   },
   {
    "id": "q7_realm_7_npc_4",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_4",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_4",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_7.npc_4.banter"
   },
   {
    "id": "q7_cloud_caves_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "cloud_caves_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "cloud_caves_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "cloud_caves_1.npc_1.banter"
   },
   {
    "id": "q7_realm_7_npc_5",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_5",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_5",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_7.npc_5.banter"
   },
   {
    "id": "q7_realm_7_npc_6",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_7/npc_6",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_7/npc_6",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_7.npc_6.banter"
   },
   {
    "id": "q7_cloud_caves_1_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "cloud_caves_1/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "cloud_caves_1/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "cloud_caves_1.npc_2.banter"
   },
   {
    "id": "q8_undercroft_2_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "undercroft_2/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "undercroft_2/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q8_bronze_medals"
+   ],
+   "offers": [
+    "q8_bronze_medals"
+   ]
   },
   {
    "id": "q8_realm_8_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_8/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_8/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q8_lost_ball"
+   ],
+   "offers": [
+    "q8_lost_ball"
+   ]
   },
   {
    "id": "q8_realm_8_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_8/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_8/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_8.npc_2.banter"
+  },
+  {
+   "id": "q8_undercroft_1_npc_1",
+   "giver": "undercroft_1/npc_1",
+   "turnIn": "undercroft_1/npc_1",
+   "status": "ambient",
+   "quests": [],
+   "banter": "undercroft_1.npc_1.banter"
+  },
+  {
+   "id": "q8_undercroft_1_npc_2",
+   "giver": "undercroft_1/npc_2",
+   "turnIn": "undercroft_1/npc_2",
+   "status": "quest",
+   "quests": [
+    "q8_singer_escort"
+   ],
+   "offers": [
+    "q8_singer_escort"
+   ]
   },
   {
    "id": "q8_realm_8_npc_3",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_8/npc_3",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_8/npc_3",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_8.npc_3.banter"
+  },
+  {
+   "id": "q8_undercroft_1_npc_4",
+   "giver": "undercroft_1/npc_4",
+   "turnIn": "undercroft_1/npc_4",
+   "status": "ambient",
+   "quests": [],
+   "banter": "undercroft_1.npc_4.banter"
+  },
+  {
+   "id": "q8_beast_pens_1_npc_1",
+   "giver": "beast_pens_1/npc_1",
+   "turnIn": "beast_pens_1/npc_1",
+   "status": "ambient",
+   "quests": [],
+   "banter": "beast_pens_1.npc_1.banter"
   },
   {
    "id": "q8_realm_8_npc_4",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_8/npc_4",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_8/npc_4",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_8.npc_4.banter"
   },
   {
    "id": "q8_realm_8_npc_5",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_8/npc_5",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_8/npc_5",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q8_realm_8_npc_6",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "realm_8/npc_6",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "realm_8/npc_6",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q8_realm_8_npc_7",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "realm_8/npc_7",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "realm_8/npc_7",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_8.npc_5.banter"
   },
   {
    "id": "q8_undercroft_3_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "undercroft_3/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "undercroft_3/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q8_fan_letters"
+   ],
+   "offers": []
   },
   {
-   "id": "q8_undercroft_2_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "undercroft_2/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "undercroft_2/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "id": "q8_undercroft_1_npc_5",
+   "giver": "undercroft_1/npc_5",
+   "turnIn": "undercroft_1/npc_5",
+   "status": "ambient",
+   "quests": [],
+   "banter": "undercroft_1.npc_5.banter"
   },
   {
    "id": "q9_realm_9_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "realm_9/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "realm_9/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_9.npc_1.banter"
   },
   {
    "id": "q9_demon_castle_2_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "demon_castle_2/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "demon_castle_2/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "quest",
+   "quests": [
+    "q9_dragonlings"
+   ],
+   "offers": []
   },
   {
-   "id": "q9_demon_castle_2_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_2_npc_3",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_3",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_3",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_2_npc_4",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_4",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_4",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_2_npc_5",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_5",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_5",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_2_npc_6",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_6",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_6",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_1_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_1/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_1/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_2_npc_7",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_2/npc_7",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_2/npc_7",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_realm_9_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "realm_9/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "realm_9/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
-  },
-  {
-   "id": "q9_demon_castle_1_npc_2",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_1/npc_2",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_1/npc_2",
-   "rewardG": 2,
-   "rewardItem": null
+   "id": "q9_demon_castle_4_npc_1",
+   "giver": "demon_castle_4/npc_1",
+   "turnIn": "demon_castle_4/npc_1",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_4.npc_1.banter"
   },
   {
    "id": "q9_demon_castle_3_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
    "giver": "demon_castle_3/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
    "turnIn": "demon_castle_3/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_3.npc_1.banter"
   },
   {
-   "id": "q9_demon_castle_5_npc_1",
-   "status": "hook",
-   "type": "fetch",
-   "titleZh": "（任务待写）",
-   "titleEn": "(quest to write)",
-   "giver": "demon_castle_5/npc_1",
-   "target": {
-    "item": null,
-    "n": 1
-   },
-   "turnIn": "demon_castle_5/npc_1",
-   "rewardG": 2,
-   "rewardItem": null
+   "id": "q9_realm_9_npc_2",
+   "giver": "realm_9/npc_2",
+   "turnIn": "realm_9/npc_2",
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_9.npc_2.banter"
+  },
+  {
+   "id": "q9_shadow_vault_1_npc_1",
+   "giver": "shadow_vault_1/npc_1",
+   "turnIn": "shadow_vault_1/npc_1",
+   "status": "ambient",
+   "quests": [],
+   "banter": "shadow_vault_1.npc_1.banter"
+  },
+  {
+   "id": "q9_demon_castle_2_npc_2",
+   "giver": "demon_castle_2/npc_2",
+   "turnIn": "demon_castle_2/npc_2",
+   "status": "quest",
+   "quests": [
+    "q9_pipi_surrender"
+   ],
+   "offers": [
+    "q9_pipi_surrender"
+   ]
+  },
+  {
+   "id": "q9_demon_castle_2_npc_3",
+   "giver": "demon_castle_2/npc_3",
+   "turnIn": "demon_castle_2/npc_3",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_2.npc_3.banter"
+  },
+  {
+   "id": "q9_demon_castle_4_npc_2",
+   "giver": "demon_castle_4/npc_2",
+   "turnIn": "demon_castle_4/npc_2",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_4.npc_2.banter"
+  },
+  {
+   "id": "q9_demon_castle_3_npc_2",
+   "giver": "demon_castle_3/npc_2",
+   "turnIn": "demon_castle_3/npc_2",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_3.npc_2.banter"
+  },
+  {
+   "id": "q9_demon_castle_1_npc_1",
+   "giver": "demon_castle_1/npc_1",
+   "turnIn": "demon_castle_1/npc_1",
+   "status": "quest",
+   "quests": [
+    "q9_dragonlings"
+   ],
+   "offers": []
+  },
+  {
+   "id": "q9_demon_castle_4_npc_3",
+   "giver": "demon_castle_4/npc_3",
+   "turnIn": "demon_castle_4/npc_3",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_4.npc_3.banter"
+  },
+  {
+   "id": "q9_shadow_vault_1_npc_2",
+   "giver": "shadow_vault_1/npc_2",
+   "turnIn": "shadow_vault_1/npc_2",
+   "status": "ambient",
+   "quests": [],
+   "banter": "shadow_vault_1.npc_2.banter"
+  },
+  {
+   "id": "q9_realm_9_npc_3",
+   "giver": "realm_9/npc_3",
+   "turnIn": "realm_9/npc_3",
+   "status": "ambient",
+   "quests": [],
+   "banter": "realm_9.npc_3.banter"
+  },
+  {
+   "id": "q9_demon_castle_3_npc_3",
+   "giver": "demon_castle_3/npc_3",
+   "turnIn": "demon_castle_3/npc_3",
+   "status": "ambient",
+   "quests": [],
+   "banter": "demon_castle_3.npc_3.banter"
+  },
+  {
+   "id": "q9_demon_castle_1_npc_2",
+   "giver": "demon_castle_1/npc_2",
+   "turnIn": "demon_castle_1/npc_2",
+   "status": "quest",
+   "quests": [
+    "q9_dragonlings"
+   ],
+   "offers": []
   }
  ],
  "questItems": [
@@ -770,17 +563,33 @@
   }
  ],
  "speakers": {
-  "panda": {
-   "zh": "熊猫",
-   "en": "Panda (companion)"
+  "xiaolong": {
+   "zh": "小龙",
+   "en": "Xiaolong (Little Dragon, companion)"
+  },
+  "innkeeper_panda": {
+   "zh": "熊猫掌柜",
+   "en": "Panda innkeeper"
+  },
+  "granny_bai": {
+   "zh": "白奶奶",
+   "en": "Granny Bai"
   },
   "farmer_li": {
    "zh": "李农夫",
    "en": "Farmer Li"
   },
-  "elder_wang": {
+  "grandpa_wang": {
    "zh": "王爷爷",
-   "en": "Elder Wang"
+   "en": "Grandpa Wang"
+  },
+  "traveller": {
+   "zh": "旅人",
+   "en": "Traveller"
+  },
+  "narrator": {
+   "zh": "",
+   "en": "Narrator"
   },
   "xiaoming": {
    "zh": "小明",
