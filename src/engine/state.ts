@@ -26,10 +26,20 @@ export interface SaveState {
   // v3.3: bought spells (owned for good) and the town quest boards
   spells: string[];
   quests: Record<string, QuestState>;
+  // v3.9 graph world (?world=graph, save key v4 only): progress/0.3 (progress.schema.json), story quests (quest/0.2 state machine),
+  // seen dialogue scenes, party and the player's name for {hero}. Classic saves never carry these.
+  world?: import('../world/engine').Progress;
+  storyQuests?: Record<string, import('../world/engine').QState>;
+  scenesSeen?: string[];
+  party?: string[];
+  heroName?: string;
 }
 /** One quest's saved progress. n = kills / drops counted; base = the realm words already Ready when a words quest was accepted. */
 export interface QuestState { s: 'active' | 'claimed'; n: number; base?: string[]; at: number; done?: number; }
-const KEY = 'chinese-rpg-proto-v3';
+import { isGraph } from '../world/mode';
+export const KEY_V3 = 'chinese-rpg-proto-v3', KEY_V4 = 'chinese-rpg-proto-v4';
+/** Classic keeps the v3 key untouched; graph mode has its own v4 save, migrated from v3 on first entry (the v3 save stays). */
+const KEY = isGraph() ? KEY_V4 : KEY_V3;
 
 export function newState(): SaveState {
   const s: SaveState = {
@@ -54,7 +64,8 @@ export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 }
 
 function load(): SaveState {
   try {
-    const raw = localStorage.getItem(KEY);
+    let raw = localStorage.getItem(KEY);
+    if (!raw && KEY === KEY_V4) { raw = localStorage.getItem(KEY_V3); if (raw) { const m = JSON.parse(raw); m.migratedFrom = 'v3'; raw = JSON.stringify(m); } }
     if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
@@ -164,6 +175,8 @@ export function frontierLoc() {
 }
 export function G() { return frontierLoc().G; }
 export function innPrice(place = 'town') { return B.economy.innPriceG * (place === 'town' ? G() : LOC[place].G); }
-export function consPrice(id: string) { return CONS[id].priceG * G(); }
+/** v3.9.1 graph mode: the Return Feather costs world_rules returnFeather.priceG × G (2 × G); classic keeps shop.json's 1 × G. */
+export const worldPrice: { featherG: number | null } = { featherG: null };
+export function consPrice(id: string) { return (id === 'feather' && worldPrice.featherG ? worldPrice.featherG : CONS[id].priceG) * G(); }
 export function clampHpMp() { const h = heroStats(); S.hp = Math.max(0, Math.min(S.hp, h.maxHp)); S.mp = Math.max(0, Math.min(S.mp, h.maxMp)); }
 export function locDef(id: string) { return LOC[id]; }

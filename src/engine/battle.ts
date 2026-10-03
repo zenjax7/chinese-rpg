@@ -13,7 +13,12 @@ import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, 
 
 export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
-  questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[]; }
+  questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[];
+  /** Desy enemy ids of every foe beaten (graph-mode quest kill counts). */ kills?: string[]; }
+/** Graph mode (?world=graph): fixed enemies (Desy ids or runtime ids), a zone roster override, no elite swap. */
+export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string; noElite?: boolean; }
+export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.values(ENEMIES).map(e => [e.desyId.split(' ')[0], e.id]));
+export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
 interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
   skipWhy?: string; soaked?: boolean; summoned?: boolean; fx?: string | null; }
 type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean };
@@ -43,13 +48,16 @@ export function brokenDamage(atkE: number, defH: number) { return r(Math.max(Mat
 // exposed for the debug panel / automated tests
 (window as any).__proto = (window as any).__proto || {};
 
-export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0): Promise<BattleResult> {
-  const loc = LOC[locId]; const isBoss = kind === 'boss';
+export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, opts: BattleOpts = {}): Promise<BattleResult> {
+  const base = LOC[locId];
+  const optRoster = opts.roster?.map(r => ({ enemy: runtimeEnemy(r.enemy), weight: r.weight })).filter(r => r.enemy);
+  const loc = { ...base, ...(optRoster?.length ? { roster: optRoster, packs: undefined } : {}), ...(opts.boss && runtimeEnemy(opts.boss) ? { boss: runtimeEnemy(opts.boss) } : {}), ...(opts.noElite ? { elite: undefined } : {}) } as typeof base;
+  const fixed = (opts.enemies || []).map(runtimeEnemy).filter(Boolean) as string[]; const isBoss = kind === 'boss';
   // ---- BATTLE_INIT
   const foes: Foe[] = [];
   const mk = (id: string): Foe => { const d = ENEMIES[id]; return { d, hp: d.hp, maxHp: d.hp, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
   const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(mk)); return f; };
-  const scripted = kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
+  const scripted = fixed.length ? fixed : kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
   if (isBoss) {
     const b = withMinions(loc.boss); if (S.locs[locId].bossCheckpoint) b.hp = Math.floor(b.maxHp * C().bossCheckpointFrac);
   } else if (scripted) {
@@ -519,7 +527,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   for (const id of res.gearGot) { const r = gainGear(id); if (r.equipped) res.equipped.push(equipLine(GEAR[id], r.from)); }
   clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
-  if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; }
+  if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; res.kills = foes.map(f => f.d.desyId.split(' ')[0]); }
   save(); setBattleHud(null); view.clearFocus();
   (window as any).__proto.q = null; (window as any).__proto.battleLog = bs.log.slice(0, 200);
   return res;

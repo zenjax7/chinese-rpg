@@ -138,7 +138,11 @@ SPL = {r['spell_id']: r for r in csv.DictReader(open(os.path.join(DESY, 'data', 
 CR = {r['key']: r['value'] for r in csv.DictReader(open(os.path.join(DESY, 'data', 'cast_rule.csv'), encoding='utf-8-sig'))}
 FALL = list(csv.DictReader(open(os.path.join(DESY, 'data', 'spell_falloff.csv'), encoding='utf-8-sig')))
 QF = json.load(open(os.path.join(DESY, 'data', 'quests_full.json'), encoding='utf-8'))
-QL = json.load(open(os.path.join(DESY, 'data', 'quests.json'), encoding='utf-8'))
+# v3.9: desy/data/quests.json became the quest/0.2 story format (graph mode reads it via tools/world/build_world.py);
+# the classic town boards keep the flat v1 list (quests_v1.json, same rows as before).
+_qv1 = os.path.join(DESY, 'data', 'quests_v1.json')
+QL = json.load(open(_qv1 if os.path.exists(_qv1) else os.path.join(DESY, 'data', 'quests.json'), encoding='utf-8'))
+if isinstance(QL, dict): QL = QL.get('quests', [])
 num = lambda v: float(v) if re.fullmatch(r'-?\d+(\.\d+)?', str(v).strip()) else None
 # gear set price per tier (weapon + armor + shield, common) for the Blacksmith-first warning
 gear_set_price = {}

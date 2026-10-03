@@ -27,6 +27,15 @@ jobs:
 
       - run: npm ci
 
+      # v3.9.1 world + story data gate (graphs, zones, quests quest/0.2, scenes scene/0.2, public/world freshness).
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install jsonschema
+      - run: npm run validate:world
+        env:
+          CI: 'true'
+
       # Assets (sprites, backgrounds, audio, assets-manifest.json) are committed under public/.
       # build:ci = `tsc && vite build` without the prebuild sync (the source art/audio folders only exist locally).
       - run: npm run build:ci
