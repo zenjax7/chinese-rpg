@@ -4,7 +4,7 @@
  2. docs/tools/story/validate_dialogue.py   scenes (Desy's validator)
  3. docs/tools/story/build_quests.py        quests: must report 0 errors and reproduce docs/data/quests/quests.json byte for byte
  4. JSON Schemas: quests.json vs quests.schema.json (quest/0.2), every scene vs scene.schema.json (scene/0.2)
- 5. tools/world/build_world.py              runtime data: resolves every quest position; public/world/ must be up to date
+ 5. tools/world/build_world.py              runtime data: resolves every quest position; src/data/world/ + public/world/graphs/ must be up to date
 Exit 1 on any failure."""
 import json, os, subprocess, sys, glob, filecmp, shutil, tempfile
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -40,13 +40,19 @@ try:
     schema_check('scene/0.2 schema', os.path.join(dl, 'scene.schema.json'), [(os.path.basename(f), json.load(open(f, encoding='utf-8'))) for f in sorted(glob.glob(os.path.join(dl, 'sc_*.json')))])
 except ImportError:
     print('❌ jsonschema missing (pip install jsonschema)'); fails.append('jsonschema')
-pw = os.path.join(ROOT, 'public', 'world'); old = tempfile.mkdtemp(); shutil.copytree(pw, os.path.join(old, 'w')) if os.path.isdir(pw) else None
+# generated runtime data must be committed up to date: src/data/world/ (bundled) and public/world/ (graphs fetched at run time)
+outs = [os.path.join(ROOT, 'src', 'data', 'world'), os.path.join(ROOT, 'public', 'world')]
+old = tempfile.mkdtemp(); snaps = []
+for k, d in enumerate(outs):
+    snaps.append(os.path.join(old, str(k)))
+    if os.path.isdir(d): shutil.copytree(d, snaps[-1])
 run('build_world', ['tools/world/build_world.py'])
-if os.path.isdir(os.path.join(old, 'w')):
-    d = filecmp.dircmp(pw, os.path.join(old, 'w'))
-    def diff(dc): return dc.left_only + dc.right_only + dc.diff_files + [x for s in dc.subdirs.values() for x in diff(s)]
-    stale = diff(d); print(f"{'✅' if not stale else '❌'} public/world is up to date{'' if not stale else ': ' + ', '.join(stale[:6])}")
-    if stale and os.environ.get('CI'): fails.append('public/world stale')
+def diff(dc): return dc.left_only + dc.right_only + dc.diff_files + [x for s in dc.subdirs.values() for x in diff(s)]
+stale = []
+for d, sn in zip(outs, snaps):
+    stale += [os.path.relpath(d, ROOT) + '/' + x for x in (diff(filecmp.dircmp(d, sn)) if os.path.isdir(sn) else ['(missing)'])]
+print(f"{'✅' if not stale else '❌'} src/data/world + public/world are up to date{'' if not stale else ': ' + ', '.join(stale[:6])}")
+if stale and os.environ.get('CI'): fails.append('world data stale')
 shutil.rmtree(old)
 print('FAILED: ' + ', '.join(fails) if fails else 'world + story data: all checks passed')
 sys.exit(1 if fails else 0)

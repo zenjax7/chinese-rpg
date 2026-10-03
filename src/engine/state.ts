@@ -37,9 +37,14 @@ export interface SaveState {
 /** One quest's saved progress. n = kills / drops counted; base = the realm words already Ready when a words quest was accepted. */
 export interface QuestState { s: 'active' | 'claimed'; n: number; base?: string[]; at: number; done?: number; }
 import { isGraph } from '../world/mode';
+import { SaveStore, LocalSaveStore, CloudSaveStore, CloudTrigger } from './savestore';
 export const KEY_V3 = 'chinese-rpg-proto-v3', KEY_V4 = 'chinese-rpg-proto-v4';
 /** Classic keeps the v3 key untouched; graph mode has its own v4 save, migrated from v3 on first entry (the v3 save stays). */
 const KEY = isGraph() ? KEY_V4 : KEY_V3;
+/** Save storage (architecture §9): classic = LocalSaveStore exactly as before; graph mode = the CloudSaveStore stub over the same local mirror. */
+export const store: SaveStore = isGraph() ? new CloudSaveStore(new LocalSaveStore()) : new LocalSaveStore();
+/** A §9.1 cloud trigger (quest given / completed, node or graph change, boss, shortcut, inn, Feather, defeat). No-op in classic mode. */
+export function cloudTrigger(t: CloudTrigger, detail?: string) { store.trigger(t, detail); }
 
 export function newState(): SaveState {
   const s: SaveState = {
@@ -64,14 +69,14 @@ export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 }
 
 function load(): SaveState {
   try {
-    let raw = localStorage.getItem(KEY);
-    if (!raw && KEY === KEY_V4) { raw = localStorage.getItem(KEY_V3); if (raw) { const m = JSON.parse(raw); m.migratedFrom = 'v3'; raw = JSON.stringify(m); } }
+    let raw = store.load(KEY);
+    if (!raw && KEY === KEY_V4) { raw = store.load(KEY_V3); if (raw) { const m = JSON.parse(raw); m.migratedFrom = 'v3'; raw = JSON.stringify(m); } }
     if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
 }
-export function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* quota */ } }
-export function resetAll() { localStorage.removeItem(KEY); S = newState(); save(); }
+export function save() { store.save(KEY, JSON.stringify(S)); }
+export function resetAll() { store.remove(KEY); S = newState(); save(); }
 export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; S = s; save(); }
 
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }

@@ -56,7 +56,7 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
 /** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
-export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void } = {};
+export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[] } = {};
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
   setTitle(graphHooks.title || `🏘️ ${zh('小山村')} Little Hill Village`);
@@ -64,18 +64,20 @@ export function town() {
   // one suggestion at a time
   const potionP = consPrice('honey');
   const hasPotion = (S.inv.honey || 0) + (S.inv.bighoney || 0) > 0;
-  const tip: { at: keyof typeof VILLAGE; line: string } =
+  let tip: { at: keyof typeof VILLAGE; line: string } =
     S.hp < h.maxHp * 0.5 ? { at: 'inn', line: `The inn is warm! Rest, then let's go to the ${esc(fl.name.split(' ').pop()!.toLowerCase())}.` }
     : !S.locs[fl.id].previewSeen ? { at: 'words', line: `New words wait in ${zh(fl.zh)} ${esc(fl.name)}! Let's peek in the 学堂 first.`.replace('学堂', zh('学堂')) }
     : !hasPotion && S.gold >= potionP ? { at: 'shop', line: `We have ${S.gold} 🪙. A honey potion (${potionP} 🪙) would help us!` }
     : claimable().length ? { at: 'quests', line: `A quest is finished! Let's get our reward at the ${zh('任务板')}.` }
     : { at: 'gate', line: `Ready? Let's go to ${zh(fl.zh)} ${esc(fl.name)}!` };
+  const shown = (Object.keys(VILLAGE) as (keyof typeof VILLAGE)[]).filter(k => !graphHooks.hide?.includes(k));   // graph-mode villages: no magic shop
+  if (!shown.includes(tip.at)) tip = { at: 'gate', line: tip.line };
   const sign = (k: keyof typeof VILLAGE) => { const v = VILLAGE[k]; const [z1, z2] = v.z.split(' ');
     return `<button class="hot" data-go="${k}" aria-label="${v.e}" style="left:${v.hot[0]}px;top:${v.hot[1]}px;width:${v.hot[2]}px;height:${v.hot[3]}px"></button>
       <button class="sign${k === 'gate' ? ' gold' : ''}" data-go="${k}" data-testid="${v.tid}" style="left:${v.sign[0]}px;top:${v.sign[1]}px"><span class="z">${z1} <span lang="zh-CN">${z2}</span></span><span class="e">${v.e}</span></button>`; };
   const bang = VILLAGE[tip.at].sign;
   render(`<div data-testid="town" class="screen">
-    ${(Object.keys(VILLAGE) as (keyof typeof VILLAGE)[]).map(sign).join('')}
+    ${shown.map(sign).join('')}
     <div class="bang" data-testid="suggest" data-at="${tip.at}" style="left:${bang[0] + 62}px;top:${bang[1] - 52}px">❗</div>
     ${session.speechBlocked && S.consent.speech ? `<div class="tip warn" style="left:440px;top:92px">🔇 ${esc(session.speechBlockReason || 'Speech is off for this session.')}</div>` : ''}
     <div class="bottombar panel">

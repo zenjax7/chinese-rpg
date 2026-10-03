@@ -104,6 +104,11 @@ export function isVisited(P: Progress, gid: string, node: string) { const g = gr
 /** Can the hero walk this edge now? (edge cond; a shortcut until opened) */
 export function edgeOpen(e: GEdge, x: Ctx) { return evalCond(e.cond, x) && (e.kind !== 'shortcut' || x.P.shortcuts.includes(e.id)); }
 
+/** World map: realm 1 is always open; realm t+1 opens when realm t's realm boss (zone bossKind 'realmboss') is defeated. */
+export function realmOpen(realm: number, P: Progress, zones: Zone[]) {
+  return realm <= 1 || zones.some(z => z.realm === realm - 1 && z.bossKind === 'realmboss' && P.zonesDefeated.includes(z.id));
+}
+
 // ---------------- fog of war ----------------
 export type FogState = 'visited' | 'seen' | 'landmark' | 'hidden';
 /** visited nodes; '?' for nodes one open edge away from a visited node; landmarks (town, village, boss or node.fog='landmark'); revealed bits. */
@@ -186,7 +191,7 @@ export function pickEvent(g: Graph, node: string, on: string, x: Ctx, first: boo
       const opts = ev.pick.map((o, i) => ({ o, i, k: `${key}#${i}` })).filter(({ o, k }) => evalCond(o.cond, x) && !(o.once && P.eventsDone.includes(k))
         && !(o.cooldown && P.eventLastFired[k] !== undefined && visits - P.eventLastFired[k] < o.cooldown));
       if (!opts.length) continue;
-      const tot = opts.reduce((s, a) => s + a.o.weight, 0); let r = roll(`${P.seed}|${node}|${visits}|${ev.id}`) * tot;
+      const tot = opts.reduce((s, a) => s + a.o.weight, 0); let r = roll(`${P.seed}|${g.id}|${node}|${visits}`) * tot;   // world-graph §4: saveSeed | graph | node | visit
       const ch = opts.find(a => (r -= a.o.weight) < 0) || opts[opts.length - 1];
       return { ev, actions: ch.o.do, key: ch.k, outcome: ch.o.outcome };
     }

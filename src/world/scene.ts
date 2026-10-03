@@ -1,6 +1,6 @@
 /** Minimal Fire Emblem-style dialogue scene player (architecture §11.1, Desy's scene/0.2, Arty's portraits v2 + dialogue UI).
- *  DOM overlay inside the 1280x720 frame: portraits left / right (512x768 webp facing right, mirrored on the right, bottom-anchored
- *  on the panel's top edge, scaled ~0.62 × the character's own scale), speaker lit / listener dimmed, 9-slice panel and nameplate
+ *  DOM overlay inside the 1280x720 frame: portraits left / right (512x768 webp facing right; <id>.portrait.json: mirrored on the right
+ *  when `mirror`, bottom-anchored on the panel's top edge, scale 0.62, ×1.15 when `big`), speaker lit / listener dimmed, 9-slice panel and nameplate
  *  (CSS border-image with the insets from ui/manifest.json), a bobbing ▼ next arrow. Text: the Chinese line (or the English line with
  *  {Cxxx} tokens shown as the Chinese word) and the English gloss below. No pinyin anywhere.
  *  Tap / Enter / Space advances (first tap finishes the typing), the Skip button or a long press (600 ms) skips the scene. */
@@ -20,17 +20,22 @@ export interface SceneEnv {
 }
 export interface SceneResult { skipped: boolean; choices: Record<string, string>; endedAt: string }
 
-interface PChar { id: string; anchorY: number; scale: number; files: Record<string, string> }
-let PIDX: Record<string, PChar> | null = null; let UIM: any = null;
-const SCALE = 0.62, BOX = { x: 50, y: 510, w: 1180, h: 190 };
-export async function loadSceneArt() {
-  if (PIDX) return;
-  try { const j = await (await fetch('portraits/portraits_index.json')).json(); PIDX = Object.fromEntries(j.characters.map((c: PChar) => [c.id, c])); } catch { PIDX = {}; }
-  try { UIM = await (await fetch('ui/manifest.json')).json(); } catch { UIM = null; }
+/** Arty's per-character file public/portraits/<id>.portrait.json: anchorY (eye line, canvas px), mirror (flip on the right), big (wide bust). */
+export interface PChar { id: string; anchorY: number; mirror?: boolean; big?: boolean; defaultExpr?: string; expressions?: string[] }
+const PC: Record<string, PChar | null> = {}; let UIM: any = null; let uiLoaded = false;
+const SCALE = 0.62, BIG = 1.15, BOX = { x: 50, y: 510, w: 1180, h: 190 };
+export async function loadPortrait(id: string): Promise<PChar | null> {
+  if (!(id in PC)) PC[id] = await fetch(`portraits/${id}.portrait.json`).then(r => r.ok ? r.json() : null).catch(() => null);
+  return PC[id];
 }
-function portraitUrl(id: string, expr = 'neutral'): string | null {
-  const c = PIDX?.[id]; if (!c) return null;
-  const f = c.files[expr] || c.files.neutral || Object.values(c.files)[0]; return f ? `portraits/${f}` : null;
+export async function loadSceneArt(chars: string[] = []) {
+  if (!uiLoaded) { uiLoaded = true; try { UIM = await (await fetch('ui/manifest.json')).json(); } catch { UIM = null; } }
+  await Promise.all([...new Set(chars)].map(loadPortrait));
+}
+/** <id>_<expr>.webp when the character has that expression, else its default expression. */
+export function portraitUrl(id: string, expr = 'neutral'): string | null {
+  const c = PC[id]; if (!c) return null;
+  const e = c.expressions?.includes(expr) ? expr : (c.defaultExpr || 'neutral'); return `portraits/${id}_${e}.webp`;
 }
 const esc = (s: string) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
 /** Main line: Chinese where we have it ({Cxxx} -> the word), gloss: plain English. */
@@ -77,11 +82,11 @@ function css() {
 
 /** Play one scene; resolves when it ends (or is skipped). Choices made are returned (line id -> choice id). */
 export async function playScene(sc: Scene, env: SceneEnv, host: HTMLElement): Promise<SceneResult> {
-  await loadSceneArt(); css();
+  await loadSceneArt([...Object.values(sc.slots || {}).map(x => x.char), ...sc.lines.map(l => l.portrait || l.speaker).filter(x => x && x !== 'narrator')]); css();
   const res: SceneResult = { skipped: false, choices: {}, endedAt: '' };
   const root = document.createElement('div'); root.className = 'sc'; root.dataset.testid = 'scene'; root.dataset.scene = sc.id;
   root.innerHTML = `<button class="secondary sc-skip" data-testid="scene-skip">⏭ 跳过 <span class="en">Skip</span></button>
-    <div class="sc-p" data-side="L"></div><div class="sc-p flip" data-side="R"></div>
+    <div class="sc-p" data-side="L"></div><div class="sc-p" data-side="R"></div>
     <div class="sc-name L hidden" data-testid="scene-name"></div>
     <div class="sc-box" data-testid="scene-box"><div class="sc-main" data-testid="scene-line"></div><div class="sc-gloss" data-testid="scene-gloss"></div><div class="sc-next" data-testid="scene-next"></div></div>
     <div class="sc-ch hidden" data-testid="scene-choices"></div>`;
@@ -94,9 +99,10 @@ export async function playScene(sc: Scene, env: SceneEnv, host: HTMLElement): Pr
     for (const s of ['L', 'R'] as const) {
       const el = pEl(s); const slot = shown[s]; const c = slot ? slots[slot] : null; const url = c && portraitUrl(c.char, c.expr);
       if (!url || !c) { el.innerHTML = ''; el.style.display = 'none'; continue; }
-      const pc = PIDX![c.char]; const k = SCALE * (pc.scale || 1); const w = 512 * k, h = 768 * k;
+      const pc = PC[c.char]!; const k = SCALE * (pc.big ? BIG : 1); const w = 512 * k, h = 768 * k;   // bottom-anchored on the panel's top edge
       el.style.display = ''; el.style.width = `${w}px`; el.style.height = `${h}px`;
       el.style.left = s === 'L' ? `${70 + 160 - w / 2}px` : `${850 + 160 - w / 2}px`;
+      el.classList.toggle('flip', s === 'R' && pc.mirror !== false); el.dataset.anchorY = String(Math.round(pc.anchorY * k));
       el.dataset.char = c.char; el.dataset.expr = c.expr || 'neutral';
       const img = el.querySelector('img') as HTMLImageElement | null;
       if (img) { if (!img.src.endsWith(url)) img.src = url; } else el.innerHTML = `<img alt="" src="${url}">`;

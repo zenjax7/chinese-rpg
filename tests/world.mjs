@@ -19,7 +19,9 @@ function validateSave(obj, label) {
 
 export async function worldUnitTests({ check, log = console.log }) {
   const E = await import(path.join(ROOT, 'src/world/engine.ts'));
-  const J = f => JSON.parse(readFileSync(path.join(ROOT, 'public/world', f), 'utf8'));
+  const J = f => JSON.parse(readFileSync(path.join(ROOT, f.startsWith('graphs/') ? 'public/world' : 'src/data/world', f), 'utf8'));
+  const PG = await import(path.join(ROOT, 'src/world/progress.ts'));
+  const SCH = J('progress.schema.json'), COM = J('common.schema.json');
   const idx = J('index.json'); const rules = idx.rules; const quests = J('quests.json').quests;
   const g1 = J('graphs/realm_1.json'); E.registerGraph(g1);
   // bitsets
@@ -37,6 +39,16 @@ export async function worldUnitTests({ check, log = console.log }) {
   check(Math.abs(E.stepRate(g1, e2, Pw, rules).p - rules.encounterRate[String(e2.danger)] * rules.clearedStepMult) < 1e-9, 'world: walked edge rolls × clearedStepMult');
   const safeE = g1.edges.find(e => e.from === 'village' || e.to === 'village');
   check(E.edgeSafe(g1, safeE, P0, rules), `world: edges next to a town are safe (${safeE.id})`);
+  // weighted events: same seed + node + visit -> same pick; the pick key is saveSeed|graph|node|visit (world-graph §4)
+  const pickEv = g1.events.find(e => e.pick && e.node !== 'village');
+  if (pickEv) { const picks = seed => Array.from({ length: 8 }, (_, v) => { const P = E.newProgress(seed, idx.start); const n = g1.nodes.find(n => n.id === pickEv.node); E.gp(P, 'realm_1').visits[n.idx] = v; return E.pickEvent(g1, pickEv.node, 'enter', { P, quests: {} }, false)?.outcome; }).join(',');
+    check(picks(5) === picks(5) && picks(5).split(',').length === 8, `events: weighted pick on ${pickEv.node} is seeded per save + node + visit (${picks(5)})`); }
+  const outs = new Set(); for (const f of idx.graphs.map(g => g.id)) for (const ev of J(`graphs/${f}.json`).events || []) { if (ev.outcome) outs.add(ev.outcome); for (const o of ev.pick || []) outs.add(o.outcome); }
+  check(['nothing', 'story', 'item', 'treasure', 'miniboss', 'quest_offer'].every(o => outs.has(o)), `events: outcomes seen in the data (${[...outs].join(', ')}); portal = a node kind + edge`);
+  // world map: realm t+1 opens when realm t's realm boss falls
+  const Pr = E.newProgress(1, idx.start);
+  check(E.realmOpen(1, Pr, idx.zones) && !E.realmOpen(2, Pr, idx.zones), 'world map: realm 1 open, realm 2 locked at the start');
+  Pr.zonesDefeated.push('warren'); check(E.realmOpen(2, Pr, idx.zones) && !E.realmOpen(3, Pr, idx.zones), 'world map: the realm 1 realm boss (warren) opens realm 2 only');
   // fog
   const Pf = E.newProgress(7, idx.start); E.markVisited(Pf, g1, 'village');
   const x = { P: Pf, quests: {} }; const fog = E.fog(g1, Pf, x, rules.fog.landmarkKinds);
@@ -75,6 +87,15 @@ export async function worldUnitTests({ check, log = console.log }) {
   for (const [gid, nid] of [['realm_3', 'village_1x'], ['realm_6', 'village_2x'], ['realm_9', 'village_3x']]) {
     const g = J(`graphs/${gid}.json`); check(!!g.nodes.find(n => n.id === nid && n.kind === 'village'), `world: new leaf village ${gid}/${nid}`);
   }
+  // runtime validator (src/world/progress.ts) agrees with the JSON Schema; old saves migrate
+  const fresh = E.newProgress(42, idx.start, idx.dataVersion, 2, 'meadow');
+  check(PG.validateProgress(fresh, SCH, COM).length === 0, 'save schema (runtime): a new progress validates');
+  const old = { schema: 'progress/0.2', seed: 9, pos: { graph: 'realm_1', node: 'm_fork', edge: 'e2', step: 1 }, lastInn: { graph: 'realm_1', node: 'village' },
+    graphs: { realm_1: { visited: 'Aw==', cleared: 'AQ==', junk: 1 } }, bosses: ['meadow'], flags: ['met_xiaolong', 'met_xiaolong'], feathers: 5, oldField: true };
+  const errs = PG.validateProgress(old, SCH, COM);
+  const mig = PG.migrateProgress(old, idx.start, 3); const v1 = PG.validateProgress(mig, SCH, COM); const v1py = validateSave(mig, 'migrated');
+  check(errs.length >= 3 && v1.length === 0 && v1py.ok && mig.graphs.realm_1.visited === 'Aw==' && mig.graphs.realm_1.walked === 'AQ==' && mig.zonesDefeated[0] === 'meadow' && mig.feathers === 3 && mig.flags.length === 1 && mig.pos.edge === null,
+    `save migration: a progress/0.2 save (${errs.length} schema errors) migrates to a valid progress/0.3, keeping bitsets, bosses and flags` + (v1.length ? ': ' + v1.join('; ') : ''));
   // a fresh progress object is schema-valid
   const v0 = validateSave(E.newProgress(42, idx.start, idx.dataVersion, 2, 'meadow'), 'new');
   check(v0.ok, 'save schema: a new progress/0.3 object validates' + (v0.ok ? '' : ': ' + v0.errors.join('; ')));
@@ -91,6 +112,11 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const edit = fn => p.evaluate(([k, src]) => { const s = JSON.parse(localStorage.getItem(k)); (0, eval)(src)(s); localStorage.setItem(k, JSON.stringify(s)); }, [KEY4, fn.toString()]);
   const shot = async name => { if (!shots) return; await p.waitForTimeout(400); await p.screenshot({ path: shots + name + '.png' }); log('saved', shots + name + '.png'); };
   const saves = [];
+  /** Run an async window.__proto.world call that may play scenes or dialogues; skip / OK them until it resolves. */
+  const bgCall = async (src, max = 40) => { await p.evaluate(src => { window.__bgDone = false; (0, eval)(src)().finally(() => { window.__bgDone = true; }); }, src);
+    for (let i = 0; i < max; i++) { if (await p.evaluate(() => window.__bgDone)) return true; await p.waitForTimeout(200);
+      if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+    return false; };
   const keep = async label => { saves.push([label, await sv()]); };
   const scene = () => p.evaluate(() => { const s = document.querySelector('[data-testid=scene]'); if (!s) return null;
     const pd = side => { const e = s.querySelector(`[data-side=${side}]`); return e && e.style.display !== 'none' ? { char: e.dataset.char, expr: e.dataset.expr, dim: e.classList.contains('dim'), lit: e.classList.contains('lit'), flip: e.classList.contains('flip'), img: e.querySelector('img')?.getAttribute('src') } : null; };
@@ -133,10 +159,10 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await p.keyboard.press(' '); await p.waitForTimeout(80); await p.keyboard.press(' '); await p.waitForTimeout(300);
   sc = await scene(); check(sc.line === 'l4' && /小龙/.test(sc.name) && sc.main.includes('你好') && /hello/i.test(sc.gloss), `scene: Space advances; {C001} shows the Chinese word + English gloss (“${sc.main}” / “${sc.gloss}”)`);
   check(!/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/.test(sc.main + sc.gloss + sc.name), 'scene: no pinyin');
-  await shot('2026-10-03-dialogue-scene');
+  await shot('2026-10-03-graph-dialogue-scene');
   for (let i = 0; i < 20 && !(await tid('scene-choice-0').count()); i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(150); }
   check(await tid('scene-choice-0').count() === 1 && (await tid('scene-choice-0').innerText()).includes('你好'), 'scene: a choice line shows bilingual choice buttons');
-  await shot('2026-10-03-dialogue-choice');
+  await shot('2026-10-03-graph-dialogue-choice');
   await tid('scene-choice-0').click(); await p.waitForTimeout(300);
   await tid('scene-skip').click(); await p.waitForTimeout(500);
   let s = await sv();
@@ -181,27 +207,30 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   for (const n of ['m_field', 'm_farm']) { if (await p.locator(`[data-testid="gnode-${n}"].next`).count()) { await tid('gnode-' + n).click(); await settle(); } }
   if (!(await tid('graph').count()) && await tid('town').count()) await tid('go-adventure').click();
   await tid('graph').waitFor({ timeout: 10000 }).catch(() => {});
-  await shot('2026-10-03-graph-fog');
+  await shot('2026-10-03-graph-realm-fog');
 
   // ---- Feather use on the map: picker → fly → consumed ----
   const fBefore = (await sv()).inv.feather;
   await tid('go-items').click(); await tid('items').waitFor(); await tid('act-feather').click(); await tid('feather-picker').waitFor();
   const opts = await p.evaluate(() => [...document.querySelectorAll('[data-testid^="feather-to-"]')].map(e => e.dataset.testid));
   check(opts.includes('feather-to-realm_1-village'), `Feather picker lists the last inn + visited towns/villages (${opts})`);
-  await shot('2026-10-03-feather-picker');
+  await shot('2026-10-03-graph-feather-picker');
   await tid('feather-to-realm_1-village').click(); await tid('town').waitFor({ timeout: 10000 });
   s = await sv(); check(s.inv.feather === fBefore - 1 && s.world.pos.node === 'village', `Feather used: flew to the village, ${fBefore} → ${s.inv.feather}`);
   await keep('after feather');
 
   // ---- free Feather on realm-boss clears in realms 3 / 6 / 8 only (no tip) ----
   await edit(s => { s.inv.feather = 2; }); await p.reload(); await tid('town').waitFor();
-  await p.evaluate(() => window.__proto.world.clearBoss('realm_1', 'w_throne')); let fz = (await sv()).inv.feather;
+  await bgCall("() => window.__proto.world.clearBoss('realm_1', 'w_throne')"); let fz = (await sv()).inv.feather;
   check(fz === 2, `realm 1 boss: no free Feather (${fz})`);
-  await p.evaluate(() => window.__proto.world.clearBoss('bazaar_cellars_1', 'boss_3')); fz = (await sv()).inv.feather;
+  await bgCall("() => window.__proto.world.clearBoss('bazaar_cellars_1', 'boss_3')"); fz = (await sv()).inv.feather;
   check(fz === 3, `realm 3 boss clear gives 1 free Feather (2 → ${fz})`);
-  await p.evaluate(() => window.__proto.world.clearBoss('moonlit_crypt_2', 'boss_6')); fz = (await sv()).inv.feather;
+  await bgCall("() => window.__proto.world.clearBoss('moonlit_crypt_2', 'boss_6')"); fz = (await sv()).inv.feather;
   check(fz === 3, `realm 6 boss at the carry cap: still 3 (${fz})`);
   s = await sv(); check(s.world.zonesDefeated.includes('warren') && s.locs.meadow.bossDefeated && s.locs.forest.unlocked, 'realm 1 boss clear maps onto the classic meadow boss (towns / skills keep working)');
+  const cl = await p.evaluate(() => window.__proto.world.cloud());
+  check(cl.kind === 'cloud' && cl.pushes.some(x => x.trigger === 'bossDefeated') && cl.pushes.some(x => x.trigger === 'feather') && cl.triggers.some(x => x.trigger === 'nodeChange') && !cl.pushes.some(x => x.trigger === 'nodeChange'),
+    `SaveStore: CloudSaveStore stub pushes on boss / Feather triggers right away; node changes are debounced (${[...new Set(cl.pushes.map(x => x.trigger))].join(', ')})`);
   await keep('after boss clears');
 
   // ---- quests: q1_hoe offer (scene) → accept → the well → turn in (scene) ----
@@ -213,6 +242,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('scene-choice-0').click(); await skipScenes(6);
   for (let k = 0; k < 3 && await tid('dialog').count(); k++) await tid('dialog-btn-1').click();   // decline the second offer (q1_bounty) for now
   s = await sv(); check(s.storyQuests?.q1_hoe?.s === 'active' && s.world.flags.includes('accept_q1_hoe'), `quest accepted via the offer scene choice (${JSON.stringify(s.storyQuests?.q1_hoe)})`);
+  check((await p.evaluate(() => window.__proto.world.cloud())).pushes.some(x => x.trigger === 'questGiven' && x.detail === 'q1_hoe'), 'SaveStore: accepting a quest pushes right away (§9.1 quest given)');
   await keep('quest active');
   await p.evaluate(() => window.__proto.world.goto('realm_1', 'm_well', true)); await p.waitForTimeout(800); await skipScenes(6);
   s = await sv(); check(s.storyQuests.q1_hoe.s === 'ready' && s.inv.farmers_hoe === 1, `quest progress: reached the well, got the hoe → ready (${s.storyQuests.q1_hoe.s})`);
@@ -242,15 +272,70 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   s = await sv(); check(s.storyQuests.q8_caged_beasts.step >= 2, `quest-gated fight won → the quest moves on (step ${s.storyQuests.q8_caged_beasts.step})`);
   await keep('quest-gated fight');
 
-  // ---- dungeon level transition: realm_2 portal → great_hive_1 ----
+  // ---- dungeon level transition: realm_2 portal → great_hive_1, then stairs between two levels of one dungeon ----
   await p.evaluate(() => window.__proto.world.goto('realm_2', 'portal_1')); await tid('graph').waitFor();
   await tid('gexit-x_portal_1').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.graph === 'great_hive_1', null, { timeout: 10000 });
+  await skipScenes(3);
   s = await sv(); check(s.world.pos.graph === 'great_hive_1' && s.world.pos.node === 'stairs_1', 'dungeon: the portal edge loads the next graph (great_hive_1)');
+  check((await p.evaluate(() => window.__proto.world.cloud())).pushes.some(x => x.trigger === 'graphChange' && x.detail === 'great_hive_1'), 'SaveStore: a graph change pushes right away (§9.1)');
+  const idxJ = JSON.parse(readFileSync(path.join(ROOT, 'src/data/world/index.json'), 'utf8'));
+  const lv = idxJ.graphs.filter(g => g.kind === 'dungeon_level');
+  const dung = [...new Set(lv.map(g => g.dungeon))];
+  check(lv.length === 26 && dung.length === 12, `dungeons: ${lv.length} levels in ${dung.length} dungeons, loaded from the index (no hard-coded ids)`);
+  const g1J = JSON.parse(readFileSync(path.join(ROOT, 'public/world/graphs/goblin_caves_1.json'), 'utf8'));
+  const down = g1J.edges.find(e => e.kind === 'stairs' && typeof e.to === 'object' && e.to.graph !== g1J.id && lv.some(l => l.id === e.to.graph && l.level === 2));
+  await p.evaluate(([n]) => window.__proto.world.goto('goblin_caves_1', n), [down.from]); await tid('graph').waitFor(); await skipScenes(3);
+  await tid('gexit-' + down.id).click(); await p.waitForFunction(g => document.querySelector('[data-testid=graph]')?.dataset.graph === g, down.to.graph, { timeout: 10000 });
+  await skipScenes(3);
+  s = await sv(); check(s.world.pos.graph === down.to.graph && s.world.pos.node === down.to.node && (await tid('graph').getAttribute('data-kind')) === 'dungeon_level',
+    `dungeon: stairs ${down.id} go down a level (goblin_caves_1/${down.from} → ${down.to.graph}/${down.to.node})`);
+  await shot('2026-10-03-graph-dungeon-level');
   await keep('dungeon');
+  // ---- scroll + zoom: realm 8 (91 nodes) opens zoomed in; a 200-node graph renders and zooms ----
+  await p.evaluate(() => window.__proto.world.goto('realm_8', 'town_3')); await tid('graph').waitFor(); await skipScenes(3);
+  if (!(await tid('graph').count())) await tid('go-adventure').click().catch(() => {});
+  await tid('graph').waitFor();
+  check((await tid('zoom-level').innerText()) === '×2.0' && +(await tid('graph').getAttribute('data-nodes')) === 91, 'map: a 91-node realm opens at ×2 centred on the hero');
+  const big = { id: 'synthetic_200', kind: 'overworld', realm: 1, title: { zh: '大地图', en: 'Test 200' }, nodes: [], edges: [] };
+  for (let i = 0; i < 200; i++) big.nodes.push({ id: 'n' + i, idx: i, kind: i % 37 === 0 ? 'inn' : 'waypoint', x: +(0.02 + 0.96 * (i % 20) / 19).toFixed(4), y: +(0.02 + 0.96 * Math.floor(i / 20) / 9).toFixed(4), zone: 'meadow' });
+  for (let i = 0; i < 200; i++) { if (i % 20 < 19) big.edges.push({ id: 'h' + i, idx: big.edges.length, from: 'n' + i, to: 'n' + (i + 1), kind: 'path', danger: 1, steps: 1 }); if (i < 180) big.edges.push({ id: 'v' + i, idx: big.edges.length, from: 'n' + i, to: 'n' + (i + 20), kind: 'path', danger: 1, steps: 1 }); }
+  const t200 = await p.evaluate(async g => { const w = window.__proto.world; w.W.graphs[g.id] = g; w.E.registerGraph(g); const t0 = performance.now(); await w.goto(g.id, 'n105'); return performance.now() - t0; }, big);
+  await tid('graph').waitFor();
+  const nVis = await p.locator('[data-testid^="gnode-"]').count();
+  check(+(await tid('graph').getAttribute('data-nodes')) === 200 && (await tid('zoom-level').innerText()) === '×3.0' && nVis >= 5 && t200 < 1500, `map: a 200-node graph renders at ×3 (${nVis} nodes in view after fog, ${Math.round(t200)} ms)`);
+  await tid('zoom-out').click(); await tid('zoom-out').click();
+  const z2 = await tid('zoom-level').innerText();
+  await p.mouse.move(640, 360); await p.mouse.wheel(0, -400); await p.waitForTimeout(150); const z3 = await tid('zoom-level').innerText();
+  const vb0 = await tid('graph-svg').getAttribute('viewBox'); await p.mouse.move(640, 300); await p.mouse.down(); await p.mouse.move(500, 250, { steps: 5 }); await p.mouse.up(); const vb1 = await tid('graph-svg').getAttribute('viewBox');
+  check(z2 === '×1.5' && parseFloat(z3.slice(1)) > 1.5 && vb0 !== vb1, `map: ± buttons, the wheel and dragging zoom and scroll (${z2} → wheel ${z3}; drag moved the view)`);
+  await tid('zoom-home').click(); await tid('gnode-n106').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'n106', null, { timeout: 8000 }).catch(() => {});
+  check((await tid('graph').getAttribute('data-node')) === 'n106', 'map: tapping an adjacent node on the 200-node graph moves there');
+  await p.evaluate(() => { const P = window.__proto.world.P(); delete P.graphs.synthetic_200; });
+  // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
+  await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
+  check(await p.locator('[data-testid="gnode-realm_2"].next').count() === 0, 'world map: realm 2 is locked before the realm 1 realm boss');
+  await edit(s => { if (!s.world.zonesDefeated.includes('warren')) s.world.zonesDefeated.push('warren'); }); await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+  await shot('2026-10-03-graph-world-map');
+  check(await p.locator('[data-testid="gnode-realm_2"].next').count() === 1 && await p.locator('[data-testid="gnode-realm_3"].next').count() === 0, 'world map: beating warren opens realm 2 (realm 3 still locked)');
+  await tid('gnode-realm_2').click();
+  for (let i = 0; i < 40 && !(await tid('town').count()); i++) { await p.waitForTimeout(250);   // first-visit scenes / dialogues / quest offers ("Later")
+    if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  await tid('town').waitFor({ timeout: 5000 });
+  s = await sv(); check(s.world.pos.graph === 'realm_2' && s.world.pos.node === 'entry_town', 'world map: tapping realm 2 goes to its entry town');
+  await tid('go-adventure').click(); await tid('graph').waitFor();
+  await tid('go-world').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.graph === 'world', null, { timeout: 8000 });
+  check((await sv()).world.pos.node === 'realm_2', 'world map: a realm town has a 🌍 World map button back (realms 2–9 have no exit edge in the data)');
   // a realm that is not in this build
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_3')); await tid('graph').waitFor();
   await tid('gexit-x_realm_3').click(); await tid('not-in-build').waitFor({ timeout: 5000 }); await tid('dialog-btn-0').click();
-  check((await sv()).world.pos.graph === 'world', 'world map: realms 3–9 say “not in this build”');
+  check((await sv()).world.pos.graph === 'world', 'world map: realms 3–9 say “not in this build” (world.json inBuild: false)');
+  await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
+  // ---- a damaged / older save is migrated on load and validates ----
+  await edit(s => { s.world.schema = 'progress/0.2'; s.world.feathers = 7; s.world.junk = 1; s.world.graphs.realm_1.cleared = 'AQ=='; });
+  await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  const mv = await p.evaluate(() => ({ errs: window.__proto.world.validate(), mig: window.__proto.migratedProgress || [] })); s = await sv();
+  check(mv.errs.length === 0 && mv.mig.length >= 3 && s.world.schema === 'progress/0.3' && !('junk' in s.world) && s.world.feathers <= 3, `save migration on load: ${mv.mig.length} schema errors fixed, the save validates again`);
+  await keep('migrated on load');
 
   // ---- every captured save validates against progress.schema.json ----
   for (const [label, sv0] of saves) { const v = validateSave(sv0, label); check(v.ok, `save schema: “${label}” validates (progress/0.3)` + (v.ok ? '' : ': ' + v.errors.slice(0, 3).join('; '))); }

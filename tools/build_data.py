@@ -216,3 +216,11 @@ _bal = json.load(open(os.path.join(ROOT, 'src', 'data', 'balance.json'), encodin
 _regen = {r['key']: r['value'] for r in csv.DictReader(open(os.path.join(DESY, 'data', 'mp_rules.csv'), encoding='utf-8-sig'))}.get('regen_per_correct')
 if _regen is not None and float(_regen) != _bal['combat']['mpPerCorrect']:
     print(f"WARNING: balance.json mpPerCorrect differs from desy mp_rules regen_per_correct = {_regen}")
+
+# ---------------- v3.9.1 graph world (?world=graph) ----------------
+# src/data/world/ (index: rules + zones + graph list, quests quest/0.2, scenes scene/0.2, save schemas) and public/world/graphs/,
+# from the repo's docs/data copy of Desy's files (repo-relative, so CI can rebuild and check it): tools/world/build_world.py.
+import subprocess, sys
+_r = subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'world', 'build_world.py')], capture_output=True, text=True)
+print(_r.stdout.strip() or _r.stderr.strip())
+if _r.returncode: raise SystemExit('build_world failed:\n' + _r.stdout + _r.stderr)
