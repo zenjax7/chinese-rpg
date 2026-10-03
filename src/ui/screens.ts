@@ -4,7 +4,7 @@ import { TARGET_LABEL } from '../engine/battle';
 import { S, save, heroStats, innPrice, consPrice, speechOn, session, skillSlots, refreshSkills, resetAll, clampHpMp, expToNext, WAY_LABEL, ALL_WAYS, replaceState, gainGear, equipLine, strictlyBetter, weakGear, tierGear, notices, frontierLoc } from '../engine/state';
 import { readiness, prog, proficient, progress, activeWays, distractors, bossPool } from '../engine/learning';
 import { runBattle, setCurrentLoc, BattleResult, BattleKind } from '../engine/battle';
-import { speak, speechSupported, requestMic, hasZhVoice } from '../engine/speech';
+import { speak, speechSupported, requestMic, hasZhVoice, srLog, srDebugHtml } from '../engine/speech';
 import { sayBtn, wireSayButtons } from '../engine/voice';
 import { playMusic, playSfx, unlockAudio, audioSettings, setAudio } from '../audio/audio';
 import { BG, assets, spellIcon } from '../assets';
@@ -598,6 +598,8 @@ export function debugPanel(onChange: () => void) {
       <button id="close" data-testid="dbg-close">Close</button></div>
     <p class="muted">Speech: consent ${S.consent.speech ? 'yes' : 'no'}, session ${session.speechBlocked ? 'paused (' + esc(session.speechBlockReason) + ')' : 'ok'}, voids ${session.voids}. Stats: ${esc(JSON.stringify(S.stats))}. Courage ${S.courage}.
       ${LOCATIONS.map(l => { const r = readiness(l.id); return `${l.name}: ready ${r.n}/${r.total} (trigger ${Math.round(r.trigger * 100)}%), path ${S.locs[l.id].pathCleared}, patrols left ${S.locs[l.id].patrolsLeft}`; }).join(' · ')}</p>
+    <h3>🎤 Speech log (raw transcripts, alternatives, confidence; newest first)</h3>
+    <div data-testid="dbg-srlog" style="max-height:220px;overflow:auto">${srLog.length ? srDebugHtml(10) : '<p class="muted">No recognition attempts yet.</p>'}</div>
     <h3>Item mastery (correct/attempts, Leitner box)</h3>
     <table class="mastery" data-testid="mastery"><tr><th>Loc</th><th>Item</th><th>English</th>${ALL_WAYS.map(w => `<th>${WAY_LABEL[w]}</th>`).join('')}<th>Progress</th><th>Proficient</th></tr>
     ${rows.map(({ id, l }) => { const p = prog(id); const it = ITEM[id]; return `<tr style="${p.seen ? '' : 'opacity:.45'}"><td>${l.emoji}</td><td class="zhc" lang="zh-CN">${it.zh}</td><td>${esc(it.enPrimary)}</td>

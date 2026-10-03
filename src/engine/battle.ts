@@ -3,13 +3,13 @@ import { B, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SK
 import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses } from './learning';
-import { listen, speechSupported } from './speech';
+import { listen, speechSupported, quietForMic, noteGrade, srDebugHtml } from './speech';
 import { sayItem } from './voice';
-import { playSfx, playMusic, playSting, beep, duck, playSpellSfx } from '../audio/audio';
+import { playSfx, playMusic, playSting, beep, holdMusicForMic, playSpellSfx } from '../audio/audio';
 import { BG, spellIcon } from '../assets';
 import { matchZh, matchEn } from './match';
 import { view, HERO_X, BASE_Y } from '../phaser/view';
-import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, flyTo } from '../ui/dom';
+import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, flyTo, DEBUG } from '../ui/dom';
 
 export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
@@ -250,31 +250,34 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const mic = $('#mic') as HTMLButtonElement; mic.disabled = false; mic.classList.add('pulse');
     await new Promise<void>(res => mic.onclick = () => res());
     mic.classList.remove('pulse'); mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').innerHTML = '👂 Listening…<br>say it now!';
-    beep(); duck(true);
+    mic.onclick = null; mic.disabled = true;               // one tap = one recognition (no overlapping start())
+    const rb = $('#replay') as HTMLButtonElement | null; if (rb) rb.disabled = true;   // 🔊 would talk into the mic
+    // the mic must not hear the game: TTS cancelled and finished, VO clip stopped, music held at 0 (resumes in place afterwards)
+    holdMusicForMic(true); await quietForMic(); beep(); await sleep(220);
     const long = [...item.zh].length > B.speech.longAnswerSyllables;   // 1 character = 1 syllable
-    const lr = await listen(lang, long);
-    duck(false);
+    const lr = await listen(lang, long).finally(() => holdMusicForMic(false));
+    if (rb) rb.disabled = false;
     mic.classList.remove('listening'); mic.textContent = '🎤'; mic.disabled = true;
     if (lr.kind === 'tech') { mic.classList.add('hush'); mic.textContent = '🤫'; log(`🎤 (technical: ${lr.code}) re-prompt`, false); await sleep(400); return { result: 'void', spoken: true, hinted: false, fast: false, tech: true }; }
     if (lr.kind === 'fatal') return { result: 'void', spoken: true, hinted: false, fast: false, fatal: lr.code };
     let correct = false; let heard = '';
-    if (lr.kind === 'result') { const m = zhAns ? matchZh(lr.alts, item) : matchEn(lr.alts, item); correct = m.ok; heard = lr.alts[0] || ''; }
-    else heard = '(could not understand)';
+    if (lr.kind === 'result') { const m = zhAns ? matchZh(lr.alts, item) : matchEn(lr.alts, item); correct = m.ok; heard = (m.ok && m.alt) || lr.alts[0] || ''; noteGrade(item.zh, m); }
+    else { heard = '(could not understand)'; noteGrade(item.zh, { ok: false }); }
     // "I heard: …" for 800 ms before grading, so the child sees the game listened
-    mic.classList.add('heard'); mic.textContent = '💬'; $('#micmsg').innerHTML = `💬 I heard:<br>“${esc(heard)}”`;
+    mic.classList.add('heard'); mic.textContent = '💬'; $('#micmsg').innerHTML = `💬 I heard:<br>“${esc(heard)}”` + (DEBUG ? srDebugHtml() : '');
     await sleep(800);
-    await feedback(id, correct, turn, heard);
+    await feedback(id, correct, turn, heard, true);
     return { result: correct ? 'correct' : 'wrong', spoken: true, hinted: false, fast: false };
   }
 
   /** Feedback lives on the cards (✔/✘) and the message line; the dock never grows. Wrong = the correct word's audio, never pinyin. */
-  async function feedback(id: string, correct: boolean, _turn: string, heard?: string) {
+  async function feedback(id: string, correct: boolean, _turn: string, heard?: string, spoken = false) {
     const item = ITEM[id];
     const heardTxt = heard !== undefined ? ` <span class="muted">(I heard “${esc(heard)}”)</span>` : '';
     if (correct) {
       playSfx('sfx_correct', { detune: 100 * Math.min(5, bs.streak) });
       msg(`✔ Great! ${zh(item.zh)} = ${esc(item.enPrimary)}`, 'fb-ok');
-      sayItem(id);
+      if (!spoken) sayItem(id);   // spoken questions: the child just said it (or heard it as the question); no replay after a right answer
       await sleep(Math.max(800, C().correctFeedbackMs));
       return;
     }

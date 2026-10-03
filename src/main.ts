@@ -4,6 +4,8 @@ import { consentScreen, town, enterLocation, debugPanel, locationScreen, pauseMe
 import { hud, $, DEBUG, ui } from './ui/dom';
 import { watchFrame } from './ui/frame';
 import { playSfx, toggleMute, audioSettings, onAudioSettings } from './audio/audio';
+import { matchZh, matchEn, normZh } from './engine/match';
+import { ITEM, ITEMS } from './data';
 
 async function boot() {
   // Phaser bakes text into textures, so wait (briefly) for the web fonts before the scene creates enemy names (spec §3).
@@ -18,6 +20,10 @@ async function boot() {
   else town();
 }
 boot();
+// ?debug: the spoken-answer grader, for the tests (tests/speech.mjs)
+if (DEBUG) Object.assign(((window as any).__proto = (window as any).__proto || {}), {
+  gradeZh: (alts: string[], id: string) => matchZh(alts, ITEM[id]), gradeEn: (alts: string[], id: string) => matchEn(alts, ITEM[id]), normZh,
+  findItem: (zh: string) => ITEMS.find(i => i.zh === zh)?.id ?? null });
 
 const inBattle = () => !!document.querySelector('[data-testid="battle"]');
 $('#debugBtn').addEventListener('click', () => debugPanel(() => { hud(); if (inBattle() || !document.querySelector('[data-testid="town"],[data-testid="location"],[data-testid="worldmap"]')) return; if (S.where !== 'town' && S.locs[S.where]) locationScreen(S.where); else if (S.consent.given) town(); }));

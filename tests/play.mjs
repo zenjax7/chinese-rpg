@@ -1,6 +1,7 @@
 // Headless play-through: node tests/play.mjs [baseUrl]
 import { chromium } from 'playwright-core';
 import { spellTests } from './spells.mjs';
+import { speechTests } from './speech.mjs';
 const BASE0 = process.argv[2] || 'http://127.0.0.1:8795/';
 const BASE = BASE0 + (BASE0.includes('?') ? '&' : '?') + 'debug';   // ?debug shows the 🐞 debug panel button
 const log = (...a) => console.log('•', ...a);
@@ -428,6 +429,9 @@ await nv.context().close();
 
 // ================= v3.4 spells, magic shop, quests (seeded save) =================
 await spellTests({ browser, BASE, check, log, shots: process.env.SPELL_SHOTS || '' });
+
+// ================= spoken answers (stubbed recogniser + TTS) and music continuity =================
+await speechTests({ browser, BASE, check, log });
 
 check(pinyinSeen.size === 0, 'no pinyin (tone-marked Latin) in battle / practice / results DOM' + (pinyinSeen.size ? ': ' + [...pinyinSeen].slice(0, 5).join(' | ') : ''));
 check(focusSeen.size === 0, 'no "Focus words" panel / scout screen in battle' + (focusSeen.size ? ': ' + [...focusSeen].join(', ') : ''));

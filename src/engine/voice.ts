@@ -3,7 +3,7 @@
 // Buttons are disabled when neither is available (no speechSynthesis or no Chinese voice on the device).
 import { ITEM } from '../data';
 import { assets, onAssets } from '../assets';
-import { speak, hasZhVoice, onVoices, synth } from './speech';
+import { speak, hasZhVoice, onVoices, synth, onQuietForMic } from './speech';
 import { audioSettings, duck } from '../audio/audio';
 
 const ttsOk = () => !!synth() && hasZhVoice();
@@ -12,9 +12,14 @@ const clip = (id: string) => assets().vo[id]?.find(u => (u.endsWith('.ogg') ? ca
 export const canSayItem = (id: string) => !!clip(id) || ttsOk();
 
 let playing: HTMLAudioElement | null = null;
+/** Stops a VO clip that is still playing (called before the mic opens). */
+export function stopVoice() { try { playing?.pause(); } catch { /* */ } playing = null; }
+onQuietForMic(stopVoice);
+/** Count of word-audio plays (TTS or clip) per item, for the tests: a question's audio must play once, not again after a right answer. */
+const countSay = (id: string) => { const w: any = window; const c = ((w.__proto = w.__proto || {}).sayCount = w.__proto.sayCount || {}); c[id] = (c[id] || 0) + 1; };
 /** Speaks an item (by id). Resolves when done or after maxMs. */
 export function sayItem(id: string, maxMs?: number): Promise<void> {
-  duck(true); let un = false; const undo = () => { if (!un) { un = true; duck(false); } };
+  countSay(id); duck(true); let un = false; const undo = () => { if (!un) { un = true; duck(false); } };
   return sayRaw(id, maxMs).then(undo, undo);
 }
 function sayRaw(id: string, maxMs?: number): Promise<void> {
@@ -25,8 +30,11 @@ function sayRaw(id: string, maxMs?: number): Promise<void> {
       try { playing?.pause(); } catch { /* */ }
       const a = new Audio(url); playing = a; (window as any).__proto.voClip = url; const s = audioSettings(); a.volume = s.muted ? 0 : Math.min(1, s.master);
       let done = false; const fin = () => { if (!done) { done = true; res(); } };
-      a.onended = fin; a.onerror = () => { done = true; speak(it?.zh || '', 'zh-CN', maxMs).then(res); };
-      a.play().catch(() => { if (!done) { done = true; speak(it?.zh || '', 'zh-CN', maxMs).then(res); } });
+      // TTS fallback only while this clip is still the one we want: a late error after the timeout, or after the clip was stopped
+      // for the mic, must not start a second (duplicate) utterance
+      const fallback = () => { if (done || playing !== a) return; done = true; speak(it?.zh || '', 'zh-CN', maxMs).then(res); };
+      a.onended = fin; a.onerror = fallback;
+      a.play().catch(fallback);
       setTimeout(fin, maxMs ?? 4000);
     });
   }

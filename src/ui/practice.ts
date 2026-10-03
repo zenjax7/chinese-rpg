@@ -3,11 +3,11 @@
 import { B, ITEM, LOC, POOLS, CONS } from '../data';
 import { S, save, speechOn, session, WayKey } from '../engine/state';
 import { prog, progress, distractors, pickWay, WayCtx, gradePractice } from '../engine/learning';
-import { listen } from '../engine/speech';
+import { listen, quietForMic, noteGrade, srDebugHtml } from '../engine/speech';
 import { sayItem, sayBtn, wireSayButtons } from '../engine/voice';
-import { playSfx, playMusic, beep, duck } from '../audio/audio';
+import { playSfx, playMusic, beep, holdMusicForMic } from '../audio/audio';
 import { matchZh, matchEn } from '../engine/match';
-import { $, $$, esc, render, on, toast, dialog, sleep, hud, zh, bookHtml, wireBook, chunk } from './dom';
+import { $, $$, esc, render, on, toast, dialog, sleep, hud, zh, bookHtml, wireBook, chunk, DEBUG } from './dom';
 
 type Mode = 'flash' | 'listen' | 'say' | 'match' | 'quiz';
 const MODES: { id: Mode; emoji: string; name: string; zh: string; desc: string; graded: boolean; sticker: string }[] = [
@@ -171,16 +171,17 @@ async function question(loc: string, id: string, way: WayKey, title: string): Pr
   for (let tries = 0; tries < 2; tries++) {
     const go = await Promise.race([quitP, new Promise<string>(r => ($('#mic') as HTMLButtonElement).onclick = () => r('go'))]);
     if (go === 'quit') return 'quit';
-    const mic = $('#mic'); mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').textContent = '👂 Listening… say it now!';
-    beep(); duck(true);
-    const lr = await listen(zhAns ? 'zh-CN' : 'en-US', [...it.zh].length > B.speech.longAnswerSyllables);
-    duck(false); mic.classList.remove('listening'); mic.textContent = '🎤';
+    const mic = $('#mic') as HTMLButtonElement; mic.onclick = null; mic.disabled = true;   // one tap = one recognition
+    mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').textContent = '👂 Listening… say it now!';
+    holdMusicForMic(true); await quietForMic(); beep(); await sleep(220);   // TTS cancelled + finished before the mic opens
+    const lr = await listen(zhAns ? 'zh-CN' : 'en-US', [...it.zh].length > B.speech.longAnswerSyllables).finally(() => holdMusicForMic(false));
+    mic.disabled = false; mic.classList.remove('listening'); mic.textContent = '🎤';
     if (lr.kind === 'fatal') { session.speechBlocked = true; session.speechBlockReason = lr.code; toast('🔇 Speech is off for now.'); return 'skip'; }
     if (lr.kind === 'tech') { $('#micmsg').textContent = '🤫 I didn\'t hear anything. Tap and talk!'; continue; }
-    const ok = lr.kind === 'result' && (zhAns ? matchZh(lr.alts, it) : matchEn(lr.alts, it)).ok;
+    const m = lr.kind === 'result' ? (zhAns ? matchZh(lr.alts, it) : matchEn(lr.alts, it)) : { ok: false }; const ok = m.ok; noteGrade(it.zh, m);
     const heard = lr.kind === 'result' ? lr.alts.join(' / ') : '(could not understand)';
     playSfx(ok ? 'sfx_correct' : 'sfx_wrong');
-    $('#fb').innerHTML = `<div class="feedback ${ok ? 'ok' : 'bad'}" data-testid="${ok ? 'pfb-ok' : 'pfb-bad'}">${ok ? '✔ Great!' : '✘ Not quite.'} ${zh(it.zh)} = ${esc(it.enPrimary)} <span style="font-size:18px">(💬 I heard “${esc(heard)}”)</span></div>`;
+    $('#fb').innerHTML = `<div class="feedback ${ok ? 'ok' : 'bad'}" data-testid="${ok ? 'pfb-ok' : 'pfb-bad'}">${ok ? '✔ Great!' : '✘ Not quite.'} ${zh(it.zh)} = ${esc(it.enPrimary)} <span style="font-size:18px">(💬 I heard “${esc(heard)}”)</span>${DEBUG ? srDebugHtml() : ''}</div>`;
     if (!ok) sayItem(id);
     await sleep(ok ? 700 : 1600);
     return ok ? 'correct' : 'wrong';

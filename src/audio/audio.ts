@@ -34,13 +34,37 @@ let cur: { key: MusicKey; snd: Phaser.Sound.BaseSound } | null = null;
 let sting: Phaser.Sound.BaseSound | null = null;
 const dbg = () => ((window as any).__proto = (window as any).__proto || {}, (window as any).__proto.audio = (window as any).__proto.audio || { sfx: [], music: [], stings: [] });
 
-let ducks = 0;   // >0 while word audio plays or the mic listens: music drops by 60% (spec §4.3/§4.4)
-const musicVol = (key: string) => (cfg.muted ? 0 : cfg.master * cfg.music * (assets().music[key]?.volume ?? 1) * (ducks ? 0.4 : 1));
+let ducks = 0;   // >0 while word audio plays: music drops by 60% (spec §4.3/§4.4)
+let micHold = false;   // while the mic listens the music is held at volume 0 (the track keeps running, so it resumes in place)
+const musicVol = (key: string) => (cfg.muted || micHold ? 0 : cfg.master * cfg.music * (assets().music[key]?.volume ?? 1) * (ducks ? 0.4 : 1));
 const sfxVol = (key: string) => (cfg.muted ? 0 : cfg.master * cfg.sfx * (assets().sfx[key]?.volume ?? 1));
 const loaded = (key: string) => !!scene && scene.cache.audio.exists(key);
 
 /** Called by the Phaser scene once audio files are loaded. */
-export function attachSound(s: Phaser.Scene) { scene = s; mgr = s.sound; if (unlocked) startWanted(); }
+export function attachSound(s: Phaser.Scene) {
+  scene = s; mgr = s.sound;
+  // Phaser suspends the whole AudioContext on every window blur and resumes it on focus (pauseOnBlur). Blur happens without the
+  // tab changing: the mic permission bubble, the OS speech/mic indicator, a click into the browser chrome or another window, and
+  // the music cut out and back each time. Only a hidden tab pauses the music now.
+  (mgr as any).pauseOnBlur = false;
+  watchContext();
+  if (unlocked) startWanted();
+}
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => {
+  const ctx: AudioContext | undefined = (mgr as any)?.context; if (!ctx || !unlocked) return;
+  try { if (document.hidden) ctx.suspend(); else ctx.resume(); } catch { /* */ }
+});
+/** The OS can also suspend/interrupt the AudioContext behind our back (iOS/Android switch the audio session when the mic opens,
+ *  a phone notification, etc.). While the tab is visible we bring it straight back, so the music never stays cut. */
+let watchedCtx: AudioContext | null = null;
+function kickContext() {
+  const ctx: any = (mgr as any)?.context; if (!ctx || !unlocked || (typeof document !== 'undefined' && document.hidden)) return;
+  if (ctx.state === 'suspended' || ctx.state === 'interrupted') { dbg().ctxResumes = (dbg().ctxResumes || 0) + 1; try { ctx.resume(); } catch { /* */ } }
+}
+function watchContext() {
+  const ctx: any = (mgr as any)?.context; if (!ctx || ctx === watchedCtx || typeof ctx.addEventListener !== 'function') return;
+  watchedCtx = ctx; ctx.addEventListener('statechange', () => setTimeout(kickContext, 250));
+}
 /** Call from a user-gesture handler (consent Start button, or the first click/key). Safe to call repeatedly. */
 export function unlockAudio() {
   if (unlocked) return; unlocked = true; dbg().unlocked = true;
@@ -63,7 +87,13 @@ export function playSpellSfx(id: string) { playSfx(assets().sfx[`sfx_spell_${id}
 /** Duck music (and new SFX) while a word plays or while listening. Calls nest. */
 export function duck(on: boolean) {
   ducks = Math.max(0, ducks + (on ? 1 : -1)); dbg().ducked = ducks > 0;
-  if (cur) fade(cur.snd, musicVol(cur.key), 200);
+  if (cur) fade(cur.snd, musicVol(cur.key), on ? 200 : 600);   // slow release, so back-to-back word audio doesn't pump the music
+}
+/** Silence the music while the mic listens (fast fade to 0), then bring it back. The track is not stopped or restarted. */
+export function holdMusicForMic(on: boolean) {
+  micHold = on; dbg().micHold = on;
+  if (!on) kickContext();   // the mic session may have suspended/interrupted our AudioContext
+  if (cur) fade(cur.snd, musicVol(cur.key), on ? 120 : 400);
 }
 /** Short soft "beep" that tells the child listening has started (synthesised; no asset needed). */
 export function beep() {
@@ -91,8 +121,11 @@ function fade(snd: any, to: number, ms: number, done?: () => void) {
     onComplete: () => { fades.delete(snd); setVol(snd, to); done?.(); }, onStop: () => fades.delete(snd) });
   fades.set(snd, tw);
 }
+const fadingOut = new Set<{ key: MusicKey; snd: any }>();
 function startTrack(key: MusicKey, fadeMs: number) {
   if (!mgr || !loaded(key)) return;
+  // the same track is still fading out (e.g. map -> battle -> straight back): bring that instance back instead of restarting it
+  for (const f of fadingOut) if (f.key === key && alive(f.snd) && f.snd.isPlaying) { fadingOut.delete(f); cur = f; fade(f.snd, musicVol(key), fadeMs); dbg().playing = key; return; }
   const e = assets().music[key]; const snd: any = mgr.add(key, { volume: 0 });
   const ls = e?.loopStart, le = e?.loopEnd;
   const dur = snd.duration || snd.totalDuration || 0;
@@ -104,7 +137,7 @@ function startTrack(key: MusicKey, fadeMs: number) {
     if (ls > 0.05) { snd.addMarker({ name: 'intro', start: 0, duration: ls }); snd.once('complete', () => { if (cur?.snd === snd && alive(snd)) snd.play('loop', { volume: snd.volume }); }); snd.play('intro'); }
     else snd.play('loop');
   } else snd.play({ loop: true });
-  cur = { key, snd }; fade(snd, musicVol(key), fadeMs); dbg().playing = key;
+  cur = { key, snd }; fade(snd, musicVol(key), fadeMs); dbg().playing = key; (dbg().starts = dbg().starts || []).push(key);
 }
 function startWanted() {
   if (!unlocked || sting) return;
@@ -113,15 +146,27 @@ function startWanted() {
 
 /** Loop the given track; crossfades from whatever is playing. No-op if it's already playing. */
 export function playMusic(key: MusicKey, fadeMs = 900) {
-  want = key; dbg().music.push(key); dbg().current = key;
+  if (want !== key || dbg().music[dbg().music.length - 1] !== key) dbg().music.push(key);
+  want = key; dbg().current = key;
   if (!mgr || !unlocked || sting) return;          // started on unlock / after the sting
-  if (cur?.key === key) return;
+  if (cur?.key === key) {                          // already this track: never restart it; only un-pause a stray pause
+    const s: any = cur.snd; if (alive(s) && s.isPaused) s.resume();
+    return;
+  }
   stopMusic(fadeMs); startTrack(key, fadeMs);
 }
 export function stopMusic(fadeMs = 600) {
-  if (!cur) return; const old: any = cur.snd; cur = null; dbg().playing = null;
-  fade(old, 0, fadeMs, () => { try { old.stop(); old.destroy(); } catch { /* */ } });
+  if (!cur) return; const old = cur; cur = null; dbg().playing = null; fadingOut.add(old);
+  fade(old.snd, 0, fadeMs, () => { if (!fadingOut.has(old)) return; fadingOut.delete(old); try { old.snd.stop(); old.snd.destroy(); } catch { /* */ } });
 }
+/** Debug/test view of the music: AudioContext state and every live music instance (there must never be two playing at full volume). */
+export function musicState() {
+  const keys = ['mus_village', 'mus_battle_field', 'mus_battle_boss'];
+  const all: any[] = mgr ? keys.flatMap(k => (mgr as any).getAll ? (mgr as any).getAll(k) : []) : [];
+  return { ctx: (mgr as any)?.context?.state ?? null, cur: cur?.key ?? null, want, sting: !!sting, micHold, ducks,
+    live: all.filter(alive).map(s => ({ key: s.key, playing: !!s.isPlaying, paused: !!s.isPaused, vol: Math.round((s.volume ?? 0) * 100) / 100, seek: Math.round((s.seek ?? 0) * 10) / 10 })) };
+}
+if (typeof window !== 'undefined') { const w: any = window; (w.__proto = w.__proto || {}).musicState = musicState; }
 /** Battle-end sting: fades the music out, plays the one-shot, and holds any playMusic() request until it finishes. */
 export function playSting(key: StingKey) {
   dbg().stings.push(key); want = null; dbg().current = null;
