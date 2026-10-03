@@ -28,10 +28,10 @@ export function heroDamage(atk: number, streak: number, spoken: boolean, tired: 
   return Math.max(1, r(atk * streakMult(streak) * (spoken ? C().spokenDamageMult : 1) * (tired ? C().tiredHeroDamageMult : 1) - 0.5 * defE));
 }
 /** v3.4 §6.7 spell damage: max(1, round_half_up(P × (Tired ? 1.5 : 1) − DEF_e)). Fixed power P: no ATK, streak or spoken factor.
- *  All factors come from spells.json rules (tiredMult, defMult = 1 → full DEF; wardMult only when the bossMagicWard flag is on). */
-export function spellDamage(power: number, tired: boolean, ward: boolean, defE: number) {
+ *  Factors come from spells.json rules (tiredMult, defMult = 1 → full DEF). v3.5: no Magic Ward. */
+export function spellDamage(power: number, tired: boolean, defE: number) {
   const R = SPELL_RULES;
-  return Math.max(1, r(power * (tired ? R.tiredMult : 1) * (ward ? R.wardMult : 1) - R.defMult * defE));
+  return Math.max(1, r(power * (tired ? R.tiredMult : 1) - R.defMult * defE));
 }
 export const isBossKind = (d: EnemyDef) => d.kind === 'locboss' || d.kind === 'realmboss';
 export const TARGET_LABEL: Record<string, string> = { single: '🎯 单个 one enemy', same_type: '👥 同类 one kind (max 3)', all: '🌐 全部 all (max 3)' };
@@ -75,22 +75,12 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint, casts: 0, lastCastQ: -1 };
   const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false, gearGot: [], equipped: [] };
   const tired = () => bs.q >= tiredAt;
-  // v3.4 cast rule: 1 cast per normal/elite battle, 2 per boss battle (2nd ≥ bossGapQuestions questions later), Spellbook unlocks after minCorrect right answers
+  // v3.5 cast rule: no per-battle cap and no unlock; MP is the only limit (cast any turn, back to back)
   const castKind: 'normal' | 'elite' | 'boss' = leader || isBoss ? 'boss' : foes.some(f => f.d.kind === 'elite') ? 'elite' : 'normal';
-  const castCap = () => SPELL_RULES.castLimit[castKind] ?? 1;
-  /** Why a spell can't be cast now (null = it can). */
-  const castBlock = (sp?: SpellDef): { why: 'locked' | 'cap' | 'gap' | 'mp'; text: string } | null => {
-    const L = SPELL_RULES.castLimit;
-    if (res.correct < L.minCorrect) return { why: 'locked', text: `🔒 after ${L.minCorrect} right answers (${res.correct}/${L.minCorrect})` };
-    if (bs.casts >= castCap()) return { why: 'cap', text: `✋ ${castCap()} cast${castCap() > 1 ? 's' : ''} per battle used` };
-    if (bs.casts > 0 && bs.q - bs.lastCastQ < L.bossGapQuestions) return { why: 'gap', text: `⏳ ready in ${L.bossGapQuestions - (bs.q - bs.lastCastQ)} questions` };
-    if (sp && S.mp < sp.mp) return { why: 'mp', text: `needs ${sp.mp} MP` };
-    return null;
-  };
-  // Magic Ward 魔法护盾 (v3.3; dropped in v3.4, flag bossMagicWard): every enemy of a boss battle takes wardMult × spell damage
-  const ward = SPELL_RULES.bossMagicWard && !!leader;
-  let wardShown = false; let bookTab: 'skills' | 'spells' = 'skills'; let bookPage = 0;
-  (window as any).__proto.castState = () => ({ casts: bs.casts, cap: castCap(), kind: castKind, correct: res.correct, q: bs.q, lastCastQ: bs.lastCastQ, streak: bs.streak, block: castBlock()?.why || null });
+  /** Why a spell can't be cast now (null = it can): only MP. */
+  const castBlock = (sp?: SpellDef): { why: 'mp'; text: string } | null => (sp && S.mp < sp.mp ? { why: 'mp', text: `needs ${sp.mp} MP` } : null);
+  let bookTab: 'skills' | 'spells' = 'skills'; let bookPage = 0;
+  (window as any).__proto.castState = () => ({ casts: bs.casts, kind: castKind, correct: res.correct, q: bs.q, lastCastQ: bs.lastCastQ, streak: bs.streak, round: bs.round });
   const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
   /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
   const msg = (html: string, testid = '') => { const el = $('#bmsg'); if (!el) return; el.innerHTML = html; if (testid) el.dataset.testid = testid; else delete el.dataset.testid; };
@@ -102,7 +92,6 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
   const syncView = () => { view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
     foes.forEach((f, i) => { if (f.alive && f.fx) view.setStatus(i, f.fx); }); };
   syncView();
-  if (ward && S.spells.length) view.setWard(true);
 
   // ---- UI skeleton: everything sits inside the 1280x720 frame; the dock (24,464,1232x236) never changes size (spec §4)
   const skeleton = () => {
@@ -371,9 +360,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const live = foes.filter(f => f.alive); const first = tgt && tgt.alive ? tgt : live[0];
     S.mp -= sp.mp; bs.casts++; bs.lastCastQ = bs.q; hud();
     flyTo(`−${sp.mp} MP`, heroFrame(), 'mp', '#9be7ff');
-    if (ward && !wardShown) { wardShown = true; view.setWard(true); log(`🛡️ ${zh('魔法护盾')}! Magic Ward: in boss battles spells do less damage.`); toast(`🛡️ ${zh('魔法护盾')}! Magic Ward`); }
-    const info: any = { id: sp.id, power: sp.power, ward, wardMult: R.wardMult, defMult: R.defMult, tiredMult: R.tiredMult, mpBefore, mpCost: sp.mp, hits: [],
-      qBefore: q0, streakBefore: streak0, casts: bs.casts, cap: castCap(), kind: castKind, asked: false };
+    const info: any = { id: sp.id, power: sp.power, defMult: R.defMult, tiredMult: R.tiredMult, mpBefore, mpCost: sp.mp, hits: [],
+      qBefore: q0, streakBefore: streak0, casts: bs.casts, round: bs.round, kind: castKind, asked: false };
     (window as any).__proto.lastSpell = info;
     if (R.castRequiresAnswer) {
       info.asked = true; const o = await ask('spell', sp.target === 'all' ? undefined : first, sp); info.result = o.result;
@@ -388,7 +376,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const hitList = pool.filter(Boolean).slice(0, R.maxTargets);
     const dmgs: number[] = []; const status: (string | null)[] = []; const lines: string[] = [];
     for (const f of hitList) {
-      let d = spellDamage(sp.power, tiredNow, ward, f.d.def_);
+      let d = spellDamage(sp.power, tiredNow, f.d.def_);
       const wax = !!(f.d.mech.waxShieldFirstHit && !f.waxUsed);
       if (wax) { f.waxUsed = true; d = f.d.mech.waxShieldFirstHit!; log(`🕯️ ${f.d.zh}'s wax shield soaks up the spell!`, false); }
       f.hp = Math.max(0, f.hp - d); dmgs.push(d); let st: string | null = null;
@@ -409,10 +397,10 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
     const key = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { info.skippedAt ??= Math.round(performance.now() - t0); view.skipCast(); } };
     const t0 = performance.now();
     $('[data-testid="battle"]')?.appendChild(sk); document.addEventListener('keydown', key);
-    await view.castSpell(sp, hitList.map(f => foes.indexOf(f)), dmgs, hitList.map(f => f.hp), { status, tag: ward ? '🛡️ ×' + R.wardMult : undefined });
+    await view.castSpell(sp, hitList.map(f => foes.indexOf(f)), dmgs, hitList.map(f => f.hp), { status });
     info.animMs = Math.round(performance.now() - t0);
     sk.remove(); document.removeEventListener('keydown', key);
-    log(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)} hits ${hitList.map((f, k) => `${zhName(f)} for ${dmgs[k]}`).join(', ')}${ward ? ` (🛡️ ward ×${R.wardMult})` : ''}${tiredNow ? ' (😪 ×' + R.tiredMult + ')' : ''}`);
+    log(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)} hits ${hitList.map((f, k) => `${zhName(f)} for ${dmgs[k]}`).join(', ')}${tiredNow ? ' (😪 ×' + R.tiredMult + ')' : ''}`);
     for (const l of lines) log(l, false);
     for (const f of hitList) { if (f.hp <= 0 && f.alive) kill(f); else if (f.alive) { checkCheckpoint(); halfTriggers(f); } }
     info.qAfter = bs.q; info.streakAfter = bs.streak; info.mpEnd = S.mp; info.done = true;
@@ -573,16 +561,15 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0):
         if (which === 'skills' && bookTab === 'spells' && owned.length) {
           const per = 4; const pages = Math.ceil(owned.length / per); bookPage = Math.min(bookPage, pages - 1);
           const shown = owned.slice(bookPage * per, bookPage * per + per).map(id => SPELL[id]);
-          const gate = castBlock(); const locked = gate?.why === 'locked';
-          msg(locked ? `📖 ${zh('魔法书')} Spellbook is charging: ${gate!.text}. Answer questions to unlock it!` : gate ? `📖 ${gate.text}` : `📖 ${zh('魔法书')} Spellbook: 🔷 ${S.mp} MP. Casting is instant (no question).`, locked ? 'spellbook-locked-msg' : '');
-          await dockMain(`<div class="sublist spellbook${locked ? ' locked' : ''}" data-testid="spellbook" data-locked="${locked ? 1 : 0}" data-block="${gate?.why || ''}">${shown.map((sp, k) => { const b2 = castBlock(sp); const ok = !b2;
+          msg(`📖 ${zh('魔法书')} Spellbook: 🔷 ${S.mp} MP. Casting is instant (no question).`, 'spellbook-msg');
+          await dockMain(`<div class="sublist spellbook" data-testid="spellbook">${shown.map((sp, k) => { const b2 = castBlock(sp); const ok = !b2;
             return `<button class="spell" data-a="spell" data-item="${sp.id}" data-testid="spell-${sp.id}" data-key="${k + 1}" data-block="${b2?.why || ''}" ${ok ? '' : 'disabled'} title="${esc(TARGET_LABEL[sp.target])}">
-              <span class="sic">${locked ? spellIcon('locked', '🔒', 34) : spellIcon(sp.id, sp.emoji, 34)}</span><span class="zh" lang="zh-CN">${sp.zh}</span><span class="nm">${esc(sp.en)}</span>
+              <span class="sic">${spellIcon(sp.id, sp.emoji, 34)}</span><span class="zh" lang="zh-CN">${sp.zh}</span><span class="nm">${esc(sp.en)}</span>
               <span class="en">${sp.mp} MP · ${ok ? `<span data-testid="mp-left">${S.mp - sp.mp} left after</span>` : `<b class="need">${b2!.text}</b>`}</span><span class="tg">💥 ${sp.power} · ${TARGET_LABEL[sp.target]}</span></button>`; }).join('')}
             ${pages > 1 ? `<button class="ghost back" data-page="1" data-testid="spell-more">▶ ${zh('更多')} More<span class="en">${bookPage + 1}/${pages}</span></button>` : ''}
             <button class="ghost back" data-back="1" data-testid="act-back" data-key="${shown.length + 1}">◀ ${zh('返回')} Back</button></div>`);
           on('#bmain [data-page]', () => { bookPage = (bookPage + 1) % pages; sub('skills'); });
-          if (!gate && shown.every(sp => S.mp < sp.mp)) msg(`📖 Not enough MP for a spell (🔷 ${S.mp}). Right answers give +1 MP.`, 'spell-nomp');
+          if (shown.every(sp => S.mp < sp.mp)) msg(`📖 Not enough MP for a spell (🔷 ${S.mp}). Right answers give +1 MP.`, 'spell-nomp');
           wire(); return;
         }
         if (which === 'skills') {

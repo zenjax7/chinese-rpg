@@ -20,7 +20,7 @@ const NUM_FONT = '"Fredoka","Nunito",sans-serif';
 const TXT_RES = 2;   // text textures at 2x so they stay sharp under the 1.5 camera zoom
 type Body = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 interface FoeView { body: Body; blob: Phaser.GameObjects.Ellipse; bar: Phaser.GameObjects.Graphics; label: Phaser.GameObjects.Text; data: ViewEnemy;
-  x: number; y: number; h: number; sprite: string | null; ghost: number; shown: number; impactAt: number; mark?: Phaser.GameObjects.Text; orb?: Phaser.GameObjects.Arc; ward?: StatusView; status?: StatusView; }
+  x: number; y: number; h: number; sprite: string | null; ghost: number; shown: number; impactAt: number; mark?: Phaser.GameObjects.Text; orb?: Phaser.GameObjects.Arc; status?: StatusView; }
 /** Enemy slot x positions (spec §4.1); a boss leading a pack takes the middle slot. */
 export function foeSlots(n: number, bossFirst: boolean): number[] {
   if (n <= 1) return [900];
@@ -115,7 +115,7 @@ class MainScene extends Phaser.Scene {
     return true;
   }
   setMode(mode: 'town' | 'map' | 'battle' | 'blank', color = 0x6fbf4a, bgKeys: string[] = []) {
-    this.wardOn = false; this.clearDecor(); this.clearFoes(); this.clearFocus(); this.shield(false);
+    this.clearDecor(); this.clearFoes(); this.clearFocus(); this.shield(false);
     this.ground.setFillStyle(color); this.bg.setFillStyle(mode === 'battle' ? 0x9ad7f5 : 0x87ceeb);
     const b = mode === 'battle';
     this.hero.setVisible(b); this.heroShadow.setVisible(b); this.comp.setVisible(b);
@@ -132,7 +132,7 @@ class MainScene extends Phaser.Scene {
       put(160, 150, '☁️', 66); put(1090, 110, '☁️', 54); put(110, 400, '🌳'); put(1170, 430, '🌳'); put(930, 160, '⛰️', 92);
     } else if (mode === 'battle') { put(110, 80, '☁️', 58); put(1170, 120, '☁️', 48); }
   }
-  clearFoes() { for (const f of this.foes) { f.body.destroy(); f.blob.destroy(); f.bar.destroy(); f.label.destroy(); f.mark?.destroy(); f.orb?.destroy(); clearStatus(this, f.ward); clearStatus(this, f.status); } this.foes = []; this.target = -1; this.targetMark?.setVisible(false); this.targetRing?.setVisible(false); }
+  clearFoes() { for (const f of this.foes) { f.body.destroy(); f.blob.destroy(); f.bar.destroy(); f.label.destroy(); f.mark?.destroy(); f.orb?.destroy(); clearStatus(this, f.status); } this.foes = []; this.target = -1; this.targetMark?.setVisible(false); this.targetRing?.setVisible(false); }
   foeTop(f: FoeView) { return f.y - f.h * (f.sprite ? 0.84 : 0.8); }
   setEnemies(list: ViewEnemy[]) {
     this.clearFoes();
@@ -153,21 +153,15 @@ class MainScene extends Phaser.Scene {
       if (d.hp <= 0) [body, blob, f.label, f.bar].forEach(o => o.setAlpha(0));
     });
     (window as any).__proto.foeLayout = this.foes.map(f => ({ x: f.x, top: this.foeTop(f), h: f.h }));
-    if (this.wardOn) this.setWard(true);
   }
   // ---------------- v3.4 spells (choreography in ./spellfx.ts) ----------------
-  wardOn = false; cast: CastHandle | null = null;
+  cast: CastHandle | null = null;
   fxTarget(f: FoeView) { return { x: f.x, top: this.foeTop(f), feet: f.y, h: f.h, body: f.body, sprite: f.sprite }; }
   fxHost() {
     const b = this.hero; const sp = b instanceof Phaser.GameObjects.Sprite ? b : null;
     const w = sp ? sp.displayWidth : SIZE.hero * 0.6, h = sp ? sp.displayHeight : SIZE.hero * 0.6;
     const box = sp ? { x: sp.x + (0.5 - sp.originX) * w, feet: sp.y + (1 - sp.originY) * h, w, h } : { x: HERO_X, feet: BASE_Y, w, h };
     return { scene: this as Phaser.Scene, hero: b, heroBox: box, playOnce: (x: Body, id: string | null, a: string) => this.playOnce(x, id, a), hitStop: (x: Body) => this.impact(x) };
-  }
-  /** Magic Ward 魔法护盾 (flag bossMagicWard, off in v3.4): Arty's violet ward ring under every enemy. */
-  setWard(on: boolean) {
-    this.wardOn = on;
-    for (const f of this.foes) { clearStatus(this, f.ward); f.ward = undefined; if (on && f.data.hp > 0) f.ward = showStatus(this, 'ward', this.fxTarget(f), '🛡️'); }
   }
   /** Status overlay on enemy i: soaked | dazed | chilled | frozen, null clears it. */
   setStatus(i: number, key: string | null) {
@@ -221,7 +215,7 @@ class MainScene extends Phaser.Scene {
       } else { f.ghost = f.shown; this.drawBar(f); }
       if (f.data.hp <= 0 && was > 0) {   // defeat: hurt frames, then fade out (no dedicated defeat frames)
         if (this.target === i) this.setTarget(-1);
-        clearStatus(this, f.ward); f.ward = undefined; clearStatus(this, f.status); f.status = undefined;
+        clearStatus(this, f.status); f.status = undefined;
         const fade = () => this.tweens.add({ targets: [f.body, f.blob, f.label, f.bar], alpha: 0, duration: 500 });
         this.coinBurst(f.x, this.foeTop(f) + f.h * 0.4);
         if (f.sprite && this.anims.exists(`${f.sprite}_hurt`)) { const b = f.body as Phaser.GameObjects.Sprite; b.play(`${f.sprite}_hurt`); b.once('animationcomplete', () => { b.stop(); fade(); }); }
@@ -392,5 +386,4 @@ export const view = {
   skipCast: () => call(s => s.skipCast()),
   setStatus: (i: number, key: string | null) => call(s => s.setStatus(i, key)),
   fizzle: (element: string) => call(s => s.fizzle(element)),
-  setWard: (on: boolean) => call(s => s.setWard(on)),
 };

@@ -231,9 +231,9 @@ export function playCast(h: FxHost, spell: { id: string; element: string; emoji:
   return { done, skip, totalMs: total, naturalMs: natural, mode, missing: [...missing] };
 }
 
-// ---------------- status overlays (fx/manifest.json "status": soaked, dazed, chilled, frozen, ward) ----------------
+// ---------------- status overlays (fx/manifest.json "status": soaked, dazed, chilled, frozen) ----------------
 export interface StatusView { objs: Phaser.GameObjects.GameObject[]; key: string; }
-/** Draws a status overlay on an enemy: front layers above the enemy body (depth 4), back layers (and "behind", e.g. the ward ring) below it. */
+/** Draws a status overlay on an enemy: front layers above the enemy body (depth 4), back layers (and "behind") below it. */
 export function showStatus(s: Phaser.Scene, key: string, t: FxTarget, emojiFallback: string): StatusView {
   const cfg = MAN?.status?.[key]; const objs: Phaser.GameObjects.GameObject[] = []; const add = <T extends Phaser.GameObjects.GameObject>(o: T) => { objs.push(o); return o; };
   const ctr = { x: t.x, y: (t.top + t.feet) / 2 };
@@ -270,9 +270,8 @@ export function showStatus(s: Phaser.Scene, key: string, t: FxTarget, emojiFallb
     if (objs.length) return { objs, key };
   }
   // fallback: an emoji badge over the head
-  const fb: Record<string, string> = { soaked: '💧', dazed: '💫', chilled: '🥶', frozen: '🧊', ward: '🛡️' };
-  if (key === 'ward') { const e = add(s.add.ellipse(t.x, t.feet - 6, t.h * 0.8, t.h * 0.2, 0xb48cff, 0.25).setStrokeStyle(4, 0xd7c2ff, 0.8).setDepth(3.6)); s.tweens.add({ targets: e, alpha: 0.6, duration: 900, yoyo: true, repeat: -1 }); }
-  else { const e = add(s.add.text(t.x + 40, t.top - 10, fb[key] || emojiFallback, { fontSize: '40px', padding: { x: 6, y: 8 } }).setOrigin(0.5).setResolution(2).setDepth(4.7)); s.tweens.add({ targets: e, y: e.y - 6, duration: 700, yoyo: true, repeat: -1 }); }
+  const fb: Record<string, string> = { soaked: '💧', dazed: '💫', chilled: '🥶', frozen: '🧊' };
+  { const e = add(s.add.text(t.x + 40, t.top - 10, fb[key] || emojiFallback, { fontSize: '40px', padding: { x: 6, y: 8 } }).setOrigin(0.5).setResolution(2).setDepth(4.7)); s.tweens.add({ targets: e, y: e.y - 6, duration: 700, yoyo: true, repeat: -1 }); }
   return { objs, key };
 }
 export function clearStatus(s: Phaser.Scene, v?: StatusView, popParticles = false) {

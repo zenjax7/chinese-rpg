@@ -49,9 +49,8 @@ export interface TownDef { town: number; zh: string; en: string; G: number; real
 export interface SpellDef { id: string; town: number; zh: string; zhTrad: string; en: string; target: 'single' | 'same_type' | 'all'; element: string; emoji: string;
   power: number; mp: number; priceG: number; status: 'soak' | 'daze' | 'chill' | 'freeze' | null; statusZh: string | null; statusEn: string | null; statusText: string | null;
   skipChance: number; soak: boolean; statusTurns: number; }
-export interface CastLimit { normal: number; elite: number; boss: number; minCorrect: number; bossGapQuestions: number; }
-export interface SpellRules { version: string; castRequiresAnswer: boolean; fizzleSpendsMp: boolean; tiredMult: number; defMult: number; bossMagicWard: boolean; wardMult: number;
-  maxTargets: number; bossStatusMult: number; statusBossMultBy: Record<string, number>; soakMult: number; castStreak: string; castMpRegen: number; castLimit: CastLimit;
+export interface SpellRules { version: string; castRequiresAnswer: boolean; fizzleSpendsMp: boolean; tiredMult: number; defMult: number;
+  maxTargets: number; bossStatusMult: number; statusBossMultBy: Record<string, number>; soakMult: number; castStreak: string; castMpRegen: number;
   blacksmithFirst: 'warn' | 'lock' | 'off'; town1Shelf: string; }
 export interface QuestDef { id: string; town: number; type: 'bounty' | 'collect' | 'words' | 'delivery'; titleZh: string; titleEn: string; n: number; rewardG: number;
   rewardItem: string | null; rewardCosmetic: string | null; enemy: string | null; enemyDesyId: string | null; dropZh: string | null; dropEn: string | null; toTown: number | null; }

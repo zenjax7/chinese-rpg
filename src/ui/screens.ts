@@ -211,7 +211,7 @@ export function magicShop() {
         ${own ? `<button class="secondary" disabled data-testid="owned-${sp.id}">✅ Owned for good</button>` : `<button data-buys="${sp.id}" data-testid="buy-spell-${sp.id}" ${S.gold >= p ? '' : 'disabled'}>Buy ${p} 🪙</button>`}</div>`; }).join('')}</div>`;
   };
   render(dlg({ testid: 'magic-shop', title: `🔮 ${zh('魔法店')} Magic Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
-    <p class="muted">Spells are yours for good. In battle: ✨ ${zh('技能')} Skills → 📖 ${zh('魔法')} Spells. ${SPELL_RULES.castRequiresAnswer ? `Answer right to cast; a wrong answer fizzles (${zh('失灵')}).` : 'Casting is instant: no question, it just uses MP.'} The Spellbook opens after ${SPELL_RULES.castLimit.minCorrect} right answers in a battle. You can cast ${SPELL_RULES.castLimit.normal} spell per battle (${SPELL_RULES.castLimit.boss} in boss battles). MP tea works on the map only.${SPELL_RULES.bossMagicWard ? ` Bosses have a ${zh('魔法护盾')} Magic Ward: spells do half damage there.` : ''}</p>
+    <p class="muted">Spells are yours for good. In battle: ✨ ${zh('技能')} Skills → 📖 ${zh('魔法')} Spells. ${SPELL_RULES.castRequiresAnswer ? `Answer right to cast; a wrong answer fizzles (${zh('失灵')}).` : 'Casting is instant: no question, it just uses MP.'} Cast on any turn, as often as your MP allows. MP tea works on the map only.</p>
     ${towns.map(shelf).join('')}` }));
   on('[data-buyc]', (_e, el) => { const id = el.dataset.buyc!; const pr = consPrice(id); if (S.gold < pr) return; S.gold -= pr; S.inv[id] = (S.inv[id] || 0) + 1; playSfx('sfx_gold'); save(); toast(`Bought ${CONS[id].en}`); magicShop(); });
   on('[data-buys]', async (_e, el) => {
