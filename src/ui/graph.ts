@@ -347,7 +347,7 @@ export function graphScreen() {
   const z = zoneOf(g, here); const loc = battleLoc(z); setCurrentLoc(loc);
   view.mode('map', parseInt(LOC[loc].bg), BG.map(LOC[loc])); playMusic('mus_village'); hud();
   const ttl = g.title || W.idx!.graphs.find(x => x.id === g.id)?.title;
-  const lvl = g.kind === 'dungeon_level' && g.level ? ` · ${zh(`第${g.level}层`)} Level ${g.level}` : '';
+  const lvl = g.kind === 'dungeon_level' && g.level && !(ttl?.zh || '').includes('层') ? ` · ${zh(`第${g.level}层`)} Level ${g.level}` : '';   // most titles already name the level
   setTitle(`${isWorld ? '🌍' : g.kind === 'dungeon_level' ? '🕳️' : '🗺️'} ${zh(ttl?.zh || '')} ${esc(ttl?.en || g.id)}${lvl}`);
   const x = ctx(); const fogS: Record<string, E.FogState> = isWorld ? Object.fromEntries(g.nodes.map(n => [n.id, 'visited' as E.FogState])) : E.fog(g, P(), x, R().fog?.landmarkKinds);
   const dense = g.nodes.length > 60; const rr = dense ? 17 : 22;
