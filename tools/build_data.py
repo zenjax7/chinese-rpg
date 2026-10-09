@@ -1,17 +1,31 @@
-"""Builds src/data/{items,enemies,skills,shop,v3}.json from Desy's spec v3 data. Run: python3 tools/build_data.py
-Sources: desy/data/combat_data.json (all v3 tables), desy/data/curriculum_location_pools.csv (location pools),
-desy/core-curriculum.csv (item fields), desy/enemies.json (flavor text), art/sprites/manifest.json (sprite keys)."""
+"""Builds src/data/{items,enemies,skills,shop,v3,quests,towns,spells}.json from Desy's spec v3 data. Run: python3 tools/build_data.py
+Sources (repo-relative, GitHub is the only source of truth; see docs/README.md): docs/data/json/combat_data.json (all v3 tables),
+docs/data/curriculum/curriculum_location_pools.csv (location pools), docs/data/curriculum/curriculum.csv (item fields),
+docs/data/json/enemies-art-roster.json (flavor text), art/sprites/manifest.json (sprite keys).
+DESY_ROOT=/workspace/desy reads Desy's own working tree instead (her flat layout)."""
 import csv, json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DESY = os.path.join(ROOT, '..', '..', 'desy')
-CD = json.load(open(os.path.join(DESY, 'data', 'combat_data.json'), encoding='utf-8'))
+DOCS = os.path.join(ROOT, 'docs', 'data')
+DESY_ROOT = os.environ.get('DESY_ROOT')
+# Desy-relative name -> repo path under docs/data (docs/README.md lists every table)
+_MAP = {'data/combat_data.json': 'json/combat_data.json', 'core-curriculum.csv': 'curriculum/curriculum.csv',
+        'data/curriculum_location_pools.csv': 'curriculum/curriculum_location_pools.csv', 'enemies.json': 'json/enemies-art-roster.json',
+        'data/boss_hp.csv': 'enemies/boss_hp.csv', 'data/mp_potions.csv': 'spells/mp_potions.csv', 'data/spells_full.json': 'json/spells_full.json',
+        'data/spells.csv': 'spells/spells.csv', 'data/cast_rule.csv': 'spells/cast_rule.csv', 'data/spell_falloff.csv': 'spells/spell_falloff.csv',
+        'data/quests_full.json': 'quests/quests_full.json', 'data/quests_v1.json': 'quests/quests_v1.json', 'data/quests.json': 'quests/quests.json',
+        'data/mp_rules.csv': 'balance/mp_rules.csv'}
+def D(*parts):
+    """Desy-relative path (e.g. D('data', 'spells.csv')) -> the repo copy in docs/data, or Desy's tree when DESY_ROOT is set."""
+    rel = '/'.join(parts)
+    return os.path.join(DESY_ROOT, rel) if DESY_ROOT else os.path.join(DOCS, _MAP[rel])
+CD = json.load(open(D('data', 'combat_data.json'), encoding='utf-8'))
 out = lambda name, obj: json.dump(obj, open(os.path.join(ROOT, 'src', 'data', name), 'w'), ensure_ascii=False, indent=1)
 
 # ---------------- items + pools ----------------
 # Prototype locations -> Desy location pools (v3: 47-60 items per location)
 LOC_POOL = {'meadow': 'L1.1', 'forest': 'L2.1'}
-rows = {r['id']: r for r in csv.DictReader(open(os.path.join(DESY, 'core-curriculum.csv'), encoding='utf-8-sig'))}
-pools_csv = list(csv.DictReader(open(os.path.join(DESY, 'data', 'curriculum_location_pools.csv'), encoding='utf-8-sig')))
+rows = {r['id']: r for r in csv.DictReader(open(D('core-curriculum.csv'), encoding='utf-8-sig'))}
+pools_csv = list(csv.DictReader(open(D('data', 'curriculum_location_pools.csv'), encoding='utf-8-sig')))
 ALT_ZH = {'哪儿': ['哪里'], '这儿': ['这里'], '那儿': ['那里'], '拜拜': ['白白'], '两': ['二'], '二': ['两']}
 ALT_EN = {'你好': ['hi'], '谢谢': ['thanks'], '再见': ['bye', 'see you'], '对不起': ["i'm sorry"],
           '没关系': ["it's ok", 'that is okay', "it's alright"], '不客气': ['no problem', 'you are welcome'],
@@ -28,7 +42,7 @@ for p in pools_csv:
 out('items.json', dict(_note='Generated from desy/data/curriculum_location_pools.csv + desy/core-curriculum.csv (realms 1-2). pools: meadow = L1.1 Village Meadow, forest = L2.1 Flower Glade, in authored order. All realm 1-2 items are used for distractors.', pools=pools, items=items))
 
 # ---------------- enemies ----------------
-full = {e['id']: e for e in json.load(open(os.path.join(DESY, 'enemies.json'), encoding='utf-8'))}
+full = {e['id']: e for e in json.load(open(D('enemies.json'), encoding='utf-8'))}
 stats = {e['id']: e for e in CD['enemies']}
 MANI = os.environ.get('ART_SPRITES', '/workspace/art/sprites') + '/manifest.json'
 MAN = json.load(open(MANI)) if os.path.exists(MANI) else {}
@@ -73,7 +87,7 @@ for pid, (did, emoji, color, mech) in MAP.items():
                    special=d['special'], group=f.get('group_behavior', '')))
 # v3.7 boss HP / ATK (desy/data/boss_hp.csv: HP = v3.5 HP x m(t) by tier and boss type (location ~15 correct, realm ~20), ATK x 0.8). combat_data.json carries the same numbers;
 # boss_hp.csv is applied explicitly so a later roster edit can't silently drift from Desy's boss table.
-BHP = {(int(r['tier']), r['boss_type']): r for r in csv.DictReader(open(os.path.join(DESY, 'data', 'boss_hp.csv'), encoding='utf-8-sig'))}
+BHP = {(int(r['tier']), r['boss_type']): r for r in csv.DictReader(open(D('data', 'boss_hp.csv'), encoding='utf-8-sig'))}
 for e in en:
     if e['kind'] in ('locboss', 'realmboss'):
         r = BHP[(e['tier'], 'realm' if e['kind'] == 'realmboss' else 'location')]
@@ -117,7 +131,7 @@ gear += [
   dict(id='queens_crown', slot='charm', tier=2, rarity='heroic', zh='蜂后之冠', en="Queen's Crown", emoji='👑', mp=int(MPR['queens_crown_bonus']), price=0, perk='+6 max MP'),
 ]
 CONS = {c['item_id']: c for c in CD['consumables']}
-MPP = {r['item_id']: r for r in csv.DictReader(open(os.path.join(DESY, 'data', 'mp_potions.csv'), encoding='utf-8-sig'))}
+MPP = {r['item_id']: r for r in csv.DictReader(open(D('data', 'mp_potions.csv'), encoding='utf-8-sig'))}
 cons = [
   dict(id='honey', zh=CONS['honey_potion']['name_zh'], en='Honey Potion', emoji='🍯', priceG=1, healHpFrac=0.40),
   dict(id='bighoney', zh=CONS['big_honey']['name_zh'], en='Big Honey', emoji='🏺', priceG=2, healHpFrac=0.70),
@@ -133,15 +147,15 @@ out('shop.json', dict(_note='Generated from combat_data.json gear (tiers 1-2 com
 # ---------------- v3.3/v3.4: towns, spells, quests (desy/data/spells.csv, cast_rule.csv, spell_falloff.csv, spells_full.json, quests*.json) ----------------
 # Engine-neutral JSON: plain fields, no game-specific ids beyond the prototype item/enemy ids it maps to. Every number comes from Desy's files;
 # the prototype-only switch (castRequiresAnswer) is marked in rules._note.
-SPF = json.load(open(os.path.join(DESY, 'data', 'spells_full.json'), encoding='utf-8'))
-SPL = {r['spell_id']: r for r in csv.DictReader(open(os.path.join(DESY, 'data', 'spells.csv'), encoding='utf-8-sig'))}
-CR = {r['key']: r['value'] for r in csv.DictReader(open(os.path.join(DESY, 'data', 'cast_rule.csv'), encoding='utf-8-sig'))}
-FALL = list(csv.DictReader(open(os.path.join(DESY, 'data', 'spell_falloff.csv'), encoding='utf-8-sig')))
-QF = json.load(open(os.path.join(DESY, 'data', 'quests_full.json'), encoding='utf-8'))
+SPF = json.load(open(D('data', 'spells_full.json'), encoding='utf-8'))
+SPL = {r['spell_id']: r for r in csv.DictReader(open(D('data', 'spells.csv'), encoding='utf-8-sig'))}
+CR = {r['key']: r['value'] for r in csv.DictReader(open(D('data', 'cast_rule.csv'), encoding='utf-8-sig'))}
+FALL = list(csv.DictReader(open(D('data', 'spell_falloff.csv'), encoding='utf-8-sig')))
+QF = json.load(open(D('data', 'quests_full.json'), encoding='utf-8'))
 # v3.9: desy/data/quests.json became the quest/0.2 story format (graph mode reads it via tools/world/build_world.py);
 # the classic town boards keep the flat v1 list (quests_v1.json, same rows as before).
-_qv1 = os.path.join(DESY, 'data', 'quests_v1.json')
-QL = json.load(open(_qv1 if os.path.exists(_qv1) else os.path.join(DESY, 'data', 'quests.json'), encoding='utf-8'))
+_qv1 = D('data', 'quests_v1.json')
+QL = json.load(open(_qv1 if os.path.exists(_qv1) else D('data', 'quests.json'), encoding='utf-8'))
 if isinstance(QL, dict): QL = QL.get('quests', [])
 num = lambda v: float(v) if re.fullmatch(r'-?\d+(\.\d+)?', str(v).strip()) else None
 # gear set price per tier (weapon + armor + shield, common) for the Blacksmith-first warning
@@ -213,7 +227,7 @@ print({k: len(v) for k, v in pools.items()}, len(items), [(e['id'], e['hp'], e['
 
 # balance.json is hand-tuned; warn when its MP regen drifts from Desy's mp_rules (v3.6+: regen_per_correct = 0)
 _bal = json.load(open(os.path.join(ROOT, 'src', 'data', 'balance.json'), encoding='utf-8'))
-_regen = {r['key']: r['value'] for r in csv.DictReader(open(os.path.join(DESY, 'data', 'mp_rules.csv'), encoding='utf-8-sig'))}.get('regen_per_correct')
+_regen = {r['key']: r['value'] for r in csv.DictReader(open(D('data', 'mp_rules.csv'), encoding='utf-8-sig'))}.get('regen_per_correct')
 if _regen is not None and float(_regen) != _bal['combat']['mpPerCorrect']:
     print(f"WARNING: balance.json mpPerCorrect differs from desy mp_rules regen_per_correct = {_regen}")
 

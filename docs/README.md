@@ -4,7 +4,7 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 
 - **Play the live prototype:** https://zenjax7.github.io/chinese-rpg/
 - **Start here:** [design/plan.md](design/plan.md), the research summary, plan and early decisions.
-- **Backend architecture (approved):** [architecture.md](architecture.md) is the approved design (not built yet) for parent accounts, cloud saves, COPPA, hosting at $0 (Vercel Hobby, Neon Postgres and Auth.js with Google), static per-graph content on the CDN, the node-graph world, and the dialogue and quest data hooks.
+- **Backend architecture (approved):** [architecture.md](tech/architecture.md) is the approved design (not built yet) for parent accounts, cloud saves, COPPA, hosting at $0 (Vercel Hobby, Neon Postgres and Auth.js with Google), static per-graph content on the CDN, the node-graph world, and the dialogue and quest data hooks.
 
 This folder holds design docs, data tables, reference images and Desy's design tools. It is **not** part of the game build: Vite only bundles `src/` and copies `public/`, so nothing under `docs/` goes to GitHub Pages. The layout follows Desy's repo manifest. Docs are Markdown and tables are CSV (UTF-8; some CSVs have a BOM for Excel). JSON twins are kept for code. HTML and XLSX exports are left out because they are generated from the Markdown and CSV files.
 
@@ -12,7 +12,7 @@ This folder holds design docs, data tables, reference images and Desy's design t
 
 When documents disagree, use this order:
 
-1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.9.1)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.9.1)** with the data in [data/world/](data/world/) for the node-graph world, and **[design/quests.md](design/quests.md)** / **[design/story.md](design/story.md)** with [data/quests/](data/quests/) and [data/dialogue/](data/dialogue/) for quests and story scenes.
+1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.9.1)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.9.1)** with the data in [data/world/](data/world/) for the node-graph world, and **[design/quests.md](story/quests.md)** / **[design/story.md](story/story.md)** with [data/quests/](data/quests/) and [data/dialogue/](data/dialogue/) for quests and story scenes.
 2. **The CSV tables and world JSON in [data/](#data-tables)**, which match spec v3.9.1. The game data in `src/data` is built from them.
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
 4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
@@ -28,16 +28,16 @@ Everything in an `archive/` folder is superseded and kept for history only.
 | [world-graph-schema-answers.md](design/world-graph-schema-answers.md) | Desy's short answers to GameDev's 14 schema questions (architecture.md §17.2). |
 | [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.7 (no cast caps, MP only; MP costs 1.25 × v3.4). |
 | [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
-| [enemies-art-brief.md](design/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
-| [ui-layout-review.md](design/ui-layout-review.md) | UI layout and game-feel review. Its images are in [images/ui-review/](images/ui-review/). |
+| [enemies-art-brief.md](art/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
+| [ui-layout-review.md](design/ui-layout-review.md) | UI layout and game-feel review. Its images are in [images/ui-review/](art/ui-review/). |
 | [design-memo.md](design/design-memo.md) | Design findings memo: reference games (Prodigy, Miitopia), HSK levels, learning design. |
 | [plan.md](design/plan.md) | Research summary, plan and early decisions. Older than the spec. |
-| [research-tech-market.md](design/research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
-| [story.md](design/story.md) | Story: the 9-realm plot, scenes and how dialogue teaches words (scene/0.2). |
-| [quests.md](design/quests.md) | Quests v2: 50 NPC and story quests on world-graph nodes (quest/0.2), givers by position, the quest state machine. |
-| [characters.md](design/characters.md) | Characters: the realm 1 cast and generic NPCs (portrait ids match Arty's v2 portraits). |
-| [art-direction-memo.md](design/art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
-| [ai-art-pipeline-proposal.md](design/ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
+| [research-tech-market.md](tech/research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
+| [story.md](story/story.md) | Story: the 9-realm plot, scenes and how dialogue teaches words (scene/0.2). |
+| [quests.md](story/quests.md) | Quests v2: 50 NPC and story quests on world-graph nodes (quest/0.2), givers by position, the quest state machine. |
+| [characters.md](story/characters.md) | Characters: the realm 1 cast and generic NPCs (portrait ids match Arty's v2 portraits). |
+| [art-direction-memo.md](art/art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
+| [ai-art-pipeline-proposal.md](art/ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
 
 ### Archive ([design/archive/](design/archive/))
 
@@ -96,23 +96,23 @@ These are the spec tables.
 
 | File | What it is |
 |---|---|
-| [chest_contents.csv](data/combat/chest_contents.csv) | Treasure chest loot tables |
-| [companion.csv](data/combat/companion.csv) | Companion stats and behavior |
-| [consumables.csv](data/combat/consumables.csv) | Potions and other consumables |
-| [drops.csv](data/combat/drops.csv) | Enemy drop tables |
-| [economy_prices.csv](data/combat/economy_prices.csv) | Shop prices and gold economy |
-| [gear.csv](data/combat/gear.csv) | Weapons and armor by tier |
-| [gear_heroic_drops.csv](data/combat/gear_heroic_drops.csv) | Heroic gear drops from bosses and elites |
-| [hero_stats.csv](data/combat/hero_stats.csv) | Hero stats by level |
-| [mp_rules.csv](data/combat/mp_rules.csv) | MP rules (max MP, regen, heal limits) |
-| [practice_modes.csv](data/combat/practice_modes.csv) | Practice mode definitions |
-| [practice_rewards.csv](data/combat/practice_rewards.csv) | Rewards for practice modes |
-| [proficiency_patrol_settings.csv](data/combat/proficiency_patrol_settings.csv) | Proficiency patrol settings |
-| [realm_difficulty.csv](data/combat/realm_difficulty.csv) | Difficulty per realm |
-| [realm_location_difficulty.csv](data/combat/realm_location_difficulty.csv) | Difficulty per location |
-| [safety_nets.csv](data/combat/safety_nets.csv) | Safety nets for struggling players |
-| [skills_mp.csv](data/combat/skills_mp.csv) | Skills and their MP costs |
-| [special_mechanics.csv](data/combat/special_mechanics.csv) | Special enemy and boss mechanics |
+| [chest_contents.csv](data/items/chest_contents.csv) | Treasure chest loot tables |
+| [companion.csv](data/balance/companion.csv) | Companion stats and behavior |
+| [consumables.csv](data/items/consumables.csv) | Potions and other consumables |
+| [drops.csv](data/items/drops.csv) | Enemy drop tables |
+| [economy_prices.csv](data/items/economy_prices.csv) | Shop prices and gold economy |
+| [gear.csv](data/items/gear.csv) | Weapons and armor by tier |
+| [gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) | Heroic gear drops from bosses and elites |
+| [hero_stats.csv](data/balance/hero_stats.csv) | Hero stats by level |
+| [mp_rules.csv](data/balance/mp_rules.csv) | MP rules (max MP, regen, heal limits) |
+| [practice_modes.csv](data/balance/practice_modes.csv) | Practice mode definitions |
+| [practice_rewards.csv](data/balance/practice_rewards.csv) | Rewards for practice modes |
+| [proficiency_patrol_settings.csv](data/balance/proficiency_patrol_settings.csv) | Proficiency patrol settings |
+| [realm_difficulty.csv](data/balance/realm_difficulty.csv) | Difficulty per realm |
+| [realm_location_difficulty.csv](data/balance/realm_location_difficulty.csv) | Difficulty per location |
+| [safety_nets.csv](data/balance/safety_nets.csv) | Safety nets for struggling players |
+| [skills_mp.csv](data/balance/skills_mp.csv) | Skills and their MP costs |
+| [special_mechanics.csv](data/balance/special_mechanics.csv) | Special enemy and boss mechanics |
 
 ### World graph ([data/world/](data/world/))
 
@@ -153,105 +153,105 @@ There are 29 CSV result tables behind the spec: realm pacing, economy, MP, compa
 There are 30 JSON files for the game code. Each one matches the CSV of the same name; the art roster is `enemies-art-roster.json`. Three are bundles with no single CSV twin:
 - [combat_data.json](data/json/combat_data.json) bundles all the spec tables.
 - [spells_full.json](data/json/spells_full.json) adds the spell rules and tiers to the list.
-- [quests_full.json](data/json/quests_full.json) adds the quest rules to the list.
+- [quests_full.json](data/quests/quests_full.json) adds the quest rules to the list.
 
 The rules in these bundles are also written out in spells.md and combat-spec.md §6.7 and §7.11.
 
-## Images ([images/](images/))
+## Images ([images/](art/))
 
 Final game sprites, backgrounds and audio are not here; they are under `public/` in the game.
 
-### UI review mockups ([images/ui-review/](images/ui-review/))
+### UI review mockups ([images/ui-review/](art/ui-review/))
 
 | File | What it is |
 |---|---|
-| [battle-command.png](images/ui-review/battle-command.png) | Mockup A: battle, command state |
-| [battle-feedback.png](images/ui-review/battle-feedback.png) | Mockup D: answer feedback and the hit |
-| [battle-question-mc.png](images/ui-review/battle-question-mc.png) | Mockup B: question open (multiple choice) |
-| [battle-question-speech.png](images/ui-review/battle-question-speech.png) | Mockup C: defense question, speech mode |
-| [diagnosis.png](images/ui-review/diagnosis.png) | Annotated diagnosis of the old battle screen |
-| [map.png](images/ui-review/map.png) | Mockup E: location map |
-| [scaling.png](images/ui-review/scaling.png) | Scaling and letterboxing across devices |
-| [village.png](images/ui-review/village.png) | Mockup F: village hub and world map |
+| [battle-command.png](art/ui-review/battle-command.png) | Mockup A: battle, command state |
+| [battle-feedback.png](art/ui-review/battle-feedback.png) | Mockup D: answer feedback and the hit |
+| [battle-question-mc.png](art/ui-review/battle-question-mc.png) | Mockup B: question open (multiple choice) |
+| [battle-question-speech.png](art/ui-review/battle-question-speech.png) | Mockup C: defense question, speech mode |
+| [diagnosis.png](art/ui-review/diagnosis.png) | Annotated diagnosis of the old battle screen |
+| [map.png](art/ui-review/map.png) | Mockup E: location map |
+| [scaling.png](art/ui-review/scaling.png) | Scaling and letterboxing across devices |
+| [village.png](art/ui-review/village.png) | Mockup F: village hub and world map |
 
-The HTML/CSS mock sources are in [images/ui-review/src/](images/ui-review/src/) (re-render with `render.mjs`; they expect the prototype's `dist/` art). They are kept as sources only and are not part of the game build.
+The HTML/CSS mock sources are in [images/ui-review/src/](art/ui-review/src/) (re-render with `render.mjs`; they expect the prototype's `dist/` art). They are kept as sources only and are not part of the game build.
 
-### Style anchors ([images/style-anchors/](images/style-anchors/))
-
-| File | What it is |
-|---|---|
-| [APPROVED_style_bright_detailed_battle.png](images/style-anchors/APPROVED_style_bright_detailed_battle.png) | **Approved style** (bright, detailed battle scene) |
-| [anchor_A_bright_classic.png](images/style-anchors/anchor_A_bright_classic.png) | Style option A: bright classic |
-| [anchor_B_storybook_inkwash.png](images/style-anchors/anchor_B_storybook_inkwash.png) | Style option B: storybook ink-wash |
-| [anchor_C_bold_graphic.png](images/style-anchors/anchor_C_bold_graphic.png) | Style option C: bold graphic |
-| [battle_mockup_meadow.png](images/style-anchors/battle_mockup_meadow.png) | Meadow battle mockup |
-| [hybrid_A_inkwash_Cmenace_battle.png](images/style-anchors/hybrid_A_inkwash_Cmenace_battle.png) | Hybrid: ink-wash with option C menace |
-
-### Reference sheets ([images/refsheets/](images/refsheets/))
+### Style anchors ([images/style-anchors/](art/style-anchors/))
 
 | File | What it is |
 |---|---|
-| [REJECTED_rabbit_as_buddy.png](images/refsheets/REJECTED_rabbit_as_buddy.png) | Rejected: rabbit drawn as a cute buddy (it must look like a pest monster) |
-| [hero_v1.png](images/refsheets/hero_v1.png) | Hero reference sheet v1 |
-| [horned_rabbit_enemy_v1.png](images/refsheets/horned_rabbit_enemy_v1.png) | Horned Rabbit enemy reference sheet v1 |
+| [APPROVED_style_bright_detailed_battle.png](art/style-anchors/APPROVED_style_bright_detailed_battle.png) | **Approved style** (bright, detailed battle scene) |
+| [anchor_A_bright_classic.png](art/style-anchors/anchor_A_bright_classic.png) | Style option A: bright classic |
+| [anchor_B_storybook_inkwash.png](art/style-anchors/anchor_B_storybook_inkwash.png) | Style option B: storybook ink-wash |
+| [anchor_C_bold_graphic.png](art/style-anchors/anchor_C_bold_graphic.png) | Style option C: bold graphic |
+| [battle_mockup_meadow.png](art/style-anchors/battle_mockup_meadow.png) | Meadow battle mockup |
+| [hybrid_A_inkwash_Cmenace_battle.png](art/style-anchors/hybrid_A_inkwash_Cmenace_battle.png) | Hybrid: ink-wash with option C menace |
 
-## Design tools ([tools/](tools/))
+### Reference sheets ([images/refsheets/](art/refsheets/))
+
+| File | What it is |
+|---|---|
+| [REJECTED_rabbit_as_buddy.png](art/refsheets/REJECTED_rabbit_as_buddy.png) | Rejected: rabbit drawn as a cute buddy (it must look like a pest monster) |
+| [hero_v1.png](art/refsheets/hero_v1.png) | Hero reference sheet v1 |
+| [horned_rabbit_enemy_v1.png](art/refsheets/horned_rabbit_enemy_v1.png) | Horned Rabbit enemy reference sheet v1 |
+
+## Design tools ([tools/](tech/tools/))
 
 These are Desy's sim and data-generation scripts. **They live in `docs/tools/`, not the repo's top-level `tools/`.** The top-level `tools/` holds the game's own build scripts (for example `tools/build_data.py`, which builds `src/data`), and keeping the two apart stops them being mixed up. The scripts expect Desy's workspace layout (`/workspace/desy`), so they are kept here for reference and are not run from the repo.
 
 | File | What it is |
 |---|---|
-| [combat_sim.py](tools/sim/combat_sim.py) | Battle sim |
-| [sim_v3_runner.py](tools/sim/sim_v3_runner.py) | v3 sim runner |
-| [spells_runner.py](tools/sim/spells_runner.py) | Campaign runner, v3.7 |
-| [spells_sim.py](tools/sim/spells_sim.py) | Campaign sim (spells and quests) |
-| [boss_harness.py](tools/sim/boss_harness.py) | v3.6 single boss fight harness (full MP, 2 strongest spells) |
-| [boss_tune.py](tools/sim/boss_tune.py) | Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) |
-| [boss_tune_v37_loc.json](tools/sim/boss_tune_v37_loc.json) | v3.7 location boss HP tuning output (~15 correct answers) |
-| [regen_only.py](tools/sim/regen_only.py) | v3.6 check: removing MP regen alone |
-| [atk_check.py](tools/sim/atk_check.py) | v3.6 boss ATK multiplier check |
-| [v37_boss_check_0.5.json](tools/sim/v37_boss_check_0.5.json), [0.75](tools/sim/v37_boss_check_0.75.json), [0.9](tools/sim/v37_boss_check_0.9.json) | v3.7 boss check output at 50 / 75 / 90 % accuracy |
-| [assemble_spec.py](tools/data/assemble_spec.py) | Assembles combat-spec.md |
-| [build_data.py](tools/data/build_data.py) | Generates the data CSV/JSON tables |
-| [spec_new_sections.md](tools/data/spec_new_sections.md) | Spec source sections |
-| [spells_data.py](tools/data/spells_data.py) | Spell and quest source data and design formulas |
-| [spells_md_template.md](tools/data/spells_md_template.md) | spells.md template |
-| [write_spells_md.py](tools/data/write_spells_md.py) | Generates spells.md |
-| [write_html.py](tools/data/write_html.py) | Renders combat-spec-v3.html from combat-spec.md |
-| [sync_check.py](tools/sync_check.py) | Manifest sync check plus the world validator |
+| [combat_sim.py](tech/tools/sim/combat_sim.py) | Battle sim |
+| [sim_v3_runner.py](tech/tools/sim/sim_v3_runner.py) | v3 sim runner |
+| [spells_runner.py](tech/tools/sim/spells_runner.py) | Campaign runner, v3.7 |
+| [spells_sim.py](tech/tools/sim/spells_sim.py) | Campaign sim (spells and quests) |
+| [boss_harness.py](tech/tools/sim/boss_harness.py) | v3.6 single boss fight harness (full MP, 2 strongest spells) |
+| [boss_tune.py](tech/tools/sim/boss_tune.py) | Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) |
+| [boss_tune_v37_loc.json](tech/tools/sim/boss_tune_v37_loc.json) | v3.7 location boss HP tuning output (~15 correct answers) |
+| [regen_only.py](tech/tools/sim/regen_only.py) | v3.6 check: removing MP regen alone |
+| [atk_check.py](tech/tools/sim/atk_check.py) | v3.6 boss ATK multiplier check |
+| [v37_boss_check_0.5.json](tech/tools/sim/v37_boss_check_0.5.json), [0.75](tech/tools/sim/v37_boss_check_0.75.json), [0.9](tech/tools/sim/v37_boss_check_0.9.json) | v3.7 boss check output at 50 / 75 / 90 % accuracy |
+| [assemble_spec.py](tech/tools/data/assemble_spec.py) | Assembles combat-spec.md |
+| [build_data.py](tech/tools/data/build_data.py) | Generates the data CSV/JSON tables |
+| [spec_new_sections.md](tech/tools/data/spec_new_sections.md) | Spec source sections |
+| [spells_data.py](tech/tools/data/spells_data.py) | Spell and quest source data and design formulas |
+| [spells_md_template.md](tech/tools/data/spells_md_template.md) | spells.md template |
+| [write_spells_md.py](tech/tools/data/write_spells_md.py) | Generates spells.md |
+| [write_html.py](tech/tools/data/write_html.py) | Renders combat-spec-v3.html from combat-spec.md |
+| [sync_check.py](tech/tools/sync_check.py) | Manifest sync check plus the world validator |
 
-#### World tools ([tools/world/](tools/world/))
+#### World tools ([tools/world/](tech/tools/world/))
 
 The v3.8 world-graph tools. Like the other design tools they use Desy's absolute `/workspace/desy/` paths.
 
 | File | What it is |
 |---|---|
-| [make_world_data.py](tools/world/make_world_data.py) | Hand-authored data: realm 1, the world map, rules, zones and quest hooks |
-| [world_gen.py](tools/world/world_gen.py) | Generates the reference realms 2–9 and the index |
-| [v03.py](tools/world/v03.py) | Converts the internal format to `graph/0.3` |
-| [world_graph.py](tools/world/world_graph.py) | Loader (a realm is an overworld plus its dungeon levels) |
-| [validate_world.py](tools/world/validate_world.py) | World data validator (schemas and graph rules) |
-| [make_schemas.py](tools/world/make_schemas.py) | Writes the JSON Schemas in data/world/schemas |
-| [render_world.py](tools/world/render_world.py) | Draws the diagrams (PNG and mermaid) |
-| [world_loop.py.txt](tools/world/world_loop.py.txt) | The sim's graph loop, spliced into world_sim.py |
-| [build_world_sim.py](tools/world/build_world_sim.py) | Builds world_sim.py from spells_sim.py plus the loop |
-| [world_runner.py](tools/world/world_runner.py) | v3.8 sim runner (main run and sweep) |
-| [tables.py](tools/world/tables.py) | Writes the tables for world-graph.md and the CSVs |
-| [write_world_doc.py](tools/world/write_world_doc.py) | Builds world-graph.md from the source below |
-| [doc/world-graph.src.md](tools/world/doc/world-graph.src.md) | world-graph.md source with placeholders (its image links resolve only in the built doc in design/) |
-| [doc/spec12.md](tools/world/doc/spec12.md) | The text of combat-spec §12 |
-| [sim/world_summary.json](tools/world/sim/world_summary.json) | v3.8 main sim output (100 runs per profile) |
+| [make_world_data.py](tech/tools/world/make_world_data.py) | Hand-authored data: realm 1, the world map, rules, zones and quest hooks |
+| [world_gen.py](tech/tools/world/world_gen.py) | Generates the reference realms 2–9 and the index |
+| [v03.py](tech/tools/world/v03.py) | Converts the internal format to `graph/0.3` |
+| [world_graph.py](tech/tools/world/world_graph.py) | Loader (a realm is an overworld plus its dungeon levels) |
+| [validate_world.py](tech/tools/world/validate_world.py) | World data validator (schemas and graph rules) |
+| [make_schemas.py](tech/tools/world/make_schemas.py) | Writes the JSON Schemas in data/world/schemas |
+| [render_world.py](tech/tools/world/render_world.py) | Draws the diagrams (PNG and mermaid) |
+| [world_loop.py.txt](tech/tools/world/world_loop.py.txt) | The sim's graph loop, spliced into world_sim.py |
+| [build_world_sim.py](tech/tools/world/build_world_sim.py) | Builds world_sim.py from spells_sim.py plus the loop |
+| [world_runner.py](tech/tools/world/world_runner.py) | v3.8 sim runner (main run and sweep) |
+| [tables.py](tech/tools/world/tables.py) | Writes the tables for world-graph.md and the CSVs |
+| [write_world_doc.py](tech/tools/world/write_world_doc.py) | Builds world-graph.md from the source below |
+| [doc/world-graph.src.md](tech/tools/world/doc/world-graph.src.md) | world-graph.md source with placeholders (its image links resolve only in the built doc in design/) |
+| [doc/spec12.md](tech/tools/world/doc/spec12.md) | The text of combat-spec §12 |
+| [sim/world_summary.json](tech/tools/world/sim/world_summary.json) | v3.8 main sim output (100 runs per profile) |
 
-#### Story tools ([tools/story/](tools/story/))
+#### Story tools ([tools/story/](tech/tools/story/))
 
-Unlike the other design tools these run from the repo: [_paths.py](tools/story/_paths.py) maps Desy's paths to `docs/` with [desy_paths.json](tools/desy_paths.json) (generated from her repo-manifest; set `DESY_ROOT=/workspace/desy` to run them on her tree).
+Unlike the other design tools these run from the repo: [_paths.py](tech/tools/story/_paths.py) maps Desy's paths to `docs/` with [desy_paths.json](tech/tools/desy_paths.json) (generated from her repo-manifest; set `DESY_ROOT=/workspace/desy` to run them on her tree).
 
 | File | What it is |
 |---|---|
-| [quests_def.py](tools/story/quests_def.py) | The 50 quest definitions |
-| [build_quests.py](tools/story/build_quests.py) | Builds and checks data/quests/quests.json and .csv (positions, hooks, words) |
-| [make_dialogue.py](tools/story/make_dialogue.py) | Writes the data/dialogue scenes |
-| [validate_dialogue.py](tools/story/validate_dialogue.py) | Checks the scenes: schema, word tokens, met-word rule, density, gotos |
+| [quests_def.py](tech/tools/story/quests_def.py) | The 50 quest definitions |
+| [build_quests.py](tech/tools/story/build_quests.py) | Builds and checks data/quests/quests.json and .csv (positions, hooks, words) |
+| [make_dialogue.py](tech/tools/story/make_dialogue.py) | Writes the data/dialogue scenes |
+| [validate_dialogue.py](tech/tools/story/validate_dialogue.py) | Checks the scenes: schema, word tokens, met-word rule, density, gotos |
 
 The game build keeps its own repo-relative copy of the world validator in `tools/world/` (`npm run validate:world`).
 

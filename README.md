@@ -2,7 +2,7 @@
 
 A browser RPG prototype for learning Chinese, built with **Phaser 4 + TypeScript + Vite**.
 Battles are driven by vocabulary questions (typed or spoken via the Web Speech API).
-See `ASSETS.md` for the art/audio asset pipeline.
+See [docs/art/asset-hooks.md](docs/art/asset-hooks.md) for the art/audio asset pipeline.
 
 ## Requirements
 

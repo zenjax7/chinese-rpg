@@ -359,7 +359,7 @@ There's no custom domain (D8), so there's no sending domain and no transactional
 | **No ads, no tracking** | None in child surfaces, ever: no ads, behavioural profiling, or marketing. Vercel Web Analytics and Speed Insights stay **off**. If ads ever come, see §5.9. |
 | **Retention** (required by the 2025 amended Rule) | A written policy: `save_backups` copies for 30 days, audit rows for 2 years, inactive accounts deleted after 18 months. With no email, the warning is shown in the parent area from month 15 (§18.1). |
 | **Security program** (required by the 2025 amended Rule) | §14: the DAL with tests, least-privilege DB roles, 2FA on every vendor account, encrypted backups, and an incident plan. |
-| **Schools** | Out of scope. School consent has different rules (`docs/design/research-tech-market.md`). |
+| **Schools** | Out of scope. School consent has different rules (`docs/tech/research-tech-market.md`). |
 
 *This is an engineering reading of the Rule, not legal advice.* Legal review is deferred to public launch (D14). A safe-harbor program (PRIVO, kidSAFE, iKeepSafe) is worth pricing at that point.
 
@@ -898,7 +898,7 @@ There are no leaderboards, no trading, no PvP and no real-money items, so cheati
 
 - **Plausibility checks in `save_progress()`** (they **flag**, they don't reject):
   - `level` and `exp` match the `expToNext(L) = B.hero.expToNextPerLevel × L` curve
-  - gold gained per save ≤ a bound from battles and quests since the last save (the gold tables in `docs/data/combat/economy_prices.csv`)
+  - gold gained per save ≤ a bound from battles and quests since the last save (the gold tables in `docs/data/items/economy_prices.csv`)
   - every id in `inv`, `gear`, `spells` and `skills` exists in the build's content index, and equipped items are owned
   - a quest is `claimed` only once, and only if it was `active` in the previous snapshot or the same save
   - per save, `da` ≤ 300 and `dc ≤ da` for word mastery
@@ -1446,4 +1446,4 @@ Already settled: one graph per dungeon level, stairs or portal edges between lev
 | COPPA 2025 amendments (Federal Register) | https://www.federalregister.gov/documents/2025/04/22/2025-05904/childrens-online-privacy-protection-rule |
 | FTC COPPA FAQ (voice recordings, penalties) | https://www.ftc.gov/business-guidance/resources/complying-coppa-frequently-asked-questions |
 
-Background in this repo: `docs/design/plan.md` (Decision 7, privacy posture), `docs/design/research-tech-market.md` (COPPA and speech research), `docs/design/combat-spec.md` and `docs/design/spells.md` (game systems).
+Background in this repo: `docs/design/plan.md` (Decision 7, privacy posture), `docs/tech/research-tech-market.md` (COPPA and speech research), `docs/design/combat-spec.md` and `docs/design/spells.md` (game systems).

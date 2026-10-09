@@ -1,5 +1,5 @@
 """Converts the internal graph dicts (make_world_data.py / world_gen.py) to the published format graph/0.3,
-which builds on GameDev's graph/0.2 draft (docs/architecture.md §6.3): one JSON file per overworld or dungeon level, nodes with
+which builds on GameDev's graph/0.2 draft (docs/tech/architecture.md §6.3): one JSON file per overworld or dungeon level, nodes with
 a never-reused idx, edges with kind path|oneway|shortcut|stairs|portal|exit (cross-graph: to {graph,node}), per-graph events
 (on / cond / do), dialogue and npcs inside the graph. Desy additions: zone, danger, steps, patrol, outcome, pick, cooldown."""
 KIND = {'path': 'waypoint', 'crossroads': 'fork', 'treasure': 'chest', 'deadend': 'waypoint', 'campfire': 'inn', 'story': 'story', 'miniboss': 'miniboss',

@@ -1,7 +1,7 @@
 # World graph design (v3.9.1)
 
-Repo path: `docs/design/world-graph.md` · Data: `docs/data/world/` · Tools: `docs/tools/world/` · Spec summary: combat-spec.md §12.
-Written 2026-10-02 (PT) by Desy; v3.9 update the same night (§0.1). It builds on GameDev's graph schema in `docs/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
+Repo path: `docs/design/world-graph.md` · Data: `docs/data/world/` · Tools: `docs/tech/tools/world/` · Spec summary: combat-spec.md §12.
+Written 2026-10-02 (PT) by Desy; v3.9 update the same night (§0.1). It builds on GameDev's graph schema in `docs/tech/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
 
 ## 0.0 What changed in v3.9.1 (Director's defaults, 2026-10-02 23:15 PT)
 
@@ -717,7 +717,7 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 - **Quest ids:** `data/quests.json` (v2, quest/0.2) ids; also accepted: the prototype board quests.json and quests_world.json hook ids.
 - **`bossDefeated`** takes a zone id.
 
-### 14.5 Validation (`docs/tools/world/validate_world.py`)
+### 14.5 Validation (`docs/tech/tools/world/validate_world.py`)
 
 1. **JSON Schema:** every file, with `$ref` to common.
 2. **Unique values:** node ids, idx (≤ idxMax), edge ids and event ids are unique. Every file is listed in index.json.

@@ -8,7 +8,7 @@ Related files: `characters.md` (portrait brief), `quests.md` (50 quests), `data/
 
 - **Companion = 小龙**, speaker id `xiaolong`. `panda` is renamed in data/world by the world-graph owner. Inn pandas are `innkeeper_panda`.
 - **Ending approved:** the Demon King shrinks to a grumpy small demon and goes to Teacher Zhang's school with Pipi.
-- **Escorts never fail:** after a lost battle the escortee waits at the last inn.
+- **Escorts never fail:** the escortee can't be harmed; after a lost battle it is waiting at the last inn used (runtime rules: quests.md §2a).
 - **The free Bubble Spell quest reward is approved.**
 - **Quest gold target counts gold only:** 30 × G per realm, ±10%. Items, gear and spells are a bonus (quests.md §0, §3).
 - **Names stay placeholders** (the cast names below, and NPC names) until Jack picks.
@@ -161,7 +161,7 @@ Note: some existing world-graph dialogue lines carry full zh sentences above the
 1. *Is the scene format enough (≤ 4 portraits, choices, flags)?* Yes. I added `trigger`, `density`, `tokens`, optional `zh`/`zhTrad`, `swap` for the rare fifth speaker, and `correct` on choices (§7). Four slots is enough. Narrator lines need `side: "none"`.
 2. *One file per quest or per realm?* **Scenes: one file per scene** (as you proposed). **Quests: one bundle, `quests.json`** (50 quests, about 130 KB), built from a single source by `build_quests.py`. Split it per realm (`quests_r1.json`…) at build time if loading needs it. Ids stay the same either way.
 3. *Auto vs turn-in?* 41 quests go back to the giver. 8 hand in to a different named NPC (e.g. q1_carrot → Xiaoming in the village, q9_pipi_surrender → Granny Bai). **Only `q8_singer_escort` is `auto`**: it completes on arrival. Full list in quests.md §4.
-4. *Timers, failure states, repeats?* **None.** No timers. Quests can't fail. Escorts never fail: if the kid loses a battle, the escortee waits at the last inn. Nothing repeats (`repeatable: false`). A kid-friendly rule: an active quest can be dropped and re-taken at the giver with no penalty.
+4. *Timers, failure states, repeats?* **None.** No timers. Quests can't fail. Escorts never fail: the escortee can't be harmed, and if the kid loses a battle it is waiting at the last inn used. Runtime rules for `escort` and `words` are in quests.md §2a. Nothing repeats (`repeatable: false`). A kid-friendly rule: an active quest can be dropped and re-taken at the giver with no penalty.
 
 **Arty** (full spec in characters.md §4)
 5. *Which expressions?* neutral, happy, sad, surprised, angry, worried, and thinking. Key cast get all 7. Generic NPCs get neutral, happy and worried.
