@@ -1,262 +1,345 @@
 # Chinese Quest: project docs
 
-A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teaches Mandarin reading, listening and speaking to kids aged about 10–12. Battles are won by answering vocabulary questions, typed or spoken.
+A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teaches Mandarin reading, listening and speaking to kids aged about 10–12. Live prototype: https://zenjax7.github.io/chinese-rpg/
 
-- **Play the live prototype:** https://zenjax7.github.io/chinese-rpg/
-- **Start here:** [design/plan.md](design/plan.md), the research summary, plan and early decisions.
-- **Backend architecture (approved):** [architecture.md](tech/architecture.md) is the approved design (not built yet) for parent accounts, cloud saves, COPPA, hosting at $0 (Vercel Hobby, Neon Postgres and Auth.js with Google), static per-graph content on the CDN, the node-graph world, and the dialogue and quest data hooks.
+## Rules
 
-This folder holds design docs, data tables, reference images and Desy's design tools. It is **not** part of the game build: Vite only bundles `src/` and copies `public/`, so nothing under `docs/` goes to GitHub Pages. The layout follows Desy's repo manifest. Docs are Markdown and tables are CSV (UTF-8; some CSVs have a BOM for Excel). JSON twins are kept for code. HTML and XLSX exports are left out because they are generated from the Markdown and CSV files.
+- **GitHub is the only source of truth.** This `docs/` folder in [zenjax7/chinese-rpg](https://github.com/zenjax7/chinese-rpg) is the one primary copy of every design doc and table. Copies elsewhere (Google Drive, `/workspace/desy`, `/workspace/art`) are working drafts, not sources.
+- **Tables are CSV, docs are Markdown.** JSON only where the data is structured (world graphs, quests, dialogue, schemas). No `.xlsx`, `.html` exports or Google Docs/Sheets copies are kept or maintained.
+- **Owners commit here.** Desy, Arty, GameDev and the Director commit future docs and tables directly to this folder (or hand them to GameDev to commit), and in the same commit **update this index** (one line per file) and, for any decision by Jack, **add a line to [decisions.md](decisions.md)**.
+- **Edit in place; git is the version control.** Don't add `-v2`/`archive` copies. To see an old version: `git log --follow -- docs/<path>` then `git show <commit>:<path>`. Files from before the 2026-10-09 reorganization keep their history across the move (`git log --follow`); for example `git log --follow -- docs/design/combat-spec.md`, or `git show 09abe41:docs/design/archive/combat-spec-v3.8.md` for a dropped archive copy.
+- **Game data is built from here.** `tools/build_data.py` and `tools/world/build_world.py` read `docs/data/`; rebuild and commit `src/data/` and `public/world/` after a data change ([tech/deploy.md](tech/deploy.md)). `docs/` itself is not part of the Pages build.
 
-## Source of truth
+## Which doc wins
 
-When documents disagree, use this order:
+1. [decisions.md](decisions.md) (Jack's locked decisions), then [design/combat-spec.md](design/combat-spec.md) (v3.9.1), [design/spells.md](design/spells.md) (v3.7) and [design/world-graph.md](design/world-graph.md) (v3.9.1).
+2. The tables in [data/](data/), which match those specs; `src/data` is built from them.
+3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) for vocabulary; [story/](story/) for story and quests.
+4. [design/plan.md](design/plan.md) and the research memos are background.
 
-1. **[design/combat-spec.md](design/combat-spec.md) (spec v3.9.1)** and **[design/spells.md](design/spells.md) (v3.7)** for combat, progression, spells and quests, and **[design/world-graph.md](design/world-graph.md) (v3.9.1)** with the data in [data/world/](data/world/) for the node-graph world, and **[design/quests.md](story/quests.md)** / **[design/story.md](story/story.md)** with [data/quests/](data/quests/) and [data/dialogue/](data/dialogue/) for quests and story scenes.
-2. **The CSV tables and world JSON in [data/](#data-tables)**, which match spec v3.9.1. The game data in `src/data` is built from them.
-3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) (v2) for vocabulary.
-4. [design/plan.md](design/plan.md) and the research memos are background. Where they differ from the spec or data (numbers, mechanics), the spec and data win.
+**Pending (not merged yet):** Desy's v3.9.2 world and quest data (`/workspace/desy/data/world/`, incl. `content/realm_3..9.json`, `realm_content.schema.json`, exit edges, FNV-1a RNG; and `data/quests*.json`) is newer than [data/world/](data/world/) and [data/quests/](data/quests/) here. It needs GameDev to update the build tools and game together, so it was not dropped into the build inputs. The v3.9.2 text of [story/story.md](story/story.md) and [story/quests.md](story/quests.md) is already here.
 
-Everything in an `archive/` folder is superseded and kept for history only.
+## Layout
 
-## Design docs ([design/](design/))
+| folder | what | owner |
+|---|---|---|
+| [design/](design/) | Game rules: combat, spells, world graph, economy, curriculum notes, UI layout, plan | Desy |
+| [story/](story/) | Story, characters, quests | Desy |
+| [data/](data/) | CSV and JSON tables: curriculum, enemies, spells, items, balance, quests, dialogue, world, sim, json | Desy |
+| [art/](art/) | Art and audio specs, Arty's READMEs, asset hooks, reference images | Arty |
+| [tech/](tech/) | Architecture, deploy, research, and Desy's design tools | GameDev |
 
-| File | What it is |
-|---|---|
-| [combat-spec.md](design/combat-spec.md) | **Source of truth.** Combat and progression spec, v3.9.1. New in v3.9/v3.9.1: no free inn warp (the Return Feather, 2 × G, start 2, carry 3, is the only fast way back; a free Feather for the realm boss in realms 3, 6 and 8), town density from 1 per 20 nodes (realm 1) to 1 per 60 (realm 9) with 3 added villages, inns within 3 hops in realms 1–3, fog of war (`progress.schema.json`), the tutorial village event and dialogue scenes. New in v3.8: §12, the world graph (every map is a graph, random battles on edges, safe edges, 7 arrival event kinds, zones, inn warp). Kept from v3.7: no MP regen; boss HP targets ~15 correct answers for location bosses and ~20 for realm bosses, even with full-MP spells; boss ATK × 0.8; no MP hints. |
-| [world-graph.md](design/world-graph.md) | **Source of truth for the world.** World graph design, v3.9.1 (fog of war, Return Feather, town density): map hierarchy, node and edge kinds, encounters on edges, arrival events, realm sizes, sim results, Realm 1 and Goblin Caves examples, and the `graph/0.3` data format. |
-| [world-graph-schema-answers.md](design/world-graph-schema-answers.md) | Desy's short answers to GameDev's 14 schema questions (architecture.md §17.2). |
-| [spells.md](design/spells.md) | **Source of truth.** Magic spells and quests: design and sim results, v3.7 (no cast caps, MP only; MP costs 1.25 × v3.4). |
-| [curriculum-notes.md](design/curriculum-notes.md) | Curriculum notes v2: how the vocabulary is levelled and split across realms and locations. |
-| [enemies-art-brief.md](art/enemies-art-brief.md) | Enemy roster and art brief (50 enemies, with animation briefs for Arty). |
-| [ui-layout-review.md](design/ui-layout-review.md) | UI layout and game-feel review. Its images are in [images/ui-review/](art/ui-review/). |
-| [design-memo.md](design/design-memo.md) | Design findings memo: reference games (Prodigy, Miitopia), HSK levels, learning design. |
-| [plan.md](design/plan.md) | Research summary, plan and early decisions. Older than the spec. |
-| [research-tech-market.md](tech/research-tech-market.md) | Technology, market and compliance research (engines, speech, COPPA). |
-| [story.md](story/story.md) | Story: the 9-realm plot, scenes and how dialogue teaches words (scene/0.2). |
-| [quests.md](story/quests.md) | Quests v2: 50 NPC and story quests on world-graph nodes (quest/0.2), givers by position, the quest state machine. |
-| [characters.md](story/characters.md) | Characters: the realm 1 cast and generic NPCs (portrait ids match Arty's v2 portraits). |
-| [art-direction-memo.md](art/art-direction-memo.md) | Art direction findings: reference game styles and what appeals to 12-year-olds. |
-| [ai-art-pipeline-proposal.md](art/ai-art-pipeline-proposal.md) | Proposal for the AI art and audio pipeline into Phaser. |
+## Index (one line per file: path — contents · **owner** · when to read)
 
-### Archive ([design/archive/](design/archive/))
+### Index and decisions
 
-| File | What it is |
-|---|---|
-| [combat-spec-v3.8.md](design/archive/combat-spec-v3.8.md) | Combat spec v3.8 (world graph with the free inn warp). |
-| [combat-spec-v3.7.md](design/archive/combat-spec-v3.7.md) | Combat spec v3.7 (before the §12 world graph). |
-| [combat-spec-v3.6.md](design/archive/combat-spec-v3.6.md) | Combat spec v3.6 (~20-answer target for all bosses). |
-| [spells-v3.6.md](design/archive/spells-v3.6.md) | Spells and quests v3.6. |
-| [combat-spec-v3.5.md](design/archive/combat-spec-v3.5.md) | Combat spec v3.5 (MP regen, MP hints, v3.5 boss stats). |
-| [spells-v3.5.md](design/archive/spells-v3.5.md) | Spells and quests v3.5. |
-| [combat-spec-v3.4.md](design/archive/combat-spec-v3.4.md) | Combat spec v3.4, with per-battle cast caps. |
-| [spells-v3.4.md](design/archive/spells-v3.4.md) | Spells and quests v3.4, with cast caps and the 3-correct unlock. |
-| [combat-spec-v3.3.md](design/archive/combat-spec-v3.3.md) | Combat spec v3.3, before the v3.4 free-cast spell change. |
-| [spells-v3.3.md](design/archive/spells-v3.3.md) | Spells and quests v3.3, before the free-cast change. |
-| [combat-spec-v2.md](design/archive/combat-spec-v2.md) | Combat spec v2. |
-| [combat-spec-v1.md](design/archive/combat-spec-v1.md) | Combat spec v1. |
-| [curriculum-notes-v1.md](design/archive/curriculum-notes-v1.md) | Curriculum notes v1. |
+- [README.md](README.md) — This index and the docs rules · **all** · first
+- [decisions.md](decisions.md) — Dated log of Jack's locked decisions, one line each · **Director (all append)** · before any design or tech change
 
-## Data tables
+### Design (docs/design/)
 
-### Curriculum ([data/curriculum/](data/curriculum/))
+- [design/README.md](design/README.md) — What design/ holds · **Desy** · browsing
+- [design/combat-spec.md](design/combat-spec.md) — Source of truth: combat and progression spec v3.9.1 (battle rules, stats, economy, spells summary §6.7, quests §7.11, world graph §12) · **Desy** · before any combat, balance or progression change
+- [design/spells.md](design/spells.md) — Source of truth for spells and v1 board quests: design and sim, v3.7 (no cast caps, no MP regen, boss targets) · **Desy** · when touching spells, MP or bosses
+- [design/world-graph.md](design/world-graph.md) — Source of truth for the world: graph design v3.9.1 (nodes, edges, encounters, events, Feather, fog, data format) · **Desy** · before world/map work
+- [design/world-graph-schema-answers.md](design/world-graph-schema-answers.md) — Desy's answers to GameDev's 14 world-graph schema questions · **Desy** · when implementing graph data
+- [design/curriculum-notes.md](design/curriculum-notes.md) — Curriculum notes v2: how 1,051 items are levelled and split across realms and locations · **Desy** · when touching vocabulary
+- [design/ui-layout-review.md](design/ui-layout-review.md) — UI layout and game-feel review: 1280×720 frame, sizes, battle and map screens (correct repo version with fixed links) · **Desy** · before UI or layout work
+- [design/design-memo.md](design/design-memo.md) — Design findings memo: reference games, HSK/YCT, learning design (background, Sep 28) · **Desy** · for background
+- [design/plan.md](design/plan.md) — Research summary, plan and early decisions 1–15 (Sep 28; the spec wins where they differ) · **Director** · onboarding
 
-| File | What it is |
-|---|---|
-| [curriculum.csv](data/curriculum/curriculum.csv) | Master word and phrase list, v2 (16 columns, UTF-8 with BOM) |
-| [curriculum_location_pools.csv](data/curriculum/curriculum_location_pools.csv) | Curriculum items assigned to each location |
-| [curriculum_locations.csv](data/curriculum/curriculum_locations.csv) | Location list |
-| [curriculum_realm_summary.csv](data/curriculum/curriculum_realm_summary.csv) | Per-realm totals |
-| [curriculum_slice.csv](data/curriculum/curriculum_slice.csv) | Prototype slice |
-| [archive/curriculum-v1.csv](data/curriculum/archive/curriculum-v1.csv) | Curriculum v1 word list (superseded) |
+### Story (docs/story/)
 
-### Enemies ([data/enemies/](data/enemies/))
+- [story/README.md](story/README.md) — What story/ holds · **Desy** · browsing
+- [story/story.md](story/story.md) — Story bible v1.1 (v3.9.2 escort wording): premise, cast, arc per realm, event placement, Chinese density, scene/0.2 format · **Desy** · before writing story, scenes or dialogue
+- [story/quests.md](story/quests.md) — Quests v2 (v3.9.2 text): 50 NPC/story quests, quest/0.2 schema, §2a escort/words runtime rules, rewards, hooks · **Desy** · before quest work
+- [story/characters.md](story/characters.md) — Portrait brief: key cast, named NPCs, 26 generic bases, portrait spec · **Desy / Arty** · when drawing or wiring portraits
 
-| File | What it is |
-|---|---|
-| [enemies-art-roster.csv](data/enemies/enemies-art-roster.csv) | Art-brief roster: visuals, attacks, shouts (same stats as the combat table) |
-| [enemies.csv](data/enemies/enemies.csv) | Combat table: stats, drops, specials. Use this for numbers. |
-| [enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) | Enemy stat bands by level and role |
-| [boss_hp.csv](data/enemies/boss_hp.csv) | Boss HP multipliers and ATK × 0.8 by tier and boss type (v3.7: location ~15, realm ~20 correct answers; v3.6 values kept as columns) |
+### Data: curriculum
 
-### Spells and quests ([data/spells/](data/spells/))
+- [data/README.md](data/README.md) — What data/ holds, folder by folder, and which tools read it · **Desy** · browsing data
+- [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) — Master word and phrase list, v2 (16 columns, UTF-8 with BOM) · **Desy** · when changing these numbers
+- [data/curriculum/curriculum_location_pools.csv](data/curriculum/curriculum_location_pools.csv) — Curriculum items assigned to each location · **Desy** · when changing these numbers
+- [data/curriculum/curriculum_locations.csv](data/curriculum/curriculum_locations.csv) — Location list · **Desy** · when changing these numbers
+- [data/curriculum/curriculum_realm_summary.csv](data/curriculum/curriculum_realm_summary.csv) — Per-realm totals · **Desy** · when changing these numbers
+- [data/curriculum/curriculum_slice.csv](data/curriculum/curriculum_slice.csv) — Prototype slice · **Desy** · when changing these numbers
 
-| File | What it is |
-|---|---|
-| [cast_rule.csv](data/spells/cast_rule.csv) | Spell cast rule (v3.6+: no cap, MP only, no regen, no hints) |
-| [mp_potions.csv](data/spells/mp_potions.csv) | MP potion values (map only) |
-| [quests.csv](data/spells/quests.csv) | Quest list |
-| [spell_falloff.csv](data/spells/spell_falloff.csv) | Spell damage fall-off: reference only, not a game rule |
-| [spell_mp_check.csv](data/spells/spell_mp_check.csv) | Spell MP sanity check (v3.5+ costs) |
-| [spells.csv](data/spells/spells.csv) | Spell list: towns, prices, power, MP (v3.5+ costs = 1.25 × v3.4; the v3.4 MP is kept in `mp_cost_v34`) |
+### Data: enemies
 
-### Combat tables ([data/combat/](data/combat/))
+- [data/enemies/boss_hp.csv](data/enemies/boss_hp.csv) — Boss HP multipliers and ATK × 0.8 by tier and boss type (v3.7: location ~15, realm ~20 correct answers; v3.6 values kept as columns) · **Desy** · when changing these numbers
+- [data/enemies/enemies-art-roster.csv](data/enemies/enemies-art-roster.csv) — Art-brief roster: visuals, attacks, shouts (same stats as the combat table) · **Desy** · when changing these numbers
+- [data/enemies/enemies.csv](data/enemies/enemies.csv) — Combat table: stats, drops, specials. Use this for numbers. · **Desy** · when changing these numbers
+- [data/enemies/enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) — Enemy stat bands by level and role · **Desy** · when changing these numbers
 
-These are the spec tables.
+### Data: spells
 
-| File | What it is |
-|---|---|
-| [chest_contents.csv](data/items/chest_contents.csv) | Treasure chest loot tables |
-| [companion.csv](data/balance/companion.csv) | Companion stats and behavior |
-| [consumables.csv](data/items/consumables.csv) | Potions and other consumables |
-| [drops.csv](data/items/drops.csv) | Enemy drop tables |
-| [economy_prices.csv](data/items/economy_prices.csv) | Shop prices and gold economy |
-| [gear.csv](data/items/gear.csv) | Weapons and armor by tier |
-| [gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) | Heroic gear drops from bosses and elites |
-| [hero_stats.csv](data/balance/hero_stats.csv) | Hero stats by level |
-| [mp_rules.csv](data/balance/mp_rules.csv) | MP rules (max MP, regen, heal limits) |
-| [practice_modes.csv](data/balance/practice_modes.csv) | Practice mode definitions |
-| [practice_rewards.csv](data/balance/practice_rewards.csv) | Rewards for practice modes |
-| [proficiency_patrol_settings.csv](data/balance/proficiency_patrol_settings.csv) | Proficiency patrol settings |
-| [realm_difficulty.csv](data/balance/realm_difficulty.csv) | Difficulty per realm |
-| [realm_location_difficulty.csv](data/balance/realm_location_difficulty.csv) | Difficulty per location |
-| [safety_nets.csv](data/balance/safety_nets.csv) | Safety nets for struggling players |
-| [skills_mp.csv](data/balance/skills_mp.csv) | Skills and their MP costs |
-| [special_mechanics.csv](data/balance/special_mechanics.csv) | Special enemy and boss mechanics |
+- [data/spells/cast_rule.csv](data/spells/cast_rule.csv) — Spell cast rule (v3.6+: no cap, MP only, no regen, no hints) · **Desy** · when changing these numbers
+- [data/spells/mp_potions.csv](data/spells/mp_potions.csv) — MP potion values (map only) · **Desy** · when changing these numbers
+- [data/spells/spell_falloff.csv](data/spells/spell_falloff.csv) — Spell damage fall-off: reference only, not a game rule · **Desy** · when changing these numbers
+- [data/spells/spell_mp_check.csv](data/spells/spell_mp_check.csv) — Spell MP sanity check (v3.5+ costs) · **Desy** · when changing these numbers
+- [data/spells/spells.csv](data/spells/spells.csv) — Spell list: towns, prices, power, MP (v3.5+ costs = 1.25 × v3.4; the v3.4 MP is kept in `mp_cost_v34`) · **Desy** · when changing these numbers
 
-### World graph ([data/world/](data/world/))
+### Data: items
 
-The v3.9.1 world data, in `graph/0.3` format (towns + villages per realm = ceil(nodes / (20 … 60)); new leaf villages realm_3/village_1x, realm_6/village_2x, realm_9/village_3x). Realm 1 and the world map are authored by hand; realms 2–9 and their dungeons are generated reference layouts (`status: "reference"`) for the writers to replace.
+- [data/items/chest_contents.csv](data/items/chest_contents.csv) — Treasure chest loot tables (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/consumables.csv](data/items/consumables.csv) — Potions and other consumables (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/drops.csv](data/items/drops.csv) — Enemy drop tables (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/economy_prices.csv](data/items/economy_prices.csv) — Shop prices and gold economy (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/gear.csv](data/items/gear.csv) — Weapons and armor by tier (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) — Heroic gear drops from bosses and elites (combat-spec table) · **Desy** · when changing these numbers
 
-| File | What it is |
-|---|---|
-| [index.json](data/world/index.json) | Index of every file the loader reads: the graphs (id, kind, realm, dungeon level, file), the rule/zone/quest files and the start position |
-| [world_rules.json](data/world/world_rules.json) | Encounter rate per danger, depth step, safe-edge rules, softeners (walked edges, zone battle budget, pity rolls), walk times, inn warp and seed rules |
-| [zones.json](data/world/zones.json) | The 20 zones (one per location): word pool, roster, elite, boss, order and unlock rules |
-| [quests_world.json](data/world/quests_world.json) | Quest hooks placed on the graphs (`offerQuest` targets), quest items and speakers |
-| [layout_targets.json](data/world/layout_targets.json) | Size and shape targets per realm (nodes, dead ends, inn distance) |
-| [world_realm_table.csv](data/world/world_realm_table.csv) | Per-realm table: graph size and shape, towns, inns, dungeons, zones, and sim battles and minutes (beeline, explorer, v3.7) |
-| [graphs/](data/world/graphs/) | 36 graph files: [world.json](data/world/graphs/world.json), [realm_1.json](data/world/graphs/realm_1.json) … `realm_9.json`, and 26 dungeon levels (for example [goblin_caves_1.json](data/world/graphs/goblin_caves_1.json)) |
-| [schemas/](data/world/schemas/) | 7 JSON Schemas (2020-12): common, graph, index, progress (the save's world part, fog of war), quests_world, world_rules, zones |
-| [examples/](data/world/examples/) | [progress_example.json](data/world/examples/progress_example.json): a save's world progress that validates against progress.schema.json |
-| [diagrams/](data/world/diagrams/) | Diagrams of realm 1, realm 4, realm 8 and the Goblin Caves (PNG and mermaid) |
+### Data: balance
 
-### Quests ([data/quests/](data/quests/))
+- [data/balance/companion.csv](data/balance/companion.csv) — Companion stats and behavior (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/hero_stats.csv](data/balance/hero_stats.csv) — Hero stats by level (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/mp_rules.csv](data/balance/mp_rules.csv) — MP rules (max MP, regen, heal limits) (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/practice_modes.csv](data/balance/practice_modes.csv) — Practice mode definitions (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/practice_rewards.csv](data/balance/practice_rewards.csv) — Rewards for practice modes (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/proficiency_patrol_settings.csv](data/balance/proficiency_patrol_settings.csv) — Proficiency patrol settings (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/realm_difficulty.csv](data/balance/realm_difficulty.csv) — Difficulty per realm (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/realm_location_difficulty.csv](data/balance/realm_location_difficulty.csv) — Difficulty per location (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/safety_nets.csv](data/balance/safety_nets.csv) — Safety nets for struggling players (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/skills_mp.csv](data/balance/skills_mp.csv) — Skills and their MP costs (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/special_mechanics.csv](data/balance/special_mechanics.csv) — Special enemy and boss mechanics (combat-spec table) · **Desy** · when changing these numbers
 
-| File | What it is |
-|---|---|
-| [quests.json](data/quests/quests.json) | Quests v2 (quest/0.2): 50 NPC and story quests; givers are positions (`entry_town`, `outpost_k`, `village_k`) resolved against the realm graph |
-| [quests.csv](data/quests/quests.csv) | The same as a sheet |
-| [quests.schema.json](data/quests/quests.schema.json) | JSON Schema for quest/0.2 |
-| [quests_v1.json](data/quests/quests_v1.json), [quests_v1.csv](data/quests/quests_v1.csv) | The v1 town-board quests (backup) |
+### Data: quests
 
-### Dialogue ([data/dialogue/](data/dialogue/))
+- [data/quests/quests.csv](data/quests/quests.csv) — Quests v2 as a sheet (one row per quest) · **Desy** · when editing quests (then rebuild)
+- [data/quests/quests.json](data/quests/quests.json) — Quests v2 (quest/0.2): 50 NPC and story quests; givers are positions (`entry_town`, `outpost_k`, `village_k`) resolved against the realm graph · **Desy** · when editing quests (then rebuild)
+- [data/quests/quests.schema.json](data/quests/quests.schema.json) — JSON Schema for quest/0.2 · **Desy** · when editing quests (then rebuild)
+- [data/quests/quests_full.json](data/quests/quests_full.json) — v1 quest rules + list (bundle). Still read by tools/build_data.py for the classic-mode boards · **Desy** · when editing quests (then rebuild)
+- [data/quests/quests_v1.csv](data/quests/quests_v1.csv) — v1 town-board quests (36). Superseded in design by quests v2, but still the input for the classic-mode boards (tools/build_data.py) · **Desy** · when editing quests (then rebuild)
+- [data/quests/quests_v1.json](data/quests/quests_v1.json) — v1 town-board quests (36). Superseded in design by quests v2, but still the input for the classic-mode boards (tools/build_data.py) · **Desy** · when editing quests (then rebuild)
 
-Dialogue scenes in scene/0.2 ([scene.schema.json](data/dialogue/scene.schema.json)): [sc_r1_opening.json](data/dialogue/sc_r1_opening.json) (the tutorial opening), [sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json), [sc_q1_hoe_offer.json](data/dialogue/sc_q1_hoe_offer.json), [sc_q1_hoe_thanks.json](data/dialogue/sc_q1_hoe_thanks.json), [sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json), [sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json).
+### Data: dialogue
 
-### Simulation output ([data/sim/](data/sim/))
+- [data/dialogue/sc_q1_hoe_offer.json](data/dialogue/sc_q1_hoe_offer.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q1_hoe_thanks.json](data/dialogue/sc_q1_hoe_thanks.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r1_opening.json](data/dialogue/sc_r1_opening.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/scene.schema.json](data/dialogue/scene.schema.json) — JSON Schema for scene/0.2 (extends GameDev scene/0.1) · **Desy** · when writing scenes
 
-There are 29 CSV result tables behind the spec: realm pacing, economy, MP, companion, elites, specials, patrol minutes, spoken-answer cap, trigger tuning, and the spell sims by player profile (`50/65/75/90_saver`, `75_spender`), plus the v3.5–v3.7 tables [sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv), [sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) and [sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv). The world sims (v3.7 loop vs beeline vs explorer) are [sim_world_v38.csv](data/sim/sim_world_v38.csv), [sim_world_v39.csv](data/sim/sim_world_v39.csv) and [sim_world_v391.csv](data/sim/sim_world_v391.csv). The full v3.7 sim text output is [combat_sim_out.txt](data/sim/combat_sim_out.txt).
+### Data: world (v3.9.1)
 
-### JSON twins ([data/json/](data/json/))
+- [data/world/index.json](data/world/index.json) — Index of every file the loader reads: the graphs (id, kind, realm, dungeon level, file), the rule/zone/quest files and the start position · **Desy** · when editing world data (then rebuild)
+- [data/world/layout_targets.json](data/world/layout_targets.json) — Size and shape targets per realm (nodes, dead ends, inn distance) · **Desy** · when editing world data (then rebuild)
+- [data/world/quests_world.json](data/world/quests_world.json) — Quest hooks placed on the graphs (`offerQuest` targets), quest items and speakers · **Desy** · when editing world data (then rebuild)
+- [data/world/world_realm_table.csv](data/world/world_realm_table.csv) — Per-realm table: graph size and shape, towns, inns, dungeons, zones, and sim battles and minutes (beeline, explorer, v3.7) · **Desy** · when editing world data (then rebuild)
+- [data/world/world_rules.json](data/world/world_rules.json) — Encounter rate per danger, depth step, safe-edge rules, softeners (walked edges, zone battle budget, pity rolls), walk times, inn warp and seed rules · **Desy** · when editing world data (then rebuild)
+- [data/world/zones.json](data/world/zones.json) — The 20 zones (one per location): word pool, roster, elite, boss, order and unlock rules · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/goblin_caves.png](data/world/diagrams/goblin_caves.png) — v3.8 diagram (PNG) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/goblin_caves_1.mmd](data/world/diagrams/goblin_caves_1.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/goblin_caves_2.mmd](data/world/diagrams/goblin_caves_2.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/goblin_caves_3.mmd](data/world/diagrams/goblin_caves_3.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/realm_1.mmd](data/world/diagrams/realm_1.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/realm_1.png](data/world/diagrams/realm_1.png) — v3.8 diagram (PNG) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/realm_4.mmd](data/world/diagrams/realm_4.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
+- [data/world/diagrams/realm_8.png](data/world/diagrams/realm_8.png) — v3.8 diagram (PNG) · **Desy** · when editing world data (then rebuild)
+- [data/world/examples/progress_example.json](data/world/examples/progress_example.json) — v3.9 progress example (checked by the validator) · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/bazaar_cellars_1.json](data/world/graphs/bazaar_cellars_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/beast_pens_1.json](data/world/graphs/beast_pens_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/beast_pens_2.json](data/world/graphs/beast_pens_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/cloud_caves_1.json](data/world/graphs/cloud_caves_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/demon_castle_1.json](data/world/graphs/demon_castle_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/demon_castle_2.json](data/world/graphs/demon_castle_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/demon_castle_3.json](data/world/graphs/demon_castle_3.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/demon_castle_4.json](data/world/graphs/demon_castle_4.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/demon_castle_5.json](data/world/graphs/demon_castle_5.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/goblin_caves_1.json](data/world/graphs/goblin_caves_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/goblin_caves_2.json](data/world/graphs/goblin_caves_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/goblin_caves_3.json](data/world/graphs/goblin_caves_3.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/great_hive_1.json](data/world/graphs/great_hive_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/griffin_spire_1.json](data/world/graphs/griffin_spire_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/griffin_spire_2.json](data/world/graphs/griffin_spire_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/griffin_spire_3.json](data/world/graphs/griffin_spire_3.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/hydra_lair_1.json](data/world/graphs/hydra_lair_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/hydra_lair_2.json](data/world/graphs/hydra_lair_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/moonlit_crypt_1.json](data/world/graphs/moonlit_crypt_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/moonlit_crypt_2.json](data/world/graphs/moonlit_crypt_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/old_mine_1.json](data/world/graphs/old_mine_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_1.json](data/world/graphs/realm_1.json) — v3.8 graph (graph/0.3), authored · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_2.json](data/world/graphs/realm_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_3.json](data/world/graphs/realm_3.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_4.json](data/world/graphs/realm_4.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_5.json](data/world/graphs/realm_5.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_6.json](data/world/graphs/realm_6.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_7.json](data/world/graphs/realm_7.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_8.json](data/world/graphs/realm_8.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/realm_9.json](data/world/graphs/realm_9.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/shadow_vault_1.json](data/world/graphs/shadow_vault_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/shadow_vault_2.json](data/world/graphs/shadow_vault_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/undercroft_1.json](data/world/graphs/undercroft_1.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/undercroft_2.json](data/world/graphs/undercroft_2.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/undercroft_3.json](data/world/graphs/undercroft_3.json) — v3.9.2 graph (graph/0.3), generated reference layout · **Desy** · when editing world data (then rebuild)
+- [data/world/graphs/world.json](data/world/graphs/world.json) — v3.9.2 graph (graph/0.3), authored; realms[] links and unlock conditions · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/common.schema.json](data/world/schemas/common.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/graph.schema.json](data/world/schemas/graph.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/index.schema.json](data/world/schemas/index.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/progress.schema.json](data/world/schemas/progress.schema.json) — v3.9.2 player progress schema (progress/0.3: fog bitsets, lastInn, visitedTowns = towns and villages, feathers) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/quests_world.schema.json](data/world/schemas/quests_world.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/world_rules.schema.json](data/world/schemas/world_rules.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/zones.schema.json](data/world/schemas/zones.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
 
-There are 30 JSON files for the game code. Each one matches the CSV of the same name; the art roster is `enemies-art-roster.json`. Three are bundles with no single CSV twin:
-- [combat_data.json](data/json/combat_data.json) bundles all the spec tables.
-- [spells_full.json](data/json/spells_full.json) adds the spell rules and tiers to the list.
-- [quests_full.json](data/quests/quests_full.json) adds the quest rules to the list.
+### Data: sim output
 
-The rules in these bundles are also written out in spells.md and combat-spec.md §6.7 and §7.11.
+- [data/sim/combat_sim_out.txt](data/sim/combat_sim_out.txt) — Full sim text output, v3.7 (optional) · **Desy** · when checking balance numbers
+- [data/sim/sim_companion.csv](data/sim/sim_companion.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_companion_variants.csv](data/sim/sim_companion_variants.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_economy.csv](data/sim/sim_economy.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_elites.csv](data/sim/sim_elites.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_elites_2.csv](data/sim/sim_elites_2.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_mp.csv](data/sim/sim_mp.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_patrols_minutes.csv](data/sim/sim_patrols_minutes.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_realms.csv](data/sim/sim_realms.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_specials.csv](data/sim/sim_specials.csv) — Sim output table (rerun with v3.7 boss stats) · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_boss_fights_by_realm.csv](data/sim/sim_spells_boss_fights_by_realm.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv](data/sim/sim_spells_boss_target_check_correct_answers_to_win.csv) — Sim output table (v3.7) · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_does_saving_mp_pay_off.csv](data/sim/sim_spells_does_saving_mp_pay_off.csv) — Sim output table (v3.7) · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_gold_and_mp_timeline.csv](data/sim/sim_spells_gold_and_mp_timeline.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_per_realm_50_saver.csv](data/sim/sim_spells_per_realm_50_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_per_realm_65_saver.csv](data/sim/sim_spells_per_realm_65_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_per_realm_75_saver.csv](data/sim/sim_spells_per_realm_75_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_per_realm_75_spender.csv](data/sim/sim_spells_per_realm_75_spender.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_per_realm_90_saver.csv](data/sim/sim_spells_per_realm_90_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv](data/sim/sim_spells_question_share_cast_share_hours_and_defe.csv) — Sim output table (v3.7 vs v3.6; replaces sim_spells_question_share_and_cast_share_v3_5_vs_v3.csv) · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_price_in_effort.csv](data/sim/sim_spells_spell_price_in_effort.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_timeline_50_saver.csv](data/sim/sim_spells_spell_timeline_50_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_timeline_65_saver.csv](data/sim/sim_spells_spell_timeline_65_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_timeline_75_saver.csv](data/sim/sim_spells_spell_timeline_75_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_timeline_75_spender.csv](data/sim/sim_spells_spell_timeline_75_spender.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_spell_timeline_90_saver.csv](data/sim/sim_spells_spell_timeline_90_saver.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spells_whole_campaign.csv](data/sim/sim_spells_whole_campaign.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_spoken_cap.csv](data/sim/sim_spoken_cap.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_trigger_tuning.csv](data/sim/sim_trigger_tuning.csv) — Sim output table · **Desy** · when checking balance numbers
+- [data/sim/sim_world_v38.csv](data/sim/sim_world_v38.csv) — v3.8 sim (kept for the v3.8 → v3.9 comparison) · **Desy** · when checking balance numbers
+- [data/sim/sim_world_v39.csv](data/sim/sim_world_v39.csv) — v3.9 sim: v3.7 loop vs beeline vs explorer (no warp, Feathers bought) · **Desy** · when checking balance numbers
+- [data/sim/sim_world_v391.csv](data/sim/sim_world_v391.csv) — v3.9.1 sim (current): realm-boss Feathers, density ramp · **Desy** · when checking balance numbers
 
-## Images ([images/](art/))
+### Data: JSON twins and bundles
 
-Final game sprites, backgrounds and audio are not here; they are under `public/` in the game.
+- [data/json/boss_hp.json](data/json/boss_hp.json) — JSON twin of the CSV (v3.7) · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/cast_rule.json](data/json/cast_rule.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/chest_contents.json](data/json/chest_contents.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/combat_data.json](data/json/combat_data.json) — Bundle of all spec tables (each also a CSV) · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/companion.json](data/json/companion.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/consumables.json](data/json/consumables.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/drops.json](data/json/drops.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/economy_prices.json](data/json/economy_prices.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/enemies-art-roster.json](data/json/enemies-art-roster.json) — JSON twin of enemies/enemies-art-roster.csv (flavor text read by tools/build_data.py) · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/enemies.json](data/json/enemies.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/enemy_stat_bands.json](data/json/enemy_stat_bands.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/gear.json](data/json/gear.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/gear_heroic_drops.json](data/json/gear_heroic_drops.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/hero_stats.json](data/json/hero_stats.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/mp_potions.json](data/json/mp_potions.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/mp_rules.json](data/json/mp_rules.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/practice_modes.json](data/json/practice_modes.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/practice_rewards.json](data/json/practice_rewards.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/proficiency_patrol_settings.json](data/json/proficiency_patrol_settings.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/realm_difficulty.json](data/json/realm_difficulty.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/realm_location_difficulty.json](data/json/realm_location_difficulty.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/safety_nets.json](data/json/safety_nets.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/skills_mp.json](data/json/skills_mp.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/special_mechanics.json](data/json/special_mechanics.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/spell_falloff.json](data/json/spell_falloff.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/spell_mp_check.json](data/json/spell_mp_check.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/spells.json](data/json/spells.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/spells_full.json](data/json/spells_full.json) — Spell rules + tiers + list (rules are also in spells.md / §6.7) · **Desy** · read by tools/build_data.py; regenerate with the CSV
 
-### UI review mockups ([images/ui-review/](art/ui-review/))
+### Art and audio (docs/art/)
 
-| File | What it is |
-|---|---|
-| [battle-command.png](art/ui-review/battle-command.png) | Mockup A: battle, command state |
-| [battle-feedback.png](art/ui-review/battle-feedback.png) | Mockup D: answer feedback and the hit |
-| [battle-question-mc.png](art/ui-review/battle-question-mc.png) | Mockup B: question open (multiple choice) |
-| [battle-question-speech.png](art/ui-review/battle-question-speech.png) | Mockup C: defense question, speech mode |
-| [diagnosis.png](art/ui-review/diagnosis.png) | Annotated diagnosis of the old battle screen |
-| [map.png](art/ui-review/map.png) | Mockup E: location map |
-| [scaling.png](art/ui-review/scaling.png) | Scaling and letterboxing across devices |
-| [village.png](art/ui-review/village.png) | Mockup F: village hub and world map |
+- [art/README.md](art/README.md) — What art/ holds · **Arty** · browsing
+- [art/enemies-art-brief.md](art/enemies-art-brief.md) — Enemy roster (50) and art/animation brief · **Desy / Arty** · when drawing enemies
+- [art/art-direction-memo.md](art/art-direction-memo.md) — Art direction findings: reference styles, what appeals to 10–12-year-olds, sourcing · **Arty** · before new art
+- [art/ai-art-pipeline-proposal.md](art/ai-art-pipeline-proposal.md) — AI art and audio pipeline proposal into Phaser · **Arty** · when changing the art pipeline
+- [art/asset-hooks.md](art/asset-hooks.md) — Where delivered backgrounds, SFX, music, spell art and word audio go, and how the game picks them up (was ASSETS.md) · **GameDev / Arty** · when delivering assets
+- [art/audio.md](art/audio.md) — Arty's audio pack README: SFX, music loops and stings, sources, licences · **Arty** · when adding audio
+- [art/arty/sprites.md](art/arty/sprites.md) — Arty's battle sprites README (batch 1 sheets, manifest) · **Arty** · when adding sprites
+- [art/arty/spells.md](art/arty/spells.md) — Arty's spell art README: icons, fx textures, recipes · **Arty** · when adding spell art
+- [art/arty/portraits.md](art/arty/portraits.md) — Arty's dialogue portraits README · **Arty** · when adding portraits
+- [art/arty/backgrounds.md](art/arty/backgrounds.md) — Arty's backgrounds README (realms 1–2) · **Arty** · when adding backgrounds
+- [art/arty/ui.md](art/arty/ui.md) — Arty's dialogue UI README (panel, nameplate, arrow) · **Arty** · when changing dialogue UI art
+- [art/arty/batch1-prompts.md](art/arty/batch1-prompts.md) — Arty's batch 1 image prompts and references · **Arty** · when regenerating batch 1 art
+- [art/refsheets/REJECTED_rabbit_as_buddy.png](art/refsheets/REJECTED_rabbit_as_buddy.png) — Rejected: rabbit drawn as a cute buddy (it must look like a pest monster) · **Arty** · for art reference
+- [art/refsheets/hero_v1.png](art/refsheets/hero_v1.png) — Hero reference sheet v1 · **Arty** · for art reference
+- [art/refsheets/horned_rabbit_enemy_v1.png](art/refsheets/horned_rabbit_enemy_v1.png) — Horned Rabbit enemy reference sheet v1 · **Arty** · for art reference
+- [art/style-anchors/APPROVED_style_bright_detailed_battle.png](art/style-anchors/APPROVED_style_bright_detailed_battle.png) — Approved style (bright, detailed battle scene) · **Arty** · for art reference
+- [art/style-anchors/anchor_A_bright_classic.png](art/style-anchors/anchor_A_bright_classic.png) — Style option A: bright classic · **Arty** · for art reference
+- [art/style-anchors/anchor_B_storybook_inkwash.png](art/style-anchors/anchor_B_storybook_inkwash.png) — Style option B: storybook ink-wash · **Arty** · for art reference
+- [art/style-anchors/anchor_C_bold_graphic.png](art/style-anchors/anchor_C_bold_graphic.png) — Style option C: bold graphic · **Arty** · for art reference
+- [art/style-anchors/battle_mockup_meadow.png](art/style-anchors/battle_mockup_meadow.png) — Meadow battle mockup · **Arty** · for art reference
+- [art/style-anchors/hybrid_A_inkwash_Cmenace_battle.png](art/style-anchors/hybrid_A_inkwash_Cmenace_battle.png) — Hybrid: ink-wash with option C menace · **Arty** · for art reference
+- [art/ui-review/battle-command.png](art/ui-review/battle-command.png) — Mockup A: battle, command state · **Desy** · with ui-layout-review.md
+- [art/ui-review/battle-feedback.png](art/ui-review/battle-feedback.png) — Mockup D: answer feedback and the hit · **Desy** · with ui-layout-review.md
+- [art/ui-review/battle-question-mc.png](art/ui-review/battle-question-mc.png) — Mockup B: question open (multiple choice) · **Desy** · with ui-layout-review.md
+- [art/ui-review/battle-question-speech.png](art/ui-review/battle-question-speech.png) — Mockup C: defense question, speech mode · **Desy** · with ui-layout-review.md
+- [art/ui-review/diagnosis.png](art/ui-review/diagnosis.png) — Annotated diagnosis of the old battle screen · **Desy** · with ui-layout-review.md
+- [art/ui-review/map.png](art/ui-review/map.png) — Mockup E: location map · **Desy** · with ui-layout-review.md
+- [art/ui-review/scaling.png](art/ui-review/scaling.png) — Scaling and letterboxing across devices · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/battle-command.html](art/ui-review/src/battle-command.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/battle-feedback.html](art/ui-review/src/battle-feedback.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/battle-question-mc.html](art/ui-review/src/battle-question-mc.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/battle-question-speech.html](art/ui-review/src/battle-question-speech.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/diagnosis.html](art/ui-review/src/diagnosis.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/map.html](art/ui-review/src/map.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/mock.css](art/ui-review/src/mock.css) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/mock.js](art/ui-review/src/mock.js) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/render.mjs](art/ui-review/src/render.mjs) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/scaling.html](art/ui-review/src/scaling.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/src/village.html](art/ui-review/src/village.html) — HTML/CSS mock source for the PNGs · **Desy** · with ui-layout-review.md
+- [art/ui-review/village.png](art/ui-review/village.png) — Mockup F: village hub and world map · **Desy** · with ui-layout-review.md
 
-The HTML/CSS mock sources are in [images/ui-review/src/](art/ui-review/src/) (re-render with `render.mjs`; they expect the prototype's `dist/` art). They are kept as sources only and are not part of the game build.
+### Tech (docs/tech/)
 
-### Style anchors ([images/style-anchors/](art/style-anchors/))
+- [tech/README.md](tech/README.md) — What tech/ holds · **GameDev** · browsing
+- [tech/architecture.md](tech/architecture.md) — Approved architecture: accounts, cloud saves, COPPA, $0 hosting (Vercel + Neon + Auth.js), graph world, decision log D1–D18 · **GameDev** · before backend, save or hosting work
+- [tech/deploy.md](tech/deploy.md) — How deploy works: GitHub Pages workflow, build:ci, validate:world, asset sync, tests · **GameDev** · before pushing to main
+- [tech/research-tech-market.md](tech/research-tech-market.md) — Technology, market and compliance research (engines, speech, COPPA) · **GameDev** · for background
 
-| File | What it is |
-|---|---|
-| [APPROVED_style_bright_detailed_battle.png](art/style-anchors/APPROVED_style_bright_detailed_battle.png) | **Approved style** (bright, detailed battle scene) |
-| [anchor_A_bright_classic.png](art/style-anchors/anchor_A_bright_classic.png) | Style option A: bright classic |
-| [anchor_B_storybook_inkwash.png](art/style-anchors/anchor_B_storybook_inkwash.png) | Style option B: storybook ink-wash |
-| [anchor_C_bold_graphic.png](art/style-anchors/anchor_C_bold_graphic.png) | Style option C: bold graphic |
-| [battle_mockup_meadow.png](art/style-anchors/battle_mockup_meadow.png) | Meadow battle mockup |
-| [hybrid_A_inkwash_Cmenace_battle.png](art/style-anchors/hybrid_A_inkwash_Cmenace_battle.png) | Hybrid: ink-wash with option C menace |
+### Design tools (docs/tech/tools/)
 
-### Reference sheets ([images/refsheets/](art/refsheets/))
-
-| File | What it is |
-|---|---|
-| [REJECTED_rabbit_as_buddy.png](art/refsheets/REJECTED_rabbit_as_buddy.png) | Rejected: rabbit drawn as a cute buddy (it must look like a pest monster) |
-| [hero_v1.png](art/refsheets/hero_v1.png) | Hero reference sheet v1 |
-| [horned_rabbit_enemy_v1.png](art/refsheets/horned_rabbit_enemy_v1.png) | Horned Rabbit enemy reference sheet v1 |
-
-## Design tools ([tools/](tech/tools/))
-
-These are Desy's sim and data-generation scripts. **They live in `docs/tools/`, not the repo's top-level `tools/`.** The top-level `tools/` holds the game's own build scripts (for example `tools/build_data.py`, which builds `src/data`), and keeping the two apart stops them being mixed up. The scripts expect Desy's workspace layout (`/workspace/desy`), so they are kept here for reference and are not run from the repo.
-
-| File | What it is |
-|---|---|
-| [combat_sim.py](tech/tools/sim/combat_sim.py) | Battle sim |
-| [sim_v3_runner.py](tech/tools/sim/sim_v3_runner.py) | v3 sim runner |
-| [spells_runner.py](tech/tools/sim/spells_runner.py) | Campaign runner, v3.7 |
-| [spells_sim.py](tech/tools/sim/spells_sim.py) | Campaign sim (spells and quests) |
-| [boss_harness.py](tech/tools/sim/boss_harness.py) | v3.6 single boss fight harness (full MP, 2 strongest spells) |
-| [boss_tune.py](tech/tools/sim/boss_tune.py) | Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) |
-| [boss_tune_v37_loc.json](tech/tools/sim/boss_tune_v37_loc.json) | v3.7 location boss HP tuning output (~15 correct answers) |
-| [regen_only.py](tech/tools/sim/regen_only.py) | v3.6 check: removing MP regen alone |
-| [atk_check.py](tech/tools/sim/atk_check.py) | v3.6 boss ATK multiplier check |
-| [v37_boss_check_0.5.json](tech/tools/sim/v37_boss_check_0.5.json), [0.75](tech/tools/sim/v37_boss_check_0.75.json), [0.9](tech/tools/sim/v37_boss_check_0.9.json) | v3.7 boss check output at 50 / 75 / 90 % accuracy |
-| [assemble_spec.py](tech/tools/data/assemble_spec.py) | Assembles combat-spec.md |
-| [build_data.py](tech/tools/data/build_data.py) | Generates the data CSV/JSON tables |
-| [spec_new_sections.md](tech/tools/data/spec_new_sections.md) | Spec source sections |
-| [spells_data.py](tech/tools/data/spells_data.py) | Spell and quest source data and design formulas |
-| [spells_md_template.md](tech/tools/data/spells_md_template.md) | spells.md template |
-| [write_spells_md.py](tech/tools/data/write_spells_md.py) | Generates spells.md |
-| [write_html.py](tech/tools/data/write_html.py) | Renders combat-spec-v3.html from combat-spec.md |
-| [sync_check.py](tech/tools/sync_check.py) | Manifest sync check plus the world validator |
-
-#### World tools ([tools/world/](tech/tools/world/))
-
-The v3.8 world-graph tools. Like the other design tools they use Desy's absolute `/workspace/desy/` paths.
-
-| File | What it is |
-|---|---|
-| [make_world_data.py](tech/tools/world/make_world_data.py) | Hand-authored data: realm 1, the world map, rules, zones and quest hooks |
-| [world_gen.py](tech/tools/world/world_gen.py) | Generates the reference realms 2–9 and the index |
-| [v03.py](tech/tools/world/v03.py) | Converts the internal format to `graph/0.3` |
-| [world_graph.py](tech/tools/world/world_graph.py) | Loader (a realm is an overworld plus its dungeon levels) |
-| [validate_world.py](tech/tools/world/validate_world.py) | World data validator (schemas and graph rules) |
-| [make_schemas.py](tech/tools/world/make_schemas.py) | Writes the JSON Schemas in data/world/schemas |
-| [render_world.py](tech/tools/world/render_world.py) | Draws the diagrams (PNG and mermaid) |
-| [world_loop.py.txt](tech/tools/world/world_loop.py.txt) | The sim's graph loop, spliced into world_sim.py |
-| [build_world_sim.py](tech/tools/world/build_world_sim.py) | Builds world_sim.py from spells_sim.py plus the loop |
-| [world_runner.py](tech/tools/world/world_runner.py) | v3.8 sim runner (main run and sweep) |
-| [tables.py](tech/tools/world/tables.py) | Writes the tables for world-graph.md and the CSVs |
-| [write_world_doc.py](tech/tools/world/write_world_doc.py) | Builds world-graph.md from the source below |
-| [doc/world-graph.src.md](tech/tools/world/doc/world-graph.src.md) | world-graph.md source with placeholders (its image links resolve only in the built doc in design/) |
-| [doc/spec12.md](tech/tools/world/doc/spec12.md) | The text of combat-spec §12 |
-| [sim/world_summary.json](tech/tools/world/sim/world_summary.json) | v3.8 main sim output (100 runs per profile) |
-
-#### Story tools ([tools/story/](tech/tools/story/))
-
-Unlike the other design tools these run from the repo: [_paths.py](tech/tools/story/_paths.py) maps Desy's paths to `docs/` with [desy_paths.json](tech/tools/desy_paths.json) (generated from her repo-manifest; set `DESY_ROOT=/workspace/desy` to run them on her tree).
-
-| File | What it is |
-|---|---|
-| [quests_def.py](tech/tools/story/quests_def.py) | The 50 quest definitions |
-| [build_quests.py](tech/tools/story/build_quests.py) | Builds and checks data/quests/quests.json and .csv (positions, hooks, words) |
-| [make_dialogue.py](tech/tools/story/make_dialogue.py) | Writes the data/dialogue scenes |
-| [validate_dialogue.py](tech/tools/story/validate_dialogue.py) | Checks the scenes: schema, word tokens, met-word rule, density, gotos |
-
-The game build keeps its own repo-relative copy of the world validator in `tools/world/` (`npm run validate:world`).
-
-## How to update
-
-- Desy, Arty and Director hand updated files to GameDev, who copies them into `docs/` (Desy's `repo-manifest.md` maps each source file to its path here) and commits them. Or edit the files under `docs/` directly and commit.
-- When a spec changes, copy the old version into the matching `archive/` folder with a version suffix (for example `combat-spec-v3.3.md`) and keep the current file name, so links stay valid.
-- Docs are Markdown and sheets are CSV. Don't commit HTML or XLSX exports, third-party word lists (CC-CEDICT, HSK/YCT lists), or game assets (those go in `public/`). Keep files under 5 MB.
+- [tech/tools/desy_paths.json](tech/tools/desy_paths.json) — Map from Desy's /workspace/desy paths to repo paths (used by the story tools) · **Desy** · when a doc or table moves
+- [tech/tools/sync_check.py](tech/tools/sync_check.py) — Manifest sync check plus the world validator · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/story/_paths.py](tech/tools/story/_paths.py) — Path resolver: runs the story tools on the repo layout (DESY_ROOT=… for Desy's tree) · **Desy** · when rebuilding quests/scenes
+- [tech/tools/world/sim/world_summary.json](tech/tools/world/sim/world_summary.json) — v3.9.1 main world sim output (100 runs per profile) · **Desy** · when re-running the world sim
+- [tech/tools/data/assemble_spec.py](tech/tools/data/assemble_spec.py) — Assembles combat-spec.md · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/build_data.py](tech/tools/data/build_data.py) — Generates the data CSV/JSON tables · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/spec_new_sections.md](tech/tools/data/spec_new_sections.md) — Spec source sections · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/spells_data.py](tech/tools/data/spells_data.py) — Spell and quest source data and design formulas · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/spells_md_template.md](tech/tools/data/spells_md_template.md) — spells.md template · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/write_html.py](tech/tools/data/write_html.py) — Renders combat-spec-v3.html from combat-spec.md · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/write_spells_md.py](tech/tools/data/write_spells_md.py) — Generates spells.md · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/atk_check.py](tech/tools/sim/atk_check.py) — v3.6 boss ATK multiplier check · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/boss_harness.py](tech/tools/sim/boss_harness.py) — v3.6 single boss fight harness (full MP, 2 strongest spells) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/boss_tune.py](tech/tools/sim/boss_tune.py) — Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/boss_tune_v37_loc.json](tech/tools/sim/boss_tune_v37_loc.json) — v3.7 location boss HP tuning output (~15 correct answers) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/combat_sim.py](tech/tools/sim/combat_sim.py) — Battle sim · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/regen_only.py](tech/tools/sim/regen_only.py) — v3.6 check: removing MP regen alone · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/sim_v3_runner.py](tech/tools/sim/sim_v3_runner.py) — v3 sim runner · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/spells_runner.py](tech/tools/sim/spells_runner.py) — Campaign runner, v3.7 · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/spells_sim.py](tech/tools/sim/spells_sim.py) — Campaign sim (spells and quests) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/v37_boss_check_0.5.json](tech/tools/sim/v37_boss_check_0.5.json) — v3.7 boss check output at 50 / 75 / 90 % accuracy · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/v37_boss_check_0.75.json](tech/tools/sim/v37_boss_check_0.75.json) — Boss check output (read by build_data.py for boss_hp) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/sim/v37_boss_check_0.9.json](tech/tools/sim/v37_boss_check_0.9.json) — Boss check output · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/story/build_quests.py](tech/tools/story/build_quests.py) — Builds and checks data/quests/quests.json and .csv (positions, hooks, words) · **Desy** · when rebuilding quests/scenes
+- [tech/tools/story/make_dialogue.py](tech/tools/story/make_dialogue.py) — Writes the data/dialogue scenes · **Desy** · when rebuilding quests/scenes
+- [tech/tools/story/quests_def.py](tech/tools/story/quests_def.py) — The 50 quest definitions · **Desy** · when rebuilding quests/scenes
+- [tech/tools/story/validate_dialogue.py](tech/tools/story/validate_dialogue.py) — Checks the scenes: schema, word tokens, met-word rule, density, gotos · **Desy** · when rebuilding quests/scenes
+- [tech/tools/world/build_world_sim.py](tech/tools/world/build_world_sim.py) — Builds world_sim.py from spells_sim.py plus the loop · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/doc/spec12.md](tech/tools/world/doc/spec12.md) — The text of combat-spec §12 · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/doc/world-graph.src.md](tech/tools/world/doc/world-graph.src.md) — world-graph.md source with placeholders (its image links resolve only in the built doc in design/) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/make_schemas.py](tech/tools/world/make_schemas.py) — Writes the JSON Schemas in data/world/schemas · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/make_world_data.py](tech/tools/world/make_world_data.py) — Hand-authored data: realm 1, the world map, rules, zones and quest hooks · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/render_world.py](tech/tools/world/render_world.py) — Draws the diagrams (PNG and mermaid) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/sim/world_summary_v38.json](tech/tools/world/sim/world_summary_v38.json) — v3.8 main sim output (baseline for v3.9 tables) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/sim/world_summary_v39.json](tech/tools/world/sim/world_summary_v39.json) — v3.9 main sim output (baseline for the v3.9.1 table) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/tables.py](tech/tools/world/tables.py) — Writes the tables for world-graph.md and the CSVs · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/v03.py](tech/tools/world/v03.py) — Converts the internal format to `graph/0.3` · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/validate_world.py](tech/tools/world/validate_world.py) — World data validator (schemas and graph rules) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/world_gen.py](tech/tools/world/world_gen.py) — Generates the reference realms 2–9 and the index · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/world_graph.py](tech/tools/world/world_graph.py) — Loader (a realm is an overworld plus its dungeon levels) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/world_loop.py.txt](tech/tools/world/world_loop.py.txt) — The sim's graph loop, spliced into world_sim.py · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/world_runner.py](tech/tools/world/world_runner.py) — v3.8 sim runner (main run and sweep) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/write_world_doc.py](tech/tools/world/write_world_doc.py) — Builds world-graph.md from the source below · **Desy** · when re-running Desy's sims or generators
