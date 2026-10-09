@@ -10,7 +10,7 @@ import { handle } from '../../server/router';
 export const ORIGIN = 'http://localhost:5173';
 
 function wrapPglite(pg: any): Db {
-  const norm = (r: any) => ({ rows: r.rows, rowCount: r.affectedRows ?? r.rows.length });
+  const norm = (r: any) => ({ rows: r.rows, rowCount: Math.max(r.rows.length, r.affectedRows ?? 0) });
   const client = (c: any): Queryable => ({ query: async (t, p = []) => norm(await c.query(t, p)), exec: async t => { await c.exec(t); } });
   return { ...client(pg), tx: fn => pg.transaction((t: any) => fn(client(t))) } as Db;
 }
