@@ -89,7 +89,8 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
       else if (st === 'menu') {
         if (!blurDone) { blurDone = true; await p.evaluate(() => { window.dispatchEvent(new Event('blur')); }); await p.waitForTimeout(150);
           musicSamples.push({ ...(await p.evaluate(() => window.__proto.musicState?.())), afterBlur: true }); await p.evaluate(() => window.dispatchEvent(new Event('focus'))); }
-        await tid('act-attack').click();
+        // The old menu can still be attached while it fades out (dockMain, 90 ms) under the next screen: short click, then re-check the state
+        await tid('act-attack').click({ timeout: 2000 }).catch(() => {});
       }
       else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
       else if (st === 'mc') { const q = await p.evaluate(() => window.__proto.q); await p.locator(`[data-testid="opt"][data-o="${q.answerId}"]`).first().click(); }
