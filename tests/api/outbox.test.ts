@@ -4,8 +4,8 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { freshDb, parent, snapshot, type TestDb } from './helpers.js';
 import { handle } from '../../server/router.js';
 import { ApiClient } from '../../src/net/api.js';
-import { Outbox, type KV } from '../../src/net/outbox.js';
-import { cloudChild, cloudSender, CLOUD_KEY } from '../../src/net/cloud.js';
+import { Outbox, adoptServer, type KV } from '../../src/net/outbox.js';
+import { cloudChild, cloudSender, CLOUD_KEY, stateFromCloud } from '../../src/net/cloud.js';
 
 let t: TestDb;
 beforeAll(async () => { t = await freshDb(); });
@@ -82,6 +82,21 @@ describe('cloud outbox (§9.2)', () => {
     b.enqueue(full(2, 1, 1)); const r: any = await b.flush();
     expect(r.kind).toBe('conflict'); expect(r.winner).toBe('server'); expect(r.server.state.level).toBe(5);
     expect((await t.db.query(`select count(*)::int as n from save_backups where child_id = $1 and reason = 'conflict_lost'`, [P.kids[0]])).rows[0].n).toBe(1);
+  });
+  it('a second device that loads the cloud save (child picker) sends only its new answers: counters are not doubled', async () => {
+    const P = await parent(t.db, 'outbox5@example.com', { children: 1 });
+    const a = new Outbox(memKV(), net(P.token).api, P.kids[0], 'graph');
+    a.enqueue(full(3, 4, 3)); expect(await a.flush()).toMatchObject({ kind: 'sent', version: 1 });
+    const { api } = net(P.token);
+    const got = await api.call('GET', `/children/${P.kids[0]}/save`);
+    const st = stateFromCloud(got.body, { version: 3, level: 1, exp: 0, inv: {}, consent: { given: false } })!;
+    expect(st.prog.C001.ways.rZE).toMatchObject({ a: 4, c: 3 }); expect(st.prog.C001.ways.sEZ).toMatchObject({ a: 0, c: 0 });
+    expect(st.consent.given).toBe(true); expect(st.log).toEqual([]); expect(st.level).toBe(3);
+    const kvB = memKV(); adoptServer(kvB, P.kids[0], got.body.version, st); const b = new Outbox(kvB, api, P.kids[0], 'graph');
+    st.prog.C001.ways.rZE.a = 6; st.prog.C001.ways.rZE.c = 4;
+    b.enqueue(st); expect(await b.flush()).toMatchObject({ kind: 'sent', version: 2 });   // same base version: no conflict
+    expect((await t.db.query(`select ways from word_mastery where child_id = $1`, [P.kids[0]])).rows[0].ways.rZE).toMatchObject({ a: 6, c: 4 });
+    expect(stateFromCloud({ version: 0, contentVersion: null, state: null, graphs: [], mastery: [] }, {})).toBeNull();
   });
   it('cloud saving is off by default: no build flag or no chosen child -> no sender', () => {
     const kv = memKV();

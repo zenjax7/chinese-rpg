@@ -32,3 +32,32 @@ export function cloudSender(buildFlag: boolean, contentVersion: string, opts: { 
   const kick = () => (running ??= run().finally(() => { running = null; }));
   return async (b: { seq: number; state: string }) => { try { box.enqueue(JSON.parse(b.state)); } catch { return; } await kick(); };
 }
+
+/** GET /children/:id/save body (server/dal/saves.ts loadSave). */
+export interface CloudSave {
+  version: number; contentVersion: string | null; state: Record<string, any> | null;
+  graphs: { graph: string; n?: number; visited: string; cleared: string; lastNode?: string | null }[];
+  mastery: { item: string; seen: boolean; recentMiss: number; ways: Record<string, any> }[];
+}
+const blankWay = () => ({ c: 0, a: 0, box: 0, last: 0, due: 0, wrongRun: 0 });
+/** Turns the cloud save into a full local SaveState on top of `base` (a fresh newState()): the snapshot, `prog` rebuilt from the
+ *  word_mastery rows, graph bitsets the snapshot lacks, an empty answer log (it never leaves a device), and consent marked given
+ *  (the parent consented for the account; speech stays off until the parent turns it on). Returns null when there is no snapshot
+ *  and no mastery yet (a brand-new child: start fresh). */
+export function stateFromCloud(save: CloudSave, base: Record<string, any>): Record<string, any> | null {
+  if (!save.state && !save.mastery.length) return null;
+  const st: Record<string, any> = { ...base, ...(save.state || {}), log: [] };
+  st.consent = { given: true, speech: false, at: Date.now() };
+  const prog: Record<string, any> = {};
+  for (const m of save.mastery) {
+    const ways: Record<string, any> = {};
+    for (const w of ['rZE', 'rEZ', 'sZE', 'sEZ']) ways[w] = { ...blankWay(), ...(m.ways?.[w] || {}) };
+    prog[m.item] = { seen: !!m.seen, recentMiss: m.recentMiss | 0, ways };
+  }
+  st.prog = prog;
+  if (st.world && typeof st.world === 'object') {
+    const graphs = (st.world.graphs ||= {});
+    for (const g of save.graphs) if (!graphs[g.graph]) graphs[g.graph] = { visited: g.visited, walked: g.cleared, revealed: '', crossings: {}, edgeProgress: {}, visits: {} };
+  }
+  return st;
+}

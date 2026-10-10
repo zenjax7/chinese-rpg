@@ -1,0 +1,44 @@
+/* Family-account screens (src/ui/account.ts). Only in the accounts build: this file is imported by account.ts, never by main.ts. */
+button.small { min-height:48px; font-size:18px; padding:6px 14px; border-radius:14px; }
+.acct-title, .acct-pick { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px; background:rgba(5,8,20,.35); }
+.acct-title .logo { font:700 64px var(--title); color:var(--hi); text-shadow:0 4px 0 rgba(0,0,0,.5); text-align:center; }
+.acct-title .logo .big, .acct-pick h1 .big { font:700 72px var(--zh); color:var(--hi); }
+.acct-title .logo .en { font:800 30px var(--title); color:#fff; }
+.acct-buttons { display:flex; flex-direction:column; gap:22px; width:620px; }
+.acct-buttons button { font-size:28px; padding:14px 22px; }
+.acct-pick h1 { font-size:40px; text-align:center; }
+.acct-pick h1 .en { display:block; font:800 30px var(--title); color:#fff; }
+.tiles { display:flex; flex-wrap:wrap; gap:22px; justify-content:center; max-width:1120px; }
+.tile { width:170px; height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; border-radius:24px; padding:8px; }
+.tile .av { font-size:84px; line-height:1; }
+.tile .nick { font:800 24px var(--en); max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tiles.small .tile { width:150px; height:160px; }
+.tiles.small .tile .av { font-size:64px; }
+.notice ul, .dlg-body ul { margin:6px 0 6px 22px; padding:0; }
+.notice li { margin:4px 0; }
+label.check { display:flex; gap:12px; align-items:center; font:800 22px var(--en); margin-top:14px; }
+label.check input { width:32px; height:32px; }
+.pinpad { width:520px; text-align:center; }
+.pindots { display:flex; gap:14px; justify-content:center; margin:10px 0; }
+.pindots i { width:26px; height:26px; border-radius:50%; border:3px solid var(--hi); display:inline-block; }
+.pindots i.opt { border-style:dashed; opacity:.7; }
+.pindots i.on { background:var(--hi); opacity:1; }
+.pinmsg { min-height:30px; font:800 20px var(--en); }
+.pinmsg.bad { color:#ffb4b4; }
+.keys { display:grid; grid-template-columns:repeat(3, 120px); gap:12px; justify-content:center; margin:8px 0 12px; }
+.keys button { font-size:34px; min-height:72px; }
+.pa-kids { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+.pa-kid { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,.08); border-radius:14px; padding:6px 12px; }
+.pa-kid .av { font-size:40px; }
+.pa-kid .nick { flex:1; font-size:24px; }
+.row.left { justify-content:flex-start; margin-bottom:8px; }
+.childform { width:820px; text-align:center; }
+.childform input[type=text] { width:340px; }
+.avatars { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:10px 0; }
+.avatars .av { font-size:44px; width:84px; min-height:84px; padding:0; }
+.avatars .av.sel { outline:5px solid var(--hi); background:var(--gold); }
+.import-hint { display:flex; gap:14px; align-items:center; }
+#netBanner { position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:30; background:#3a2a08; border:2px solid var(--gold);
+  border-radius:14px; padding:6px 16px; font:800 18px var(--en); color:#fff; white-space:nowrap; pointer-events:none; box-shadow:0 4px 0 rgba(0,0,0,.4); }
+#playerChip { position:absolute; right:250px; top:22px; z-index:5; background:var(--navy); border:2px solid rgba(255,255,255,.4); border-radius:16px;
+  padding:6px 14px; font:800 20px var(--en); pointer-events:none; }

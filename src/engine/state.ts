@@ -38,14 +38,20 @@ export interface SaveState {
 export interface QuestState { s: 'active' | 'claimed'; n: number; base?: string[]; at: number; done?: number; }
 import { isGraph } from '../world/mode';
 import { SaveStore, LocalSaveStore, CloudSaveStore, CloudTrigger } from './savestore';
-import { cloudSender } from '../net/cloud';
+import { cloudSender, cloudChild } from '../net/cloud';
 export const KEY_V3 = 'chinese-rpg-proto-v3', KEY_V4 = 'chinese-rpg-proto-v4';
+/** Accounts build only (__CLOUD__): the child profile picked on this device, else null (guest). Each child has its own local
+ *  mirror key, so guest saves and other children's saves on this device are never touched. */
+export const CHILD_ID: string | null = __CLOUD__ ? cloudChild() : null;
+export const childKey = (id: string) => `${KEY_V4}:child:${id}`;
 /** Classic keeps the v3 key untouched; graph mode has its own v4 save, migrated from v3 on first entry (the v3 save stays). */
-const KEY = isGraph() ? KEY_V4 : KEY_V3;
+const KEY = CHILD_ID ? childKey(CHILD_ID) : isGraph() ? KEY_V4 : KEY_V3;
 /** Save storage (architecture §9): classic = LocalSaveStore exactly as before; graph mode = the CloudSaveStore stub over the same local mirror. */
 /** Cloud saving stays off unless the build sets VITE_CLOUD_SAVE=1 and a parent picked a child on this device (src/net/cloud.ts). */
 const CLOUD_BUILD = (import.meta as any).env?.VITE_CLOUD_SAVE === '1';
-export const store: SaveStore = isGraph() ? new CloudSaveStore(new LocalSaveStore(), cloudSender(CLOUD_BUILD, 'graph')) : new LocalSaveStore();
+export const store: SaveStore = isGraph() ? new CloudSaveStore(new LocalSaveStore(), __CLOUD__
+  ? cloudSender(CLOUD_BUILD, 'graph', { onResult: r => window.dispatchEvent(new CustomEvent('cloudsave:result', { detail: r })) })   // → offline banner
+  : cloudSender(CLOUD_BUILD, 'graph')) : new LocalSaveStore();
 /** A §9.1 cloud trigger (quest given / completed, node or graph change, boss, shortcut, inn, Feather, defeat). No-op in classic mode. */
 export function cloudTrigger(t: CloudTrigger, detail?: string) { store.trigger(t, detail); }
 

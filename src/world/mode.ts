@@ -4,6 +4,8 @@ export type WorldMode = 'classic' | 'graph';
 export const MODE_KEY = 'chinese-rpg-world-mode';
 function read(): WorldMode {
   try {
+    // Accounts build only: a cloud child profile always plays the graph world (cloud saves need progress/0.3, decisions.md).
+    if (__CLOUD__ && /"childId":"[0-9a-f-]{36}"/i.test(localStorage.getItem('chinese-rpg-cloud') || '')) return 'graph';   // = cloudChild() in src/net/cloud.ts
     const q = new URLSearchParams(location.search).get('world');
     if (q === 'graph' || q === 'classic') { localStorage.setItem(MODE_KEY, q); return q; }
     return localStorage.getItem(MODE_KEY) === 'graph' ? 'graph' : 'classic';
