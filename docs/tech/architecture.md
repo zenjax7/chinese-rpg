@@ -4,6 +4,8 @@
 **Owner:** GameDev. **Graph spec (§6):** a shared proposal. Desy is writing `world-graph.md`, the JSON Schemas, and example data for realm 1 and a 3-level dungeon on top of it.
 **Scope:** parent accounts with child profiles, cloud saves, the world as a node graph, and how content and assets ship.
 
+> **Revision 4 (proposed 2026-10-10, pending Jack's approval): level content moves into the DB, plus a repo export.** Maps, events, quests and dialogue per level would be edited in `/editor` and stored in Neon (`levels`, `level_revisions`), and GameDev's box exports them to `docs/data/levels/`. That revises "the DB holds player data only" below for **level content only**; art, audio and the global tables stay static. See [§1.4](#14-revision-4-proposed-level-content-in-the-db-plus-a-repo-export) and [level-editor.md](level-editor.md).
+
 **Revision 3 in one paragraph.** The database now holds **player data only**. Art, music, animation, and the graph and content JSON all ship **as static files with the frontend build** on Vercel's CDN. They get content-hashed names, per-graph manifests, a service worker cache, and `immutable` headers. There are no content tables, no storage bucket, no publish-to-storage job, and no content-pointer endpoint any more. Sign-in is **Google only, through Auth.js**, with **database sessions** in an httpOnly cookie. Without row-level security, per-parent access is enforced by **one data-access layer** in the API. Every piece fits a free tier (Vercel Hobby, Neon Free, a Google OAuth client). §13 shows where those tiers break: **Neon compute hours run out first, at roughly 700–1,000 monthly active players.**
 
 ## Contents
@@ -53,7 +55,7 @@
 | D2 | A child's own email link at 13+ is designed, not built | 2026-10-02 | §5.1.1 |
 | D3 | Graph scale: about 15 nodes per graph early, up to about 200 later. Maze-like. One graph per dungeon level, linked by stairs or portals. Towns, villages and inns can sit anywhere. | 2026-10-02 | §6 |
 | D4 | **Budget is $0 until ads are integrated.** Every piece must fit a free tier. | 2026-10-02 | §3, §13 |
-| D5 | **Art, music and animation never go in the DB or object storage.** They ship as static assets with the frontend on Vercel's CDN. Graph and content JSON is static too, versioned with the build. **The DB holds player data only.** | 2026-10-02 | §7, §10 |
+| D5 | **Art, music and animation never go in the DB or object storage.** They ship as static assets with the frontend on Vercel's CDN. Graph and content JSON is static too, versioned with the build. **The DB holds player data only.** *(2026-10-10: proposed revision for level content, §1.4)* | 2026-10-02 | §7, §10 |
 | D6 | **Neon Postgres (Free) + Vercel Functions + Auth.js with Google.** Supabase is removed completely. | 2026-10-02 | §3, §5, §7, §8 |
 | D7 | Non-commercial, on **Vercel Hobby**. **Future:** ads would force Vercel Pro or a move to Cloudflare Pages, and kid-directed ads must be **COPPA-compliant contextual ads only**. | 2026-10-02 | §3.4, §5.9 |
 | D8 | **No custom domain** at first (`*.vercel.app`), so no email-sending domain and no DNS | 2026-10-02 | §5.4, §17 |
@@ -63,7 +65,7 @@
 | D12 | **Google sign-in only** | 2026-10-02 | §5.2 |
 | D13 | **On a save conflict, the save with more progress wins**, and the other is kept as a backup copy | 2026-10-02 | §9.4 |
 | D14 | **Legal review is deferred** until the game opens to the public. The COPPA design principles stay. | 2026-10-02 | §5.6 |
-| D15 | §6 stays the shared graph proposal. **Graph data is static build content, not DB rows.** Only `graph_progress` (and the position fields on `saves`) live in the DB. | 2026-10-02 | §6, §7 |
+| D15 | §6 stays the shared graph proposal. **Graph data is static build content, not DB rows.** Only `graph_progress` (and the position fields on `saves`) live in the DB. *(2026-10-10: proposed revision, levels in the DB, §1.4)* | 2026-10-02 | §6, §7 |
 | D16 | **Stack approved and final:** Vercel + Neon + Auth.js (Google) | 2026-10-02 | whole doc |
 | D17 | **Monetization is deferred until the game is complete.** Ads are future work. | 2026-10-02 | §3.4, §5.9, §16 |
 | D18 | Add **dialogue-scene and quest data hooks** (design only). Desy owns story, dialogue and quest data. Arty owns portraits. | 2026-10-02 | §11 |
@@ -74,6 +76,21 @@
 - **Replaced by:** a build step that emits hashed assets and `manifests/<graphId>.<hash>.json` (§10), a **`content_version` baked into the build** and recorded on every save, so old saves can be migrated (§10.2), Auth.js tables plus a `parents` extension (§7), and a DAL with tests instead of RLS (§8).
 - **Renamed:** `save_history` → `save_backups`.
 - **Added:** §11, dialogue scenes and quest data hooks (design only, schemas proposed for Desy).
+
+### 1.4 Revision 4 (proposed): level content in the DB plus a repo export
+
+**Status: proposed 2026-10-10, pending Jack's approval.** The full design is [level-editor.md](level-editor.md).
+
+- **What changes:** D5 and D15 said graph and content JSON ship as static build files, and the DB holds player data only. For **level content** (per-level maps, events, quest definitions and variants, and dialogue scenes, as `level/0.1` JSON), that becomes:
+  - **the DB is the live source.** Tables `levels` (draft + published), append-only `level_revisions`, `content_releases`, `editors` and `editor_tokens` (level-editor §3). Estimated well under 100 MB.
+  - **The game reads published levels** from `GET /api/v1/levels/index` and `GET /api/v1/levels/:id?v=N`, which are CDN-cached and immutable per version, with an IndexedDB cache and the last export bundled as the offline fallback (level-editor §7).
+  - **GameDev's box exports** every published release to `docs/data/levels/` with gh, so git keeps the history and a backup, and CI and the sim read it. **The editor and backend have no GitHub write access**, and the export token lives only on that box (level-editor §9).
+- **What doesn't change:**
+  - art, audio, animation, portraits and manifests stay static and content-hashed (D5);
+  - the global tables (curriculum, enemies, economy, items, `world_rules`) stay in the repo and ship with the build;
+  - player data, the DAL and Auth.js stay as they are.
+- **Privacy:** the editor uses its own Postgres role with no grant on any player table, and a separate `EditorCtx` (level-editor §4).
+- **Cost:** the public level routes are mostly CDN hits. Neon compute stays the first limit (§13).
 
 ---
 
