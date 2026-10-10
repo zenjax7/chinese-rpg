@@ -761,6 +761,21 @@
    "node": "treasure_1",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q9_second_wind"
+   },
+   "do": [
+    {
+     "dialogue": "demon_castle_2.treasure_1.step_q9_second_wind"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -769,7 +784,7 @@
    ]
   },
   {
-   "id": "treasure_1.2",
+   "id": "treasure_1.3",
    "node": "treasure_1",
    "on": "enter",
    "once": false,
@@ -1061,6 +1076,12 @@
    {
     "speaker": "traveller",
     "en": "(quest step for q9_dragonlings: scene from data/dialogue)"
+   }
+  ],
+  "demon_castle_2.treasure_1.step_q9_second_wind": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q9_second_wind: scene from data/dialogue)"
    }
   ],
   "demon_castle_2.story_1": [

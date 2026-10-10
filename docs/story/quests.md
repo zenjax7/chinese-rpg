@@ -59,7 +59,7 @@ These are the only two step types with behaviour beyond "an event happened". Bot
 2. The step completes when the party enters the `to` node. `to` is a `ref` (`<graph>/<node>`) or a zone + town/village position.
 3. The escortee always stays with the party:
    - After a **defeat** it is waiting at the last inn used, where the party wakes up.
-   - **Return Feather** and **inn warp** take it along.
+   - The **Return Feather** takes it along (v3.9 removed the inn warp).
    - Nothing resets, and the kid just walks on.
 4. If the kid drops the quest, the escortee goes back to the giver.
 5. **Save:** `obj.<stepId>` is 0 until done, then 1. Whether someone is following is derived from the current step, so nothing else is stored.

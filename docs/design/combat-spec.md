@@ -1,6 +1,6 @@
 # Combat and Progression Spec (v3)
 
-Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7). **v3.8 update 2026-10-02 (PT, Jack):** every map is a graph (world, realm overworlds, dungeon levels); random battles happen on edges with safe edges near towns, inns and boss approaches; 7 kinds of arrival event; locations become zones on the graphs; inn warp; beeline pacing within +3–6% of v3.7 for savers (§12, `world-graph.md`). **v3.9 update 2026-10-02 (PT), Jack:** the free inn warp is removed. The Return Feather (now 2 × G) is the only fast way back to a town: to the last inn or any visited town/village, anywhere outside battle and the boss room, sold in town and village shops only, 2 at the start. Town/village density goes from about 1 per 20 nodes (realm 1) to 1 per 60 (realm 9). Inns are within 3 hops in realms 1–3. Fog of war is approved. Node x/y are normalised. The tutorial is a village event. Story alignment: companion `xiaolong`, panda innkeepers, D1 density in realm 1. Quest hooks are reconciled with the v2 quests (§12.1). **v3.9.1 update 2026-10-02 (PT), Director's defaults:** a free Return Feather in the realm-boss chests of realms 3, 6 and 8 (no shop nudge). Town/village density is ceil(nodes / ramp 20…60), giving 1,1,2,2,2,3,3,3,4 (§12.2).
+Project: kids' Chinese-learning browser RPG (Phaser 4), for players aged 10–12. Revised 2026-09-28 (PT) after Jack's v2 review; v3.2 update 2026-09-29 (PT): new-item and Tired caps aligned with Jack's caps as used in the prototype build; no pinyin in the game UI (audio-only feedback); bilingual battle commands; half-up rounding in the sim. **v3.3 update 2026-10-01 (PT):** purchasable spells (§6.7) and town quest boards (§7.11), Jack's request; details in `/workspace/desy/spells.md`. **v3.4 update 2026-10-02 (PT):** casting a spell is a free action (no question, no fizzle) with fixed spell power that falls off at later tiers, a cast cap (1 per battle, 2 per boss, after 3 correct answers), expensive map-only MP potions, and no Magic Ward (§6.7). **v3.5 update 2026-10-02 (PT):** no cast caps (MP is the only limit; spell MP costs ×1.25), Magic Ward removed, Super Blizzard's Freeze lasts 1 turn and skips bosses, 2–3 s skippable cast animations, and MP-saving hints (§6.7). **v3.6 update 2026-10-02 (PT, Jack):** no MP regen on correct answers (MP comes back only at the inn, on waking after a defeat, or from map-only Mana Tea); boss HP raised so that even a kid who spends a full MP bar on spells needs about 20 correct answers per boss, with boss ATK × 0.8 to keep defeats flat; all MP hints removed (§2.3, §6.4, §6.7, §8.2). **v3.7 update 2026-10-02 (PT, Jack):** location bosses retuned to about 15 correct answers (still with a full MP bar spent on spells); realm bosses stay at about 20; boss ATK × 0.8 kept (§2.3, §6.7). **v3.8 update 2026-10-02 (PT, Jack):** every map is a graph (world, realm overworlds, dungeon levels); random battles happen on edges with safe edges near towns, inns and boss approaches; 7 kinds of arrival event; locations become zones on the graphs; inn warp; beeline pacing within +3–6% of v3.7 for savers (§12, `world-graph.md`). **v3.9 update 2026-10-02 (PT), Jack:** the free inn warp is removed. The Return Feather (now 2 × G) is the only fast way back to a town: to the last inn or any visited town/village, anywhere outside battle and the boss room, sold in town and village shops only, 2 at the start. Town/village density goes from about 1 per 20 nodes (realm 1) to 1 per 60 (realm 9). Inns are within 3 hops in realms 1–3. Fog of war is approved. Node x/y are normalised. The tutorial is a village event. Story alignment: companion `xiaolong`, panda innkeepers, D1 density in realm 1. Quest hooks are reconciled with the v2 quests (§12.1). **v3.9.1 update 2026-10-02 (PT), Director's defaults:** a free Return Feather in the realm-boss chests of realms 3, 6 and 8 (no shop nudge). Town/village density is ceil(nodes / ramp 20…60), giving 1,1,2,2,2,3,3,3,4 (§12.2). **v3.9.2 update 2026-10-03 (PT), Jack:** realm links with unlock conditions and danger-0 exit edges to the world map; the `portal` arrival outcome is dropped (6 outcomes); the encounter RNG is FNV-1a 32-bit → mulberry32 with test vectors shared by game, sim and validator; Feather destinations are the last inn used plus visited towns and villages only; game content files for realms 3–9 (§12.3). **v3.9.3 (2026-10-09 PT):** dead ends are a shape, not a node kind; q9_second_wind step 2 fixed (§12.4).
 Previous versions: `combat-spec-v2.md` and `combat-spec-v1.md` (both kept unchanged).
 Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1,051 items, 9 realms, 20 locations, 60-item slice), `enemies.json` (50-enemy roster), and `chinese-rpg-design-memo.md`.
 
@@ -65,6 +65,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 31 | **World graph (v3.8, Jack 2026-10-02 PT).** Every map is a graph; random battles happen on edges (danger × steps, safe near towns, inns, boss approaches and on the way home after a boss clear); 7 arrival outcomes; locations become zones on the graphs; patrol rule at the approach inn; inn warp to towns. Pacing for a beeline player stays within +3–6% of v3.7 for savers. | §12 |
 | 32 | **No free warp; Feather as a budget (v3.9, Jack 2026-10-02 PT).** The inn warp is removed. The Return Feather costs 2 × G (2 kills at every tier). It flies to the last inn or any visited town/village, from anywhere outside battle and the boss room. It is sold in town and village item shops (not inns), carry 3, 2 at the start. Towns + villages per realm = max(1, round(nodes / (20 + 5(t−1)))), i.e. 1,1,1,2,2,2,3,3,3. `maxHopsToInn` is 3 in realms 1–3 and 5 later. Fog of war: visited nodes plus "?" neighbours, state in player progress. Sim: time and spells within 1% of v3.8; 50% savers on beeline +2.5 to +3.8 defeats per campaign. | §7.3, §12.1 |
 | 33 | **Realm-boss Feathers and density ramp (v3.9.1, Director's defaults 2026-10-02 23:15 PT).** The realm-boss chests of realms 3, 6 and 8 hold a free Return Feather. There is no shop nudge or tip. Towns + villages = max(1, ceil(nodes / (20 + 5(t−1)))) = 1,1,2,2,2,3,3,3,4. 3 villages were added without changing any existing id. Sim vs v3.9: time ±0.6% (spender explorers +2%); defeats −0.1 to −0.5 for 50% savers. | §7.3, §12.2 |
+| 34 | **Realm links, exits, seed hash, Feather wording, realm 3–9 content (v3.9.2, Jack 2026-10-03 PT).** `world.json` `realms[]` links the 9 realms in order; realm *N* opens when realm *N*−1's realm boss is defeated. Every realm overworld has a danger-0 `exit` edge from its entry settlement to the world map. No `portal` arrival outcome (6 outcomes). Rolls are `mulberry32(fnv1a32(key))` with 3 shared test vectors. Feather destinations are the last inn used and every town or village entered; other inns don't count. Realms 3–9 get game content files. | §7.3, §12, §12.3 |
 | – | Scripted path fights per location go from 6 to 8, because pools are about 1.75× larger. | §5, §7.4 |
 
 Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by default", "no MP regeneration" (back in v3.6, row 26), the open questions Jack answered, and the unlimited Queen Bee summon.
@@ -668,7 +669,7 @@ The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, beca
 | big_honey | Big Honey | 大蜂蜜 | +70% max HP | yes (uses the turn, no question) | 2 × G | no limit (shares the 3 per battle belt) | shop from tier 5; chests |
 | mana_tea | Mana Tea | 魔力茶 | +50% max MP | no: map only (v3.4) | 6 × G (v3.4; was 1 × G) | no limit | shop; normal/elite chest; words quest |
 | big_mana_tea | Big Mana Tea | 大魔力茶 | refills MP to full | no: map only | 15 × G | no limit | shop from town 5; boss chests |
-| return_feather | Return Feather | 回城羽毛 | Fly to the last inn you used or any visited town/village; anywhere on the map, not in battle or the boss room (v3.9) | no | 2 × G | 3 | town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1) |
+| return_feather | Return Feather | 回城羽毛 | Fly to the last inn you used or any town/village you have entered; other inns don't count (v3.9.2 wording). Anywhere on the map, not in battle or the boss room (v3.9) | no | 2 × G | 3 | town/village item shop (not inns); normal/elite chest (5%); 2 free in the tutorial; 1 in the realm-boss chest of realms 3, 6, 8 (v3.9.1) |
 
 ### 6.5 How gear is earned (no pay-to-win)
 
@@ -1604,18 +1605,18 @@ Also in v3.2: **no pinyin anywhere in the game UI**, with audio-only answer feed
 
 ---
 
-## 12. World graph (v3.8, updated v3.9)
+## 12. World graph (v3.8, updated v3.9–v3.9.3)
 
 v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/world-graph.md`); data in `data/world/` (repo `docs/data/world/`); sim in `build/world/`. This section summarises it and replaces the linear path of §7.10 (inn, 4 fights, inn, 4 fights, inn, gate, boss) as the map model. The battle, learning and economy rules of §2–§7 are unchanged.
 
 **Model.**
 - **Graphs:**
-  - 1 world graph and 9 realm overworld graphs.
+  - 1 world graph and 9 realm overworld graphs. The world graph links the realms in order; realm *N* opens when realm *N*−1's realm boss is defeated, and each realm has a danger-0 exit edge back to the world map (v3.9.2, §12.3).
   - 26 dungeon levels in 12 dungeons, one graph per level, joined by two-way stairs or portals.
   - Towns and villages are nodes that open the town screen.
 - **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster, elite and boss. Zones are placed on the graphs, and one zone can span several levels.
 - **Battles on edges:** random battles happen on edges, with `danger` 0–3 and `steps` encounter rolls per edge.
-- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 7 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, portal, story and treasure. Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, edge, crossing and step, so reloading never re-rolls.
+- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 6 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, story and treasure (v3.8–v3.9.1 also listed `portal`; dropped in v3.9.2 because portals are edges). Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, graph, edge, crossing and step (FNV-1a 32-bit → mulberry32, §12.3), so reloading never re-rolls.
 
 **Encounter rules** (`data/world/world_rules.json`):
 
@@ -1635,7 +1636,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 | fog of war (v3.9) | visited nodes + "?" neighbours; towns, villages and bosses are landmarks; state in player progress (`progress.schema.json`) |
 | authoring target | each zone's shortest route expects 6.5–9.5 battles (v3.7: 8 path fights) |
 
-**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns; §12.1.)
+**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns and villages; §12.1, §12.3.)
 
 **Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 28–35% dead ends, 0–2 villages (v3.9), 2–21 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
 
@@ -1668,7 +1669,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 
 - **Return Feather** (`world_rules.returnFeather`):
   - Costs 2 × G: 12, 24, 36, 54, 72, 90, 108, 126, 144 gold in realms 1–9, which is 2 kills at every tier.
-  - Destinations: the last inn or any visited town/village. Usable anywhere outside battle and the boss room.
+  - Destinations: the last inn used or any visited town/village (exact wording in §12.3). Usable anywhere outside battle and the boss room.
   - Sold in town and village item shops (not inns). Carry 3, start 2.
   - A typical beeline kid buys 1–2 per realm; a no-spell saver buys 0.5–1.
   - The 2 free Feathers are a small conflict with budgeting: one free round trip, which delays the first purchase by about one realm.
@@ -1702,3 +1703,28 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - Defeats: 50% savers on beeline −0.1 to −0.5 (51.5 / 51.7), spenders −0.2.
   - Spells on beeline unchanged (75% saver 4.9). Explorers +0.6–0.7 spells.
   - Feathers bought fall by about 2–2.5 per campaign, because the boss Feathers replace purchases.
+
+### 12.3 v3.9.2 changes (Jack 2026-10-03 PT)
+
+- **Realm links and unlocks** (`world.json` `realms[]`, one entry per realm: `realm, node, graph, entry, enterEdge, exitEdge, linkEdge, unlock, realmBossZone, next`):
+  - Realm 1 is open from the start (`unlock: null`, no link edge).
+  - Realm *N* (2–9) opens when realm *N*−1's realm-boss zone is defeated: `unlock: {bossDefeated: <zone>}`. The same condition sits on the world path `w{N−1}{N}` (danger 0). The zones are `warren`, `great_hive`, `night_bazaar`, `goblin_school`, `hydra_s_lair`, `moonlit_graveyard`, `griffin_summit` and `grand_colosseum` (unlocking realms 2–9); realm 9's realm boss is `throne_hall`.
+  - The world portal `x_realm_N` leads from the realm node to the realm's entry (`realm_1/village`, `realm_N/entry_town`).
+- **Exit edges to the world map:** each realm overworld has one `exit` edge from its entry settlement to its world node, danger 0, so leaving never rolls a battle: `exit_village` in realm 1 and `exit_entry_town` in realms 2–9. Each one is the graph's last edge `idx`, so no saved bitset moved. Realm 1 keeps `x_w_throne` (open once `warren` is beaten).
+- **Seed hash** (`world_rules.seed`, matching `src/world/engine.ts`):
+  - roll = first output of mulberry32 seeded with FNV-1a 32-bit of the key (offset 0x811c9dc5, prime 0x01000193, XOR each UTF-16 code unit then multiply mod 2^32), as uint32 / 2^32.
+  - Edge key `saveSeed|graphId|edgeId|crossing|step` (`crossing` = earlier crossings of that edge, from 0; `step` from 0). A battle starts when roll < chance.
+  - Event key `saveSeed|graphId|nodeId|visit` (`visit` counts this arrival, from 1); weighted pick = roll × total weight, walked down the eligible options in order.
+  - Test vectors: `12345|realm_1|e1|0|0` → 199679387, 0.09237345564179122; `12345|realm_2|e3|1|2` → 1855283427, 0.2770371865481138; `12345|realm_1|village|0` → 4123396911, 0.5738876694813371. The game, the data and the validator agree on all three.
+- **Feather destinations** (`returnFeather.destinationRule`): exactly two kinds. The **last inn used** is the one node where the kid last rested (a standalone or campfire inn, or a town's or village's inn); it changes at every rest. **Visited towns and villages** are every town or village node ever entered, in any realm. **Other inns never count**, even if visited. The node you stand on is not offered.
+- **Arrival outcomes:** 6; `portal` is gone (no event used it).
+- **Realm 3–9 content:** `docs/data/world/content/realm_3.json` … `realm_9.json` (schema `realm_content/0.1`, listed in `index.json` `content`) hold enemies, locations (one per zone), word pools and items in the same shapes as GameDev's realm 1–2 tables. Boss HP/ATK come from `data/enemies/boss_hp.csv`, MC options and review slots from `data/balance/realm_location_difficulty.csv`, at most 3 new words per battle. Every zone has an explicit roster. Details in `world-graph.md` §14.6.
+- **Escort and words quest steps:** runtime rules are in `docs/story/quests.md` §2a (escortees follow the party, are never in battle, can't be harmed and wait at the last inn after a defeat; `words` counts correct battle answers from a pool, n defaults to 10).
+- No balance numbers changed, so the v3.9.1 sim stands.
+
+### 12.4 v3.9.3 changes (2026-10-09 PT)
+
+- **Dead ends** are a shape, not a node kind: a node with one edge. The generated `deadend_k` spots are waypoints (a few are inns or mini-bosses) and do exactly what their events say; a dead end with no event is an empty end, and the game adds nothing at run time (`world-graph.md` §2).
+- **q9_second_wind step 2** is the `treasure` event at `demon_castle_2/treasure_1`.
+- **Gear for tiers 1–9** is listed in `docs/data/items/gear_items.csv` (same prices and stats as `gear.csv`; no re-price, no sim rerun).
+- **Answer options** are unchanged: §5 and `realm_difficulty.csv` (e.g. 4 options in realm 3, with 1 fewer on a word's first-ever ask, §3.4).
