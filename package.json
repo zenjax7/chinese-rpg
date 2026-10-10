@@ -15,7 +15,7 @@
     "validate:world": "python3 tools/world/validate_all.py",
     "test:world": "node tests/world.mjs",
     "test:api": "tsc -p tsconfig.server.json && vitest run -c vitest.api.config.ts",
-    "test:api:pg": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-postgresql://rpg:rpg_local_dev@127.0.0.1:5432/rpg_test} vitest run -c vitest.api.config.ts",
+    "test:api:pg": "node -e \"if(!process.env.TEST_DATABASE_URL){console.error('Set TEST_DATABASE_URL to a throwaway local Postgres database');process.exit(1)}\" && vitest run -c vitest.api.config.ts",
     "db:migrate": "node server/migrate.mjs",
     "db:status": "node server/migrate.mjs --status"
   },

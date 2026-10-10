@@ -1,6 +1,7 @@
 /** Save storage behind one interface (architecture §9). LocalSaveStore = today's localStorage mirror (classic mode uses only this).
- *  CloudSaveStore = the §9.1 cloud layer as a STUB: it keeps the local mirror as the source of truth and records when a push would
- *  happen (the §9.1 trigger table), but sends nothing. The database / API layer is a separate task; `push` is the seam for it. */
+ *  CloudSaveStore = the §9.1 cloud layer: it keeps the local mirror as the source of truth and pushes on the §9.1 triggers. Without a
+ *  `send` function (the default: cloud saving off) it sends nothing and only records what it would push; with one (src/net/cloud.ts,
+ *  VITE_CLOUD_SAVE=1 + a chosen child) the push goes into the outbox (src/net/outbox.ts) and on to PUT /api/v1/children/:id/save. */
 export interface SaveStore {
   readonly kind: 'local' | 'cloud';
   load(key: string): string | null;
