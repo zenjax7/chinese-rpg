@@ -55,6 +55,11 @@ Dates are 2026, Pacific time.
 - **Oct 9** — v3.9.2: each realm is left through its own exit edge (kind exit, danger 0) from its entry town or village; there is no World-map button in other towns. Realm links (`w12`…`w89`) and unlock conditions come from `world.json` `realms[]`.
 - **Oct 9** — v3.9.2: the `portal` event outcome is gone (a portal is a node kind and an edge, not an outcome).
 - **Oct 9** — v3.9.2: escort steps complete on entering the target node; words steps count correct battle answers to the pool (practice and preview don't count; n defaults to 10). A dropped quest goes back to its giver. [quests.md §2a](story/quests.md#2a-runtime-rules-for-escort-and-words-for-gamedev)
+- **Oct 9** — v3.9.3: a dead end is a shape (a node with one edge), not a node kind. It does what its kind and events say; with no event it is an empty end (no battle, item or line) and the game adds nothing at run time. [world-graph.md §2](design/world-graph.md#2-node-kinds)
+- **Oct 9** — v3.9.3: a quest pickup step must name its node (`ref: graph/node`); `q9_second_wind` step 2 is the dead-end chest `demon_castle_2/treasure_1`. v3.9.4 adds a quest-step story event there (fires first while the quest is active; the chest is `treasure_1.2`). [quests.md](story/quests.md)
+- **Oct 9** — v3.9.3 gear: all 81 pieces (tiers 1–9 × weapon/armor/shield × common/fine/heroic) come from `data/items/gear_items.csv`, prices unchanged. Town N's blacksmith sells the tier-N common set; in graph mode a village sells its realm town's tier (pending Desy: world-graph §2 says villages have no smith). Chest fine gear uses the realm's tier. Generic "Heroic X" names and blank perks are placeholders. [tech/deploy.md](tech/deploy.md)
+- **Oct 9** — Realm 3 battles showing 3 answer options instead of 4 is expected (the first-ask rule); no change. [combat-spec.md](design/combat-spec.md)
+- **Oct 9** — v3.9.4: Desy's world tools are back in `docs/tech/tools/world/` with repo paths, and CI checks that they reproduce `docs/data/world/` byte for byte. The sim and doc tools (tables.py, world_runner.py, build_world_sim.py, write_world_doc.py) still point at /workspace/desy, as Desy asked. [tech/deploy.md](tech/deploy.md)
 
 ## Accounts, saves and hosting (architecture D1–D18)
 
