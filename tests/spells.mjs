@@ -130,6 +130,8 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
         check(c.correct === 0 && await tid('spell-small_fireball').isEnabled(), `spellbook: open and castable on turn 1 (round ${c.round}, ${c.correct} right answers)`);
         const bookTxt = await tid('spellbook').innerText(); check(!/×\s*\d/.test(bookTxt) && !(await p.locator('[data-testid^="casts-"]').count()), 'spellbook: no ×N cast counts (v3.6+)');
         await shot('spellbook');
+        const ui = await p.evaluate(() => (window.__proto.foeLayout || []).map(f => f.uiDepth));
+        check(ui.length > 0 && ui.every(d => d > 10), `enemy name + HP bar draw above every spell FX layer (depth ${ui.join(',')} > 10)`);
       }
       if (await tid('spell-small_fireball').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('small_fireball', { skip: casts.length > 0, midShot: !casts.length && shots ? shots + 'spell-cast.png' : '' })) }); return true; }
       if (!gateChecked) { gateChecked = true;

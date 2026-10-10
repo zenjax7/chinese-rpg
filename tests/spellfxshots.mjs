@@ -27,6 +27,11 @@ for (const w of want) {
   const tg = p.locator(TGT); if (await tg.count()) await tg.first().click();
   await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 }); await p.waitForTimeout(w.ms);
   if (process.env.BURST) for (let i = 0; i < +process.env.BURST; i++) { await p.screenshot({ path: `${OUT}${w.id}-b${i}.png` }); }
+  if (w.id === 'tornado') {   // Arty, Oct 9: the funnel must spawn at the first target, not in front of the caster
+    const sp = await p.evaluate(() => window.__proto.tornadoSpawn); const ok = sp && Math.abs(sp.x - sp.firstTargetX) < 120 && sp.x - sp.heroX > 200;
+    console.log(ok ? 'ok' : 'FAIL', 'tornado spawns at the first target', JSON.stringify(sp)); if (!ok) process.exitCode = 1; }
+  if (process.env.UI_CHECK) { const ui = await p.evaluate(() => (window.__proto.foeLayout || []).map(f => f.uiDepth)); const ok = ui.every(d => d > 10);
+    console.log(ok ? 'ok' : 'FAIL', 'enemy name/HP depth above FX', ui.join(',')); if (!ok) process.exitCode = 1; }
   const path = `${OUT}${w.id}.png`; await p.screenshot({ path }); console.log('saved', path, JSON.stringify(await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0])));
   await p.waitForFunction(() => window.__proto.lastSpell?.done, null, { timeout: 8000 }).catch(() => {});
   await p.waitForTimeout(300); await p.screenshot({ path: `${OUT}${w.id}-after.png` });

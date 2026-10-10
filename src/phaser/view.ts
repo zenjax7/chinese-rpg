@@ -19,6 +19,9 @@ const ZH_FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei","Noto Sans CJK S
 const NUM_FONT = '"Fredoka","Nunito",sans-serif';
 const HEAD_ANCHOR = 0.08;   // default enemy headAnchor (fraction of the sprite height from its top)
 const TXT_RES = 2;   // text textures at 2x so they stay sharp under the 1.5 camera zoom
+/** Enemy name, HP bar, intent mark and target arrow sit ABOVE every spell FX layer (spellfx.ts uses depth ≤ 10; the screen flash is 20),
+ *  so overhead spells (lightning cloud and bolt, tornado, meteor) never cover them. Damage numbers float above these (11). */
+export const FOE_UI_DEPTH = 10.5;
 type Body = Phaser.GameObjects.Sprite | Phaser.GameObjects.Text;
 interface FoeView { body: Body; blob: Phaser.GameObjects.Ellipse; bar: Phaser.GameObjects.Graphics; label: Phaser.GameObjects.Text; data: ViewEnemy;
   x: number; y: number; h: number; sprite: string | null; ghost: number; shown: number; impactAt: number; mark?: Phaser.GameObjects.Text; orb?: Phaser.GameObjects.Arc; status?: StatusView; }
@@ -82,7 +85,7 @@ class MainScene extends Phaser.Scene {
     this.hero = this.makeBody('hero', '🧙', HERO_X, BASE_Y, SIZE.hero, null).setDepth(4);
     this.shieldBubble = this.add.ellipse(HERO_X, BASE_Y - SIZE.hero * 0.42, SIZE.hero * 0.72, SIZE.hero * 0.95, 0x6dd5fa, 0.12).setStrokeStyle(4, 0x9be7ff, 0.9).setDepth(5).setVisible(false);
     this.targetRing = this.add.ellipse(0, 0, 150, 34, 0xffffff, 0.22).setStrokeStyle(3, 0xffffff, 0.8).setDepth(2).setVisible(false);
-    this.targetMark = this.add.text(0, 0, '▼', { fontSize: '40px', color: '#ffe27a', stroke: '#000', strokeThickness: 6, fontFamily: NUM_FONT }).setOrigin(0.5, 1).setResolution(TXT_RES).setDepth(9).setVisible(false);
+    this.targetMark = this.add.text(0, 0, '▼', { fontSize: '40px', color: '#ffe27a', stroke: '#000', strokeThickness: 6, fontFamily: NUM_FONT }).setOrigin(0.5, 1).setResolution(TXT_RES).setDepth(FOE_UI_DEPTH).setVisible(false);
     this.tweens.add({ targets: this.comp, y: '-=5', duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     this.tweens.add({ targets: this.shieldBubble, alpha: 0.6, duration: 600, yoyo: true, repeat: -1 });
     ready(this);
@@ -143,17 +146,17 @@ class MainScene extends Phaser.Scene {
       const sprite = this.has(d.sprite) ? d.sprite! : null;
       const blob = this.add.ellipse(x, y, h * 0.62, h * 0.14, 0x000000, 0.28).setDepth(2);
       const body = this.makeBody(sprite, d.emoji, x, y, h, d.tint).setDepth(4);
-      const f: FoeView = { body, blob, bar: this.add.graphics().setDepth(8), label: null as any, data: { ...d }, x, y, h, sprite, ghost: d.hp, shown: d.hp, impactAt: 0 };
+      const f: FoeView = { body, blob, bar: this.add.graphics().setDepth(FOE_UI_DEPTH), label: null as any, data: { ...d }, x, y, h, sprite, ghost: d.hp, shown: d.hp, impactAt: 0 };
       const top = this.foeTop(f);
       // tall bosses: the name would sit under the spell banner, so put it beside the HP bar instead
       const inline = top - 26 - 40 < 160;
       f.label = this.add.text(inline ? x - 75 : x, inline ? top - 9 : top - 26, d.name, { fontSize: '28px', fontFamily: ZH_FONT, color: '#fff', fontStyle: 'bold', stroke: '#000', strokeThickness: 6, padding: { x: 4, y: 6 } })
-        .setOrigin(inline ? 1 : 0.5, inline ? 0.5 : 1).setResolution(TXT_RES).setDepth(8);
+        .setOrigin(inline ? 1 : 0.5, inline ? 0.5 : 1).setResolution(TXT_RES).setDepth(FOE_UI_DEPTH);
       if (!sprite) this.tweens.add({ targets: body, y: body.y - 6, duration: 700 + i * 120, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
       this.foes.push(f); this.drawBar(f);
       if (d.hp <= 0) [body, blob, f.label, f.bar].forEach(o => o.setAlpha(0));
     });
-    (window as any).__proto.foeLayout = this.foes.map(f => ({ x: f.x, top: this.foeTop(f), h: f.h }));
+    (window as any).__proto.foeLayout = this.foes.map(f => ({ x: f.x, top: this.foeTop(f), h: f.h, uiDepth: Math.min(f.label.depth, f.bar.depth) }));
   }
   // ---------------- v3.4 spells (choreography in ./spellfx.ts) ----------------
   cast: CastHandle | null = null;
@@ -236,7 +239,7 @@ class MainScene extends Phaser.Scene {
       .setOrigin(0.5).setResolution(TXT_RES).setDepth(depth);
   }
   float(x: number, y: number, text: string, color: string, size = 44) {
-    const t = this.txt(x, y, text, size, color);
+    const t = this.txt(x, y, text, size, color, 11);
     this.tweens.add({ targets: t, y: y - 70, alpha: 0, duration: 1200, delay: 300, onComplete: () => t.destroy() });
   }
   /** Big damage number: pops to 1.3x, then floats up (spec §4.4). */
@@ -332,7 +335,7 @@ class MainScene extends Phaser.Scene {
     if (f.body instanceof Phaser.GameObjects.Sprite) { if (on) f.body.setTint(0xff9a9a); else if (f.data.tint) f.body.setTint(f.data.tint); else f.body.clearTint(); }
     if (!on) return;
     const top = this.foeTop(f);
-    f.mark = this.txt(f.x + 78, top - 40, '!', 56, '#ff4d4d', 9);
+    f.mark = this.txt(f.x + 78, top - 40, '!', 56, '#ff4d4d', FOE_UI_DEPTH);
     this.tweens.add({ targets: f.mark, scale: 1.2, duration: 300, yoyo: true, repeat: -1 });
     f.orb = this.add.circle(f.x - f.h * 0.45, top + f.h * 0.35, 16, 0xff6b6b, 0.85).setStrokeStyle(4, 0xffd0d0).setDepth(9);
     this.tweens.add({ targets: f.orb, scale: 1.5, alpha: 0.5, duration: 400, yoyo: true, repeat: -1 });

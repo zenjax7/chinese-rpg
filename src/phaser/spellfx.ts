@@ -248,8 +248,12 @@ export function playCast(h: FxHost, spell: { id: string; element: string; emoji:
   };
   const hasProj = pr.path && pr.path !== 'none' && (pr.count ?? 1) > 0;
   if (!hasProj) tgts.forEach((t, k) => addImpact(k, t, Cms + delay + k * stagger, 0));
-  else if (pr.path === 'sweep') {   // tornado: one ground-level traveller through every target, exits right
-    const p0x = hb.x + 0.3 * hb.h, p1x = W + 150, T = pr.travelMs || 1200, t0 = Cms, gy = hb.feet;
+  else if (pr.path === 'sweep') {   // tornado: one ground-level funnel through every target, exits right
+    // It spawns AT the first (leftmost) target, not in front of the caster (Arty's review, Oct 9: a faint wisp by the hero read as a miss),
+    // then sweeps through the other targets. targets_sweep order is left to right.
+    const firstX = Math.min(...tgts.map(t => t.x)), firstH = tgts.find(t => t.x === firstX)?.h ?? 0;
+    const p0x = Math.max(hb.x + 0.3 * hb.h, firstX - 0.25 * firstH), p1x = W + 150, T = pr.travelMs || 1200, t0 = Cms, gy = hb.feet;
+    (window as any).__proto.tornadoSpawn = { x: p0x, firstTargetX: firstX, heroX: hb.x };
     const o = image(pr.texture, 9, pr.blendMode, 30); const xpos = (t: number) => lerp(p0x, p1x, (t - t0) / T);
     fns.push(t => { const u = (t - t0) / T; if (u < 0 || u > 1) { o.setVisible(false); return; } sc(o, pr.scale ?? 1, 1 + 0.04 * Math.sin(t / 60), 1);
       show(o, xpos(t), gy + 6 + (pr.wobbleRel || 0) * 60 * Math.sin(t / 90), Math.min(1, u / 0.08, (1 - u) / 0.08)); });
