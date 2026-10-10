@@ -286,6 +286,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     const heardTxt = heard !== undefined ? ` <span class="muted">(I heard “${esc(heard)}”)</span>` : '';
     if (correct) {
       playSfx('sfx_correct', { detune: 100 * Math.min(5, bs.streak) });
+      view.companion('cheer');   // 小龙 hops
       msg(`✔ Great! ${zh(item.zh)} = ${esc(item.enPrimary)}`, 'fb-ok');
       if (!spoken) sayItem(id);   // spoken questions: the child just said it (or heard it as the question); no replay after a right answer
       await sleep(Math.max(800, C().correctFeedbackMs));
@@ -529,6 +530,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   for (const id of res.gearGot) { const r = gainGear(id); if (r.equipped) res.equipped.push(equipLine(GEAR[id], r.from)); }
   clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
+  if (res.outcome === 'win') view.companion('cheer');
   if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; res.kills = foes.map(f => f.d.desyId.split(' ')[0]); }
   save(); setBattleHud(null); view.clearFocus();
   (window as any).__proto.q = null; (window as any).__proto.battleLog = bs.log.slice(0, 200);

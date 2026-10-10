@@ -1,0 +1,38 @@
+{
+  "xiaolong": {
+    "frameWidth": 256,
+    "frameHeight": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 1.0
+    },
+    "facing": "right",
+    "states": {
+      "idle": {
+        "file": "xiaolong_battle_idle.png",
+        "frames": 4,
+        "fps": 6,
+        "loop": true
+      },
+      "cheer": {
+        "file": "xiaolong_battle_cheer.png",
+        "frames": 4,
+        "fps": 8,
+        "loop": false
+      },
+      "attack": {
+        "file": "xiaolong_battle_attack.png",
+        "frames": 4,
+        "fps": 10,
+        "loop": false,
+        "hitFrame": 2
+      },
+      "hurt": {
+        "file": "xiaolong_battle_hurt.png",
+        "frames": 2,
+        "fps": 6,
+        "loop": false
+      }
+    }
+  }
+}

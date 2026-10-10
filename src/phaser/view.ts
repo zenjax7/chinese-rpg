@@ -35,7 +35,10 @@ export function foeSlots(n: number, bossFirst: boolean): number[] {
 class MainScene extends Phaser.Scene {
   bg!: Phaser.GameObjects.Rectangle; ground!: Phaser.GameObjects.Rectangle; art!: Phaser.GameObjects.Image; dim!: Phaser.GameObjects.Rectangle;
   decor: Phaser.GameObjects.GameObject[] = [];
-  hero!: Body; heroShadow!: Phaser.GameObjects.Ellipse; comp!: Phaser.GameObjects.Text; shieldBubble!: Phaser.GameObjects.Ellipse;
+  hero!: Body; heroShadow!: Phaser.GameObjects.Ellipse; comp!: Phaser.GameObjects.Text | Phaser.GameObjects.Sprite;
+  /** Arty's 小龙 battle strips (public/companions/manifest.json), null => the 🐲 placeholder. */
+  compArt: { id: string; states: Record<string, { frames: number; fps: number; loop: boolean; hitFrame?: number }> } | null = null;
+  compBob: Phaser.Tweens.Tween | null = null; compHop: Phaser.Tweens.Tween | null = null; shieldBubble!: Phaser.GameObjects.Ellipse;
   targetMark!: Phaser.GameObjects.Text; targetRing!: Phaser.GameObjects.Ellipse;
   foes: FoeView[] = [];
   manifest: Record<string, any> = {};
@@ -59,6 +62,11 @@ class MainScene extends Phaser.Scene {
       if (sf.manifest) { this.load.json('spellFxManifest', sf.manifest);
         this.load.once('filecomplete-json-spellFxManifest', (_k2: string, _t2: string, fm: any) => { setFxData(fm, null);
           for (const [key, url, fw, fh] of fxTextureList()) { if (fw && fh) this.load.spritesheet(key, url, { frameWidth: fw, frameHeight: fh }); else this.load.image(key, url); } }); }
+      // 小龙 battle strips (Arty): one spritesheet per state, <id>_<state>, from companions/manifest.json
+      if (m.companions?.manifest) { this.load.json('companionManifest', m.companions.manifest);
+        this.load.once('filecomplete-json-companionManifest', (_k2: string, _t2: string, cm: any) => {
+          for (const [id, c] of Object.entries<any>(cm || {})) for (const [st, a] of Object.entries<any>(c?.states || {}))
+            if (a?.file) this.load.spritesheet(`${id}_${st}`, `companions/${a.file}`, { frameWidth: c.frameWidth, frameHeight: c.frameHeight }); }); }
       if (!this.sound || (this.sound as any).noAudio) return;
       for (const group of ['sfx', 'music'] as const) for (const [key, e] of Object.entries<any>(m[group] || {}))
         if (e?.urls?.length) this.load.audio(key, e.urls);   // [ogg, mp3]: Phaser picks the first the browser supports
@@ -81,14 +89,46 @@ class MainScene extends Phaser.Scene {
     this.dim = this.add.rectangle(W / 2, H / 2, W, H, 0x0a1028, 0.2).setDepth(1).setVisible(false);
     attachSound(this);
     this.heroShadow = this.add.ellipse(HERO_X, BASE_Y, 120, 26, 0x000000, 0.28).setDepth(2);
-    this.comp = this.add.text(COMP_X, BASE_Y - 36, '🐲', { fontSize: '64px', padding: { x: 6, y: 10 } }).setOrigin(0.5).setResolution(TXT_RES).setDepth(3);
+    this.comp = this.makeCompanion();
     this.hero = this.makeBody('hero', '🧙', HERO_X, BASE_Y, SIZE.hero, null).setDepth(4);
     this.shieldBubble = this.add.ellipse(HERO_X, BASE_Y - SIZE.hero * 0.42, SIZE.hero * 0.72, SIZE.hero * 0.95, 0x6dd5fa, 0.12).setStrokeStyle(4, 0x9be7ff, 0.9).setDepth(5).setVisible(false);
     this.targetRing = this.add.ellipse(0, 0, 150, 34, 0xffffff, 0.22).setStrokeStyle(3, 0xffffff, 0.8).setDepth(2).setVisible(false);
     this.targetMark = this.add.text(0, 0, '▼', { fontSize: '40px', color: '#ffe27a', stroke: '#000', strokeThickness: 6, fontFamily: NUM_FONT }).setOrigin(0.5, 1).setResolution(TXT_RES).setDepth(FOE_UI_DEPTH).setVisible(false);
-    this.tweens.add({ targets: this.comp, y: '-=5', duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    if (!this.compArt) this.compBob = this.tweens.add({ targets: this.comp, y: '-=5', duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     this.tweens.add({ targets: this.shieldBubble, alpha: 0.6, duration: 600, yoyo: true, repeat: -1 });
     ready(this);
+  }
+  /** 小龙 stands left of the hero on the feet line (y = BASE_Y), bottom-centre anchor, drawn ~120 px tall at scale 1 (Arty's strips are
+   *  256x256 frames, facing right). Falls back to the 🐲 emoji placeholder when the strips (or their idle state) are missing. */
+  makeCompanion(): Phaser.GameObjects.Text | Phaser.GameObjects.Sprite {
+    const cm = this.cache.json.get('companionManifest'); const id = 'xiaolong'; const c = cm?.[id];
+    if (c?.states?.idle && this.textures.exists(`${id}_idle`)) {
+      const states: Record<string, any> = {};
+      for (const [st, a] of Object.entries<any>(c.states)) {
+        if (!this.textures.exists(`${id}_${st}`)) continue; states[st] = a;
+        if (!this.anims.exists(`${id}_${st}`)) this.anims.create({ key: `${id}_${st}`, frames: this.anims.generateFrameNumbers(`${id}_${st}`, { start: 0, end: (a.frames || 1) - 1 }),
+          frameRate: a.fps || 8, repeat: a.loop ? -1 : 0 });
+      }
+      this.compArt = { id, states };
+      (window as any).__proto = (window as any).__proto || {}; (window as any).__proto.companion = { art: true, states: Object.keys(states), played: [] as string[] };
+      return this.add.sprite(COMP_X, BASE_Y, `${id}_idle`).setOrigin(c.anchor?.x ?? 0.5, c.anchor?.y ?? 1).setDepth(3).play(`${id}_idle`);
+    }
+    (window as any).__proto = (window as any).__proto || {}; (window as any).__proto.companion = { art: false, states: [], played: [] as string[] };
+    return this.add.text(COMP_X, BASE_Y - 36, '🐲', { fontSize: '64px', padding: { x: 6, y: 10 } }).setOrigin(0.5).setResolution(TXT_RES).setDepth(3);
+  }
+  /** Plays a one-shot companion state (cheer / attack / hurt), then back to the idle loop. Returns false on the placeholder. */
+  compPlay(state: 'cheer' | 'attack' | 'hurt'): boolean {
+    const a = this.compArt, sp = this.comp; if (!a || !(sp instanceof Phaser.GameObjects.Sprite) || !a.states[state] || !sp.active) return false;
+    const cur = sp.anims.currentAnim?.key, busy = sp.anims.isPlaying && cur === `${a.id}_attack`;
+    if (busy && state !== 'attack') return false;   // never cut the fire puff short
+    this.compHop?.stop(); this.compHop = null; sp.y = BASE_Y;
+    sp.play(`${a.id}_${state}`); (window as any).__proto.companion.played.push(state);
+    sp.off('animationcomplete'); sp.once('animationcomplete', () => { if (sp.active) { sp.y = BASE_Y; sp.play(`${a.id}_idle`); } });
+    if (state === 'cheer') {   // hop: up ~20 px across frames 1–2, back down for the landing frame, so the jump reads
+      const fm = 1000 / (a.states.cheer.fps || 8);
+      this.compHop = this.tweens.add({ targets: sp, y: BASE_Y - 20, delay: fm, duration: fm, yoyo: true, ease: 'Sine.out', onComplete: () => { sp.y = BASE_Y; } });
+    }
+    return true;
   }
   markY = 0;
   update(time: number) { if (this.targetMark?.visible) this.targetMark.y = this.markY + Math.sin(time / 140) * 5; }
@@ -276,12 +316,16 @@ class MainScene extends Phaser.Scene {
   /** Hero dashes at enemy i. dmg: number => hit juice, 'MISS' => whiff. */
   hitEnemy(i: number, dmg: number | string, opts: { spoken?: boolean; companion?: boolean } = {}) {
     const f = this.foes[i]; if (!f) return;
-    const IMPACT = 180; f.impactAt = performance.now() + IMPACT + 70;
+    // Impact (hit juice, damage number, HP bar) lands at 180 ms; for 小龙's strip it lands on the attack's hitFrame (the fire puff).
+    const ca = opts.companion && this.compArt?.states.attack; const IMPACT = ca ? Math.round((ca.hitFrame ?? 2) * 1000 / (ca.fps || 10)) : 180;
+    f.impactAt = performance.now() + IMPACT + 70;
+    if (ca) (window as any).__proto.companion.hitMs = IMPACT;
     const actor: any = opts.companion ? this.comp : this.hero;
     if (opts.companion) {
       const bub = this.txt(COMP_X + 20, BASE_Y - 150, '我来帮你!', 28, '#ffffff', 12).setFontFamily(ZH_FONT).setBackgroundColor('#ff5e9a');
       this.tweens.add({ targets: bub, alpha: 0, delay: 1100, duration: 300, onComplete: () => bub.destroy() });
-      this.tweens.add({ targets: this.comp, x: f.x - 120, duration: IMPACT, yoyo: true, hold: 160, ease: 'Quad.in' });
+      if (!this.compPlay('attack')) this.tweens.add({ targets: this.comp, x: f.x - 120, duration: IMPACT, yoyo: true, hold: 160, ease: 'Quad.in' });
+      else this.tweens.add({ targets: this.comp, x: f.x - 230, duration: IMPACT, yoyo: true, hold: 260, ease: 'Quad.in' });   // dash in; the puff lands on hitFrame
     } else {
       this.playOnce(this.hero, 'hero', 'attack');
       this.tweens.add({ targets: actor, x: HERO_X + 150, duration: IMPACT, yoyo: true, hold: 120, ease: 'Quad.in' });
@@ -322,6 +366,7 @@ class MainScene extends Phaser.Scene {
         this.tweens.add({ targets: f.body, x: f.x + 30, duration: 120, yoyo: true, delay: 60 });
       } else if (typeof dmg === 'number' && dmg > 0) {   // mild consequence: hurt frame, red number, soft red edge glow (no camera shake)
         if (!this.playOnce(this.hero, 'hero', 'hurt')) this.tweens.add({ targets: this.hero, alpha: 0.3, duration: 90, yoyo: true, repeat: 2 });
+        this.compPlay('hurt');   // 小龙 flinches when the hero is hit (enemies never target the companion)
         this.damageNumber(hp.x, hp.y - 110, '-' + dmg, '#ff6b6b');
         const e = document.getElementById('edge'); if (e) { e.classList.remove('hurt'); void e.offsetWidth; e.classList.add('hurt'); }
       } else this.float(hp.x, hp.y - 110, '0', '#ffffff');
@@ -378,6 +423,8 @@ export const view = {
   enemies: (l: ViewEnemy[]) => call(s => s.setEnemies(l)),
   updateEnemy: (i: number, hp: number, tired?: boolean) => call(s => s.updateEnemy(i, hp, tired)),
   hitEnemy: (i: number, d: number | string, opts?: { spoken?: boolean; companion?: boolean }) => call(s => s.hitEnemy(i, d, opts)),
+  /** 小龙 one-shot: cheer (correct answer, win), hurt. Attack is played by hitEnemy(..., { companion: true }). */
+  companion: (state: 'cheer' | 'hurt') => call(s => { s.compPlay(state); }),
   enemyAttack: (i: number, d: number | string, blocked: boolean) => call(s => s.enemyAttack(i, d, blocked)),
   heroFloat: (t: string, c?: string) => call(s => s.heroFloat(t, c)),
   windUp: (i: number, on: boolean) => call(s => s.windUp(i, on)),

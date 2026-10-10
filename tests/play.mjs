@@ -195,7 +195,10 @@ await debugSet(p, { hp: 999 });
 let wrongs = 0;
 await tid(p, 'act-path').click(); r = await playBattle(p, () => ++wrongs > 5);
 log('battle 2 result', r.result, JSON.stringify(r.stats));
-check((await p.evaluate(() => window.__proto.companionHits || 0)) >= 1, 'companion (gauge 100) made a free attack'); if (r.result === 'win') await tid(p, 'victory-ok').click();
+check((await p.evaluate(() => window.__proto.companionHits || 0)) >= 1, 'companion (gauge 100) made a free attack');
+{ const c = await p.evaluate(() => window.__proto.companion || {});
+  check(c.art && ['idle', 'cheer', 'attack', 'hurt'].every(k => c.states.includes(k)), `小龙 battle strips loaded (Arty): ${(c.states || []).join(',')}`);
+  check(c.played?.includes('attack') && c.played?.includes('cheer') && c.hitMs === 200, `小龙 plays attack (impact on hitFrame 2 = ${c.hitMs} ms) and cheer: ${[...new Set(c.played || [])].join(',')}`); } if (r.result === 'win') await tid(p, 'victory-ok').click();
 if (r.result === 'defeat') await tid(p, 'back').click();
 // defeat: set HP to 1 and gold 100, answer everything wrong
 if (await tid(p, 'town').count()) await goLoc(p, 'meadow');

@@ -265,6 +265,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [art/asset-hooks.md](art/asset-hooks.md) — Where delivered backgrounds, SFX, music, spell art and word audio go, and how the game picks them up (was ASSETS.md) · **GameDev / Arty** · when delivering assets
 - [art/audio.md](art/audio.md) — Arty's audio pack README: SFX, music loops and stings, sources, licences · **Arty** · when adding audio
 - [art/arty/sprites.md](art/arty/sprites.md) — Arty's battle sprites README (batch 1 sheets, manifest) · **Arty** · when adding sprites
+- [art/arty/xiaolong_battle.md](art/arty/xiaolong_battle.md) — Xiaolong battle sprites: 小龙 companion idle/cheer/attack/hurt strips, 256x256 frames, anchor bottom-centre, facing right · **Arty** · when changing the battle companion
 - [art/arty/spells.md](art/arty/spells.md) — Arty's spell art README: icons, fx textures, recipes · **Arty** · when adding spell art
 - [art/arty/portraits.md](art/arty/portraits.md) — Arty's dialogue portraits README · **Arty** · when adding portraits
 - [art/arty/backgrounds.md](art/arty/backgrounds.md) — Arty's backgrounds README (realms 1–2) · **Arty** · when adding backgrounds
