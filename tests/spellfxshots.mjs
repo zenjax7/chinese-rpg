@@ -22,7 +22,9 @@ for (const w of want) {
   await tid('act-skills').click(); await tid('tab-spells').waitFor(); if (!(await tid('spellbook').count())) await tid('tab-spells').click();
   if (process.env.LUCKY) await p.evaluate(() => { Math.random = () => 0.01; });   // statuses always land (layout check)
   await tid('spell-' + w.id).click();
-  const tg = p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])'); if (await tg.count()) await tg.first().click();
+  const TGT = '[data-testid^="target-"]:not([data-testid="target-menu"])';   // target buttons appear after the dock cross-fade: wait for them or the cast
+  await p.waitForFunction(s => !!(document.querySelector(s) || document.querySelector('[data-testid="fx-skip"]')), TGT, { timeout: 5000 });
+  const tg = p.locator(TGT); if (await tg.count()) await tg.first().click();
   await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 }); await p.waitForTimeout(w.ms);
   if (process.env.BURST) for (let i = 0; i < +process.env.BURST; i++) { await p.screenshot({ path: `${OUT}${w.id}-b${i}.png` }); }
   const path = `${OUT}${w.id}.png`; await p.screenshot({ path }); console.log('saved', path, JSON.stringify(await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0])));

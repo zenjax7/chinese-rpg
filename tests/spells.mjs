@@ -86,11 +86,19 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     }
     throw new Error('spells: battle did not finish');
   }
+  const TGT = '[data-testid^="target-"]:not([data-testid="target-menu"])';
+  /** After a spell click: wait until either the target buttons or the cast (fx-skip) is on screen, then tap the first target if asked. */
+  async function pickTargetOrCast() {
+    await p.waitForFunction(s => !!(document.querySelector(s) || document.querySelector('[data-testid="fx-skip"]')), TGT, { timeout: 5000 });
+    if (await p.locator(TGT).count()) await p.locator(TGT).first().click();
+  }
   /** Cast `id` from the open Spellbook; returns lastSpell after the animation. skip = click the tap-to-skip layer. */
   async function cast(id, { skip = false, midShot = '' } = {}) {
     const before = await cs(); const mp0 = +(await tid('hud-mp').innerText());
     await tid('spell-' + id).click();
-    if (await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').count()) await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
+    // A single-target spell with 2+ enemies alive opens TARGET_SELECT, whose buttons appear only after the dock cross-fade (dockMain, ~90 ms).
+    // Counting them right after the click raced that fade: with no target picked the cast never started and fx-skip timed out (the old flake).
+    await pickTargetOrCast();
     await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 });
     const asked = await p.locator('[data-testid="opt"]:not([disabled])').count();
     if (midShot) { await p.waitForTimeout(900); await p.screenshot({ path: midShot }); log('saved', midShot); }
