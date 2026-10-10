@@ -8,6 +8,10 @@
     "api/auth/[...auth].ts": { "maxDuration": 10 }
   },
   "crons": [{ "path": "/api/v1/cron/daily", "schedule": "17 9 * * *" }],
+  "rewrites": [
+    { "source": "/api/v1/:path*", "destination": "/api/v1/[...route]" },
+    { "source": "/api/auth/:path*", "destination": "/api/auth/[...auth]" }
+  ],
   "headers": [
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
     { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
