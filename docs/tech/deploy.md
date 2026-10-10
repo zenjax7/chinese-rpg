@@ -6,10 +6,12 @@ Owner: GameDev. Live build: https://zenjax7.github.io/chinese-rpg/ (decision log
 
 [`.github/workflows/deploy.yml`](../../.github/workflows/deploy.yml) runs on every push to `main` (and on manual dispatch):
 
-1. `npm ci` on Node 22.
-2. `pip install jsonschema`, then `npm run validate:world` with `CI=true` ([`tools/world/validate_all.py`](../../tools/world/validate_all.py)). It runs the world validator, Desy's dialogue validator and `build_quests.py` (from [`docs/tech/tools/story/`](tools/story/)), the quest and scene JSON Schemas, and checks that `src/data/world/` and `public/world/` were rebuilt from `docs/data/` and committed.
-3. `npm run build:ci` = `tsc && vite build`. It skips the `prebuild` asset sync, because the art and audio source folders only exist on the team box.
-4. The `dist/` folder is uploaded as the Pages artifact and deployed by `actions/deploy-pages`.
+1. A gitleaks secret scan of the checked-out tree, then `npm ci` on Node 22.
+2. `npm run test:api` (server type-check and the API tests on in-process PGlite; see [api.md](api.md)).
+3. `pip install jsonschema`, then `npm run validate:world` with `CI=true` ([`tools/world/validate_all.py`](../../tools/world/validate_all.py)). It runs the world validator, Desy's dialogue validator and `build_quests.py` (from [`docs/tech/tools/story/`](tools/story/)), the quest and scene JSON Schemas, and checks that `src/data/world/` and `public/world/` were rebuilt from `docs/data/` and committed.
+4. `npm run build:ci` = `tsc && vite build`. It skips the `prebuild` asset sync, because the art and audio source folders only exist on the team box.
+5. `npm run check:dist` fails the build if `dist/` holds any server code or server env names.
+6. The `dist/` folder is uploaded as the Pages artifact and deployed by `actions/deploy-pages`.
 
 `docs/` is **not** part of the Pages build: Vite bundles `src/` and copies `public/` only. The game reads `docs/data/` only through the build tools below, whose output is committed.
 

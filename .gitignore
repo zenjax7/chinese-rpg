@@ -45,3 +45,9 @@ Thumbs.db
 __pycache__/
 *.pyc
 .venv/
+
+# env files (secrets never committed; .env.example is names only)
+.env
+.env.*
+!.env.example
+.vercel/

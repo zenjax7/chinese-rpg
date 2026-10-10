@@ -71,6 +71,8 @@ Dates are 2026, Pacific time.
 - **Oct 2** — Legal review deferred until public launch; COPPA design principles stay (D14). [architecture.md §1.2](tech/architecture.md#12-decision-log)
 - **Oct 2** — Graph scale ~15 to ~200 nodes, one graph per dungeon level; graph data is static build content (D3, D15). [architecture.md §1.2](tech/architecture.md#12-decision-log)
 - **Oct 2** — Dialogue-scene and quest data hooks designed; Desy owns story/dialogue/quests, Arty owns portraits (D18). [architecture.md §1.2](tech/architecture.md#12-decision-log)
+- **Oct 9** — The accounts API (`/api/v1`, Auth.js, Neon DAL) is in the repo but not deployed. Cloud saving in the client is off by default: it needs the build flag `VITE_CLOUD_SAVE=1` and a chosen cloud child, and the GitHub Pages build never sets it. No Vercel, Neon or Google OAuth resources are created until Jack sets them up (architecture §17). [tech/api.md](tech/api.md)
+- **Oct 9** — CI runs a gitleaks scan and `npm run test:api` before the Pages build, and `check:dist` fails the build if `dist/` holds server code or server env names. [tech/deploy.md](tech/deploy.md)
 
 ## Docs and process
 

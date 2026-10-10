@@ -25,7 +25,17 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Secret scan of the checked-out tree (the repo is public; architecture.md §14.1).
+      - name: gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz | tar -xz gitleaks
+          ./gitleaks dir . --no-banner --redact
+          rm gitleaks
+
       - run: npm ci
+
+      # API tests (server type-check + vitest on in-process PGlite; no database or secrets needed). Runs before the Pages build.
+      - run: npm run test:api
 
       # v3.9.1 world + story data gate (graphs, zones, quests quest/0.2, scenes scene/0.2, public/world freshness).
       - uses: actions/setup-python@v5
@@ -39,6 +49,9 @@ jobs:
       # Assets (sprites, backgrounds, audio, assets-manifest.json) are committed under public/.
       # build:ci = `tsc && vite build` without the prebuild sync (the source art/audio folders only exist locally).
       - run: npm run build:ci
+
+      # The static site must never contain server code or server env names (docs/tech/api.md).
+      - run: npm run check:dist
 
       # Headless tests (tests/play.mjs) are not run here: they need a running server on :8795 and a local
       # Chrome at /usr/bin/google-chrome. Run `npm test` locally before pushing.
