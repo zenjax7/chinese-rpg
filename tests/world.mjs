@@ -1,4 +1,4 @@
-// v3.9.1 graph world tests (?world=graph): node tests/world.mjs [baseUrl]   (also run from tests/play.mjs)
+// v3.9.2 graph world tests (?world=graph): node tests/world.mjs [baseUrl]   (also run from tests/play.mjs)
 // Engine unit checks import src/world/engine.ts directly (node 22 strips the types). Browser checks drive the built game.
 // Saves are validated against docs/data/world/schemas/progress.schema.json with tools/world/validate_save.py (needs jsonschema:
 // WORLD_PY=/path/to/python, default /workspace/desy/.venv/bin/python if present, else python3).
@@ -45,10 +45,44 @@ export async function worldUnitTests({ check, log = console.log }) {
     check(picks(5) === picks(5) && picks(5).split(',').length === 8, `events: weighted pick on ${pickEv.node} is seeded per save + node + visit (${picks(5)})`); }
   const outs = new Set(); for (const f of idx.graphs.map(g => g.id)) for (const ev of J(`graphs/${f}.json`).events || []) { if (ev.outcome) outs.add(ev.outcome); for (const o of ev.pick || []) outs.add(o.outcome); }
   check(['nothing', 'story', 'item', 'treasure', 'miniboss', 'quest_offer'].every(o => outs.has(o)), `events: outcomes seen in the data (${[...outs].join(', ')}); portal = a node kind + edge`);
+  check(!outs.has('portal') && !E.OUTCOMES.includes('portal') && [...outs].every(o => E.OUTCOMES.includes(o)) && JSON.stringify([...E.OUTCOMES].sort()) === JSON.stringify([...J('common.schema.json').$defs.outcome.enum].sort()),
+    `events: v3.9.2 dropped the 'portal' outcome (game OUTCOMES = schema enum: ${E.OUTCOMES.join(', ')})`);
+  // v3.9.2 seed rule: FNV-1a 32-bit of the key → mulberry32; Desy's test vectors (world_rules.json seed.testVectors)
+  const tv = rules.seed.testVectors;
+  for (const v of tv) check(E.fnv1a(v.key) === v.fnv1a32 && E.roll(v.key) === v.roll, `seed: fnv1a32("${v.key}") = ${E.fnv1a(v.key)} (want ${v.fnv1a32}), roll ${E.roll(v.key)} (want ${v.roll})`);
+  check(tv.length === 3 && rules.seed.hash === 'fnv1a32' && rules.seed.algorithm === 'mulberry32', 'seed: 3 test vectors, fnv1a32 → mulberry32');
+  { // the encounter roll really uses the key saveSeed|graph|edge|crossing|step: vector 1 (seed 12345, realm_1 e1, crossing 0, step 0) = 0.0924
+    const fg = { id: 'realm_1', kind: 'overworld', realm: 1, nodes: [{ id: 'a', idx: 0, kind: 'fork', x: 0, y: 0 }, { id: 'b', idx: 1, kind: 'fork', x: 1, y: 0 }], edges: [{ id: 'e1', idx: 0, from: 'a', to: 'b', kind: 'path', danger: 1 }] };
+    const at = rate => { const Pv = E.newProgress(12345, idx.start); return E.rollStep(fg, fg.edges[0], 0, Pv, { ...rules, encounterRate: { 1: rate }, maxRate: 1 }); };
+    check(at(0.093) === true && at(0.092) === false, 'seed: rollStep(seed 12345, realm_1 e1, crossing 0, step 0) rolls exactly vector 1 (fights at rate 0.093, not at 0.092)'); }
   // world map: realm t+1 opens when realm t's realm boss falls
   const Pr = E.newProgress(1, idx.start);
   check(E.realmOpen(1, Pr, idx.zones) && !E.realmOpen(2, Pr, idx.zones), 'world map: realm 1 open, realm 2 locked at the start');
   Pr.zonesDefeated.push('warren'); check(E.realmOpen(2, Pr, idx.zones) && !E.realmOpen(3, Pr, idx.zones), 'world map: the realm 1 realm boss (warren) opens realm 2 only');
+  // v3.9.2 world.json realms[]: unlock conditions, link edges, exit edges
+  const RL = idx.realms; const Pu = E.newProgress(1, idx.start); const xu = { P: Pu, quests: {} }; const gw = J('graphs/world.json');
+  check(RL.length === 9 && RL.every((r, i) => r.realm === i + 1), `realms[]: 9 realms in order`);
+  check(E.realmOpen(1, Pu, idx.zones, RL, xu) && RL.slice(1).every(r => !E.realmOpen(r.realm, Pu, idx.zones, RL, xu)), 'realms[]: only realm 1 is open on a new save');
+  let chain = true; for (const r of RL.slice(1)) { const prev = RL.find(a => a.realm === r.realm - 1);
+    chain &&= r.unlock?.bossDefeated === prev.realmBossZone && idx.zones.find(z => z.id === prev.realmBossZone)?.bossKind === 'realmboss';
+    Pu.zonesDefeated.push(prev.realmBossZone); chain &&= E.realmOpen(r.realm, Pu, idx.zones, RL, xu) && (r.next == null || !E.realmOpen(r.next, Pu, idx.zones, RL, xu)); }
+  check(chain, `realms[]: realm N unlocks on bossDefeated of realm N−1's realm-boss zone, one at a time (${RL.slice(1).map(r => r.unlock.bossDefeated).join(', ')})`);
+  const links = RL.filter(r => r.linkEdge).map(r => gw.edges.find(e => e.id === r.linkEdge));
+  check(links.length === 8 && links.every((e, i) => e && e.kind === 'path' && (e.danger ?? 0) === 0 && e.to === RL[i + 1].node && e.from === RL[i].node && e.cond?.bossDefeated === RL[i + 1].unlock.bossDefeated),
+    `realms[]: link edges ${RL.filter(r => r.linkEdge).map(r => r.linkEdge).join(',')} join realm N−1 → N on the world map, danger 0, same condition as the unlock`);
+  const ex = []; for (const r of RL) { const g = J(`graphs/${r.graph}.json`); const e = g.edges.find(e => e.id === r.exitEdge); const en = gw.edges.find(e => e.id === r.enterEdge);
+    if (!(e && e.kind === 'exit' && e.from === r.entry && e.to?.graph === 'world' && e.to?.node === r.node && (e.danger ?? 0) === 0 && en && en.from === r.node && en.to?.graph === r.graph && en.to?.node === r.entry)) ex.push(r.realm);
+    else { E.registerGraph(g); if (!E.edgeSafe(g, e, E.newProgress(1, idx.start), rules)) ex.push(r.realm + '(unsafe)'); } }
+  check(!ex.length, `realms[]: every realm has an enter edge from its world node to its entry and a safe exit edge (kind exit, danger 0) from the entry back to the world node${ex.length ? ' — bad: ' + ex.join(',') : ''}`);
+  // v3.9.2 realm 3–9 content: complete → in build
+  const C = idx.content; let cbad = [];
+  for (const r of [3, 4, 5, 6, 7, 8, 9]) { const c = JSON.parse(readFileSync(path.join(ROOT, 'public/world', C[r]), 'utf8')); const zs = idx.zones.filter(z => z.realm === r); const ids = new Set(c.enemies.map(e => e.id));
+    for (const z of zs) { if (!c.locations.some(l => l.id === z.location)) cbad.push(`${z.id}:loc`); if (!(c.pools[z.location] || []).length) cbad.push(`${z.id}:pool`);
+      for (const e of [z.boss, z.elite, ...(z.roster || []).map(a => a.enemy)].filter(Boolean)) if (!ids.has(e)) cbad.push(`${z.id}:${e}`); }
+    if (JSON.stringify(c).match(/"py"\s*:\s*"[^"]/)) cbad.push(`realm ${r}: pinyin`);
+    for (const ids2 of Object.values(c.pools)) for (const id of ids2) if (!c.items.some(i => i.id === id)) cbad.push(`${r}:${id}`); }
+  check(!cbad.length && [3, 4, 5, 6, 7, 8, 9].every(r => idx.inBuild[r] === true && gw.nodes.find(n => n.id === `realm_${r}`).inBuild !== false),
+    `content: realms 3–9 have enemies, bosses, rosters, word pools (no pinyin) for every zone → in build${cbad.length ? ' — missing: ' + cbad.slice(0, 6).join(', ') : ''}`);
   // fog
   const Pf = E.newProgress(7, idx.start); E.markVisited(Pf, g1, 'village');
   const x = { P: Pf, quests: {} }; const fog = E.fog(g1, Pf, x, rules.fog.landmarkKinds);
@@ -60,7 +94,14 @@ export async function worldUnitTests({ check, log = console.log }) {
   Pf.visitedTowns.push({ graph: 'realm_2', node: 'entry_town' }); Pf.lastInn = { graph: 'realm_1', node: 'm_inn' }; Pf.pos.node = 'm_fork';
   const dests = E.featherDestinations(Pf, r => r.node);
   check(dests[0].kind === 'inn' && dests[0].ref.node === 'm_inn' && dests.some(d => d.ref.node === 'village') && dests.some(d => d.ref.graph === 'realm_2'), `world: Feather destinations = last inn + visited towns/villages (${dests.map(d => d.ref.node).join(', ')})`);
-  check(rules.returnFeather.priceG === 2 && rules.returnFeather.start === 2 && rules.returnFeather.carry === 3 && JSON.stringify(rules.realmBossFeather.realms) === '[3,6,8]', 'world: v3.9.1 Feather rules (2×G, start 2, carry 3, free on realm bosses 3/6/8)');
+  { // v3.9.2 destinationRule: inns other than the last one used are never destinations (even if an old save listed them)
+    const other = g1.nodes.find(n => n.kind === 'inn' && n.id !== 'm_inn'); const Pi = E.newProgress(7, idx.start); E.markVisited(Pi, g1, 'village');
+    if (other) { E.markVisited(Pi, g1, other.id); Pi.visitedTowns.push({ graph: 'realm_1', node: other.id }); }
+    Pi.lastInn = { graph: 'realm_1', node: 'm_inn' }; Pi.pos.node = 'm_fork'; const d2 = E.featherDestinations(Pi, r => r.node);
+    check(!!other && d2.filter(d => d.kind === 'inn').length === 1 && !d2.some(d => d.ref.node === other.id) && d2.every(d => d.kind === 'inn' || ['town', 'village'].includes(g1.nodes.find(n => n.id === d.ref.node)?.kind)),
+      `world: Feather never offers an inn other than the last one used (${other?.id} visited; destinations ${d2.map(d => d.ref.node).join(', ')})`);
+    check(rules.returnFeather.destinations.join() === 'lastInn,visitedTown', 'world: Feather rule data = lastInn + visitedTown'); }
+  check(rules.returnFeather.priceG === 2 && rules.returnFeather.start === 2 && rules.returnFeather.carry === 3 && JSON.stringify(rules.realmBossFeather.realms) === '[3,6,8]', 'world: v3.9.2 Feather rules (2×G, start 2, carry 3, free on realm bosses 3/6/8)');
   // quests: q1_hoe accept → reach the well (the hoe lies there too) → ready → turn in
   const q = quests.find(q => q.id === 'q1_hoe'); const Pq = E.newProgress(3, idx.start); const xq = { P: Pq, quests: {}, inv: {} };
   check(E.questStatus(q, xq) === 'available', 'quest: q1_hoe available');
@@ -83,6 +124,40 @@ export async function worldUnitTests({ check, log = console.log }) {
   check(qf?.quest.id === 'q8_caged_beasts' && qf.enemies.includes('ogre_gladiator'), 'quest-gated fight: q8_caged_beasts active at the kill step → fight on beast_pens_1/deadend_3');
   E.questEvent(quests, xc, { type: 'fightWon', graph: 'beast_pens_1', node: 'deadend_3' });
   check(E.currentStep(cb, xc.quests.q8_caged_beasts).objective.type === 'reach', 'quest-gated fight: winning it advances the quest');
+  // quests.md §2a escort: completes on entering `to`, never fails, follower derived from the current step; dropping sends it back
+  { const q5 = quests.find(q => q.id === 'q5_escort_xiaohe'); const xe = { P: E.newProgress(5, idx.start), quests: {} };
+    E.accept(q5, xe); const st = xe.quests.q5_escort_xiaohe; let cs = E.currentStep(q5, st);
+    check(cs.objective.type === 'escort' && cs.toAt?.node === 'path_1' && st.obj[cs.id] === 0, `escort: q5 accepted → escort Xiaohe to realm_5/path_1 (obj.${cs.id} = 0)`);
+    check(E.escortFollowers(quests, xe).map(f => f.npc).join() === 'xiaohe', 'escort: Xiaohe follows the party (derived from the step, not saved)');
+    E.questEvent(quests, xe, { type: 'kill', enemies: ['frog'], realm: 5 }); E.questEvent(quests, xe, { type: 'arrive', graph: 'realm_5', node: 'entry_town' });
+    check(st.s === 'active' && E.currentStep(q5, st).id === 's2', 'escort: battles and other arrivals do not end it (and nothing fails it)');
+    E.questEvent(quests, xe, { type: 'arrive', graph: 'realm_5', node: 'path_1' }); cs = E.currentStep(q5, st);
+    check(st.obj.s2 === 1 && cs.id === 's3' && cs.toAt?.node === 'town_2', `escort: entering path_1 → obj.s2 = 1, next escort to ${cs.toAt?.graph}/${cs.toAt?.node}`);
+    E.questEvent(quests, xe, { type: 'arrive', graph: 'realm_5', node: 'town_2' });
+    check(st.obj.s3 === 1 && E.currentStep(q5, st)?.objective.type !== 'escort' && !E.escortFollowers(quests, xe).length, `escort: entering the outpost village ends the escort; Xiaohe stops following (${st.s})`);
+    const x7 = { P: E.newProgress(5, idx.start), quests: {} }; const q7 = quests.find(q => q.id === 'q7_lost_mapmaker'); E.accept(q7, x7);
+    while (E.currentStep(q7, x7.quests[q7.id])?.objective.type !== 'escort') E.completeStep(q7, x7.quests[q7.id]);
+    check(E.escortFollowers(quests, x7)[0]?.npc === 'mapmaker_lu' && E.dropQuest(q7, x7) && !x7.quests[q7.id] && E.questStatus(q7, x7) === 'available' && !E.escortFollowers(quests, x7).length,
+      'escort: dropping the quest sends the escortee back to the giver (no follower, offered again)'); }
+  // quests.md §2a words: every correct battle answer to an item of the pool counts; n defaults to 10
+  { const qb = quests.find(q => q.id === 'q2_bubble_lesson'); const xw = { P: E.newProgress(6, idx.start), quests: {}, inv: {} }; E.accept(qb, xw); const st = xw.quests[qb.id];
+    const s2 = E.currentStep(qb, st); check(s2.objective.type === 'collect' && s2.at.refs.length === 3, 'collect: q2 soap flowers = 3 pickups (refs)');
+    for (const r of ['realm_2/path_2', 'realm_2/path_2', 'realm_2/path_3']) E.questEvent(quests, xw, { type: 'arrive', graph: 'realm_2', node: r.split('/')[1] });
+    check(st.obj.s2 === 2 && E.currentStep(qb, st).id === 's2', `collect: each ref node gives one flower once (2/3 after path_2 twice + path_3)`);
+    E.questEvent(quests, xw, { type: 'arrive', graph: 'realm_2', node: 'path_5' }); const s3 = E.currentStep(qb, st);
+    check(s3.objective.type === 'words' && s3.objective.pool === 'L2.1' && E.wordsNeeded(s3) === 8 && st.obj.s3 === 0, 'words: q2 step s3 = 8 correct answers from pool L2.1 (obj.s3 = 0)');
+    for (let i = 0; i < 3; i++) E.questEvent(quests, xw, { type: 'answer', item: 'C001', pool: 'L1.1' });
+    for (let i = 0; i < 7; i++) E.questEvent(quests, xw, { type: 'answer', item: 'Cx', pool: 'L2.1' });
+    check(st.obj.s3 === 7 && E.currentStep(qb, st).id === 's3', 'words: answers from another pool do not count (7/8)');
+    E.questEvent(quests, xw, { type: 'answer', item: 'Cx', pool: 'L2.1' });
+    check(st.obj.s3 === 8 && E.currentStep(qb, st)?.id !== 's3', 'words: the 8th correct L2.1 answer completes the step');
+    check(E.wordsNeeded({ id: 'x', objective: { type: 'words', pool: 'L1.1' }, at: null }) === 10, 'words: n defaults to 10'); }
+  // quests.md §6 extended build check: every giver, step, turn-in and escort target resolves to a node
+  { const bad = []; for (const q of quests) { if (!q.giverAt) bad.push(q.id + ':giver'); if (q.returnToGiver !== false && q.turnIn !== 'auto' && !q.turnInAt) bad.push(q.id + ':turnIn');
+      for (const st of q.objectives) { const o = st.objective; if (o.type === 'escort' && !st.toAt) bad.push(`${q.id}/${st.id}:to`);
+        if (['talk', 'reach', 'deliver', 'kill'].includes(o.type) && !st.at && !(o.type === 'kill' && o.enemy)) bad.push(`${q.id}/${st.id}`); } }
+    const kinds = {}; for (const q of quests) for (const st of q.objectives) for (const r of [st.at, st.toAt].filter(a => a && a.node)) { const g = J(`graphs/${r.graph}.json`); if (!g.nodes.some(n => n.id === r.node)) bad.push(`${q.id}/${st.id}:${r.graph}/${r.node}`); }
+    check(!bad.length, `quests: every giver, step position, turn-in and escort target resolves to a real node (${quests.length} quests)${bad.length ? ' — ' + bad.slice(0, 5).join(', ') : ''}`); }
   // new leaf villages load generically
   for (const [gid, nid] of [['realm_3', 'village_1x'], ['realm_6', 'village_2x'], ['realm_9', 'village_3x']]) {
     const g = J(`graphs/${gid}.json`); check(!!g.nodes.find(n => n.id === nid && n.kind === 'village'), `world: new leaf village ${gid}/${nid}`);

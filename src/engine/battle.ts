@@ -21,6 +21,8 @@ export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.valu
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
 interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
   skipWhy?: string; soaked?: boolean; summoned?: boolean; fx?: string | null; }
+/** Graph mode listens to correct battle answers (quests.md §2a words steps). Practice and preview never run a battle, so they never count. */
+export const battleHooks: { onCorrect?: (itemId: string) => void } = {};
 type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean };
 
 const C = () => B.combat;
@@ -179,7 +181,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     if (g.wayDone) { bs_exp(B.learning.expWayComplete, `⭐ ${item.zh}: a way is complete! +${B.learning.expWayComplete} EXP`); }
     if (g.becameProficient) { bs_exp(B.learning.expProficient, `🏅 ${item.zh} is now Proficient! +${B.learning.expProficient} EXP`); res.learned.push(id); }
     if (out.result === 'correct') {
-      res.correct++; S.stats.correct++;
+      res.correct++; S.stats.correct++; battleHooks.onCorrect?.(id);
       if (!(out.fast && !proficient(id))) bs.streak += 1 + (out.spoken ? C().spokenExtraStreak : 0);
       const mp0 = S.mp; S.mp = Math.min(heroStats().maxMp, S.mp + C().mpPerCorrect);
       if (S.mp > mp0) flyTo(`+${S.mp - mp0} MP`, heroFrame(), 'mp');

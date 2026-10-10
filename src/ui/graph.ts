@@ -1,6 +1,6 @@
-/** v3.9.1 graph world UI (?world=graph). Data: src/data/world/ + public/world/graphs/ (tools/world/build_world.py from Desy's docs/data). Progress lives in
+/** v3.9.2 graph world UI (?world=graph). Data: src/data/world/ + public/world/graphs/ (tools/world/build_world.py from Desy's docs/data). Progress lives in
  *  S.world (progress/0.3), story quests in S.storyQuests, seen scenes in S.scenesSeen, all in the v4 save. Classic mode never loads this. */
-import { B, LOC, CONS, TOWNS, GEAR_LIST } from '../data';
+import { B, LOC, CONS, TOWNS, GEAR_LIST, ITEM } from '../data';
 import { S, save, heroStats, refreshSkills, gainGear, equipLine, worldPrice, addExp, cloudTrigger, store } from '../engine/state';
 import { validateProgress, migrateProgress } from '../world/progress';
 import PROGRESS_SCHEMA from '../data/world/progress.schema.json';
@@ -13,6 +13,8 @@ import { BG } from '../assets';
 import { playMusic, playSfx } from '../audio/audio';
 import * as E from '../world/engine';
 import { playScene, Scene, SceneEnv } from '../world/scene';
+import { loadRealmContent } from '../world/content';
+import { battleHooks } from '../engine/battle';
 
 // ---------------- data ----------------
 export const W: { idx: E.WorldIndex | null; quests: E.Quest[]; graphs: Record<string, E.Graph>; scenes: Record<string, Scene | null>; zones: Record<string, E.Zone> } =
@@ -32,7 +34,8 @@ export async function loadWorld() {
 }
 export async function graph(id: string): Promise<E.Graph> {
   if (!W.graphs[id]) { const g = await J(`world/graphs/${id}.json`); W.graphs[id] = g; E.registerGraph(g); }
-  return W.graphs[id];
+  const g = W.graphs[id]; if (g.realm >= 3) await loadRealmContent(g.realm, W.idx?.content);   // realm 3–9 enemies, words, zones (world/content.ts)
+  return g;
 }
 async function scene(id: string): Promise<Scene | null> {
   if (!(id in W.scenes)) { const ld = SCENES[`../data/world/scenes/${id}.json`]; W.scenes[id] = ld ? await ld().catch(() => null) : null; }
@@ -77,6 +80,9 @@ Object.assign(proto(), { world: {
   clearBoss: async (g: string, n: string) => { await graph(g); const gg = W.graphs[g]; const nn = E.nodeOf(gg, n)!; await bossCleared(gg, nn, W.zones[nn.boss!]); },
   accept: (id: string) => { const q = W.quests.find(x => x.id === id)!; E.accept(q, ctx()); saveW(); cloudTrigger('questGiven', q.id); },
   cloud: () => ({ kind: store.kind, triggers: (store as any).triggers || [], pushes: (store as any).pushes || [] }),
+  answer: (id: string) => onCorrect(id),
+  fight: async (zone?: string) => { const g = W.graphs[P().pos.graph]; const out = await fight(g, zone ? W.zones[zone] : zoneOf(g, P().pos.node), {}); graphScreen(); return out; },
+  drop: (id: string) => { const q = W.quests.find(x => x.id === id)!; E.dropQuest(q, ctx()); saveW(); },
   validate: (p?: unknown) => validateProgress(p ?? S.world, PROGRESS_SCHEMA, COMMON_SCHEMA),
 } });
 
@@ -115,7 +121,8 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, noElite: !!o.enemies };
   S.locs[loc].bossCheckpoint = false;
-  const res = await runBattle(loc, o.boss ? 'boss' : 'patrol', 0, opts);
+  battleHooks.onCorrect = onCorrect;
+  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'patrol', 0, opts); } finally { battleHooks.onCorrect = undefined; }
   if (res.outcome === 'win') {
     if (res.kills?.length) questUpdate(E.questEvent(W.quests, ctx(), { type: 'kill', enemies: res.kills, realm: g.realm }));
     saveW(); await rewards(res, o.label || '');
@@ -124,6 +131,14 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
     else { await defeated(); }
   }
   return res.outcome;
+}
+/** quests.md §2a words steps: every correct battle answer to an item of the step's pool (Desy's pool id = ITEM.loc) adds 1. */
+function onCorrect(itemId: string) {
+  const pool = ITEM[itemId]?.loc; if (!pool) return;
+  const ch = E.questEvent(W.quests, ctx(), { type: 'answer', item: itemId, pool });
+  for (const q of W.quests) { const st = S.storyQuests![q.id]; const s = st?.s === 'active' && E.currentStep(q, st);
+    if (s && s.objective.type === 'words' && s.objective.pool === pool) proto().wordsCount = { quest: q.id, n: st.obj[s.id], of: E.wordsNeeded(s) }; }
+  questUpdate(ch);
 }
 async function defeated() {
   const { fee } = applyDefeat(); P().pos = { graph: P().lastInn.graph, node: P().lastInn.node, edge: null, step: 0 };
@@ -218,10 +233,16 @@ async function questsAtNode(g: E.Graph, node: string) {
 }
 export function questLog(back: () => void = graphScreen) {
   const rows = W.quests.filter(q => S.storyQuests![q.id]).map(q => { const st = S.storyQuests![q.id]; const step = E.currentStep(q, st);
-    const what = st.s === 'completed' ? '✅ done' : st.s === 'ready' ? `❗ go back to ${esc(nodeTitle(q.turnInAt || q.giverAt!))}` : step ? `${esc(step.objective.type)}${step.objective.n ? ` ${st.obj[step.id] || 0}/${step.objective.n}` : ''}${step.at && 'node' in step.at ? ` · ${esc(nodeTitle(step.at as E.NodeRef))}` : ''}` : '';
-    return `<div class="card" data-testid="qlog-${q.id}" data-state="${st.s}">${zh(q.title.zh)} <b>${esc(q.title.en)}</b><div class="muted">${what}</div></div>`; });
+    const o = step?.objective; const need = o?.type === 'words' ? E.wordsNeeded(step!) : o?.n;
+    const where = o?.type === 'escort' && step!.toAt ? ` · to ${esc(nodeTitle(step!.toAt))}` : step?.at && 'node' in step.at ? ` · ${esc(nodeTitle(step.at as E.NodeRef))}` : '';
+    const what = st.s === 'completed' ? '✅ done' : st.s === 'ready' ? `❗ go back to ${esc(nodeTitle(q.turnInAt || q.giverAt!))}` : step ? `${o!.type === 'escort' ? `👣 ${esc(names(o!.npc || '')?.en || '')} follows you` : esc(o!.type)}${need ? ` ${st.obj[step.id] || 0}/${need}` : ''}${where}` : '';
+    const drop = st.s === 'active' ? `<button class="secondary" data-drop="${q.id}" data-testid="qdrop-${q.id}" style="float:right;font-size:14px">✖ Drop</button>` : '';
+    return `<div class="card" data-testid="qlog-${q.id}" data-state="${st.s}">${drop}${zh(q.title.zh)} <b>${esc(q.title.en)}</b><div class="muted">${what}</div></div>`; });
   render(dlg({ testid: 'questlog', cls: 'narrow', title: `📜 ${zh('任务')} Quests`, body: rows.join('') || '<p class="muted">No quests yet. Talk to people in towns and villages!</p>' }));
   on('#back', back);
+  on('[data-drop]', async (_e, el) => { const q = questById(el.dataset.drop!); if (!q) return;
+    if (await dialog(`✖ ${zh(q.title.zh)} ${esc(q.title.en)}`, `<p>Drop this quest? You can ask ${esc(nodeTitle(q.giverAt || P().pos))} for it again.</p>`, ['Drop it', 'Keep it']) !== 0) return questLog(back);
+    E.dropQuest(q, ctx()); saveW(); toast(`📜 Quest dropped: ${esc(q.title.en)}`); questLog(back); });
 }
 
 // ---------------- Return Feather ----------------
@@ -233,7 +254,8 @@ function featherPicker(back: () => void) {
     ${d.map((x, i) => `<button class="secondary" data-d="${i}" data-testid="feather-to-${x.ref.graph}-${x.ref.node}" style="display:block;width:100%;margin:6px 0">${x.kind === 'inn' ? '🛏️' : '🏘️'} ${esc(x.label)}</button>`).join('') || '<p>No other place to fly to yet.</p>'}` }));
   on('[data-d]', async (_e, el) => { const t = d[+el.dataset.d!]; if ((S.inv.feather || 0) <= 0) return; S.inv.feather--; await graph(t.ref.graph);
     P().pos = { graph: t.ref.graph, node: t.ref.node, edge: null, step: 0 }; E.markVisited(P(), W.graphs[t.ref.graph], t.ref.node); saveW(); playSfx('sfx_gold');
-    cloudTrigger('feather', `${t.ref.graph}/${t.ref.node}`); toast(`🪶 Whoosh! You fly to ${esc(t.label)}.`); openNode(); });
+    cloudTrigger('feather', `${t.ref.graph}/${t.ref.node}`); toast(`🪶 Whoosh! You fly to ${esc(t.label)}.`);
+    offeredNow.clear(); await questsAtNode(W.graphs[t.ref.graph], t.ref.node); saveW(); openNode(); });   // an escort can end at a Feather destination
   on('#back', back);
 }
 function bag(back: () => void) { itemsScreen(back, 'graph', () => featherPicker(() => bag(back))); }
@@ -248,7 +270,7 @@ async function walk(e: E.GEdge) {
       const tgt = e.to as E.NodeRef; const meta = W.idx!.graphs.find(x => x.id === tgt.graph);
       const wn = g.kind === 'world' ? E.nodeOf(g, e.from) as any : null;
       if (!meta || (wn && wn.inBuild === false && !allRealms())) { await dialog(`🚧 ${zh('还没开放')} Not in this build`, `<p data-testid="not-in-build">${esc(wn?.title?.en || tgt.graph)} is not in this build yet.</p>`, ['OK']); return; }
-      if (!E.edgeOpen(e, ctx())) { toast('🔒 The way is closed.'); return; }
+      if (!E.edgeOpen(e, ctx()) || (wn && !realmNodeOpen(wn, ctx()))) { toast('🔒 The way is closed.'); return; }
       await graph(tgt.graph); P().pos = { graph: tgt.graph, node: tgt.node, edge: null, step: 0 }; P().hops++; saveW(); cloudTrigger('graphChange', tgt.graph);
       return void await arrive(tgt.node);
     }
@@ -328,10 +350,11 @@ function rest(g: E.Graph, n: E.GNode) {
 // ---------------- the map (SVG over the Phaser background) ----------------
 const ICON: Record<string, string> = { town: '🏘️', village: '🏡', inn: '🛏️', boss: '👑', miniboss: '💀', chest: '🧰', story: '📖', npc: '🙂', portal: '🌀', stairs_up: '⬆️', stairs_down: '⬇️', fork: '•', waypoint: '•', shop: '🛒' };
 const allRealms = () => /[?&]realms=all\b/.test(location.search) || !!proto().allRealms;
-/** World map: realm nodes link through their portal edges; realm t+1 opens when realm t's realm boss falls (world-graph §2). */
-const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { const r = Number(String(n.id).match(/(\d+)$/)?.[1] || 1); return E.realmOpen(r, x.P, W.idx!.zones); };
-/** The world-map node that leads into graph `gid` (any realm overworld; realms 2–9 have no exit edge in the data, so towns offer one). */
-const worldNodeFor = async (gid: string) => { const w = await graph('world').catch(() => null); return w?.edges.find(e => typeof e.to === 'object' && (e.to as E.NodeRef).graph === gid)?.from || null; };
+/** World map (v3.9.2 world.json realms[]): realm N opens when its unlock condition holds (the previous realm's realm boss); ?realms=all opens all.
+ *  Realms are left through their own exit edge (kind exit, from the entry town / village). */
+const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
+  const rl = W.idx!.realms?.find(r => r.node === n.id); const r = rl?.realm ?? Number(String(n.id).match(/(\d+)$/)?.[1] || 1);
+  return E.realmOpen(r, x.P, W.idx!.zones, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
 const MAXZ = 4, MW = 1160, MH = 410, OX = 60, OY = 130;   // the node area keeps nodes + labels clear of the HUD and the bottom bar (top 592)
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
@@ -355,7 +378,8 @@ export function graphScreen() {
   // on the world map every open realm node is one tap away (through its own portal edge)
   const worldPick = new Map<string, E.GEdge>(); if (isWorld) for (const n of g.nodes) { const e = g.edges.find(e2 => e2.from === n.id && typeof e2.to === 'object'); if (e && realmNodeOpen(n, x)) worldPick.set(n.id, e); }
   const pr = E.gp(P(), g.id);
-  const lines = isWorld ? g.nodes.slice(1).map((n, k) => { const a = g.nodes[k]; return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(n)}" y2="${py(n)}" class="ge${realmNodeOpen(n, x) ? ' walked' : ' closed'}"/>`; }).join('')
+  const lines = isWorld ? g.edges.filter(e => typeof e.to === 'string').map(e => { const a = E.nodeOf(g, e.from)!, b = E.nodeOf(g, e.to as string)!;   // link edges w12..w89
+    const open = allRealms() || E.edgeOpen(e, x); return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${open ? ' walked' : ' closed'}" data-edge="${e.id}"/>`; }).join('')
     : g.edges.filter(e => typeof e.to === 'string').map(e => { const a = E.nodeOf(g, e.from)!, b = E.nodeOf(g, e.to as string)!;
     if (fogS[a.id] === 'hidden' || fogS[b.id] === 'hidden' || (fogS[a.id] !== 'visited' && fogS[b.id] !== 'visited')) return '';
     const walked = E.bitGet(pr.walked, e.idx); const open = E.edgeOpen(e, x);
@@ -370,8 +394,8 @@ export function graphScreen() {
   const exits = [...adj.entries()].filter(([k]) => k.startsWith('@')).map(([, e]) => { const t = e.to as E.NodeRef; const meta = W.idx!.graphs.find(m => m.id === t.graph);
     const lab = e.kind === 'exit' ? `🌍 ${zh('世界地图')} World map` : e.kind === 'stairs' ? (hn.kind === 'stairs_up' ? `⬆️ ${zh('上楼')} Up` : `⬇️ ${zh('下楼')} Down`) : `🌀 ${meta?.title?.zh ? zh(meta.title.zh) + ' ' : ''}${esc(meta?.title?.en || t.graph)}`;
     return `<button class="secondary" data-exit="${e.id}" data-testid="gexit-${e.id}">${lab}</button>`; }).join('');
-  const hasExit = [...adj.values()].some(e => e.kind === 'exit');
-  const toWorld = !isWorld && !hasExit && g.kind === 'overworld' && (hn.kind === 'town' || hn.kind === 'village') ? `<button class="secondary" id="toworld" data-testid="go-world">🌍 ${zh('世界地图')} World map</button>` : '';
+  const fol = isWorld ? [] : E.escortFollowers(W.quests, x);
+  const follow = fol.length ? `<span data-testid="escort-follower" data-npc="${fol.map(f => f.npc).join(' ')}"> · 👣 ${fol.map(f => esc(names(f.npc, g)?.en || f.npc)).join(', ')}</span>` : '';
   const act = hn.kind === 'inn' ? `<button data-testid="act-rest" id="rest">🛏️ ${zh('休息')} Rest</button>` : (hn.kind === 'town' || hn.kind === 'village') ? `<button data-testid="act-town" id="intown">🏘️ ${zh('进去')} Go in</button>` : '';
   render(`<div data-testid="graph" class="screen graph" data-graph="${g.id}" data-node="${here}" data-kind="${g.kind}" data-nodes="${g.nodes.length}">
     <style>.graph svg{position:absolute;left:0;top:0;width:1280px;height:720px;pointer-events:auto;touch-action:none}.graph .ge{stroke:#f6e7c1;stroke-width:5;stroke-dasharray:10 8;opacity:.8}.graph .ge.walked{stroke-dasharray:none}
@@ -384,13 +408,12 @@ export function graphScreen() {
     <div class="bottombar panel">
       <button class="secondary" id="gbag" data-testid="go-items" data-key="1"><span class="ic">🎒</span>${zh('背包')} Bag</button>
       <button class="secondary" id="gq" data-testid="go-quests" data-key="2">📜 ${zh('任务')} Quests</button>
-      <div class="hint" data-testid="graph-hint">${esc(hn.title ? `${hn.title.en}` : '')} · 🪶×${S.inv.feather || 0}</div>${exits}${toWorld}${act}
+      <div class="hint" data-testid="graph-hint">${esc(hn.title ? `${hn.title.en}` : '')} · 🪶×${S.inv.feather || 0}${follow}</div>${exits}${act}
     </div></div>`);
   const svg = $('[data-testid="graph-svg"]') as unknown as SVGSVGElement;
   svg.querySelectorAll('.gn.next').forEach(el => el.addEventListener('click', () => { if (moved) return; const id = (el as HTMLElement).dataset.node!; const e = isWorld ? worldPick.get(id) : adj.get(id); if (e) walk(e); }));
   on('[data-exit]', (_e, el) => { const e = g.edges.find(x2 => x2.id === el.dataset.exit); if (e) walk(e); });
   on('#rest', () => rest(g, hn)); on('#intown', () => enterTown(g, hn));
-  on('#toworld', async () => { const wn = await worldNodeFor(g.id); if (!wn) return; await graph('world'); P().pos = { graph: 'world', node: wn, edge: null, step: 0 }; saveW(); cloudTrigger('graphChange', 'world'); graphScreen(); });
   on('#gbag', () => bag(graphScreen)); on('#gq', () => questLog());
   const setZoom = (k: number, cx = 640, cy = 360) => { const z0 = zoom; zoom = Math.max(1, Math.min(MAXZ, k));
     // keep the point under (cx, cy) in place
@@ -428,7 +451,10 @@ async function askName() {
 export async function startGraph() {
   await loadWorld(); await ensureProgress();
   await askName();
-  const p = P(); await graph(p.pos.graph);
+  const p = P();
+  const seenRealms = new Set(Object.keys(p.graphs).map(id => W.idx!.graphs.find(m => m.id === id)?.realm || 0).filter(r => r >= 3));
+  await Promise.all([...seenRealms].map(r => loadRealmContent(r, W.idx!.content).catch(() => false)));
+  await graph(p.pos.graph);
   if (!E.nodeOf(W.graphs[p.pos.graph], p.pos.node)) p.pos = { ...W.idx!.start, edge: null, step: 0 };
   await graph(p.lastInn.graph).catch(() => {});
   const g = W.graphs[p.pos.graph]; const n = E.nodeOf(g, p.pos.node)!;
