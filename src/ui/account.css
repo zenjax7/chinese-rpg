@@ -44,3 +44,4 @@ label.check input { width:32px; height:32px; }
 #playerChip { position:absolute; right:250px; top:22px; z-index:5; background:var(--navy); border:2px solid rgba(255,255,255,.4); border-radius:16px;
   padding:6px 14px; font:800 20px var(--en); pointer-events:none; }
 body.acct-screen #hud, body.acct-screen #playerChip { display:none; }
+[data-testid="parent-area"] .dlg-foot button { min-width:0; }

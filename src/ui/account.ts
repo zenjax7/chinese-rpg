@@ -229,11 +229,11 @@ export function parentArea(me: Me, opt: { firstRun?: boolean } = {}) {
     <div class="row left"><button id="padd" data-testid="pa-add" ${full ? 'disabled' : ''}>➕ ${bi('加孩子', 'Add a player')}</button>
       ${full ? `<span class="muted" data-testid="pa-cap">${bi('最多六个', 'A family can have up to 6 players.')}</span>` : ''}
       ${gs && n ? `<button class="secondary" id="pimp" data-testid="pa-import">📥 ${bi('导入', 'Import this device\'s guest save')}</button>` : ''}</div>
-    <h3>${bi('数据', 'Your data')}</h3>
-    <div class="row left"><button class="secondary" id="pexp" data-testid="pa-export">⬇️ ${bi('导出', 'Export data (JSON)')}</button>
+`,
+    foot: `<button class="secondary" id="pexp" data-testid="pa-export">⬇️ ${bi('导出', 'Export data')}</button>
       <button class="ghost" id="pso" data-testid="pa-signout">${bi('退出', 'Sign out')}</button>
-      <button class="danger" id="pdelacc" data-testid="pa-delete-account">⚠️ ${bi('删除账户', 'Delete account')}</button></div>`,
-    foot: `<button id="pdone" data-testid="pa-done" data-key="enter" ${n ? '' : 'disabled'}>${bi('谁在玩', 'Who\'s playing?')} ▶</button>` }));
+      <button class="danger" id="pdelacc" data-testid="pa-delete-account">⚠️ ${bi('删除账户', 'Delete account')}</button>
+      <button id="pdone" data-testid="pa-done" data-key="enter" ${n ? '' : 'disabled'}>${bi('谁在玩', 'Who\'s playing?')} ▶</button>` }));
   const refresh = async () => { const m2 = await loadMe(); if (m2) parentArea(m2); };
   on('#back', () => pickerScreen(me));
   on('#pdone', async () => { const m2 = await loadMe(); pickerScreen(m2 || me); });
