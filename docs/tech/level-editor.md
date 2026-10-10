@@ -69,7 +69,7 @@ Jack's plan covers all three: graph becomes the Vercel default **after** the edi
 
 ### 1.1 Recommendation in 10 lines
 
-1. **Schema `level/0.1`:** one level = one graph = its own zone (36 levels). It holds per-level settings (pool, roster, boss, backdrop, music, odds), nodes, edges, events, node `quests[]` variants, quests given here, and scene/0.2 dialogue.
+1. **Schema `level/0.1`:** one level = one graph = its own zone (36 levels; 38 if Jack approves Desy's realm_1 split). It holds one `settings` block (pool, roster, boss, backdrop, music, odds, unlocks), nodes, edges, events, node `quests[]` variants, quests given here, and scene/0.2 dialogue.
 2. **Ids are append-only:** never reused and never renamed after publish (the game doesn't apply `renames`).
 3. **DB:** `levels` (draft + published JSON, `draft_rev`, `published_version`), append-only `level_revisions`, `content_releases`, `editors`, `editor_tokens`. Under 100 MB for years.
 4. **Auth:** the existing Auth.js Google sign-in, plus an `editors` allowlist checked in a separate editor DAL, kept apart from parent and child data by a separate Postgres role.
@@ -117,15 +117,13 @@ The version is `level/0.1` (Desy's name). It becomes `level/1.0` when the editor
 | `aspect` | number | Width/height. Node x/y are normalised 0–1 against it. |
 | `idxMax`, `edgeIdxMax` | int | Only grow (§2.9) |
 | `retired` | `{nodes[], edges[], events[], quests[], scenes[]}` | Deleted ids, never handed out again |
-| `settings` | object | **The per-level settings that replace zones** (§2.4) |
-| `boss` | object or `null` | **The level's location or realm boss** (§2.4) |
+| `settings` | object | **The per-level settings that replace zones**, including the optional `boss` record (§2.4) |
 | `realms` | array | Only in `world`: realm links, as today's `world.json` |
 | `nodes`, `edges`, `events` | arrays | §2.2–2.3. `events` keeps list order, because order is data (first eligible wins). |
 | `quests` | array | Quest definitions **given in this level** (§2.6) |
 | `scenes` | object `{id: scene/0.2}` | Every scene that triggers in this level, inline graph dialogue included (§2.5) |
 | `characters` | string[] | Character ids used here (refs into the global registry); computed on save |
 | `assets` | object | `{backgrounds[], music[], portraits[], sprites[]}` ids; **computed on save** from the content, used for preload (§7) |
-| `legacy` | `{zones: string[]}` | Old zone ids this level absorbed, used only for save migration (§2.4) |
 
 ### 2.2 Nodes
 
@@ -147,7 +145,7 @@ Jack's "what happens here" maps to `kind` plus the node's first event. The edito
 | Quest battle | `kind: miniboss` + a quest step variant whose `in` is `{do: [{fight: {...}, quest}], outcome: miniboss}` (pick the quest and step) |
 | Item | event `{outcome: item, do: [{giveItem: …}]}` |
 | Story event | `kind: story` + event `{outcome: story, do: [{scene: …}]}` |
-| Location boss | `kind: boss`; the level's `boss.node` points here |
+| Location boss | `kind: boss`; the level's `settings.boss.node` points here |
 | Nothing / path | `kind: waypoint` or `fork`, with no event |
 | Lever, shop, exit | as graph/0.3 |
 
@@ -165,44 +163,71 @@ Rules:
 
 ### 2.4 Per-level settings and the boss (a level is its own zone)
 
-Jack's decision on 2026-10-10: **zones disappear from the schema and the editor.** Every setting a zone held is now a per-level setting:
+Jack's decision on 2026-10-10: **zones disappear from the schema and the editor.** There is no zone record, no node `zone` field and no zone layer in the UI. Everything a zone held is in **one `settings` block per level**, which is Desy's block (coverage doc §1.3) with the same field names:
 
 ```json
 "settings": {
-  "title":   {"zh": "灰雾村", "en": "Gloomy Village"},
-  "tier": 6,
-  "pool":    {"locations": ["L6.1"], "add": [], "remove": []},
-  "roster":  [{"enemy": "zombie", "weight": 1}],
-  "enemiesPerBattle": [3, 3],
-  "elite": "zombie_knight", "packs": {}, "scriptedElite": null,
+  "title": {"zh": "灰雾村", "en": "Gloomy Village"}, "emoji": "🏚️",
   "background": "bg_village_fog", "music": "village_theme",
+  "desyPool": "L6.1", "pool": "gloomy_village",
+  "tier": 6,
+  "enemiesPerBattle": [3, 3],
+  "roster": [{"enemy": "zombie", "weight": 1}],
+  "packs": {}, "elite": "zombie_knight", "scriptedElite": null,
   "encounters": null,
-  "unlockRequires": ["hydra_s_lair"]
-},
-"boss": {"node": "boss_1", "gateEdge": "e10", "enemy": "zombie_mayor", "kind": "locboss", "id": "gloomy_village"}
+  "unlockRequires": ["hydra_lair_2"],
+  "boss": {"node": "boss_1", "gateEdge": "e10", "kind": "locboss", "enemy": "zombie_mayor"}
+}
 ```
 
-(These are `realm_6`'s settings, taken from today's `gloomy_village` zone; the background and music ids are illustrative.)
+(These are `realm_6`'s settings, copied from today's `gloomy_village` zone. The emoji, background and music ids are illustrative.)
 
-- **`pool`**: curriculum location ids (`L1.1`…`L9.2`, from `curriculum_location_pools.csv`), plus optional `add` / `remove` lists of curriculum item ids (`C001`…). Default (Desy Q4): pick location ids only, with add and remove hidden behind "advanced".
-- **`roster`, `elite`, `packs`, `boss.enemy`**: enemy ids from `enemies.csv`, never copied stats. The editor warns when a boss of another tier or type is picked (`boss_hp.csv`).
-- **`encounters`**: `null` means the global `world_rules` odds (danger 0/0.6/0.85/0.95, depth +10% per level, max 0.95, pity 2, budget 8). An object overrides some of them, e.g. `{"danger": {"1": 0.5}}`. The validator clamps the values to the global maximum.
-- **`unlockRequires`**: `boss.id` values (old zone ids keep working).
-- **`boss`**: the location boss is per level (Desy). It is one record or `null`, for a level with no boss, such as most dungeon floors and the optional mines.
-  - `boss.id` is **the old zone id, kept for ever**, so `bossDefeated: "warren"` conditions, `zonesDefeated` in saves and realm unlocks keep working with no save migration.
-  - New levels get `boss.id = level id`.
-- **Realm-boss rewards** (`bossReward`: gold, Honey Potion, the heroic piece, a skill) stay global, in the realm content tables, keyed by `boss.id`, so the reward can't be given twice.
-- **How today's zones map:**
-  - 14 of 20 zones span 2–5 graphs, so each such graph **inherits its zone's settings**, and the boss goes only to the level that holds `bossNode`. For example, `demon_king_s_gate` covers `realm_9`, `demon_castle_1–2` and `shadow_vault_1–2`, and its boss sits in exactly one of them.
-  - 10 graphs hold 2–3 zones today. In 9 of them the second zone is a single entrance or boss node (for example, `realm_2` has 11 `forest` nodes and 1 `great_hive` node); `realm_1` has three real zones (meadow 7, clover_hills 4, warren 6 nodes).
-  - **Desy's zone→level map for all 36 graphs, and her recommendation for the multi-zone graphs, are in [level-json-coverage.md](../design/level-json-coverage.md)** (being added as of 2026-10-10). This doc follows her map rather than inventing one.
-- **What breaks without zones:** the code that still depends on zones:
-  - `zones.json`;
-  - `src/world/engine.ts`, which reads `zonesDefeated` and `z.bossKind`;
-  - `src/world/content.ts`, `src/ui/graph.ts` (the zone budget and `p.zone`) and `server/progress.ts`;
-  - `progress.schema.json` (`zone`, `zonesDefeated`).
+| Setting | Meaning | Editable? |
+|---|---|---|
+| `title`, `emoji`, `background`, `music` | the location name shown in battle, its backdrop and its music (the level's own map title stays at the top level) | yes |
+| `desyPool` (`L1.1`…`L9.2`) + `pool` (the location pool key, e.g. `clover_hills`) | the word pool. `pool` keeps today's key for location battle state (`S.locs`) and review order, so saves don't change. | pick by id (Desy Q4) |
+| `tier`; `G` and `recLevel` (derived) | from the global tables; shown, not typed | tier only |
+| Difficulty row: `mcOptions`, `reviewSlots`, `pathFights`, `maxNewPerBattle` | read from `realm_location_difficulty.csv` by `desyPool` | **read-only** (decision 17) |
+| `enemiesPerBattle`, `roster` (enemy + weight), `packs`, `elite`, `scriptedElite` | enemy **ids** only, never copied stats | yes (Desy Q5: stats no) |
+| `encounters` | `null` = the global `world_rules` odds. An object = a per-level override (Jack's spec), e.g. `{"danger": {"1": 0.5}}`, clamped to the global max 0.95. | yes, if Jack confirms (Q8). Desy keeps rates global; see D4 in §12. |
+| `unlockRequires` | the previous boss **level** id(s); the gating itself stays on edges (`cond bossDefeated`) | yes |
+| `boss` (optional) | **the location or realm boss of this level**: `node`, `gateEdge` (the one `patrol` edge), `kind` (`locboss` / `realmboss`), `enemy`, and for a realm boss `reward` (today's `bossReward`) | yes; at most one per level |
 
-  Desy is listing it. Phase 6 removes or renames it (§10).
+**What the editor does with it:**
+- The Level Settings panel (§5.3) is the only place pools and enemies are picked.
+- Pool contents, the 3-new cap, Tired caps, enemy stats and boss HP stay global (Desy).
+- The editor warns when a boss of another tier or type is picked.
+
+**Bosses and unlocks are keyed on level ids** (Desy §3.9.4):
+- `bossDefeated: <zone>` becomes `bossDefeated: <boss level>` through Desy's 20-row table (e.g. warren → `warren`, great_hive → `great_hive_1`, throne_hall → `demon_castle_5`). That covers:
+  - 5 conditions in `realm_1`, 16 in `world.json` and 17 in `quests.json`;
+  - the 21 `unlockRequires` entries.
+- `realms[].realmBossZone` becomes `realmBossLevel`, and `realms[].unlock` uses the same ids.
+- It is a 1:1 rename, so every gate opens at exactly the same moment as today.
+- **Saves:** `zonesDefeated` holds boss level ids after a **one-time save migration** through the same table (§7.3). It is 1:1, so the "bosses beaten" count in `server/progress.ts` doesn't change.
+
+**The battle budget** (8 battles, pity 2) resets **when the level's word pool changes** (Desy §3.9.3, her Q18). Floors of one dungeon that share a pool keep sharing one budget, as today. The budget id is the level's `pool`, the same strings as today, so it needs no migration.
+
+**How today's zones map onto levels** (Desy §3.9.1–3.9.2, followed here rather than re-invented):
+- **25 of the 36 graphs** hold exactly one zone and copy it.
+- A zone that spans several graphs (14 of 20) is **copied into each of them**, so every dungeon floor keeps today's pool, roster and difficulty row.
+- The **boss record** goes only to the level holding the boss node. Each of the 20 boss nodes is in exactly one graph.
+- **9 graphs** hold one stray "doorway" node of the next zone (a portal or stairs-down after a location boss). **These stay in their own graph's level** (no map, id or save change). Only their 9 approach edges (17 danger-2 steps) now fight in the pool just cleared. On the beeline that is −2.0 to +0.3 battles per realm; five realm-boss locations drop to 5.1–6.3 own-pool battles before their boss (Desy Q17).
+- **`realm_1`** holds three real zones (meadow, clover_hills, warren), each with its own boss.
+  - **Desy proposes splitting it into three levels** (`realm_1`, `clover_hills`, `warren`, joined by portal links, with battles identical to today), which would make 38 levels.
+  - **⏳ PENDING Jack's confirmation, not planned as decided.** Until then this doc counts **36 levels**, and the migration keeps `realm_1` whole, with a flag that blocks its publish until the decision (Q1b).
+  - If approved, the split happens in the seed **before** the first publish, plus a one-time realm-1 save migration (node idx 7–16 and edge idx 8–18 move; Desy §3.9.2 A).
+- `world` has no settings for battles.
+
+**Code that still depends on zones:** Desy lists it in §3.9.6:
+- `zones.json` and the zone schemas;
+- `src/world/engine.ts` (`Zone`, `realmOpen`, `P.zone` budget, `edgeZone`);
+- `src/ui/graph.ts` (`zoneOf`, boss fights, budget reset);
+- `src/world/content.ts`, `src/data.ts`, `src/world/progress.ts`, `src/engine/battle.ts`;
+- `server/progress.ts`, `server/dal/saves.ts`;
+- the tests and the Python tools.
+
+Phase 6 removes it (§10).
 
 ### 2.5 Dialogue scenes (scene/0.2, unchanged)
 
@@ -286,7 +311,7 @@ They ship with the deploy, so the Function's validators and the editor's pickers
 
 ### 2.9 Stable ids, retirement and no renames
 
-- The ids of levels, nodes, edges, events (`<node>.<n>`), quests, steps, scenes and `boss.id` are **save keys and RNG keys**. Seeds hash `saveSeed|graphId|edgeId|crossing|step` and `…|nodeId|visit`. Bitsets index by `idx`.
+- The ids of levels, nodes, edges, events (`<node>.<n>`), quests, steps and scenes are **save keys and RNG keys**. Seeds hash `saveSeed|graphId|edgeId|crossing|step` and `…|nodeId|visit`. Bitsets index by `idx`.
 - New nodes and edges get `idxMax+1` / `edgeIdxMax+1`. A deleted id goes into `retired` and is never reused (the server also checks against every past revision).
 - **No renames after publish.** `index.json` has a `renames` map, but **the game does not apply it** (no reference in `src/`). The policy is therefore **ids are fixed once published**:
   - before the first publish, ids are free text;
@@ -295,7 +320,7 @@ They ship with the deploy, so the Function's validators and the editor's pickers
 
 ### 2.10 Full example
 
-A trimmed `old_mine_1` as it would look after migration: 6 of its 13 nodes, with a quest step, an NPC giver and one scene. It is valid against the draft schema. It's a level with no boss of its own, so it inherits the `gloomy_village` zone settings (whose boss is in `realm_6`), and `boss` is `null`.
+A trimmed `old_mine_1` as it would look after migration: 6 of its 13 nodes, with a quest step, an NPC giver and one scene. It is valid against the draft schema. It has no boss of its own: it copies the `gloomy_village` zone settings (Desy §3.9.1, row 17), and its settings have no `boss` record (that boss is in `realm_6`).
 
 ```json
 {
@@ -311,19 +336,17 @@ A trimmed `old_mine_1` as it would look after migration: 6 of its 13 nodes, with
   "aspect": 3.515,
   "idxMax": 12, "edgeIdxMax": 13,
   "retired": {"nodes": [], "edges": [], "events": [], "quests": [], "scenes": []},
-  "legacy": {"zones": ["gloomy_village"]},
   "settings": {
-    "title": {"zh": "旧矿洞", "en": "Old Mine"},
-    "tier": 6,
-    "pool": {"locations": ["L6.1"], "add": [], "remove": []},
-    "roster": [{"enemy": "zombie", "weight": 1}],
-    "enemiesPerBattle": [3, 3],
-    "elite": "zombie_knight", "packs": {}, "scriptedElite": null,
+    "title": {"zh": "灰雾村", "en": "Gloomy Village"}, "emoji": "🏚️",
     "background": "bg_mine", "music": "dungeon_theme",
+    "desyPool": "L6.1", "pool": "gloomy_village",
+    "tier": 6,
+    "enemiesPerBattle": [3, 3],
+    "roster": [{"enemy": "zombie", "weight": 1}],
+    "packs": {}, "elite": "zombie_knight", "scriptedElite": null,
     "encounters": null,
-    "unlockRequires": ["hydra_s_lair"]
+    "unlockRequires": ["hydra_lair_2"]
   },
-  "boss": null,
   "nodes": [
     {"id": "stairs_1", "idx": 0, "kind": "stairs_up", "x": 0.05, "y": 0.5, "title": {"zh": "楼梯", "en": "Entrance"}},
     {"id": "path_1", "idx": 1, "kind": "fork", "x": 0.23, "y": 0.5, "title": {"zh": "暗厅", "en": "Dark hall"}},
@@ -405,11 +428,12 @@ Notes on the example:
 | graph `events[]` | `events[]` (order kept) | quest-hook events are generated from `quests[]` variants, not hand-written |
 | graph `dialogue{}` (197 inline keys) | `scenes{}` (scene/0.2) | converted once; `{"dialogue": key}` actions become `{"scene": id}` |
 | graph `npcs{}` | `characters[]` (refs) + global registry | names move to the registry |
-| `world.json` `realms[]` | `realms[]` on level `world` | `realmBossZone` holds a `boss.id` (Desy D5: rename it or not) |
-| **zones.json** zone record | `settings` + `boss` on each level (§2.4) | the zone concept is gone; `desyPool` → `settings.pool.locations`; `bossNode` / `gateEdge` / `boss` / `bossKind` → `boss`; `roster`, `elite`, `packs`, `enemiesPerBattle`, `unlockRequires` → `settings` |
+| `world.json` `realms[]` | `realms[]` on level `world` | `realmBossZone` → `realmBossLevel`; `unlock` conditions use boss level ids (Desy §3.9.4) |
+| **zones.json** zone record | `settings` on each level that had its nodes (§2.4) | the zone concept is gone; `title`, `desyPool`, `pool`, `tier`, `roster`, `elite`, `packs`, `scriptedElite`, `enemiesPerBattle` copied as is; `bossNode` / `gateEdge` / `boss` / `bossKind` → `settings.boss` on the boss level only; `unlockRequires` → boss level ids |
 | `index.json` | compiled by the server per release (`GET /levels/index`) | no longer hand-built; `renames` is dropped (§2.9) |
 | **quest/0.2** quest | `quests[]` in the giver's level | `zone` is dropped; positions are always resolved `{graph, node}`; `event: portal` becomes `reach` |
 | quest `scenes {offer, progress, turnIn}` | kept, and mirrored by the giver's `pre` / `in` / `post` variants | variants are the editing surface; the validator keeps both in sync |
+| quest `zone` and positions (305 zone refs) | `zone` → the boss level of that zone (metadata); every position frozen to `{graph, node}`; area steps and `scope.zone` → a list of levels (Desy §3.9.5) | all 259 positions resolve today |
 | `quests_world.json` hooks (55 NPC slots) | node `quests[]` + `kind: npc` events | ambient banter becomes a scene on the NPC node |
 | **scene/0.2** files | `scenes{}` in the trigger level | unchanged format; `zone` is implied |
 | `content/realm_N.json` (generated) | compiled per release by the server | still generated, never edited |
@@ -809,7 +833,12 @@ sequenceDiagram
   - changed content under an existing id simply plays the new content;
   - an event already in `eventsDone` stays done (give it a new id to make it fire again);
   - unchanged edges keep their exact RNG rolls, because the keys hash ids, never `idx` or list positions.
-- **Zones → levels:** no save migration. `boss.id` keeps the old zone ids, so `zonesDefeated` stays valid. Phase 6 renames the field to `bossesDefeated`, with an alias on load.
+- **Zones → levels: one-time save migration** (Desy §3.9.4), applied on load to local saves and in the server's save path to cloud saves:
+  - `zonesDefeated` zone ids → boss level ids, through Desy's 20-row table (1:1, so the boss count is unchanged);
+  - the budget's `zone` already holds the pool name, so it stays;
+  - if the realm_1 split is approved, its bits, `pos`, `lastInn` and `visitedTowns` move too.
+  - The migrated save records `progress.levelsMigrated: 1`, so it runs once.
+  - Phase 6 may rename the field to `bossesDefeated`, with an alias on load.
 - **Real families on cloud saves:**
   - the server-side save validator (`server/progress.ts`) reads node counts from the bundled static index today (`graphNodeCount`);
   - phase 2 points it at the published release, so a node added in the editor doesn't make a child's cloud save fail validation.
@@ -857,8 +886,10 @@ sequenceDiagram
 
 **The one-shot conversion** (Desy §3.4, adjusted for level = zone):
 
-1. **`tools/level/split_levels.py`** writes 36 `level/0.1` files to `docs/data/levels/` (the first repo copy, §9). In the process it:
-   - spreads each zone's settings onto every level the zone touches (Desy's zone→level map), and puts `boss` on the level that holds `bossNode`, with `boss.id` = the zone id;
+1. **`tools/level/split_levels.py`** writes 36 `level/0.1` files (38 with the realm_1 split) to `docs/data/levels/` (the first repo copy, §9). In the process it:
+   - copies each zone's settings into every level that held its nodes (Desy §3.9.1), and puts `settings.boss` only on the level holding the boss node; drops node `zone` fields; leaves the 9 doorway nodes in their own graph (§3.9.2 B);
+   - renames `bossDefeated`, `unlockRequires` and `realmBossZone` targets to boss level ids (§3.9.4), and maps the quests' 305 zone references to levels (§3.9.5);
+   - keeps `realm_1` whole unless Jack approves the split (then it writes `realm_1`, `clover_hills` and `warren`, §3.9.2 A);
    - puts quests in the giver's level and scenes in the trigger's level, and turns hooks into node `quests[]` variants;
    - converts the inline `dialogue{}` to scene/0.2 and rewrites `{"dialogue": k}` as `{"scene": id}`;
    - resolves the 117 `zone + nodeKind + position` positions with `build_world.resolve_pos`;
