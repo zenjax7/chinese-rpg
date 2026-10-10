@@ -205,7 +205,6 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   async function battle() {
     for (let i = 0, waits = 0; i < 3000; i++) {
       const st = await state();
-      if (process.env.WORLD_DEBUG && i % 100 === 0) { log('battle', i, st, JSON.stringify(await p.evaluate(() => (window.__proto.foes?.() || []).map(f => [f.id, f.hp, f.alive]))), await p.evaluate(() => document.querySelector('[data-testid=battle]')?.innerText.slice(0, 200))); await p.screenshot({ path: '/tmp/dbg.png' }); }
       if (st === 'victory') { await tid('victory-ok').click(); return 'win'; }
       if (st === 'left' || st === 'scene' || st === 'dialog') return st;
       if (st === 'continue') await tid('continue').click({ timeout: 2000 }).catch(() => {});

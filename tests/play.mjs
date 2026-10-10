@@ -267,7 +267,8 @@ check(r.result === 'win', `beat the Starter Meadow boss (${r.stats.q} q)`);
 const bv = await tid(p, 'victory').innerText(); check(/Honeycomb Forest/.test(bv) && /Guardian Shield/.test(bv), 'boss unlocks Honeycomb Forest + Guardian Shield');
 check(/heroic/.test(bv), 'Rabbit King chest gives the heroic Rabbit-Horn Dagger');
 log(bv.replace(/\n+/g, ' | '));
-check(/Equipped .*Rabbit-Horn Dagger \(ATK 5 → 7\)/.test(bv), 'strictly better heroic drop auto-equipped (shown on the results card)');
+// ATK 5 = Wooden Sword; 6 = a lucky Fine Wooden Sword drop from a meadow foe (random, so both are fine)
+check(/Equipped .*Rabbit-Horn Dagger \(ATK [56] → 7\)/.test(bv), 'strictly better heroic drop auto-equipped (shown on the results card)');
 await tid(p, 'victory-ok').click(); await tid(p, 'town').waitFor();
 check((await save_(p)).equip.weapon === 'horn_dagger', 'Rabbit-Horn Dagger is worn after the boss (auto-equip, v3.2 §7.9)');
 await tid(p, 'go-adventure').click(); await tid(p, 'worldmap').waitFor();
