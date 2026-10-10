@@ -70,3 +70,28 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 - **Cloud children play the graph world only.** Cloud snapshots need the graph-mode `world` (progress/0.3), so picking a child forces graph mode for that child; guests keep the classic default.
 - **Tests use PGlite** in-process instead of a Neon branch; `test:api:pg` covers real Postgres.
 - **Partly deployed:** the Vercel project (`zenjax7/chinese-rpg`) exists, but no Neon database (`DATABASE_URL`) or Google OAuth client yet. See [architecture.md §17](architecture.md) for what Jack sets up.
+
+## Planned: level editor and level endpoints (not built)
+
+**Status: planned, from [level-editor.md](level-editor.md), which is proposed and pending Jack's approval. None of these routes exist yet.**
+
+| Route | Who | What |
+|---|---|---|
+| `GET /api/v1/levels/index` | public | Latest content release: `{release, levels: {id: {v, hash, realm, kind, title}}, start}`. `CDN-Cache-Control: s-maxage=300, stale-while-revalidate`, ETag `r<release>` |
+| `GET /api/v1/levels/:id?v=N` | public | One published level (`level/0.1`) at version N: `immutable`, ETag = content hash. Without `v`: 302 to the current version |
+| `GET /api/v1/levels/quests?r=R` | public | The compiled quest list of release R (immutable) |
+| `GET /api/v1/editor/levels` | editor | Level list with draft/published state, versions and error counts |
+| `GET /api/v1/editor/levels/:id/draft` | editor | The draft + `draftRev` + validation (also used by Playtest) |
+| `PUT /api/v1/editor/levels/:id/draft` | editor | Autosave `{draftRev, body}`. Validated and stored even with errors. 409 on a stale `draftRev` |
+| `POST /api/v1/editor/levels` | editor | Create a level (kind, realm, id checked against retired ids) |
+| `POST /api/v1/editor/publish` | editor, session < 12 h | Publish one level or a set `{levels: [{id, draftRev}], note}` in one transaction → new versions, `level_revisions` rows, a `content_releases` row. 422 with errors |
+| `GET /api/v1/editor/levels/:id/revisions` | editor | Publish history and checkpoints |
+| `POST /api/v1/editor/levels/:id/rollback` | editor, session < 12 h | Republish revision vM as a new version |
+| `POST /api/v1/editor/import` | editor, session < 12 h | Import level JSON (e.g. a repo edit by Desy) as the **draft** only |
+| `GET /api/v1/editor/export?state=published[&level=]` | editor session **or** Bearer `export:read` token | Read-only export of the published levels (`state=draft` needs the session). GameDev's box uses it to write `docs/data/levels/` |
+| `POST /api/v1/editor/tokens`, `DELETE /api/v1/editor/tokens/:id` | owner, session < 12 h | Create (shown once) and revoke read-only export tokens |
+
+- **Editor routes** accept only an `EditorCtx`: a session user in the `editors` table or in `EDITOR_GOOGLE_SUBS`. They use the `app_editor` DB role, which has no grant on player tables.
+- **The same CSRF rules** as the routes above apply. Rate limits: save 240/h, publish 30/h, export 60/h per token.
+- **`vercel.json`'s `no-store`** rule for `/api/(.*)` will be narrowed so the public `/api/v1/levels/*` routes can be CDN-cached.
+- **Planned env names:** `DATABASE_URL_EDITOR`, `DATABASE_URL_LEVELS_RO`, `EDITOR_GOOGLE_SUBS`, `EXPORT_TOKEN_PEPPER`.
