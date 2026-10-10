@@ -305,6 +305,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [tech/README.md](tech/README.md) — What tech/ holds · **GameDev** · browsing
 - [tech/architecture.md](tech/architecture.md) — Approved architecture: accounts, cloud saves, COPPA, $0 hosting (Vercel + Neon + Auth.js), graph world, decision log D1–D18 · **GameDev** · before backend, save or hosting work
 - [tech/api.md](tech/api.md) — As-built note for the accounts and cloud-save API (/api/v1, Auth.js, DAL, migrations, client outbox), how to test it, and its deviations from architecture.md · **GameDev** · before backend or cloud-save work
+- [tech/api.md#account-screens-client](tech/api.md#account-screens-client) — Account screens (accounts build only, `VITE_CLOUD_SAVE=1`): launch, Google sign-in, consent, parent PIN, parent area, "Who's playing?", guest-save import, offline banner; `npm run build:cloud` + `npm run test:account` · **GameDev** · before UI work on accounts
 - [tech/deploy.md](tech/deploy.md) — How deploy works: GitHub Pages workflow, build:ci, validate:world, asset sync, tests · **GameDev** · before pushing to main
 - [tech/research-tech-market.md](tech/research-tech-market.md) — Technology, market and compliance research (engines, speech, COPPA) · **GameDev** · for background
 
