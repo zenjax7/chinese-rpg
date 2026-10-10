@@ -3,7 +3,8 @@ import json, sys, os
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import world_graph as WG
-OUT = '/workspace/desy/data/world/diagrams'
+from _paths import OUT as _OUT
+OUT = os.path.join(_OUT, 'diagrams')
 COL = {'town': '#e4572e', 'village': '#f3a712', 'inn': '#29335c', 'boss': '#7b0828', 'miniboss': '#c0392b', 'chest': '#d4ac0d', 'story': '#8e44ad', 'npc': '#16a085',
        'fork': '#7f8c8d', 'waypoint': '#95a5a6', 'stairs_up': '#2e86c1', 'stairs_down': '#2e86c1', 'portal': '#5dade2', 'exit': '#34495e', 'lever': '#a04000', 'shop': '#f39c12'}
 SHAPE = {'town': 's', 'village': 's', 'inn': 'h', 'boss': '*', 'miniboss': 'P', 'chest': 'D', 'story': 'p', 'npc': 'o', 'stairs_up': '^', 'stairs_down': 'v', 'portal': '8'}

@@ -1,9 +1,10 @@
 """Generates reference realm graphs for realms 2-9 (and their dungeon levels) from per-realm layout targets (LAYOUT below,
 also written to data/world/layout_targets.json). Realm 1 is hand-authored (make_world_data.py). The generated graphs are
 reference layouts for the sim and for level designers to replace with authored maps; they follow every validator rule.
-Run after make_world_data.py:  /workspace/desy/.venv/bin/python world_gen.py"""
+Run after make_world_data.py (repo root): python3 docs/tech/tools/world/world_gen.py"""
 import math, json, os, random, csv, re, collections
-OUT = '/workspace/desy/data/world'; VERSION = 'v3.9.1'
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); from _paths import D, OUT as _OUT, SRC_DATA   # repo-relative (_paths.py)
+OUT = _OUT; VERSION = 'v3.9.2'
 RULES = json.load(open(f'{OUT}/world_rules.json'))
 def dump(path, obj):
     p = os.path.join(OUT, path); os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -28,9 +29,9 @@ LAYOUT = {
  9: dict(nodes=200, towns=3, minis=6, loop=0.3,  dungeons=[dict(id='demon_castle', name="Demon King's Castle", zh='魔王城', levels=5, zones=[[1], [1], [2], [2], [2]], innLevels=[2, 4]),
                                                      dict(id='shadow_vault', name='Shadow Vault (optional)', zh='暗影宝库', levels=2, zones=[[], []], innLevels=[1], optional=True)]),
 }
-TOWNS = json.load(open('/workspace/chinese-rpg/prototype/src/data/towns.json'))['towns']
-LOCROWS = list(csv.DictReader(open('/workspace/desy/data/realm_location_difficulty.csv', encoding='utf-8-sig')))
-ENEM = {r['id']: r for r in csv.DictReader(open('/workspace/desy/data/enemies.csv', encoding='utf-8-sig'))}
+TOWNS = json.load(open(_os.path.join(SRC_DATA, 'towns.json')))['towns']
+LOCROWS = list(csv.DictReader(open(D('data/realm_location_difficulty.csv'), encoding='utf-8-sig')))
+ENEM = {r['id']: r for r in csv.DictReader(open(D('data/enemies.csv'), encoding='utf-8-sig'))}
 PROTO = {}   # v3.8: data uses desy enemy ids everywhere (build_data maps them to prototype ids via desyId)
 slug = lambda s: re.sub(r'[^a-z0-9]+', '_', s.lower()).strip('_')
 PATH = [{"pick": [{"event": "nothing", "weight": 70}, {"event": "ambient", "weight": 15}, {"event": "find_honey", "weight": 15}]}]
@@ -41,9 +42,9 @@ def rate(d, level): return min(RULES['maxRate'], RULES['encounterRate'][str(d)] 
 
 # ---- v3.9: pin nodes that story/quests reference (data/quests.json where.ref, quests.md §6 hook table) so regeneration keeps them
 import re as _re
-QV2 = json.load(open('/workspace/desy/data/quests.json', encoding='utf-8'))['quests']
+QV2 = json.load(open(D('data/quests.json'), encoding='utf-8'))['quests']
 HOOK_TABLE = []
-for _m in _re.finditer(r"^\| `(q\d_[a-z0-9_]+)` \| `([a-z0-9_]+/[a-z0-9_]+)` \| ([^|]*) \|", open('/workspace/desy/quests.md', encoding='utf-8').read(), _re.M):
+for _m in _re.finditer(r"^\| `(q\d_[a-z0-9_]+)` \| `([a-z0-9_]+/[a-z0-9_]+)` \| ([^|]*) \|", open(D('quests.md'), encoding='utf-8').read(), _re.M):
     uses = [(_u.group(1), _u.group(2)) for _u in _re.finditer(r"(q\d_[a-z0-9_]+) \(([^)]*)\)", _m.group(3))]
     HOOK_TABLE.append(dict(hook=_m.group(1), giver=_m.group(2), uses=uses))
 PUB2INT = {'npc': 'npc', 'story': 'story', 'miniboss': 'miniboss', 'chest': 'treasure', 'portal': 'portal', 'waypoint': 'deadend', 'deadend': 'deadend'}
@@ -136,8 +137,8 @@ def gen(t):
         if r['scripted_elite_id']: z["scriptedElite"] = PROTO.get(r['scripted_elite_id'], r['scripted_elite_id'])
         zones.append(z); spine_nodes += zspine; cur = boss
         enc = {"id": zid, "tier": t, "enemiesPerBattle": [int(x) for x in r['enemies_per_fight'].replace('–', '-').split('-')] * (1 if '–' in r['enemies_per_fight'] else 2)}
-        if t == 2: enc["roster"] = [{"enemy": PROTO.get(e, e), "weight": 1} for e in r['normal_enemy_ids'].split(';')]
-        else: enc["fromRoster"] = {"location": r['location_id']}
+        enc["roster"] = [{"enemy": PROTO.get(e, e), "weight": 1} for e in r['normal_enemy_ids'].split(';') if e]   # v3.9.2: explicit roster for every realm (was fromRoster for 3-9)
+        assert enc["roster"], r['location_id']
         el = r['scripted_elite_id'] or next((e['id'] for e in ENEM.values() if e['role'] == 'elite' and e['realm'] == str(t)), None)
         enc["elite"] = PROTO.get(el, el); ENCG.append(enc)
     G[rid]['zones'] = zones
@@ -418,8 +419,7 @@ def main():
             d = {"id": z['id'], "realm": t, "order": z['order'], "title": {"en": r['location_name'], "zh": r['location_name_zh']}, "location": z['location'], "desyPool": z['desyPool'],
                  "pool": z['pool'], "tier": t, "bossNode": {"graph": bg, "node": bn}, "gateEdge": {"graph": gg, "edge": ge}, "bossKind": z['bossKind'], "boss": z['enemy'],
                  "enemiesPerBattle": e['enemiesPerBattle'], "elite": e['elite']}
-            if 'roster' in e: d["roster"] = e['roster']; d["packs"] = {}
-            else: d["fromRoster"] = e['fromRoster']
+            d["roster"] = e['roster']; d["packs"] = {}
             if z.get('scriptedElite'): d["scriptedElite"] = z['scriptedElite']
             d["unlockRequires"] = [prev] if prev else ([zfile['zones'][-1]['id']] if t > 1 else [])
             zfile['zones'].append(d); prev = z['id']
@@ -431,6 +431,18 @@ def main():
         if e.get('from') == 'realm_1' and e['kind'] != 'portal': e['cond'] = {"bossDefeated": "warren"}
     for e in world['edges']:
         if e['kind'] == 'portal' and e['to']['graph'] != 'realm_1': e['to']['node'] = 'entry_town'
+    # v3.9.2: explicit realm links (world.json 'realms'): enter / exit / link edges + unlock condition per realm
+    RBZ = {z['realm']: z['id'] for z in zfile['zones'] if z['bossKind'] == 'realmboss'}
+    links = []
+    for t in range(1, 10):
+        rg = json.load(open(f'{OUT}/graphs/realm_{t}.json'))
+        ex = next(e for e in rg['edges'] if e['kind'] == 'exit' and e['from'] == rg['entry'] and e['to'] == {"graph": "world", "node": f"realm_{t}"})
+        enter = next(e for e in world['edges'] if e['kind'] == 'portal' and e['from'] == f'realm_{t}')
+        link = next((e for e in world['edges'] if e['kind'] != 'portal' and e.get('to') == f'realm_{t}'), None)
+        if link: assert link['cond'] == {"bossDefeated": RBZ[t - 1]}, (t, link)
+        links.append({"realm": t, "node": f"realm_{t}", "graph": f"realm_{t}", "entry": rg['entry'], "enterEdge": enter['id'], "exitEdge": ex['id'],
+                      "linkEdge": link['id'] if link else None, "unlock": {"bossDefeated": RBZ[t - 1]} if t > 1 else None, "realmBossZone": RBZ[t], "next": t + 1 if t < 9 else None})
+    world['realms'] = links
     qfile['_note'] = MW.QW_NOTE if hasattr(MW, 'QW_NOTE') else qfile.get('_note')
     dump('graphs/world.json', world); dump('zones.json', zfile); dump('quests_world.json', qfile)
     print('PIN_LOG:'); [print('  ', l) for l in PIN_LOG]
@@ -442,7 +454,9 @@ def main():
     dump('index.json', {"_note": "v3.8 world index: every file the loader reads, plus the start position. status reference = generated by build/world/world_gen.py (replace with authored maps); authored = hand-made.",
                         "schema": "index/0.3", "version": VERSION, "renames": {}, "start": {"graph": "realm_1", "node": "village"},
                         "files": {"rules": "world_rules.json", "zones": "zones.json", "quests": "quests_world.json", "layoutTargets": "layout_targets.json"},
+                        "content": {str(t): f"content/realm_{t}.json" for t in range(3, 10)},
                         "graphs": [{"id": g, "kind": meta[g]['kind'], "realm": meta[g]['realm'], "dungeon": meta[g].get('dungeon'), "level": meta[g].get('level', 0), "status": meta[g].get('status', 'authored'),
                                     "nodes": len(meta[g]['nodes']), "file": f"graphs/{g}.json"} for g in graphs]})
     for t, s_ in stats.items(): print(t, s_)
+    import make_realm_content; make_realm_content.main()     # v3.9.2: content/realm_{3..9}.json (enemies, locations, pools, items)
 if __name__ == '__main__': main()

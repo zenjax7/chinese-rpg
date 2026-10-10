@@ -12,12 +12,12 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 
 ## Which doc wins
 
-1. [decisions.md](decisions.md) (Jack's locked decisions), then [design/combat-spec.md](design/combat-spec.md) (v3.9.1), [design/spells.md](design/spells.md) (v3.7) and [design/world-graph.md](design/world-graph.md) (v3.9.1).
+1. [decisions.md](decisions.md) (Jack's locked decisions), then [design/combat-spec.md](design/combat-spec.md) (v3.9.3), [design/spells.md](design/spells.md) (v3.7) and [design/world-graph.md](design/world-graph.md) (v3.9.3).
 2. The tables in [data/](data/), which match those specs; `src/data` is built from them.
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) for vocabulary; [story/](story/) for story and quests.
 4. [design/plan.md](design/plan.md) and the research memos are background.
 
-The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and exit edges, FNV-1a seeds, escort and words steps) is merged into [data/world/](data/world/) and [data/quests/](data/quests/), and the game reads it (graph mode, `?world=graph`).
+The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and exit edges, FNV-1a seeds, escort and words steps) is merged into [data/world/](data/world/) and [data/quests/](data/quests/), and the game reads it (graph mode, `?world=graph`). The spec text covers it: combat-spec §12.3–§12.4 and world-graph §0.00, §1.1, §4.4, §12.1, §14.6.
 
 ## Layout
 
@@ -39,9 +39,9 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 ### Design (docs/design/)
 
 - [design/README.md](design/README.md) — What design/ holds · **Desy** · browsing
-- [design/combat-spec.md](design/combat-spec.md) — Source of truth: combat and progression spec v3.9.1 (battle rules, stats, economy, spells summary §6.7, quests §7.11, world graph §12) · **Desy** · before any combat, balance or progression change
+- [design/combat-spec.md](design/combat-spec.md) — Source of truth: combat and progression spec v3.9.3 (battle rules, stats, economy, spells summary §6.7, quests §7.11, world graph §12; v3.9.2 realm links, seeds, Feather and content §12.3) · **Desy** · before any combat, balance or progression change
 - [design/spells.md](design/spells.md) — Source of truth for spells and v1 board quests: design and sim, v3.7 (no cast caps, no MP regen, boss targets) · **Desy** · when touching spells, MP or bosses
-- [design/world-graph.md](design/world-graph.md) — Source of truth for the world: graph design v3.9.1 (nodes, edges, encounters, events, Feather, fog, data format) · **Desy** · before world/map work
+- [design/world-graph.md](design/world-graph.md) — Source of truth for the world: graph design v3.9.3 (nodes, edges, encounters, events, realm links and exits, seed hash with test vectors, Feather, fog, data format, realm 3–9 content files) · **Desy** · before world/map work
 - [design/world-graph-schema-answers.md](design/world-graph-schema-answers.md) — Desy's answers to GameDev's 14 world-graph schema questions · **Desy** · when implementing graph data
 - [design/curriculum-notes.md](design/curriculum-notes.md) — Curriculum notes v2: how 1,051 items are levelled and split across realms and locations · **Desy** · when touching vocabulary
 - [design/ui-layout-review.md](design/ui-layout-review.md) — UI layout and game-feel review: 1280×720 frame, sizes, battle and map screens (correct repo version with fixed links) · **Desy** · before UI or layout work
@@ -87,6 +87,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [data/items/economy_prices.csv](data/items/economy_prices.csv) — Shop prices and gold economy (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear.csv](data/items/gear.csv) — Weapons and armor by tier (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) — Heroic gear drops from bosses and elites (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/gear_items.csv](data/items/gear_items.csv) — Game-ready gear catalogue, tiers 1–9: one row per piece (weapon/armor/shield × common/fine/heroic) with ids (`<slot>_t<tier>_<rarity>`, prototype ids for tiers 1–2), stat, shop price, price in G and in battles of gold, source and perk. Derived from gear.csv (§6.2) with no new numbers · **Desy** · when adding gear for realms 3–9 to the game (regenerate after a gear.csv change)
 
 ### Data: balance
 
@@ -317,6 +318,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [tech/tools/world/sim/world_summary.json](tech/tools/world/sim/world_summary.json) — v3.9.1 main world sim output (100 runs per profile) · **Desy** · when re-running the world sim
 - [tech/tools/data/assemble_spec.py](tech/tools/data/assemble_spec.py) — Assembles combat-spec.md · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/build_data.py](tech/tools/data/build_data.py) — Generates the data CSV/JSON tables · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/make_gear_items.py](tech/tools/data/make_gear_items.py) — Writes data/items/gear_items.csv from gear.csv, economy_prices.csv and realm_difficulty.csv (run from the repo root) · **Desy** · after a gear or price change
 - [tech/tools/data/spec_new_sections.md](tech/tools/data/spec_new_sections.md) — Spec source sections · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_data.py](tech/tools/data/spells_data.py) — Spell and quest source data and design formulas · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_md_template.md](tech/tools/data/spells_md_template.md) — spells.md template · **Desy** · when re-running Desy's sims or generators
@@ -341,15 +343,17 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [tech/tools/world/build_world_sim.py](tech/tools/world/build_world_sim.py) — Builds world_sim.py from spells_sim.py plus the loop · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/doc/spec12.md](tech/tools/world/doc/spec12.md) — The text of combat-spec §12 · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/doc/world-graph.src.md](tech/tools/world/doc/world-graph.src.md) — world-graph.md source with placeholders (its image links resolve only in the built doc in design/) · **Desy** · when re-running Desy's sims or generators
-- [tech/tools/world/make_schemas.py](tech/tools/world/make_schemas.py) — Writes the JSON Schemas in data/world/schemas · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/_paths.py](tech/tools/world/_paths.py) — Repo paths for the world tools (inputs in docs/ and src/data, output docs/data/world; `WORLD_OUT`, `DESY_ROOT`, `ART_SPRITES` overrides) · **Desy** · when re-running Desy's sims or generators, or moving data files
+- [tech/tools/world/make_realm_content.py](tech/tools/world/make_realm_content.py) — Writes the realm 3–9 content files (data/world/content/realm_N.json) from combat_data, boss_hp, the curriculum pools and zones.json; world_gen.py runs it · **Desy** · when re-running Desy's generators or changing realm 3–9 enemies, pools or locations
+- [tech/tools/world/make_schemas.py](tech/tools/world/make_schemas.py) — Writes the JSON Schemas in data/world/schemas (v3.9.2, incl. realm_content) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/make_world_data.py](tech/tools/world/make_world_data.py) — Hand-authored data: realm 1, the world map, rules, zones and quest hooks · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/render_world.py](tech/tools/world/render_world.py) — Draws the diagrams (PNG and mermaid) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/sim/world_summary_v38.json](tech/tools/world/sim/world_summary_v38.json) — v3.8 main sim output (baseline for v3.9 tables) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/sim/world_summary_v39.json](tech/tools/world/sim/world_summary_v39.json) — v3.9 main sim output (baseline for the v3.9.1 table) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/tables.py](tech/tools/world/tables.py) — Writes the tables for world-graph.md and the CSVs · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/v03.py](tech/tools/world/v03.py) — Converts the internal format to `graph/0.3` · **Desy** · when re-running Desy's sims or generators
-- [tech/tools/world/validate_world.py](tech/tools/world/validate_world.py) — World data validator (schemas and graph rules) · **Desy** · when re-running Desy's sims or generators
-- [tech/tools/world/world_gen.py](tech/tools/world/world_gen.py) — Generates the reference realms 2–9 and the index · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/validate_world.py](tech/tools/world/validate_world.py) — World data validator: wrapper for the CI copy tools/world/validate_world.py (v3.9.2 checks) · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/world/world_gen.py](tech/tools/world/world_gen.py) — Generates the reference realms 2–9, zones, world.json realms[], exit edges and the index, then the realm 3–9 content files · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/world_graph.py](tech/tools/world/world_graph.py) — Loader (a realm is an overworld plus its dungeon levels) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/world_loop.py.txt](tech/tools/world/world_loop.py.txt) — The sim's graph loop, spliced into world_sim.py · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/world_runner.py](tech/tools/world/world_runner.py) — v3.8 sim runner (main run and sweep) · **Desy** · when re-running Desy's sims or generators

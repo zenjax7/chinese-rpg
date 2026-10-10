@@ -189,6 +189,20 @@ export function markSafeBack(P: Progress, g: Graph, from: string, rules: any) {
   for (let n = goal; n && prev[n]; ) { const e = prev[n]!; P.safeUntil[`${g.id}/${e.idx}`] = P.hops + hops; n = otherEnd(e, n) as string; }
 }
 
+// ---------------- shops + chests (v3.9.3 gear catalogue, docs/data/items/gear_items.csv) ----------------
+export interface ShopGear { id: string; slot: string; tier: number; rarity: string; shop?: boolean; shopTown?: number; shopRequires?: string }
+/** The town number whose blacksmith shelf a town / village node shows: a town node names it (`town`); a village sells its realm town's tier. */
+export const shopTownOf = (g: Graph, n: GNode) => n.town ?? g.realm;
+/** Graph-mode shop shelf for town `town`: the core pieces the CSV sells there ("shop: town N blacksmith" → shopTown N), plus the open charms. */
+export function shopShelf<T extends ShopGear>(gear: T[], town: number, open: (loc: string) => boolean = () => true): T[] {
+  return gear.filter(g => g.shop && (g.slot === 'charm' ? g.tier <= town && (!g.shopRequires || open(g.shopRequires)) : g.shopTown === town));
+}
+/** Chest gear tier for a realm: the realm's tier, or the highest tier the catalogue has below it. */
+export function chestTier(gear: ShopGear[], realm: number, rarity = 'fine'): number {
+  const ts = gear.filter(g => g.rarity === rarity && g.slot !== 'charm').map(g => g.tier); const below = ts.filter(t => t <= realm);
+  return below.length ? Math.max(...below) : Math.min(...ts);
+}
+
 // ---------------- arrival events (§5.2: first eligible event per arrival) ----------------
 export interface Fired { ev: GEvent; actions: Action[]; key: string; outcome?: string }
 export function pickEvent(g: Graph, node: string, on: string, x: Ctx, first: boolean): Fired | null {

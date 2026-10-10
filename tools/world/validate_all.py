@@ -5,6 +5,8 @@
  3. docs/tech/tools/story/build_quests.py        quests: must report 0 errors and reproduce docs/data/quests/quests.json byte for byte
  4. JSON Schemas: quests.json vs quests.schema.json (quest/0.2), every scene vs scene.schema.json (scene/0.2)
  5. tools/world/build_world.py              runtime data: resolves every quest position; src/data/world/ + public/world/graphs/ must be up to date
+ 6. docs/tech/tools/world/ (v3.9.4)        Desy's world tools (make_world_data -> world_gen -> make_realm_content -> make_schemas), run into a
+                                            temp dir (WORLD_OUT), must reproduce every generated file in docs/data/world byte for byte
 Exit 1 on any failure."""
 import json, os, subprocess, sys, glob, filecmp, shutil, tempfile
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -54,5 +56,22 @@ for d, sn in zip(outs, snaps):
 print(f"{'✅' if not stale else '❌'} src/data/world + public/world are up to date{'' if not stale else ': ' + ', '.join(stale[:6])}")
 if stale and os.environ.get('CI'): fails.append('world data stale')
 shutil.rmtree(old)
+# 6. Desy's world tools reproduce docs/data/world (v3.9.4: repo paths, WORLD_OUT); hand-kept extras (diagrams/, examples/, world_realm_table.csv) are not generated
+wout = tempfile.mkdtemp(); env = dict(os.environ, WORLD_OUT=wout); env.pop('DESY_ROOT', None); tl = os.path.join('docs', 'tech', 'tools', 'world'); terr = ''
+for t in ('make_world_data.py', 'world_gen.py', 'make_schemas.py'):
+    r = subprocess.run([PY, os.path.join(tl, t)], cwd=ROOT, env=env, capture_output=True, text=True)
+    if r.returncode: terr = f"{t} failed: " + (r.stdout + r.stderr).strip().splitlines()[-1][:200]; break
+W = os.path.join(ROOT, 'docs', 'data', 'world'); regen = []
+if not terr:
+    for dp, _, fs in os.walk(wout):
+        for f in fs:
+            rel = os.path.relpath(os.path.join(dp, f), wout)
+            if not os.path.exists(os.path.join(W, rel)) or not filecmp.cmp(os.path.join(dp, f), os.path.join(W, rel), shallow=False): regen.append(rel)
+    for sub in ('graphs', 'content', 'schemas'):   # every committed graph / content / schema file must come from the tools
+        regen += [f"{sub}/{f} (not generated)" for f in os.listdir(os.path.join(W, sub)) if f.endswith('.json') and not os.path.exists(os.path.join(wout, sub, f))]
+ok = not terr and not regen
+print(f"{'✅' if ok else '❌'} world tools reproduce docs/data/world byte for byte{'' if ok else ': ' + (terr or ', '.join(sorted(regen)[:8]))}")
+if not ok: fails.append('world tools drift')
+shutil.rmtree(wout)
 print('FAILED: ' + ', '.join(fails) if fails else 'world + story data: all checks passed')
 sys.exit(1 if fails else 0)

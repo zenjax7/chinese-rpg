@@ -59,7 +59,7 @@ These are the only two step types with behaviour beyond "an event happened". Bot
 2. The step completes when the party enters the `to` node. `to` is a `ref` (`<graph>/<node>`) or a zone + town/village position.
 3. The escortee always stays with the party:
    - After a **defeat** it is waiting at the last inn used, where the party wakes up.
-   - **Return Feather** and **inn warp** take it along.
+   - The **Return Feather** takes it along (v3.9 removed the inn warp).
    - Nothing resets, and the kid just walks on.
 4. If the kid drops the quest, the escortee goes back to the giver.
 5. **Save:** `obj.<stepId>` is 0 until done, then 1. Whether someone is following is derived from the current step, so nothing else is stored.
@@ -205,6 +205,7 @@ Re-pointed after the world regenerations:
   - q7_lost_mapmaker: signpost `realm_7/path_1`, on the npc_1 → town route
   - q7_griffin_feathers: nests at `griffin_spire_1/treasure_1`, `griffin_spire_2/treasure_1`, `griffin_spire_2/deadend_1`
   - q7_griffin_chick: turn-in `griffin_spire_3/npc_1`
+  - q9_second_wind (v3.9.3): Granny Bai's badge at the dead-end chest `demon_castle_2/treasure_1` (s2 named only the graph; the build now rejects a pickup step without a node)
   - Two escort routes that were labelled as stairs (q7_griffin_chick, q8_singer_escort) are now area steps; the escort's `to` is the real target.
   - A pickup right after a fight inherits the fight's node.
 

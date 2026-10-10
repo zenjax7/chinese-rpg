@@ -1,7 +1,19 @@
-# World graph design (v3.9.1)
+# World graph design (v3.9.3)
 
 Repo path: `docs/design/world-graph.md` · Data: `docs/data/world/` · Tools: `docs/tech/tools/world/` · Spec summary: combat-spec.md §12.
 Written 2026-10-02 (PT) by Desy; v3.9 update the same night (§0.1). It builds on GameDev's graph schema in `docs/tech/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
+
+## 0.00 What changed in v3.9.2 and v3.9.3 (Jack 2026-10-03 PT; text brought up to date 2026-10-09 PT)
+
+- **Realm links (§1, §14.1):** `world.json` carries `realms[]`, one entry per realm: `{realm, node, graph, entry, enterEdge, exitEdge, linkEdge, unlock, realmBossZone, next}`. Realm *N* (N ≥ 2) opens when realm *N*−1's realm-boss zone is defeated: `unlock = {bossDefeated: <zone>}`, and the same condition is on the world path `linkEdge` `w{N-1}{N}` (danger 0). Realm 1 has no unlock and no link edge. The game's `realmOpen()` reads `realms[].unlock`.
+- **Exit edges to the world map (§3):** every realm overworld has one `exit` edge from its entry settlement to its world node, danger 0 (no battles): `exit_village` in realm 1 (edge idx 19), `exit_entry_town` in realms 2–9. Realm 1 also keeps `x_w_throne` (from the warren boss area, open once `warren` is defeated). The world node's portal `x_realm_N` leads back into the realm's entry.
+- **Seed hash (§4.4):** FNV-1a 32-bit of the key string → mulberry32, with 3 test vectors in `world_rules.seed.testVectors` that the game and the validator both reproduce.
+- **Feather destinations (§12.1):** exactly the last inn used plus every town or village ever entered. Other inns never count (`world_rules.returnFeather.destinationRule`).
+- **Arrival outcomes:** 6, the `portal` outcome is gone (§5.1).
+- **Realm 3–9 game content (§14.1):** `content/realm_3.json` … `realm_9.json` (schema `realm_content/0.1`), listed in `index.json` `content`. Every zone has an explicit `roster` (no more `fromRoster`).
+- **Quest steps:** `escort` and `words` steps follow `docs/story/quests.md` §2a (runtime rules for GameDev); the world graph only places their nodes.
+- **v3.9.3:** dead ends are a shape, not a node kind (§2); `q9_second_wind` step 2 is at `demon_castle_2/treasure_1`.
+- **Tools:** the v3.9.2 world tools are back in `docs/tech/tools/world/` with repo paths (`_paths.py`); `make_realm_content.py` writes the content files (§14.6).
 
 ## 0.0 What changed in v3.9.1 (Director's defaults, 2026-10-02 23:15 PT)
 
@@ -38,7 +50,7 @@ Sim, v3.9 → v3.9.1 (100 seeds per profile):
 
 - **Every map is a graph.** There is one world graph (9 realm nodes), one overworld graph per realm, and one graph per dungeon level. Towns and villages are nodes that open the existing town screens (`screens.ts`); a town interior is not a graph.
 - **Random battles happen on edges.** Each edge has a `danger` (0–3) and `steps` (encounter rolls along it). Nodes are places: towns, inns, forks, chests, NPCs, story spots, mini-bosses, bosses, stairs and portals.
-- **Arriving at a node runs at most one event.** There are 7 outcomes: quest offer (hook only), nothing, quest-linked mini-boss, quest item, portal, story, and treasure. Each event is fixed or weighted, and once, cooldown or repeatable. All randomness is seeded, so reloading never re-rolls.
+- **Arriving at a node runs at most one event.** There are 6 outcomes: quest offer (hook only), nothing, quest-linked mini-boss, quest item, story, and treasure (v3.9.2: no `portal` outcome; portals are edges). Each event is fixed or weighted, and once, cooldown or repeatable. All randomness is seeded, so reloading never re-rolls.
 - **Zone = location.** Each of the 20 locations (L1.1…L9.2) is a zone with its own word pool, roster and boss, placed on the graphs through `zones.json`. One zone can span several dungeon levels. All learning rules stay as they are: 7-item sets, at most 3 new items, the patrol rule (speech 20%, reading 40%), forced patrols and boss gates.
 - **Safe edges:** no random battles on edges that touch a town or inn, on the boss-approach edge, or on stairs and portals. After a boss or mini-boss is cleared, the way you came back to the nearest inn stays safe for 20 hops or until the next inn rest. Walked edges drop to 5% of their rate, and each zone has a budget of 8 fresh battles. Encounter rates rise by 10% per dungeon level.
 - **Size grows from 17 nodes in realm 1 to 200 in realm 9.** Later realms get more villages, deeper dungeons (up to 5 levels) with inns inside them, dead ends (about 30–38% of nodes) and optional treasure, story and mini-boss branches. Every node is at most 3 hops from an inn in realms 1–3 and 5 hops in realms 4–9.
@@ -53,10 +65,28 @@ Sim, v3.9 → v3.9.1 (100 seeds per profile):
 
 | Level | Graph `kind` | Count | Contents |
 |---|---|---|---|
-| World map | `world` | 1 (`world.json`) | 9 realm nodes (`portal`) linked in order. Realm *t*+1 opens when realm *t*'s realm boss falls (`cond: {bossDefeated: <zone>}`) |
+| World map | `world` | 1 (`world.json`) | 9 realm nodes (`portal`) linked in order by danger-0 `path` edges `w12` … `w89`. Realm *t*+1 opens when realm *t*'s realm boss falls (`cond: {bossDefeated: <zone>}` on the link edge and in `realms[].unlock`, v3.9.2). Each realm node has a portal `x_realm_N` into the realm's entry, and each realm overworld has an `exit` edge back (§1.1) |
 | Realm overworld | `overworld` | 9 (`realm_1` … `realm_9`) | Main town (entry), villages, inns, the overworld zones, dungeon entrances |
 | Dungeon level | `dungeon_level` | 26 levels in 12 dungeons | One graph per level, joined by `stairs` edges; an entrance `portal` edge joins level 1 to the overworld |
 | Town screen | not a graph | one per town/village | `town` node with `hub` (screen id) and `town` (towns.json number, which sets prices). Villages use the same screen with fewer services |
+
+### 1.1 Realm links and exits (v3.9.2)
+
+`world.json` `realms[]` is the one place the game reads realm order, unlocks and the way in and out:
+
+| Realm | World node | Enter (world portal → entry) | Exit (overworld → world, danger 0) | Link edge from previous realm | Unlock | Realm-boss zone |
+|---|---|---|---|---|---|---|
+| 1 | `realm_1` | `x_realm_1` → `realm_1/village` | `exit_village` (idx 19); also `x_w_throne` once `warren` is beaten | – | none (start) | `warren` |
+| 2 | `realm_2` | `x_realm_2` → `realm_2/entry_town` | `exit_entry_town` | `w12` | `bossDefeated: warren` | `great_hive` |
+| 3 | `realm_3` | `x_realm_3` → `entry_town` | `exit_entry_town` | `w23` | `bossDefeated: great_hive` | `night_bazaar` |
+| 4 | `realm_4` | `x_realm_4` → `entry_town` | `exit_entry_town` | `w34` | `bossDefeated: night_bazaar` | `goblin_school` |
+| 5 | `realm_5` | `x_realm_5` → `entry_town` | `exit_entry_town` | `w45` | `bossDefeated: goblin_school` | `hydra_s_lair` |
+| 6 | `realm_6` | `x_realm_6` → `entry_town` | `exit_entry_town` | `w56` | `bossDefeated: hydra_s_lair` | `moonlit_graveyard` |
+| 7 | `realm_7` | `x_realm_7` → `entry_town` | `exit_entry_town` | `w67` | `bossDefeated: moonlit_graveyard` | `griffin_summit` |
+| 8 | `realm_8` | `x_realm_8` → `entry_town` | `exit_entry_town` | `w78` | `bossDefeated: griffin_summit` | `grand_colosseum` |
+| 9 | `realm_9` | `x_realm_9` → `entry_town` | `exit_entry_town` | `w89` | `bossDefeated: grand_colosseum` | `throne_hall` |
+
+Rules: the unlock of realm *N* is always `{bossDefeated: <realm N−1 realmBossZone>}` and equals the `cond` on `linkEdge`; the link and exit edges are danger 0, so walking between realms never rolls a battle. The exit edge is appended after the generated edges, so it has the overworld's highest `idx` and no existing idx moved. `next` is the following realm (null for realm 9). A realm whose zones have no game content yet stays locked in the build even when its unlock holds (`index.json` `inBuild` in GameDev's runtime copy).
 
 **Zones** (`zones.json`) are the link to the curriculum. A zone is one location: word pool (`desyPool` L1.1…L9.2), roster, elite and boss. Its nodes carry `zone`, and its boss node and gate edge are referenced from the zone. Zones are ordered inside a realm (`order`, `unlockRequires`).
 
@@ -71,7 +101,7 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `inn` | Inn or campfire (`campfire: true`) | story on first visit | rest + save | Every node is ≤ `maxHopsToInn` hops from an inn or town (3 in realms 1–3, 5 in 4–9). No Feathers for sale. Each boss has an **approach inn** next to its gate edge |
 | `waypoint` | Plain spot on a path | weighted (nothing / ambient / honey) | – | Replaces GameDev's `fight` node |
 | `fork` | Waypoint with 3+ edges | weighted | – | Kind is cosmetic (map icon); the loader treats it like a waypoint |
-| `chest` | Treasure spot (outcome 7) | `openChest` once | – | Often at the end of a dead-end branch; may hide a quest item |
+| `chest` | Treasure spot (outcome `treasure`) | `openChest` once | – | Often at the end of a dead-end branch; may hide a quest item |
 | `npc` | Quest giver / helper | `offerQuest` once, then story | – | `npc` = id in the graph's `npcs` map |
 | `story` | Lore or cut-scene spot | `dialogue` once | – | |
 | `miniboss` | Optional strong fight | `fight {kind: miniboss}` once, quest-linked | – | Safe way home after the win (§4.3) |
@@ -81,6 +111,8 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `portal` | Dungeon mouth, realm node on the world map | – | – | Edge kind `portal` |
 | `exit` | Leaves the realm | – | – | Realm 1 uses an `exit` edge on the realm boss node |
 | `shop` | Stand-alone shop (optional) | – | – | Kept from §6; normally shops live in town/village `services` |
+
+**Dead ends (v3.9.3).** A dead end is a shape, not a node kind: a node with one edge. The generator's dead-end spots (ids `deadend_k`) are exported as `waypoint` (a few as `inn` or `miniboss`), and quests call them `nodeKind: deadend`. A dead end does exactly what its kind and its events say (§5.2: the first eligible event fires). Today every `deadend_k` waypoint carries the waypoint pick (80% nothing / 20% honey, cooldown 4), and some also carry quest steps (fights, pickups). **A dead end with no event is just an empty end:** arriving does nothing (no battle, no item, no ambient line) and the player walks back. The game adds nothing at run time; if a spot needs flavor, give it an event in the data.
 
 ## 3. Edge kinds and fields
 
@@ -134,7 +166,20 @@ Each step on an edge rolls `p = encounterRate[danger] × (1 + depthStep × (leve
 
 ### 4.4 Determinism
 
-Every roll is `mulberry32(hash(saveSeed | graphId | edgeId | crossing | step))`, where `crossing` counts how many times this save has walked that edge. The same goes for weighted events (`… | nodeId | visit`). Reloading or re-entering never re-rolls, and the sim uses the same rule.
+Every roll is `mulberry32(fnv1a32(key))`, the first output of mulberry32 seeded with the FNV-1a 32-bit hash of a key string (v3.9.2, `world_rules.seed`; the game's `src/world/engine.ts` `fnv1a`/`mulberry32`/`roll`):
+
+- **Edge key:** `saveSeed|graphId|edgeId|crossing|step`. `saveSeed` is the save's uint32 seed (decimal), `crossing` is how many times this save had already crossed that edge before (0 on the first crossing), and `step` is the 0-based encounter step on the edge. A battle starts when `roll < chance` (§4.1).
+- **Event key:** `saveSeed|graphId|nodeId|visit` for weighted events, where `visit` counts arrivals at the node including this one. Pick: `r = roll × total weight`, then subtract each eligible option's weight in list order and take the first that takes `r` below 0.
+- **FNV-1a 32-bit:** `h = 0x811c9dc5`; for each UTF-16 code unit `c` (keys are ASCII, so bytes): `h ^= c; h = (h × 0x01000193) mod 2^32`.
+- **mulberry32:** the standard 32-bit generator; the roll is the first output as uint32 / 2^32, in [0, 1).
+
+| Test vector key | fnv1a32 | roll |
+|---|---|---|
+| `12345|realm_1|e1|0|0` | 199679387 | 0.09237345564179122 |
+| `12345|realm_2|e3|1|2` | 1855283427 | 0.2770371865481138 |
+| `12345|realm_1|village|0` | 4123396911 | 0.5738876694813371 |
+
+The game, `world_rules.seed.testVectors` and the validator agree on all three. Reloading or re-entering never re-rolls, because each roll depends only on the save seed and the counters.
 
 ### 4.5 Authoring target
 
@@ -142,7 +187,7 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
 
 ## 5. Arrival events
 
-### 5.1 The 7 outcomes
+### 5.1 The 6 outcomes
 
 | `outcome` | What happens | Action(s) | Default repeat |
 |---|---|---|---|
@@ -150,9 +195,10 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
 | `nothing` | Nothing | – | repeatable (weighted) |
 | `miniboss` | Quest-linked optional strong fight (2–3 enemies, one elite) | `fight {kind: miniboss}`, `giveGold`, `setFlag` | once |
 | `item` | Quest item (`cond: questActive`) or a small find (honey, cooldown 4 visits) | `giveItem` | once / cooldown |
-| `portal` | Travel to another graph or node | `teleport` (portal *edges* are the normal way; this is for scripted warps) | – |
 | `story` | Lore, hints, boss intros | `dialogue` | once |
 | `treasure` | Chest | `openChest`: `chest_normal` = normal chest, `chest_fine` = location boss chest, `chest_boss` = realm boss chest, using the desy `chest_contents` tables | once |
+
+v3.9.2: the `portal` outcome is gone (no event used it). Portals are edges (§3); the `teleport` action stays for scripted warps.
 
 ### 5.2 Event rules
 
@@ -344,7 +390,7 @@ The biggest single graph (the realm 8 overworld, 93 nodes) is in `data/world/dia
   - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed, bossCheckpoint}`, and `graph_progress` bitsets by node `idx`.
   - Added: `edgeCrossings` (for seeding) and `edgeProgress` (turn-back).
 - **Defeat:** wake at `lastInn`, which can be on another level or in the town. Gold loss as in v3.7. Edges stay walked.
-- **Feather (v3.9):** to `lastInn` or any visited town/village, from anywhere outside battle and the boss room. No inn warp.
+- **Feather (v3.9, wording v3.9.2):** to `lastInn` (the one place last rested) or any town or village ever entered (`visitedTowns`), from anywhere outside battle and the boss room. Other inns don't count. No inn warp. Rules in §12.1.
 - **Fog of war:** player progress keeps `visited`, `walked` and `revealed` bitsets per graph (node `idx` / edge `idx`). The UI shows visited nodes, "?" for nodes one open edge away, and landmark nodes (`fog: "landmark"`) once their zone is open. Schema: `progress.schema.json`, example `examples/progress_example.json`.
 - **Boss retry:** `bossCheckpoint` as in v3.7 (spec §7.4).
 
@@ -353,7 +399,7 @@ The biggest single graph (the realm 8 overworld, 93 nodes) is in `data/world/dia
 | Field (`world_rules.returnFeather`) | Value |
 |---|---|
 | Price | 2×G (2 normal kills at every tier): 12, 24, 36, 54, 72, 90, 108, 126, 144 gold in realms 1–9 |
-| Destinations | The last inn used, or any visited town/village (the player picks) |
+| Destinations (v3.9.2 `destinationRule`) | Exactly two kinds; the player picks one. **Last inn used** (`lastInn`): the one node where the player last rested (a standalone or campfire inn, or the inn of a town or village); it is replaced at every rest. **Visited towns and villages** (`visitedTowns`): every node of kind `town` or `village` ever entered, in any realm. **Other inns never count**, even if visited or rested at earlier. The node the player is standing on is not offered |
 | Usable | Anywhere on the map outside battle and the boss room (dungeon levels included) |
 | Sold | Town and village item shops. Not at inns |
 | Carry | 3 |
@@ -420,12 +466,13 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 
 | File | Schema | Contents |
 |---|---|---|
-| `index.json` | `index.schema.json` | `schema: index/0.3`, `start {graph,node}`, file list, `graphs[]` (id, kind, realm, dungeon, level, status, nodes, file), `renames` |
+| `index.json` | `index.schema.json` | `schema: index/0.3`, `start {graph,node}`, file list, `graphs[]` (id, kind, realm, dungeon, level, status, nodes, file), `content` (v3.9.2: realm → content file, realms 3–9), `renames` |
 | `world_rules.json` | `world_rules.schema.json` | Encounter and travel knobs (§4); may merge into balance.json as `world` |
-| `zones.json` | `zones.schema.json` | 20 zones: id, realm, order, title, location, desyPool, pool, tier, bossNode, gateEdge, bossKind, boss, enemiesPerBattle, roster or fromRoster, packs, elite, scriptedElite, unlockRequires |
+| `zones.json` | `zones.schema.json` | 20 zones: id, realm, order, title, location, desyPool, pool, tier, bossNode, gateEdge, bossKind, boss, enemiesPerBattle, roster (explicit in every zone since v3.9.2), packs, elite, scriptedElite, unlockRequires |
 | `quests_world.json` | `quests_world.schema.json` | NPC slots (id, giver/turnIn `graph/node`, `status` quest/ambient, `quests`, `offers`, `banter`), quest items, shared speakers |
 | `examples/progress_example.json` | `progress.schema.json` | Player progress example (`progress/0.3`): pos, lastInn, visitedTowns, per-graph visited/walked/revealed bitsets, eventsDone, feathers |
-| `graphs/<id>.json` | `graph.schema.json` | 36 graphs: `world`, `realm_1…9`, 26 dungeon levels |
+| `graphs/<id>.json` | `graph.schema.json` | 36 graphs: `world` (with `realms[]`, §1.1), `realm_1…9` (each with its `exit` edge), 26 dungeon levels |
+| `content/realm_3.json` … `realm_9.json` | `realm_content.schema.json` | v3.9.2 game content per realm (§14.6): enemies, locations (= zones), word pools, items |
 | `layout_targets.json` | – | Generator targets per realm |
 | `world_realm_table.csv` | – | The §7 table |
 | `diagrams/*.png, *.mmd` | – | Rendered examples |
@@ -435,13 +482,14 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 
 ```json
 {"schema": "graph/0.3", "id": "realm_1", "kind": "overworld", "realm": 1, "dungeon": null, "level": 0,
- "title": {"zh": "新手草原", "en": "Starter Meadow"}, "status": "authored", "entry": "village", "idxMax": 16, "edgeIdxMax": 18, "aspect": 1.61,
+ "title": {"zh": "新手草原", "en": "Starter Meadow"}, "status": "authored", "entry": "village", "idxMax": 16, "edgeIdxMax": 19, "aspect": 1.61,
  "background": {"map": "bg_map_realm_1", "battle": "bg_battle_r1"},
  "nodes": [{"id": "village", "idx": 0, "kind": "town", "x": 0.05, "y": 0.8127, "fog": "landmark", "zone": "meadow", "title": {"zh": "小山村", "en": "Little Hill Village"},
             "save": true, "services": ["inn", "save", "shop"], "hub": "village", "town": 1}, "..."],
  "edges": [{"id": "e1", "from": "village", "to": "m_fork", "kind": "path", "danger": 0, "steps": 1, "terrain": "road", "idx": 1},
            {"id": "g1", "from": "m_grass", "to": "m_crow", "kind": "path", "danger": 0, "steps": 1, "patrol": true, "terrain": "boss_approach"},
-           {"id": "x_w_throne", "from": "w_throne", "kind": "exit", "to": {"graph": "world", "node": "realm_1"}, "cond": {"bossDefeated": "warren"}}, "..."],
+           {"id": "x_w_throne", "from": "w_throne", "kind": "exit", "to": {"graph": "world", "node": "realm_1"}, "cond": {"bossDefeated": "warren"}},
+           {"id": "exit_village", "from": "village", "to": {"graph": "world", "node": "realm_1"}, "kind": "exit", "danger": 0, "idx": 19}, "..."],
  "events": [{"id": "m_well.1", "node": "m_well", "on": "enter", "once": true, "outcome": "item", "cond": {"questActive": "q1_hoe"},
              "do": [{"giveItem": "farmers_hoe", "qty": 1, "quest": "q1_hoe"}]},
             {"id": "m_fork.1", "node": "m_fork", "on": "enter", "pick": [{"weight": 70, "outcome": "nothing", "do": []},
@@ -460,10 +508,11 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 | Node kinds: `fight`/`elite`/`gate` dropped; `waypoint`, `miniboss`, `story` added | Fights live on edges |
 | Node fields `zone`, `title`, `save`, `services`, `hub`, `town`, `campfire`, `boss`, `npc` | Town/inn behaviour, zone link |
 | Edge fields `danger`, `steps`, `terrain`, `patrol`, `scripted` | Encounters |
-| Event fields `outcome`, `cooldown`, `pick`; actions `offerQuest`, `openChest` | The 7 outcomes, weighted events |
+| Event fields `outcome`, `cooldown`, `pick`; actions `offerQuest`, `openChest` | The 6 outcomes, weighted events |
 | `roster` moved to zones.json | One roster per zone |
 | Save: `edgeCrossings`, `edgeProgress` added | Seeding, turn-back |
 | v3.9: x/y normalised 0–1 + `aspect`; edge `idx` + `edgeIdxMax`; node `fog`; action `scene`; fight kind `tutorial` + `canLose`; event `tutorial`; dialogue `tokens` | GameDev's answers, story alignment |
+| v3.9.2: world `realms[]`; `exit` edge per realm overworld; outcome `portal` dropped; `world_rules.seed` hash + test vectors; `returnFeather.destinationRule`; index `content`; zone `roster` required (`fromRoster` dropped) | Realm links, exits, matching RNG in game and sim, Feather wording, realm 3–9 content |
 
 ### 14.4 IDs and references
 
@@ -500,8 +549,30 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
    - Every hook's giver exists. `quest` hooks list v2 ids, and their `offers` have an `offerQuest` on the node.
    - Every v2 quest's hook, giver and step nodes exist, and every giver node offers its quest.
    - The progress example validates.
+8. **v3.9.2:**
+   - `world.json` has `realms[]`. Each enter edge leads from the realm node to the graph's entry; each exit edge is kind `exit`, danger 0, entry → `world/<node>`; `realmBossZone` is that realm's realm-boss zone.
+   - Realm 1 has no unlock or link edge; every later realm's unlock is `bossDefeated` of the previous realm-boss zone and equals the `cond` on its danger-0 link edge.
+   - No `portal` outcome anywhere.
+   - `world_rules.seed.testVectors` reproduce with FNV-1a 32-bit → mulberry32.
+   - Every content file in `index.json` `content` exists and validates; ids equal `desyId` and are in enemies.csv; every zone of the realm has a location and a word pool; every pool item is in `items`.
 
-Run it with `python validate_world.py [data_dir] [-v]`; exit code 1 means errors. Current data: 36 graphs, 20 zones, 55 hooks (29 quest, 26 ambient), 0 errors, 0 warnings. GameDev is porting it to CI with repo-relative paths (`QUESTS_V2`, `DIALOGUE_DIR` env vars override the data paths).
+Run it with `python3 tools/world/validate_world.py [data_dir] [-v]` (the CI copy; `docs/tech/tools/world/validate_world.py` is a wrapper for it since v3.9.4); exit code 1 means errors. The full gate is `CI=1 python3 tools/world/validate_all.py`. Current data: 36 graphs, 20 zones, 55 hooks (29 quest, 26 ambient), 0 errors, 0 warnings.
+
+### 14.6 Realm 3–9 content files and the world tools (v3.9.2)
+
+- **Content files:** `docs/data/world/content/realm_N.json` for N = 3…9 (`schema: realm_content/0.1`), listed in `index.json` `content` (`{"3": "content/realm_3.json", …}`). Realms 1–2 stay in GameDev's `src/data` tables (`tools/build_data.py`). Each file has `realm`, `title`, `G`, `maxNewPerBattle` (3), and the same row shapes as `src/data`:
+  - `enemies[]`: `enemies.json` rows. Stats from `data/json/combat_data.json`, boss HP/ATK from `data/enemies/boss_hp.csv`, attack names from `data/json/enemies-art-roster.json`. `id` = `desyId` (the roster id the graphs and quests use).
+  - `locations[]`: `locations.json` rows, one per zone of the realm; `id` = zone id; `mcOptions`, `reviewSlots`, `pathFights` from `data/balance/realm_location_difficulty.csv`; `bossReward` (heroic gear) on the realm-boss zone.
+  - `pools{}`: zone id → curriculum ids, from `data/curriculum/curriculum_location_pools.csv` in authored order.
+  - `items[]`: `items.json` rows for every pool item (`data/curriculum/curriculum.csv`).
+  - GameDev-owned placeholders: emoji, color, bg, `headAnchor` 0.1, `sprite` (the id when no sheet exists, i.e. emoji fallback), `mech` `{}`, roster weights 1, `altZh`/`altEn` `[]`.
+- **Tools** (`docs/tech/tools/world/`, run from the repo root; `WORLD_OUT=dir` writes elsewhere, `DESY_ROOT` runs on Desy's old tree):
+  1. `make_world_data.py`: realm 1, world_rules, layout targets, hand-authored events.
+  2. `world_gen.py`: realms 2–9 and dungeons, zones, `world.json` `realms[]`, exit edges (`v03.py`), index; it then runs `make_realm_content.py`.
+  3. `make_schemas.py`: `schemas/*.schema.json`, including `realm_content.schema.json`.
+  4. `tools/world/build_world.py` (GameDev): runtime copy in `src/data/world/` and `public/world/graphs/`.
+  Re-running 1–3 reproduces `docs/data/world/` byte for byte.
+- **Quest steps on the graphs:** `escort` and `words` steps have runtime rules in `docs/story/quests.md` §2a (escortees follow, can't be harmed and wait at the last inn after a defeat; `words` counts correct battle answers from a pool). The graphs only hold their nodes and hooks.
 
 ## 15. Open questions
 

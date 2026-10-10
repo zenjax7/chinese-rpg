@@ -1,15 +1,15 @@
-## 12. World graph (v3.8, updated v3.9)
+## 12. World graph (v3.8, updated v3.9–v3.9.3)
 
 v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/world-graph.md`); data in `data/world/` (repo `docs/data/world/`); sim in `build/world/`. This section summarises it and replaces the linear path of §7.10 (inn, 4 fights, inn, 4 fights, inn, gate, boss) as the map model. The battle, learning and economy rules of §2–§7 are unchanged.
 
 **Model.**
 - **Graphs:**
-  - 1 world graph and 9 realm overworld graphs.
+  - 1 world graph and 9 realm overworld graphs. The world graph links the realms in order; realm *N* opens when realm *N*−1's realm boss is defeated, and each realm has a danger-0 exit edge back to the world map (v3.9.2, §12.3).
   - 26 dungeon levels in 12 dungeons, one graph per level, joined by two-way stairs or portals.
   - Towns and villages are nodes that open the town screen.
 - **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster, elite and boss. Zones are placed on the graphs, and one zone can span several levels.
 - **Battles on edges:** random battles happen on edges, with `danger` 0–3 and `steps` encounter rolls per edge.
-- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 7 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, portal, story and treasure. Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, edge, crossing and step, so reloading never re-rolls.
+- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 6 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, story and treasure (v3.8–v3.9.1 also listed `portal`; dropped in v3.9.2 because portals are edges). Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, graph, edge, crossing and step (FNV-1a 32-bit → mulberry32, §12.3), so reloading never re-rolls.
 
 **Encounter rules** (`data/world/world_rules.json`):
 
@@ -29,7 +29,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 | fog of war (v3.9) | visited nodes + "?" neighbours; towns, villages and bosses are landmarks; state in player progress (`progress.schema.json`) |
 | authoring target | each zone's shortest route expects 6.5–9.5 battles (v3.7: 8 path fights) |
 
-**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns; §12.1.)
+**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns and villages; §12.1, §12.3.)
 
 **Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 28–35% dead ends, 0–2 villages (v3.9), 2–21 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
 
@@ -62,7 +62,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 
 - **Return Feather** (`world_rules.returnFeather`):
   - Costs 2 × G: 12, 24, 36, 54, 72, 90, 108, 126, 144 gold in realms 1–9, which is 2 kills at every tier.
-  - Destinations: the last inn or any visited town/village. Usable anywhere outside battle and the boss room.
+  - Destinations: the last inn used or any visited town/village (exact wording in §12.3). Usable anywhere outside battle and the boss room.
   - Sold in town and village item shops (not inns). Carry 3, start 2.
   - A typical beeline kid buys 1–2 per realm; a no-spell saver buys 0.5–1.
   - The 2 free Feathers are a small conflict with budgeting: one free round trip, which delays the first purchase by about one realm.
@@ -96,3 +96,28 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - Defeats: 50% savers on beeline −0.1 to −0.5 (51.5 / 51.7), spenders −0.2.
   - Spells on beeline unchanged (75% saver 4.9). Explorers +0.6–0.7 spells.
   - Feathers bought fall by about 2–2.5 per campaign, because the boss Feathers replace purchases.
+
+### 12.3 v3.9.2 changes (Jack 2026-10-03 PT)
+
+- **Realm links and unlocks** (`world.json` `realms[]`, one entry per realm: `realm, node, graph, entry, enterEdge, exitEdge, linkEdge, unlock, realmBossZone, next`):
+  - Realm 1 is open from the start (`unlock: null`, no link edge).
+  - Realm *N* (2–9) opens when realm *N*−1's realm-boss zone is defeated: `unlock: {bossDefeated: <zone>}`. The same condition sits on the world path `w{N−1}{N}` (danger 0). The zones are `warren`, `great_hive`, `night_bazaar`, `goblin_school`, `hydra_s_lair`, `moonlit_graveyard`, `griffin_summit` and `grand_colosseum` (unlocking realms 2–9); realm 9's realm boss is `throne_hall`.
+  - The world portal `x_realm_N` leads from the realm node to the realm's entry (`realm_1/village`, `realm_N/entry_town`).
+- **Exit edges to the world map:** each realm overworld has one `exit` edge from its entry settlement to its world node, danger 0, so leaving never rolls a battle: `exit_village` in realm 1 and `exit_entry_town` in realms 2–9. Each one is the graph's last edge `idx`, so no saved bitset moved. Realm 1 keeps `x_w_throne` (open once `warren` is beaten).
+- **Seed hash** (`world_rules.seed`, matching `src/world/engine.ts`):
+  - roll = first output of mulberry32 seeded with FNV-1a 32-bit of the key (offset 0x811c9dc5, prime 0x01000193, XOR each UTF-16 code unit then multiply mod 2^32), as uint32 / 2^32.
+  - Edge key `saveSeed|graphId|edgeId|crossing|step` (`crossing` = earlier crossings of that edge, from 0; `step` from 0). A battle starts when roll < chance.
+  - Event key `saveSeed|graphId|nodeId|visit` (`visit` counts this arrival, from 1); weighted pick = roll × total weight, walked down the eligible options in order.
+  - Test vectors: `12345|realm_1|e1|0|0` → 199679387, 0.09237345564179122; `12345|realm_2|e3|1|2` → 1855283427, 0.2770371865481138; `12345|realm_1|village|0` → 4123396911, 0.5738876694813371. The game, the data and the validator agree on all three.
+- **Feather destinations** (`returnFeather.destinationRule`): exactly two kinds. The **last inn used** is the one node where the kid last rested (a standalone or campfire inn, or a town's or village's inn); it changes at every rest. **Visited towns and villages** are every town or village node ever entered, in any realm. **Other inns never count**, even if visited. The node you stand on is not offered.
+- **Arrival outcomes:** 6; `portal` is gone (no event used it).
+- **Realm 3–9 content:** `docs/data/world/content/realm_3.json` … `realm_9.json` (schema `realm_content/0.1`, listed in `index.json` `content`) hold enemies, locations (one per zone), word pools and items in the same shapes as GameDev's realm 1–2 tables. Boss HP/ATK come from `data/enemies/boss_hp.csv`, MC options and review slots from `data/balance/realm_location_difficulty.csv`, at most 3 new words per battle. Every zone has an explicit roster. Details in `world-graph.md` §14.6.
+- **Escort and words quest steps:** runtime rules are in `docs/story/quests.md` §2a (escortees follow the party, are never in battle, can't be harmed and wait at the last inn after a defeat; `words` counts correct battle answers from a pool, n defaults to 10).
+- No balance numbers changed, so the v3.9.1 sim stands.
+
+### 12.4 v3.9.3 changes (2026-10-09 PT)
+
+- **Dead ends** are a shape, not a node kind: a node with one edge. The generated `deadend_k` spots are waypoints (a few are inns or mini-bosses) and do exactly what their events say; a dead end with no event is an empty end, and the game adds nothing at run time (`world-graph.md` §2).
+- **q9_second_wind step 2** is the `treasure` event at `demon_castle_2/treasure_1`.
+- **Gear for tiers 1–9** is listed in `docs/data/items/gear_items.csv` (same prices and stats as `gear.csv`; no re-price, no sim rerun).
+- **Answer options** are unchanged: §5 and `realm_difficulty.csv` (e.g. 4 options in realm 3, with 1 fewer on a word's first-ever ask, §3.4).

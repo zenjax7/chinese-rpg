@@ -1,10 +1,11 @@
-"""Writes the hand-authored v3.8 world-graph data to /workspace/desy/data/world/:
+"""Writes the hand-authored v3.8 world-graph data to docs/data/world/ (or $WORLD_OUT):
 world_rules.json, events.json, encounters.json, graphs/world.json, graphs/realm_1.json (Starter Meadow, 17 nodes, 3 zones),
 (v3.9: the village_1/village_2 interior graphs are gone; towns and villages are realm nodes.) Realms 2-9 and their dungeon levels come from world_gen.py.
-Run: /workspace/desy/.venv/bin/python make_world_data.py && /workspace/desy/.venv/bin/python world_gen.py"""
+Run (repo root): python3 docs/tech/tools/world/make_world_data.py && python3 docs/tech/tools/world/world_gen.py   (WORLD_OUT=dir to write elsewhere)"""
 import json, os
-OUT = '/workspace/desy/data/world'
-VERSION = 'v3.9.1'
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); from _paths import D, OUT as _OUT, SRC_DATA   # repo-relative (_paths.py)
+OUT = _OUT
+VERSION = 'v3.9.2'
 def dump(path, obj):
     p = os.path.join(OUT, path); os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, 'w', encoding='utf-8') as f: json.dump(obj, f, ensure_ascii=False, indent=1); f.write('\n')
@@ -24,18 +25,23 @@ RULES = {
  "repel": {"item": "bell", "hops": 6, "maxDanger": 2, "blocksScripted": False, "blocksPatrols": False},
  "walkSecPerHop": 1.0,
  "walkSecPerStep": 1.5,
- "eventSec": {"nothing": 0, "story": 12, "quest_offer": 10, "item": 4, "treasure": 5, "portal": 3, "miniboss": 0},
+ "eventSec": {"nothing": 0, "story": 12, "quest_offer": 10, "item": 4, "treasure": 5, "miniboss": 0},
  "beelineBattleTarget": 8.0,
  "beelineBattleRange": [6.5, 9.5],
  "maxHopsToInn": {"1": 3, "2": 3, "3": 3, "default": 5},
  "townDensity": {"nodesPerTownRealm1": 20, "nodesPerTownRealm9": 60, "rampPerRealm": 5, "rule": "v3.9.1: towns + villages per realm = max(1, ceil(nodes / (20 + 5 x (realm - 1)))), counting the main town, so a settlement never serves more than 20, 25 ... 60 nodes"},
  "realmBossFeather": {"realms": [3, 6, 8], "qty": 1, "note": "v3.9.1: the realm-boss chest of these realms also holds a free Return Feather (on: clear event on the boss node). No shop nudge or tip."},
  "returnFeather": {"item": "feather", "priceG": 2, "carry": 3, "start": 2, "useSec": 3,
-                   "destinations": ["lastInn", "visitedTown"], "usable": "anywhere on the map outside battle and outside a boss room",
+                   "destinations": ["lastInn", "visitedTown"],
+                   "destinationRule": "v3.9.2: exactly two kinds of destination. lastInn = the one node where the player last rested (an inn, a campfire inn, or the inn of a town or village); it is replaced each time the player rests. visitedTown = every node of kind town or village the player has ever entered, in any realm. Inns other than the last one used are never destinations, even if visited.", "usable": "anywhere on the map outside battle and outside a boss room",
                    "note": "v3.9: no free warp. A Feather is the only fast way back to a town (and from a town back to the last inn). Sold in town and village item shops, not at inns."},
  "fog": {"reveal": "visited nodes + every node one open edge away from a visited node (shown as '?', kind hidden)", "landmarkKinds": ["town", "village", "boss"],
          "state": "player progress (progress.schema.json: visited / walked bitsets by idx); never stored in the graph file"},
- "seed": {"algorithm": "mulberry32", "key": "saveSeed|graphId|edgeId|crossing|step", "note": "every roll is a pure function of the save seed and how many times that edge was crossed, so reloading never re-rolls"}
+ "seed": {"algorithm": "mulberry32", "hash": "fnv1a32", "key": "saveSeed|graphId|edgeId|crossing|step", "eventKey": "saveSeed|graphId|nodeId|visit",
+          "hashRule": "v3.9.2: seed = FNV-1a 32-bit of the key string (offset basis 0x811c9dc5, prime 0x01000193, XOR each UTF-16 code unit then multiply mod 2^32; keys are ASCII so code units = bytes); roll = first mulberry32 output (uint32 / 2^32, in [0,1)). A battle starts when roll < chance.",
+          "testVectors": [{"key": "12345|realm_1|e1|0|0", "fnv1a32": 199679387, "roll": 0.09237345564179122},
+                          {"key": "12345|realm_2|e3|1|2", "fnv1a32": 1855283427, "roll": 0.2770371865481138},
+                          {"key": "12345|realm_1|village|0", "fnv1a32": 4123396911, "roll": 0.5738876694813371}], "note": "every roll is a pure function of the save seed and how many times that edge was crossed, so reloading never re-rolls"}
 }
 
 EV = []
