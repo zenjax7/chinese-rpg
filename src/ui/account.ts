@@ -97,13 +97,15 @@ function keypad(o: { testid: string; title: string; sub: string; mode: 'set' | '
     <div class="keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(d => `<button class="secondary" data-d="${d}" data-key="${d}" data-testid="pin-key-${d}">${d}</button>`).join('')}
       <button class="ghost" data-del data-testid="pin-del" aria-label="Delete">⌫</button><button class="secondary" data-d="0" data-testid="pin-key-0">0</button>
       <button data-ok data-key="enter" data-testid="pin-ok" aria-label="OK">✓</button></div>
-    ${o.onCancel ? `<button class="ghost small" id="pincancel" data-testid="pin-cancel">${bi('取消', 'Cancel')}</button>` : ''}</div>`);
+    ${o.onCancel ? `<button class="ghost small" id="pincancel" data-testid="pin-cancel">${bi('取消', 'Cancel')}</button>` : ''}</div>`)
+    .querySelector('.pinpad') as HTMLElement;   // listeners go on the panel, so they die with it when the modal shows something else
   const paint = () => {
     $('.pindots', m).innerHTML = Array.from({ length: 6 }, (_, i) => `<i class="${i < pin.length ? 'on' : ''}${i >= 4 ? ' opt' : ''}"></i>`).join('');
     $$('button[data-d],button[data-del]', m).forEach(b => ((b as HTMLButtonElement).disabled = busy || locked));
     ($('[data-ok]', m) as HTMLButtonElement).disabled = busy || locked || pin.length < 4;
   };
   const say = (html: string, bad = true) => { const e = $('#pinmsg', m); e.innerHTML = html; e.classList.toggle('bad', bad); };
+  const alive = () => m.isConnected;
   m.addEventListener('click', async e => {
     const b = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!b || b.disabled) return;
     if (b.dataset.d !== undefined) { if (pin.length < 6) pin += b.dataset.d; }
@@ -113,7 +115,8 @@ function keypad(o: { testid: string; title: string; sub: string; mode: 'set' | '
       if (o.mode === 'set' && pin !== first) { first = ''; pin = ''; $('#pinsub', m).innerHTML = o.sub; say(bi('两次不一样', 'The two PINs did not match. Start again.')); paint(); return; }
       busy = true; paint(); say(bi('请稍等', 'Checking…'), false);
       const r = await o.onPin(pin); busy = false;
-      if (!r.ok) { pin = ''; if (o.mode === 'set') { first = ''; $('#pinsub', m).innerHTML = o.sub; } locked = !!r.locked; say(r.msg); m.querySelector('.pinpad')!.toggleAttribute('data-locked', locked); }
+      if (r.ok || !alive()) return;   // done: the next screen has replaced the keypad
+      { pin = ''; if (o.mode === 'set') { first = ''; $('#pinsub', m).innerHTML = o.sub; } locked = !!r.locked; say(r.msg); m.toggleAttribute('data-locked', locked); }
     } else if (b.id === 'pincancel') { closeModal(); o.onCancel?.(); return; }
     paint();
   });
