@@ -19,6 +19,8 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 
 The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and exit edges, FNV-1a seeds, escort and words steps) is merged into [data/world/](data/world/) and [data/quests/](data/quests/), and the game reads it (graph mode, `?world=graph`). The spec text covers it: combat-spec §12.3–§12.4 and world-graph §0.00, §1.1, §4.4, §12.1, §14.6.
 
+v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), heroic gear has exactly one source per piece (realm-boss chests, with charms for realms 4–8, and quest `q5_fog_bottle`; the other 24 heroic pieces are named but not placed), and `q9_second_wind` step 2 plays the scene `sc_q9_second_wind_badge`. See [decisions.md](decisions.md) (Oct 10).
+
 ## Layout
 
 | folder | what | owner |
