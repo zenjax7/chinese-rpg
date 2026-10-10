@@ -1,6 +1,7 @@
 """Writes data/world/schemas/*.schema.json (JSON Schema 2020-12) for the v3.8 world data (graph/0.3)."""
 import json, os
-OUT = '/workspace/desy/data/world/schemas'; os.makedirs(OUT, exist_ok=True)
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); from _paths import D, OUT as _OUT, SRC_DATA   # repo-relative (_paths.py)
+OUT = _os.path.join(_OUT, 'schemas'); os.makedirs(OUT, exist_ok=True)
 B = 'https://zenjax7.github.io/chinese-rpg/schemas/world/'
 ID = {"type": "string", "pattern": "^[a-z0-9_]+$"}
 KEY = {"type": "string", "pattern": "^[a-z0-9_.]+$", "description": "id that may carry a graph prefix, e.g. realm_1.crowBeaten"}
@@ -8,7 +9,7 @@ TEXT = {"type": "object", "properties": {"zh": {"type": "string"}, "en": {"type"
 REF = lambda d: {"$ref": f"common.schema.json#/$defs/{d}"}
 NODE_KINDS = ["town", "village", "inn", "waypoint", "fork", "chest", "npc", "story", "miniboss", "boss", "lever", "stairs_up", "stairs_down", "portal", "exit", "shop"]
 EDGE_KINDS = ["path", "oneway", "shortcut", "stairs", "portal", "exit"]
-OUTCOMES = ["nothing", "quest_offer", "miniboss", "item", "portal", "story", "treasure"]
+OUTCOMES = ["nothing", "quest_offer", "miniboss", "item", "story", "treasure"]   # v3.9.2: "portal" outcome dropped (no event used it; portals are edges)
 common = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "common.schema.json", "title": "Shared definitions for the world data", "$defs": {
   "id": ID, "text": TEXT,
   "nodeRef": {"description": "A node in another graph", "type": "object", "properties": {"graph": ID, "node": ID}, "required": ["graph", "node"], "additionalProperties": False},
@@ -64,18 +65,26 @@ graph = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "
   "aspect": {"type": "number", "exclusiveMinimum": 0, "description": "width/height of the layout box (x/y are normalised separately)"}, "background": {"type": "object", "properties": {"map": {"type": "string"}, "battle": {"type": "string"}}},
   "music": {"type": "string"}, "nodes": {"type": "array", "items": node, "minItems": 1}, "edges": {"type": "array", "items": edge}, "events": {"type": "array", "items": event},
   "dialogue": {"type": "object", "additionalProperties": {"type": "array", "items": line, "minItems": 1}},
-  "npcs": {"type": "object", "additionalProperties": {"type": "object", "properties": {"name": TEXT, "portrait": {"type": "string"}}, "required": ["name"]}}},
+  "npcs": {"type": "object", "additionalProperties": {"type": "object", "properties": {"name": TEXT, "portrait": {"type": "string"}}, "required": ["name"]}},
+  "realms": {"type": "array", "minItems": 9, "maxItems": 9, "description": "v3.9.2, world graph only: one link per realm. Realm N+1 unlocks when realm N's realm-boss zone is cleared.",
+             "items": {"type": "object", "properties": {"realm": {"type": "integer", "minimum": 1, "maximum": 9}, "node": ID, "graph": ID, "entry": ID,
+                       "enterEdge": {"type": "string", "description": "world edge (portal) from the realm node into the realm graph's entry node"},
+                       "exitEdge": {"type": "string", "description": "edge id in the realm graph: entry town/village -> this world node (kind exit, no battles)"},
+                       "linkEdge": {"type": ["string", "null"], "description": "world edge from the previous realm node to this one (null for realm 1)"},
+                       "unlock": {"oneOf": [{"type": "null"}, {"type": "object", "properties": {"bossDefeated": ID}, "required": ["bossDefeated"], "additionalProperties": False}]},
+                       "realmBossZone": ID, "next": {"type": ["integer", "null"]}},
+                       "required": ["realm", "node", "graph", "entry", "enterEdge", "exitEdge", "linkEdge", "unlock", "realmBossZone", "next"], "additionalProperties": False}}},
   "required": ["schema", "id", "kind", "title", "entry", "idxMax", "edgeIdxMax", "aspect", "nodes", "edges"], "additionalProperties": False,
-  "allOf": [{"if": {"properties": {"kind": {"const": "dungeon_level"}}}, "then": {"required": ["dungeon", "level"], "properties": {"level": {"minimum": 1}}}}]}
+  "allOf": [{"if": {"properties": {"kind": {"const": "dungeon_level"}}}, "then": {"required": ["dungeon", "level"], "properties": {"level": {"minimum": 1}}}},
+            {"if": {"properties": {"kind": {"const": "world"}}}, "then": {"required": ["realms"]}, "else": {"not": {"required": ["realms"]}}}]}
 zone = {"type": "object", "properties": {"id": ID, "realm": {"type": "integer", "minimum": 1, "maximum": 9}, "order": {"type": "integer", "minimum": 1}, "title": TEXT,
         "location": {"type": "string", "description": "src/data/locations.json id"}, "desyPool": {"type": "string", "pattern": "^L[1-9]\\.[1-9]$"}, "pool": ID, "tier": {"type": "integer"},
         "bossNode": REF("nodeRef"), "gateEdge": REF("edgeRef"), "bossKind": {"enum": ["locboss", "realmboss"]}, "boss": ID,
         "enemiesPerBattle": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 3}, "minItems": 2, "maxItems": 2},
-        "roster": {"type": "array", "items": {"type": "object", "properties": {"enemy": ID, "weight": {"type": "number", "exclusiveMinimum": 0}}, "required": ["enemy", "weight"], "additionalProperties": False}},
-        "fromRoster": {"type": "object", "properties": {"location": {"type": "string"}}, "required": ["location"]},
+        "roster": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"enemy": ID, "weight": {"type": "number", "exclusiveMinimum": 0}}, "required": ["enemy", "weight"], "additionalProperties": False}},
         "packs": {"type": "object"}, "elite": ID, "scriptedElite": {"type": ["string", "boolean"]}, "unlockRequires": {"type": "array", "items": ID}},
-        "required": ["id", "realm", "order", "title", "desyPool", "pool", "bossNode", "gateEdge", "bossKind", "boss", "enemiesPerBattle", "unlockRequires"],
-        "oneOf": [{"required": ["roster"]}, {"required": ["fromRoster"]}], "additionalProperties": False}
+        "required": ["id", "realm", "order", "title", "desyPool", "pool", "bossNode", "gateEdge", "bossKind", "boss", "enemiesPerBattle", "roster", "unlockRequires"],
+        "additionalProperties": False}
 zones = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "zones.schema.json", "title": "Zones = locations: word pool, roster and boss, placed on graphs", "type": "object",
          "properties": {"_note": {"type": "string"}, "version": {"type": "string"}, "zones": {"type": "array", "items": zone, "minItems": 1}}, "required": ["zones"], "additionalProperties": False}
 hook = {"type": "object", "description": "v3.9: an NPC slot on the graphs. status quest = used by data/quests.json (quest/0.2; quest content lives there); ambient = free slot, a repeatable one-line banter NPC.",
@@ -96,21 +105,44 @@ rules = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "
   "walkSecPerHop": {"type": "number"}, "walkSecPerStep": {"type": "number"}, "eventSec": {"type": "object"}, "beelineBattleTarget": {"type": "number"},
   "beelineBattleRange": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}, "maxHopsToInn": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "object", "properties": {"default": {"type": "integer", "minimum": 1}}, "patternProperties": {"^[1-9]$": {"type": "integer", "minimum": 1}}, "required": ["default"], "additionalProperties": False}]},
   "townDensity": {"type": "object"}, "fog": {"type": "object"}, "realmBossFeather": {"type": "object", "properties": {"realms": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 9}}, "qty": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}, "required": ["realms"], "additionalProperties": False},
-  "returnFeather": {"type": "object", "properties": {"item": ID, "priceG": {"type": "number", "minimum": 0}, "carry": {"type": "integer"}, "start": {"type": "integer", "minimum": 0}, "useSec": {"type": "number"}, "destinations": {"type": "array", "items": {"enum": ["lastInn", "visitedTown"]}}, "usable": {"type": "string"}, "note": {"type": "string"}}, "required": ["item", "priceG", "carry", "start", "destinations"], "additionalProperties": False},
-  "seed": {"type": "object"}},
+  "returnFeather": {"type": "object", "properties": {"item": ID, "priceG": {"type": "number", "minimum": 0}, "carry": {"type": "integer"}, "start": {"type": "integer", "minimum": 0}, "useSec": {"type": "number"}, "destinations": {"type": "array", "items": {"enum": ["lastInn", "visitedTown"]}, "description": "lastInn = the single node where the player last rested; visitedTown = every town or village node ever entered. Other visited inns are not destinations."}, "destinationRule": {"type": "string"}, "usable": {"type": "string"}, "note": {"type": "string"}}, "required": ["item", "priceG", "carry", "start", "destinations"], "additionalProperties": False},
+  "seed": {"type": "object", "properties": {"algorithm": {"const": "mulberry32"}, "hash": {"const": "fnv1a32"}, "key": {"type": "string"}, "eventKey": {"type": "string"}, "hashRule": {"type": "string"}, "note": {"type": "string"},
+           "testVectors": {"type": "array", "items": {"type": "object", "properties": {"key": {"type": "string"}, "fnv1a32": {"type": "integer", "minimum": 0, "maximum": 4294967295}, "roll": P01}, "required": ["key", "fnv1a32", "roll"], "additionalProperties": False}}},
+           "required": ["algorithm", "hash", "key", "testVectors"], "additionalProperties": False}},
   "required": ["encounterRate", "depthStep", "maxRate", "safe", "clearedStepMult", "zoneBattleBudget", "budgetSpentMult", "pityRolls", "maxHopsToInn", "returnFeather"], "additionalProperties": False}
 index = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "index.schema.json", "title": "World data index", "type": "object", "properties": {
   "_note": {"type": "string"}, "schema": {"const": "index/0.3"}, "version": {"type": "string"}, "start": REF("nodeRef"),
   "files": {"type": "object", "properties": {k: {"type": "string"} for k in ("rules", "zones", "quests", "layoutTargets")}, "required": ["rules", "zones", "quests"]},
+  "content": {"type": "object", "description": "v3.9.2: realm -> game content file (realm_content.schema.json). Realms 1-2 live in GameDev's src/data (build_data.py).", "patternProperties": {"^[3-9]$": {"type": "string"}}, "additionalProperties": False},
   "renames": {"type": "object", "description": "old id -> new id for graphs/nodes/edges ('graph/node' keys) so old saves load", "additionalProperties": {"type": "string"}},
   "graphs": {"type": "array", "items": {"type": "object", "properties": {"id": ID, "kind": {"type": "string"}, "realm": {"type": ["integer", "null"]}, "dungeon": {"type": ["string", "null"]},
             "level": {"type": "integer"}, "status": {"type": "string"}, "nodes": {"type": "integer"}, "file": {"type": "string"}}, "required": ["id", "file"], "additionalProperties": False}}},
   "required": ["schema", "start", "files", "graphs"], "additionalProperties": False}
+S = {"type": "string"}; I0 = {"type": "integer", "minimum": 0}; SL = {"type": "array", "items": {"type": "string"}}
+c_enemy = {"type": "object", "description": "src/data/enemies.json row (GameDev build_data.py shape) + shoutZh/shoutItem/priority", "properties": {
+  "id": ID, "desyId": ID, "sprite": S, "spriteTint": {"type": ["integer", "null"]}, "headAnchor": P01, "zh": S, "py": S, "en": S, "emoji": S, "color": I0, "tier": {"type": "integer", "minimum": 1, "maximum": 9},
+  "level": {"type": "integer", "minimum": 1}, "kind": {"enum": ["normal", "elite", "locboss", "realmboss"]}, "role": {"enum": ["normal", "elite", "boss"]}, "hp": {"type": "integer", "minimum": 1},
+  "atk": I0, "def_": I0, "exp": I0, "gold": I0, "chestRate": P01, "minions": {"type": "array", "items": ID}, "mech": {"type": "object"}, "attackZh": S, "attackEn": S, "special": S, "group": S,
+  "shoutZh": S, "shoutItem": S, "priority": S}, "required": ["id", "desyId", "sprite", "zh", "en", "tier", "level", "kind", "hp", "atk", "def_", "exp", "gold", "chestRate", "minions", "mech"], "additionalProperties": False}
+c_loc = {"type": "object", "description": "src/data/locations.json row; id = zones.json zone id", "properties": {
+  "id": ID, "name": S, "zh": S, "emoji": S, "tier": {"type": "integer"}, "realm": {"type": "integer"}, "G": {"type": "number"}, "recLevel": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2},
+  "enemiesPerBattle": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 2, "maxItems": 2}, "mcOptions": {"type": "integer", "minimum": 2}, "reviewSlots": I0, "pathFights": I0,
+  "maxNewPerBattle": {"const": 3}, "roster": zone["properties"]["roster"], "boss": ID, "unlockRequires": {"type": "array", "items": ID}, "bg": S,
+  "bossReward": {"type": ["object", "null"]}, "packs": {"type": "object"}, "scripted": {"type": "object", "additionalProperties": {"type": "array", "items": ID}}, "elite": ID,
+  "desyPool": {"type": "string", "pattern": "^L[1-9]\\.[1-9]$"}, "bossKind": {"enum": ["locboss", "realmboss"]}, "bossNode": REF("nodeRef")},
+  "required": ["id", "tier", "G", "enemiesPerBattle", "mcOptions", "reviewSlots", "maxNewPerBattle", "roster", "boss", "elite", "desyPool"], "additionalProperties": False}
+c_item = {"type": "object", "description": "src/data/items.json row", "properties": {"id": {"type": "string", "pattern": "^C[0-9]{3,4}$"}, "zh": S, "trad": S, "py": S, "en": S, "enPrimary": S, "type": S, "pos": S, "topic": S,
+  "loc": S, "speaking": {"type": "boolean"}, "reading": {"type": "boolean"}, "slice": {"type": "boolean"}, "altZh": SL, "altEn": SL}, "required": ["id", "zh", "py", "en", "loc"], "additionalProperties": False}
+content = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "realm_content.schema.json", "title": "v3.9.2 game content for one realm (3-9): enemies, locations (= zones), word pools, items", "type": "object", "properties": {
+  "_note": S, "schema": {"const": "realm_content/0.1"}, "version": S, "realm": {"type": "integer", "minimum": 3, "maximum": 9}, "title": TEXT, "G": {"type": "number"}, "maxNewPerBattle": {"const": 3},
+  "enemies": {"type": "array", "items": c_enemy, "minItems": 1}, "locations": {"type": "array", "items": c_loc, "minItems": 1},
+  "pools": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string", "pattern": "^C[0-9]{3,4}$"}, "minItems": 1}}, "items": {"type": "array", "items": c_item}},
+  "required": ["schema", "realm", "maxNewPerBattle", "enemies", "locations", "pools", "items"], "additionalProperties": False}
 BITS = {"type": "string", "pattern": "^[A-Za-z0-9+/]*={0,2}$", "description": "base64 bitset, bit i = node/edge idx i"}
 progress = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B + "progress.schema.json", "title": "Player world progress (save). Fog of war, walked edges and event state live here, never in graph files.", "type": "object", "properties": {
   "schema": {"const": "progress/0.3"}, "dataVersion": {"type": "string"}, "seed": {"type": "integer", "description": "save seed for all encounter / event rolls"},
   "pos": {"type": "object", "properties": {"graph": ID, "node": ID, "edge": {"type": ["string", "null"]}, "step": {"type": "integer", "minimum": 0}}, "required": ["graph", "node"]},
-  "lastInn": REF("nodeRef"), "visitedTowns": {"type": "array", "items": REF("nodeRef"), "description": "Return Feather destinations"},
+  "lastInn": REF("nodeRef"), "visitedTowns": {"type": "array", "items": REF("nodeRef"), "description": "Return Feather destinations besides lastInn: every node of kind town OR village ever entered (any realm). Never holds plain inns or campfires."},
   "graphs": {"type": "object", "description": "per graph id", "additionalProperties": {"type": "object", "properties": {
       "visited": BITS, "walked": {**BITS, "description": "edges fully walked once (x clearedStepMult)"}, "revealed": {**BITS, "description": "optional extra reveals (map items, story); fog = visited + neighbours of visited + landmarks + revealed"},
       "crossings": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}, "description": "edge idx -> times crossed (roll seed)"},
@@ -123,6 +155,6 @@ progress = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": B 
   "safeUntil": {"type": "object", "additionalProperties": {"type": "integer"}, "description": "'graph/edgeIdx' -> hop count until which the post-clear safety holds"},
   "hops": {"type": "integer", "minimum": 0}, "feathers": {"type": "integer", "minimum": 0, "maximum": 3}},
   "required": ["schema", "seed", "pos", "lastInn", "graphs"], "additionalProperties": False}
-for name, s in (("progress", progress), ("common", common), ("graph", graph), ("zones", zones), ("quests_world", quests), ("world_rules", rules), ("index", index)):
+for name, s in (("progress", progress), ("common", common), ("graph", graph), ("zones", zones), ("quests_world", quests), ("world_rules", rules), ("index", index), ("realm_content", content)):
     json.dump(s, open(f"{OUT}/{name}.schema.json", "w"), indent=1, ensure_ascii=False)
 print('schemas written')

@@ -103,6 +103,10 @@ def convert(g, EVS, speakers=None, graph_kind=None):
         if e.get('note'): ee["note"] = e['note']
         edges.append(ee)
     for i, ee in enumerate(edges): ee["idx"] = i                      # v3.9: stable edge idx (progress bitsets)
+    if kind == 'overworld' and gid.startswith('realm_'):               # v3.9.2: safe exit entry town/village -> world map; appended last so older idx stay
+        assert not any(e['id'] == f"exit_{g['entry']}" for e in edges)
+        edges.append({"id": f"exit_{g['entry']}", "from": g['entry'], "kind": "exit", "to": {"graph": "world", "node": gid}, "danger": 0,
+                      "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open", "idx": len(edges)})
     out["edgeIdxMax"] = len(edges) - 1
     # v3.9: x/y normalised to 0-1 per graph (GameDev); 'aspect' = width/height of the layout box so art can keep the shape
     xs = [n['x'] for n in nodes]; ys = [n['y'] for n in nodes]; w = (max(xs) - min(xs)) or 1; hgt = (max(ys) - min(ys)) or 1

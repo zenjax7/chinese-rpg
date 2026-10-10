@@ -1,8 +1,9 @@
 """Loads the v3.9 world data (data/world, format graph/0.3) for world_sim.py, the validator and the renderer.
 A Realm = the realm's overworld graph plus every dungeon level reachable from it by stairs/portal edges, merged into one node
 space ('graph/node'). Zones (one per location/word pool) come from zones.json."""
-import json, collections, os
-ROOT = os.environ.get('WORLD_DATA', '/workspace/desy/data/world')
+import json, collections, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from _paths import OUT as _OUT
+ROOT = os.environ.get('WORLD_DATA', _OUT)
 J = lambda p: json.load(open(os.path.join(ROOT, p), encoding='utf-8'))
 RULES = J('world_rules.json'); INDEX = J('index.json'); ZONES = J(INDEX['files']['zones'])['zones']
 QF = J(INDEX['files']['quests']); HOOKS = {q['id']: q for q in QF['questHooks']}
