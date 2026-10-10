@@ -36,6 +36,7 @@ Dates are 2026, Pacific time.
 - **Oct 2** — v3.5 (kept in v3.6/v3.7): spell MP costs are 1.25× the v3.4 costs. [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 22)
 - **Oct 2** — v3.6: boss ATK × 0.8 (Director's default, adopted). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 28)
 - **Oct 2** — v3.7: location bosses need about 15 correct answers, realm bosses about 20 (even after spending full MP). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 30)
+- **Oct 9** — Spell FX never cover the enemy's name, HP bar or target arrow: that UI draws above every spell FX layer. Area spells that travel (tornado) start at the first target, not at the caster (Arty's screenshot review).
 
 ## World, travel and quests
 
