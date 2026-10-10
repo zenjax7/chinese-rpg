@@ -910,3 +910,177 @@ sequenceDiagram
 - **The Oct 9 byte-for-byte CI check** of `docs/data/world/` against the tools keeps running on the frozen seed.
 
 ---
+
+## 9. Source of truth: DB live, repo export by GameDev
+
+Jack's decisions (2026-10-10):
+- **The level editor and the backend get no GitHub write access**: no GitHub App, no token in Vercel, and no Action that pulls from the DB and commits.
+- **GameDev**, the engineering agent, exports the published levels into the repo **from its own box**, using the gh CLI that is already signed in there.
+
+### 9.1 Roles
+
+| Where | Holds | Truth for |
+|---|---|---|
+| **Neon DB** | drafts, published levels, `level_revisions`, releases | **live level content.** The DB wins. |
+| **GitHub `docs/data/levels/`** | the latest published JSON per level, exported by GameDev, with git history | version history, backup, the seed, disaster recovery, the CI validators, the sim, and Desy's reading copy |
+| **GitHub, everything else** | docs, code, schemas, validators, global tables, the frozen v3.9.x seed (`docs/data/world/` etc.) | unchanged: GitHub stays primary (the Oct 9 rule) |
+
+**This deliberately revises Jack's "GitHub is the only primary source" rule for level content only.** The repo copy of a level is an export of the DB, not its source. Docs, code, the global tables and every other data file stay GitHub-primary.
+
+### 9.2 The export loop
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant J as Jack
+  participant API as /api/v1 (Vercel)
+  participant B as GameDev box
+  participant GH as GitHub
+  J->>API: Publish (release 57)
+  loop every 30 min (routine), or when Jack says published
+    B->>API: GET /api/v1/levels/index (public)
+    API-->>B: release 57 (repo has 56)
+  end
+  B->>API: GET /api/v1/editor/export?state=published (Bearer export token, read-only)
+  API-->>B: {release 57, levels [...]} and audit_log export.read
+  B->>B: write docs/data/levels/ID.json (stable key order) + RELEASE.json
+  B->>B: join_levels.py, validate_all.py, TS validators, parity, gitleaks
+  B->>GH: commit "levels: release 57 (realm_6 v5, old_mine_1 v2)" as Jack Song, push with gh
+  GH->>GH: CI: validators + sim on docs/data/levels
+```
+
+- **The endpoint** is `GET /api/v1/editor/export?state=published[&level=…]`, GET only. It accepts either of two credentials:
+  - Jack's editor session (the editor's **Download JSON** button uses it);
+  - a Bearer token from `editor_tokens` with scope `export:read`.
+- **What the token can and can't do:**
+  - it can't save, publish or import, and it can't read drafts (drafts need the session and `state=draft`);
+  - it is hashed at rest (SHA-256 with the server pepper `EXPORT_TOKEN_PEPPER`), revocable in the editor, and its `last_used_at` is tracked.
+- **The credential lives only on GameDev's box**, e.g. in `~/.config/chinese-rpg/export-token` (mode 600), outside every repo working tree.
+  - It is never in the public repo, never in GitHub Actions secrets, and never in a URL or a log.
+  - gitleaks runs before every export commit, and CI runs it again.
+- **The commit:**
+  - touches only `docs/data/levels/**`: one file per level plus `RELEASE.json` (release id and versions);
+  - author `Jack Song <48544849+zenjax7@users.noreply.github.com>`, pushed with gh to `main`;
+  - the push deploys Pages and Vercel. Data-only changes don't change the game build, except that the Vercel offline fallback copy (§7.2) refreshes.
+  - If the validators fail on an export, GameDev still commits it, because the repo must mirror what players see. GameDev then flags the failure to Jack: the server validated that content at publish, so a mismatch means a parity bug.
+- **What Jack sets up** (one step, in the editor): **Tokens → "New export token (read-only)"**, then paste it once on GameDev's box when asked. No GitHub App, no repo secret, no Action, no Vercel-side GitHub token.
+
+### 9.3 Conflict rules
+
+- **The DB wins.** Each export overwrites `docs/data/levels/` completely.
+- **Repo edits never flow back automatically.** If Desy changes a level in the repo (or regenerates one), she or GameDev runs a deliberate **import**:
+  - `POST /api/v1/editor/import {level JSON}`, editor session only, from the editor's **Import JSON** button;
+  - it lands as the **draft**, never as published, with a diff view against the current draft;
+  - Jack reviews it and publishes.
+- GameDev's next export overwrites any repo edit that wasn't imported. CI flags a commit that touches `docs/data/levels/` without the export commit message pattern.
+
+### 9.4 Backups and disaster recovery
+
+- **Three layers:**
+  - Neon's restore window (6 hours on Free);
+  - `level_revisions` (the full history, append-only);
+  - the git history of `docs/data/levels/`.
+- **Recovery:** `server/seed-levels.mjs --restore` loads the repo copy into a fresh database and republishes each level at its exported version.
+- **Local dev** seeds PGlite from the same files.
+
+---
+
+## 10. Rollout, risks, security and privacy
+
+### 10.1 Phases
+
+Sizes: S ≈ up to 2 days, M ≈ 3–5 days, L ≈ 1–2 weeks of agent work.
+
+| # | Phase | Size | Done when |
+|---|---|---|---|
+| 0 | This doc + Desy's checklist approved by Jack; realm_1 split decided (Q1b) | S | Jack approves; the decisions.md lines go from "proposed" to decided |
+| 1 | The `level/0.1` JSON Schema; `split_levels.py` / `join_levels.py`; the round-trip test in CI; the first `docs/data/levels/` copy; the TypeScript validators + compile, with the parity test | L | round trip and parity green in CI; validate_all reports 0 errors on the joined output |
+| 2 | Migration `003_levels.sql` (+ Neon roles); `seed-levels.mjs`; the public `GET /levels/index` and `/levels/:id`; the game loads levels from the API in graph mode, with IndexedDB and the bundled fallback; the one-time zone → level save migration; **load-time save reconcile** for deleted nodes (`lastInn`, `visitedTowns`, retired bits and events; `server/progress.ts` node counts from the release) | M–L | a Vercel preview plays from the DB; the offline fallback works; save tests for deleted nodes and migrated saves pass |
+| 3 | **Editor MVP:** editor auth (`editors`, `EDITOR_GOOGLE_SUBS`, `EditorCtx`, the `app_editor` role), the `editor.html` entry, map list, canvas, node inspector, level settings, autosave, 409 handling, the bundle guard | L | Jack edits and saves a draft; the game bundle's sha is unchanged |
+| 4 | Dialogue editor with portrait preview, quest view and variant tabs, inline validation, Playtest | L | Jack writes a quest end to end and plays it from the draft |
+| 5 | Publish (single and set), releases, history, rollback, import, Download JSON, the export endpoint and tokens; the **GameDev export routine** on the box | M | a publish reaches players within 5 minutes; the export commit lands and CI is green |
+| 5b | **Headless TypeScript campaign sim** (replaces Desy's lost `world_sim.py` and spells chain, below) | M–L (about 1.5–2 weeks) | CI writes `docs/data/sim/campaign_*.csv` on every export; the numbers match Desy's last known beeline counts (§3.9.3) within noise |
+| 6 | **Remove the zone code** (Desy §3.9.6): `zones.json` as a runtime input, the zone schemas, the zone code in `src/world/engine.ts`, `src/ui/graph.ts`, `src/world/content.ts`, `src/data.ts`, `src/world/progress.ts`, `src/engine/battle.ts`, `server/progress.ts` and `server/dal/saves.ts`; `progress.zone` → the pool-keyed budget; the tests in `tests/world.mjs` and `tests/api/*`; the Python tools' zone paths (seed-only) | M | `rg -n zone src server` finds only the migration alias; all suites green |
+| 7 | **Graph becomes the Vercel default** (only now, per Jack) + the guest/classic switch (Q2); the Pages decision (Q12) | S | new guests land in graph; classic is reachable as decided |
+
+**The campaign sim (phase 5b):**
+- `tools/sim/campaign.ts`, run with Node 22 type stripping, like `tests/world.mjs`.
+- It imports the game's **real** engine modules: `src/engine/battle.ts`, `src/world/engine.ts` (encounters, `stepRate` / `rollStep`, budget, pity), the seeded RNG (mulberry32/FNV-1a), quest state, the spells, and the economy.
+- It reads `docs/data/levels/*.json` plus the global tables, so no logic is duplicated in Python.
+- It walks headless profiles (beeline and explorer; 50% saver, 50% spender, 75% saver) through the 9 realms and records battles, words met, time, defeats, gold, Feathers and boss attempts.
+- It runs in CI on every export commit and writes CSV to `docs/data/sim/`.
+- Q15 recommends building it after the editor MVP.
+
+### 10.2 Guests and classic
+
+- **Recommended:** once phase 7 ships, a **new** Vercel guest defaults to graph.
+- A guest who already has a classic v3 save keeps classic, with a one-time card: "Try the new world (your classic save is kept)".
+- `?world=classic` keeps working for one release cycle.
+- Child profiles are already graph.
+- Pages stays unchanged until it's retired.
+
+### 10.3 Risks
+
+| Risk | Mitigation |
+|---|---|
+| The TypeScript port drifts from Desy's Python validators | the parity test on every push; Python stays the reference |
+| A publish breaks live saves (deleted or retargeted nodes) | append-only ids, no renames, the load-time reconcile, publish warnings with affected-save counts, one-click rollback |
+| The zone → level save migration goes wrong for a real family | a 1:1 table, run once and flagged; tested on fixtures from real save shapes; the server keeps the pre-migration save in `save_backups` (exists) |
+| The CDN doesn't cache function responses as expected | verified on a preview in phase 2. Fallback: serve levels as static files rebuilt by a Vercel deploy hook (one deploy per publish) |
+| Neon is paused or over quota | IndexedDB and the bundled fallback for players; the editor shows "DB unavailable" and keeps unsent drafts in localStorage |
+| A stolen Google session lets someone publish | the allowlist by Google `sub`, the 12-hour step-up for publish, the audit log, rollback |
+| The export token leaks | it reads only published data, which is already public through `/levels`; hashed at rest, revocable, kept outside any repo, gitleaks |
+| Auth.js maintenance stalls | the DAL hides it; Better Auth is the fallback (architecture §3.1) |
+| Bundle bloat | the separate entry, and the CI string guard on the game chunks |
+| Balance shift from the doorway edges (−2.0 to +0.3 battles per realm) | Desy's numbers (§3.9.3); the campaign sim re-checks them; the data-only fix is her Q17 alternative |
+
+### 10.4 Security and privacy notes
+
+- **The editor never touches child data.** Three layers enforce it:
+  - the types (`EditorCtx` ≠ `ParentCtx`);
+  - the DAL (the editor DAL imports no player DAL);
+  - the Postgres grants (`app_editor` has no grant on any player table).
+
+  The only cross-touch is the affected-save **count** at publish, which the player-role DAL computes and returns as a number.
+- **Level content is public data** that players download, with no personal data in it, so a leaked export token exposes nothing beyond release timing.
+- **The public repo holds no secret.**
+  - The env names go into `.env.example`: `DATABASE_URL_EDITOR`, `DATABASE_URL_LEVELS_RO`, `EDITOR_GOOGLE_SUBS`, `EXPORT_TOKEN_PEPPER`. Their values live in Vercel.
+  - The export token lives only on GameDev's box.
+  - There is no GitHub credential anywhere in Vercel or the backend.
+- **CSP is unchanged for `/editor`.** React Flow needs inline styles, which `style-src 'unsafe-inline'` already allows; `frame-ancestors 'none'` stays; the scene-preview iframe is same-origin.
+- **Audit rows** are kept as today (hashed actor, no content).
+
+---
+
+## 11. Open questions for Jack (with defaults)
+
+1. **(a) Approve the level schema as "one level = one graph = its own zone", with zones gone from the editor?** *Default:* yes (your Oct 10 decision). **(b) Split `realm_1` into three levels** (`realm_1`, `clover_hills`, `warren`), as Desy proposes? *Default:* yes, before the first publish. It keeps the L1.1, L1.2 and L1.3 pools, the 3 bosses and the gates exactly, at the cost of one realm-1 save migration. **Pending your answer**; until then `realm_1` stays whole and unpublishable from the editor.
+2. **Guests and classic after phase 7.** *Default:* new guests get graph; existing classic guests keep classic plus a "try the new world" card; `?world=classic` stays for one release.
+3. **Who signs in to `/editor`?** *Default:* only you, by Google `sub` in `EDITOR_GOOGLE_SUBS`, then the `editors` table. Desy reads the repo export and doesn't need a login.
+4. **Can a draft with errors be saved?** *Default:* yes, saved and flagged; only publish blocks.
+5. **Publish several levels at once?** *Default:* yes, as one validated set in one transaction.
+6. **Delete an already-published node?** *Default:* yes, with a warning and the count of affected saves; saves are cleaned up on load.
+7. **Renames after publish?** *Default:* **no**; ids are fixed once published, titles are free. (The game doesn't apply `renames` today.)
+8. **Per-level encounter odds** (your spec) versus Desy's "rates stay global". *Default:* allow an optional per-level override of the danger odds, clamped to max 0.95, with `null` meaning global. Budget and pity stay global.
+9. **Word pools.** *Default:* pick a location pool (`desyPool`) only; pool contents stay in the curriculum.
+10. **Export cadence.** *Default:* GameDev's box polls the public index every 30 minutes and exports only when the release changes; you can also say "published" to trigger it at once.
+11. **Where does the export credential live?** *Default:* a read-only `export:read` token you create in the editor, stored only on GameDev's box (mode 600, outside the repo), revocable at any time.
+12. **The Pages build, once levels live in the DB.** The Pages build is static, has no API, and the API sends no CORS headers. *Default:* the Vercel build reads levels from the DB; Pages keeps the frozen v3.9.x seed until you retire it. (A later alternative: build Pages from the latest `docs/data/levels/` export.)
+13. **The 9 doorway nodes** (Desy Q17). *Default:* they stay in their own graph's level, with no map change. The cost is −2.0 to +0.3 battles per realm, and five realm-boss locations get slightly fewer own-pool battles.
+14. **Battle budget reset** (Desy Q18). *Default:* reset when the level's word pool changes (today's rule, without zones).
+15. **The campaign sim.** Desy's `world_sim.py` and spells chain are lost. *Default:* build a headless TypeScript campaign sim in the repo that reuses the game's real battle, encounter, RNG and quest modules, reads the level JSON, runs in CI and writes CSV to `docs/data/sim/`. Build it in **phase 5b, right after the editor MVP and publish** (sized M–L, about 1.5–2 weeks).
+16. **Playtest saves.** *Default:* a throwaway local save per playtest, never synced, reset on each launch.
+17. **A `town` level kind** (walk-in town maps). *Default:* the schema allows it; the editor hides it until a town map exists.
+
+## 12. Schema questions for Desy
+
+- **D1. The settings block:** this doc adopts your §1.3 block with your names, with `boss` inside `settings`. Should `G` and `recLevel` be stored, or derived at compile from `tier`? (Default: derived, shown read-only.)
+- **D2. The difficulty row** (`mcOptions`, `reviewSlots`, `pathFights`, `maxNewPerBattle`): derived from `realm_location_difficulty.csv` by `desyPool` and not stored in the level, so the CSV stays the only copy? (Default: yes.)
+- **D3. `old_mine_1/npc_1` is `kind: inn`**, yet it is Miner Gao's giver position. Should it become `kind: npc`, or does the giver stand at the campfire?
+- **D4. Per-level encounter odds:** Jack's spec lists them as a level setting, and your doc keeps rates global. Is an optional danger-odds override (clamped, `null` = global) acceptable to you, with budget and pity staying global?
+- **D5. Node `quests[]` vs quest `scenes{}`:** the variants are the editing surface, and the server keeps `quests[].scenes` in sync. Store both, or derive `scenes{}` only?
+- **D6. Quest ownership when a giver moves level:** the definition moves with the giver (same quest id). Agree?
+- **D7. Quest `zone` metadata → "home level"** (the boss level of that zone, your §3.9.5): keep it as a field (`home`), or drop it, since the giver's level already owns the quest?
+- **D8. Ambient banter** (26 slots): a scene on the NPC node with `once: false`, or a lighter "bark" line type? (Default: a scene, so there is no new format.)
+- **D9. Your §3.0, §3.4 step 1, Q6 and Q15 say there are no level copies in GitHub.** Jack's later clarification adds GameDev's export to `docs/data/levels/` (§9 here). A pointer note sits at the top of your doc; please update those parts when you next edit it. The export token is kept only on GameDev's box, not in "Vercel and local env files".
+- **D10. After the realm_1 decision:** if Jack says no to the split, which option do you want (one pool, or a union pool), knowing your §3.9.2 table says both are unfaithful?
