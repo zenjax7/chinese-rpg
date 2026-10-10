@@ -415,3 +415,245 @@ Notes on the example:
 | `content/realm_N.json` (generated) | compiled per release by the server | still generated, never edited |
 
 ---
+
+## 3. DB tables
+
+Migration `003_levels.sql`. Content tables only, with **no child or parent columns at all**.
+
+```mermaid
+erDiagram
+  levels ||--o{ level_revisions : "history"
+  content_releases ||--o{ release_levels : "pins"
+  levels ||--o{ release_levels : "pinned in"
+  editors ||--o{ editor_tokens : "issues"
+  editors ||--o{ levels : "updated_by"
+  levels {
+    text id PK
+    smallint realm
+    text kind
+    jsonb draft
+    int draft_rev
+    jsonb draft_validation
+    jsonb published
+    int published_version
+    text published_hash
+    text updated_by FK
+    timestamptz created_at
+    timestamptz updated_at
+    timestamptz published_at
+  }
+  level_revisions {
+    bigint id PK
+    text level_id FK
+    int version
+    text kind
+    jsonb body
+    text content_hash
+    text created_by
+    timestamptz created_at
+    text note
+  }
+  content_releases {
+    int id PK
+    timestamptz created_at
+    text created_by
+    text note
+    jsonb index
+    jsonb compiled
+  }
+  release_levels {
+    int release_id FK
+    text level_id FK
+    int version
+  }
+  editors {
+    text user_id PK
+    text google_sub
+    text email
+    text role
+    timestamptz created_at
+    timestamptz disabled_at
+  }
+  editor_tokens {
+    uuid id PK
+    text editor_id FK
+    text token_hash
+    text scope
+    text label
+    timestamptz created_at
+    timestamptz last_used_at
+    timestamptz revoked_at
+  }
+```
+
+- **`levels`**: one row per level, holding the current draft and the current published copy.
+  - `draft_rev` is incremented on every save. It is the optimistic lock (§6.4).
+  - `published` is null until the first publish.
+- **`level_revisions`**: **append-only** (no `UPDATE` or `DELETE` grant).
+  - `kind = 'publish'`: one row per publish, `unique (level_id, version)`.
+  - `kind = 'checkpoint'`: a draft snapshot at most every 10 minutes while editing. Checkpoints older than 90 days are pruned by the existing daily cron (the cron's role is the only one with `DELETE`, and only on checkpoint rows); publish rows are never pruned.
+- **`content_releases`** + **`release_levels`**: the published set. Every publish (or set publish) creates one release that pins `{level → version}` for every level.
+  - It stores the compiled runtime index and quest list, so the public index route is a single row read.
+  - "Content version" = the release id.
+- **`editors`**: the allowlist.
+  - `user_id` is the Auth.js `users.id`.
+  - `google_sub` (the stable Google account id from `accounts.providerAccountId`) is preferred, with `email` as a fallback for bootstrap.
+  - `role` ∈ `owner` (Jack), `editor`, `viewer` (export only).
+- **`editor_tokens`**: hashed read-only tokens, `scope = 'export:read'` (§9). A token is shown once, at creation.
+- **`audit_log`** (exists):
+  - adds `actor_type 'editor'` (the check constraint is widened);
+  - adds the actions `editor.signin`, `level.save` (sampled: the first per 10 minutes), `level.publish`, `level.rollback`, `level.import`, `export.read`, `token.create`, `token.revoke`.
+
+**Indexes:**
+- `levels (realm, kind)`;
+- `level_revisions (level_id, version desc)` and `(level_id, created_at desc)`;
+- `release_levels (level_id, release_id)`;
+- `editors (google_sub)` unique and `editors (lower(email))` unique;
+- `editor_tokens (token_hash)` unique `where revoked_at is null`.
+
+**Size estimate.** Neon Free storage is 0.5–1 GB (the architecture doc counted 1 GB on 2026-10-02; this plan assumes 0.5 GB).
+
+| Item | Raw size | In Postgres (jsonb, TOAST-compressed about 3–4×) |
+|---|---|---|
+| A level today | graphs avg 17 KB (626 KB / 36). With scenes and quests embedded, about 30–60 KB (realm 8 about 120 KB). | about 15 KB avg |
+| `levels` (draft + published × 36) | about 3.6 MB | about 1 MB |
+| 2,000 publish revisions (several years at about 2 a day) | about 100 MB | about 30 MB |
+| Checkpoints, 90-day window (about 2,000) | about 100 MB | about 30 MB |
+| `content_releases` × 2,000 (index + compiled quests, about 40 KB) | 80 MB | about 20 MB |
+
+- **Total: well under 100 MB**, next to player data at about 0.25–0.5 MB per active child (architecture §7.5).
+- If storage gets tight, the cron trims checkpoints to 30 days and keeps `compiled` only on the latest 50 releases.
+
+---
+
+## 4. Editor auth
+
+- **Same Auth.js, same Google provider, same session cookie.** No second OAuth client.
+- **After sign-in, the router builds one of two disjoint contexts:**
+  - **`EditorCtx`**: only if the session's user has a live `editors` row, or matches the bootstrap env var `EDITOR_GOOGLE_SUBS` (comma-separated Google `sub` values, set in Vercel; no email needed). The first owner login inserts the `editors` row.
+  - **`ParentCtx`**: today's context, unchanged.
+  - Editor routes (`/api/v1/editor/*`) accept **only** `EditorCtx`; player routes accept only `ParentCtx`.
+  - Jack's Google account can be both a parent and an editor, but no single request is both.
+- **The role check is in the DAL.**
+  - `server/dal/levels.ts` functions take an `EditorCtx` (a branded type, so passing a `ParentCtx` doesn't compile).
+  - Each function re-checks the role at the top (`viewer` can only export).
+  - Handlers contain no SQL, as today.
+- **A separate Postgres role (privacy by construction).**
+  - Editor handlers use a pool built from `DATABASE_URL_EDITOR` (Neon role `app_editor`), which is granted:
+    - `select, insert, update` on the level tables;
+    - `insert` only on `level_revisions` and `audit_log`;
+    - `select` on `users`, `accounts` and `sessions` (session lookup);
+    - **no grant at all on `parents`, `child_profiles`, `saves`, `graph_progress`, `word_mastery`, `save_backups` or `consent_records`.**
+  - A bug in editor code **can't read child data**.
+  - The public level routes use a third role, `app_levels_ro`, which is read-only: `select` on `levels`, `content_releases` and `release_levels`, and the queries read only the published columns.
+- **CSRF:** the existing checks apply to every state-changing editor route:
+  - a same-origin `Origin`;
+  - not `Sec-Fetch-Site: cross-site`;
+  - `application/json`;
+  - `X-App-Request: 1`.
+
+  Sessions stay SameSite=Lax and httpOnly.
+- **Step-up:** publish, rollback, import and token creation need a session younger than 12 hours. Otherwise the editor sends Jack through Google again (`prompt=login`).
+- **Rate limits** (the existing `rate_limits` table, keyed by editor):
+  - save: 240 an hour;
+  - publish, rollback and import: 30 an hour;
+  - export: 60 an hour per token;
+  - draft playtest reads: 600 an hour.
+
+  The WAF IP rule already covers `/api/*`.
+- **Audit:** `audit_log` rows as listed in §3, with the hashed actor (as today) and the level id and version in `details`. No level content and no child data.
+- **Nothing for players to load:** the editor's code is never loaded by players (§5). The `/editor` page itself is static; everything protected is behind the API.
+
+---
+
+## 5. Editor UI and library
+
+### 5.1 Library choice
+
+| Option | Fit | Cost | Verdict |
+|---|---|---|---|
+| **React Flow (`@xyflow/react`, MIT)** | A node-and-edge editor out of the box: drag, connect, multi-select, minimap, zoom/pan, custom node components (our kind icons), edge labels (danger), handles, keyboard delete, documented undo patterns | React 19 + react-dom ≈ 60 KB gz; React Flow ≈ 45–55 KB gz | **Recommended.** Mature and well documented, the fastest path to Jack's feature list. It renders HTML/SVG, so the inspectors and forms are ordinary React. |
+| Rete.js | Built for dataflow and visual programming (sockets, typed ports, an engine) | Similar, and it still needs a React or Vue render plugin | The wrong model for a map: we have places and roads, not computation |
+| Cytoscape.js | An excellent graph *viewer*, with layouts | About 110 KB gz; the editing UX (handles, forms on nodes) is DIY | Good for analysis, weak as an editor |
+| Custom canvas / Phaser | Could reuse the game's visuals (fog, icons) | Weeks of hit-testing, selection, undo, accessibility and forms | Not worth it. The game's own graph screen stays the playtest preview. |
+| Vanilla SVG (like `src/ui/graph.ts`) | No dependencies | The same DIY problem | No |
+
+### 5.2 A separate bundle (the game grows by 0 bytes)
+
+- **A separate Vite entry:** `build.rollupOptions.input = { main: 'index.html', editor: 'editor.html' }` with `src/editor/main.tsx`. React and React Flow are imported only from `src/editor/**`, so Vite emits them in separate chunks.
+- **Shared code** (schema types, validators, the condition evaluator) lives in `src/shared/level/**` and is imported by both. Only what the game already needs goes into the game chunk.
+- **Accounts build only:** the editor entry is added only when `VITE_CLOUD_SAVE=1`, so the Pages build stays byte-identical (`tests/account.mjs` already checks the sha1 of every Pages file).
+- **Routing:** `vercel.json` rewrites `/editor` and `/editor/*` → `/editor.html`, and adds `X-Robots-Tag: noindex` on `/editor*`.
+- **A CI guard** (`tools/check_dist.mjs`) fails the build if any `react`, `@xyflow` or `src/editor` string appears in the game's chunks.
+
+| Bundle | Today | After |
+|---|---|---|
+| Game `index-*.js` | 2,115 KB raw / **627 KB gz** (measured, `dist/` at `e4e6a4a`) | **unchanged** (± the shared level loader, about 3–5 KB gz, in phase 2) |
+| Editor (new, loaded only at `/editor`) | — | about 180–220 KB gz: React ≈ 60, React Flow ≈ 50, ajv ≈ 35 (already a server dependency), zod ≈ 15, editor code ≈ 40 |
+
+The editor figures are estimates from the libraries' published sizes. Phase 3 measures the real numbers and records them here.
+
+### 5.3 Layout and panels
+
+```
+┌───────────────┬──────────────────────────────────────────────┬─────────────────────────┐
+│ MAP LIST      │  GRAPH CANVAS (React Flow)                   │  NODE INSPECTOR         │
+│ ▸ world       │   ○ village ──2── ○ fork ──1── ◆ boss        │  Node m_farm · idx 5    │
+│ ▾ realm 6     │        │                                     │  Kind  [NPC ▾]          │
+│   realm_6 ●   │        0                                     │  NPC   [Farmer Li ▾] 🖼  │
+│   old_mine_1  │        ○ inn            ⚠ 2 warnings         │  Portal → [level ▾][node ▾]
+│ ▸ dungeons…   │  [＋node] [link] [delete] [tidy] [fit]       │  Quest: [pre | in | post]│
+│ ● draft / pub │  minimap                                     │  Events (ordered) ⇅     │
+├───────────────┴──────────────────────────────────────────────┴─────────────────────────┤
+│ DIALOGUE  sc_q1_hoe_offer  [L1 hero] [L2 xiaolong] [R1 farmer_li · sad 🖼]                 │
+│  l1 farmer_li · surprised · zh [我的锄头呢?]  en [Where is my hoe?]   ↑ ↓ ✖   Preview ▶     │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│ LEVEL SETTINGS  Pool [L1.1 ×][+]  Roster [horned_rabbit ×3][mushroom_imp ×2]  Elite [..]    │
+│  Boss [big_beak_crow ▾] at [m_crow ▾] gate [g1 ▾]   Backdrop [..]  Music [..]  Odds [global]│
+│ [✓ autosaved 09:41]  [Validate]  [Playtest ▶]  [Publish…]  [History]  [Download JSON]       │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Map list:**
+  - levels grouped by realm and dungeon, with draft and published badges (`● draft ahead of v3`) and an error count;
+  - "New level": pick a kind and realm, and the editor generates an id and checks it against `retired`;
+  - **no zone layer** anywhere.
+- **Graph canvas:**
+  - create, drag, link (drag from a handle) and delete nodes and edges;
+  - edge labels show danger and steps, and kind icons match the game;
+  - positions are stored normalised 0–1 using `aspect`;
+  - "tidy" (dagre or elk, lazy-loaded) lays out new mazes;
+  - cross-level edges show as a stub with the target level's name, and a double-click jumps there;
+  - undo and redo (an in-memory history of JSON patches).
+- **Node inspector:**
+  - the kind dropdown in Jack's words (§2.2);
+  - the portal target dropdown (level → node), which creates and updates the edge pair;
+  - title zh/en, and services;
+  - the **ordered event list** (drag to reorder, because order matters);
+  - the quest variant tabs **pre / in / post**, with a quest picker, and a step picker for step nodes.
+- **Dialogue editor:**
+  - slots L1/L2/R1/R2, each with a **character picker and an expression picker with a live portrait preview** (the game's `portraits/*.portrait.json`);
+  - lines: speaker, side, expression, **Chinese, English gloss**, and `{Cxxx}` tokens (autocomplete from the curriculum);
+  - add, reorder and delete lines, and edit choices;
+  - `zhTrad` is shown read-only after save, and there is no pinyin field;
+  - "Preview ▶" plays the scene with the game's scene player in a same-origin iframe.
+- **Word-pool picker:**
+  - location ids from `curriculum_location_pools.csv`, with item counts;
+  - an optional add/remove of single items from `curriculum.csv` (search by Chinese or English);
+  - met-rule warnings show live in the dialogue editor.
+- **Enemy and boss pickers:**
+  - from `enemies.csv`, filtered by realm and role;
+  - with the sprite thumbnail and tier badge;
+  - a warning on a tier mismatch (`boss_hp.csv`).
+- **Inline validation:**
+  - errors in red and warnings in amber;
+  - shown on the canvas (node outline), on the inspector field, and in a problems list (click to focus);
+  - the same messages as the server, because they share one validator.
+- **Playtest ▶:**
+  - opens `/?world=graph&playtest=<levelId>` in a new tab;
+  - the game fetches the **draft** through `GET /api/v1/editor/levels/:id/draft` (editor session, same origin) and the published versions of every other level;
+  - it uses a throwaway save key `chinese-rpg-proto-v4:playtest`, with no cloud sync, and starts at the level's `entry`;
+  - a debug bar offers "teleport to node" and "set quest state";
+  - the parameter is ignored when a child profile is active, or when the editor session check fails.
+
+---
