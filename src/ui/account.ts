@@ -47,7 +47,8 @@ const errMsg = (r: R, fallback = '出错了 Something went wrong.') => {
 };
 const bi = (z: string, en: string) => `${zh(z)} ${en}`;
 const maskEmail = (e: string | null) => { if (!e) return ''; const [u, d] = e.split('@'); return `${esc(u.slice(0, 1))}•••@${esc(d || '')}`; };
-const scene = () => { view.mode('town', undefined, BG.village()); setTitle(null); closeModal(); };
+/** Account screens sit on the village art without the game HUD (body.acct-screen hides it until the game starts). */
+const scene = () => { view.mode('town', undefined, BG.village()); setTitle(null); closeModal(); document.body.classList.add('acct-screen'); };
 
 // ---------------------------------------------------------------- offline banner (§9.7)
 type BannerKind = 'offline' | 'signedOut' | null;
@@ -366,7 +367,8 @@ export async function pickChild(c: Child, opt: { force?: boolean } = {}) {
 
 // ---------------------------------------------------------------- boot
 /** Called by main.ts instead of the normal start in the accounts build. */
-export async function accountBoot(start: () => void) {
+export async function accountBoot(startGame: () => void) {
+  const start = () => { document.body.classList.remove('acct-screen'); startGame(); };
   accountHooks.switchPlayer = switchPlayer;
   window.addEventListener('cloudsave:result', (e: any) => {
     const r = e.detail; if (!r) return;
