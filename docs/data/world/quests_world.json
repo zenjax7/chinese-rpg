@@ -1,6 +1,6 @@
 {
  "_note": "v3.9: NPC slots on the graphs, reconciled with data/quests.json (quest/0.2). status quest = used by a v2 quest (giver or step; offers = offerQuest events on the node); ambient = free slot that is a one-line banter NPC. Quest items.",
- "version": "v3.9.1",
+ "version": "v3.9.2",
  "questHooks": [
   {
    "id": "q1_hoe",
@@ -70,7 +70,8 @@
    "turnIn": "goblin_caves_3/story_1",
    "status": "quest",
    "quests": [
-    "q4_homework"
+    "q4_homework",
+    "q4_school_bell"
    ],
    "offers": [
     "q4_homework"

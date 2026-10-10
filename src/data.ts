@@ -34,6 +34,8 @@ export const POOLS: Record<string, string[]> = (itemsJ as any).pools;
 export const ENEMIES: Record<string, EnemyDef> = Object.fromEntries((enemiesJ as any).enemies.map((e: EnemyDef) => [e.id, e]));
 export const LOCATIONS: LocationDef[] = (locationsJ as any).locations;
 export const LOC: Record<string, LocationDef> = Object.fromEntries(LOCATIONS.map(l => [l.id, l]));
+/** Pool review order (learning.earlierItems): the classic locations, then graph-mode realm 3–9 zones once their content is loaded (world/content.ts). */
+export const POOL_ORDER: string[] = LOCATIONS.map(l => l.id);
 export const GEAR: Record<string, GearDef> = Object.fromEntries((shopJ as any).gear.map((g: GearDef) => [g.id, g]));
 export const GEAR_LIST: GearDef[] = (shopJ as any).gear;
 export const CONSUMABLES: ConsumableDef[] = (shopJ as any).consumables;

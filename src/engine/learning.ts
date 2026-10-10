@@ -1,4 +1,4 @@
-import { B, ITEM, ITEMS, POOLS, LOCATIONS, Item } from '../data';
+import { B, ITEM, ITEMS, POOLS, POOL_ORDER, Item } from '../data';
 import { S, WayKey, ALL_WAYS, ItemProg, WayStat, speechOn } from './state';
 
 const L = () => B.learning;
@@ -47,7 +47,7 @@ function wReview(id: string) {
   return (proficient(id) ? l.proficientWeight : l.localBaseWeight + l.localProgressWeight * (1 - progress(id))) + l.overdueWeight * Math.min(maxOverdue(id), l.overdueCap);
 }
 export function earlierItems(locId: string): string[] {
-  const out: string[] = []; for (const l of LOCATIONS) { if (l.id === locId) break; out.push(...POOLS[l.id]); } return out;
+  const out: string[] = []; for (const l of POOL_ORDER) { if (l === locId) break; out.push(...(POOLS[l] || [])); } return out;
 }
 /** Carried-over "debt": seen, not-yet-proficient earlier items, oldest first, capped (spec §3.3). */
 export function carried(locId: string) { return earlierItems(locId).filter(id => prog(id).seen && !proficient(id)).slice(0, L().carryOverCap); }

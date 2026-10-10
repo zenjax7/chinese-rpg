@@ -430,6 +430,21 @@
    ]
   },
   {
+   "id": "boss_2.1",
+   "node": "boss_2",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q2_royal_jelly"
+   },
+   "do": [
+    {
+     "dialogue": "great_hive_1.boss_2.step_q2_royal_jelly"
+    }
+   ]
+  },
+  {
    "id": "npc_1.1",
    "node": "npc_1",
    "on": "enter",
@@ -650,6 +665,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "great_hive_1.boss_2.step_q2_royal_jelly": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_royal_jelly: scene from data/dialogue)"
    }
   ],
   "great_hive_1.story_1.step_q2_royal_jelly": [

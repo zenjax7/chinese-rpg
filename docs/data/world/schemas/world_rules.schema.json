@@ -179,7 +179,11 @@
        "lastInn",
        "visitedTown"
       ]
-     }
+     },
+     "description": "lastInn = the single node where the player last rested; visitedTown = every town or village node ever entered. Other visited inns are not destinations."
+    },
+    "destinationRule": {
+     "type": "string"
     },
     "usable": {
      "type": "string"
@@ -198,7 +202,61 @@
    "additionalProperties": false
   },
   "seed": {
-   "type": "object"
+   "type": "object",
+   "properties": {
+    "algorithm": {
+     "const": "mulberry32"
+    },
+    "hash": {
+     "const": "fnv1a32"
+    },
+    "key": {
+     "type": "string"
+    },
+    "eventKey": {
+     "type": "string"
+    },
+    "hashRule": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    },
+    "testVectors": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "key": {
+        "type": "string"
+       },
+       "fnv1a32": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+       },
+       "roll": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+       }
+      },
+      "required": [
+       "key",
+       "fnv1a32",
+       "roll"
+      ],
+      "additionalProperties": false
+     }
+    }
+   },
+   "required": [
+    "algorithm",
+    "hash",
+    "key",
+    "testVectors"
+   ],
+   "additionalProperties": false
   }
  },
  "required": [

@@ -86,11 +86,19 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     }
     throw new Error('spells: battle did not finish');
   }
+  const TGT = '[data-testid^="target-"]:not([data-testid="target-menu"])';
+  /** After a spell click: wait until either the target buttons or the cast (fx-skip) is on screen, then tap the first target if asked. */
+  async function pickTargetOrCast() {
+    await p.waitForFunction(s => !!(document.querySelector(s) || document.querySelector('[data-testid="fx-skip"]')), TGT, { timeout: 5000 });
+    if (await p.locator(TGT).count()) await p.locator(TGT).first().click();
+  }
   /** Cast `id` from the open Spellbook; returns lastSpell after the animation. skip = click the tap-to-skip layer. */
   async function cast(id, { skip = false, midShot = '' } = {}) {
     const before = await cs(); const mp0 = +(await tid('hud-mp').innerText());
     await tid('spell-' + id).click();
-    if (await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').count()) await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
+    // A single-target spell with 2+ enemies alive opens TARGET_SELECT, whose buttons appear only after the dock cross-fade (dockMain, ~90 ms).
+    // Counting them right after the click raced that fade: with no target picked the cast never started and fx-skip timed out (the old flake).
+    await pickTargetOrCast();
     await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 });
     const asked = await p.locator('[data-testid="opt"]:not([disabled])').count();
     if (midShot) { await p.waitForTimeout(900); await p.screenshot({ path: midShot }); log('saved', midShot); }
@@ -122,6 +130,8 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
         check(c.correct === 0 && await tid('spell-small_fireball').isEnabled(), `spellbook: open and castable on turn 1 (round ${c.round}, ${c.correct} right answers)`);
         const bookTxt = await tid('spellbook').innerText(); check(!/×\s*\d/.test(bookTxt) && !(await p.locator('[data-testid^="casts-"]').count()), 'spellbook: no ×N cast counts (v3.6+)');
         await shot('spellbook');
+        const ui = await p.evaluate(() => (window.__proto.foeLayout || []).map(f => f.uiDepth));
+        check(ui.length > 0 && ui.every(d => d > 10), `enemy name + HP bar draw above every spell FX layer (depth ${ui.join(',')} > 10)`);
       }
       if (await tid('spell-small_fireball').isEnabled()) { casts.push({ b, k: inBattle++, ...(await cast('small_fireball', { skip: casts.length > 0, midShot: !casts.length && shots ? shots + 'spell-cast.png' : '' })) }); return true; }
       if (!gateChecked) { gateChecked = true;

@@ -19,10 +19,19 @@ export interface Zone { id: string; realm: number; order: number; title: Txt; lo
   enemiesPerBattle?: number[]; roster?: { enemy: string; weight: number }[]; elite?: string; tier?: number }
 export interface WorldIndex { contentVersion: string; dataVersion: string; start: NodeRef; rules: any; zones: Zone[];
   graphs: { id: string; kind: string; realm: number; dungeon?: string; level?: number; title?: Txt }[]; scenes: string[];
-  words: Record<string, Txt>; speakers: Record<string, Txt> }
+  words: Record<string, Txt>; speakers: Record<string, Txt>;
+  /** v3.9.2 world.json realms[]: realm links, unlock conditions, exit edges */
+  realms?: RealmLink[]; content?: Record<string, string>; inBuild?: Record<string, boolean> }
+export interface RealmLink { realm: number; node: string; graph: string; entry: string; enterEdge: string; exitEdge: string; linkEdge: string | null;
+  unlock: Cond | null; realmBossZone: string; next: number | null }
+/** The event outcomes the game knows (v3.9.2 dropped 'portal'). */
+export const OUTCOMES = ['nothing', 'quest_offer', 'miniboss', 'item', 'story', 'treasure'] as const;
 export type Cond = Record<string, any>;
 export interface QuestStep { id: string; event?: string; objective: { type: string; npc?: string; enemy?: string; enemies?: string[]; n?: number; item?: string;
-  source?: string; dropFrom?: string[]; dropChance?: number; turnIn?: boolean; scope?: { realm?: number } }; at: (NodeRef & { edges?: string[] }) | { graph: string; edges: string[] } | null }
+  source?: string; dropFrom?: string[]; dropChance?: number; turnIn?: boolean; scope?: { realm?: number }; to?: string; pool?: string };
+  at: (NodeRef & { edges?: string[]; refs?: (string | NodeRef)[] }) | { graph: string; edges: string[] } | null;
+  /** escort steps: the node that completes the step (quests.md §2a) */
+  toAt?: NodeRef | null }
 export interface Quest { id: string; realm: number; zone: string; title: Txt; giver: any; giverAt: NodeRef | null; turnIn: any; turnInAt: NodeRef | null;
   returnToGiver?: boolean; requires?: Cond | null; objectives: QuestStep[]; scenes?: { offer?: string; progress?: string; turnIn?: string } | null;
   rewards: { goldValue?: number; expValue?: number; items?: Record<string, number>; flags?: string[] }; summary?: string; repeatable?: boolean }
@@ -104,8 +113,11 @@ export function isVisited(P: Progress, gid: string, node: string) { const g = gr
 /** Can the hero walk this edge now? (edge cond; a shortcut until opened) */
 export function edgeOpen(e: GEdge, x: Ctx) { return evalCond(e.cond, x) && (e.kind !== 'shortcut' || x.P.shortcuts.includes(e.id)); }
 
-/** World map: realm 1 is always open; realm t+1 opens when realm t's realm boss (zone bossKind 'realmboss') is defeated. */
-export function realmOpen(realm: number, P: Progress, zones: Zone[]) {
+/** World map: a realm opens when its world.json realms[].unlock condition holds (v3.9.2: bossDefeated of the previous realm's
+ *  realm-boss zone; realm 1 has none). Without realms[] data: realm t+1 opens when realm t's realm boss (zone bossKind 'realmboss') is defeated. */
+export function realmOpen(realm: number, P: Progress, zones: Zone[], realms: RealmLink[] = [], x?: Ctx) {
+  const r = realms.find(a => a.realm === realm);
+  if (r) return !r.unlock || evalCond(r.unlock, x || { P, quests: {} });
   return realm <= 1 || zones.some(z => z.realm === realm - 1 && z.bossKind === 'realmboss' && P.zonesDefeated.includes(z.id));
 }
 
@@ -214,6 +226,8 @@ export function questStatus(q: Quest, x: Ctx): QStatus {
   const st = x.quests[q.id]; if (st) return st.s;
   return evalCond(q.requires || null, x) ? 'available' : 'locked';
 }
+/** "graph/node" (quests.json refs) or a NodeRef → NodeRef */
+export const toRef = (r: string | NodeRef): NodeRef => typeof r === 'string' ? { graph: r.split('/')[0], node: r.split('/').slice(1).join('/') } : r;
 export const atNode = (a: any, gid: string, node: string) => !!a && a.graph === gid && a.node === node;
 export const autoTurnIn = (q: Quest) => q.turnIn === 'auto' || q.returnToGiver === false;
 /** The steps that count as objectives (the first talk = the offer, the last talk with turnIn = the hand-in). */
@@ -221,33 +235,53 @@ export function objectiveSteps(q: Quest): QuestStep[] {
   return q.objectives.filter((s, i) => !(i === 0 && s.objective.type === 'talk') && !s.objective.turnIn);
 }
 export function accept(q: Quest, x: Ctx, now = Date.now()): QState {
-  const st: QState = { s: 'active', at: now, step: 0, obj: {} }; x.quests[q.id] = st; skipAuto(q, st); return st;
+  const st: QState = { s: 'active', at: now, step: 0, obj: {} }; x.quests[q.id] = st; enterStep(q, st); return st;
 }
 export function currentStep(q: Quest, st: QState): QuestStep | null { return objectiveSteps(q)[st.step] || null; }
 /** Advance past the current step; returns the new status. 'ready' waits for the giver, auto quests become 'completed'. */
 export function completeStep(q: Quest, st: QState, now = Date.now()): QState['s'] {
-  st.step++; skipAuto(q, st);
+  st.step++; enterStep(q, st);
   if (st.step >= objectiveSteps(q).length) { st.s = autoTurnIn(q) ? 'completed' : 'ready'; if (st.s === 'completed') st.done = now; }
   return st.s;
 }
-/** escort and words steps have no runtime check yet: they complete as soon as they become current (gap, see report). */
-function skipAuto(q: Quest, st: QState) { let s = currentStep(q, st); while (s && ['escort', 'words'].includes(s.objective.type)) { st.step++; s = currentStep(q, st); } }
+/** quests.md §2a: escort and words steps save a counter under obj.<stepId> from the moment they become current (escort 0 → 1, words = count). */
+function enterStep(q: Quest, st: QState) { const s = currentStep(q, st); if (s && ['escort', 'words'].includes(s.objective.type)) st.obj[s.id] ??= 0; }
+/** Words needed for a words step (quests.md §2a: n defaults to 10). */
+export const wordsNeeded = (s: QuestStep) => s.objective.n ?? 10;
+/** Who is following the party: the npc of every active quest whose current step is an escort (derived, never saved; never in battle). */
+export function escortFollowers(quests: Quest[], x: Ctx): { quest: Quest; npc: string; to: NodeRef | null }[] {
+  const out: { quest: Quest; npc: string; to: NodeRef | null }[] = [];
+  for (const q of quests) { const st = x.quests[q.id]; if (st?.s !== 'active') continue; const s = currentStep(q, st);
+    if (s && s.objective.type === 'escort' && s.objective.npc) out.push({ quest: q, npc: s.objective.npc, to: s.toAt || null }); }
+  return out;
+}
+/** Drop an active quest: it is offered again by its giver (an escortee goes back to the giver; nothing is lost but the progress). */
+export function dropQuest(q: Quest, x: Ctx): boolean { const st = x.quests[q.id]; if (!st || st.s === 'completed') return false; delete x.quests[q.id]; return true; }
 export function turnIn(st: QState, now = Date.now()) { st.s = 'completed'; st.done = now; }
 export type QEvent = { type: 'arrive'; graph: string; node: string } | { type: 'kill'; enemies: string[]; realm: number } | { type: 'collect'; item: string; n?: number }
-  | { type: 'fightWon'; graph: string; node: string };
+  | { type: 'fightWon'; graph: string; node: string }
+  /** a correct battle answer (not practice, not preview) to an item of Desy's pool `pool` (ITEM.loc) */
+  | { type: 'answer'; item: string; pool: string };
 /** Feed one game event to every active quest; returns the ids whose state changed (step done / ready / completed). */
 export function questEvent(quests: Quest[], x: Ctx, ev: QEvent, rnd: () => number = Math.random): { id: string; s: QState['s']; stepDone: boolean }[] {
   const out: { id: string; s: QState['s']; stepDone: boolean }[] = [];
   for (const q of quests) {
     const st = x.quests[q.id]; if (!st || st.s !== 'active') continue;
-    skipAuto(q, st);
     const step = currentStep(q, st);
     if (!step) { st.s = autoTurnIn(q) ? 'completed' : 'ready'; if (st.s === 'completed') st.done = Date.now(); out.push({ id: q.id, s: st.s, stepDone: false }); continue; }
     let cur: QuestStep | null = step; let fresh = true; let changed = false;
     while (cur && st.s === 'active') {
       const o = cur.objective; let done = false;
       if (fresh && ev.type === 'arrive' && atNode(cur.at, ev.graph, ev.node) && ['talk', 'reach', 'deliver'].includes(o.type)) done = true;
+      else if (fresh && ev.type === 'arrive' && o.type === 'collect' && o.source === 'nodeItem' && (cur.at as any)?.refs?.length) {
+        // multi-pickup (refs): each listed node gives one, once
+        const refs: NodeRef[] = (cur.at as any).refs.map(toRef); const k = refs.findIndex(r => atNode(r, ev.graph, ev.node));
+        if (k >= 0 && !st.obj[`${cur.id}@${k}`]) { st.obj[`${cur.id}@${k}`] = 1; st.obj[cur.id] = (st.obj[cur.id] || 0) + 1; }
+        done = (st.obj[cur.id] || 0) >= (o.n || refs.length);
+      }
       else if (fresh && ev.type === 'arrive' && o.type === 'collect' && o.source === 'nodeItem' && atNode(cur.at, ev.graph, ev.node)) done = true;
+      else if (fresh && ev.type === 'arrive' && o.type === 'escort' && atNode(cur.toAt, ev.graph, ev.node)) { st.obj[cur.id] = 1; done = true; }
+      else if (ev.type === 'answer' && o.type === 'words' && o.pool === ev.pool) { st.obj[cur.id] = (st.obj[cur.id] || 0) + 1; done = st.obj[cur.id] >= wordsNeeded(cur); }
       else if (o.type === 'collect' && !o.dropFrom && o.item && ((x.inv || {})[o.item] || 0) >= (o.n || 1)) done = true;   // already carried
       else if (fresh && ev.type === 'collect' && o.type === 'collect' && o.item === ev.item) { st.obj[cur.id] = (st.obj[cur.id] || 0) + (ev.n || 1); done = st.obj[cur.id] >= (o.n || 1); }
       else if (fresh && ev.type === 'fightWon' && o.type === 'kill' && o.enemies && atNode(cur.at, ev.graph, ev.node)) done = true;
@@ -275,11 +309,14 @@ export function questFightAt(quests: Quest[], x: Ctx, gid: string, node: string)
 }
 
 // ---------------- Return Feather (rules.returnFeather, realmBossFeather) ----------------
-export function featherDestinations(P: Progress, title: (r: NodeRef) => string): { ref: NodeRef; label: string; kind: 'inn' | 'town' }[] {
+/** v3.9.2 destinationRule: exactly the last inn used plus every town or village ever entered. Other inns are never destinations.
+ *  kindOf: the node kind when known (graph loaded); entries whose kind is known and is not town/village are dropped (old saves). */
+export function featherDestinations(P: Progress, title: (r: NodeRef) => string, kindOf: (r: NodeRef) => string | undefined = r => { const g = graphsCache[r.graph]; return g && nodeOf(g, r.node)?.kind; }): { ref: NodeRef; label: string; kind: 'inn' | 'town' }[] {
   const out: { ref: NodeRef; label: string; kind: 'inn' | 'town' }[] = [];
   const same = (a: NodeRef, b: NodeRef) => a.graph === b.graph && a.node === b.node;
   out.push({ ref: P.lastInn, label: title(P.lastInn), kind: 'inn' });
-  for (const t of P.visitedTowns) if (!out.some(o => same(o.ref, t))) out.push({ ref: t, label: title(t), kind: 'town' });
+  for (const t of P.visitedTowns) { const k = kindOf(t); if (k !== undefined && k !== 'town' && k !== 'village') continue;
+    if (!out.some(o => same(o.ref, t))) out.push({ ref: t, label: title(t), kind: 'town' }); }
   return out.filter(o => !same(o.ref, { graph: P.pos.graph, node: P.pos.node }));
 }
 /** Add feathers up to the carry cap; returns how many were actually added. */

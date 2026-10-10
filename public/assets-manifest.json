@@ -179,5 +179,8 @@
  },
  "ui": {
   "manifest": "ui/manifest.json"
+ },
+ "companions": {
+  "manifest": "companions/manifest.json"
  }
 }

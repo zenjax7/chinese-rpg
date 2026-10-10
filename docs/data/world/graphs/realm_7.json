@@ -16,7 +16,7 @@
   "map": "bg_map_realm_7",
   "battle": "bg_battle_r7"
  },
- "edgeIdxMax": 79,
+ "edgeIdxMax": 80,
  "aspect": 1.933,
  "nodes": [
   {
@@ -1811,6 +1811,18 @@
    "steps": 1,
    "terrain": "grass",
    "idx": 79
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_7"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 80
   }
  ],
  "events": [
@@ -1818,25 +1830,30 @@
    "id": "path_1.1",
    "node": "path_1",
    "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_lost_mapmaker"
+   },
+   "do": [
+    {
+     "dialogue": "realm_7.path_1.step_q7_lost_mapmaker"
+    }
+   ]
+  },
+  {
+   "id": "path_1.2",
+   "node": "path_1",
+   "on": "enter",
    "pick": [
     {
-     "weight": 70,
+     "weight": 80,
      "outcome": "nothing",
      "once": false,
      "do": []
     },
     {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
+     "weight": 20,
      "outcome": "item",
      "cooldown": 4,
      "do": [
@@ -2286,24 +2303,13 @@
    "node": "miniboss_1",
    "on": "enter",
    "once": true,
-   "outcome": "miniboss",
+   "outcome": "story",
    "cond": {
     "questActive": "q7_golem_sign"
    },
    "do": [
     {
-     "fight": {
-      "enemies": [
-       "cliff_golem",
-       "harpy",
-       "harpy"
-      ],
-      "kind": "miniboss"
-     },
-     "quest": "q7_golem_sign"
-    },
-    {
-     "setFlag": "q7_golem_sign.s2"
+     "dialogue": "realm_7.miniboss_1.step_q7_golem_sign"
     }
    ]
   },
@@ -2423,6 +2429,21 @@
    "node": "treasure_4",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_glacier_roses"
+   },
+   "do": [
+    {
+     "dialogue": "realm_7.treasure_4.step_q7_glacier_roses"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -2431,7 +2452,7 @@
    ]
   },
   {
-   "id": "treasure_4.2",
+   "id": "treasure_4.3",
    "node": "treasure_4",
    "on": "enter",
    "once": false,
@@ -3491,6 +3512,12 @@
   }
  ],
  "dialogue": {
+  "realm_7.path_1.step_q7_lost_mapmaker": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_lost_mapmaker: scene from data/dialogue)"
+   }
+  ],
   "ambient": [
    {
     "speaker": "xiaolong",
@@ -3498,6 +3525,18 @@
    }
   ],
   "realm_7.portal_2.step_q7_glacier_roses": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_glacier_roses: scene from data/dialogue)"
+   }
+  ],
+  "realm_7.miniboss_1.step_q7_golem_sign": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_golem_sign: scene from data/dialogue)"
+   }
+  ],
+  "realm_7.treasure_4.step_q7_glacier_roses": [
    {
     "speaker": "traveller",
     "en": "(quest step for q7_glacier_roses: scene from data/dialogue)"

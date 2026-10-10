@@ -470,6 +470,21 @@
    "node": "treasure_1",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q3_lost_wallet"
+   },
+   "do": [
+    {
+     "dialogue": "bazaar_cellars_1.treasure_1.step_q3_lost_wallet"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -478,7 +493,7 @@
    ]
   },
   {
-   "id": "treasure_1.2",
+   "id": "treasure_1.3",
    "node": "treasure_1",
    "on": "enter",
    "once": false,
@@ -645,6 +660,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "bazaar_cellars_1.treasure_1.step_q3_lost_wallet": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q3_lost_wallet: scene from data/dialogue)"
    }
   ],
   "bazaar_cellars_1.miniboss_1.step_q3_lost_wallet": [

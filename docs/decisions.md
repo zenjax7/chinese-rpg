@@ -36,6 +36,7 @@ Dates are 2026, Pacific time.
 - **Oct 2** — v3.5 (kept in v3.6/v3.7): spell MP costs are 1.25× the v3.4 costs. [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 22)
 - **Oct 2** — v3.6: boss ATK × 0.8 (Director's default, adopted). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 28)
 - **Oct 2** — v3.7: location bosses need about 15 correct answers, realm bosses about 20 (even after spending full MP). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 30)
+- **Oct 9** — Spell FX never cover the enemy's name, HP bar or target arrow: that UI draws above every spell FX layer. Area spells that travel (tornado) start at the first target, not at the caster (Arty's screenshot review).
 
 ## World, travel and quests
 
@@ -46,10 +47,14 @@ Dates are 2026, Pacific time.
 - **Oct 2** — Realm-boss chests in realms 3, 6 and 8 hold a free Return Feather (Director's default). [combat-spec.md §12.2](design/combat-spec.md#122-v391-changes-directors-defaults-2026-10-02-2315-pt)
 - **Oct 2** — Quest gold target counts gold only (≈ 30 × G per realm); free Bubble Spell reward; companion is 小龙 (Director's calls, pending Jack). [quests.md §0.](story/quests.md#0-decisions-directors-calls-2026-10-02-2249-pt-pending-jack)
 - **Oct 2** — Ending: the Demon King shrinks and goes to Teacher Zhang's school with Pipi (Director's call, pending Jack). [story.md §0.](story/story.md#0-decisions-directors-calls-2026-10-02-2249-pt-pending-jack)
-- **Oct 3** — v3.9.2 (Desy): realm N+1 unlocks when the realm N boss falls. [world-graph.md §1.](design/world-graph.md#1-map-hierarchy) (v3.9.2 data not yet merged, see README)
-- **Oct 3** — v3.9.2 (Desy): rolls use FNV-1a 32-bit of the event key into mulberry32. [world-graph.md §4.4](design/world-graph.md#44-determinism) (v3.9.2 data not yet merged)
+- **Oct 3** — v3.9.2 (Desy): realm N+1 unlocks when the realm N boss falls. [world-graph.md §1.](design/world-graph.md#1-map-hierarchy)
+- **Oct 3** — v3.9.2 (Desy): rolls use FNV-1a 32-bit of the event key into mulberry32. [world-graph.md §4.4](design/world-graph.md#44-determinism)
 - **Oct 3** — v3.9.2 (Desy): Feather destinations are the last inn used plus every visited town and village. [world-graph.md §12.1](design/world-graph.md#121-return-feather-rules-v39)
 - **Oct 3** — v3.9.2 (Desy): escorts never fail (escortee can't be harmed; waits at the last inn used). [quests.md: 2a. Runtime rules](story/quests.md#2a-runtime-rules-for-escort-and-words-for-gamedev)
+- **Oct 9** — v3.9.2 merged: realms 3–9 are playable in graph mode. Their enemies, word pools and bosses come from `data/world/content/realm_N.json`; a realm is in the build when its content is complete (checked at build time), else it keeps the “not in this build” lock. `?realms=all` still opens every realm. [README](README.md)
+- **Oct 9** — v3.9.2: each realm is left through its own exit edge (kind exit, danger 0) from its entry town or village; there is no World-map button in other towns. Realm links (`w12`…`w89`) and unlock conditions come from `world.json` `realms[]`.
+- **Oct 9** — v3.9.2: the `portal` event outcome is gone (a portal is a node kind and an edge, not an outcome).
+- **Oct 9** — v3.9.2: escort steps complete on entering the target node; words steps count correct battle answers to the pool (practice and preview don't count; n defaults to 10). A dropped quest goes back to its giver. [quests.md §2a](story/quests.md#2a-runtime-rules-for-escort-and-words-for-gamedev)
 
 ## Accounts, saves and hosting (architecture D1–D18)
 

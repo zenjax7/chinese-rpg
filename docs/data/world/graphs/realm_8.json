@@ -16,7 +16,7 @@
   "map": "bg_map_realm_8",
   "battle": "bg_battle_r8"
  },
- "edgeIdxMax": 91,
+ "edgeIdxMax": 92,
  "aspect": 1.98,
  "nodes": [
   {
@@ -2141,6 +2141,18 @@
    "steps": 1,
    "terrain": "grass",
    "idx": 91
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_8"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 92
   }
  ],
  "events": [
