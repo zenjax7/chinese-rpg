@@ -124,6 +124,9 @@ for q in D.Q:
             gp = P(f"data/world/graphs/{gr}.json")
             if not os.path.exists(gp): errors.append(f"{q['id']}: graph {gr} missing"); continue
             if nd and nd not in {n["id"] for n in json.load(open(gp))["nodes"]}: errors.append(f"{q['id']}: node {ref} missing")
+        # v3.9.3: a pickup (nodeItem) step must name its node(s): graph+node, ref "graph/node" or refs (a graph alone is ambiguous)
+        if st[1].get("type") == "pickup" and not (wh.get("node") or "/" in (wh.get("ref") or "") or wh.get("refs")):
+            errors.append(f"{q['id']}: pickup step needs an explicit node (ref 'graph/node'), got {wh.get('ref') or wh.get('graph')}")
     steps = []
     for i, (ev, ob, wh, note) in enumerate(q["steps"], 1):
         gob = dict(ob); dt = ob["type"]
