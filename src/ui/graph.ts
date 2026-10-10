@@ -1,6 +1,6 @@
 /** v3.9.2 graph world UI (?world=graph). Data: src/data/world/ + public/world/graphs/ (tools/world/build_world.py from Desy's docs/data). Progress lives in
  *  S.world (progress/0.3), story quests in S.storyQuests, seen scenes in S.scenesSeen, all in the v4 save. Classic mode never loads this. */
-import { B, LOC, CONS, TOWNS, GEAR_LIST, ITEM } from '../data';
+import { B, LOC, CONS, TOWNS, GEAR, GEAR_LIST, ITEM } from '../data';
 import { S, save, heroStats, refreshSkills, gainGear, equipLine, worldPrice, addExp, cloudTrigger, store } from '../engine/state';
 import { validateProgress, migrateProgress } from '../world/progress';
 import PROGRESS_SCHEMA from '../data/world/progress.schema.json';
@@ -81,7 +81,7 @@ Object.assign(proto(), { world: {
   accept: (id: string) => { const q = W.quests.find(x => x.id === id)!; E.accept(q, ctx()); saveW(); cloudTrigger('questGiven', q.id); },
   cloud: () => ({ kind: store.kind, triggers: (store as any).triggers || [], pushes: (store as any).pushes || [] }),
   answer: (id: string) => onCorrect(id),
-  fight: async (zone?: string) => { const g = W.graphs[P().pos.graph]; const out = await fight(g, zone ? W.zones[zone] : zoneOf(g, P().pos.node), {}); graphScreen(); return out; },
+  fight: async (zone?: string, boss = false) => { const g = W.graphs[P().pos.graph]; const out = await fight(g, zone ? W.zones[zone] : zoneOf(g, P().pos.node), { boss }); graphScreen(); return out; },
   drop: (id: string) => { const q = W.quests.find(x => x.id === id)!; E.dropQuest(q, ctx()); saveW(); },
   validate: (p?: unknown) => validateProgress(p ?? S.world, PROGRESS_SCHEMA, COMMON_SCHEMA),
 } });
@@ -203,6 +203,9 @@ function giveRewards(q: E.Quest) {
   for (const [k, n] of Object.entries(r.items || {})) if (CONS[k]) { if (k === 'feather') giveItem(k, n); else S.inv[k] = (S.inv[k] || 0) + n; msg += ` · ${CONS[k].emoji}×${n}`; }
   for (const f of r.flags || []) if (!P().flags.includes(f)) P().flags.push(f);
   playSfx('sfx_gold'); toast(`🎁 ${msg}`);
+  // v3.9.5: quest gear (quests.json rewards.gear, e.g. q5_fog_bottle → shield_t5_heroic, its only source); auto-equipped when strictly better
+  for (const gr of r.gear || []) { const it = GEAR[gr.id]; if (!it || S.gear.includes(it.id)) continue;
+    const res = gainGear(it.id); toast(res.equipped ? equipLine(it, res.from) : `🎁 ${it.emoji} ${zh(it.zh)} ${esc(it.en)}${it.rarity !== 'common' ? ` (${it.rarity})` : ''}`); }
 }
 const offeredNow = new Set<string>();
 async function offerQuest(id: string, g: E.Graph, force = false) {
@@ -333,7 +336,7 @@ function openNode() {
 function enterTown(g: E.Graph, n: E.GNode) {
   graphHooks.title = `${n.kind === 'village' ? '🏡' : '🏘️'} ${zh(n.title?.zh || '')} ${esc(n.title?.en || '')}`;
   graphHooks.hide = n.kind === 'village' ? ['magic'] : [];
-  graphHooks.shopTown = E.shopTownOf(g, n);   // v3.9.3: town t's blacksmith shelf (villages: their realm town's tier)   // world-graph §2: a village has inn + save + item shop (Feathers), no magic shop
+  graphHooks.shopTown = E.smithTownOf(g, n);   // town t's blacksmith shelf; null in a village (v3.9.5, world-graph §2: inn + save + item shop with Feathers, no magic shop, no smith)
   graphHooks.exit = () => graphScreen(); graphHooks.questLog = () => questLog(() => town()); graphHooks.bag = () => bag(() => town());
   graphHooks.onRest = () => { P().lastInn = { graph: g.id, node: n.id }; clearSafe(); saveW(); cloudTrigger('inn', `${g.id}/${n.id}`); };
   town();

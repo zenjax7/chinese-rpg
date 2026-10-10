@@ -34,7 +34,7 @@ export interface QuestStep { id: string; event?: string; objective: { type: stri
   toAt?: NodeRef | null }
 export interface Quest { id: string; realm: number; zone: string; title: Txt; giver: any; giverAt: NodeRef | null; turnIn: any; turnInAt: NodeRef | null;
   returnToGiver?: boolean; requires?: Cond | null; objectives: QuestStep[]; scenes?: { offer?: string; progress?: string; turnIn?: string } | null;
-  rewards: { goldValue?: number; expValue?: number; items?: Record<string, number>; flags?: string[] }; summary?: string; repeatable?: boolean }
+  rewards: { goldValue?: number; expValue?: number; items?: Record<string, number>; flags?: string[]; gear?: { id: string; rarity?: string }[] }; summary?: string; repeatable?: boolean }
 /** One story quest's saved state (architecture §11.2): only active / ready / completed are stored. */
 export interface QState { s: 'active' | 'ready' | 'completed'; at: number; done?: number; step: number; obj: Record<string, number> }
 
@@ -191,8 +191,9 @@ export function markSafeBack(P: Progress, g: Graph, from: string, rules: any) {
 
 // ---------------- shops + chests (v3.9.3 gear catalogue, docs/data/items/gear_items.csv) ----------------
 export interface ShopGear { id: string; slot: string; tier: number; rarity: string; shop?: boolean; shopTown?: number; shopRequires?: string }
-/** The town number whose blacksmith shelf a town / village node shows: a town node names it (`town`); a village sells its realm town's tier. */
-export const shopTownOf = (g: Graph, n: GNode) => n.town ?? g.realm;
+/** v3.9.5: the town number whose blacksmith shelf a settlement shows, or null when it has no smith. Only town nodes have one
+ *  (`town`, else the realm's number); villages have no smith, so no gear for sale (world-graph.md §2, combat-spec §6.5). */
+export const smithTownOf = (g: Graph, n: GNode): number | null => n.kind === 'town' ? n.town ?? g.realm : null;
 /** Graph-mode shop shelf for town `town`: the core pieces the CSV sells there ("shop: town N blacksmith" → shopTown N), plus the open charms. */
 export function shopShelf<T extends ShopGear>(gear: T[], town: number, open: (loc: string) => boolean = () => true): T[] {
   return gear.filter(g => g.shop && (g.slot === 'charm' ? g.tier <= town && (!g.shopRequires || open(g.shopRequires)) : g.shopTown === town));

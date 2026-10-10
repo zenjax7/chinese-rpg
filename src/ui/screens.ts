@@ -60,7 +60,7 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
 export const accountHooks: { switchPlayer?: () => void } = {};
 /** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
 export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[];
-  /** v3.9.3: the town number whose blacksmith shelf this town / village shows (graph mode) */ shopTown?: number } = {};
+  /** graph mode: the town number whose blacksmith shelf this town shows; null = a village, which has no smith (v3.9.5) */ shopTown?: number | null } = {};
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
   setTitle(graphHooks.title || `🏘️ ${zh('小山村')} Little Hill Village`);
@@ -168,7 +168,8 @@ export function shop() {
   hud(); view.mode('town', undefined, BG.village());
   // v3.9.3: graph mode stocks the shelf of this town's tier (gear_items.csv sources); classic keeps the in-build towns' gear (tiers 1-2)
   const open = (l: string) => !!S.locs[l]?.unlocked;
-  const gear = graphHooks.shopTown ? shopShelf(GEAR_LIST, graphHooks.shopTown, open)
+  const noSmith = graphHooks.shopTown === null;   // v3.9.5: villages have no smith (world-graph §2), so no gear or charms for sale
+  const gear = noSmith ? [] : graphHooks.shopTown ? shopShelf(GEAR_LIST, graphHooks.shopTown, open)
     : GEAR_LIST.filter(g => g.shop && (!g.shopTown || TOWN[g.shopTown]?.inBuild) && (!g.shopRequires || open(g.shopRequires)));
   const statTxt = (g: any) => [g.atk ? `⚔️+${g.atk}` : '', g.def ? `🛡️+${g.def}` : '', g.mp ? `🔷+${g.mp} MP` : ''].filter(Boolean).join(' ');
   const fl = frontierLoc(); const weak = weakFor(fl.id); const weakSlots = weak.map(w => w.slot as string);
@@ -176,11 +177,12 @@ export function shop() {
     return !S.gear.includes(g.id) && (strictlyBetter(g, cur) && (weakSlots.includes(g.slot) || g.tier >= fl.tier)); };
   render(dlg({ testid: 'shop', title: `🧪 ${zh('商店')} Grandma Wu's Shop <span class="tag">🪙 ${S.gold}</span>`, body: `
     ${weak.length ? `<div class="gearwarn inline" data-testid="shop-gear-warn"><div class="gw-h">⚠️ ${zh('装备太弱')} Your gear is weak for ${fl.emoji} ${zh(fl.zh)} ${esc(fl.name)}!</div>
-      <ul>${weakLines(fl.id)}</ul><div class="muted">Look for ⬆ Upgrade below. Better gear is put on for you when you buy it.</div></div>` : ''}
+      <ul>${weakLines(fl.id)}</ul><div class="muted">${noSmith ? `This village has no smith. Fly to a town with a 🪶 ${zh('回城羽毛')} Return Feather to buy gear.` : 'Look for ⬆ Upgrade below. Better gear is put on for you when you buy it.'}</div></div>` : ''}
     <h3>Potions & tools</h3><div class="grid">${CONSUMABLES.filter(c => !c.magicShop).map(c => `<div class="card"><div>${itemIcon(c.id, c.emoji)} ${zh(c.zh)} ${esc(c.en)}</div>
       <div class="muted">${c.healHpFrac ? `+${c.healHpFrac * 100}% HP` : c.healMpFrac ? `+${c.healMpFrac * 100}% MP` : 'Warp to the last inn you used (map only)'} · you have ${S.inv[c.id] || 0}${c.carryLimit ? ` (max ${c.carryLimit})` : ''}</div>
       <button data-buyc="${c.id}" data-testid="buy-${c.id}" ${S.gold >= consPrice(c.id) && !(c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit) ? '' : 'disabled'}>${c.carryLimit && (S.inv[c.id] || 0) >= c.carryLimit ? 'Bag full' : `Buy ${consPrice(c.id)} 🪙`}</button></div>`).join('')}</div>
-    <h3 style="margin-top:14px">Weapons, armor, shields & charms</h3><div class="grid">${gear.map(g => { const own = S.gear.includes(g.id); return `<div class="card" data-gear="${g.id}" data-testid="shopgear-${g.id}">
+    ${noSmith ? `<p class="muted" style="margin-top:14px" data-testid="shop-no-smith">⚒️ No smith in this village: weapons, armor, shields and charms are sold in towns.</p>` : `
+    <h3 style="margin-top:14px">Weapons, armor, shields & charms</h3>`}<div class="grid">${gear.map(g => { const own = S.gear.includes(g.id); return `<div class="card" data-gear="${g.id}" data-testid="shopgear-${g.id}">
       <div>${g.emoji} ${zh(g.zh)} ${esc(g.en)}${upg(g) ? ' <span class="upg" data-testid="upg-' + g.id + '">⬆ Upgrade</span>' : ''}</div><div class="muted">${g.slot} · tier ${g.tier} · ${statTxt(g)}${g.slot === 'charm' ? ` · charm slot opens at Lv ${B.slots.charmUnlockLevel}` : ''}</div>
       ${own ? `<button class="secondary" disabled>Owned</button> ${S.equip[g.slot] !== g.id ? `<button data-eq="${g.id}" data-testid="equip-${g.id}">Equip</button>` : '<span class="tag">equipped</span>'}`
         : `<button data-buyg="${g.id}" data-testid="buy-${g.id}" ${S.gold >= g.price ? '' : 'disabled'}>Buy ${g.price} 🪙</button>`}</div>`; }).join('')}</div>` }));
@@ -279,7 +281,7 @@ export function equip(back: () => void = town) {
   const stat = (g: any) => [g.atk ? `⚔️+${g.atk}` : '', g.def ? `🛡️+${g.def}` : '', g.mp ? `🔷+${g.mp}` : ''].filter(Boolean).join(' ');
   render(dlg({ testid: 'equip', title: `⚔️ ${zh('装备')} Gear & Skills`, body: `
     <p>Level ${S.level} (EXP ${S.exp}/${expToNext(S.level)}) · ❤️ ${h.maxHp} · 🔷 ${h.maxMp} · ⚔️ ATK ${h.atk} · 🛡️ DEF ${h.def}</p>
-    <div class="grid">${slotNames.map(sl => { const locked = sl === 'charm' && S.level < B.slots.charmUnlockLevel; const owned = S.gear.filter(id => GEAR[id].slot === sl);
+    <div class="grid">${slotNames.map(sl => { const locked = sl === 'charm' && S.level < B.slots.charmUnlockLevel; const owned = S.gear.filter(id => GEAR[id]?.slot === sl);
       return `<div class="card"><h3>${sl}${locked ? ` 🔒 (Lv ${B.slots.charmUnlockLevel})` : ''}</h3>
       ${owned.length ? owned.map(id => { const g = GEAR[id]; const on_ = S.equip[sl] === id;
         return `<div style="margin-bottom:8px"><button class="${on_ ? '' : 'secondary'}" data-eq="${id}" data-testid="eq-${id}" ${locked ? 'disabled' : ''}>${on_ ? '✅ ' : ''}${g.emoji} ${zh(g.zh)} ${esc(g.en)} ${stat(g)}${g.rarity !== 'common' ? ` (${g.rarity})` : ''}</button></div>`; }).join('') : '<div class="muted">nothing yet</div>'}
