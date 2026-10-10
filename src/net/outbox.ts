@@ -90,3 +90,19 @@ export class Outbox {
     return { kind: 'retry', status, afterSec: afterSec ?? this.backoff };
   }
 }
+
+/** The child picker loaded the cloud save onto this device: take the server's version, word counters and graph bitsets as already
+ *  acknowledged in this child's persisted outbox, so the next push sends only new play (another device's answers are never counted
+ *  twice). Drops any local batch. A plain function (not a method) so builds that never call it don't carry it. Construct the Outbox
+ *  after calling this. */
+export function adoptServer(kv: KV, childId: string, version: number, state: Record<string, any>) {
+  const key = `chinese-rpg-outbox-v1:${childId}`;
+  let p: any = null; try { p = JSON.parse(kv.get(key) || 'null'); } catch { p = null; }
+  const sentAc: Record<string, [number, number]> = {}, sentGraphs: Record<string, string> = {};
+  for (const [item, ip] of Object.entries<any>(state.prog || {})) for (const way of WAYS) {
+    const w = ip?.ways?.[way]; if (w && (w.a || w.c)) sentAc[`${item}|${way}`] = [w.a | 0, w.c | 0];
+  }
+  for (const [graph, g] of Object.entries<any>(state.world?.graphs || {})) sentGraphs[graph] = `${g.visited || ''}|${g.walked || ''}`;
+  const base = p && typeof p.seq === 'number' ? p : { deviceId: `dev-${rnd()}`, seq: 0 };
+  kv.set(key, JSON.stringify({ ...base, version, sentAc, sentGraphs, inflight: null, pending: null }));
+}

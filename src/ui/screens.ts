@@ -56,6 +56,8 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
 /** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
+/** Accounts build only (src/ui/account.ts fills it): the game menu's "switch player" button. */
+export const accountHooks: { switchPlayer?: () => void } = {};
 export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[] } = {};
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
@@ -316,7 +318,9 @@ export function pauseMenu() {
       <button id="pclose" data-testid="pause-resume" data-key="enter" style="width:420px">▶ Keep playing</button>
       <button class="secondary" id="pwords" data-testid="pause-words" style="width:420px">📖 Word list</button>
       ${inBattle ? `<button class="secondary" id="plog" data-testid="pause-log" style="width:420px">📜 Battle log</button>` : ''}
-      <button class="ghost" id="pparents" data-testid="pause-parents" style="width:420px">👪 Parents</button></div></div>`);
+      <button class="ghost" id="pparents" data-testid="pause-parents" style="width:420px">👪 Parents</button>${__CLOUD__ ? `
+      <button class="ghost small" id="pswitch" data-testid="pause-switch" style="width:300px">🔄 <span lang="zh-CN" class="zh">换人</span> Switch player</button>` : ''}</div></div>`);
+  if (__CLOUD__) on('#pswitch', () => { closeModal(); accountHooks.switchPlayer?.(); }, m);
   on('#pclose', closeModal, m);
   on('#pwords', () => wordListModal(S.where !== 'town' && LOC[S.where] ? S.where : frontier().id), m);
   on('#plog', () => modal(`<div class="panel" data-testid="battle-log" style="width:900px"><h2>📜 Battle log</h2><div style="font-size:20px">${$('#blog')?.innerHTML || ''}</div>

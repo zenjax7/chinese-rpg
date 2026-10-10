@@ -73,6 +73,7 @@ Dates are 2026, Pacific time.
 - **Oct 2** — Dialogue-scene and quest data hooks designed; Desy owns story/dialogue/quests, Arty owns portraits (D18). [architecture.md §1.2](tech/architecture.md#12-decision-log)
 - **Oct 9** — The accounts API (`/api/v1`, Auth.js, Neon DAL) is in the repo but not deployed. Cloud saving in the client is off by default: it needs the build flag `VITE_CLOUD_SAVE=1` and a chosen cloud child, and the GitHub Pages build never sets it. No Vercel, Neon or Google OAuth resources are created until Jack sets them up (architecture §17). [tech/api.md](tech/api.md)
 - **Oct 9** — CI runs a gitleaks scan and `npm run test:api` before the Pages build, and `check:dist` fails the build if `dist/` holds server code or server env names. [tech/deploy.md](tech/deploy.md)
+- **Oct 9** — Account screens ship only in the accounts build (`VITE_CLOUD_SAVE=1`, compile-time `__CLOUD__`); the GitHub Pages bundle stays byte-identical. A cloud child profile always plays the graph world (cloud saves need progress/0.3) with its own local copy per child; the PIN is set on the consent screen and sent with `POST /consent`; the guest save is imported once, then kept on the device as `.imported-<date>`. [tech/api.md](tech/api.md#account-screens-client)
 
 ## Docs and process
 

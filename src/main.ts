@@ -18,6 +18,11 @@ async function boot() {
   hud();
   if (DEBUG) $('#debugBtn').classList.remove('hidden');
   if (isGraph()) { graphHooks.start = () => { startGraph(); }; document.body.dataset.world = 'graph'; }
+  // Accounts build only (VITE_CLOUD_SAVE=1): launch / sign-in / child picker first, then the same start as below. On Pages
+  // __CLOUD__ is false, this branch and src/ui/account.ts are dropped, and the bundle is byte-identical to the pre-accounts build.
+  if (__CLOUD__) return (await import('./ui/account')).accountBoot(() => {
+    if (!S.consent.given) consentScreen(); else if (isGraph()) startGraph(); else if (S.where !== 'town' && S.locs[S.where]) enterLocation(S.where); else town();
+  });
   if (!S.consent.given) consentScreen();
   else if (isGraph()) startGraph();
   else if (S.where !== 'town' && S.locs[S.where]) enterLocation(S.where);

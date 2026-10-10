@@ -33,6 +33,26 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 - `src/engine/state.ts` wraps the local save store in `CloudSaveStore`. The sender does nothing unless **both** the build flag `VITE_CLOUD_SAVE=1` is set and the player has a cloud child selected (`localStorage["chinese-rpg-cloud"] = {"childId": …}`). The Pages build sets neither, so classic and graph play are unchanged.
 - `src/net/outbox.ts` queues saves per child (`chinese-rpg-outbox-v1:<childId>`). A retry reuses the same `seq`, so the server treats it as the same write; mastery is sent as deltas against the last acknowledged counters. Results: sent, conflict (the server has a newer save; the game gets a `cloudsave:server-newer` event), retry, signed out, dropped.
 
+## Account screens (client)
+
+`src/ui/account.ts` (+ `account.css`), loaded by `src/main.ts` only when the build sets `VITE_CLOUD_SAVE=1`. `vite.config.ts` turns that into the compile-time constant `__CLOUD__`; with it false every account branch folds away, so **the GitHub Pages bundle is byte-identical** to the build before accounts (checked by sha1 of every file in `dist/`).
+
+| screen | what it does | API |
+|---|---|---|
+| Launch | `游客 Play as guest` (today's game, local save) or `家长登录 Parent sign-in with Google`. Shown when `GET /me` is 401; a signed-in device skips it | `GET /me` |
+| Google sign-in | fetches the Auth.js CSRF token and POSTs a form to `/api/auth/signin/google` with `callbackUrl` = the app; Auth.js redirects to Google and back | `GET /api/auth/csrf`, `POST /api/auth/signin/google` |
+| Consent (first sign-in, or a new notice version) | plain-language notice, masked verified email, notice version, the parent/guardian 18+ checkbox, Agree. A first-time parent then sets a 4–6 digit PIN twice on the keypad; a returning parent enters theirs. Then an on-screen receipt | `POST /consent {noticeVersion, pin, attest: true}`, then `POST /parent/unlock` |
+| PIN keypad | 4–6 digits; wrong PIN shows the tries left; a lockout shows the API's message and the time it ends, and disables the keys. If the 10-minute unlock runs out mid-task, the keypad comes back and the task continues | `POST /parent/unlock` (403 `wrong_pin`, 423 `pin_locked`) |
+| Parent area | players (avatar + nickname): add, rename, delete (confirmation + PIN again); 6-player cap (button disabled, and the API's 409 is shown); import this device's guest save; export JSON; sign out; delete account (type DELETE + PIN) | `POST /children`, `PATCH`/`DELETE /children/:id`, `GET /export`, `DELETE /account`, `POST /api/auth/signout` |
+| Who's playing? | avatar tiles; one tap loads that child's cloud save and restarts into the game as them | `GET /children/:id/save` |
+| Import prompt | after the first player is added (or from the parent area / picker), if the device has a guest save with progress: into an existing player, a new player, or "Not now" | `POST /children/:id/import` |
+| In game | a chip with who is playing; `🔄 换人 Switch player` in the pause menu; the offline banner | outbox `PUT /children/:id/save` |
+
+- **Per-child local copy.** A picked child saves locally under `chinese-rpg-proto-v4:child:<id>` (guest saves `-v3`/`-v4` are never touched). On pick, the cloud save replaces the local copy unless this device has unsent play for that child; `stateFromCloud()` rebuilds `prog` from the mastery rows, and `adoptServer()` marks the server's counters as already sent so another device's answers are never counted twice.
+- **Offline.** If the API is unreachable or answers 502–504 (Neon paused, §9.7), a small banner shows (`离线 Offline · saved on this device, will sync later`), play continues on the local copy, the outbox keeps the batch, and the banner goes when a push succeeds. A 401 while playing shows "signed out" instead.
+- **Import.** The raw v3 save goes to the server's converter; the local key is then renamed `…imported-<date>` and `chinese-rpg-import` records where it went, so the prompt never returns. "Not now" also stops the prompt (the parent area still offers it).
+- **Tests:** `npm run build:cloud` (→ `dist-cloud/`) then `npm run test:account` (`tests/account.mjs`, 63 checks, API and Auth.js mocked with Playwright `page.route`; it serves `dist-cloud/` on :8796 itself and needs the Pages build on :8795). It also checks that the Pages build has no account chunk, no account strings and makes no `/api` request.
+
 ## Tests
 
 - `npm run test:api` — type-checks the server and runs the API tests on in-process PGlite (no database needed). CI runs it before the Pages build.
@@ -47,6 +67,6 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 
 - **`VITE_CLOUD_SAVE` is a `VITE_*` variable** although §14.1 says nothing is. It is an on/off build flag, not a key, and holds no secret.
 - **`APP_ORIGIN`** (optional) is not in §14.1. When set, it is the allowed origin for the CSRF check; otherwise the request's own host is used.
-- **No sign-in or parent-area UI yet.** The client side is the save path only; picking a cloud child is a localStorage value for now.
+- **Cloud children play the graph world only.** Cloud snapshots need the graph-mode `world` (progress/0.3), so picking a child forces graph mode for that child; guests keep the classic default.
 - **Tests use PGlite** in-process instead of a Neon branch; `test:api:pg` covers real Postgres.
 - **Partly deployed:** the Vercel project (`zenjax7/chinese-rpg`) exists, but no Neon database (`DATABASE_URL`) or Google OAuth client yet. See [architecture.md §17](architecture.md) for what Jack sets up.
