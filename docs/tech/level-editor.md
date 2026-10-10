@@ -268,7 +268,7 @@ Rules:
 stateDiagram-v2
   [*] --> available: requires met
   available --> active: pre (offer scene), Accept
-  active --> active: in (giver progress scene; step nodes give item, fight or line)
+  active --> active: in (giver progress scene, step nodes give item, fight or line)
   active --> ready: last step before turn-in done
   ready --> completed: post.scene (turn-in) + rewards from the quest definition
   completed --> completed: post.after (closing line)
@@ -734,8 +734,8 @@ sequenceDiagram
   participant F as /api/v1 Function (app_editor)
   participant DB as Neon
   J->>F: POST /editor/publish {levels:[{id, draftRev}], note}
-  F->>DB: BEGIN; SELECT … FROM levels WHERE id = ANY(ids) FOR UPDATE
-  F->>F: check draft_rev matches; validate the set + all other published levels
+  F->>DB: BEGIN, then SELECT … FROM levels WHERE id = ANY(ids) FOR UPDATE
+  F->>F: check draft_rev matches, validate the set + all other published levels
   alt errors
     F-->>J: 422 {errors} (nothing written)
   else ok
@@ -743,7 +743,7 @@ sequenceDiagram
     F->>DB: INSERT level_revisions (kind publish, version, body, hash, note) per level
     F->>F: compile runtime index + quest list + realm content
     F->>DB: INSERT content_releases (index, compiled) + release_levels (every level → version)
-    F->>DB: INSERT audit_log (level.publish, ids, versions); COMMIT
+    F->>DB: INSERT audit_log (level.publish, ids, versions), then COMMIT
     F-->>J: 200 {release, versions}
   end
 ```
