@@ -115,19 +115,47 @@ skills = [
 out('skills.json', dict(_note='Generated from combat_data.json skills_mp + mp_rules (v3 costs). Heal is earned by a Honeycomb quest in the spec; the prototype has no quests, so it unlocks at level 3.', skills=skills))
 
 # ---------------- shop: gear + consumables ----------------
-NAMES = {(1, 'weapon'): ('wood_sword', '🗡️'), (1, 'armor'): ('cloth_tunic', '👕'), (1, 'shield'): ('potlid', '🛡️'),
-         (2, 'weapon'): ('stinger', '🗡️'), (2, 'armor'): ('petal_cloak', '🧥'), (2, 'shield'): ('beeswax', '🛡️')}
-gear = []
-for g in CD['gear']:
-    if g['tier'] > 2: continue
-    gid, emo = NAMES[(g['tier'], g['slot'])]; st = 'atk' if g['stat'] == 'ATK' else 'def'
-    base = dict(slot=g['slot'], tier=g['tier'], emoji=emo)
-    gear.append(dict(base, id=gid, rarity='common', zh=g['example_name_zh'], en=g['example_name_en'], **{st: g['common']}, price=g['shop_price_common'], shop=True, **({'shopRequires': 'forest'} if g['tier'] == 2 else {})))
-    gear.append(dict(base, id=gid + '_f', rarity='fine', zh='好' + g['example_name_zh'], en='Fine ' + g['example_name_en'], **{st: g['fine']}, price=0))
+# v3.9.3: core gear (weapon / armor / shield, tiers 1-9 x common / fine / heroic = 81 pieces) comes from Desy's game-ready catalogue
+# docs/data/items/gear_items.csv (written by docs/tech/tools/data/make_gear_items.py from gear.csv; prices unchanged). id = the CSV's
+# prototype_id when it has one (tiers 1-2 + horn_dagger, so old saves keep their gear), else the CSV id (<slot>_t<tier>_<rarity>).
+# Common pieces are sold where the CSV's source says ("shop: town N blacksmith" -> shopTown N); fine / heroic pieces are never sold.
+# Blank perks are left out; the generic "Heroic X" names are Desy's placeholders (namePlaceholder: true) until she names them.
+GEAR_CSV = os.path.join(DESY_ROOT, 'data', 'gear_items.csv') if DESY_ROOT else os.path.join(DOCS, 'items', 'gear_items.csv')
+SLOT_EMOJI = {'weapon': '🗡️', 'armor': '👕', 'shield': '🛡️'}
+EMOJI = {(2, 'armor'): '🧥', (1, 'weapon', 'heroic'): '🦴'}   # the prototype's tier-1/2 icons
+PERK_FIELDS = {'horn_dagger': dict(startStreak=1)}              # perks the battle code implements; any other perk is shown as text only
+gear, _gbad = [], []
+for r in csv.DictReader(open(GEAR_CSV, encoding='utf-8-sig')):
+    t, slot, rar = int(r['tier']), r['slot'], r['rarity']
+    gid = (r.get('prototype_id') or '').strip() or r['id']
+    st = 'atk' if r['stat'].strip().upper() == 'ATK' else 'def'
+    m = re.match(r'shop:\s*town\s+(\d+)\b', r.get('source') or '')
+    sells = rar == 'common' and str(r.get('shop')).strip().lower() == 'true'
+    if sells and not m: _gbad.append(f"{r['id']}: shop row without a 'shop: town N' source ({r.get('source')!r})")
+    if sells and not (r.get('price') or '').strip(): _gbad.append(f"{r['id']}: shop row without a price")
+    g = dict(slot=slot, tier=t, emoji=EMOJI.get((t, slot, rar)) or EMOJI.get((t, slot)) or SLOT_EMOJI.get(slot, '🎽'), id=gid, rarity=rar,
+             zh=r['zh'].strip(), en=r['en'].strip(), **{st: int(r['value'])}, price=int(r['price']) if sells else 0)
+    if sells:
+        g.update(shop=True, shopTown=int(m.group(1)) if m else t)
+        if t == 2: g['shopRequires'] = 'forest'                 # classic mode: the tier-2 shelf opens with the forest
+    if (r.get('perk') or '').strip(): g['perk'] = r['perk'].strip()
+    g.update(PERK_FIELDS.get(gid, {}))
+    if rar == 'heroic' and 'unnamed' in (r.get('source') or ''): g['namePlaceholder'] = True
+    if gid != r['id']: g['csvId'] = r['id']
+    gear.append(g)
+if _gbad: raise SystemExit('gear_items.csv:\n' + '\n'.join(_gbad))
+_have = {(g['tier'], g['slot'], g['rarity']) for g in gear}
+_miss = [(t, sl, ra) for t in range(1, 10) for sl in ('weapon', 'armor', 'shield') for ra in ('common', 'fine', 'heroic') if (t, sl, ra) not in _have]
+if _miss or len(gear) != 81 or len({g['id'] for g in gear}) != 81: raise SystemExit(f'gear_items.csv: want 81 unique pieces (9 tiers x 3 slots x 3 rarities), missing {_miss[:9]}')
+# cross-check against combat_data.json gear (the same §6.2 table): stats and shop prices must agree
+_cdg = {(g['tier'], g['slot']): g for g in CD['gear']}
+for g in gear:
+    c = _cdg.get((g['tier'], g['slot'])); k = 'atk' if g['slot'] == 'weapon' else 'def'
+    if c and (g[k] != c[g['rarity']] or (g.get('shop') and g['price'] != c['shop_price_common'])): _gbad.append(f"{g['id']}: {k} {g[k]} / price {g['price']} != combat_data.json {c[g['rarity']]} / {c['shop_price_common']}")
+if _gbad: raise SystemExit('gear_items.csv vs combat_data.json drift:\n' + '\n'.join(_gbad))
 gear += [
   dict(id='red_knot', slot='charm', tier=1, rarity='common', zh='红绳结', en='Red Knot Charm', emoji='🧧', atk=1, price=45, shop=True),
   dict(id='jade_pendant', slot='charm', tier=2, rarity='common', zh='玉坠', en='Jade Pendant', emoji='📿', **{'def': 1}, mp=4, price=90, shop=True, shopRequires='forest'),
-  dict(id='horn_dagger', slot='weapon', tier=1, rarity='heroic', zh='角兔角', en='Rabbit-Horn Dagger', emoji='🦴', atk=next(g['heroic'] for g in CD['gear'] if g['tier'] == 1 and g['slot'] == 'weapon'), startStreak=1, price=0, perk='+1 streak at battle start'),
   dict(id='queens_crown', slot='charm', tier=2, rarity='heroic', zh='蜂后之冠', en="Queen's Crown", emoji='👑', mp=int(MPR['queens_crown_bonus']), price=0, perk='+6 max MP'),
 ]
 CONS = {c['item_id']: c for c in CD['consumables']}
@@ -142,7 +170,7 @@ cons = [
        battleUse=not MPP['big_mana_tea']['battle_use'].startswith('no'), fromTown=int(MPP['big_mana_tea']['from_town']), magicShop=True),
   dict(id='feather', zh=CONS['return_feather']['name_zh'], en='Return Feather', emoji='🪶', priceG=1, warp=True, carryLimit=int(CONS['return_feather']['carry_limit'])),
 ]
-out('shop.json', dict(_note='Generated from combat_data.json gear (tiers 1-2 common/fine/heroic, shop prices), gear_heroic_drops and consumables. Charms (red_knot, jade_pendant) are prototype placeholders; the spec has no charm price table. Consumable prices are multiples of the current area G.', gear=gear, consumables=cons))
+out('shop.json', dict(_note='Generated by tools/build_data.py. Core gear: docs/data/items/gear_items.csv (v3.9.3, tiers 1-9 x weapon/armor/shield x common/fine/heroic; common pieces sold in town shopTown, graph-mode villages sell their realm town\'s tier). Charms (red_knot, jade_pendant, queens_crown) and consumables from combat_data.json; red_knot and jade_pendant are prototype placeholders; the spec has no charm price table. Consumable prices are multiples of the current area G.', gear=gear, consumables=cons))
 
 # ---------------- v3.3/v3.4: towns, spells, quests (desy/data/spells.csv, cast_rule.csv, spell_falloff.csv, spells_full.json, quests*.json) ----------------
 # Engine-neutral JSON: plain fields, no game-specific ids beyond the prototype item/enemy ids it maps to. Every number comes from Desy's files;

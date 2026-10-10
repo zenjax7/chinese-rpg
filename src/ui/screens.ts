@@ -2,6 +2,7 @@ import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, CONS, CONSUMABLES, SKILLS, ITEM, PO
 import { openTowns, questView, accept as acceptQuest, claim as claimQuest, reward as questReward, onArrive, claimable } from '../engine/quests';
 import { TARGET_LABEL } from '../engine/battle';
 import { S, save, heroStats, innPrice, consPrice, speechOn, session, skillSlots, refreshSkills, resetAll, clampHpMp, expToNext, WAY_LABEL, ALL_WAYS, replaceState, gainGear, equipLine, strictlyBetter, weakGear, tierGear, notices, frontierLoc } from '../engine/state';
+import { shopShelf } from '../world/engine';
 import { readiness, prog, proficient, progress, activeWays, distractors, bossPool } from '../engine/learning';
 import { runBattle, setCurrentLoc, BattleResult, BattleKind } from '../engine/battle';
 import { speak, speechSupported, requestMic, hasZhVoice, srLog, srDebugHtml } from '../engine/speech';
@@ -56,7 +57,8 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
 /** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
-export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[] } = {};
+export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[];
+  /** v3.9.3: the town number whose blacksmith shelf this town / village shows (graph mode) */ shopTown?: number } = {};
 export function town() {
   S.where = 'town'; save(); view.mode('town', undefined, BG.village()); playMusic('mus_village'); hud();
   setTitle(graphHooks.title || `🏘️ ${zh('小山村')} Little Hill Village`);
@@ -162,7 +164,10 @@ export function inn(msg = '', place = 'town', node = 0) {
 // =============== shop ===============
 export function shop() {
   hud(); view.mode('town', undefined, BG.village());
-  const gear = GEAR_LIST.filter(g => g.shop && (!g.shopRequires || S.locs[g.shopRequires]?.unlocked));
+  // v3.9.3: graph mode stocks the shelf of this town's tier (gear_items.csv sources); classic keeps the in-build towns' gear (tiers 1-2)
+  const open = (l: string) => !!S.locs[l]?.unlocked;
+  const gear = graphHooks.shopTown ? shopShelf(GEAR_LIST, graphHooks.shopTown, open)
+    : GEAR_LIST.filter(g => g.shop && (!g.shopTown || TOWN[g.shopTown]?.inBuild) && (!g.shopRequires || open(g.shopRequires)));
   const statTxt = (g: any) => [g.atk ? `⚔️+${g.atk}` : '', g.def ? `🛡️+${g.def}` : '', g.mp ? `🔷+${g.mp} MP` : ''].filter(Boolean).join(' ');
   const fl = frontierLoc(); const weak = weakFor(fl.id); const weakSlots = weak.map(w => w.slot as string);
   const upg = (g: any) => { const cur = S.equip[g.slot as 'weapon'] ? GEAR[S.equip[g.slot as 'weapon']!] : null;

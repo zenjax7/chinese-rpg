@@ -20,7 +20,9 @@ export interface LocationDef { id: string; name: string; zh: string; emoji: stri
   bossReward: { skill?: string; heroic?: string; text: string };
   mapNodes?: { x: number; y: number; kind: 'inn' | 'fight' | 'gate' | 'boss' }[]; }
 export interface GearDef { id: string; slot: 'weapon' | 'armor' | 'shield' | 'charm'; tier: number; rarity: string; zh: string; en: string;
-  emoji: string; atk?: number; def?: number; mp?: number; hp?: number; price: number; shop?: boolean; shopRequires?: string; startStreak?: number; perk?: string; }
+  emoji: string; atk?: number; def?: number; mp?: number; hp?: number; price: number; shop?: boolean; shopRequires?: string; startStreak?: number; perk?: string;
+  /** v3.9.3 (gear_items.csv): the town whose blacksmith sells it; the CSV id when the prototype id differs; generic placeholder name */
+  shopTown?: number; csvId?: string; namePlaceholder?: boolean; }
 export interface ConsumableDef { id: string; zh: string; en: string; emoji: string; priceG: number; healHpFrac?: number; healMpFrac?: number; warp?: boolean; carryLimit?: number;
   /** v3.4: false = map only (MP potions never drunk in battle). fromTown: first town that sells it. magicShop: sold in the 🔮 magic shop. */
   battleUse?: boolean; fromTown?: number; magicShop?: boolean; }
