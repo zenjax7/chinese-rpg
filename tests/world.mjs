@@ -176,6 +176,76 @@ export async function worldUnitTests({ check, log = console.log }) {
   check(v0.ok, 'save schema: a new progress/0.3 object validates' + (v0.ok ? '' : ': ' + v0.errors.join('; ')));
   const bad = validateSave({ ...E.newProgress(42, idx.start), feathers: 4, extra: 1 }, 'bad');
   check(!bad.ok, 'save schema: the validator rejects feathers 4 / unknown keys');
+  await v393UnitTests({ E, J, idx, rules, quests, check });
+}
+
+/** v3.9.3 / v3.9.4: seed vectors in the spec, q9_second_wind step 2, dead ends, gear tiers 1–9 in the shops. */
+async function v393UnitTests({ E, J, idx, rules, quests, check }) {
+  const csv = f => { const [h, ...rows] = readFileSync(path.join(ROOT, f), 'utf8').replace(/^\uFEFF/, '').trim().split(/\r?\n/);
+    const split = l => { const out = []; let cur = '', q = false; for (const c of l) { if (c === '"') q = !q; else if (c === ',' && !q) { out.push(cur); cur = ''; } else cur += c; } out.push(cur); return out; };
+    const H = split(h); return rows.map(r => Object.fromEntries(split(r).map((v, i) => [H[i], v]))); };
+  // ---- §4.4 seed hash: the spec's test-vector table = world_rules.seed.testVectors = engine.ts fnv1a / roll ----
+  const doc = readFileSync(path.join(ROOT, 'docs/design/world-graph.md'), 'utf8');
+  const docVec = [...doc.matchAll(/^\| `([^`]+)` \| (\d+) \| (0\.\d+) \|$/gm)].map(m => ({ key: m[1], fnv1a32: +m[2], roll: +m[3] }));
+  const tv = rules.seed.testVectors;
+  check(docVec.length === 3 && JSON.stringify(docVec) === JSON.stringify(tv.map(v => ({ key: v.key, fnv1a32: v.fnv1a32, roll: v.roll }))) && docVec.every(v => E.fnv1a(v.key) === v.fnv1a32 && E.roll(v.key) === v.roll),
+    `seed (v3.9.4 §4.4): world-graph.md's 3 test vectors = world_rules.seed.testVectors = engine.ts fnv1a/roll (${docVec.map(v => v.key).join(', ')})`);
+  // ---- q9_second_wind step 2: the badge on the dead-end chest demon_castle_2/treasure_1 ----
+  const q9 = quests.find(q => q.id === 'q9_second_wind'); const s2 = q9.objectives.find(o => o.id === 's2');
+  const dc2 = J('graphs/demon_castle_2.json'); E.registerGraph(dc2);
+  const t1 = dc2.nodes.find(n => n.id === 'treasure_1'); const t1edges = dc2.edges.filter(e => e.from === 'treasure_1' || e.to === 'treasure_1');
+  check(s2.where.ref === 'demon_castle_2/treasure_1' && s2.at?.graph === 'demon_castle_2' && s2.at?.node === 'treasure_1' && s2.objective.type === 'collect' && s2.objective.source === 'nodeItem' && t1?.kind === 'chest' && t1edges.length === 1,
+    `q9_second_wind s2: pickup at demon_castle_2/treasure_1, a chest with one edge (dead end) (${JSON.stringify(s2.at)}, ${t1edges.length} edge)`);
+  const graphOnly = quests.flatMap(q => q.objectives.filter(o => o.objective.desyType === 'pickup' && !(o.where?.node || o.where?.refs || (o.where?.ref || '').includes('/'))).map(o => `${q.id}/${o.id}`));
+  check(!graphOnly.length, `quests (v3.9.3): no pickup step names only a graph${graphOnly.length ? ' — ' + graphOnly.join(', ') : ''}`);
+  { const P = E.newProgress(7, idx.start); P.flags.push('pact_elves'); const x = { P, quests: {}, inv: {} };
+    const before = E.pickEvent(dc2, 'treasure_1', 'enter', x, true);
+    check(before?.outcome === 'treasure' && before.actions.some(a => a.openChest), `q9 not active: arriving at treasure_1 opens the chest (${before?.ev.id})`);
+    check(E.questStatus(q9, x) === 'available', 'q9_second_wind is offered once a pact flag is set');
+    const st = E.accept(q9, x); E.questEvent(quests, x, { type: 'arrive', graph: 'realm_9', node: 'entry_town' });
+    check(E.currentStep(q9, st)?.id === 's2', `q9: after the offer the current step is s2 (${E.currentStep(q9, st)?.id})`);
+    const ev = E.pickEvent(dc2, 'treasure_1', 'enter', x, true);
+    check(ev?.outcome === 'story' && ev.ev.id === 'treasure_1.1' && ev.actions.some(a => a.dialogue === 'demon_castle_2.treasure_1.step_q9_second_wind') && dc2.dialogue?.['demon_castle_2.treasure_1.step_q9_second_wind'],
+      `q9 active (v3.9.4): the quest-step story event fires first on treasure_1 (${ev?.ev.id} ${ev?.outcome}); the chest is treasure_1.2`);
+    E.questEvent(quests, x, { type: 'arrive', graph: 'demon_castle_2', node: 'deadend_1' });
+    check(E.currentStep(q9, st)?.id === 's2', 'q9: arriving somewhere else in demon_castle_2 does not pick up the badge');
+    E.questEvent(quests, x, { type: 'arrive', graph: 'demon_castle_2', node: 'treasure_1' });
+    check(E.currentStep(q9, st)?.id === 's3' && st.s === 'active', `q9: arriving at treasure_1 picks up the badge → the words step (${E.currentStep(q9, st)?.id})`);
+    E.markFired(P, dc2, ev); const again = E.pickEvent(dc2, 'treasure_1', 'enter', x, false);
+    check(again?.ev.id === 'treasure_1.2' && again.outcome === 'treasure', `q9: the next arrival opens the chest (${again?.ev.id})`); }
+  // ---- dead ends (v3.9.3): a shape, not a kind; a one-edge node does what its kind + events say, nothing else ----
+  const KINDS = new Set(JSON.parse(readFileSync(path.join(ROOT, 'docs/data/world/schemas/graph.schema.json'), 'utf8')).properties.nodes.items.properties.kind.enum); const deg = {}; const seen = {}; let oneEdge = 0, noEvent = [];
+  for (const gm of idx.graphs) { const g = J(`graphs/${gm.id}.json`); for (const e of g.edges) for (const n of [e.from, e.to]) if (typeof n === 'string') deg[`${g.id}/${n}`] = (deg[`${g.id}/${n}`] || 0) + 1;
+    const evn = new Set((g.events || []).map(e => e.node));
+    for (const n of g.nodes) { seen[n.kind] = 1; if (deg[`${g.id}/${n.id}`] === 1) { oneEdge++; if (!evn.has(n.id)) noEvent.push(`${g.id}/${n.id}:${n.kind}`); } } }
+  check(!KINDS.has('deadend') && !('deadend' in seen) && Object.keys(seen).every(k => KINDS.has(k)), `dead ends: no 'deadend' node kind in the schema or the graphs (kinds: ${Object.keys(seen).sort().join(', ')})`);
+  check(oneEdge > 100 && noEvent.every(s => /:(town|village|inn|boss)$/.test(s)), `dead ends: ${oneEdge} one-edge nodes; the ${noEvent.length} without events are towns / villages / inns / bosses (handled by their kind)`);
+  { const g = { id: 'deadend_test', kind: 'overworld', realm: 1, nodes: [{ id: 'a', idx: 0, kind: 'waypoint', x: 0, y: 0 }, { id: 'end', idx: 1, kind: 'waypoint', x: 1, y: 0 }],
+      edges: [{ id: 'e1', idx: 0, from: 'a', to: 'end', kind: 'path', danger: 1, steps: 1 }], events: [] }; E.registerGraph(g);
+    const P = E.newProgress(3, idx.start); const x = { P, quests: {}, inv: {} }; P.pos = { graph: g.id, node: 'end', edge: null, step: 0 };
+    const ch = E.questEvent(quests, x, { type: 'arrive', graph: g.id, node: 'end' });
+    check(E.pickEvent(g, 'end', 'enter', x, true) === null && E.questFightAt(quests, x, g.id, 'end') === null && ch.length === 0 && E.edgesAt(g, 'end').length === 1,
+      'dead ends: a one-edge waypoint with no event is empty (no event, no fight, no quest change; the only way on is back)'); }
+  // ---- gear tiers 1–9 (gear_items.csv → src/data/shop.json) and the shops that stock them ----
+  const SHOP = JSON.parse(readFileSync(path.join(ROOT, 'src/data/shop.json'), 'utf8')).gear; const rows = csv('docs/data/items/gear_items.csv');
+  const core = SHOP.filter(g => g.slot !== 'charm'); const byCsv = Object.fromEntries(core.map(g => [g.csvId || g.id, g]));
+  const gbad = rows.filter(r => { const g = byCsv[r.id]; const k = r.stat === 'ATK' ? 'atk' : 'def';
+    return !g || g.tier !== +r.tier || g.slot !== r.slot || g.rarity !== r.rarity || g[k] !== +r.value || g.zh !== r.zh || g.en !== r.en || (r.prototype_id && g.id !== r.prototype_id)
+      || (r.shop === 'True' ? !(g.shop && g.price === +r.price && g.shopTown === +r.source.match(/town (\d+)/)[1]) : (g.shop || g.price !== 0)) || (r.perk ? g.perk !== r.perk : 'perk' in g); }).map(r => r.id);
+  check(rows.length === 81 && core.length === 81 && !gbad.length, `gear: 81 pieces (tiers 1–9 × weapon/armor/shield × common/fine/heroic) match gear_items.csv: ids, stats, names, prices, shop town, perks${gbad.length ? ' — bad: ' + gbad.slice(0, 6).join(', ') : ''}`);
+  check(['wood_sword', 'wood_sword_f', 'horn_dagger', 'stinger', 'petal_cloak_f', 'beeswax'].every(id => SHOP.some(g => g.id === id)) && SHOP.find(g => g.id === 'horn_dagger').startStreak === 1,
+    'gear: tier 1–2 pieces keep their prototype ids (old saves) and the dagger keeps +1 streak');
+  check(rows.filter(r => !r.perk).every(r => !('perk' in byCsv[r.id])) && core.filter(g => g.namePlaceholder).every(g => g.rarity === 'heroic' && /^Heroic /.test(g.en)) && core.filter(g => g.namePlaceholder).length === 24,
+    `gear: blank perks are left out; the 24 generic "Heroic …" names are flagged namePlaceholder`);
+  const realmTown = {}; for (const gm of idx.graphs.filter(g => g.kind === 'overworld')) { const g = J(`graphs/${gm.id}.json`); for (const n of g.nodes) if (n.kind === 'town' || n.kind === 'village') realmTown[`${g.id}/${n.id}`] = [g.realm, E.shopTownOf(g, n)]; }
+  check(Object.values(realmTown).length === 21 && Object.values(realmTown).every(([r, t]) => r === t), `shops: every town and village sells its realm town's tier (${Object.keys(realmTown).length} settlements)`);
+  const open = { meadow: true, forest: true };
+  for (let t = 1; t <= 9; t++) { const shelf = E.shopShelf(SHOP, t, l => !!open[l]); const cores = shelf.filter(g => g.slot !== 'charm');
+    const want = rows.filter(r => r.shop === 'True' && +r.tier === t).map(r => byCsv[r.id].id).sort();
+    check(JSON.stringify(cores.map(g => g.id).sort()) === JSON.stringify(want) && cores.every(g => g.tier === t && g.rarity === 'common') && shelf.filter(g => g.slot === 'charm').every(g => g.tier <= t),
+      `shop town ${t}: blacksmith sells the tier-${t} common set only (${cores.map(g => `${g.id} ${g.price}`).join(', ')}) + open charms`); }
+  check(E.shopShelf(SHOP, 2, () => false).every(g => g.slot !== 'charm' || !g.shopRequires), 'shop: a charm with shopRequires stays hidden until its location opens');
+  check([3, 5, 9].every(t => E.chestTier(core, t) === t) && E.chestTier(core, 12) === 9 && E.chestTier(core, 1) === 1, 'chests: fine gear comes from the realm\'s own tier (tiers 1–9; capped at 9)');
 }
 
 export async function worldTests({ browser, BASE, check, log = console.log, shots = '' }) {
@@ -438,6 +508,28 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const r3 = await battle(); check(r3 === 'win' || r3 === 'left', `realm 3 battle finished (${r3})`);
   for (let i = 0; i < 30 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
   await keep('after realm 3 battle');
+  // ---- v3.9.3 gear: later towns and villages stock their realm's tier (gear_items.csv "shop: town N blacksmith") ----
+  const shopAt = async (g, n) => {   // arrive at the settlement (decline quest offers with "Later"), wait for its town screen, open the shop
+    await p.evaluate(([g, n]) => { window.__gotoDone = false; window.__proto.world.goto(g, n, true).finally(() => { window.__gotoDone = true; }); }, [g, n]);
+    for (let i = 0, calm = 0; i < 80 && calm < 2; i++) { await p.waitForTimeout(200);
+      if (await tid('scene').count()) { calm = 0; await tid('scene-skip').click().catch(() => {}); }
+      else if (await tid('dialog').count()) { calm = 0; await (await tid('dialog-btn-1').count() ? tid('dialog-btn-1') : tid('dialog-btn-0')).click().catch(() => {}); }
+      else if (await tid('town').count() && await p.evaluate(() => window.__gotoDone)) calm++; }
+    await tid('go-shop').click(); await tid('shop').waitFor({ timeout: 5000 });
+    const ids = await p.evaluate(() => [...document.querySelectorAll('[data-testid=shop] [data-gear]')].map(e => e.dataset.gear));
+    await tid('back').click().catch(() => {}); return ids; };
+  await edit(s => { s.gold = 5000; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
+  for (const [g, n, t] of [['realm_3', 'entry_town', 3], ['realm_5', 'entry_town', 5], ['realm_7', 'town_3', 7], ['realm_9', 'village_3x', 9]]) {
+    const ids = await shopAt(g, n); const core = ids.filter(id => /^(weapon|armor|shield)_t\d_|^(wood_sword|cloth_tunic|potlid|stinger|petal_cloak|beeswax)$/.test(id));
+    check(['weapon', 'armor', 'shield'].every(sl => core.includes(`${sl}_t${t}_common`)) && core.length === 3,
+      `shop ${g}/${n}: sells the tier-${t} weapon, armor and shield, nothing from other tiers (${core.join(', ')})`); }
+  { const before = (await sv()).gold; await shopAt('realm_5', 'entry_town'); await tid('go-shop').click(); await tid('shop').waitFor();
+    await tid('buy-weapon_t5_common').click(); await p.waitForTimeout(300); const s5 = await sv();
+    check(before - s5.gold === 650 && s5.gear.includes('weapon_t5_common') && s5.equip.weapon === 'weapon_t5_common', `shop realm 5: buying the Hydra-fang Spear costs 650 and equips it (ATK 17) (${before} → ${s5.gold})`);
+    await tid('back').click().catch(() => {}); await keep('after a tier-5 purchase'); }
+  { const ids = await shopAt('realm_1', 'village');
+    check(ids.includes('wood_sword') && !ids.some(id => /_t\d_/.test(id)), `shop realm 1 village: still the tier-1 set (${ids.join(', ')})`); }
   // ---- words step (quests.md §2a): correct battle answers to pool L2.1 count; practice does not ----
   await edit(s => { s.storyQuests.q2_bubble_lesson = { s: 'active', at: Date.now(), step: 1, obj: { s2: 3, s3: 0 } }; });
   await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
