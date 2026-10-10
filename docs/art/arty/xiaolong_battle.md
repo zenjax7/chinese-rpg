@@ -59,6 +59,4 @@ The source sheets are AI-painted pose sheets on a flat magenta background (about
 
 Scripts: `tools/cut.py`, then `tools/build.py` (helper: `tools/key.py`).
 
-Suggested `docs/README.md` index entry:
-
-- [Xiaolong battle sprites](art/arty/xiaolong_battle.md): 小龙 companion idle/cheer/attack/hurt strips, 256x256 frames, anchor bottom-centre, facing right.
+Index entry: added to [docs/README.md](../../README.md) (Art section). In the game, the strips are synced to `public/companions/`; see [asset-hooks.md](../asset-hooks.md#battle-companion-小龙-oct-9).
