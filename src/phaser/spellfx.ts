@@ -301,7 +301,11 @@ export function playCast(h: FxHost, spell: { id: string; element: string; emoji:
   const total = Math.min(C.castAnim?.maxMs ?? 5000, natural2);
 
   // ---- run
-  const start = s.time.now; const tick = () => { const t = s.time.now - start; for (const f of fns) f(t); };
+  const pp = (window as any).__proto = (window as any).__proto || {};
+  // Test hook (tests/spellfxshots.mjs): __proto.fxFreezeAt = ms holds the timeline-driven layers at that cast time for a screenshot;
+  // __proto.fxImpacts lists this cast's impact times. Unset in play, so nothing changes for players.
+  pp.fxImpacts = [...impTimes].sort((a, b) => a - b);
+  const start = s.time.now; const tick = () => { const fz = pp.fxFreezeAt; const t = Math.min(s.time.now - start, typeof fz === 'number' ? fz : Infinity); for (const f of fns) f(t); };
   s.events.on('update', tick); tick();
   let finish!: () => void; const done = new Promise<void>(r => (finish = r));
   let over = false;

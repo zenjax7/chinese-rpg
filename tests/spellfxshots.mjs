@@ -3,7 +3,11 @@
 import { chromium } from 'playwright-core';
 const KEY = 'chinese-rpg-proto-v3';
 const [BASE = 'http://127.0.0.1:8795/', OUT = '/tmp/spellfx-', ...want0] = process.argv.slice(2);
-const want = (want0.length ? want0 : ['lightning@1080', 'blizzard@1500']).map(x => { const [id, ms] = x.split('@'); return { id, ms: +ms || 1000 }; });
+// spell@ms waits ms after the cast starts; spell@hit+N freezes the cast timeline N ms after the first impact (__proto.fxFreezeAt),
+// so a short-lived layer (the lightning bolt) is caught every time; spell@=N freezes at cast time N.
+const want = (want0.length ? want0 : ['lightning@1080', 'blizzard@1500']).map(x => { const [id, ms = ''] = x.split('@');
+  const hit = ms.match(/^hit([+-]\d+)?$/), at = ms.match(/^=(\d+)$/);
+  return { id, ms: hit || at ? 0 : +ms || 1000, freeze: hit ? { hit: +(hit[1] || 0) } : at ? { at: +at[1] } : null }; });
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
 const p = await (await browser.newContext({ viewport: { width: 1280, height: 720 } })).newPage();
 const errs = []; p.on('pageerror', e => errs.push(e.message));
@@ -25,7 +29,10 @@ for (const w of want) {
   const TGT = '[data-testid^="target-"]:not([data-testid="target-menu"])';   // target buttons appear after the dock cross-fade: wait for them or the cast
   await p.waitForFunction(s => !!(document.querySelector(s) || document.querySelector('[data-testid="fx-skip"]')), TGT, { timeout: 5000 });
   const tg = p.locator(TGT); if (await tg.count()) await tg.first().click();
-  await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 }); await p.waitForTimeout(w.ms);
+  await tid('fx-skip').waitFor({ state: 'attached', timeout: 5000 });
+  if (w.freeze) { const fz = await p.evaluate(f => { const pp = window.__proto; pp.fxFreezeAt = f.at ?? ((pp.fxImpacts || [0])[0] + f.hit); return pp.fxFreezeAt; }, w.freeze);
+    await p.waitForTimeout(fz + 250); }
+  else await p.waitForTimeout(w.ms);
   if (process.env.BURST) for (let i = 0; i < +process.env.BURST; i++) { await p.screenshot({ path: `${OUT}${w.id}-b${i}.png` }); }
   if (w.id === 'tornado') {   // Arty, Oct 9: the funnel must spawn at the first target, not in front of the caster
     const sp = await p.evaluate(() => window.__proto.tornadoSpawn); const ok = sp && Math.abs(sp.x - sp.firstTargetX) < 120 && sp.x - sp.heroX > 200;
@@ -33,6 +40,7 @@ for (const w of want) {
   if (process.env.UI_CHECK) { const ui = await p.evaluate(() => (window.__proto.foeLayout || []).map(f => f.uiDepth)); const ok = ui.every(d => d > 10);
     console.log(ok ? 'ok' : 'FAIL', 'enemy name/HP depth above FX', ui.join(',')); if (!ok) process.exitCode = 1; }
   const path = `${OUT}${w.id}.png`; await p.screenshot({ path }); console.log('saved', path, JSON.stringify(await p.evaluate(() => (window.__proto.spellAnims || []).slice(-1)[0])));
+  await p.evaluate(() => { window.__proto.fxFreezeAt = null; });
   await p.waitForFunction(() => window.__proto.lastSpell?.done, null, { timeout: 8000 }).catch(() => {});
   await p.waitForTimeout(300); await p.screenshot({ path: `${OUT}${w.id}-after.png` });
   await edit(s => { s.where = 'forest'; });
