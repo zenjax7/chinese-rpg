@@ -73,6 +73,15 @@ export function newState(): SaveState {
   return s;
 }
 
+/** Renamed gear ids → current ids (old saves keep their gear). v3.9.5: realm 3's Mimic Shield is the catalogue piece shield_t3_heroic
+ *  (its content id was mimic_shield, which no build could grant, so this is belt-and-braces). Unknown ids are kept, never dropped. */
+export const GEAR_ALIASES: Record<string, string> = { mimic_shield: 'shield_t3_heroic' };
+export function migrateGearIds(s: SaveState): string[] {
+  const moved: string[] = []; const to = (id: string | null) => (id && !GEAR[id] && GEAR[GEAR_ALIASES[id]] ? GEAR_ALIASES[id] : id);
+  s.gear = [...new Set((s.gear || []).map(id => { const n = to(id)!; if (n !== id) moved.push(`${id}→${n}`); return n; }))];
+  for (const k of Object.keys(s.equip || {}) as (keyof SaveState['equip'])[]) s.equip[k] = to(s.equip[k]);
+  return moved;
+}
 export let S: SaveState = load();
 export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 };
 
@@ -80,13 +89,13 @@ function load(): SaveState {
   try {
     let raw = store.load(KEY);
     if (!raw && KEY === KEY_V4) { raw = store.load(KEY_V3); if (raw) { const m = JSON.parse(raw); m.migratedFrom = 'v3'; raw = JSON.stringify(m); } }
-    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; fillSkillSlots(s); return s; } }
+    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
 }
 export function save() { store.save(KEY, JSON.stringify(S)); }
 export function resetAll() { store.remove(KEY); S = newState(); save(); }
-export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; S = s; save(); }
+export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); S = s; save(); }
 
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }
 
@@ -95,7 +104,7 @@ export function heroStats(s: SaveState = S) {
   let atk = Math.floor(L / h.atkLevelDiv), def = Math.floor(L / h.defLevelDiv), maxHp = h.hpBase + h.hpPerLevel * L, maxMp = h.mpBase + h.mpPerLevel * L;
   for (const slot of ['weapon', 'armor', 'shield', 'charm'] as const) {
     const id = s.equip[slot]; if (!id) continue; if (slot === 'charm' && L < B.slots.charmUnlockLevel) continue;
-    const g = GEAR[id]; atk += g.atk || 0; def += g.def || 0; maxMp += g.mp || 0; maxHp += g.hp || 0;
+    const g = GEAR[id]; if (!g) continue; atk += g.atk || 0; def += g.def || 0; maxMp += g.mp || 0; maxHp += g.hp || 0;
   }
   const courageMult = 1 + B.economy.courageStep * Math.min(B.economy.courageMaxStacks, s.courage);
   return { atk, def, defBattle: def * courageMult, courageMult, maxHp, maxMp };

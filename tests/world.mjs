@@ -205,8 +205,11 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
     const st = E.accept(q9, x); E.questEvent(quests, x, { type: 'arrive', graph: 'realm_9', node: 'entry_town' });
     check(E.currentStep(q9, st)?.id === 's2', `q9: after the offer the current step is s2 (${E.currentStep(q9, st)?.id})`);
     const ev = E.pickEvent(dc2, 'treasure_1', 'enter', x, true);
-    check(ev?.outcome === 'story' && ev.ev.id === 'treasure_1.1' && ev.actions.some(a => a.dialogue === 'demon_castle_2.treasure_1.step_q9_second_wind') && dc2.dialogue?.['demon_castle_2.treasure_1.step_q9_second_wind'],
-      `q9 active (v3.9.4): the quest-step story event fires first on treasure_1 (${ev?.ev.id} ${ev?.outcome}); the chest is treasure_1.2`);
+    check(ev?.outcome === 'story' && ev.ev.id === 'treasure_1.1' && ev.ev.once === true && ev.actions.length === 1 && ev.actions[0].scene === 'sc_q9_second_wind_badge' && !dc2.dialogue?.['demon_castle_2.treasure_1.step_q9_second_wind'],
+      `q9 active (v3.9.5): the quest-step event on treasure_1 plays the scene sc_q9_second_wind_badge once (${ev?.ev.id} ${ev?.outcome} ${JSON.stringify(ev?.actions)}); the chest is treasure_1.2`);
+    { const sc = J('scenes/sc_q9_second_wind_badge.json'); const q9s2 = J('quests.json').quests.find(q => q.id === 'q9_second_wind').objectives.find(o => o.id === 's2');
+      check(sc.once === true && sc.lines.length > 0 && q9s2.objective.scene === 'sc_q9_second_wind_badge' && idx.scenes.includes('sc_q9_second_wind_badge'),
+        `q9 badge scene (v3.9.5): sc_q9_second_wind_badge is in the build (once, ${sc.lines.length} lines) and is quest step s2's scene`); }
     E.questEvent(quests, x, { type: 'arrive', graph: 'demon_castle_2', node: 'deadend_1' });
     check(E.currentStep(q9, st)?.id === 's2', 'q9: arriving somewhere else in demon_castle_2 does not pick up the badge');
     E.questEvent(quests, x, { type: 'arrive', graph: 'demon_castle_2', node: 'treasure_1' });
@@ -235,10 +238,18 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
   check(rows.length === 81 && core.length === 81 && !gbad.length, `gear: 81 pieces (tiers 1–9 × weapon/armor/shield × common/fine/heroic) match gear_items.csv: ids, stats, names, prices, shop town, perks${gbad.length ? ' — bad: ' + gbad.slice(0, 6).join(', ') : ''}`);
   check(['wood_sword', 'wood_sword_f', 'horn_dagger', 'stinger', 'petal_cloak_f', 'beeswax'].every(id => SHOP.some(g => g.id === id)) && SHOP.find(g => g.id === 'horn_dagger').startStreak === 1,
     'gear: tier 1–2 pieces keep their prototype ids (old saves) and the dagger keeps +1 streak');
-  check(rows.filter(r => !r.perk).every(r => !('perk' in byCsv[r.id])) && core.filter(g => g.namePlaceholder).every(g => g.rarity === 'heroic' && /^Heroic /.test(g.en)) && core.filter(g => g.namePlaceholder).length === 24,
-    `gear: blank perks are left out; the 24 generic "Heroic …" names are flagged namePlaceholder`);
-  const realmTown = {}; for (const gm of idx.graphs.filter(g => g.kind === 'overworld')) { const g = J(`graphs/${gm.id}.json`); for (const n of g.nodes) if (n.kind === 'town' || n.kind === 'village') realmTown[`${g.id}/${n.id}`] = [g.realm, E.shopTownOf(g, n)]; }
-  check(Object.values(realmTown).length === 21 && Object.values(realmTown).every(([r, t]) => r === t), `shops: every town and village sells its realm town's tier (${Object.keys(realmTown).length} settlements)`);
+  const heroic = core.filter(g => g.rarity === 'heroic'); const unplaced = rows.filter(r => r.rarity === 'heroic' && /^none/.test(r.source));
+  check(rows.filter(r => !r.perk).every(r => !('perk' in byCsv[r.id])) && !core.some(g => g.namePlaceholder) && heroic.length === 27
+    && heroic.every(g => g.zh && g.en && !/^Heroic /.test(g.en) && !/^英雄/.test(g.zh) && /[\u4e00-\u9fff]/.test(g.zh)) && new Set(heroic.map(g => g.en)).size === 27,
+    `gear (v3.9.5): blank perks are left out; all 27 heroic pieces have real bilingual names, no "Heroic …" / 英雄… placeholders (${heroic.slice(0, 4).map(g => `${g.zh} ${g.en}`).join(', ')} …)`);
+  check(unplaced.length === 24 && unplaced.every(r => !r.perk && !byCsv[r.id].shop) && byCsv.armor_t1_heroic?.en === 'Bunny-Fur Vest' && byCsv.weapon_t9_heroic?.zh === '光明之剑',
+    `gear (v3.9.5): the 24 heroic pieces with source "none in the spec" are named but have no perk and are not sold (${unplaced.length})`);
+  check(rows.filter(r => r.rarity === 'fine').every(r => !r.perk), 'gear (v3.9.5): fine perks stay blank');
+  const settle = {}; for (const gm of idx.graphs.filter(g => g.kind === 'overworld')) { const g = J(`graphs/${gm.id}.json`); for (const n of g.nodes) if (n.kind === 'town' || n.kind === 'village') settle[`${g.id}/${n.id}`] = [g.realm, n.kind, E.smithTownOf(g, n)]; }
+  const towns_ = Object.values(settle).filter(v => v[1] === 'town'), villages_ = Object.entries(settle).filter(([, v]) => v[1] === 'village');
+  check(Object.keys(settle).length === 21 && towns_.length === 9 && towns_.every(([r, , t]) => r === t), `shops: each realm's town has the blacksmith of its own tier (${towns_.length} towns)`);
+  check(villages_.length === 12 && villages_.every(([, v]) => v[2] === null) && E.shopTownOf === undefined,
+    `shops (v3.9.5): villages have no smith, so they sell NO gear (${villages_.length} villages: ${villages_.map(([k]) => k).slice(0, 4).join(', ')} …); shopTownOf is gone`);
   const open = { meadow: true, forest: true };
   for (let t = 1; t <= 9; t++) { const shelf = E.shopShelf(SHOP, t, l => !!open[l]); const cores = shelf.filter(g => g.slot !== 'charm');
     const want = rows.filter(r => r.shop === 'True' && +r.tier === t).map(r => byCsv[r.id].id).sort();
@@ -246,6 +257,27 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
       `shop town ${t}: blacksmith sells the tier-${t} common set only (${cores.map(g => `${g.id} ${g.price}`).join(', ')}) + open charms`); }
   check(E.shopShelf(SHOP, 2, () => false).every(g => g.slot !== 'charm' || !g.shopRequires), 'shop: a charm with shopRequires stays hidden until its location opens');
   check([3, 5, 9].every(t => E.chestTier(core, t) === t) && E.chestTier(core, 12) === 9 && E.chestTier(core, 1) === 1, 'chests: fine gear comes from the realm\'s own tier (tiers 1–9; capped at 9)');
+  // ---- v3.9.5 heroic sources: the guaranteed realm-boss chest (bossReward.heroic) and one quest; nothing else ----
+  const GID = Object.fromEntries(SHOP.map(g => [g.id, g])); const reward = {};
+  for (let r = 3; r <= 9; r++) { const c = JSON.parse(readFileSync(path.join(ROOT, `public/world/content/realm_${r}.json`), 'utf8')); const bl = c.locations.filter(l => l.bossReward);
+    reward[r] = { n: bl.length, heroic: bl[0]?.bossReward?.heroic ?? null, zone: bl[0]?.id, boss: c.enemies.find(e => e.kind === 'realmboss')?.id }; }
+  check(reward[3].n === 1 && reward[3].heroic === 'shield_t3_heroic' && GID.shield_t3_heroic?.slot === 'shield' && GID.shield_t3_heroic.rarity === 'heroic' && GID.shield_t3_heroic.en === 'Mimic Shield',
+    `realm 3 boss chest: bossReward.heroic = shield_t3_heroic, the Mimic Shield in the gear catalogue (${reward[3].zone}, ${reward[3].heroic})`);
+  check(!('thorns' in (GID.shield_t3_heroic || {})) && GID.shield_t3_heroic.perk === 'Thorns 25%' && !Object.keys(GID.shield_t5_heroic || {}).some(k => /leak|block/i.test(k)),
+    'Mimic Shield Thorns and Turtle-Shell perk are text only (no battle field)');
+  const charms = { 4: ['goblin_crown', 'Goblin Crown'], 5: ['hydra_scale', 'Hydra Scale'], 6: ['cure_flask', 'Cure Flask'], 7: ['griffin_feather', 'Griffin Feather'], 8: ['champion_belt', 'Champion Belt'] };
+  for (const [r, [id, en]] of Object.entries(charms)) { const g = GID[id];
+    check(reward[r].n === 1 && reward[r].heroic === id && g && g.slot === 'charm' && g.rarity === 'heroic' && g.tier === +r && g.en === en && /[\u4e00-\u9fff]/.test(g.zh) && !g.shop && g.perk,
+      `realm ${r} boss chest gives its charm: ${reward[r].zone} bossReward.heroic = ${reward[r].heroic} → shop.json charm ${g ? `${g.zh} ${g.en} (${g.perk})` : 'MISSING'}`); }
+  check(reward[9].n === 1 && reward[9].heroic === null, `realm 9 boss chest gives no heroic piece (${reward[9].zone})`);
+  const q5 = quests.find(q => q.id === 'q5_fog_bottle'); const qGear = quests.flatMap(q => (q.rewards?.gear || []).filter(g => g.rarity === 'heroic').map(g => `${q.id}:${g.id}`));
+  check(JSON.stringify(qGear) === JSON.stringify(['q5_fog_bottle:shield_t5_heroic']) && GID.shield_t5_heroic?.en === 'Turtle-Shell Shield' && q5.rewards.gear[0].id === 'shield_t5_heroic',
+    `q5_fog_bottle gives shield_t5_heroic (Turtle-Shell Shield), the only quest heroic piece (${qGear.join(', ')})`);
+  const LOCS = JSON.parse(readFileSync(path.join(ROOT, 'src/data/locations.json'), 'utf8')); const cls = (Array.isArray(LOCS) ? LOCS : LOCS.locations).map(l => l.bossReward?.heroic).filter(Boolean);
+  const srcs = {}; for (const h of [...cls, ...Object.values(reward).map(r => r.heroic).filter(Boolean), ...qGear.map(x => x.split(':')[1])]) srcs[h] = (srcs[h] || 0) + 1;
+  const csvGid = Object.fromEntries(rows.map(r => [r.id, byCsv[r.id].id]));
+  check(Object.values(srcs).every(n => n === 1) && unplaced.every(r => !srcs[csvGid[r.id]]) && rows.filter(r => r.rarity === 'heroic' && !/^none/.test(r.source)).every(r => srcs[csvGid[r.id]] === 1)
+    && Object.keys(srcs).every(id => GID[id]), `heroic sources: each placed piece has exactly one source, the 24 unplaced have none, every source names real gear (${Object.keys(srcs).sort().join(', ')})`);
 }
 
 export async function worldTests({ browser, BASE, check, log = console.log, shots = '' }) {
@@ -520,7 +552,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     await tid('back').click().catch(() => {}); return ids; };
   await edit(s => { s.gold = 5000; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
-  for (const [g, n, t] of [['realm_3', 'entry_town', 3], ['realm_5', 'entry_town', 5], ['realm_7', 'town_3', 7], ['realm_9', 'village_3x', 9]]) {
+  for (const [g, n, t] of [['realm_3', 'entry_town', 3], ['realm_5', 'entry_town', 5], ['realm_7', 'entry_town', 7], ['realm_9', 'entry_town', 9]]) {
     const ids = await shopAt(g, n); const core = ids.filter(id => /^(weapon|armor|shield)_t\d_|^(wood_sword|cloth_tunic|potlid|stinger|petal_cloak|beeswax)$/.test(id));
     check(['weapon', 'armor', 'shield'].every(sl => core.includes(`${sl}_t${t}_common`)) && core.length === 3,
       `shop ${g}/${n}: sells the tier-${t} weapon, armor and shield, nothing from other tiers (${core.join(', ')})`); }
@@ -530,6 +562,59 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     await tid('back').click().catch(() => {}); await keep('after a tier-5 purchase'); }
   { const ids = await shopAt('realm_1', 'village');
     check(ids.includes('wood_sword') && !ids.some(id => /_t\d_/.test(id)), `shop realm 1 village: still the tier-1 set (${ids.join(', ')})`); }
+  // ---- v3.9.5: villages have no smith: their item shop sells Feathers and potions, but no gear and no charms ----
+  for (const [g, n] of [['realm_3', 'village_1x'], ['realm_7', 'town_3'], ['realm_9', 'village_3x']]) {
+    const ids = await shopAt(g, n); await tid('go-shop').click(); await tid('shop').waitFor();
+    const note = await tid('shop-no-smith').count(), fea = await tid('buy-feather').count(); await tid('back').click().catch(() => {});
+    check(ids.length === 0 && note === 1 && fea === 1, `shop ${g}/${n} (village): no smith, so no gear or charms for sale (${ids.length} gear cards); Feathers still sold`); }
+  // ---- v3.9.5: the guaranteed realm-boss chest gives the realm's heroic piece (realm 3: Mimic Shield; realms 4–8: their charm) ----
+  await edit(s => { s.level = 70; s.hp = 9999; s.mp = 999; s.gold = 5000; for (const id of ['weapon_t9_common', 'armor_t9_common', 'shield_t9_common']) if (!s.gear.includes(id)) s.gear.push(id);
+    s.equip.weapon = 'weapon_t9_common'; s.equip.armor = 'armor_t9_common'; s.equip.shield = 'shield_t9_common'; s.gear = s.gear.filter(id => !['shield_t3_heroic', 'goblin_crown', 'hydra_scale', 'cure_flask', 'griffin_feather', 'champion_belt'].includes(id)); });
+  await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
+  for (const [r, zone, want] of [[3, 'night_bazaar', 'shield_t3_heroic'], [4, 'goblin_school', 'goblin_crown'], [5, 'hydra_s_lair', 'hydra_scale'], [6, 'moonlit_graveyard', 'cure_flask'], [7, 'griffin_summit', 'griffin_feather'], [8, 'grand_colosseum', 'champion_belt']]) {
+    await bgCall(`() => window.__proto.world.goto('realm_${r}', 'entry_town')`); await skipScenes(3);
+    await p.evaluate(z => { window.__fightDone = null; window.__proto.world.fight(z, true).then(o => { window.__fightDone = o; }); }, zone);
+    await tid('battle').waitFor({ state: 'attached', timeout: 15000 }); const boss = (await p.evaluate(() => window.__proto.foes()))[0]?.id;
+    let out = 'none'; try { out = await battle(); } catch (e) { out = 'error ' + e.message; }
+    for (let i = 0; i < 40 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); }
+    s = await sv();
+    check(out === 'win' && s.gear.includes(want), `realm ${r} realm-boss chest (${zone}, ${boss}): ${want} is in the bag after the win (${out}; ${s.gear.filter(id => id === want).join('') || 'missing'})`);
+  }
+  await keep('after realm-boss chests (realm 3-8 heroic pieces)');
+  // ---- v3.9.5: q5_fog_bottle turn-in gives shield_t5_heroic (Turtle-Shell Shield), its only source ----
+  { const q5 = JSON.parse(readFileSync(path.join(ROOT, 'src/data/world/quests.json'), 'utf8')).quests.find(q => q.id === 'q5_fog_bottle'); const last = q5.objectives.length - 1;
+    await edit(s => { s.gear = s.gear.filter(id => id !== 'shield_t5_heroic'); s.storyQuests.q5_fog_bottle = { s: 'ready', at: Date.now(), step: 0, obj: {} }; if (!s.world.flags.includes('met_madame_mist')) s.world.flags.push('met_madame_mist'); });
+    await p.evaluate(l => { const k = 'chinese-rpg-proto-v4'; const s = JSON.parse(localStorage.getItem(k)); s.storyQuests.q5_fog_bottle.step = l; localStorage.setItem(k, JSON.stringify(s)); }, last);
+    await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 }); await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
+    await bgCall("() => window.__proto.world.goto('realm_5', 'entry_town', true)", 60); await skipScenes(6);
+    s = await sv(); check(s.storyQuests.q5_fog_bottle?.s === 'completed' && s.gear.includes('shield_t5_heroic'), `q5_fog_bottle turn-in gives shield_t5_heroic, the Turtle-Shell Shield (${s.storyQuests.q5_fog_bottle?.s}; ${s.gear.includes('shield_t5_heroic')})`); }
+  // ---- v3.9.5: the q9 badge scene plays once at demon_castle_2/treasure_1 (event treasure_1.1) ----
+  { await edit(s => { delete s.storyQuests.q9_second_wind; s.scenesSeen = (s.scenesSeen || []).filter(x => x !== 'sc_q9_second_wind_badge'); if (!s.world.flags.includes('pact_elves')) s.world.flags.push('pact_elves');
+      s.world.eventsDone = s.world.eventsDone.filter(e => !e.startsWith('demon_castle_2/treasure_1')); });
+    await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 }); await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
+    await p.evaluate(() => window.__proto.world.accept('q9_second_wind')); await bgCall("() => window.__proto.world.goto('realm_9', 'entry_town', true)", 60); await skipScenes(6);
+    const seenIds = []; const watch = async src => { await p.evaluate(src => { window.__gd = false; (0, eval)(src)().finally(() => { window.__gd = true; }); }, src);
+      for (let i = 0; i < 80; i++) { const c = await scene(); if (c) { if (!seenIds.includes(c.id)) seenIds.push(c.id); await tid('scene-skip').click().catch(() => {}); }
+        else if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); else if (await p.evaluate(() => window.__gd)) break; await p.waitForTimeout(150); } };
+    const step0 = (await sv()).storyQuests.q9_second_wind?.step;
+    await watch("() => window.__proto.world.goto('demon_castle_2', 'treasure_1', true)"); const first = [...seenIds]; s = await sv();
+    const st1 = s.storyQuests.q9_second_wind; const cur = await p.evaluate(() => { const w = window.__proto.world; const q = w.W.quests.find(q => q.id === 'q9_second_wind'); return w.E.currentStep(q, w.quests().q9_second_wind)?.id; });
+    check(first.includes('sc_q9_second_wind_badge') && s.scenesSeen.includes('sc_q9_second_wind_badge') && s.world.eventsDone.includes('demon_castle_2/treasure_1.1') && st1?.step === step0 + 1 && cur === 's3',
+      `q9 badge: arriving at demon_castle_2/treasure_1 with q9_second_wind active plays sc_q9_second_wind_badge in the browser and picks up the badge (scenes: ${first.join(', ') || 'none'}; step → ${cur})`);
+    seenIds.length = 0; const goldB = s.gold;
+    const t1 = JSON.parse(readFileSync(path.join(ROOT, 'public/world/graphs/demon_castle_2.json'), 'utf8')); const nb = t1.edges.find(e => e.from === 'treasure_1' || e.to === 'treasure_1'); const other = nb.from === 'treasure_1' ? nb.to : nb.from;
+    await watch(`() => window.__proto.world.goto('demon_castle_2', '${other}', true)`); seenIds.length = 0;
+    await watch("() => window.__proto.world.goto('demon_castle_2', 'treasure_1', true)"); s = await sv();
+    check(!seenIds.includes('sc_q9_second_wind_badge') && s.world.eventsDone.includes('demon_castle_2/treasure_1.2'), `q9 badge: the scene plays once; the next arrival opens the chest instead (scenes: ${seenIds.join(', ') || 'none'}; gold ${goldB} → ${s.gold})`);
+    await keep('after the q9 badge scene'); }
+  // ---- v3.9.5 save compatibility: old ids still load (no gear id changed; the never-granted mimic_shield maps to shield_t3_heroic) ----
+  { await edit(s => { s.gear = s.gear.filter(id => id !== 'shield_t3_heroic'); s.gear.push('mimic_shield', 'armor_t1_heroic', 'horn_dagger', 'queens_crown'); s.equip.shield = 'mimic_shield'; s.equip.armor = 'armor_t1_heroic'; });
+    await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+    await bgCall("() => window.__proto.world.goto('realm_1', 'village', true)", 60); await skipScenes(4); await tid('go-equip').click(); await tid('equip').waitFor({ timeout: 5000 });
+    const eqTxt = await tid('equip').innerText(); s = await sv(); await tid('back').click().catch(() => {});
+    check(s.gear.includes('shield_t3_heroic') && !s.gear.includes('mimic_shield') && s.equip.shield === 'shield_t3_heroic' && s.equip.armor === 'armor_t1_heroic' && /Mimic Shield/.test(eqTxt) && /Bunny-Fur Vest/.test(eqTxt) && /Rabbit-Horn Dagger/.test(eqTxt),
+      `save compatibility: an old save loads; mimic_shield → shield_t3_heroic, armor_t1_heroic now shows as Bunny-Fur Vest (${s.equip.shield}, ${s.equip.armor})`); }
   // ---- words step (quests.md §2a): correct battle answers to pool L2.1 count; practice does not ----
   await edit(s => { s.storyQuests.q2_bubble_lesson = { s: 'active', at: Date.now(), step: 1, obj: { s2: 3, s3: 0 } }; });
   await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });

@@ -6054,6 +6054,7 @@
      "objective": {
       "type": "collect",
       "item": "old_hero_badge",
+      "scene": "sc_q9_second_wind_badge",
       "desyType": "pickup",
       "source": "nodeItem"
      },
@@ -6063,7 +6064,7 @@
       "position": "castle_level_2_dead_end",
       "ref": "demon_castle_2/treasure_1"
      },
-     "note": "Her old badge, lost 50 years ago (quest item before the chest)."
+     "note": "Her old badge, lost 50 years ago (quest item before the chest). Step scene sc_q9_second_wind_badge plays on arrival."
     },
     {
      "id": "s3",

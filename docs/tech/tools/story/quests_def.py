@@ -508,7 +508,7 @@ q(id="q9_second_wind", realm=9, zone="demon_king_s_gate", type="fetch", story="m
   title=("白奶奶最后一课", "Granny Bai's Last Lesson"), giver="granny_bai", giverAt=Z("demon_king_s_gate", "town", "entry_town"), hook=None,
   turnIn="giver", requires={"any": [{"flag": "pact_elves"}, {"flag": "pact_dwarves"}, {"flag": "pact_dragons"}]},
   steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, Z("demon_king_s_gate", "town", "entry_town"), "'A hero is someone who gets up again.'"),
-         ("treasure", {"type": "pickup", "item": "old_hero_badge"}, Z("demon_king_s_gate", "chest", "castle_level_2_dead_end", "demon_castle_2/treasure_1"), "Her old badge, lost 50 years ago (quest item before the chest)."),
+         ("treasure", {"type": "pickup", "item": "old_hero_badge", "scene": "sc_q9_second_wind_badge"}, Z("demon_king_s_gate", "chest", "castle_level_2_dead_end", "demon_castle_2/treasure_1"), "Her old badge, lost 50 years ago (quest item before the chest). Step scene sc_q9_second_wind_badge plays on arrival."),
          ("quest_offer", {"type": "words", "pool": "L9.1", "n": 12}, Z("demon_king_s_gate", "town", "entry_town"), "Answer 12 Gate (L9.1) words correctly in battles."),
          ("quest_offer", {"type": "turn_in", "npc": "granny_bai"}, Z("demon_king_s_gate", "town", "entry_town"), "She teaches 再起 Second Wind (spec: Castle quest).")],
   rewards=dict(G=3, items={}, L=30, skills=["second_wind"]),

@@ -19,6 +19,8 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 
 The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and exit edges, FNV-1a seeds, escort and words steps) is merged into [data/world/](data/world/) and [data/quests/](data/quests/), and the game reads it (graph mode, `?world=graph`). The spec text covers it: combat-spec §12.3–§12.4 and world-graph §0.00, §1.1, §4.4, §12.1, §14.6.
 
+v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), heroic gear has exactly one source per piece (realm-boss chests, with charms for realms 4–8, and quest `q5_fog_bottle`; the other 24 heroic pieces are named but not placed), and `q9_second_wind` step 2 plays the scene `sc_q9_second_wind_badge`. See [decisions.md](decisions.md) (Oct 10).
+
 ## Layout
 
 | folder | what | owner |
@@ -87,7 +89,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [data/items/economy_prices.csv](data/items/economy_prices.csv) — Shop prices and gold economy (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear.csv](data/items/gear.csv) — Weapons and armor by tier (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) — Heroic gear drops from bosses and elites (combat-spec table) · **Desy** · when changing these numbers
-- [data/items/gear_items.csv](data/items/gear_items.csv) — Game-ready gear catalogue, tiers 1–9: one row per piece (weapon/armor/shield × common/fine/heroic) with ids (`<slot>_t<tier>_<rarity>`, prototype ids for tiers 1–2), stat, shop price, price in G and in battles of gold, source and perk. Derived from gear.csv (§6.2) with no new numbers · **Desy** · when adding gear for realms 3–9 to the game (regenerate after a gear.csv change)
+- [data/items/gear_items.csv](data/items/gear_items.csv) — Game-ready gear catalogue, tiers 1–9: one row per piece (weapon/armor/shield × common/fine/heroic) with ids (`<slot>_t<tier>_<rarity>`, prototype ids for tiers 1–2), stat, shop price, price in G and in battles of gold, source and perk. Every heroic piece has a bilingual name; only the 3 the spec places have a source (realm-boss chests of realms 1 and 3, quest q5_fog_bottle), the other 24 say 'none in the spec'. Derived from gear.csv (§6.2) with no new numbers · **Desy** · when adding gear for realms 3–9 to the game (regenerate after a gear.csv change)
 
 ### Data: balance
 
@@ -116,6 +118,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 
 - [data/dialogue/sc_q1_hoe_offer.json](data/dialogue/sc_q1_hoe_offer.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q1_hoe_thanks.json](data/dialogue/sc_q1_hoe_thanks.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q9_second_wind_badge.json](data/dialogue/sc_q9_second_wind_badge.json) — q9_second_wind step 2 scene: Granny Bai's old badge, plays at demon_castle_2/treasure_1 (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r1_opening.json](data/dialogue/sc_r1_opening.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes

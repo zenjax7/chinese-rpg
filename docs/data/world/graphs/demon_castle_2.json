@@ -767,7 +767,7 @@
    },
    "do": [
     {
-     "dialogue": "demon_castle_2.treasure_1.step_q9_second_wind"
+     "scene": "sc_q9_second_wind_badge"
     }
    ]
   },
@@ -1076,12 +1076,6 @@
    {
     "speaker": "traveller",
     "en": "(quest step for q9_dragonlings: scene from data/dialogue)"
-   }
-  ],
-  "demon_castle_2.treasure_1.step_q9_second_wind": [
-   {
-    "speaker": "traveller",
-    "en": "(quest step for q9_second_wind: scene from data/dialogue)"
    }
   ],
   "demon_castle_2.story_1": [

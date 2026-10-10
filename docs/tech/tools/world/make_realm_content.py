@@ -21,6 +21,8 @@ BHP = {(int(r['tier']), r['boss_type']): r for r in csv.DictReader(open(D('data/
 HERO = {h['tier']: h for h in CD['hero_stats']}
 HEROIC = {h['tier']: h for h in CD['gear_heroic_drops']}
 TOWNS = json.load(open(D('data/spells_full.json'), encoding='utf-8'))['towns']
+# v3.9.5: gear catalogue (docs/data/items/gear_items.csv); game id = prototype_id or id, as tools/build_data.py builds it
+GEAR_BY_EN = {r['en']: (r.get('prototype_id') or '').strip() or r['id'] for r in csv.DictReader(open(D('data/gear_items.csv'), encoding='utf-8-sig')) if r['rarity'] == 'heroic'}
 MAN_P = os.path.join(SPRITES, 'manifest.json')
 MAN = json.load(open(MAN_P)) if os.path.exists(MAN_P) else {}
 ALIAS = MAN.get('_aliases', {})
@@ -68,7 +70,10 @@ def heroic(t):
     h = HEROIC[t]['heroic_drop']; m = re.match(r'(\S+)\s+(.+?)\s*\((.+)\)\s*$', h)
     if not m: return {"heroic": None, "zh": "", "en": "", "effect": "", "text": h.strip('() ')}   # realm 9: no heroic gear (cosmetics + title, game won)
     zh, en, eff = m.group(1), m.group(2), m.group(3)
-    return {"heroic": re.sub(r'[^a-z0-9]+', '_', en.lower().replace("'", '')).strip('_'), "zh": zh, "en": en, "effect": eff,
+    # §6.3 / §7.2: the realm-boss chest gives this piece (battle.ts openChest heroicGear -> GEAR[bossReward.heroic]). A weapon/armor/shield drop
+    # uses its gear_items.csv id (realm 3: Mimic Shield = shield_t3_heroic); charm-type drops (realms 4-8) keep a name id like queens_crown.
+    hid = GEAR_BY_EN.get(en) or re.sub(r'[^a-z0-9]+', '_', en.lower().replace("'", '')).strip('_')
+    return {"heroic": hid, "zh": zh, "en": en, "effect": eff,
             "text": f"{en} {zh} is yours!"}
 
 def rng(s): a, b = [int(x) for x in s.replace('–', '-').split('-')]; return [a, b]

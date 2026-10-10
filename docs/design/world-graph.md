@@ -118,7 +118,7 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `kind` | Meaning | Typical event | Save / rest | Notes |
 |---|---|---|---|---|
 | `town` | Main town of the realm | story on first visit | inn + save + all shops | `hub`, `town` (prices from towns.json G). One per realm, at the entry |
-| `village` | Outpost in a big realm | story | inn + save + item shop (sells Return Feathers) | No magic shop or smith: fly to a town with a Feather. Density rule (v3.9.1): 1 village in realms 3–5, 2 in realms 6–8, 3 in realm 9 |
+| `village` | Outpost in a big realm | story | inn + save + item shop (sells Return Feathers) | No magic shop or smith, so no gear or spells for sale: fly to a town with a Feather. Density rule (v3.9.1): 1 village in realms 3–5, 2 in realms 6–8, 3 in realm 9 |
 | `inn` | Inn or campfire (`campfire: true`) | story on first visit | rest + save | Every node is ≤ `maxHopsToInn` hops from an inn or town (3 in realms 1–3, 5 in 4–9). No Feathers for sale. Each boss has an **approach inn** next to its gate edge |
 | `waypoint` | Plain spot on a path | weighted (nothing / ambient / honey) | – | Replaces GameDev's `fight` node |
 | `fork` | Waypoint with 3+ edges | weighted | – | Kind is cosmetic (map icon); the loader treats it like a waypoint |
@@ -806,7 +806,7 @@ Run it with `python3 tools/world/validate_world.py [data_dir] [-v]` (the CI copy
 
 - **Content files:** `docs/data/world/content/realm_N.json` for N = 3…9 (`schema: realm_content/0.1`), listed in `index.json` `content` (`{"3": "content/realm_3.json", …}`). Realms 1–2 stay in GameDev's `src/data` tables (`tools/build_data.py`). Each file has `realm`, `title`, `G`, `maxNewPerBattle` (3), and the same row shapes as `src/data`:
   - `enemies[]`: `enemies.json` rows. Stats from `data/json/combat_data.json`, boss HP/ATK from `data/enemies/boss_hp.csv`, attack names from `data/json/enemies-art-roster.json`. `id` = `desyId` (the roster id the graphs and quests use).
-  - `locations[]`: `locations.json` rows, one per zone of the realm; `id` = zone id; `mcOptions`, `reviewSlots`, `pathFights` from `data/balance/realm_location_difficulty.csv`; `bossReward` (heroic gear) on the realm-boss zone.
+  - `locations[]`: `locations.json` rows, one per zone of the realm; `id` = zone id; `mcOptions`, `reviewSlots`, `pathFights` from `data/balance/realm_location_difficulty.csv`; `bossReward` on the realm-boss zone: its combat-spec §6.3 heroic piece, which the realm-boss chest gives (combat-spec §7.2). `bossReward.heroic` is the game's gear id when the piece is in `data/items/gear_items.csv` (realm 3: `shield_t3_heroic`, Mimic Shield); the charm-type drops of realms 4–8 keep name ids (`goblin_crown` …), like `queens_crown`; realm 9 has none.
   - `pools{}`: zone id → curriculum ids, from `data/curriculum/curriculum_location_pools.csv` in authored order.
   - `items[]`: `items.json` rows for every pool item (`data/curriculum/curriculum.csv`).
   - GameDev-owned placeholders: emoji, color, bg, `headAnchor` 0.1, `sprite` (the id when no sheet exists, i.e. emoji fallback), `mech` `{}`, roster weights 1, `altZh`/`altEn` `[]`.
