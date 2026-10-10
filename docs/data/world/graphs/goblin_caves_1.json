@@ -966,6 +966,21 @@
    "node": "treasure_3",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q4_lost_schoolbag"
+   },
+   "do": [
+    {
+     "dialogue": "goblin_caves_1.treasure_3.step_q4_lost_schoolbag"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -974,7 +989,7 @@
    ]
   },
   {
-   "id": "treasure_3.2",
+   "id": "treasure_3.3",
    "node": "treasure_3",
    "on": "enter",
    "once": false,
@@ -1000,6 +1015,12 @@
     "speaker": "xiaolong",
     "en": "(story beat to write)"
    }
+  ],
+  "goblin_caves_1.treasure_3.step_q4_lost_schoolbag": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q4_lost_schoolbag: scene from data/dialogue)"
+   }
   ]
  },
  "npcs": {
@@ -1007,6 +1028,12 @@
    "name": {
     "zh": "小龙",
     "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

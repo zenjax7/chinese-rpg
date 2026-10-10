@@ -1,0 +1,430 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://zenjax7.github.io/chinese-rpg/schemas/world/realm_content.schema.json",
+ "title": "v3.9.2 game content for one realm (3-9): enemies, locations (= zones), word pools, items",
+ "type": "object",
+ "properties": {
+  "_note": {
+   "type": "string"
+  },
+  "schema": {
+   "const": "realm_content/0.1"
+  },
+  "version": {
+   "type": "string"
+  },
+  "realm": {
+   "type": "integer",
+   "minimum": 3,
+   "maximum": 9
+  },
+  "title": {
+   "type": "object",
+   "properties": {
+    "zh": {
+     "type": "string"
+    },
+    "en": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "en"
+   ],
+   "additionalProperties": false
+  },
+  "G": {
+   "type": "number"
+  },
+  "maxNewPerBattle": {
+   "const": 3
+  },
+  "enemies": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "description": "src/data/enemies.json row (GameDev build_data.py shape) + shoutZh/shoutItem/priority",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "desyId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "sprite": {
+      "type": "string"
+     },
+     "spriteTint": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     },
+     "headAnchor": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "zh": {
+      "type": "string"
+     },
+     "py": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     },
+     "emoji": {
+      "type": "string"
+     },
+     "color": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+     },
+     "level": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "kind": {
+      "enum": [
+       "normal",
+       "elite",
+       "locboss",
+       "realmboss"
+      ]
+     },
+     "role": {
+      "enum": [
+       "normal",
+       "elite",
+       "boss"
+      ]
+     },
+     "hp": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "atk": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "def_": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "exp": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "gold": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "chestRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "minions": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     },
+     "mech": {
+      "type": "object"
+     },
+     "attackZh": {
+      "type": "string"
+     },
+     "attackEn": {
+      "type": "string"
+     },
+     "special": {
+      "type": "string"
+     },
+     "group": {
+      "type": "string"
+     },
+     "shoutZh": {
+      "type": "string"
+     },
+     "shoutItem": {
+      "type": "string"
+     },
+     "priority": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "desyId",
+     "sprite",
+     "zh",
+     "en",
+     "tier",
+     "level",
+     "kind",
+     "hp",
+     "atk",
+     "def_",
+     "exp",
+     "gold",
+     "chestRate",
+     "minions",
+     "mech"
+    ],
+    "additionalProperties": false
+   },
+   "minItems": 1
+  },
+  "locations": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "description": "src/data/locations.json row; id = zones.json zone id",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "name": {
+      "type": "string"
+     },
+     "zh": {
+      "type": "string"
+     },
+     "emoji": {
+      "type": "string"
+     },
+     "tier": {
+      "type": "integer"
+     },
+     "realm": {
+      "type": "integer"
+     },
+     "G": {
+      "type": "number"
+     },
+     "recLevel": {
+      "type": "array",
+      "items": {
+       "type": "integer"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "enemiesPerBattle": {
+      "type": "array",
+      "items": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "mcOptions": {
+      "type": "integer",
+      "minimum": 2
+     },
+     "reviewSlots": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "pathFights": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "maxNewPerBattle": {
+      "const": 3
+     },
+     "roster": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "properties": {
+        "enemy": {
+         "type": "string",
+         "pattern": "^[a-z0-9_]+$"
+        },
+        "weight": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        }
+       },
+       "required": [
+        "enemy",
+        "weight"
+       ],
+       "additionalProperties": false
+      }
+     },
+     "boss": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "unlockRequires": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^[a-z0-9_]+$"
+      }
+     },
+     "bg": {
+      "type": "string"
+     },
+     "bossReward": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "packs": {
+      "type": "object"
+     },
+     "scripted": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+       }
+      }
+     },
+     "elite": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "desyPool": {
+      "type": "string",
+      "pattern": "^L[1-9]\\.[1-9]$"
+     },
+     "bossKind": {
+      "enum": [
+       "locboss",
+       "realmboss"
+      ]
+     },
+     "bossNode": {
+      "$ref": "common.schema.json#/$defs/nodeRef"
+     }
+    },
+    "required": [
+     "id",
+     "tier",
+     "G",
+     "enemiesPerBattle",
+     "mcOptions",
+     "reviewSlots",
+     "maxNewPerBattle",
+     "roster",
+     "boss",
+     "elite",
+     "desyPool"
+    ],
+    "additionalProperties": false
+   },
+   "minItems": 1
+  },
+  "pools": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "array",
+    "items": {
+     "type": "string",
+     "pattern": "^C[0-9]{3,4}$"
+    },
+    "minItems": 1
+   }
+  },
+  "items": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "description": "src/data/items.json row",
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^C[0-9]{3,4}$"
+     },
+     "zh": {
+      "type": "string"
+     },
+     "trad": {
+      "type": "string"
+     },
+     "py": {
+      "type": "string"
+     },
+     "en": {
+      "type": "string"
+     },
+     "enPrimary": {
+      "type": "string"
+     },
+     "type": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "topic": {
+      "type": "string"
+     },
+     "loc": {
+      "type": "string"
+     },
+     "speaking": {
+      "type": "boolean"
+     },
+     "reading": {
+      "type": "boolean"
+     },
+     "slice": {
+      "type": "boolean"
+     },
+     "altZh": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "altEn": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "id",
+     "zh",
+     "py",
+     "en",
+     "loc"
+    ],
+    "additionalProperties": false
+   }
+  }
+ },
+ "required": [
+  "schema",
+  "realm",
+  "maxNewPerBattle",
+  "enemies",
+  "locations",
+  "pools",
+  "items"
+ ],
+ "additionalProperties": false
+}

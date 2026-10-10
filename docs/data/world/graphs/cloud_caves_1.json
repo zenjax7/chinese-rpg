@@ -645,23 +645,13 @@
    "node": "miniboss_1",
    "on": "enter",
    "once": true,
-   "outcome": "miniboss",
+   "outcome": "story",
    "cond": {
     "questActive": "q7_glacier_roses"
    },
    "do": [
     {
-     "fight": {
-      "enemies": [
-       "cliff_golem",
-       "harpy"
-      ],
-      "kind": "miniboss"
-     },
-     "quest": "q7_glacier_roses"
-    },
-    {
-     "setFlag": "q7_glacier_roses.s5"
+     "dialogue": "cloud_caves_1.miniboss_1.step_q7_glacier_roses"
     }
    ]
   },
@@ -1067,6 +1057,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "cloud_caves_1.miniboss_1.step_q7_glacier_roses": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_glacier_roses: scene from data/dialogue)"
    }
   ],
   "cloud_caves_1.story_1.step_q7_glacier_roses": [

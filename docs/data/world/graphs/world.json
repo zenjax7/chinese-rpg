@@ -323,5 +323,131 @@
  ],
  "events": [],
  "dialogue": {},
- "npcs": {}
+ "npcs": {},
+ "realms": [
+  {
+   "realm": 1,
+   "node": "realm_1",
+   "graph": "realm_1",
+   "entry": "village",
+   "enterEdge": "x_realm_1",
+   "exitEdge": "exit_village",
+   "linkEdge": null,
+   "unlock": null,
+   "realmBossZone": "warren",
+   "next": 2
+  },
+  {
+   "realm": 2,
+   "node": "realm_2",
+   "graph": "realm_2",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_2",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w12",
+   "unlock": {
+    "bossDefeated": "warren"
+   },
+   "realmBossZone": "great_hive",
+   "next": 3
+  },
+  {
+   "realm": 3,
+   "node": "realm_3",
+   "graph": "realm_3",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_3",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w23",
+   "unlock": {
+    "bossDefeated": "great_hive"
+   },
+   "realmBossZone": "night_bazaar",
+   "next": 4
+  },
+  {
+   "realm": 4,
+   "node": "realm_4",
+   "graph": "realm_4",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_4",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w34",
+   "unlock": {
+    "bossDefeated": "night_bazaar"
+   },
+   "realmBossZone": "goblin_school",
+   "next": 5
+  },
+  {
+   "realm": 5,
+   "node": "realm_5",
+   "graph": "realm_5",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_5",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w45",
+   "unlock": {
+    "bossDefeated": "goblin_school"
+   },
+   "realmBossZone": "hydra_s_lair",
+   "next": 6
+  },
+  {
+   "realm": 6,
+   "node": "realm_6",
+   "graph": "realm_6",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_6",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w56",
+   "unlock": {
+    "bossDefeated": "hydra_s_lair"
+   },
+   "realmBossZone": "moonlit_graveyard",
+   "next": 7
+  },
+  {
+   "realm": 7,
+   "node": "realm_7",
+   "graph": "realm_7",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_7",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w67",
+   "unlock": {
+    "bossDefeated": "moonlit_graveyard"
+   },
+   "realmBossZone": "griffin_summit",
+   "next": 8
+  },
+  {
+   "realm": 8,
+   "node": "realm_8",
+   "graph": "realm_8",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_8",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w78",
+   "unlock": {
+    "bossDefeated": "griffin_summit"
+   },
+   "realmBossZone": "grand_colosseum",
+   "next": 9
+  },
+  {
+   "realm": 9,
+   "node": "realm_9",
+   "graph": "realm_9",
+   "entry": "entry_town",
+   "enterEdge": "x_realm_9",
+   "exitEdge": "exit_entry_town",
+   "linkEdge": "w89",
+   "unlock": {
+    "bossDefeated": "grand_colosseum"
+   },
+   "realmBossZone": "throne_hall",
+   "next": null
+  }
+ ]
 }

@@ -17,7 +17,7 @@
   "battle": "bg_battle_r1"
  },
  "_note": "Hand-authored example (17 nodes, 3 zones = the 3 locations L1.1-L1.3). Each zone ends at a boss node behind a gate edge (patrol rule, no random battles). Grass edges carry the random battles; 'steps' = encounter rolls along the edge. Prototype mode: the prototype's single 'meadow' location = this graph with all 3 zones on the meadow pool (see world-graph.md §9).",
- "edgeIdxMax": 18,
+ "edgeIdxMax": 19,
  "aspect": 1.61,
  "nodes": [
   {
@@ -469,6 +469,18 @@
    "patrol": true,
    "terrain": "boss_approach",
    "idx": 18
+  },
+  {
+   "id": "exit_village",
+   "from": "village",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_1"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 19
   }
  ],
  "events": [

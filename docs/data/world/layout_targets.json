@@ -1,6 +1,6 @@
 {
  "_note": "Per-realm layout targets used by build/world/world_gen.py. nodes = overworld + dungeon levels (town hub screens are not graphs).",
- "version": "v3.9.1",
+ "version": "v3.9.2",
  "realms": {
   "2": {
    "nodes": 25,

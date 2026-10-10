@@ -16,7 +16,7 @@
   "map": "bg_map_realm_3",
   "battle": "bg_battle_r3"
  },
- "edgeIdxMax": 27,
+ "edgeIdxMax": 28,
  "aspect": 2.117,
  "nodes": [
   {
@@ -697,6 +697,18 @@
    "steps": 1,
    "terrain": "road",
    "idx": 27
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_3"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 28
   }
  ],
  "events": [

@@ -497,24 +497,13 @@
    "node": "miniboss_1",
    "on": "enter",
    "once": true,
-   "outcome": "miniboss",
+   "outcome": "story",
    "cond": {
     "questActive": "q5_fog_bottle"
    },
    "do": [
     {
-     "fight": {
-      "enemies": [
-       "swamp_wisp",
-       "bog_monster",
-       "bog_lizard"
-      ],
-      "kind": "miniboss"
-     },
-     "quest": "q5_fog_bottle"
-    },
-    {
-     "setFlag": "q5_fog_bottle.s3"
+     "dialogue": "hydra_lair_2.miniboss_1.step_q5_fog_bottle"
     }
    ]
   },
@@ -677,6 +666,12 @@
     "en": "Let's keep going!"
    }
   ],
+  "hydra_lair_2.miniboss_1.step_q5_fog_bottle": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_fog_bottle: scene from data/dialogue)"
+   }
+  ],
   "hydra_lair_2.story_1": [
    {
     "speaker": "xiaolong",
@@ -689,6 +684,12 @@
    "name": {
     "zh": "小龙",
     "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

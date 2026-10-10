@@ -563,6 +563,92 @@
      "name"
     ]
    }
+  },
+  "realms": {
+   "type": "array",
+   "minItems": 9,
+   "maxItems": 9,
+   "description": "v3.9.2, world graph only: one link per realm. Realm N+1 unlocks when realm N's realm-boss zone is cleared.",
+   "items": {
+    "type": "object",
+    "properties": {
+     "realm": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+     },
+     "node": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "graph": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "entry": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "enterEdge": {
+      "type": "string",
+      "description": "world edge (portal) from the realm node into the realm graph's entry node"
+     },
+     "exitEdge": {
+      "type": "string",
+      "description": "edge id in the realm graph: entry town/village -> this world node (kind exit, no battles)"
+     },
+     "linkEdge": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "world edge from the previous realm node to this one (null for realm 1)"
+     },
+     "unlock": {
+      "oneOf": [
+       {
+        "type": "null"
+       },
+       {
+        "type": "object",
+        "properties": {
+         "bossDefeated": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+         }
+        },
+        "required": [
+         "bossDefeated"
+        ],
+        "additionalProperties": false
+       }
+      ]
+     },
+     "realmBossZone": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+     },
+     "next": {
+      "type": [
+       "integer",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "realm",
+     "node",
+     "graph",
+     "entry",
+     "enterEdge",
+     "exitEdge",
+     "linkEdge",
+     "unlock",
+     "realmBossZone",
+     "next"
+    ],
+    "additionalProperties": false
+   }
   }
  },
  "required": [
@@ -596,6 +682,27 @@
      "level": {
       "minimum": 1
      }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "kind": {
+      "const": "world"
+     }
+    }
+   },
+   "then": {
+    "required": [
+     "realms"
+    ]
+   },
+   "else": {
+    "not": {
+     "required": [
+      "realms"
+     ]
     }
    }
   }

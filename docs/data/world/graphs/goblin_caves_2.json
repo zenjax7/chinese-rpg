@@ -635,6 +635,21 @@
    "node": "treasure_1",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q4_free_classmates"
+   },
+   "do": [
+    {
+     "dialogue": "goblin_caves_2.treasure_1.step_q4_free_classmates"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -643,7 +658,7 @@
    ]
   },
   {
-   "id": "treasure_1.2",
+   "id": "treasure_1.3",
    "node": "treasure_1",
    "on": "enter",
    "once": false,
@@ -722,6 +737,12 @@
    {
     "speaker": "xiaolong",
     "en": "(story beat to write)"
+   }
+  ],
+  "goblin_caves_2.treasure_1.step_q4_free_classmates": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q4_free_classmates: scene from data/dialogue)"
    }
   ]
  },

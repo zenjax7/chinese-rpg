@@ -438,6 +438,21 @@
    "id": "path_4.1",
    "node": "path_4",
    "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q6_lost_dog"
+   },
+   "do": [
+    {
+     "dialogue": "moonlit_crypt_1.path_4.step_q6_lost_dog"
+    }
+   ]
+  },
+  {
+   "id": "path_4.2",
+   "node": "path_4",
+   "on": "enter",
    "pick": [
     {
      "weight": 70,
@@ -545,6 +560,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "moonlit_crypt_1.path_4.step_q6_lost_dog": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q6_lost_dog: scene from data/dialogue)"
    }
   ],
   "moonlit_crypt_1.story_1.step_q6_lost_dog": [

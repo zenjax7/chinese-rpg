@@ -16,7 +16,7 @@
   "map": "bg_map_realm_2",
   "battle": "bg_battle_r2"
  },
- "edgeIdxMax": 11,
+ "edgeIdxMax": 12,
  "aspect": 5.273,
  "nodes": [
   {
@@ -311,6 +311,18 @@
    "steps": 1,
    "terrain": "grass",
    "idx": 11
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_2"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 12
   }
  ],
  "events": [
@@ -420,25 +432,30 @@
    "id": "path_4.1",
    "node": "path_4",
    "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q2_lost_panda"
+   },
+   "do": [
+    {
+     "dialogue": "realm_2.path_4.step_q2_lost_panda"
+    }
+   ]
+  },
+  {
+   "id": "path_4.2",
+   "node": "path_4",
+   "on": "enter",
    "pick": [
     {
-     "weight": 70,
+     "weight": 80,
      "outcome": "nothing",
      "once": false,
      "do": []
     },
     {
-     "weight": 15,
-     "outcome": "story",
-     "once": false,
-     "do": [
-      {
-       "dialogue": "ambient"
-      }
-     ]
-    },
-    {
-     "weight": 15,
+     "weight": 20,
      "outcome": "item",
      "cooldown": 4,
      "do": [
@@ -475,6 +492,21 @@
    "node": "treasure_2",
    "on": "enter",
    "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q2_lost_panda"
+   },
+   "do": [
+    {
+     "dialogue": "realm_2.treasure_2.step_q2_lost_panda"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
    "outcome": "treasure",
    "do": [
     {
@@ -483,7 +515,7 @@
    ]
   },
   {
-   "id": "treasure_2.2",
+   "id": "treasure_2.3",
    "node": "treasure_2",
    "on": "enter",
    "once": false,
@@ -551,6 +583,18 @@
     "speaker": "xiaolong",
     "en": "Let's keep going!"
    }
+  ],
+  "realm_2.path_4.step_q2_lost_panda": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_lost_panda: scene from data/dialogue)"
+   }
+  ],
+  "realm_2.treasure_2.step_q2_lost_panda": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_lost_panda: scene from data/dialogue)"
+   }
   ]
  },
  "npcs": {
@@ -558,6 +602,12 @@
    "name": {
     "zh": "小龙",
     "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
    }
   }
  }

@@ -38,6 +38,16 @@
     "quests"
    ]
   },
+  "content": {
+   "type": "object",
+   "description": "v3.9.2: realm -> game content file (realm_content.schema.json). Realms 1-2 live in GameDev's src/data (build_data.py).",
+   "patternProperties": {
+    "^[3-9]$": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
   "renames": {
    "type": "object",
    "description": "old id -> new id for graphs/nodes/edges ('graph/node' keys) so old saves load",

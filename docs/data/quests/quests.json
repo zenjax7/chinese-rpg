@@ -430,7 +430,8 @@
      "where": {
       "zone": "forest",
       "nodeKind": "waypoint",
-      "position": "mid_zone"
+      "position": "mid_zone",
+      "ref": "realm_2/path_4"
      },
      "note": "Xiaolong spots a trail of paw-print stickers."
     },
@@ -446,7 +447,8 @@
      "where": {
       "zone": "forest",
       "nodeKind": "chest",
-      "position": "dead_end"
+      "position": "dead_end",
+      "ref": "realm_2/treasure_2"
      },
      "note": "Up a hollow tree at a dead end (quest item fires before the chest)."
     },
@@ -663,7 +665,12 @@
      "where": {
       "zone": "forest",
       "nodeKind": "waypoint",
-      "position": "branch"
+      "position": "branch",
+      "refs": [
+       "realm_2/path_2",
+       "realm_2/path_3",
+       "realm_2/path_5"
+      ]
      },
      "note": "3 soap-flowers on side branches (quest items)."
     },
@@ -673,15 +680,14 @@
      "objective": {
       "type": "words",
       "pool": "L2.1",
-      "n": 8,
-      "countFrom": "accept"
+      "n": 8
      },
      "where": {
       "zone": "forest",
       "nodeKind": "town",
       "position": "entry_town"
      },
-     "note": "Get 8 Flower Glade words Ready (battle or practice)."
+     "note": "Answer 8 Flower Glade (L2.1) words correctly in battles."
     },
     {
      "id": "s4",
@@ -825,7 +831,8 @@
      "where": {
       "zone": "great_hive",
       "nodeKind": "boss",
-      "position": "boss_room"
+      "position": "boss_room",
+      "ref": "great_hive_1/boss_2"
      },
      "note": "After the Queen's battle, give the jelly back (clear scene)."
     },
@@ -1318,7 +1325,8 @@
      "where": {
       "zone": "night_bazaar",
       "nodeKind": "chest",
-      "position": "dead_end"
+      "position": "dead_end",
+      "ref": "bazaar_cellars_1/treasure_1"
      },
      "note": "Decoy: a normal chest, but no wallet. 'Not this one!'"
     },
@@ -1588,7 +1596,8 @@
      "where": {
       "zone": "cave_mouth",
       "nodeKind": "chest",
-      "position": "dead_end"
+      "position": "dead_end",
+      "ref": "goblin_caves_1/treasure_3"
      },
      "note": "Under a pile of bat-chewed pencils."
     },
@@ -1810,10 +1819,11 @@
      },
      "where": {
       "zone": "crystal_tunnels",
-      "nodeKind": "story",
-      "position": "branch"
+      "nodeKind": "chest",
+      "position": "branch",
+      "ref": "goblin_caves_2/treasure_1"
      },
-     "note": "Kid 1 locked in a crystal cupboard."
+     "note": "Kid 1 locked in a crystal cupboard (the chest node)."
     },
     {
      "id": "s3",
@@ -1985,7 +1995,8 @@
      "where": {
       "zone": "goblin_school",
       "nodeKind": "story",
-      "position": "level_3_classroom"
+      "position": "level_3_classroom",
+      "ref": "goblin_caves_3/story_1"
      }
     }
    ],
@@ -2047,7 +2058,8 @@
    "turnIn": {
     "npc": "teacher_zhang",
     "zone": "goblin_school",
-    "nodeKind": "story"
+    "nodeKind": "story",
+    "ref": "goblin_caves_3/story_1"
    },
    "returnToGiver": false,
    "requires": {
@@ -2094,7 +2106,8 @@
      "where": {
       "zone": "goblin_school",
       "nodeKind": "story",
-      "position": "level_3_classroom"
+      "position": "level_3_classroom",
+      "ref": "goblin_caves_3/story_1"
      },
      "note": "Goblins line up for their first real lesson: 老师好!"
     }
@@ -2425,28 +2438,35 @@
       "npc": "xiaohe",
       "to": {
        "zone": "misty_marsh",
-       "nodeKind": "village"
+       "nodeKind": "fork",
+       "ref": "realm_5/path_1"
       }
      },
      "where": {
       "zone": "misty_marsh",
       "nodeKind": "path",
-      "position": "npc_to_outpost"
+      "position": "npc_to_fork"
      },
-     "note": "She follows you and hides during fights."
+     "note": "She follows you and hides during fights. At the Misty Marsh fork (path_1) she wants to follow the wisp again: 一会儿 / 现在 (choice in the step scene)."
     },
     {
      "id": "s3",
-     "event": "story",
+     "event": "edge_battle",
      "objective": {
-      "type": "reach"
+      "type": "escort",
+      "npc": "xiaohe",
+      "to": {
+       "zone": "misty_marsh",
+       "nodeKind": "village",
+       "position": "outpost"
+      }
      },
      "where": {
       "zone": "misty_marsh",
-      "nodeKind": "story",
-      "position": "mid_zone"
+      "nodeKind": "path",
+      "position": "fork_to_outpost"
      },
-     "note": "She wants to follow the wisp again: 一会儿 / 现在 (choice)."
+     "note": "On to Reed Village outpost 1 (realm_5/town_2)."
     },
     {
      "id": "s4",
@@ -2709,7 +2729,8 @@
      "where": {
       "zone": "hydra_s_lair",
       "nodeKind": "npc",
-      "position": "level_1_entry"
+      "position": "level_1_entry",
+      "ref": "hydra_lair_1/npc_1"
      }
     }
    ],
@@ -2833,7 +2854,8 @@
      "where": {
       "zone": "hydra_s_lair",
       "nodeKind": "miniboss",
-      "position": "level_2"
+      "position": "level_2",
+      "ref": "hydra_lair_2/miniboss_1"
      }
     },
     {
@@ -2949,10 +2971,15 @@
      },
      "where": {
       "zone": "gloomy_village",
-      "nodeKind": "chest",
-      "position": "dead_end"
+      "nodeKind": "deadend",
+      "position": "dead_end",
+      "refs": [
+       "realm_6/deadend_2",
+       "realm_6/deadend_3",
+       "realm_6/deadend_4"
+      ]
      },
-     "note": "3 herb patches at dead ends (quest item before the chest)."
+     "note": "3 herb patches at dead ends."
     },
     {
      "id": "s3",
@@ -3256,7 +3283,8 @@
      "where": {
       "zone": "gloomy_village",
       "nodeKind": "npc",
-      "position": "optional_dungeon"
+      "position": "optional_dungeon",
+      "ref": "old_mine_1/npc_1"
      }
     }
    ],
@@ -3345,7 +3373,8 @@
      "where": {
       "zone": "moonlit_graveyard",
       "nodeKind": "fork",
-      "position": "branch"
+      "position": "branch",
+      "ref": "moonlit_crypt_1/path_4"
      },
      "note": "Empty kennel, only paw prints (a 'nothing' beat that points onward)."
     },
@@ -3378,7 +3407,8 @@
      "where": {
       "zone": "moonlit_graveyard",
       "nodeKind": "npc",
-      "position": "level_1_entry"
+      "position": "level_1_entry",
+      "ref": "moonlit_crypt_1/npc_1"
      }
     }
    ],
@@ -3455,7 +3485,8 @@
      "where": {
       "zone": "moonlit_graveyard",
       "nodeKind": "npc",
-      "position": "level_1_entry"
+      "position": "level_1_entry",
+      "ref": "moonlit_crypt_1/npc_1"
      },
      "note": "Skeletons keep knocking over the flowers."
     },
@@ -3488,7 +3519,8 @@
      "where": {
       "zone": "moonlit_graveyard",
       "nodeKind": "npc",
-      "position": "level_1_entry"
+      "position": "level_1_entry",
+      "ref": "moonlit_crypt_1/npc_1"
      }
     }
    ],
@@ -3715,7 +3747,8 @@
      "where": {
       "zone": "windy_cliffs",
       "nodeKind": "chest",
-      "position": "dead_end"
+      "position": "dead_end",
+      "ref": "realm_7/treasure_4"
      },
      "note": "Rose 1 on a windy ledge."
     },
@@ -3781,7 +3814,8 @@
      "where": {
       "zone": "windy_cliffs",
       "nodeKind": "miniboss",
-      "position": "cloud_caves"
+      "position": "cloud_caves",
+      "ref": "cloud_caves_1/miniboss_1"
      },
      "note": "Rose 3."
     },
@@ -3891,10 +3925,11 @@
      },
      "where": {
       "zone": "windy_cliffs",
-      "nodeKind": "story",
-      "position": "fork"
+      "nodeKind": "waypoint",
+      "position": "signpost",
+      "ref": "realm_7/path_1"
      },
-     "note": "Read the signpost: 往左走 / 往右走 / 一直走 (choice)."
+     "note": "Read the signpost (on the way from npc_1 to town): 往左走 / 往右走 / 一直走 (choice)."
     },
     {
      "id": "s3",
@@ -4144,7 +4179,8 @@
      "where": {
       "zone": "windy_cliffs",
       "nodeKind": "miniboss",
-      "position": "dead_end"
+      "position": "dead_end",
+      "ref": "realm_7/miniboss_1"
      }
     },
     {
@@ -4159,7 +4195,8 @@
      "where": {
       "zone": "windy_cliffs",
       "nodeKind": "npc",
-      "position": "mid_zone"
+      "position": "mid_zone",
+      "ref": "realm_7/npc_2"
      }
     }
    ],
@@ -4253,8 +4290,13 @@
      },
      "where": {
       "zone": "griffin_summit",
-      "nodeKind": "chest",
-      "position": "levels_1_2_dead_ends"
+      "nodeKind": "any",
+      "position": "levels_1_2_dead_ends",
+      "refs": [
+       "griffin_spire_1/treasure_1",
+       "griffin_spire_2/treasure_1",
+       "griffin_spire_2/deadend_1"
+      ]
      },
      "note": "3 feather nests on the Spire's side branches."
     },
@@ -4270,7 +4312,8 @@
      "where": {
       "zone": "griffin_summit",
       "nodeKind": "npc",
-      "position": "level_1"
+      "position": "level_1",
+      "ref": "griffin_spire_1/npc_1"
      }
     }
    ],
@@ -4332,7 +4375,8 @@
    "turnIn": {
     "npc": "griffin_mother",
     "zone": "griffin_summit",
-    "nodeKind": "npc"
+    "nodeKind": "npc",
+    "ref": "griffin_spire_3/npc_1"
    },
    "returnToGiver": false,
    "requires": null,
@@ -4386,7 +4430,7 @@
      },
      "where": {
       "zone": "griffin_summit",
-      "nodeKind": "stairs",
+      "nodeKind": "path",
       "position": "level_2_to_3"
      },
      "note": "Carry it upstairs."
@@ -4782,7 +4826,8 @@
      "where": {
       "zone": "training_pits",
       "nodeKind": "npc",
-      "position": "branch"
+      "position": "branch",
+      "ref": "realm_8/npc_1"
      },
      "note": "He challenges you to a penalty kick (choice)."
     }
@@ -5001,7 +5046,8 @@
      "where": {
       "zone": "grand_colosseum",
       "nodeKind": "npc",
-      "position": "level_2"
+      "position": "level_2",
+      "ref": "undercroft_2/npc_1"
      }
     }
    ],
@@ -5234,7 +5280,7 @@
      },
      "where": {
       "zone": "grand_colosseum",
-      "nodeKind": "stairs",
+      "nodeKind": "path",
       "position": "level_1_to_3"
      }
     },
@@ -6025,15 +6071,14 @@
      "objective": {
       "type": "words",
       "pool": "L9.1",
-      "n": 12,
-      "countFrom": "accept"
+      "n": 12
      },
      "where": {
       "zone": "demon_king_s_gate",
       "nodeKind": "town",
       "position": "entry_town"
      },
-     "note": "Get 12 Gate words Ready."
+     "note": "Answer 12 Gate (L9.1) words correctly in battles."
     },
     {
      "id": "s4",

@@ -16,7 +16,7 @@
   "map": "bg_map_realm_5",
   "battle": "bg_battle_r5"
  },
- "edgeIdxMax": 33,
+ "edgeIdxMax": 34,
  "aspect": 2.071,
  "nodes": [
   {
@@ -827,6 +827,18 @@
    "steps": 1,
    "terrain": "grass",
    "idx": 33
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_5"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 34
   }
  ],
  "events": [

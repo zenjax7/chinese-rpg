@@ -49,7 +49,7 @@
    "items": {
     "$ref": "common.schema.json#/$defs/nodeRef"
    },
-   "description": "Return Feather destinations"
+   "description": "Return Feather destinations besides lastInn: every node of kind town OR village ever entered (any realm). Never holds plain inns or campfires."
   },
   "graphs": {
    "type": "object",

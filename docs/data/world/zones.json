@@ -1,6 +1,6 @@
 {
  "_note": "v3.8 zones: one per location (word pool + boss). Field names follow src/data/locations.json (roster, packs, elite, unlockRequires, desyPool); new: realm, order, bossNode, gateEdge, bossKind, scriptedElite. The roster replaces locations.json roster/packs/elite and the old scripted/pathFights/mapNodes fields.",
- "version": "v3.9.1",
+ "version": "v3.9.2",
  "zones": [
   {
    "id": "meadow",
@@ -251,9 +251,17 @@
     2
    ],
    "elite": "mimic",
-   "fromRoster": {
-    "location": "L3.1"
-   },
+   "roster": [
+    {
+     "enemy": "road_bandit",
+     "weight": 1
+    },
+    {
+     "enemy": "slime",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "great_hive"
    ]
@@ -285,9 +293,17 @@
     2
    ],
    "elite": "mimic",
-   "fromRoster": {
-    "location": "L3.2"
-   },
+   "roster": [
+    {
+     "enemy": "road_bandit",
+     "weight": 1
+    },
+    {
+     "enemy": "slime",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "mimic",
    "unlockRequires": [
     "crossroads_highway"
@@ -320,9 +336,13 @@
     3
    ],
    "elite": "goblin_brute",
-   "fromRoster": {
-    "location": "L4.1"
-   },
+   "roster": [
+    {
+     "enemy": "cave_bat",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "night_bazaar"
    ]
@@ -354,9 +374,17 @@
     3
    ],
    "elite": "goblin_brute",
-   "fromRoster": {
-    "location": "L4.2"
-   },
+   "roster": [
+    {
+     "enemy": "cave_bat",
+     "weight": 1
+    },
+    {
+     "enemy": "goblin",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "goblin_brute",
    "unlockRequires": [
     "cave_mouth"
@@ -389,9 +417,17 @@
     3
    ],
    "elite": "goblin_brute",
-   "fromRoster": {
-    "location": "L4.3"
-   },
+   "roster": [
+    {
+     "enemy": "goblin",
+     "weight": 1
+    },
+    {
+     "enemy": "goblin_monitor",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "crystal_tunnels"
    ]
@@ -423,9 +459,17 @@
     3
    ],
    "elite": "swamp_wisp",
-   "fromRoster": {
-    "location": "L5.1"
-   },
+   "roster": [
+    {
+     "enemy": "bog_monster",
+     "weight": 1
+    },
+    {
+     "enemy": "bog_lizard",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "swamp_wisp",
    "unlockRequires": [
     "goblin_school"
@@ -458,9 +502,17 @@
     3
    ],
    "elite": "swamp_wisp",
-   "fromRoster": {
-    "location": "L5.2"
-   },
+   "roster": [
+    {
+     "enemy": "bog_monster",
+     "weight": 1
+    },
+    {
+     "enemy": "bog_lizard",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "misty_marsh"
    ]
@@ -492,9 +544,13 @@
     3
    ],
    "elite": "zombie_knight",
-   "fromRoster": {
-    "location": "L6.1"
-   },
+   "roster": [
+    {
+     "enemy": "zombie",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "hydra_s_lair"
    ]
@@ -526,9 +582,17 @@
     3
    ],
    "elite": "zombie_knight",
-   "fromRoster": {
-    "location": "L6.2"
-   },
+   "roster": [
+    {
+     "enemy": "zombie",
+     "weight": 1
+    },
+    {
+     "enemy": "rattle_skeleton",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "zombie_knight",
    "unlockRequires": [
     "gloomy_village"
@@ -561,9 +625,17 @@
     3
    ],
    "elite": "cliff_golem",
-   "fromRoster": {
-    "location": "L7.1"
-   },
+   "roster": [
+    {
+     "enemy": "harpy",
+     "weight": 1
+    },
+    {
+     "enemy": "griffin",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "cliff_golem",
    "unlockRequires": [
     "moonlit_graveyard"
@@ -596,9 +668,17 @@
     3
    ],
    "elite": "cliff_golem",
-   "fromRoster": {
-    "location": "L7.2"
-   },
+   "roster": [
+    {
+     "enemy": "harpy",
+     "weight": 1
+    },
+    {
+     "enemy": "griffin",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "windy_cliffs"
    ]
@@ -630,9 +710,17 @@
     3
    ],
    "elite": "fire_elemental",
-   "fromRoster": {
-    "location": "L8.1"
-   },
+   "roster": [
+    {
+     "enemy": "arena_troll",
+     "weight": 1
+    },
+    {
+     "enemy": "ogre_gladiator",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "griffin_summit"
    ]
@@ -664,9 +752,17 @@
     3
    ],
    "elite": "fire_elemental",
-   "fromRoster": {
-    "location": "L8.2"
-   },
+   "roster": [
+    {
+     "enemy": "arena_troll",
+     "weight": 1
+    },
+    {
+     "enemy": "ogre_gladiator",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "fire_elemental",
    "unlockRequires": [
     "training_pits"
@@ -699,9 +795,17 @@
     3
    ],
    "elite": "gargoyle",
-   "fromRoster": {
-    "location": "L9.1"
-   },
+   "roster": [
+    {
+     "enemy": "imp",
+     "weight": 1
+    },
+    {
+     "enemy": "demon_knight",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "scriptedElite": "gargoyle",
    "unlockRequires": [
     "grand_colosseum"
@@ -734,9 +838,17 @@
     3
    ],
    "elite": "gargoyle",
-   "fromRoster": {
-    "location": "L9.2"
-   },
+   "roster": [
+    {
+     "enemy": "imp",
+     "weight": 1
+    },
+    {
+     "enemy": "demon_knight",
+     "weight": 1
+    }
+   ],
+   "packs": {},
    "unlockRequires": [
     "demon_king_s_gate"
    ]
