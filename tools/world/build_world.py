@@ -45,7 +45,7 @@ def resolve_pos(loc, qid):
     z = ZONE.get(loc.get('zone')); pos = loc.get('position') or ''; kind = loc.get('nodeKind')
     if not z: return None
     ow = overworld(z['realm'])
-    if ow and kind == 'town' and pos == 'entry_town':
+    if ow and kind == 'town' and pos in ('entry_town', ''):   # a town without a position = the realm's (entry) town
         t = [n for n in ow['nodes'] if n['kind'] == 'town']
         tz = [n for n in t if n.get('zone') == z['id']] or t
         if tz: return {'graph': ow['id'], 'node': sorted(tz, key=lambda n: n['idx'])[0]['id']}
@@ -62,18 +62,74 @@ def resolve_pos(loc, qid):
             if ms: return {'graph': g['id'], 'node': sorted(ms, key=lambda n: n['idx'])[0]['id']}
     return None
 
+# ---- v3.9.2 step-position check (quests.md §6 "Extended build check"): every giver, step, turn-in and escort target must resolve.
+#   town/village positions resolve by position (entry_town / outpost_k); `path` steps are area steps (edge battles or walking in the zone);
+#   every other step needs a ref / refs, or the same zone + kind + position as an earlier step or the giver that has one. The node must
+#   exist, be in that zone and have the matching kind (quest-hook nodes and nodeKind 'any' may be any kind).
+HOOK_NODES = {h['giver'] for h in qworld.get('questHooks', [])}
+def node_at(ref):
+    g, _, n = ref.partition('/'); gg = graphs.get(g)
+    return gg and next((x for x in gg['nodes'] if x['id'] == n), None)
+KIND_ALIASES = {'deadend': ('waypoint', 'fork', 'chest')}   # 'deadend' is a position-like kind in quests.json; the graphs call those nodes waypoints
+def check_ref(ref, loc, label):
+    kind, zone = loc.get('nodeKind'), loc.get('zone')
+    if '/' not in ref and ref in graphs:   # a graph-only ref: the first node of that kind in the graph (by idx)
+        ms = sorted((x for x in graphs[ref]['nodes'] if x['kind'] == kind or kind == 'any'), key=lambda x: x['idx'])
+        if not ms: err.append(f"{label}: graph {ref} has no {kind} node"); return None
+        warn.append(f"{label}: ref {ref} names a graph only; using its first {kind} node {ms[0]['id']}"); ref = f"{ref}/{ms[0]['id']}"
+    n = node_at(ref)
+    if not n: err.append(f"{label}: node {ref} does not exist"); return None
+    if kind in KIND_ALIASES and n['kind'] in KIND_ALIASES[kind]: kind = n['kind']
+    if zone and n.get('zone') and n['zone'] != zone and ref not in HOOK_NODES: err.append(f"{label}: {ref} is in zone {n['zone']}, not {zone}")
+    if kind and kind not in ('any',) and n['kind'] != kind and ref not in HOOK_NODES: err.append(f"{label}: {ref} is a {n['kind']} node, not {kind}")
+    g, _, nn = ref.partition('/'); return {'graph': g, 'node': nn}
+def resolve_step(loc, label, known):
+    """-> {'graph','node'} | {'graph','node','refs':[...]} | 'area' | None (unresolved). known: (zone, kind, position) -> ref seen earlier."""
+    if not loc: return None
+    if loc.get('graph') and loc.get('node'):
+        if not node_at(f"{loc['graph']}/{loc['node']}"): err.append(f"{label}: node {loc['graph']}/{loc['node']} does not exist"); return None
+        return {'graph': loc['graph'], 'node': loc['node']}
+    key = (loc.get('zone'), loc.get('nodeKind'), loc.get('position'))
+    if loc.get('refs'):
+        rs = [check_ref(r, loc, label) for r in loc['refs']]
+        if not all(rs): return None
+        known.setdefault(key, loc['refs'][0]); return {**rs[0], 'refs': [f"{r['graph']}/{r['node']}" for r in rs]}
+    if loc.get('ref'):
+        r = check_ref(loc['ref'], loc, label)
+        if r: known.setdefault(key, loc['ref'])
+        return r
+    if loc.get('nodeKind') == 'path': return 'area'
+    if loc.get('nodeKind') in ('town', 'village'):
+        r = resolve_pos(loc, label)
+        if not r: err.append(f"{label}: {loc.get('nodeKind')} position {loc.get('zone')}/{loc.get('position') or '(none)'} does not resolve")
+        return r
+    if key in known: return check_ref(known[key], loc, label)
+    err.append(f"{label}: {loc.get('nodeKind')} step at {loc.get('zone')}/{loc.get('position')} has no ref/refs and no earlier step with the same position")
+    return None
+
 qf = J(os.path.join(SRC, 'quests', 'quests.json')); quests = []
 for q in qf['quests']:
-    q = dict(q); g = resolve_pos(q['giver'], q['id'])
-    if not g: err.append(f"quest {q['id']}: giver position {q['giver']} does not resolve")
-    q['giverAt'] = g
-    ti = q.get('turnIn'); q['turnInAt'] = g if ti in ('giver', None) else (resolve_pos(ti, q['id']) if isinstance(ti, dict) else None)
+    q = dict(q); known = {}
+    g = resolve_step(q['giver'], f"quest {q['id']} giver", known)
+    if not isinstance(g, dict): err.append(f"quest {q['id']}: giver position {q['giver']} does not resolve"); g = None
+    q['giverAt'] = g and {'graph': g['graph'], 'node': g['node']}
+    ti = q.get('turnIn')
+    if ti in ('giver', None): q['turnInAt'] = q['giverAt']
+    elif isinstance(ti, dict):
+        r = resolve_step(ti, f"quest {q['id']} turn-in", known); q['turnInAt'] = r if isinstance(r, dict) else None
+        if not q['turnInAt']: err.append(f"quest {q['id']}: turn-in {ti} does not resolve")
+    else: q['turnInAt'] = None   # 'auto'
     for o in q['objectives']:
-        w = o.get('where') or {}
+        w = o.get('where') or {}; lab = f"quest {q['id']}/{o['id']}"; ob = o['objective']
         if 'edges' in w: o['at'] = {'graph': w['graph'], 'edges': w['edges']}
         else:
-            r = resolve_pos(w, q['id']); o['at'] = r
-            if not r and o['objective']['type'] in ('talk', 'reach', 'deliver'): warn.append(f"quest {q['id']}/{o['id']}: position {w} unresolved")
+            r = resolve_step(w, lab, known); o['at'] = r if isinstance(r, dict) else None
+            if r is None and ob['type'] in ('talk', 'reach', 'deliver', 'collect') and not ob.get('dropFrom') and ob['type'] != 'kill':
+                err.append(f"{lab}: {ob['type']} step position {w} does not resolve")
+        if ob['type'] == 'escort':   # quests.md §2a: the step completes when the party enters `to`
+            r = resolve_step(ob.get('to') or {}, f"{lab} escort target", known); o['toAt'] = r if isinstance(r, dict) else None
+            if not o['toAt']: err.append(f"{lab}: escort target {ob.get('to')} does not resolve")
+        if ob['type'] == 'words' and not re.fullmatch(r'L[1-9]\.[1-3]', ob.get('pool', '')): err.append(f"{lab}: words step needs a pool like L2.1")
     quests.append(q)
 
 # ---- scenes + word tokens
@@ -96,6 +152,40 @@ for g in graphs.values():
         for a in ev.get('do', []) + [a for p in ev.get('pick', []) for a in p['do']]:
             if 'scene' in a and a['scene'] not in scenes: warn.append(f"{g['id']}/{ev['id']}: scene {a['scene']} not delivered yet (skipped at run time)")
 
+# ---- v3.9.2 realm content (realms 3-9): enemies, locations (= zones), word pools, items -> public/world/content/realm_<n>.json,
+# fetched with the realm's graphs (src/world/content.ts merges them into the battle tables at run time; classic mode never loads them).
+# A realm is in this build only when its content is complete: every zone has a location row, a non-empty pool whose items all exist,
+# and its boss / elite / roster / scripted / minion enemies all exist. Pinyin is not shipped (the UI never shows it).
+content, in_build = {}, {1: True, 2: True}
+base_enemies = {e['desyId'].split(' ')[0] for e in J(os.path.join(ROOT, 'src', 'data', 'enemies.json'))['enemies']} | {e['id'] for e in J(os.path.join(ROOT, 'src', 'data', 'enemies.json'))['enemies']}
+for rk, rel in sorted((idx.get('content') or {}).items(), key=lambda kv: int(kv[0])):
+    t = int(rk); c = J(os.path.join(W, rel)); probs = []
+    if c.get('realm') != t: probs.append(f"realm field {c.get('realm')} != {t}")
+    en = {e['id'] for e in c['enemies']} | base_enemies; it = {i['id'] for i in c['items']} | set(items)
+    locs = {l['id']: l for l in c['locations']}
+    for z in [z for z in zones if z['realm'] == t]:
+        l = locs.get(z['id'])
+        if not l: probs.append(f"zone {z['id']} has no location row"); continue
+        if z.get('fromRoster') and not z.get('roster'): z['roster'] = l['roster']
+        need = [r['enemy'] for r in l['roster'] + (z.get('roster') or [])] + [l.get('boss'), z.get('boss'), l.get('elite')] + [x for v in (l.get('scripted') or {}).values() for x in v]
+        need += [m for e in c['enemies'] for m in e.get('minions', [])]
+        probs += [f"zone {z['id']}: enemy {x} missing" for x in need if x and x not in en]
+        pool = c.get('pools', {}).get(z['id']) or []
+        if not pool: probs.append(f"zone {z['id']}: empty word pool")
+        probs += [f"zone {z['id']}: pool item {x} missing" for x in pool if x not in it]
+        if z['location'] != z['id']: probs.append(f"zone {z['id']}: location {z['location']} != zone id")
+    in_build[t] = not probs
+    for m in probs: warn.append(f"content realm {t} (kept out of this build): {m}")   # an incomplete realm stays locked ("not in this build")
+    strip = lambda d: {k: v for k, v in d.items() if k != 'py'}
+    content[t] = {'realm': t, 'version': c.get('version'), 'title': c.get('title'), 'G': c.get('G'), 'enemies': [strip(e) for e in c['enemies']],
+                  'locations': c['locations'], 'pools': c['pools'], 'items': [strip(i) for i in c['items']]}
+for g in graphs.values():   # world map: a realm node is in this build when its content is complete (realms 1-2 come from the classic tables)
+    if g['kind'] == 'world':
+        for n in g['nodes']:
+            m = re.fullmatch(r'realm_(\d+)', n['id'])
+            if m: n['inBuild'] = bool(in_build.get(int(m.group(1))))
+realms = next((g.get('realms') for g in graphs.values() if g['kind'] == 'world'), None) or []
+
 if err:
     for m in err: print('ERROR', m)
     sys.exit(1)
@@ -104,7 +194,7 @@ if err:
 #                     -> bundled (scenes as lazy chunks); this is what build_data.py emits (it calls this script)
 #   public/world/graphs/<id>.json -> fetched one graph at a time at run time (up to ~200 nodes each)
 SRC_OUT = os.path.join(ROOT, 'src', 'data', 'world')
-for d in (os.path.join(OUT, 'graphs'), os.path.join(SRC_OUT, 'scenes')):
+for d in (os.path.join(OUT, 'graphs'), os.path.join(OUT, 'content'), os.path.join(SRC_OUT, 'scenes')):
     os.makedirs(d, exist_ok=True)
     for f in os.listdir(d): os.remove(os.path.join(d, f))
 for f in ('index.json', 'quests.json'):   # pre-split layout (v3.9 WIP) lived in public/world/
@@ -114,16 +204,19 @@ dump = lambda o, p: json.dump(o, open(p, 'w', encoding='utf-8'), ensure_ascii=Fa
 h = hashlib.sha256()
 for gid in sorted(graphs): s = json.dumps(graphs[gid], sort_keys=True, ensure_ascii=False); h.update(s.encode()); dump(graphs[gid], os.path.join(OUT, 'graphs', f'{gid}.json'))
 for sid, s in scenes.items(): h.update(json.dumps(s, sort_keys=True, ensure_ascii=False).encode()); dump(s, os.path.join(SRC_OUT, 'scenes', f'{sid}.json'))
+for t in sorted(content): h.update(json.dumps(content[t], sort_keys=True, ensure_ascii=False).encode()); dump(content[t], os.path.join(OUT, 'content', f'realm_{t}.json'))
 h.update(json.dumps([rules, zones, quests], sort_keys=True, ensure_ascii=False).encode())
 dump({'quests': quests, 'economy': qf.get('economy', {})}, os.path.join(SRC_OUT, 'quests.json'))
 for f in ('progress.schema.json', 'common.schema.json'):   # the runtime validates saves against these (src/world/progress.ts)
     shutil.copyfile(os.path.join(W, 'schemas', f), os.path.join(SRC_OUT, f))
-out = {'_note': 'Generated by tools/world/build_world.py from docs/data (Desy v3.9.1). Do not edit by hand.',
+out = {'_note': 'Generated by tools/world/build_world.py from docs/data (Desy v3.9.2). Do not edit by hand.',
        'contentVersion': h.hexdigest()[:8], 'dataVersion': rules.get('version', idx.get('version')), 'start': idx['start'],
        'rules': rules, 'zones': zones, 'questHooks': qworld.get('questHooks', []), 'questItems': qworld.get('questItems', []), 'speakers': qworld.get('speakers', {}),
        'graphs': [{k: g[k] for k in ('id', 'kind', 'realm', 'dungeon', 'level', 'nodes') if k in g} | {'title': graphs[g['id']].get('title')} for g in idx['graphs']],
-       'scenes': sorted(scenes), 'words': words}
+       'scenes': sorted(scenes), 'words': words,
+       'realms': realms, 'content': {str(t): f'content/realm_{t}.json' for t in sorted(content)}, 'inBuild': {str(k): v for k, v in sorted(in_build.items())}}
 dump(out, os.path.join(SRC_OUT, 'index.json'))
 print(f"world: {len(graphs)} graphs, {sum(len(g['nodes']) for g in graphs.values())} nodes, {len(zones)} zones, {len(quests)} quests, {len(scenes)} scenes, "
+      f"content realms {sorted(content)} (in build: {sorted(k for k, v in in_build.items() if v)}), "
       f"contentVersion {out['contentVersion']} -> src/data/world/ + public/world/graphs/" + (f"; {len(warn)} warnings" if warn else ''))
 for m in warn[:12]: print('  WARN', m)
