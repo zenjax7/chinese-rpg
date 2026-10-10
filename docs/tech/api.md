@@ -39,6 +39,8 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 - `npm run test:api:pg` — the same tests on a real local Postgres; set `TEST_DATABASE_URL` to a throwaway database first.
 - Covered: migrations, children, cross-parent isolation, saves (seq, conflicts, schema, import), PIN hashing and lockouts, consent, rate limits, export and delete, CSRF, the session injector, the Auth.js config, cron, and the client outbox.
 - CI also checks that `dist/` contains no server code or server env names.
+- **Server imports are Node ESM.** Vercel compiles each `api/**` file separately and Node runs them as ESM (`"type": "module"`), so every relative import in `api/`, `server/` and `src/net/` ends in `.js` (`'./errors.js'`, `'../../server/router.js'`); JSON is imported with `with { type: 'json' }` and traced into the function bundle. `tsconfig.server.json` uses `nodenext` resolution so `tsc` rejects extensionless imports, and `npm run check:esm` (in CI and `test:api`) fails on them too.
+- **Without `DATABASE_URL`** the functions still load: the Neon pool is created on the first query, so `/api/v1/*` without a session is `401`, routes that need the database answer `503 {"error":"not_configured"}`, and Auth.js `csrf`/`providers` work (`tests/api/deploy.test.ts`).
 
 ## Deviations from architecture.md
 
@@ -46,4 +48,4 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 - **`APP_ORIGIN`** (optional) is not in §14.1. When set, it is the allowed origin for the CSRF check; otherwise the request's own host is used.
 - **No sign-in or parent-area UI yet.** The client side is the save path only; picking a cloud child is a localStorage value for now.
 - **Tests use PGlite** in-process instead of a Neon branch; `test:api:pg` covers real Postgres.
-- **Not deployed:** no Vercel project, Neon database or Google OAuth client exists yet. See [architecture.md §17](architecture.md) for what Jack sets up.
+- **Partly deployed:** the Vercel project (`zenjax7/chinese-rpg`) exists, but no Neon database (`DATABASE_URL`) or Google OAuth client yet. See [architecture.md §17](architecture.md) for what Jack sets up.

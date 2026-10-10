@@ -1,13 +1,13 @@
-import type { Db, Queryable } from '../db';
-import type { Ctx } from '../ctx';
-import type { SaveBody } from '../schemas';
-import { badRequest } from '../errors';
-import { validateWorld, progressKey, compareKeys, positionColumns, plausibilityFlags, startNode } from '../progress';
-import { audit } from './audit';
-import { hit, LIMITS } from './rateLimit';
-import { denied, requireConsent } from './guard';
-import { applyMastery } from './mastery';
-import { applyGraphs } from './graphs';
+import type { Db, Queryable } from '../db.js';
+import type { Ctx } from '../ctx.js';
+import type { SaveBody } from '../schemas.js';
+import { badRequest } from '../errors.js';
+import { validateWorld, progressKey, compareKeys, positionColumns, plausibilityFlags, startNode } from '../progress.js';
+import { audit } from './audit.js';
+import { hit, LIMITS } from './rateLimit.js';
+import { denied, requireConsent } from './guard.js';
+import { applyMastery } from './mastery.js';
+import { applyGraphs } from './graphs.js';
 
 /** saves.schema: 4 = today's SaveState (version 3) plus the graph-mode `world` (progress/0.3), without prog and log. */
 export const SNAPSHOT_SCHEMA = 4;

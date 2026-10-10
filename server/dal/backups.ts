@@ -1,9 +1,9 @@
-import type { Db } from '../db';
-import type { Ctx } from '../ctx';
-import { notFound } from '../errors';
-import { audit } from './audit';
-import { denied, requireConsent } from './guard';
-import { replaceSnapshot } from './saves';
+import type { Db } from '../db.js';
+import type { Ctx } from '../ctx.js';
+import { notFound } from '../errors.js';
+import { audit } from './audit.js';
+import { denied, requireConsent } from './guard.js';
+import { replaceSnapshot } from './saves.js';
 
 /** GET /children/:id/backups (PIN): newest first, without the snapshots themselves. */
 export async function listBackups(db: Db, ctx: Ctx, childId: string) {

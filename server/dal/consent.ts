@@ -1,11 +1,11 @@
-import type { Db } from '../db';
-import { NOTICE_VERSION, type Ctx } from '../ctx';
-import { hashIp, hashPin } from '../crypto';
-import { badRequest, conflict } from '../errors';
-import { audit } from './audit';
-import { hit, LIMITS } from './rateLimit';
-import { checkPin } from './parents';
-import { requireParent } from './guard';
+import type { Db } from '../db.js';
+import { NOTICE_VERSION, type Ctx } from '../ctx.js';
+import { hashIp, hashPin } from '../crypto.js';
+import { badRequest, conflict } from '../errors.js';
+import { audit } from './audit.js';
+import { hit, LIMITS } from './rateLimit.js';
+import { checkPin } from './parents.js';
+import { requireParent } from './guard.js';
 
 /** "Chrome/macOS" style family only: never the full user-agent string. */
 export function uaFamily(ua: string): string {

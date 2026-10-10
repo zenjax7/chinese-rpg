@@ -1,10 +1,10 @@
-import type { Db, Queryable } from '../db';
-import { NOTICE_VERSION, type Ctx } from '../ctx';
-import { hashPin, verifyPin } from '../crypto';
-import { HttpError, locked, forbidden } from '../errors';
-import { audit } from './audit';
-import { hit, LIMITS } from './rateLimit';
-import { requireParent, requireUnlocked } from './guard';
+import type { Db, Queryable } from '../db.js';
+import { NOTICE_VERSION, type Ctx } from '../ctx.js';
+import { hashPin, verifyPin } from '../crypto.js';
+import { HttpError, locked, forbidden } from '../errors.js';
+import { audit } from './audit.js';
+import { hit, LIMITS } from './rateLimit.js';
+import { requireParent, requireUnlocked } from './guard.js';
 
 export const PIN_RULES = { shortFails: 5, shortLockMin: 15, dayFails: 10, dayLockMin: 60, unlockMin: 10, resetSessionMaxSec: 300 } as const;
 

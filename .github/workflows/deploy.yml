@@ -34,6 +34,11 @@ jobs:
 
       - run: npm ci
 
+      # Server ESM guard: Vercel runs each api/** file as Node ESM ("type": "module"), so relative imports in api/, server/ and
+      # src/net/ must end in .js. Extensionless ones crash every function with ERR_MODULE_NOT_FOUND. (test:api also runs it,
+      # and its tsc -p tsconfig.server.json uses nodenext resolution, which rejects them too.)
+      - run: npm run check:esm
+
       # API tests (server type-check + vitest on in-process PGlite; no database or secrets needed). Runs before the Pages build.
       - run: npm run test:api
 

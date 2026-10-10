@@ -1,10 +1,10 @@
 /** Session cookie -> ctx (§5.2, §8.3). The test injector (X-Test-Session) works ONLY when NODE_ENV=test; in every other
  *  environment the header is ignored and only the Auth.js cookie counts. */
-import type { Queryable } from './db';
-import type { Ctx } from './ctx';
-import { sessionCtx } from './dal/session';
-import { clientIp } from './http';
-import { isTest } from './env';
+import type { Queryable } from './db.js';
+import type { Ctx } from './ctx.js';
+import { sessionCtx } from './dal/session.js';
+import { clientIp } from './http.js';
+import { isTest } from './env.js';
 
 export const SESSION_COOKIES = ['__Secure-authjs.session-token', 'authjs.session-token'];
 export const TEST_SESSION_HEADER = 'x-test-session';

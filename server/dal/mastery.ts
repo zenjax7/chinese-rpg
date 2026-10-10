@@ -1,5 +1,5 @@
-import type { Queryable } from '../db';
-import { WAYS, type MasteryDelta } from '../schemas';
+import type { Queryable } from '../db.js';
+import { WAYS, type MasteryDelta } from '../schemas.js';
 
 export const PROFICIENT_CORRECT = 2;   // balance.json learning.proficientCorrect
 type WayStat = { c: number; a: number; box: number; last: number; due: number; wrongRun: number; pc?: number };

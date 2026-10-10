@@ -1,19 +1,19 @@
 /** The /api/v1 router (architecture.md §8.2). Handlers only parse (zod) and call the DAL; they never see SQL. The route table is
  *  exported so the cross-parent test can enumerate every child-scoped route and fail when one has no denial test. */
-import type { Db } from './db';
-import type { Ctx } from './ctx';
-import { HttpError, unauthorized } from './errors';
-import { csrfCheck, errorResponse, json, readJson, IMPORT_CAP } from './http';
-import { getCtx } from './session';
-import * as S from './schemas';
-import { getMe, unlock, changePin } from './dal/parents';
-import { grantConsent, confirmConsent, revokeConsent } from './dal/consent';
-import { createChild, updateChild, deleteChild } from './dal/children';
-import { loadSave, saveProgress, importGuestSave } from './dal/saves';
-import { listBackups, restoreBackup } from './dal/backups';
-import { exportAccount, deleteAccount } from './dal/account';
-import { dailyCron } from './dal/cron';
-import { requireUnlocked } from './dal/guard';
+import type { Db } from './db.js';
+import type { Ctx } from './ctx.js';
+import { HttpError, unauthorized } from './errors.js';
+import { csrfCheck, errorResponse, json, readJson, IMPORT_CAP } from './http.js';
+import { getCtx } from './session.js';
+import * as S from './schemas.js';
+import { getMe, unlock, changePin } from './dal/parents.js';
+import { grantConsent, confirmConsent, revokeConsent } from './dal/consent.js';
+import { createChild, updateChild, deleteChild } from './dal/children.js';
+import { loadSave, saveProgress, importGuestSave } from './dal/saves.js';
+import { listBackups, restoreBackup } from './dal/backups.js';
+import { exportAccount, deleteAccount } from './dal/account.js';
+import { dailyCron } from './dal/cron.js';
+import { requireUnlocked } from './dal/guard.js';
 import { timingSafeEqual } from 'node:crypto';
 
 export interface Deps { db: Db }

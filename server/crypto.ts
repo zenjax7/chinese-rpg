@@ -1,6 +1,6 @@
 /** PIN hashing (§5.5), IP hashing (§5.3) and audit hashing (§7.2), all with Node's built-in crypto (no native modules). */
 import { createHmac, randomBytes, scrypt as scryptCb, timingSafeEqual } from 'node:crypto';
-import { env } from './env';
+import { env } from './env.js';
 
 const SCRYPT = { N: 16384, r: 8, p: 1, keylen: 32 } as const;
 function scrypt(pw: Buffer, salt: Buffer): Promise<Buffer> {

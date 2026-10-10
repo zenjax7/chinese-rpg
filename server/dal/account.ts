@@ -1,9 +1,9 @@
-import type { Db } from '../db';
-import type { Ctx } from '../ctx';
-import { audit } from './audit';
-import { hit, LIMITS } from './rateLimit';
-import { checkPin } from './parents';
-import { requireParent } from './guard';
+import type { Db } from '../db.js';
+import type { Ctx } from '../ctx.js';
+import { audit } from './audit.js';
+import { hit, LIMITS } from './rateLimit.js';
+import { checkPin } from './parents.js';
+import { requireParent } from './guard.js';
 
 const b64 = (b: Uint8Array | null) => Buffer.from(b ?? new Uint8Array()).toString('base64');
 

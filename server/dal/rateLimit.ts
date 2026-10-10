@@ -1,5 +1,5 @@
-import type { Queryable } from '../db';
-import { tooMany } from '../errors';
+import type { Queryable } from '../db.js';
+import { tooMany } from '../errors.js';
 
 /** §8.5 Postgres fixed-window limits (the Vercel WAF rule handles per-IP floods before a Function runs). */
 export const LIMITS = {

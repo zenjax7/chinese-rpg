@@ -1,6 +1,6 @@
-import type { Queryable } from '../db';
-import type { GraphDelta } from '../schemas';
-import { popcount, graphNodeCount } from '../progress';
+import type { Queryable } from '../db.js';
+import type { GraphDelta } from '../schemas.js';
+import { popcount, graphNodeCount } from '../progress.js';
 
 const or = (a: Uint8Array, b: Uint8Array) => { const o = Buffer.alloc(Math.max(a.length, b.length)); for (let i = 0; i < o.length; i++) o[i] = (a[i] ?? 0) | (b[i] ?? 0); return o; };
 

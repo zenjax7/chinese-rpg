@@ -2,7 +2,7 @@
  *  deltas since the last acknowledged push, and graph bitsets that changed. A batch keeps its seq until the server acknowledges it,
  *  so a retry after a lost response is a duplicate the server ignores (idempotent by deviceId + seq). Nothing here touches the DOM;
  *  storage and the API client are injected, so the same code runs in the browser and in the API tests. */
-import type { ApiClient } from './api';
+import type { ApiClient } from './api.js';
 
 export interface KV { get(k: string): string | null; set(k: string, v: string): void; remove(k: string): void }
 type Way = 'rZE' | 'rEZ' | 'sZE' | 'sEZ';

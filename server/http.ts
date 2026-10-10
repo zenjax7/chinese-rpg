@@ -1,5 +1,5 @@
 /** Request checks and JSON responses for /api/v1 (architecture.md §5.2 CSRF, §8.4 body caps). No CORS headers are ever sent. */
-import { HttpError, forbidden } from './errors';
+import { HttpError, forbidden } from './errors.js';
 
 export const BODY_CAP = 256 * 1024, IMPORT_CAP = 1024 * 1024;
 const BASE_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' };

@@ -1,9 +1,9 @@
-import type { Db } from '../db';
-import type { Ctx } from '../ctx';
-import { conflict } from '../errors';
-import { audit } from './audit';
-import { checkPin } from './parents';
-import { denied, requireConsent } from './guard';
+import type { Db } from '../db.js';
+import type { Ctx } from '../ctx.js';
+import { conflict } from '../errors.js';
+import { audit } from './audit.js';
+import { checkPin } from './parents.js';
+import { denied, requireConsent } from './guard.js';
 
 export const MAX_CHILDREN = 6;
 const out = (r: any) => ({ id: r.id, nickname: r.nickname, avatar: r.avatar, speechMode: r.speech_mode, sort: r.sort, createdAt: r.created_at });

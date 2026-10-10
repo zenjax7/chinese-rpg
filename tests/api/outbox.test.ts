@@ -1,11 +1,11 @@
 /** The browser outbox (src/net/outbox.ts) against the real router: snapshot without prog/log, mastery deltas sent once, graph bitsets,
  *  idempotent retries after a lost response, offline / 503 / 429 keep the batch, 400 drops it, sign-out pauses, server-wins conflicts. */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { freshDb, parent, snapshot, type TestDb } from './helpers';
-import { handle } from '../../server/router';
-import { ApiClient } from '../../src/net/api';
-import { Outbox, type KV } from '../../src/net/outbox';
-import { cloudChild, cloudSender, CLOUD_KEY } from '../../src/net/cloud';
+import { freshDb, parent, snapshot, type TestDb } from './helpers.js';
+import { handle } from '../../server/router.js';
+import { ApiClient } from '../../src/net/api.js';
+import { Outbox, type KV } from '../../src/net/outbox.js';
+import { cloudChild, cloudSender, CLOUD_KEY } from '../../src/net/cloud.js';
 
 let t: TestDb;
 beforeAll(async () => { t = await freshDb(); });

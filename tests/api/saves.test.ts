@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { freshDb, parent, snapshot, DEVICE, type TestDb } from './helpers';
-import { progressKey, compareKeys, validateWorld } from '../../server/progress';
+import { freshDb, parent, snapshot, DEVICE, type TestDb } from './helpers.js';
+import { progressKey, compareKeys, validateWorld } from '../../server/progress.js';
 
 let t: TestDb;
 beforeAll(async () => { t = await freshDb(); });

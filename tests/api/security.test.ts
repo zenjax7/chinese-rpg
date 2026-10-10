@@ -1,11 +1,11 @@
 /** PIN hashing and lockout (§5.5), consent (§5.3–5.4), rate limits (§8.5), export / delete (§5.6), CSRF (§5.2), the session
  *  injector, the Auth.js config (§5.2) and the daily cron (§5.6). PGlite by default; TEST_DATABASE_URL for a real Postgres. */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { freshDb, parent, signIn, client, snapshot, DEVICE, PIN, ORIGIN, type TestDb } from './helpers';
-import { hashPin, verifyPin, hashIp } from '../../server/crypto';
-import { authConfig, minimalAccounts } from '../../server/auth-config';
-import { handle } from '../../server/router';
-import { uaFamily } from '../../server/dal/consent';
+import { freshDb, parent, signIn, client, snapshot, DEVICE, PIN, ORIGIN, type TestDb } from './helpers.js';
+import { hashPin, verifyPin, hashIp } from '../../server/crypto.js';
+import { authConfig, minimalAccounts } from '../../server/auth-config.js';
+import { handle } from '../../server/router.js';
+import { uaFamily } from '../../server/dal/consent.js';
 
 let t: TestDb;
 beforeAll(async () => { t = await freshDb(); });

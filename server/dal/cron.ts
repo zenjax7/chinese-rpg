@@ -1,5 +1,5 @@
-import type { Db } from '../db';
-import { audit } from './audit';
+import type { Db } from '../db.js';
+import { audit } from './audit.js';
 
 /** GET /cron/daily (Vercel Cron, Bearer CRON_SECRET): the §5.6 retention policy and housekeeping. Returns row counts only. */
 export async function dailyCron(db: Db) {

@@ -2,8 +2,8 @@
  *  403), change nothing in A's rows (row hash before and after), and write a cross_parent_denied audit row. The route table is
  *  enumerated, so a new child-scoped route without a case here fails the suite. */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { freshDb, parent, snapshot, DEVICE, PIN, type TestDb } from './helpers';
-import { ROUTES } from '../../server/router';
+import { freshDb, parent, snapshot, DEVICE, PIN, type TestDb } from './helpers.js';
+import { ROUTES } from '../../server/router.js';
 
 let t: TestDb;
 let A: Awaited<ReturnType<typeof parent>>, B: Awaited<ReturnType<typeof parent>>;

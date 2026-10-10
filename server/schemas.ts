@@ -1,6 +1,6 @@
 /** zod schemas for every request body and path param (architecture.md §8.4). All objects are .strict(): unknown keys are rejected. */
 import { z } from 'zod';
-import { badRequest } from './errors';
+import { badRequest } from './errors.js';
 
 export const childId = z.uuid();
 const ID = /^[a-z0-9_]+$/;

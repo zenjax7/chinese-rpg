@@ -1,5 +1,5 @@
-import type { Queryable } from '../db';
-import type { Ctx } from '../ctx';
+import type { Queryable } from '../db.js';
+import type { Ctx } from '../ctx.js';
 
 /** §8.3 rule 6: one query turns the session token into the whole ctx (user, parent, consent, role, PIN unlock). */
 export async function sessionCtx(q: Queryable, token: string, meta: { ip: string; userAgent: string }): Promise<Ctx | null> {

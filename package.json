@@ -14,8 +14,9 @@
     "world": "python3 tools/world/build_world.py",
     "validate:world": "python3 tools/world/validate_all.py",
     "test:world": "node tests/world.mjs",
-    "test:api": "tsc -p tsconfig.server.json && vitest run -c vitest.api.config.ts",
+    "test:api": "node tools/check_esm_imports.mjs && tsc -p tsconfig.server.json && vitest run -c vitest.api.config.ts",
     "test:api:pg": "node -e \"if(!process.env.TEST_DATABASE_URL){console.error('Set TEST_DATABASE_URL to a throwaway local Postgres database');process.exit(1)}\" && vitest run -c vitest.api.config.ts",
+    "check:esm": "node tools/check_esm_imports.mjs",
     "db:migrate": "node server/migrate.mjs",
     "db:status": "node server/migrate.mjs --status",
     "check:dist": "node tools/check_dist.mjs dist"

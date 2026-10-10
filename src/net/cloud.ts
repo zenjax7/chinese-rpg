@@ -1,8 +1,8 @@
 /** Cloud saving for the browser, OFF by default (architecture.md §9). It turns on only when the build sets VITE_CLOUD_SAVE=1 AND a
  *  signed-in parent picked a child profile on this device (localStorage "chinese-rpg-cloud" = {"childId": "<uuid>"}). Until then the
  *  CloudSaveStore stays the no-network stub and the local save is the only copy, exactly as today. */
-import { ApiClient } from './api';
-import { Outbox, type FlushResult, type KV } from './outbox';
+import { ApiClient } from './api.js';
+import { Outbox, type FlushResult, type KV } from './outbox.js';
 
 export const CLOUD_KEY = 'chinese-rpg-cloud';
 const lsKV: KV = {

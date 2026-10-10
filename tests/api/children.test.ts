@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { freshDb, parent, signIn, client, type TestDb } from './helpers';
+import { freshDb, parent, signIn, client, type TestDb } from './helpers.js';
 
 let t: TestDb;
 beforeAll(async () => { t = await freshDb(); });

@@ -1,7 +1,7 @@
-import type { Queryable } from '../db';
-import type { Ctx } from '../ctx';
-import { forbidden, notFound, HttpError } from '../errors';
-import { audit } from './audit';
+import type { Queryable } from '../db.js';
+import type { Ctx } from '../ctx.js';
+import { forbidden, notFound, HttpError } from '../errors.js';
+import { audit } from './audit.js';
 
 /** The parents row exists (consent was given at least once). */
 export function requireParent(ctx: Ctx): number {

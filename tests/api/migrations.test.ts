@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { mkdtempSync, writeFileSync, cpSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { freshDb, type TestDb } from './helpers';
+import { freshDb, type TestDb } from './helpers.js';
 // @ts-ignore plain JS
 import { migrate, listMigrations, MIGRATIONS_DIR } from '../../server/migrate.mjs';
 

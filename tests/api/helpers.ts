@@ -1,11 +1,11 @@
 /** Test harness: a fresh, migrated database per test file. Default: PGlite (Postgres 17 compiled to WASM, in-process, no network
  *  services). Set TEST_DATABASE_URL to run the same suite against a real Postgres (each file gets its own schema). */
 import { randomBytes } from 'node:crypto';
-import type { Db, Queryable } from '../../server/db';
-import { wrapPool } from '../../server/db';
+import type { Db, Queryable } from '../../server/db.js';
+import { wrapPool } from '../../server/db.js';
 // @ts-ignore plain JS
 import { migrate } from '../../server/migrate.mjs';
-import { handle } from '../../server/router';
+import { handle } from '../../server/router.js';
 
 export const ORIGIN = 'http://localhost:5173';
 

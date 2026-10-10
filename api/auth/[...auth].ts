@@ -1,8 +1,8 @@
 // Vercel Function: Auth.js at /api/auth/* (signin/google, callback/google, signout, session, csrf). architecture.md §5.2.
 import { Auth } from '@auth/core';
 import NeonAdapter from '@auth/neon-adapter';
-import { neonPool } from '../../server/db';
-import { authConfig } from '../../server/auth-config';
+import { neonPool } from '../../server/db.js';
+import { authConfig } from '../../server/auth-config.js';
 
 export default {
   async fetch(request: Request): Promise<Response> {

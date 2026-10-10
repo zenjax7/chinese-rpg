@@ -1,5 +1,5 @@
-import type { Queryable } from '../db';
-import { auditHash } from '../crypto';
+import type { Queryable } from '../db.js';
+import { auditHash } from '../crypto.js';
 
 export type AuditAction = 'consent_granted' | 'consent_confirmed' | 'consent_revoked' | 'child_created' | 'child_deleted' | 'account_deleted'
   | 'export' | 'import' | 'restore' | 'save_flagged' | 'pin_locked' | 'pin_changed' | 'cross_parent_denied' | 'cron_daily';
