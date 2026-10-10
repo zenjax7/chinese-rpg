@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """CI gate for the v3.9.1 world + story data (npm run validate:world). Repo-relative; needs `pip install jsonschema`.
  1. tools/world/validate_world.py           graphs, zones, rules (Desy's validator, ported)
- 2. docs/tools/story/validate_dialogue.py   scenes (Desy's validator)
- 3. docs/tools/story/build_quests.py        quests: must report 0 errors and reproduce docs/data/quests/quests.json byte for byte
+ 2. docs/tech/tools/story/validate_dialogue.py   scenes (Desy's validator)
+ 3. docs/tech/tools/story/build_quests.py        quests: must report 0 errors and reproduce docs/data/quests/quests.json byte for byte
  4. JSON Schemas: quests.json vs quests.schema.json (quest/0.2), every scene vs scene.schema.json (scene/0.2)
  5. tools/world/build_world.py              runtime data: resolves every quest position; src/data/world/ + public/world/graphs/ must be up to date
 Exit 1 on any failure."""
@@ -16,10 +16,10 @@ def run(name, args, ok=lambda out, code: code == 0):
     if not good: print('   ' + '\n   '.join(out.strip().splitlines()[-15:])); fails.append(name)
     return out
 run('validate_world', ['tools/world/validate_world.py'])
-run('validate_dialogue', ['docs/tools/story/validate_dialogue.py'])
-qt = os.path.join(ROOT, 'docs', 'tools', 'story', 'quests_tables.md'); had_qt = os.path.exists(qt)
+run('validate_dialogue', ['docs/tech/tools/story/validate_dialogue.py'])
+qt = os.path.join(ROOT, 'docs', 'tech', 'tools', 'story', 'quests_tables.md'); had_qt = os.path.exists(qt)
 q = os.path.join(ROOT, 'docs', 'data', 'quests'); keep = tempfile.mkdtemp(); shutil.copytree(q, os.path.join(keep, 'q'))
-out = run('build_quests (0 errors)', ['docs/tools/story/build_quests.py'], lambda o, c: c == 0 and 'ERRORS: 0' in o)
+out = run('build_quests (0 errors)', ['docs/tech/tools/story/build_quests.py'], lambda o, c: c == 0 and 'ERRORS: 0' in o)
 same = filecmp.cmp(os.path.join(q, 'quests.json'), os.path.join(keep, 'q', 'quests.json'), shallow=False)
 print(f"{'✅' if same else '❌'} build_quests reproduces docs/data/quests/quests.json")
 if not same: fails.append('quests.json drift')

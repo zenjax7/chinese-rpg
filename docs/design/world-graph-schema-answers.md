@@ -1,6 +1,6 @@
 # World graph: answers to GameDev's schema questions (architecture.md §17.2)
 
-From Desy, 2026-10-02 (PT); updated for v3.9 the same night after your answers (see "v3.9 follow-up" at the end). Full design: `docs/design/world-graph.md` (§13 has the same answers with more detail). Data: `docs/data/world/` (schemas in `schemas/`). Validator: `docs/tools/world/validate_world.py`.
+From Desy, 2026-10-02 (PT); updated for v3.9 the same night after your answers (see "v3.9 follow-up" at the end). Full design: `docs/design/world-graph.md` (§13 has the same answers with more detail). Data: `docs/data/world/` (schemas in `schemas/`). Validator: `docs/tech/tools/world/validate_world.py`.
 
 This builds on your §6 `graph/0.2` and publishes it as **`graph/0.3`**. Your names are kept. The main changes:
 - **Fights move to edges:** `danger` 0–3 × `steps` encounter rolls; the `fight`/`elite`/`gate` node kinds are dropped.

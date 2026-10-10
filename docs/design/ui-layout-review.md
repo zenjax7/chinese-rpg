@@ -10,7 +10,7 @@ All sizes below are in **logical px in a 1280×720 frame** (see §2). The smalle
 
 ## 1. Diagnosis: why it looks bad
 
-![Annotated current battle screen](../images/ui-review/diagnosis.png)
+![Annotated current battle screen](../art/ui-review/diagnosis.png)
 
 **The main problem is structure, not colours.** Right now three unrelated layers are stacked down the page: a web toolbar, a small canvas, and a DOM panel. The code shows this: `#game` is fixed at `38vh`, the 960×540 canvas is `Scale.FIT` into it, and `#ui` is a separate scrolling `<div>` (max-width 900px) below it. The result:
 
@@ -29,7 +29,7 @@ All sizes below are in **logical px in a 1280×720 frame** (see §2). The smalle
 
 ## 2. The frame: one 16:9 stage, scaled as a whole
 
-![Scaling and letterboxing across devices](../images/ui-review/scaling.png)
+![Scaling and letterboxing across devices](../art/ui-review/scaling.png)
 
 **Rules**
 
@@ -129,7 +129,7 @@ Never signal state by colour alone: always add ✔ / ✘ / 🔒 icons and words.
 
 ### 4.1 Command state
 
-![Mockup A: battle, command state](../images/ui-review/battle-command.png)
+![Mockup A: battle, command state](../art/ui-review/battle-command.png)
 
 | region | rect (x, y, w, h) | contents |
 |---|---|---|
@@ -150,7 +150,7 @@ Notes:
 
 ### 4.2 Question open: multiple choice
 
-![Mockup B: question open, EN→ZH](../images/ui-review/battle-question-mc.png)
+![Mockup B: question open, EN→ZH](../art/ui-review/battle-question-mc.png)
 
 - **Spell banner** (420, 18, 560×128; 176 tall when it holds a 96px word) at the top centre **always holds the stimulus**: English for EN→ZH, the Chinese word with a 🔊 button for ZH→EN. Its edge colour tells the turn: **gold = I'm casting** (attack), **red = enemy is casting at me** (defense).
 - **The dock holds the answer area only:** one 24px instruction line, then the answer cards in **one row**. 2 options: 580 wide · 3: 368 · 4: 284 · always 128 tall.
@@ -161,7 +161,7 @@ Notes:
 
 ### 4.3 Question open: speech mode
 
-![Mockup C: defense question, speech mode](../images/ui-review/battle-question-speech.png)
+![Mockup C: defense question, speech mode](../art/ui-review/battle-question-speech.png)
 
 - The attacker telegraphs: attack frame, red glow, "!" and a spell orb. A shield bubble forms around the hero while the kid answers a defense question.
 - Dock centre: a **150px mic** (hit area 180px) with a pulsing gold ring when ready. Left: "Tap the mic, then say it out loud." Right: "Listening starts after the beep. No rush." Don't put any other button in the dock in speech mode.
@@ -171,7 +171,7 @@ Notes:
 
 ### 4.4 Feedback and the hit
 
-![Mockup D: answer feedback and the hit](../images/ui-review/battle-feedback.png)
+![Mockup D: answer feedback and the hit](../art/ui-review/battle-feedback.png)
 
 **Correct (attack)**
 
@@ -217,7 +217,7 @@ Timings: state changes cross-fade in 150 ms, and the whole attack sequence runs 
 
 ### 6.1 Village hub and world map
 
-![Mockup F: village hub and world map](../images/ui-review/village.png)
+![Mockup F: village hub and world map](../art/ui-review/village.png)
 
 - **The art is the menu.** Put a wooden signboard on each building: emoji + Chinese 32px + English 17px, at least 132×72. The building under the sign is also tappable and glows on press. The current art already matches: cup sign = 🛏️ 客栈 Inn, sword-and-shield sign = ⚔️ 装备 Gear & skills, potion sign = 🧪 商店 Shop, the temple at the back = 📖 学堂 Words & practice, the arch gate = 🗺️ 出发 Adventure.
 - **One suggestion at a time:** a bouncing ❗ over the place the kid probably needs (inn when HP < 50%, shop when they can afford a potion, 学堂 for a new location's preview).
@@ -228,7 +228,7 @@ Timings: state changes cross-fade in 150 ms, and the whole attack sequence runs 
 
 ### 6.2 Location map
 
-![Mockup E: location map](../images/ui-review/map.png)
+![Mockup E: location map](../art/ui-review/map.png)
 
 - **Put the nodes on the painted path.** The meadow art already has a path with stepping stones. Place the 13 nodes (inn, 4 fights, inn, 4 fights, inn, patrol gate, boss) along it. Keep node positions as data per background, for example `locations.json → mapNodes: [{x, y, kind}]` in 1280×720 coordinates, joined by a dotted line.
 - **Node styles:** next = 78px gold with a pulsing ring and a "Fight 2 of 8" chip · done = green ✔ · ahead = navy ⚔️ · inn = cream 🛏️ · patrol gate = 🚧 with a sticky chip "Patrols leave at 21 ready words (you have 6)" · boss = 92px crown at the big tree with a name chip.

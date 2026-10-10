@@ -2,7 +2,7 @@
 Run manually after adding new Chinese text:  python3 tools/build_fonts.py   (needs: pip install fonttools brotli)
 
 - Noto Sans SC (SIL OFL): subset of Noto Sans CJK SC (same glyph design) to every Han/CJK character used in src/ and
-  desy/core-curriculum.csv, plus CJK punctuation. Weights 400 + 700.
+  docs/data/curriculum/curriculum.csv, plus CJK punctuation. Weights 400 + 700.
 - Nunito (OFL, body/UI) and Fredoka (OFL, titles/numbers): Latin subsets of the variable fonts.
 Source font paths can be overridden with NOTO_REG / NOTO_BOLD / NUNITO / FREDOKA env vars."""
 import os, re, glob, csv, subprocess, sys
@@ -21,7 +21,7 @@ for f in glob.glob(os.path.join(ROOT, 'src', '**', '*.*'), recursive=True):
 han.update(cjk.findall(open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()))
 # v3.9.1 graph world: graph titles, dialogue, quest titles and scenes shown at run time (public/world/, tools/world/build_world.py)
 for f in glob.glob(os.path.join(ROOT, 'public', 'world', '**', '*.json'), recursive=True): han.update(cjk.findall(open(f, encoding='utf-8').read()))
-cur = os.path.join(ROOT, '..', '..', 'desy', 'core-curriculum.csv')
+cur = os.path.join(ROOT, 'docs', 'data', 'curriculum', 'curriculum.csv')   # repo copy of Desy's core-curriculum.csv
 if os.path.exists(cur):
     for r in csv.DictReader(open(cur, encoding='utf-8-sig')): han.update(cjk.findall(r.get('simplified', '')))
 han.update('，。！？：；、“”‘’（）《》…—·')

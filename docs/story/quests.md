@@ -10,7 +10,7 @@ This replaces the v1 design (4 town-board quests per town, 36 quests). Quests ar
 
 - **The quest target counts gold only.** Quest gold ≈ 30 × G per realm (±10%). Items, gear and spells are a bonus on top. Gold rewards were rescaled to match; items, gear and spells are unchanged.
 - **The free Bubble Spell reward is approved** (q2_bubble_lesson). The Honey Town shelf shows "Quest reward" while the quest is open.
-- **Escorts never fail.** After a lost battle the escortee waits at the last inn.
+- **Escorts never fail.** The escortee can't be harmed. After a lost battle it is waiting at the last inn used (runtime rules in §2a).
 - **Ending approved.** The Demon King shrinks to a grumpy small demon and goes to Teacher Zhang's school with Pipi (story.md).
 - **The companion is 小龙**, speaker id `xiaolong`. The world-graph owner is renaming `panda` → `xiaolong` in data/world. Inn pandas are `innkeeper_panda`.
 - **Names stay placeholders** until Jack picks.
@@ -21,7 +21,7 @@ This replaces the v1 design (4 town-board quests per town, 36 quests). Quests ar
 2. **Types** (mixed in every realm from R3 on): fetch 13, slay 11, rescue 8, find 7, deliver 6, escort 5.
 3. **Placement.** Realm 1 uses real `realm_1.json` node and edge ids. Realms 2–9 use `{zone, nodeKind, position}` and, where a generated hook exists, `ref` = the hook's giver node (e.g. `great_hive_1/npc_1`), so the content survives graph regeneration.
 4. **Words.** Each quest lists 4–6 curriculum items used in its scenes. All are met by the time the quest becomes available (the quest zone's pool, plus the next zone if the quest requires that zone's boss).
-5. **No timers, no failure, no repeats.** Escorts never fail (decision §0): after a lost battle the escortee waits at the last inn. An active quest can be dropped and re-taken at the giver.
+5. **No timers, no failure, no repeats.** Escorts never fail (decision §0, rules in §2a). An active quest can be dropped and re-taken at the giver.
 6. **Every quest has three scenes**: `sc_<id>_offer`, `sc_<id>_wait` (the progress line), `sc_<id>_thanks`. `sc_q1_hoe_offer` and `sc_q1_hoe_thanks` are written as samples.
 
 ## 2. Schema (`quest/0.2`): differences from GameDev `quest/0.1`
@@ -30,7 +30,7 @@ This replaces the v1 design (4 town-board quests per town, 36 quests). Quests ar
 |---|---|---|
 | `giver` | `{npc, graph, node}` or `{board}` | same, plus `zone`/`nodeKind`/`position`/`ref` for generated realms. `alsoOnBoard` is kept (false everywhere for now). |
 | `turnIn` | `"giver"` / `"auto"` | also `{npc, graph|zone, node|nodeKind}` for "hand in to someone else". `returnToGiver` bool added for the UI. |
-| `objectives` | kill, collect, reach, talk, words, deliver | the same six, plus **`escort`** (new: `{npc, to}`, the escortee follows and joins battles as a non-target). Each objective is wrapped as `{id, event, objective, where, note}`, where `event` is the world-graph outcome that triggers it. My original step verbs are kept as `desyType`: pickup → `collect` (`source: nodeItem`), fight/boss → `kill`, turn_in → `talk` with `turnIn: true`. |
+| `objectives` | kill, collect, reach, talk, words, deliver | the same six, plus **`escort`** (new: `{npc, to}`; runtime rules in §2a). `words` is `{pool, n}` (§2a). Each objective is wrapped as `{id, event, objective, where, note}`, where `event` is the world-graph outcome that triggers it. My original step verbs are kept as `desyType`: pickup → `collect` (`source: nodeItem`), fight/boss → `kill`, turn_in → `talk` with `turnIn: true`. |
 | `order` | any / sequence | `sequence` for all 50 quests |
 | `rewards` | gold {G}, exp, items, gear, skills, spells, flags, cosmetics | same keys. `exp` is `{L}` (EXP = L × L_rec). Gear entries are `{id: shield_t3_fine, tier, slot, rarity, zh, en, stat, value, perk}` using gear.csv names. Computed values are added: `goldValue`, `expValue`, `valueG`, `spellValueGold`. |
 | new | | `realm`, `zone`, `pool`, `story` (main/side), `type`, `words`, `summary`, `hook` (quests_world id) |
@@ -49,6 +49,28 @@ States are unchanged: locked → available → active → ready → completed.
 | edge_battle | random battle on listed edges | collect (`dropFrom`, `dropChance`) or kill (count) |
 | portal | `portal` (dungeon entry) | reach |
 | nothing | plain node | reach / escort / deliver |
+
+## 2a. Runtime rules for `escort` and `words` (for GameDev)
+
+These are the only two step types with behaviour beyond "an event happened". Both are kept minimal. All quests use `order: sequence`, so only the **current** step listens to events, and its counter starts when it becomes current.
+
+**`escort` `{npc, to}`**
+1. When the step becomes current, `npc` follows the party on the map (a small sprite behind the hero). It is **not in battles** and can't be harmed, so an escort never fails.
+2. The step completes when the party enters the `to` node. `to` is a `ref` (`<graph>/<node>`) or a zone + town/village position.
+3. The escortee always stays with the party:
+   - After a **defeat** it is waiting at the last inn used, where the party wakes up.
+   - **Return Feather** and **inn warp** take it along.
+   - Nothing resets, and the kid just walks on.
+4. If the kid drops the quest, the escortee goes back to the giver.
+5. **Save:** `obj.<stepId>` is 0 until done, then 1. Whether someone is following is derived from the current step, so nothing else is stored.
+
+**`words` `{pool, n}`**
+1. While the step is current, **every correct battle answer to an item in `pool` adds 1**. Any answer way counts, and repeats of the same word count. Preview and practice answers don't count.
+2. The step completes at `n`, which defaults to 10 if missing.
+3. **Save:** `obj.<stepId>` holds the count. There is no `base` list, because this doesn't use Ready/proficiency, so it is always completable even if every word in the pool is already Ready.
+4. Data: q2_bubble_lesson s3 (`L2.1`, n 8) and q9_second_wind s3 (`L9.1`, n 12). The HUD can show "Words 5 / 8".
+
+The rules are also written into `data/quests.schema.json`, as `description` fields on the objective (with `npc`/`to` required for escort and `pool` for words).
 
 ## 3. Rewards vs target
 
@@ -109,7 +131,7 @@ EXP is L × L_rec, with L 10–30 per quest. The build fails if a realm's quest 
 | `q4_school_bell` | 4 · goblin_school | deliver | uncle_shi | 新学校的钟 A Bell for a Real School | quest_offer:talk → portal:reach → quest_offer:deliver | to teacher_zhang | 135 g, 180 EXP, 1× Return Feather | 7.0 | 学校 老师好 上课 下课 学习 帮助 |
 | `q5_invitations` | 5 · misty_marsh | deliver | grandpa_turtle | 生日请帖 Grandpa Turtle's Birthday Invitations | quest_offer:talk → quest_offer:deliver → quest_offer:deliver → quest_offer:deliver → quest_offer:talk | yes | 216 g, 240 EXP, 1× Big Honey | 8.0 | 生日 年 月 号 星期 几点 |
 | `q5_muddy_road` | 5 · misty_marsh | slay | ferry_auntie | 别迟到 Mud on the School Road | quest_offer:talk → edge_battle:kill → quest_offer:talk | yes | 216 g, 180 EXP | 6.0 | 迟到 准时 早上 点 马上 |
-| `q5_escort_xiaohe` | 5 · misty_marsh | escort | xiaohe | 送小荷回家 Xiaohe in the Mist | quest_offer:talk → edge_battle:escort → story:reach → quest_offer:talk | to xiaohe_grandma | 216 g, 180 EXP, 1× Honey Potion | 7.0 | 一会儿 现在 以后 以前 刚才 晚上 |
+| `q5_escort_xiaohe` | 5 · misty_marsh | escort | xiaohe | 送小荷回家 Xiaohe in the Mist | quest_offer:talk → edge_battle:escort → edge_battle:escort → quest_offer:talk | to xiaohe_grandma | 216 g, 180 EXP, 1× Honey Potion | 7.0 | 一会儿 现在 以后 以前 刚才 晚上 |
 | `q5_pocket_watches` | 5 · hydra_s_lair | fetch | grandpa_turtle | 怀表 Tick-Tock Lizards | quest_offer:talk → edge_battle:collect → quest_offer:talk | yes | 216 g, 180 EXP | 6.0 | 分钟 小时 时间 刻 现在几点 |
 | `q5_lost_fishers` | 5 · hydra_s_lair | rescue | old_fisher | 迷路的渔夫 Two Sons in the Lair | quest_offer:talk → story:talk → story:talk → miniboss:kill → quest_offer:talk | yes | 216 g, 300 EXP, 1× Honey Potion | 7.0 | 半天 小时 时候 后来 从前 |
 | `q5_fog_bottle` | 5 · hydra_s_lair | slay | grandpa_turtle | 雾瓶 Madame Mist's Fog Bottle | quest_offer:talk → portal:reach → miniboss:kill → item:collect → quest_offer:talk | yes | 0 g, 360 EXP, Turtle-Shell Shield | 14.1 | 虽然……但是…… 如果……就…… 先……然后…… 一……就…… 已经 |
@@ -160,7 +182,31 @@ Re-pointed after the world regenerations:
 - **q8_caged_beasts giver (v3.9.1):** realm 8 has only two villages, so `outpost_3` does not exist. Vet Ji now gives and takes the quest at **`outpost_2`**, which resolves to `realm_8/town_3`, Arena Town outpost 2, right next to the Beast Pens door `portal_2`. The giver is given by position only, like the other town and village givers. If the world graph wants an explicit `offerQuest q8_caged_beasts`, put it on `realm_8/town_3`.
 - **q3_slime_rainbow giver:** the `night_bazaar` overworld has no village (only the dungeon door `portal_1`). The dye-maker's stall moved to Crossroads Market (`crossroads_highway` `entry_town`), and the quest unlocks after the `crossroads_highway` boss. The quest stays in the `night_bazaar` zone, so its colour words (L3.2) are met in time, and the slimes are still fought anywhere in realm 3.
 - **q6_hot_soup:** the second villager's position `branch` is now `outpost_1` (`realm_6/town_2`).
+- **Extended build check (v3.9.1, GameDev report):** every giver, step, turn-in and escort target must resolve.
+  - Town/village positions resolve as below.
+  - `path` steps are area steps (edge battles or walking in the zone).
+  - Every other step needs a `ref` or `refs` (multi-pickup), or the same zone + kind + position as an earlier step or the giver that has one. The node must exist, be in that zone, and have the matching kind (quest-hook nodes may be any kind).
 - **New build check:** every town or village position must exist in `realm_<n>.json`. `entry_town` must be the realm's town. `outpost_k` must be the k-th village of that zone. A plain `outpost` is allowed only when the zone has exactly one village.
+- **q5_escort_xiaohe (GameDev report):** step s3 pointed at a `story` node at `mid_zone` in misty_marsh, but misty_marsh has no story node. The wisp beat now happens on the escort itself:
+  - s2 escorts Xiaohe from `realm_5/npc_1` to the Misty Marsh fork `realm_5/path_1`, which is on her route home. The 一会儿 / 现在 choice plays there.
+  - s3 escorts her on to Reed Village outpost 1 (`realm_5/town_2`).
+  - s4 is the turn-in to her grandma.
+- **Every step now resolves to real nodes** (extended check, below). Steps that had only a descriptive position now carry `ref`/`refs`:
+  - q2_lost_panda: `realm_2/path_4`, `realm_2/treasure_2`
+  - q2_bubble_lesson: soap flowers at `realm_2/path_2`, `path_3`, `path_5`
+  - q2_royal_jelly: boss `great_hive_1/boss_2`
+  - q3_lost_wallet: decoy chest `bazaar_cellars_1/treasure_1`
+  - q4_lost_schoolbag: `goblin_caves_1/treasure_3`
+  - q4_free_classmates: kid 1 in the chest node `goblin_caves_2/treasure_1`
+  - q4_school_bell: deliver and turn-in at `goblin_caves_3/story_1`
+  - q6_medicine_herbs: herbs at `realm_6/deadend_2`, `_3`, `_4`
+  - q6_lost_dog: kennel fork `moonlit_crypt_1/path_4`
+  - q7_glacier_roses: rose 1 at `realm_7/treasure_4`
+  - q7_lost_mapmaker: signpost `realm_7/path_1`, on the npc_1 → town route
+  - q7_griffin_feathers: nests at `griffin_spire_1/treasure_1`, `griffin_spire_2/treasure_1`, `griffin_spire_2/deadend_1`
+  - q7_griffin_chick: turn-in `griffin_spire_3/npc_1`
+  - Two escort routes that were labelled as stairs (q7_griffin_chick, q8_singer_escort) are now area steps; the escort's `to` is the real target.
+  - A pickup right after a fight inherits the fight's node.
 
 | hook (quests_world.json) | giver node | used by | note |
 |---|---|---|---|
