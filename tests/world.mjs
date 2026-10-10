@@ -383,7 +383,12 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('graph').waitFor();
   const nVis = await p.locator('[data-testid^="gnode-"]').count();
   check(+(await tid('graph').getAttribute('data-nodes')) === 200 && (await tid('zoom-level').innerText()) === '×3.0' && nVis >= 5 && t200 < 1500, `map: a 200-node graph renders at ×3 (${nVis} nodes in view after fog, ${Math.round(t200)} ms)`);
-  for (const want of ['×2.1', '×1.5']) { await tid('zoom-out').click(); await p.waitForFunction(w => document.querySelector('[data-testid="zoom-level"]')?.textContent === w, want, { timeout: 3000 }).catch(() => {}); }
+  // The map re-renders after each zoom, so a click can land on the old button and be lost: retry only while the level has not moved.
+  for (const want of ['×2.1', '×1.5']) for (let k = 0; k < 4; k++) {
+    const before = await tid('zoom-level').innerText(); if (before === want) break;
+    await tid('zoom-out').click();
+    if (await p.waitForFunction(([w, b]) => { const t = document.querySelector('[data-testid="zoom-level"]')?.textContent; return t === w || (t && t !== b); }, [want, before], { timeout: 1500 }).then(() => true, () => false)) break;
+  }
   const z2 = await tid('zoom-level').innerText();
   await p.mouse.move(640, 360); await p.mouse.wheel(0, -400); await p.waitForTimeout(150); const z3 = await tid('zoom-level').innerText();
   const vb0 = await tid('graph-svg').getAttribute('viewBox'); await p.mouse.move(640, 300); await p.mouse.down(); await p.mouse.move(500, 250, { steps: 5 }); await p.mouse.up(); const vb1 = await tid('graph-svg').getAttribute('viewBox');
