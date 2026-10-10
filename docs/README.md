@@ -87,6 +87,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [data/items/economy_prices.csv](data/items/economy_prices.csv) — Shop prices and gold economy (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear.csv](data/items/gear.csv) — Weapons and armor by tier (combat-spec table) · **Desy** · when changing these numbers
 - [data/items/gear_heroic_drops.csv](data/items/gear_heroic_drops.csv) — Heroic gear drops from bosses and elites (combat-spec table) · **Desy** · when changing these numbers
+- [data/items/gear_items.csv](data/items/gear_items.csv) — Game-ready gear catalogue, tiers 1–9: one row per piece (weapon/armor/shield × common/fine/heroic) with ids (`<slot>_t<tier>_<rarity>`, prototype ids for tiers 1–2), stat, shop price, price in G and in battles of gold, source and perk. Derived from gear.csv (§6.2) with no new numbers · **Desy** · when adding gear for realms 3–9 to the game (regenerate after a gear.csv change)
 
 ### Data: balance
 
@@ -316,6 +317,7 @@ The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and
 - [tech/tools/world/sim/world_summary.json](tech/tools/world/sim/world_summary.json) — v3.9.1 main world sim output (100 runs per profile) · **Desy** · when re-running the world sim
 - [tech/tools/data/assemble_spec.py](tech/tools/data/assemble_spec.py) — Assembles combat-spec.md · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/build_data.py](tech/tools/data/build_data.py) — Generates the data CSV/JSON tables · **Desy** · when re-running Desy's sims or generators
+- [tech/tools/data/make_gear_items.py](tech/tools/data/make_gear_items.py) — Writes data/items/gear_items.csv from gear.csv, economy_prices.csv and realm_difficulty.csv (run from the repo root) · **Desy** · after a gear or price change
 - [tech/tools/data/spec_new_sections.md](tech/tools/data/spec_new_sections.md) — Spec source sections · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_data.py](tech/tools/data/spells_data.py) — Spell and quest source data and design formulas · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_md_template.md](tech/tools/data/spells_md_template.md) — spells.md template · **Desy** · when re-running Desy's sims or generators

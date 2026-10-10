@@ -38,7 +38,7 @@ Sim, v3.9 → v3.9.1 (100 seeds per profile):
 
 - **Every map is a graph.** There is one world graph (9 realm nodes), one overworld graph per realm, and one graph per dungeon level. Towns and villages are nodes that open the existing town screens (`screens.ts`); a town interior is not a graph.
 - **Random battles happen on edges.** Each edge has a `danger` (0–3) and `steps` (encounter rolls along it). Nodes are places: towns, inns, forks, chests, NPCs, story spots, mini-bosses, bosses, stairs and portals.
-- **Arriving at a node runs at most one event.** There are 7 outcomes: quest offer (hook only), nothing, quest-linked mini-boss, quest item, portal, story, and treasure. Each event is fixed or weighted, and once, cooldown or repeatable. All randomness is seeded, so reloading never re-rolls.
+- **Arriving at a node runs at most one event.** There are 6 outcomes: quest offer (hook only), nothing, quest-linked mini-boss, quest item, story, and treasure (v3.9.2: no `portal` outcome; portals are edges). Each event is fixed or weighted, and once, cooldown or repeatable. All randomness is seeded, so reloading never re-rolls.
 - **Zone = location.** Each of the 20 locations (L1.1…L9.2) is a zone with its own word pool, roster and boss, placed on the graphs through `zones.json`. One zone can span several dungeon levels. All learning rules stay as they are: 7-item sets, at most 3 new items, the patrol rule (speech 20%, reading 40%), forced patrols and boss gates.
 - **Safe edges:** no random battles on edges that touch a town or inn, on the boss-approach edge, or on stairs and portals. After a boss or mini-boss is cleared, the way you came back to the nearest inn stays safe for 20 hops or until the next inn rest. Walked edges drop to 5% of their rate, and each zone has a budget of 8 fresh battles. Encounter rates rise by 10% per dungeon level.
 - **Size grows from 17 nodes in realm 1 to 200 in realm 9.** Later realms get more villages, deeper dungeons (up to 5 levels) with inns inside them, dead ends (about 30–38% of nodes) and optional treasure, story and mini-boss branches. Every node is at most 3 hops from an inn in realms 1–3 and 5 hops in realms 4–9.
@@ -71,7 +71,7 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `inn` | Inn or campfire (`campfire: true`) | story on first visit | rest + save | Every node is ≤ `maxHopsToInn` hops from an inn or town (3 in realms 1–3, 5 in 4–9). No Feathers for sale. Each boss has an **approach inn** next to its gate edge |
 | `waypoint` | Plain spot on a path | weighted (nothing / ambient / honey) | – | Replaces GameDev's `fight` node |
 | `fork` | Waypoint with 3+ edges | weighted | – | Kind is cosmetic (map icon); the loader treats it like a waypoint |
-| `chest` | Treasure spot (outcome 7) | `openChest` once | – | Often at the end of a dead-end branch; may hide a quest item |
+| `chest` | Treasure spot (outcome `treasure`) | `openChest` once | – | Often at the end of a dead-end branch; may hide a quest item |
 | `npc` | Quest giver / helper | `offerQuest` once, then story | – | `npc` = id in the graph's `npcs` map |
 | `story` | Lore or cut-scene spot | `dialogue` once | – | |
 | `miniboss` | Optional strong fight | `fight {kind: miniboss}` once, quest-linked | – | Safe way home after the win (§4.3) |
@@ -81,6 +81,8 @@ GameDev's kinds are kept. Changes: `fight`, `elite` and `gate` nodes become edge
 | `portal` | Dungeon mouth, realm node on the world map | – | – | Edge kind `portal` |
 | `exit` | Leaves the realm | – | – | Realm 1 uses an `exit` edge on the realm boss node |
 | `shop` | Stand-alone shop (optional) | – | – | Kept from §6; normally shops live in town/village `services` |
+
+**Dead ends (v3.9.3).** A dead end is a shape, not a node kind: a node with one edge. The generator's dead-end spots (ids `deadend_k`) are exported as `waypoint` (a few as `inn` or `miniboss`), and quests call them `nodeKind: deadend`. A dead end does exactly what its kind and its events say (§5.2: the first eligible event fires). Today every `deadend_k` waypoint carries the waypoint pick (80% nothing / 20% honey, cooldown 4), and some also carry quest steps (fights, pickups). **A dead end with no event is just an empty end:** arriving does nothing (no battle, no item, no ambient line) and the player walks back. The game adds nothing at run time; if a spot needs flavor, give it an event in the data.
 
 ## 3. Edge kinds and fields
 
@@ -142,7 +144,7 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
 
 ## 5. Arrival events
 
-### 5.1 The 7 outcomes
+### 5.1 The 6 outcomes
 
 | `outcome` | What happens | Action(s) | Default repeat |
 |---|---|---|---|
@@ -150,9 +152,10 @@ Each zone's beeline route (previous boss → approach inn) should expect 6.5–9
 | `nothing` | Nothing | – | repeatable (weighted) |
 | `miniboss` | Quest-linked optional strong fight (2–3 enemies, one elite) | `fight {kind: miniboss}`, `giveGold`, `setFlag` | once |
 | `item` | Quest item (`cond: questActive`) or a small find (honey, cooldown 4 visits) | `giveItem` | once / cooldown |
-| `portal` | Travel to another graph or node | `teleport` (portal *edges* are the normal way; this is for scripted warps) | – |
 | `story` | Lore, hints, boss intros | `dialogue` | once |
 | `treasure` | Chest | `openChest`: `chest_normal` = normal chest, `chest_fine` = location boss chest, `chest_boss` = realm boss chest, using the desy `chest_contents` tables | once |
+
+v3.9.2: the `portal` outcome is gone (no event used it). Portals are edges (§3); the `teleport` action stays for scripted warps.
 
 ### 5.2 Event rules
 
@@ -460,7 +463,7 @@ One JSON file per graph, plus JSON Schema (draft 2020-12, `data/world/schemas/`)
 | Node kinds: `fight`/`elite`/`gate` dropped; `waypoint`, `miniboss`, `story` added | Fights live on edges |
 | Node fields `zone`, `title`, `save`, `services`, `hub`, `town`, `campfire`, `boss`, `npc` | Town/inn behaviour, zone link |
 | Edge fields `danger`, `steps`, `terrain`, `patrol`, `scripted` | Encounters |
-| Event fields `outcome`, `cooldown`, `pick`; actions `offerQuest`, `openChest` | The 7 outcomes, weighted events |
+| Event fields `outcome`, `cooldown`, `pick`; actions `offerQuest`, `openChest` | The 6 outcomes, weighted events |
 | `roster` moved to zones.json | One roster per zone |
 | Save: `edgeCrossings`, `edgeProgress` added | Seeding, turn-back |
 | v3.9: x/y normalised 0–1 + `aspect`; edge `idx` + `edgeIdxMax`; node `fog`; action `scene`; fight kind `tutorial` + `canLose`; event `tutorial`; dialogue `tokens` | GameDev's answers, story alignment |

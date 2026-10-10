@@ -205,6 +205,7 @@ Re-pointed after the world regenerations:
   - q7_lost_mapmaker: signpost `realm_7/path_1`, on the npc_1 → town route
   - q7_griffin_feathers: nests at `griffin_spire_1/treasure_1`, `griffin_spire_2/treasure_1`, `griffin_spire_2/deadend_1`
   - q7_griffin_chick: turn-in `griffin_spire_3/npc_1`
+  - q9_second_wind (v3.9.3): Granny Bai's badge at the dead-end chest `demon_castle_2/treasure_1` (s2 named only the graph; the build now rejects a pickup step without a node)
   - Two escort routes that were labelled as stairs (q7_griffin_chick, q8_singer_escort) are now area steps; the escort's `to` is the real target.
   - A pickup right after a fight inherits the fight's node.
 
