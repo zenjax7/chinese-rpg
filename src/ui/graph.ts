@@ -175,7 +175,7 @@ function giveItem(id: string, n: number) {
 /** desy chest_contents (src/data/v3.json): normal = 40% 3G gold / 35% honey / 5% feather (3G if full) / 10% mana tea / 10% fine gear; fine & boss = 3G + honey + gear. */
 function openChest(kind: string, g: E.Graph) {
   const G = realmG(g.realm); const r = E.roll(`${P().seed}|${g.id}|${P().pos.node}|chest`);
-  const fine = () => { const pick = GEAR_LIST.filter(x => x.tier === Math.min(2, g.realm) && x.rarity === 'fine'); const it = pick[Math.floor(r * 997) % Math.max(1, pick.length)];
+  const fine = () => { const t = E.chestTier(GEAR_LIST, g.realm); const pick = GEAR_LIST.filter(x => x.tier === t && x.rarity === 'fine' && x.slot !== 'charm'); const it = pick[Math.floor(r * 997) % Math.max(1, pick.length)];
     if (it) { const res = gainGear(it.id); toast(res.equipped ? equipLine(it, res.from) : `🎁 ${zh(it.zh)} ${esc(it.en)}`); } else { S.gold += 3 * G; } };
   playSfx('sfx_gold');
   if (kind !== 'chest_normal') { S.gold += 3 * G; S.inv.honey = (S.inv.honey || 0) + 1; toast(`🧰 +${3 * G} 🪙 + ${zh('蜂蜜药水')} Honey Potion`); fine(); return; }
@@ -332,7 +332,8 @@ function openNode() {
 }
 function enterTown(g: E.Graph, n: E.GNode) {
   graphHooks.title = `${n.kind === 'village' ? '🏡' : '🏘️'} ${zh(n.title?.zh || '')} ${esc(n.title?.en || '')}`;
-  graphHooks.hide = n.kind === 'village' ? ['magic'] : [];   // world-graph §2: a village has inn + save + item shop (Feathers), no magic shop
+  graphHooks.hide = n.kind === 'village' ? ['magic'] : [];
+  graphHooks.shopTown = E.shopTownOf(g, n);   // v3.9.3: town t's blacksmith shelf (villages: their realm town's tier)   // world-graph §2: a village has inn + save + item shop (Feathers), no magic shop
   graphHooks.exit = () => graphScreen(); graphHooks.questLog = () => questLog(() => town()); graphHooks.bag = () => bag(() => town());
   graphHooks.onRest = () => { P().lastInn = { graph: g.id, node: n.id }; clearSafe(); saveW(); cloudTrigger('inn', `${g.id}/${n.id}`); };
   town();
