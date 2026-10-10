@@ -657,3 +657,225 @@ The editor figures are estimates from the libraries' published sizes. Phase 3 me
   - the parameter is ignored when a child profile is active, or when the editor session check fails.
 
 ---
+
+## 6. Save, validate, publish, rollback
+
+### 6.1 Validators: one TypeScript port, checked against Desy's Python
+
+`src/shared/level/validate.ts` runs in the browser and in the Function. It covers:
+- **JSON Schema** for `level/0.1`, `scene/0.2`, `quest/0.2` and `common`, compiled with ajv (as `server/progress.ts` does today). zod is used only for API request bodies.
+- **The graph rules** from `validate_world.py`:
+  - references, and two-way stairs and portals;
+  - reachability from `entry`;
+  - inns within `maxHopsToInn`, and an approach inn next to each boss;
+  - exactly one `patrol` gate edge per boss;
+  - beeline battle range, and town and village density;
+  - the `world` level's realms[] and exit edges;
+  - the seed test vectors, and heroic sources.
+- **The quest rules** from `build_quests.py` / `build_world.py`: positions resolve, variant ↔ step both ways, rewards are G/L multiples, and `requires` has no cycles.
+- **The dialogue rules** from `validate_dialogue.py`:
+  - the met rule, against the level's pool and earlier levels;
+  - density limits per tier, and at most 3 `teaches`;
+  - known speakers and expressions;
+  - no pinyin.
+- **The id rules:** append-only `idx`; no reuse of `retired` ids or of any id in past revisions; ids read-only after the first publish.
+
+**Scope:** every check runs on the level being saved **plus the other levels as currently published**, so cross-level rules see the whole world.
+
+**Parity (CI):**
+- `tests/level-parity.mjs` runs the TypeScript validators and Desy's Python `validate_all.py` on two inputs:
+  - `docs/data/levels/` joined back to the v3.9.x shapes;
+  - a set of known-bad fixtures.
+- It requires both to report the same error and warning codes.
+- Python stays the reference while Desy owns it.
+
+### 6.2 Save (autosave)
+
+- **Autosave** runs 2 s after the last change, and on blur and unload: `PUT /api/v1/editor/levels/:id/draft {draftRev, body}`.
+- The server then:
+  - validates (schema, then the rules);
+  - generates `zhTrad`;
+  - recomputes `characters` and `assets`;
+  - stores `draft`, `draft_validation` and `draft_rev + 1`.
+- **Saving is never blocked by errors** (Desy Q11): the draft is saved and flagged.
+- A checkpoint revision is written at most every 10 minutes.
+- If the API is unreachable, the editor keeps the unsent draft in `localStorage` and retries.
+
+### 6.3 Publish (atomic)
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant J as Jack (/editor)
+  participant F as /api/v1 Function (app_editor)
+  participant DB as Neon
+  J->>F: POST /editor/publish {levels:[{id, draftRev}], note}
+  F->>DB: BEGIN; SELECT … FROM levels WHERE id = ANY(ids) FOR UPDATE
+  F->>F: check draft_rev matches; validate the set + all other published levels
+  alt errors
+    F-->>J: 422 {errors} (nothing written)
+  else ok
+    F->>DB: UPDATE levels SET published = draft, published_version += 1, published_hash, published_at
+    F->>DB: INSERT level_revisions (kind publish, version, body, hash, note) per level
+    F->>F: compile runtime index + quest list + realm content
+    F->>DB: INSERT content_releases (index, compiled) + release_levels (every level → version)
+    F->>DB: INSERT audit_log (level.publish, ids, versions); COMMIT
+    F-->>J: 200 {release, versions}
+  end
+```
+
+- **Players only ever see published content.** The public routes read `content_releases` and `levels.published`, never `draft`.
+- **Set publish** (Desy Q12): stairs pairs, cross-level quests and realm links are validated and committed together.
+- **Compile step:** live content no longer goes through `build_world.py` and `make_realm_content.py`. They are ported to TypeScript (`src/shared/level/compile.ts`), because a Vercel Node Function can't run Python. Desy's Python stays in CI to check that the TypeScript compile gives the same output on the repo export.
+
+### 6.4 Concurrency
+
+- There is one editor, but there may be two tabs or two devices.
+- Every save and publish carries `draftRev`. A mismatch returns **409** with the server's draft.
+- The editor then offers "reload theirs" or "overwrite with mine" (a second save, carrying the new rev). There are no merges.
+
+### 6.5 Rollback
+
+- **History** lists the publish revisions (version, date, note, a diff summary) and the checkpoints.
+- **"Restore to draft"** copies a revision into the draft.
+- **"Roll back"** republishes revision vM as **version N+1**:
+  - it goes through the same validation;
+  - it writes a revision with `note: "rollback to vM"`;
+  - history is never rewritten.
+- A rollback that removes ids added after vM follows the deleted-node rules (§7.4). Publish shows how many live saves stand on those nodes. A count query in the player-role DAL produces that number, and only the number crosses over.
+
+---
+
+## 7. Runtime load path
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant G as Game (browser)
+  participant C as Vercel CDN
+  participant F as /api/v1 Function (app_levels_ro)
+  participant DB as Neon
+  participant I as IndexedDB
+  G->>C: GET /api/v1/levels/index
+  alt CDN hit (s-maxage 300)
+    C-->>G: {release 57, levels {realm_1: {v 4, hash}, …}}
+  else miss
+    C->>F: GET index
+    F->>DB: latest content_releases row
+    F-->>C: 200 + ETag r57
+    C-->>G: index
+  end
+  G->>I: have realm_1 v4?
+  alt cached
+    I-->>G: level JSON
+  else not cached
+    G->>C: GET /api/v1/levels/realm_1?v=4 (immutable)
+    C-->>G: level JSON (a CDN hit after the first player)
+    G->>I: store (id, v)
+  end
+  G->>G: register graph, load referenced assets from the static manifests
+  G-->>C: prefetch neighbour levels (cross-level edges) in idle time
+```
+
+### 7.1 Endpoints and caching
+
+- **`GET /api/v1/levels/index`** (public) returns the latest release: the `release` id, `{id: {v, hash, realm, kind, title}}`, the start position, and the hash of the compiled quest list.
+  - `Cache-Control: public, max-age=60` and `CDN-Cache-Control: public, s-maxage=300, stale-while-revalidate=86400`, plus `ETag: "r<release>"`.
+  - A publish reaches players within about 5 minutes, with no CDN purge, so no Vercel token is needed.
+- **`GET /api/v1/levels/:id?v=N`** (public) returns `levels.published` when its version is `v`, or the `level_revisions` row for an older `v`, so a tab mid-session keeps its version.
+  - `Cache-Control: public, max-age=31536000, immutable` + `ETag: "<hash>"`.
+  - Without `v`, it answers `302` to the current version.
+  - `v` is the "rev" in Jack's brief.
+- **`GET /api/v1/levels/quests?r=<release>`**: the compiled quest list, immutable.
+- **`vercel.json`** sends `no-store` today for all of `/api/(.*)`. That rule gets narrowed to exclude `/api/v1/levels/`. Phase 2 checks on a preview deployment that Vercel's CDN caches the function responses with these headers.
+- **Client cache:** an IndexedDB store `levels` keyed `(id, v)`, keeping the last 2 versions per level (about 2 MB at worst). The service worker (architecture §10.5) can serve the same keys when it lands; IndexedDB alone is enough for phase 2.
+- **Preload:** after arriving in a level, the game prefetches (in `requestIdleCallback`):
+  - the levels behind its cross-level edges;
+  - their `assets` lists, from the static CDN manifests (hashed and immutable).
+
+### 7.2 Offline and fallbacks
+
+1. Use the IndexedDB copy of the version named in the cached index.
+2. **API unreachable and no cache:** use the **levels bundled at build time**. The Vercel build compiles `docs/data/levels/` (GameDev's latest export, §9) into `public/world/` exactly as today, so a first-time offline guest can still play.
+3. **The Pages build** has no API, and the API sends no CORS headers. It keeps the frozen v3.9.x seed until it's retired (Q12 in §11).
+
+### 7.3 Content version and save compatibility
+
+- **What saves record:**
+  - saves gain `progress.levels: {id: v}`, the versions last played, next to `dataVersion`;
+  - `saves.content_version` (architecture §10.2) records the release id.
+- **Edits are safe by construction** (§2.9):
+  - added ids don't disturb bitsets or `eventsDone`;
+  - changed content under an existing id simply plays the new content;
+  - an event already in `eventsDone` stays done (give it a new id to make it fire again);
+  - unchanged edges keep their exact RNG rolls, because the keys hash ids, never `idx` or list positions.
+- **Zones → levels:** no save migration. `boss.id` keeps the old zone ids, so `zonesDefeated` stays valid. Phase 6 renames the field to `bossesDefeated`, with an alias on load.
+- **Real families on cloud saves:**
+  - the server-side save validator (`server/progress.ts`) reads node counts from the bundled static index today (`graphNodeCount`);
+  - phase 2 points it at the published release, so a node added in the editor doesn't make a child's cloud save fail validation.
+
+### 7.4 Deleted nodes and live saves
+
+- **Today** the game handles a deleted node **only for the player's current position**: `startGraph()` (`src/ui/graph.ts:462`) moves the player to `index.start`.
+- **Nothing cleans up:**
+  - `lastInn` (the Feather's home and the respawn point after a defeat);
+  - `visitedTowns` (Feather destinations);
+  - visited or cleared bits that point at retired `idx` values;
+  - `eventsDone` ids of deleted events.
+
+  `progress.ts` checks only the id format.
+- **Planned for phase 2, not built here:** a load-time `reconcile(progress, levels)`:
+  - `lastInn` → the nearest surviving inn in the same level, else `start`;
+  - missing `visitedTowns` entries are dropped;
+  - bits for retired `idx` values are cleared;
+  - `eventsDone` / `eventLastFired` entries for retired event ids are dropped.
+
+  The server does the same for cloud saves.
+- **Publish warns** when a delete hits a town, village, inn, boss or quest node (Desy Q14), and shows the count of affected saves.
+
+### 7.5 Cost against the free tiers
+
+| Item | At about 1,000 MAU (20 sessions each) | Free limit |
+|---|---|---|
+| Index requests | 20k sessions. At most 1 Function call per CDN region per 5 minutes (about 9k a month at most); the rest are CDN hits. | 1M invocations |
+| Level files | Each `(id, v)` misses once per CDN region, then hits. After a publish, about 36 × regions misses. | 1M CDN requests. Level JSON is about 5–20 KB gzipped, so a few hundred MB a month against 100 GB. |
+| Neon wake-ups from public reads | Index misses only, and they cluster in hours that saves already keep awake | 100 CU-hours (the binding limit, unchanged) |
+| Editor | One user, a few hundred requests a day | negligible |
+| GameDev export pulls | 1 index poll per 30 minutes (public, CDN-cached) + 1 export per publish | negligible |
+
+**Neon compute stays the first limit** (architecture §13.3). Level reads add little, because the CDN absorbs them.
+
+---
+
+## 8. Migrating Desy's v3.9.x data
+
+**What gets migrated:**
+- 36 graphs: `world`, 9 overworlds and 26 dungeon levels in 12 dungeons;
+- `zones.json` (20 zones) and the realms[] in `world.json`;
+- `quests.json` (50 quests, quest/0.2) and `quests_world.json` (55 hooks);
+- 7 scene files and 197 inline graph dialogues.
+
+**The one-shot conversion** (Desy §3.4, adjusted for level = zone):
+
+1. **`tools/level/split_levels.py`** writes 36 `level/0.1` files to `docs/data/levels/` (the first repo copy, §9). In the process it:
+   - spreads each zone's settings onto every level the zone touches (Desy's zone→level map), and puts `boss` on the level that holds `bossNode`, with `boss.id` = the zone id;
+   - puts quests in the giver's level and scenes in the trigger's level, and turns hooks into node `quests[]` variants;
+   - converts the inline `dialogue{}` to scene/0.2 and rewrites `{"dialogue": k}` as `{"scene": id}`;
+   - resolves the 117 `zone + nodeKind + position` positions with `build_world.resolve_pos`;
+   - turns the 9 `event: portal` steps into `reach` at the portal node;
+   - adds `questReady` to `common`;
+   - lists the 148 missing quest scenes as "to write" warnings, not errors.
+2. **`tools/level/join_levels.py`** rebuilds the v3.9.x shapes.
+3. **The round-trip CI test:** `join(split(seed))` must equal the seed byte for byte, except for a listed set of intended changes. Then `validate_all.py` runs on the joined output.
+4. **`server/seed-levels.mjs`** runs after `npm run db:migrate`:
+   - it loads `docs/data/levels/*.json` and validates it with the TypeScript validators;
+   - **in one transaction** it inserts all 36 levels as **published version 1** with identical drafts, writes one `level_revisions` row per level (`note: "v3.9.x seed"`), and creates release 1;
+   - it refuses to run on a non-empty `levels` table unless given `--restore` (disaster recovery, §9.4).
+5. **Cutover check:** GameDev's first export (§9) must equal the seeded files byte for byte.
+
+**How Desy's tools keep working:**
+- **The validators and the sim** read `docs/data/levels/` through `join_levels.py`, which feeds `validate_all.py`, `world_graph.py`, the sim runners and `write_world_doc.py` unchanged. CI runs them on every push, including GameDev's export commits.
+- **The generators** (`world_gen.py`, `make_world_data.py`) stop writing live content. They stay for the `status: "reference"` layouts Jack hasn't touched, and their output reaches the game only through an **import** (§9.3).
+- **The Oct 9 byte-for-byte CI check** of `docs/data/world/` against the tools keeps running on the frozen seed.
+
+---
