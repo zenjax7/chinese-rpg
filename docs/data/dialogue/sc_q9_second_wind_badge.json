@@ -1,0 +1,161 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q9_second_wind_badge",
+ "title": "Granny Bai's old badge",
+ "realm": 9,
+ "zone": "demon_king_s_gate",
+ "density": "D6",
+ "trigger": {
+  "graph": "demon_castle_2",
+  "node": "treasure_1",
+  "on": "enter",
+  "zone": "demon_king_s_gate",
+  "nodeKind": "chest",
+  "cond": {
+   "questActive": "q9_second_wind"
+  }
+ },
+ "background": "bg_castle_storeroom",
+ "music": "gentle_memory",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "surprised"
+  }
+ },
+ "words": [
+  "C565"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "narrator",
+   "side": "none",
+   "expr": "neutral",
+   "en": "Under a pile of rusty keys, something small and silver glints: a badge shaped like a bell.",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "surprised",
+   "en": "This is Granny Bai's!",
+   "zh": "这是白奶奶的！",
+   "zhTrad": "這是白奶奶的！",
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "surprised",
+   "en": "How can you tell?",
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "Her name is on it. And a tiny drawing of her... with a lot more hair.",
+   "zh": "上边有她的名字。",
+   "zhTrad": "上邊有她的名字。",
+   "vo": null
+  },
+  {
+   "id": "l5",
+   "speaker": "narrator",
+   "side": "none",
+   "expr": "neutral",
+   "en": "On the back, in small scratchy letters, someone carved a promise.",
+   "vo": null
+  },
+  {
+   "id": "l6",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "thinking",
+   "en": "Even if it's hard, don't give up.",
+   "zh": "就算很难，也不要放弃。",
+   "zhTrad": "就算很難，也不要放棄。",
+   "vo": null
+  },
+  {
+   "id": "l7",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "thinking",
+   "en": "She used to be a hero. A real one.",
+   "zh": "她以前是英雄。",
+   "zhTrad": "她以前是英雄。",
+   "vo": null
+  },
+  {
+   "id": "l8",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "She still is! And she makes the best tea in nine realms.",
+   "zh": "她现在也是！",
+   "zhTrad": "她現在也是！",
+   "vo": null
+  },
+  {
+   "id": "l9",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "neutral",
+   "en": "What do you do with the badge?",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "Read the promise out loud: {C565}",
+     "tokens": [
+      "C565"
+     ],
+     "goto": "l10",
+     "correct": true
+    },
+    {
+     "id": "c2",
+     "en": "Hide it and keep it a secret.",
+     "goto": "l9b"
+    }
+   ]
+  },
+  {
+   "id": "l9b",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "No secrets from Granny! ...But we can make it a surprise.",
+   "vo": null
+  },
+  {
+   "id": "l10",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "We must give it back to her!",
+   "zh": "我们一定要给她！",
+   "zhTrad": "我們一定要給她！",
+   "vo": null
+  },
+  {
+   "id": "l11",
+   "speaker": "narrator",
+   "side": "none",
+   "expr": "neutral",
+   "en": "You tuck the badge safely into your pack. It feels warm, like a cup of Granny Bai's tea.",
+   "vo": null,
+   "end": true
+  }
+ ]
+}

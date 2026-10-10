@@ -674,7 +674,7 @@ The cost is about +5–7 points of defeat rate at 50% accuracy from tier 5, beca
 ### 6.5 How gear is earned (no pay-to-win)
 
 There's no real money and no premium currency. Gear comes from:
-- **Shop:** common gear, priced at about 8 at-level battles of gold.
+- **Shop:** common gear, priced at about 8 at-level battles of gold, from the town blacksmith (town N sells tier N). Villages have no smith (`world-graph.md` §2).
 - **Chests:** see §7.2.
 - **Location bosses:** a guaranteed fine piece.
 - **Realm bosses:** a guaranteed heroic piece plus a skill.

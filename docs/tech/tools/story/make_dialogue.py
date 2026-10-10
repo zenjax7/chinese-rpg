@@ -177,5 +177,28 @@ SCENES.append(scene(
   L("l5", "farmer_li", "Leaving already? Don't forget: when someone says thank you, you can say you're welcome.", "R1", "happy", end=True)],
  onEnd=[{"completeQuest": "q1_hoe"}]))
 
+# ---------------- Quest step scene: q9_second_wind s2 (Granny Bai's badge, demon_castle_2/treasure_1) ----------------
+SCENES.append(scene(
+ id="sc_q9_second_wind_badge", title="Granny Bai's old badge", realm=9, zone="demon_king_s_gate", density="D6",
+ trigger={"graph": "demon_castle_2", "node": "treasure_1", "on": "enter", "zone": "demon_king_s_gate", "nodeKind": "chest",
+          "cond": {"questActive": "q9_second_wind"}},
+ background="bg_castle_storeroom", music="gentle_memory", once=True,
+ slots={"L1": {"char": "hero", "expr": "neutral"}, "L2": {"char": "xiaolong", "expr": "surprised"}},
+ lines=[
+  L("l1", "narrator", "Under a pile of rusty keys, something small and silver glints: a badge shaped like a bell.", side="none"),
+  L("l2", "xiaolong", "This is Granny Bai's!", "L2", "surprised", zh="这是白奶奶的！"),
+  L("l3", "hero", "How can you tell?", "L1", "surprised"),
+  L("l4", "xiaolong", "Her name is on it. And a tiny drawing of her... with a lot more hair.", "L2", "happy", zh="上边有她的名字。"),
+  L("l5", "narrator", "On the back, in small scratchy letters, someone carved a promise.", side="none"),
+  L("l6", "xiaolong", "Even if it's hard, don't give up.", "L2", "thinking", zh="就算很难，也不要放弃。"),
+  L("l7", "hero", "She used to be a hero. A real one.", "L1", "thinking", zh="她以前是英雄。"),
+  L("l8", "xiaolong", "She still is! And she makes the best tea in nine realms.", "L2", "happy", zh="她现在也是！"),
+  L("l9", "hero", "What do you do with the badge?", "L1", "neutral", choices=[
+     C("c1", "Read the promise out loud: {C565}", goto="l10", correct=True),
+     C("c2", "Hide it and keep it a secret.", goto="l9b")]),
+  L("l9b", "xiaolong", "No secrets from Granny! ...But we can make it a surprise.", "L2", "happy"),
+  L("l10", "xiaolong", "We must give it back to her!", "L2", "happy", zh="我们一定要给她！"),
+  L("l11", "narrator", "You tuck the badge safely into your pack. It feels warm, like a cup of Granny Bai's tea.", side="none", end=True)]))
+
 if __name__ == "__main__":
     for s in SCENES: print(s["id"], len(s["lines"]), "lines", s["words"])

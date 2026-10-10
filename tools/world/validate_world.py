@@ -301,6 +301,31 @@ for f in idx.get('content', []) if isinstance(idx.get('content'), list) else (id
     for zid, lst in c['pools'].items():
         for i in lst:
             if i not in items: E(f"{f}: pool {zid} item {i} missing")
+# ---- v3.9.5: heroic sources (combat-spec §6.2-6.3, §7.2): every heroic piece in data/items/gear_items.csv has exactly one source
+# (a realm-boss chest via locations bossReward.heroic, or a quest gear reward) or, when its source says 'none in the spec', none at all.
+GI = os.environ.get('WORLD_GEAR_CSV', f'{DOCS}/items/gear_items.csv')
+if os.path.exists(GI):
+    HER = {r['id']: r for r in csv.DictReader(open(GI, encoding='utf-8-sig')) if r['rarity'] == 'heroic'}
+    GID = {((r.get('prototype_id') or '').strip() or k): k for k, r in HER.items()}      # game id (build_data.py) -> catalogue id
+    HSRC = collections.defaultdict(list)
+    _cls = J(f'{PROTO}/locations.json') if os.path.exists(f'{PROTO}/locations.json') else []
+    for l in (_cls if isinstance(_cls, list) else _cls.get('locations', [])):              # realms 1-2: GameDev's classic tables
+        h = (l.get('bossReward') or {}).get('heroic')
+        if h: HSRC[GID.get(h, h)].append(f"realm boss ({l['id']}, src/data/locations.json)")
+    for c in CONTENT.values():
+        for l in c['locations']:
+            h = (l.get('bossReward') or {}).get('heroic')
+            if h: HSRC[GID.get(h, h)].append(f"realm {c['realm']} realm boss ({l['id']})")
+    for q in QV2.values():
+        for g in ((q.get('rewards') or {}).get('gear') or []):
+            if g.get('rarity') == 'heroic': HSRC[GID.get(g['id'], g['id'])].append(f"quest {q['id']}")
+    for k, s_ in HSRC.items():
+        if len(s_) > 1: E(f"heroic {k}: {len(s_)} sources ({'; '.join(s_)})")
+    for k, r in HER.items():
+        unplaced = (r.get('source') or '').startswith('none')
+        if unplaced and HSRC.get(k): E(f"gear_items.csv {k}: source says none but it is given by {HSRC[k][0]}")
+        if not unplaced and not HSRC.get(k): E(f"gear_items.csv {k}: source '{r.get('source')}' but nothing gives it")
+    if '-v' in sys.argv: print('heroic sources', {k: v for k, v in sorted(HSRC.items())})
 stats_h = collections.Counter(h['status'] for h in HOOKS.values())
 if '-v' in sys.argv: print('hooks', dict(stats_h), 'v2 quests', len(QV2))
 print(json.dumps({'graphs': len(G), 'zones': len(ZONES), 'hooks': dict(stats_h), 'errors': len(err), 'warnings': len(warn)}))

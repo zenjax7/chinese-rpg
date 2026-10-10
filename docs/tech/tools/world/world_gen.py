@@ -292,6 +292,9 @@ def gen(t):
                     EVG.append({"id": f"{eid}.fight_{qid}", "type": "miniboss", "repeat": {"mode": "once"}, "requires": [{"questActive": qid}],
                                 "enemies": [PROTO.get(x, x) for x in oo['enemies']][:3], "quest": qid, "setFlags": [f"{qid}.{ob.get('id', 'step')}"]})
                     out.append({"event": f"{eid}.fight_{qid}"}); continue
+                if oo.get('scene'):   # v3.9.5: a step with a written scene (objective.scene, data/dialogue) plays it instead of the placeholder line
+                    EVG.append({"id": f"{eid}.step_{qid}", "type": "scene", "repeat": {"mode": "once"}, "requires": [{"questActive": qid}], "scene": oo['scene']})
+                    out.append({"event": f"{eid}.step_{qid}"}); continue
                 EVG.append({"id": f"{eid}.step_{qid}", "type": "story", "repeat": {"mode": "once"}, "requires": [{"questActive": qid}],
                             "lines": [{"speaker": "traveller", "en": f"(quest step for {qid}: scene from data/dialogue)"}]}); out.append({"event": f"{eid}.step_{qid}"})
             return out + ([{"event": "ambient"}] if hook else [])

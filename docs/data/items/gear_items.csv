@@ -4,79 +4,79 @@ weapon_t1_fine,wood_sword_f,1,Starter Meadow,weapon,fine,ATK,6,False,,6,,,69,好
 weapon_t1_heroic,horn_dagger,1,Starter Meadow,weapon,heroic,ATK,7,False,,6,,,78,角兔角,Rabbit-Horn Dagger,+1 streak at battle start,"realm boss chest (Horned Rabbit King, §6.3)"
 armor_t1_common,cloth_tunic,1,Starter Meadow,armor,common,DEF,3,True,50,6,8.3,5.6,50,布衣,Cloth Tunic,,shop: town 1 blacksmith
 armor_t1_fine,cloth_tunic_f,1,Starter Meadow,armor,fine,DEF,3,False,,6,,,57,好布衣,Fine Cloth Tunic,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t1_heroic,,1,Starter Meadow,armor,heroic,DEF,4,False,,6,,,65,英雄布衣,Heroic Cloth Tunic,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t1_heroic,,1,Starter Meadow,armor,heroic,DEF,4,False,,6,,,65,兔毛背心,Bunny-Fur Vest,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t1_common,potlid,1,Starter Meadow,shield,common,DEF,1,True,35,6,5.8,3.9,35,锅盖盾,Pot-lid Shield,,shop: town 1 blacksmith
 shield_t1_fine,potlid_f,1,Starter Meadow,shield,fine,DEF,1,False,,6,,,40,好锅盖盾,Fine Pot-lid Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t1_heroic,,1,Starter Meadow,shield,heroic,DEF,2,False,,6,,,46,英雄锅盖盾,Heroic Pot-lid Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t1_heroic,,1,Starter Meadow,shield,heroic,DEF,2,False,,6,,,46,蘑菇盾,Mushroom-Cap Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t2_common,stinger,2,Honeycomb Forest,weapon,common,ATK,8,True,120,12,10.0,6.7,120,蜂刺短剑,Stinger Dagger,,shop: town 2 blacksmith
 weapon_t2_fine,stinger_f,2,Honeycomb Forest,weapon,fine,ATK,9,False,,12,,,138,好蜂刺短剑,Fine Stinger Dagger,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t2_heroic,,2,Honeycomb Forest,weapon,heroic,ATK,10,False,,12,,,156,英雄蜂刺短剑,Heroic Stinger Dagger,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t2_heroic,,2,Honeycomb Forest,weapon,heroic,ATK,10,False,,12,,,156,蜂后之刺,Queen's Stinger,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t2_common,petal_cloak,2,Honeycomb Forest,armor,common,DEF,5,True,95,12,7.9,5.3,95,花瓣斗篷,Petal Cloak,,shop: town 2 blacksmith
 armor_t2_fine,petal_cloak_f,2,Honeycomb Forest,armor,fine,DEF,6,False,,12,,,109,好花瓣斗篷,Fine Petal Cloak,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t2_heroic,,2,Honeycomb Forest,armor,heroic,DEF,7,False,,12,,,124,英雄花瓣斗篷,Heroic Petal Cloak,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t2_heroic,,2,Honeycomb Forest,armor,heroic,DEF,7,False,,12,,,124,金蜜斗篷,Golden Honey Cloak,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t2_common,beeswax,2,Honeycomb Forest,shield,common,DEF,2,True,70,12,5.8,3.9,70,蜂蜡盾,Beeswax Shield,,shop: town 2 blacksmith
 shield_t2_fine,beeswax_f,2,Honeycomb Forest,shield,fine,DEF,2,False,,12,,,80,好蜂蜡盾,Fine Beeswax Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t2_heroic,,2,Honeycomb Forest,shield,heroic,DEF,3,False,,12,,,91,英雄蜂蜡盾,Heroic Beeswax Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t2_heroic,,2,Honeycomb Forest,shield,heroic,DEF,3,False,,12,,,91,蜂巢盾,Honeycomb Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t3_common,,3,Crossroads Market,weapon,common,ATK,11,True,220,18,12.2,6.1,220,铁剑,Iron Sword,,shop: town 3 blacksmith
 weapon_t3_fine,,3,Crossroads Market,weapon,fine,ATK,13,False,,18,,,253,好铁剑,Fine Iron Sword,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t3_heroic,,3,Crossroads Market,weapon,heroic,ATK,14,False,,18,,,286,英雄铁剑,Heroic Iron Sword,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t3_heroic,,3,Crossroads Market,weapon,heroic,ATK,14,False,,18,,,286,宝箱牙剑,Mimic-Tooth Sword,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t3_common,,3,Crossroads Market,armor,common,DEF,7,True,175,18,9.7,4.9,175,皮甲,Leather Armor,,shop: town 3 blacksmith
 armor_t3_fine,,3,Crossroads Market,armor,fine,DEF,8,False,,18,,,201,好皮甲,Fine Leather Armor,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t3_heroic,,3,Crossroads Market,armor,heroic,DEF,9,False,,18,,,228,英雄皮甲,Heroic Leather Armor,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t3_heroic,,3,Crossroads Market,armor,heroic,DEF,9,False,,18,,,228,灯笼皮甲,Lantern Leather Armor,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t3_common,,3,Crossroads Market,shield,common,DEF,3,True,130,18,7.2,3.6,130,圆盾,Round Shield,,shop: town 3 blacksmith
 shield_t3_fine,,3,Crossroads Market,shield,fine,DEF,3,False,,18,,,150,好圆盾,Fine Round Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
 shield_t3_heroic,,3,Crossroads Market,shield,heroic,DEF,4,False,,18,,,169,宝箱盾,Mimic Shield,Thorns 25%,"realm boss chest (Mimic King, §6.3)"
 weapon_t4_common,,4,Goblin Caves,weapon,common,ATK,14,True,380,27,14.1,5.6,380,弯刀,Scimitar,,shop: town 4 blacksmith
 weapon_t4_fine,,4,Goblin Caves,weapon,fine,ATK,16,False,,27,,,437,好弯刀,Fine Scimitar,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t4_heroic,,4,Goblin Caves,weapon,heroic,ATK,18,False,,27,,,494,英雄弯刀,Heroic Scimitar,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t4_heroic,,4,Goblin Caves,weapon,heroic,ATK,18,False,,27,,,494,水晶弯刀,Crystal Scimitar,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t4_common,,4,Goblin Caves,armor,common,DEF,9,True,300,27,11.1,4.4,300,矿工护甲,Miner's Plate,,shop: town 4 blacksmith
 armor_t4_fine,,4,Goblin Caves,armor,fine,DEF,10,False,,27,,,345,好矿工护甲,Fine Miner's Plate,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t4_heroic,,4,Goblin Caves,armor,heroic,DEF,12,False,,27,,,390,英雄矿工护甲,Heroic Miner's Plate,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t4_heroic,,4,Goblin Caves,armor,heroic,DEF,12,False,,27,,,390,蝙蝠翼甲,Bat-Wing Plate,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t4_common,,4,Goblin Caves,shield,common,DEF,4,True,230,27,8.5,3.4,230,石盾,Stone Shield,,shop: town 4 blacksmith
 shield_t4_fine,,4,Goblin Caves,shield,fine,DEF,5,False,,27,,,264,好石盾,Fine Stone Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t4_heroic,,4,Goblin Caves,shield,heroic,DEF,5,False,,27,,,299,英雄石盾,Heroic Stone Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t4_heroic,,4,Goblin Caves,shield,heroic,DEF,5,False,,27,,,299,回音石盾,Echo-Stone Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t5_common,,5,Hydra Swamp,weapon,common,ATK,17,True,650,36,18.1,7.2,650,蛇牙矛,Hydra-fang Spear,,shop: town 5 blacksmith
 weapon_t5_fine,,5,Hydra Swamp,weapon,fine,ATK,20,False,,36,,,747,好蛇牙矛,Fine Hydra-fang Spear,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t5_heroic,,5,Hydra Swamp,weapon,heroic,ATK,22,False,,36,,,845,英雄蛇牙矛,Heroic Hydra-fang Spear,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t5_heroic,,5,Hydra Swamp,weapon,heroic,ATK,22,False,,36,,,845,鬼火长矛,Wisp-Fire Spear,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t5_common,,5,Hydra Swamp,armor,common,DEF,11,True,520,36,14.4,5.8,520,鳞甲,Scale Mail,,shop: town 5 blacksmith
 armor_t5_fine,,5,Hydra Swamp,armor,fine,DEF,13,False,,36,,,598,好鳞甲,Fine Scale Mail,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t5_heroic,,5,Hydra Swamp,armor,heroic,DEF,14,False,,36,,,676,英雄鳞甲,Heroic Scale Mail,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t5_heroic,,5,Hydra Swamp,armor,heroic,DEF,14,False,,36,,,676,蟾皮甲,Toad-Skin Mail,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t5_common,,5,Hydra Swamp,shield,common,DEF,5,True,390,36,10.8,4.3,390,沼泽盾,Bog Shield,,shop: town 5 blacksmith
 shield_t5_fine,,5,Hydra Swamp,shield,fine,DEF,6,False,,36,,,448,好沼泽盾,Fine Bog Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
 shield_t5_heroic,,5,Hydra Swamp,shield,heroic,DEF,7,False,,36,,,507,龟壳盾,Turtle-Shell Shield,first broken block per battle leaks 1 less,quest q5_fog_bottle
 weapon_t6_common,,6,Zombie Lands,weapon,common,ATK,20,True,900,45,20.0,6.7,900,圣光锤,Holy Mace,,shop: town 6 blacksmith
 weapon_t6_fine,,6,Zombie Lands,weapon,fine,ATK,23,False,,45,,,1035,好圣光锤,Fine Holy Mace,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t6_heroic,,6,Zombie Lands,weapon,heroic,ATK,26,False,,45,,,1170,英雄圣光锤,Heroic Holy Mace,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t6_heroic,,6,Zombie Lands,weapon,heroic,ATK,26,False,,45,,,1170,晨光锤,Dawn Mace,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t6_common,,6,Zombie Lands,armor,common,DEF,13,True,720,45,16.0,5.3,720,医者长袍,Healer's Robe,,shop: town 6 blacksmith
 armor_t6_fine,,6,Zombie Lands,armor,fine,DEF,15,False,,45,,,828,好医者长袍,Fine Healer's Robe,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t6_heroic,,6,Zombie Lands,armor,heroic,DEF,17,False,,45,,,936,英雄医者长袍,Heroic Healer's Robe,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t6_heroic,,6,Zombie Lands,armor,heroic,DEF,17,False,,45,,,936,守夜长袍,Night-Watch Robe,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t6_common,,6,Zombie Lands,shield,common,DEF,6,True,540,45,12.0,4.0,540,银盾,Silver Shield,,shop: town 6 blacksmith
 shield_t6_fine,,6,Zombie Lands,shield,fine,DEF,7,False,,45,,,621,好银盾,Fine Silver Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t6_heroic,,6,Zombie Lands,shield,heroic,DEF,8,False,,45,,,702,英雄银盾,Heroic Silver Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t6_heroic,,6,Zombie Lands,shield,heroic,DEF,8,False,,45,,,702,月牙盾,Crescent-Moon Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t7_common,,7,Griffin Peaks,weapon,common,ATK,23,True,1150,54,21.3,7.1,1150,狮鹫羽弓,Griffin Bow,,shop: town 7 blacksmith
 weapon_t7_fine,,7,Griffin Peaks,weapon,fine,ATK,26,False,,54,,,1322,好狮鹫羽弓,Fine Griffin Bow,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t7_heroic,,7,Griffin Peaks,weapon,heroic,ATK,30,False,,54,,,1495,英雄狮鹫羽弓,Heroic Griffin Bow,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t7_heroic,,7,Griffin Peaks,weapon,heroic,ATK,30,False,,54,,,1495,风龙弓,Wind-Dragon Bow,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t7_common,,7,Griffin Peaks,armor,common,DEF,15,True,920,54,17.0,5.7,920,风之甲,Wind Mail,,shop: town 7 blacksmith
 armor_t7_fine,,7,Griffin Peaks,armor,fine,DEF,17,False,,54,,,1058,好风之甲,Fine Wind Mail,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t7_heroic,,7,Griffin Peaks,armor,heroic,DEF,20,False,,54,,,1196,英雄风之甲,Heroic Wind Mail,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t7_heroic,,7,Griffin Peaks,armor,heroic,DEF,20,False,,54,,,1196,鹰身羽甲,Harpy-Wing Mail,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t7_common,,7,Griffin Peaks,shield,common,DEF,7,True,690,54,12.8,4.3,690,云盾,Cloud Shield,,shop: town 7 blacksmith
 shield_t7_fine,,7,Griffin Peaks,shield,fine,DEF,8,False,,54,,,793,好云盾,Fine Cloud Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t7_heroic,,7,Griffin Peaks,shield,heroic,DEF,9,False,,54,,,897,英雄云盾,Heroic Cloud Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t7_heroic,,7,Griffin Peaks,shield,heroic,DEF,9,False,,54,,,897,雷云盾,Thundercloud Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t8_common,,8,Ogre Colosseum,weapon,common,ATK,26,True,1400,63,22.2,7.4,1400,冠军大剑,Champion Blade,,shop: town 8 blacksmith
 weapon_t8_fine,,8,Ogre Colosseum,weapon,fine,ATK,30,False,,63,,,1610,好冠军大剑,Fine Champion Blade,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t8_heroic,,8,Ogre Colosseum,weapon,heroic,ATK,34,False,,63,,,1820,英雄冠军大剑,Heroic Champion Blade,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t8_heroic,,8,Ogre Colosseum,weapon,heroic,ATK,34,False,,63,,,1820,牛角大剑,Minotaur-Horn Blade,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t8_common,,8,Ogre Colosseum,armor,common,DEF,17,True,1120,63,17.8,5.9,1120,角斗士铠甲,Gladiator Plate,,shop: town 8 blacksmith
 armor_t8_fine,,8,Ogre Colosseum,armor,fine,DEF,20,False,,63,,,1288,好角斗士铠甲,Fine Gladiator Plate,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t8_heroic,,8,Ogre Colosseum,armor,heroic,DEF,22,False,,63,,,1456,英雄角斗士铠甲,Heroic Gladiator Plate,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t8_heroic,,8,Ogre Colosseum,armor,heroic,DEF,22,False,,63,,,1456,火心铠甲,Fire-Heart Plate,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t8_common,,8,Ogre Colosseum,shield,common,DEF,8,True,840,63,13.3,4.4,840,塔盾,Tower Shield,,shop: town 8 blacksmith
 shield_t8_fine,,8,Ogre Colosseum,shield,fine,DEF,9,False,,63,,,966,好塔盾,Fine Tower Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t8_heroic,,8,Ogre Colosseum,shield,heroic,DEF,10,False,,63,,,1092,英雄塔盾,Heroic Tower Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t8_heroic,,8,Ogre Colosseum,shield,heroic,DEF,10,False,,63,,,1092,巨魔皮盾,Troll-Hide Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 weapon_t9_common,,9,Demon King's Castle,weapon,common,ATK,29,True,1700,72,23.6,7.9,1700,勇者之剑,Hero's Sword,,shop: town 9 blacksmith
 weapon_t9_fine,,9,Demon King's Castle,weapon,fine,ATK,33,False,,72,,,1955,好勇者之剑,Fine Hero's Sword,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-weapon_t9_heroic,,9,Demon King's Castle,weapon,heroic,ATK,38,False,,72,,,2210,英雄勇者之剑,Heroic Hero's Sword,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+weapon_t9_heroic,,9,Demon King's Castle,weapon,heroic,ATK,38,False,,72,,,2210,光明之剑,Sword of Light,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 armor_t9_common,,9,Demon King's Castle,armor,common,DEF,19,True,1360,72,18.9,6.3,1360,龙鳞甲,Dragon-scale Mail,,shop: town 9 blacksmith
 armor_t9_fine,,9,Demon King's Castle,armor,fine,DEF,22,False,,72,,,1564,好龙鳞甲,Fine Dragon-scale Mail,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-armor_t9_heroic,,9,Demon King's Castle,armor,heroic,DEF,25,False,,72,,,1768,英雄龙鳞甲,Heroic Dragon-scale Mail,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+armor_t9_heroic,,9,Demon King's Castle,armor,heroic,DEF,25,False,,72,,,1768,星光铠甲,Starlight Plate,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)
 shield_t9_common,,9,Demon King's Castle,shield,common,DEF,9,True,1020,72,14.2,4.7,1020,精灵盾,Elven Shield,,shop: town 9 blacksmith
 shield_t9_fine,,9,Demon King's Castle,shield,fine,DEF,10,False,,72,,,1173,好精灵盾,Fine Elven Shield,,location boss chest (guaranteed); normal chest fine_gear 10%; quests
-shield_t9_heroic,,9,Demon King's Castle,shield,heroic,DEF,12,False,,72,,,1326,英雄精灵盾,Heroic Elven Shield,,realm boss chest / quests (unnamed: no named heroic for this slot yet)
+shield_t9_heroic,,9,Demon King's Castle,shield,heroic,DEF,12,False,,72,,,1326,石像鬼盾,Gargoyle Shield,,none in the spec (not placed: §6.3 gives one realm-boss heroic per realm; quests.json gives only shield_t5_heroic)

@@ -252,7 +252,7 @@
    ],
    "bg": "0xb5884c",
    "bossReward": {
-    "heroic": "mimic_shield",
+    "heroic": "shield_t3_heroic",
     "zh": "宝箱盾",
     "en": "Mimic Shield",
     "effect": "Thorns 25%",
