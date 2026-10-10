@@ -56,9 +56,9 @@ const VILLAGE = {   // signboards (centre x, top y) and building hotspots, in fr
   magic: { sign: [960, 404], hot: [880, 470, 170, 100], z: '🔮 魔法店', e: 'Magic shop', tid: 'go-magic' },   // v3.3
   quests: { sign: [250, 420], hot: [150, 490, 200, 90], z: '📋 任务板', e: 'Quest board', tid: 'go-quests' },
 } as const;
-/** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
 /** Accounts build only (src/ui/account.ts fills it): the game menu's "switch player" button. */
 export const accountHooks: { switchPlayer?: () => void } = {};
+/** Graph mode (?world=graph) borrows the village screens: where the gate leads, the title, the quest log and inn rests. */
 export const graphHooks: { start?: () => void; exit?: () => void; title?: string; questLog?: () => void; onRest?: () => void; bag?: () => void; hide?: string[];
   /** v3.9.3: the town number whose blacksmith shelf this town / village shows (graph mode) */ shopTown?: number } = {};
 export function town() {
