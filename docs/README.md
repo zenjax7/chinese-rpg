@@ -17,7 +17,7 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 3. [design/curriculum-notes.md](design/curriculum-notes.md) with [data/curriculum/curriculum.csv](data/curriculum/curriculum.csv) for vocabulary; [story/](story/) for story and quests.
 4. [design/plan.md](design/plan.md) and the research memos are background.
 
-**Pending (not merged yet):** Desy's v3.9.2 world and quest data (`/workspace/desy/data/world/`, incl. `content/realm_3..9.json`, `realm_content.schema.json`, exit edges, FNV-1a RNG; and `data/quests*.json`) is newer than [data/world/](data/world/) and [data/quests/](data/quests/) here. It needs GameDev to update the build tools and game together, so it was not dropped into the build inputs. The v3.9.2 text of [story/story.md](story/story.md) and [story/quests.md](story/quests.md) is already here.
+The v3.9.2 world and quest data (realm 3–9 content files, `realms[]` links and exit edges, FNV-1a seeds, escort and words steps) is merged into [data/world/](data/world/) and [data/quests/](data/quests/), and the game reads it (graph mode, `?world=graph`).
 
 ## Layout
 
@@ -121,14 +121,21 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 - [data/dialogue/sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/scene.schema.json](data/dialogue/scene.schema.json) — JSON Schema for scene/0.2 (extends GameDev scene/0.1) · **Desy** · when writing scenes
 
-### Data: world (v3.9.1)
+### Data: world (v3.9.2)
 
-- [data/world/index.json](data/world/index.json) — Index of every file the loader reads: the graphs (id, kind, realm, dungeon level, file), the rule/zone/quest files and the start position · **Desy** · when editing world data (then rebuild)
+- [data/world/index.json](data/world/index.json) — Index of every file the loader reads: the graphs (id, kind, realm, dungeon level, file), the rule/zone/quest files, the realm 3–9 content files and the start position · **Desy** · when editing world data (then rebuild)
 - [data/world/layout_targets.json](data/world/layout_targets.json) — Size and shape targets per realm (nodes, dead ends, inn distance) · **Desy** · when editing world data (then rebuild)
 - [data/world/quests_world.json](data/world/quests_world.json) — Quest hooks placed on the graphs (`offerQuest` targets), quest items and speakers · **Desy** · when editing world data (then rebuild)
 - [data/world/world_realm_table.csv](data/world/world_realm_table.csv) — Per-realm table: graph size and shape, towns, inns, dungeons, zones, and sim battles and minutes (beeline, explorer, v3.7) · **Desy** · when editing world data (then rebuild)
-- [data/world/world_rules.json](data/world/world_rules.json) — Encounter rate per danger, depth step, safe-edge rules, softeners (walked edges, zone battle budget, pity rolls), walk times, inn warp and seed rules · **Desy** · when editing world data (then rebuild)
+- [data/world/world_rules.json](data/world/world_rules.json) — Encounter rate per danger, depth step, safe-edge rules, softeners (walked edges, zone battle budget, pity rolls), walk times, Return Feather destinations (last inn + visited towns and villages) and the seed rule (FNV-1a 32-bit → mulberry32, with test vectors) · **Desy** · when editing world data (then rebuild)
 - [data/world/zones.json](data/world/zones.json) — The 20 zones (one per location): word pool, roster, elite, boss, order and unlock rules · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_3.json](data/world/content/realm_3.json) — Realm 3 content (realm_content/0.1): enemies, zone locations, word pools and items for Crossroads Highway and Night Bazaar. The game fetches it in graph mode (pinyin stripped) · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_4.json](data/world/content/realm_4.json) — Realm 4 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_5.json](data/world/content/realm_5.json) — Realm 5 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_6.json](data/world/content/realm_6.json) — Realm 6 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_7.json](data/world/content/realm_7.json) — Realm 7 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_8.json](data/world/content/realm_8.json) — Realm 8 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
+- [data/world/content/realm_9.json](data/world/content/realm_9.json) — Realm 9 content (realm_content/0.1): enemies, zone locations, word pools and items · **Desy** · when editing world data (then rebuild)
 - [data/world/diagrams/goblin_caves.png](data/world/diagrams/goblin_caves.png) — v3.8 diagram (PNG) · **Desy** · when editing world data (then rebuild)
 - [data/world/diagrams/goblin_caves_1.mmd](data/world/diagrams/goblin_caves_1.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
 - [data/world/diagrams/goblin_caves_2.mmd](data/world/diagrams/goblin_caves_2.mmd) — v3.8 diagram (mermaid) · **Desy** · when editing world data (then rebuild)
@@ -179,6 +186,7 @@ A browser-based, turn-based fantasy RPG (Phaser 4 + TypeScript + Vite) that teac
 - [data/world/schemas/index.schema.json](data/world/schemas/index.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
 - [data/world/schemas/progress.schema.json](data/world/schemas/progress.schema.json) — v3.9.2 player progress schema (progress/0.3: fog bitsets, lastInn, visitedTowns = towns and villages, feathers) · **Desy** · when editing world data (then rebuild)
 - [data/world/schemas/quests_world.schema.json](data/world/schemas/quests_world.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
+- [data/world/schemas/realm_content.schema.json](data/world/schemas/realm_content.schema.json) — v3.9.2 JSON Schema for the realm content files (realm_content/0.1) · **Desy** · when editing world data (then rebuild)
 - [data/world/schemas/world_rules.schema.json](data/world/schemas/world_rules.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
 - [data/world/schemas/zones.schema.json](data/world/schemas/zones.schema.json) — v3.9.2 JSON Schema (2020-12) · **Desy** · when editing world data (then rebuild)
 

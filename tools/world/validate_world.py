@@ -243,6 +243,64 @@ for q in QV2.values():
         elif '/' not in r and r not in G: E(f"quest {q['id']}: graph {r} missing")
     gr = (q.get('giver') or {}).get('ref')
     if gr and '/' in gr and q['id'] not in OFFERS[gr]: E(f"quest {q['id']}: giver node {gr} has no offerQuest {q['id']}")
+# ---- v3.9.2: world.json realms[] (realm links, unlock conditions, exit edges)
+WG = G.get('world', {}); RL = WG.get('realms', [])
+if not RL: E("world.json: no realms[]")
+WE = {e['id']: e for e in WG.get('edges', [])}
+for r in RL:
+    w = f"world.json realms[{r['realm']}]"; g = G.get(r['graph'])
+    if not g: E(f"{w}: graph {r['graph']} missing"); continue
+    en = WE.get(r['enterEdge']); ex = next((e for e in g['edges'] if e['id'] == r['exitEdge']), None)
+    if not en or en['from'] != r['node'] or en.get('to') != {'graph': r['graph'], 'node': r['entry']}: E(f"{w}: enterEdge {r['enterEdge']} must lead {r['node']} -> {r['graph']}/{r['entry']}")
+    if not ex or ex['kind'] != 'exit' or ex['from'] != r['entry'] or ex.get('to') != {'graph': 'world', 'node': r['node']} or ex.get('danger', 0) != 0:
+        E(f"{w}: exitEdge {r['exitEdge']} must be kind exit, danger 0, {r['entry']} -> world/{r['node']}")
+    if r['realmBossZone'] not in ZONES or ZONES[r['realmBossZone']].get('bossKind') != 'realmboss' or ZONES[r['realmBossZone']]['realm'] != r['realm']:
+        E(f"{w}: realmBossZone {r['realmBossZone']} is not realm {r['realm']}'s realm-boss zone")
+    prev = next((x for x in RL if x.get('next') == r['realm']), None)
+    if prev is None:
+        if r['unlock'] or r['linkEdge']: E(f"{w}: the first realm has no unlock / linkEdge")
+    else:
+        if r['unlock'] != {'bossDefeated': prev['realmBossZone']}: E(f"{w}: unlock must be bossDefeated {prev['realmBossZone']}")
+        le = WE.get(r['linkEdge'])
+        if not le or le['kind'] != 'path' or le['from'] != prev['node'] or le['to'] != r['node'] or le.get('danger', 0) != 0 or le.get('cond') != r['unlock']:
+            E(f"{w}: linkEdge {r['linkEdge']} must be a danger-0 path {prev['node']} -> {r['node']} with the unlock condition")
+# ---- v3.9.2: event outcomes ('portal' was dropped)
+OUTC = set(S['common']['$defs']['outcome']['enum'])
+if 'portal' in OUTC: E("common.schema.json: outcome 'portal' should be gone (v3.9.2)")
+for gid, g in G.items():
+    for ev in g.get('events', []):
+        for o in [ev.get('outcome')] + [x.get('outcome') for x in ev.get('pick', [])]:
+            if o and o not in OUTC: E(f"{gid}/{ev['id']}: outcome {o} unknown")
+# ---- v3.9.2: the seed rule (FNV-1a 32-bit -> mulberry32) reproduces Desy's test vectors
+def fnv1a32(k):
+    h = 0x811c9dc5
+    for ch in k.encode('utf-16-le')[::2]: h = ((h ^ ch) * 0x01000193) & 0xffffffff
+    return h
+def mulberry32(a):
+    a = (a + 0x6D2B79F5) & 0xffffffff; t = a
+    t = ((t ^ (t >> 15)) * (t | 1)) & 0xffffffff
+    t ^= (t + (((t ^ (t >> 7)) * (t | 61)) & 0xffffffff)) & 0xffffffff
+    return ((t ^ (t >> 14)) & 0xffffffff) / 4294967296
+for v in rules.get('seed', {}).get('testVectors', []):
+    if fnv1a32(v['key']) != v['fnv1a32'] or abs(mulberry32(fnv1a32(v['key'])) - v['roll']) > 1e-15: E(f"seed vector {v['key']}: got {fnv1a32(v['key'])} / {mulberry32(fnv1a32(v['key']))}")
+# ---- v3.9.2: realm 3-9 content files (schema realm_content/0.1) agree with zones.json
+CONTENT = {}
+for f in idx.get('content', []) if isinstance(idx.get('content'), list) else (idx.get('content') or {}).values():
+    p = f"{D}/{f}" if not str(f).startswith('/') else f
+    if not os.path.exists(p): E(f"index: content file {f} missing"); continue
+    c = J(p); check('realm_content', c, f); CONTENT[c['realm']] = c
+    ids = {e['id'] for e in c['enemies']}; items = {i['id'] for i in c['items']}
+    for e in c['enemies']:
+        if e['id'] != e.get('desyId'): E(f"{f}: enemy {e['id']} desyId {e.get('desyId')}")
+        if e['id'] not in ENEMIES: E(f"{f}: enemy {e['id']} not in enemies.csv")
+    for z in (z for z in ZONES.values() if z['realm'] == c['realm']):
+        if not any(l['id'] == z['id'] for l in c['locations']): E(f"{f}: no location for zone {z['id']}")
+        if not c['pools'].get(z['id']): E(f"{f}: no word pool for zone {z['id']}")
+        for en in [z['boss'], z.get('elite')] + [r['enemy'] for r in z.get('roster', [])]:
+            if en and en not in ids: W(f"{f}: zone {z['id']} enemy {en} not in the content file (realm stays locked)")
+    for zid, lst in c['pools'].items():
+        for i in lst:
+            if i not in items: E(f"{f}: pool {zid} item {i} missing")
 stats_h = collections.Counter(h['status'] for h in HOOKS.values())
 if '-v' in sys.argv: print('hooks', dict(stats_h), 'v2 quests', len(QV2))
 print(json.dumps({'graphs': len(G), 'zones': len(ZONES), 'hooks': dict(stats_h), 'errors': len(err), 'warnings': len(warn)}))

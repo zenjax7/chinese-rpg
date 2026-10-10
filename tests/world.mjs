@@ -205,6 +205,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   async function battle() {
     for (let i = 0, waits = 0; i < 3000; i++) {
       const st = await state();
+      if (process.env.WORLD_DEBUG && i % 100 === 0) { log('battle', i, st, JSON.stringify(await p.evaluate(() => (window.__proto.foes?.() || []).map(f => [f.id, f.hp, f.alive]))), await p.evaluate(() => document.querySelector('[data-testid=battle]')?.innerText.slice(0, 200))); await p.screenshot({ path: '/tmp/dbg.png' }); }
       if (st === 'victory') { await tid('victory-ok').click(); return 'win'; }
       if (st === 'left' || st === 'scene' || st === 'dialog') return st;
       if (st === 'continue') await tid('continue').click({ timeout: 2000 }).catch(() => {});
@@ -338,7 +339,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await keep('quest completed');
 
   // ---- quest-gated fight: q8_caged_beasts on beast_pens_1/deadend_3 ----
-  await edit(s => { s.level = 12; s.hp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor();
+  await edit(s => { s.level = 40; s.hp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor();   // realm 8 enemies (content/realm_8.json) need a realm-8 level
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
   await p.evaluate(() => { window.__proto.world.goto('beast_pens_1', 'deadend_3', true); }); await p.waitForTimeout(1200);
   check(!(await tid('battle').count()), 'quest-gated fight: no fight on deadend_3 while the quest is not active');
@@ -403,12 +404,60 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('town').waitFor({ timeout: 5000 });
   s = await sv(); check(s.world.pos.graph === 'realm_2' && s.world.pos.node === 'entry_town', 'world map: tapping realm 2 goes to its entry town');
   await tid('go-adventure').click(); await tid('graph').waitFor();
-  await tid('go-world').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.graph === 'world', null, { timeout: 8000 });
-  check((await sv()).world.pos.node === 'realm_2', 'world map: a realm town has a 🌍 World map button back (realms 2–9 have no exit edge in the data)');
-  // a realm that is not in this build
-  await p.evaluate(() => window.__proto.world.goto('world', 'realm_3')); await tid('graph').waitFor();
-  await tid('gexit-x_realm_3').click(); await tid('not-in-build').waitFor({ timeout: 5000 }); await tid('dialog-btn-0').click();
-  check((await sv()).world.pos.graph === 'world', 'world map: realms 3–9 say “not in this build” (world.json inBuild: false)');
+  check(await tid('go-world').count() === 0 && await tid('gexit-exit_entry_town').count() === 1, 'world map: the realm 2 entry town has its v3.9.2 exit edge (no fallback button)');
+  await tid('gexit-exit_entry_town').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.graph === 'world', null, { timeout: 8000 });
+  check((await sv()).world.pos.node === 'realm_2', 'world map: the exit edge exit_entry_town leads back to the realm 2 world node');
+  check(await p.locator('[data-testid="graph-svg"] line[data-edge="w12"].walked').count() === 1 && await p.locator('[data-testid="graph-svg"] line[data-edge="w23"].closed').count() === 1,
+    'world map: link edge w12 is open, w23 is closed until the realm 2 realm boss');
+  // ---- realm 3: opens after great_hive (world.json realms[].unlock); its content (enemies, words) loads on entry ----
+  await edit(s => { s.world.zonesDefeated.push('great_hive'); s.level = Math.max(s.level, 12); }); await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+  check(await p.locator('[data-testid="gnode-realm_3"].next').count() === 1 && await p.locator('[data-testid="gnode-realm_4"].next').count() === 0, 'world map: beating great_hive opens realm 3 (realm 4 still locked)');
+  await tid('gnode-realm_3').click();
+  for (let i = 0; i < 40 && !(await tid('town').count()); i++) { await p.waitForTimeout(250);
+    if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  await tid('town').waitFor({ timeout: 5000 }).catch(() => {});
+  s = await sv(); check(s.world.pos.graph === 'realm_3' && s.world.pos.node === 'entry_town' && !(await tid('not-in-build').count()), 'world map: realm 3 is in this build now — tapping it enters its entry town');
+  if (await tid('town').count()) await tid('go-adventure').click(); await tid('graph').waitFor();
+  await shot('2026-10-09-graph-realm3');
+  const rc = await p.evaluate(() => { const L = window.__proto.world.W.zones; return Object.values(L).filter(z => z.realm === 3).map(z => z.id); });
+  await p.evaluate(() => { window.__fightDone = null; window.__proto.world.fight('crossroads_highway').then(o => { window.__fightDone = o; }); });
+  await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
+  const foes3 = await p.evaluate(() => window.__proto.foes());
+  for (let i = 0; i < 40 && !(await p.locator('[data-testid="opt"]:not([disabled])').count()); i++) { const st = await state();
+    if (st === 'menu') await tid('act-attack').click().catch(() => {}); else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click().catch(() => {});
+    else if (st === 'continue') await tid('continue').click().catch(() => {}); await p.waitForTimeout(150); }
+  await shot('2026-10-09-battle-realm3');
+  const q3 = await p.evaluate(() => window.__proto.q);
+  check(rc.length === 2 && foes3.length >= 1 && foes3.every(f => ['road_bandit', 'slime', 'mimic'].includes(f.id)), `realm 3 battle: Crossroads Highway roster from content/realm_3.json (${foes3.map(f => f.id).join(', ')})`);
+  const inPool = await p.evaluate(async id => { const c = await (await fetch('world/content/realm_3.json')).json(); return { r3: c.pools.crossroads_highway.includes(id), item: c.items.find(i => i.id === id) || null }; }, q3?.answerId);
+  check(!!q3 && q3.zh && (inPool.r3 || !inPool.item), `realm 3 battle: asks a word (${q3?.answerId} ${q3?.zh}${inPool.r3 ? ', from the Crossroads Highway pool' : ', review'})`);
+  const r3 = await battle(); check(r3 === 'win' || r3 === 'left', `realm 3 battle finished (${r3})`);
+  for (let i = 0; i < 30 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  await keep('after realm 3 battle');
+  // ---- words step (quests.md §2a): correct battle answers to pool L2.1 count; practice does not ----
+  await edit(s => { s.storyQuests.q2_bubble_lesson = { s: 'active', at: Date.now(), step: 1, obj: { s2: 3, s3: 0 } }; });
+  await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  await p.evaluate(() => window.__proto.world.goto('realm_2', 'entry_town')); await tid('graph').or(tid('town')).first().waitFor();
+  await p.evaluate(() => { window.__fightDone = null; window.__proto.world.fight('forest').then(o => { window.__fightDone = o; }); });
+  await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
+  const rw = await battle(); for (let i = 0; i < 30 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  s = await sv(); const wc = await p.evaluate(() => window.__proto.wordsCount);
+  check(rw === 'win' && (s.storyQuests.q2_bubble_lesson.obj.s3 > 0 || s.storyQuests.q2_bubble_lesson.step > 1) && wc?.quest === 'q2_bubble_lesson' && wc.of === 8,
+    `words: a forest battle counts correct L2.1 answers for q2_bubble_lesson (obj.s3 = ${s.storyQuests.q2_bubble_lesson.obj.s3}, ${JSON.stringify(wc)})`);
+  // ---- escort (quests.md §2a): the follower shows on the map, survives a Feather flight, ends on entering `to` ----
+  await edit(s => { s.storyQuests.q3_caravan = { s: 'active', at: Date.now(), step: 0, obj: { s2: 0 } }; s.inv.feather = 3;
+    if (!s.world.visitedTowns.some(t => t.graph === 'realm_3' && t.node === 'village_1x')) s.world.visitedTowns.push({ graph: 'realm_3', node: 'village_1x' }); });
+  await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  await p.evaluate(() => window.__proto.world.goto('realm_3', 'entry_town')); await tid('graph').waitFor();
+  const fol = await tid('escort-follower').getAttribute('data-npc').catch(() => null);
+  check(fol === 'donkey_cart', `escort: the donkey cart follows the party on the map (${fol})`);
+  await tid('go-items').click(); await tid('items').waitFor(); await tid('act-feather').click(); await tid('feather-picker').waitFor();
+  const fopts = await p.evaluate(() => [...document.querySelectorAll('[data-testid^="feather-to-"]')].map(e => e.dataset.testid));
+  const fk = await p.evaluate(ids => ids.slice(1).map(t => { const [g, n] = t.replace('feather-to-', '').split(/-(.*)/); const gg = window.__proto.world.W.graphs[g]; return gg ? gg.nodes.find(x => x.id === n)?.kind : 'town'; }), fopts);
+  check(fopts.includes('feather-to-realm_3-village_1x') && fk.every(k => k === 'town' || k === 'village'), `Feather picker: the last inn + towns/villages only (${fopts.map(o => o.replace('feather-to-', '')).join(', ')}; kinds ${fk.join(',')})`);
+  await tid('feather-to-realm_3-village_1x').click();
+  for (let i = 0; i < 30 && !(await tid('town').count()); i++) { await p.waitForTimeout(200); if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  s = await sv(); check(s.storyQuests.q3_caravan.obj.s2 === 1 && s.storyQuests.q3_caravan.step >= 1, `escort: flying to the village (the escort target) with a Feather completes the escort step (${JSON.stringify(s.storyQuests.q3_caravan)})`);
   await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
   // ---- a damaged / older save is migrated on load and validates ----
   await edit(s => { s.world.schema = 'progress/0.2'; s.world.feathers = 7; s.world.junk = 1; s.world.graphs.realm_1.cleared = 'AQ=='; });
