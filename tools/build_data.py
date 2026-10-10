@@ -234,7 +234,28 @@ if _regen is not None and float(_regen) != _bal['combat']['mpPerCorrect']:
 # ---------------- v3.9.1 graph world (?world=graph) ----------------
 # src/data/world/ (index: rules + zones + graph list, quests quest/0.2, scenes scene/0.2, save schemas) and public/world/graphs/,
 # from the repo's docs/data copy of Desy's files (repo-relative, so CI can rebuild and check it): tools/world/build_world.py.
-import subprocess, sys
+import subprocess, sys, glob
+# ---------------- v3.9.2 realm 3-9 content (docs/data/world/content/realm_N.json) ----------------
+# The content files are Desy's per-realm enemy / location / pool tables for graph mode. build_world.py copies them to public/world/content/
+# (pinyin stripped); here they are cross-checked against the same combat_data.json enemies, boss_hp.csv and curriculum the classic tables use,
+# so a later edit on either side can't silently drift. Mismatches stop the build.
+_CE = {e['id']: e for e in CD['enemies']}; _cbad = []
+for _f in sorted(glob.glob(os.path.join(DOCS, 'world', 'content', 'realm_*.json'))):
+    _c = json.load(open(_f, encoding='utf-8')); _n = os.path.basename(_f)
+    for _e in _c['enemies']:
+        _d = _CE.get(_e['id'])
+        if not _d: _cbad.append(f"{_n}: enemy {_e['id']} not in combat_data.json"); continue
+        _want = dict(hp=_d['hp'], atk=_d['atk'], def_=_d['def'], exp=_d['exp'], gold=_d['gold'], level=_d['level'])
+        if _e['kind'] in ('locboss', 'realmboss'):
+            _r = BHP.get((_e['tier'], 'realm' if _e['kind'] == 'realmboss' else 'location'))
+            if _r: _want.update(hp=int(_r['hp']), atk=int(_r['atk']))
+        for _k, _v in _want.items():
+            if _e.get(_k) != _v: _cbad.append(f"{_n}: {_e['id']}.{_k} = {_e.get(_k)}, combat_data/boss_hp = {_v}")
+    for _i in _c['items']:
+        _r = rows.get(_i['id'])
+        if not _r: _cbad.append(f"{_n}: item {_i['id']} not in the curriculum"); continue
+        if _r.get('simplified', _r.get('zh', _i['zh'])) != _i['zh']: _cbad.append(f"{_n}: item {_i['id']} zh {_i['zh']} != curriculum")
+if _cbad: raise SystemExit('realm content drift:\n' + '\n'.join(_cbad[:40]))
 _r = subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'world', 'build_world.py')], capture_output=True, text=True)
 print(_r.stdout.strip() or _r.stderr.strip())
 if _r.returncode: raise SystemExit('build_world failed:\n' + _r.stdout + _r.stderr)
