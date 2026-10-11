@@ -4,7 +4,7 @@
 **Owner:** GameDev. **Graph spec (§6):** a shared proposal. Desy is writing `world-graph.md`, the JSON Schemas, and example data for realm 1 and a 3-level dungeon on top of it.
 **Scope:** parent accounts with child profiles, cloud saves, the world as a node graph, and how content and assets ship.
 
-> **Revision 4 (proposed 2026-10-10, pending Jack's approval): level content moves into the DB, plus a repo export.** Maps, events, quests and dialogue per level would be edited in `/editor` and stored in Neon (`levels`, `level_revisions`), and GameDev's box exports them to `docs/data/levels/`. That revises "the DB holds player data only" below for **level content only**; art, audio and the global tables stay static. See [§1.4](#14-revision-4-proposed-level-content-in-the-db-plus-a-repo-export) and [level-editor.md](level-editor.md).
+> **Revision 4 (proposed 2026-10-10, pending Jack's approval): level content moves into the DB, plus a repo export.** Maps, events, quests, word pools and dialogue per map would be edited in `/editor` and stored in Neon (`levels`, `level_revisions`), and GameDev's box exports them to `docs/data/levels/`. *(2026-10-11, r1: maps without realms, `level/0.2`; every player, guest or signed in, gets the graph world.)* That revises "the DB holds player data only" below for **level content only**; art, audio and the global tables stay static. See [§1.4](#14-revision-4-proposed-level-content-in-the-db-plus-a-repo-export) and [level-editor.md](level-editor.md).
 
 **Revision 3 in one paragraph.** The database now holds **player data only**. Art, music, animation, and the graph and content JSON all ship **as static files with the frontend build** on Vercel's CDN. They get content-hashed names, per-graph manifests, a service worker cache, and `immutable` headers. There are no content tables, no storage bucket, no publish-to-storage job, and no content-pointer endpoint any more. Sign-in is **Google only, through Auth.js**, with **database sessions** in an httpOnly cookie. Without row-level security, per-parent access is enforced by **one data-access layer** in the API. Every piece fits a free tier (Vercel Hobby, Neon Free, a Google OAuth client). §13 shows where those tiers break: **Neon compute hours run out first, at roughly 700–1,000 monthly active players.**
 
@@ -79,18 +79,19 @@
 
 ### 1.4 Revision 4 (proposed): level content in the DB plus a repo export
 
-**Status: proposed 2026-10-10, pending Jack's approval.** The full design is [level-editor.md](level-editor.md).
+**Status: proposed 2026-10-10, revised 2026-10-11 (r1, Jack's round-1 review), pending Jack's approval.** The full design is [level-editor.md](level-editor.md).
 
-- **What changes:** D5 and D15 said graph and content JSON ship as static build files, and the DB holds player data only. For **level content** (per-level maps, events, quest definitions and variants, and dialogue scenes, as `level/0.1` JSON), that becomes:
+- **What changes:** D5 and D15 said graph and content JSON ship as static build files, and the DB holds player data only. For **map content** (per-map graphs, settings and word pools, events, quest definitions and variants, and dialogue scenes, as `level/0.2` JSON, one file per map, no realms), that becomes:
   - **the DB is the live source.** Tables `levels` (draft + published), append-only `level_revisions`, `content_releases`, `editors` and `editor_tokens` (level-editor §3). Estimated well under 100 MB.
   - **The game reads published levels** from `GET /api/v1/levels/index` and `GET /api/v1/levels/:id?v=N`, which are CDN-cached and immutable per version, with an IndexedDB cache and the last export bundled as the offline fallback (level-editor §7).
   - **GameDev's box exports** every published release to `docs/data/levels/` with gh, so git keeps the history and a backup, and CI and the sim read it. **The editor and backend have no GitHub write access**, and the export token lives only on that box (level-editor §9).
 - **What doesn't change:**
   - art, audio, animation, portraits and manifests stay static and content-hashed (D5);
-  - the global tables (curriculum, enemies, economy, items, `world_rules`) stay in the repo and ship with the build;
+  - the global tables (curriculum, enemies, economy, items, `world_rules`) stay in the repo and ship with the build; learn items made in the editor and their auto-generated TTS clips reach the repo through GameDev's export (level-editor §2.5);
   - player data, the DAL and Auth.js stay as they are.
 - **Privacy:** the editor uses its own Postgres role with no grant on any player table, and a separate `EditorCtx` (level-editor §4).
 - **Cost:** the public level routes are mostly CDN hits. Neon compute stays the first limit (§13).
+- **Guests (r1, Jack 2026-10-11):** guests and signed-in players are the same. Everyone plays the graph world from the same published maps; guests just save locally only (§12.1). There is no "classic for guests" phase.
 
 ---
 
@@ -1208,7 +1209,8 @@ quests: {
 ### 12.1 Guest mode (kept, D9)
 
 - **No sign-in required, ever.** "Play as guest" goes to today's `consentScreen()` (the parent check plus the speech checkbox) and saves to `localStorage` under `chinese-rpg-proto-v3` as now (or under a v4 key after Phase 1, with the v3 key read once and migrated).
-- Guests **get all new content**: content is static files on the CDN and needs no session (§10). Guests just have no cloud save, and their play costs no Function calls and no Neon compute.
+- **Guests and signed-in players play the same game (Jack, 2026-10-11).** Everyone gets the graph world and all new content. Guests just **save locally only** (the same progress shape as an account save, including the per-map version hashes for the beta reset, [level-editor.md §10.2](level-editor.md#102-guests-and-signed-in-players-r1)). Today the code still defaults guests to the classic town (`src/world/mode.ts`); that changes with the engine work, and what happens to existing classic saves is an open question for Jack.
+- Content is static files or CDN-cached public routes and needs no session (§10, level-editor §7). Guests have no cloud save, and their play costs no Neon compute (public level reads are mostly CDN hits).
 - **No anonymous server records for guests.** Nothing about a guest is stored on the server, because that would be data about a child **before** parental consent.
 - A banner on the title screen (shown to grown-ups only, behind the parent check): *"Save progress across devices: create a free family account."*
 

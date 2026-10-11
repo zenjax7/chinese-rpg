@@ -1,0 +1,1965 @@
+{
+ "schema": "level/0.2",
+ "id": "realm_3",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "zh": "十字路口集市",
+  "en": "Crossroads Market"
+ },
+ "entry": "entry_town",
+ "aspect": 2.117,
+ "settings": {
+  "title": {
+   "en": "Crossroads Highway",
+   "zh": "十字大道"
+  },
+  "emoji": "🛒",
+  "background": {
+   "map": "bg_map_realm_3",
+   "battle": "bg_battle_r3"
+  },
+  "desyPool": "L3.1",
+  "words": [
+   "C162",
+   "C163",
+   "C164",
+   "C165",
+   "C166",
+   "C167",
+   "C168",
+   "C169",
+   "C170",
+   "C171",
+   "C172",
+   "C173",
+   "C174",
+   "C661",
+   "C662",
+   "C663",
+   "C664",
+   "C665",
+   "C666",
+   "C667",
+   "C668",
+   "C669",
+   "C670",
+   "C671",
+   "C672",
+   "C673",
+   "C674",
+   "C675",
+   "C676",
+   "C677",
+   "C678",
+   "C679",
+   "C175",
+   "C177",
+   "C178",
+   "C179",
+   "C180",
+   "C181",
+   "C680",
+   "C681",
+   "C183",
+   "C184",
+   "C185",
+   "C186",
+   "C187",
+   "C188",
+   "C189",
+   "C682",
+   "C683",
+   "C190",
+   "C191",
+   "C192",
+   "C193",
+   "C194"
+  ],
+  "G": 18,
+  "recLevel": [
+   5,
+   7
+  ],
+  "gearTier": 3,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "road_bandit",
+    "weight": 1
+   },
+   {
+    "enemy": "slime",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e5",
+   "kind": "locboss",
+   "enemy": "bandit_boss"
+  }
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "十字路口集市",
+    "en": "Crossroads Market"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 3,
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q3_stolen_hats",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q3_stolen_hats_offer"
+     },
+     "in": {
+      "scene": "sc_q3_stolen_hats_wait"
+     },
+     "post": {
+      "scene": "sc_q3_stolen_hats_thanks"
+     }
+    },
+    {
+     "quest": "q3_caravan",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q3_caravan_offer"
+     },
+     "in": {
+      "scene": "sc_q3_caravan_wait"
+     },
+     "post": {
+      "scene": "sc_q3_caravan_thanks"
+     }
+    },
+    {
+     "quest": "q3_slime_rainbow",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q3_slime_rainbow_offer"
+     },
+     "in": {
+      "scene": "sc_q3_slime_rainbow_wait"
+     },
+     "post": {
+      "scene": "sc_q3_slime_rainbow_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1625,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Crossroads Highway path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.275,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Crossroads Highway path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.3875,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Crossroads Highway path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.5,
+   "y": 0.229,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.6125,
+   "y": 0.1387,
+   "title": {
+    "zh": "山贼头目",
+    "en": "Bandit Boss"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "fork",
+   "x": 0.5,
+   "y": 0.4097,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.6125,
+   "y": 0.3193,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 0.725,
+   "y": 0.1995,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 10,
+   "kind": "story",
+   "x": 0.8375,
+   "y": 0.0615,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q3_rescue_fei",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q3_rescue_fei"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_3__realm_3_story_1_step_q3_rescue_fei"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_7",
+   "idx": 11,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.3505,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 12,
+   "kind": "miniboss",
+   "x": 0.8375,
+   "y": 0.2372,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q3_rescue_fei",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q3_rescue_fei"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_3__realm_3_miniboss_1_step_q3_rescue_fei"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q3_rescue_fei",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  },
+  {
+   "id": "path_8",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.6125,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 14,
+   "kind": "chest",
+   "x": 0.725,
+   "y": 0.5,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 15,
+   "kind": "inn",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_9",
+   "idx": 16,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5903,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 17,
+   "kind": "chest",
+   "x": 0.6125,
+   "y": 0.6807,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 18,
+   "kind": "inn",
+   "x": 0.8375,
+   "y": 0.413,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_10",
+   "idx": 19,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.6495,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_2",
+   "idx": 20,
+   "kind": "story",
+   "x": 0.8375,
+   "y": 0.587,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q3_caravan",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "story_2.1",
+        "node": "story_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q3_caravan"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_3__realm_3_story_2_step_q3_caravan"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_11",
+   "idx": 21,
+   "kind": "waypoint",
+   "x": 0.6125,
+   "y": 0.8613,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_12",
+   "idx": 22,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.8005,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_4",
+   "idx": 23,
+   "kind": "chest",
+   "x": 0.8375,
+   "y": 0.7628,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_13",
+   "idx": 24,
+   "kind": "waypoint",
+   "x": 0.8375,
+   "y": 0.9385,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 25,
+   "kind": "waypoint",
+   "x": 0.725,
+   "y": 0.95,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "village_1x",
+   "idx": 26,
+   "kind": "village",
+   "x": 0.5,
+   "y": 0.771,
+   "title": {
+    "zh": "十字路口集市村1",
+    "en": "Crossroads Market village 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ],
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q3_rescue_fei",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q3_rescue_fei_offer"
+     },
+     "in": {
+      "scene": "sc_q3_rescue_fei_wait"
+     },
+     "post": {
+      "scene": "sc_q3_rescue_fei_thanks"
+     }
+    },
+    {
+     "quest": "q3_caravan",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 5,
+   "terrain": "grass",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "grass",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "path_6",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_5",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_7",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "path_4",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 13
+  },
+  {
+   "id": "e14",
+   "from": "path_8",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 14
+  },
+  {
+   "id": "e15",
+   "from": "story_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 15
+  },
+  {
+   "id": "e16",
+   "from": "path_3",
+   "to": "path_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 16
+  },
+  {
+   "id": "e17",
+   "from": "path_9",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 17
+  },
+  {
+   "id": "e18",
+   "from": "treasure_1",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 18
+  },
+  {
+   "id": "e19",
+   "from": "path_8",
+   "to": "path_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 19
+  },
+  {
+   "id": "e20",
+   "from": "path_10",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 20
+  },
+  {
+   "id": "e21",
+   "from": "path_4",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 21
+  },
+  {
+   "id": "e22",
+   "from": "path_11",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 22
+  },
+  {
+   "id": "e23",
+   "from": "path_12",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 23
+  },
+  {
+   "id": "e24",
+   "from": "treasure_4",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 24
+  },
+  {
+   "id": "e25",
+   "from": "path_13",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 25
+  },
+  {
+   "id": "e26",
+   "from": "deadend_2",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 26
+  },
+  {
+   "id": "v1x",
+   "from": "path_3",
+   "to": "village_1x",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 27
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_3"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 28
+  },
+  {
+   "id": "x_boss_1_bazaar_cellars_1",
+   "idx": 29,
+   "from": "boss_1",
+   "to": {
+    "graph": "bazaar_cellars_1",
+    "node": "entry_gate"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_3__realm_3_story_1"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "mimic"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_3.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_2.2",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_3__realm_3_story_2"
+    }
+   ]
+  },
+  {
+   "id": "path_11.1",
+   "node": "path_11",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_13.1",
+   "node": "path_13",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q3_rescue_fei",
+   "story": "main",
+   "type": "rescue",
+   "title": {
+    "zh": "救小飞",
+    "en": "Fei and the Bandit Cave"
+   },
+   "giver": {
+    "npc": "xiaomei",
+    "graph": "realm_3",
+    "node": "village_1x"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaomei"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "village_1x"
+     },
+     "note": "Fei's little sister: bandits took him (Jack's 'rescue a friend from bandits in a cave')."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "story_1"
+     },
+     "note": "Fei's wooden sword and a ransom note: 一共多少钱?"
+    },
+    {
+     "id": "s3",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "road_bandit",
+       "road_bandit",
+       "road_bandit"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "miniboss_1"
+     },
+     "note": "The Sack Brothers in their cave."
+    },
+    {
+     "id": "s4",
+     "event": "story",
+     "objective": {
+      "type": "talk",
+      "npc": "fei"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "miniboss_1"
+     },
+     "note": "Untie Fei (scene after the clear)."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaomei",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "village_1x"
+     },
+     "note": "Reunion; Fei grumbles 谢谢."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_rescue_fei_offer",
+    "progress": "sc_q3_rescue_fei_wait",
+    "turnIn": "sc_q3_rescue_fei_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 90,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 150,
+    "items": {},
+    "gear": [
+     {
+      "id": "shield_t3_fine",
+      "tier": 3,
+      "slot": "shield",
+      "rarity": "fine",
+      "zh": "好圆盾",
+      "en": "Fine Round Shield",
+      "stat": "DEF",
+      "value": 3,
+      "perk": "",
+      "goldValue": 150
+     }
+    ],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 13.3,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C166",
+    "C663",
+    "C164",
+    "C668",
+    "C076",
+    "C282"
+   ],
+   "summary": "Follow the ransom note to the bandits' cave, beat the Sack Brothers and bring Fei home to his sister."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q3_stolen_hats",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "找帽子",
+    "en": "Hats Off!"
+   },
+   "giver": {
+    "npc": "auntie_hat",
+    "graph": "realm_3",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": true,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "auntie_hat"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     },
+     "note": "The hat seller's stock was stolen by bandits wearing it all at once."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "collect",
+      "item": "stolen_hat",
+      "n": 5,
+      "dropFrom": [
+       "road_bandit"
+      ],
+      "dropChance": 0.35
+     },
+     "where": {
+      "maps": [
+       "realm_3"
+      ]
+     }
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "auntie_hat",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_stolen_hats_offer",
+    "progress": "sc_q3_stolen_hats_wait",
+    "turnIn": "sc_q3_stolen_hats_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 108,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 90,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 7.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C162",
+    "C163",
+    "C171",
+    "C172",
+    "C190"
+   ],
+   "summary": "Knock 5 stolen hats off the road bandits' heads and return them to the hat stall."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q3_caravan",
+   "story": "side",
+   "type": "escort",
+   "title": {
+    "zh": "护送马车",
+    "en": "The Toy Caravan"
+   },
+   "giver": {
+    "npc": "boss_qian",
+    "graph": "realm_3",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "boss_qian",
+    "graph": "realm_3",
+    "node": "village_1x"
+   },
+   "returnToGiver": false,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "boss_qian"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     },
+     "note": "Boss Qian's toy cart must reach the outpost."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "donkey_cart",
+      "to": {
+       "graph": "realm_3",
+       "node": "village_1x"
+      }
+     },
+     "where": {
+      "maps": [
+       "realm_3"
+      ]
+     },
+     "note": "The cart follows; fights on the way as normal."
+    },
+    {
+     "id": "s3",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "story_2"
+     },
+     "note": "A cheeky toll-goblin wants money: 太贵了! / 便宜一点儿吧 (choice)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "toy_crate",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "village_1x"
+     },
+     "note": "Qian meets you at the outpost."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_caravan_offer",
+    "progress": "sc_q3_caravan_wait",
+    "turnIn": "sc_q3_caravan_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 108,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 90,
+    "items": {
+     "feather": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 8.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C167",
+    "C168",
+    "C169",
+    "C170",
+    "C679",
+    "C663"
+   ],
+   "summary": "Walk Boss Qian's toy cart down the highway to the outpost, haggling a cheeky toll-goblin down on the way."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q3_slime_rainbow",
+   "story": "side",
+   "type": "slay",
+   "title": {
+    "zh": "彩虹史莱姆",
+    "en": "Slime Rainbow"
+   },
+   "giver": {
+    "npc": "dye_maker_lan",
+    "graph": "realm_3",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": true,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_3"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dye_maker_lan"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     },
+     "note": "The dye-maker's stall is in Crossroads Market (the night_bazaar overworld has no village; the bazaar itself is the bazaar_cellars dungeon). Offered after the crossroads_highway boss. She needs jelly in four colors."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "kill",
+      "enemy": "slime",
+      "n": 4,
+      "variants": [
+       "red",
+       "yellow",
+       "blue",
+       "green"
+      ],
+      "scope": {
+       "maps": [
+        "bazaar_cellars_1",
+        "realm_3"
+       ]
+      }
+     },
+     "where": {
+      "maps": [
+       "bazaar_cellars_1"
+      ]
+     },
+     "note": "One of each color (the slime shouts its color)."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dye_maker_lan",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_slime_rainbow_offer",
+    "progress": "sc_q3_slime_rainbow_wait",
+    "turnIn": "sc_q3_slime_rainbow_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 90,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 90,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 5.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C191",
+    "C192",
+    "C193",
+    "C194",
+    "C197",
+    "C198"
+   ],
+   "summary": "Defeat a red, a yellow, a blue and a green slime so the dye-maker can paint the market."
+  }
+ ],
+ "scenes": {
+  "sc_realm_3__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_3__realm_3_miniboss_1_step_q3_rescue_fei": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__realm_3_miniboss_1_step_q3_rescue_fei",
+   "title": "realm_3.miniboss_1.step_q3_rescue_fei",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q3_rescue_fei: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_3__realm_3_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__realm_3_story_1",
+   "title": "realm_3.story_1",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_3__realm_3_story_1_step_q3_rescue_fei": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__realm_3_story_1_step_q3_rescue_fei",
+   "title": "realm_3.story_1.step_q3_rescue_fei",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q3_rescue_fei: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_3__realm_3_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__realm_3_story_2",
+   "title": "realm_3.story_2",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_3__realm_3_story_2_step_q3_caravan": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_3__realm_3_story_2_step_q3_caravan",
+   "title": "realm_3.story_2.step_q3_caravan",
+   "trigger": {
+    "graph": "realm_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q3_caravan: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

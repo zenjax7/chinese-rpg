@@ -45,7 +45,7 @@ Inputs: Jack's v2 decisions (all fixed), `core-curriculum.csv` (curriculum v2: 1
 | 11 | Patrol triggers: **40% without speech, 20% with speech** (Director's call in v3.1; was 25%). Readiness now counts **the location's own pool only**. | §7.4, §7.7 |
 | 12 | New **Preview & Practice** page before each location, plus a realm overview. Practice counts toward **at most 1 of the 2 correct answers per way**. | §8 |
 | 13 | **Curriculum v2 is harder:** 1,051 items (was 585), 47–60 items per location (was ~30), more grammar patterns early, and relaxed speaking/reading rules for 10–12-year-olds. | §5, `core-curriculum.md` |
-| 14 | **Elites** (2× normal HP, location-boss ATK, DEF = tier, 2× gold, 10 × L_rec EXP, 25% chest chance). One scripted elite fight per realm, and a 10% elite chance in boss-approach patrols. | §2.3, §7.8 |
+| 14 | **Elites** (2× normal HP, location-boss ATK, DEF = tier, 2× gold, 10 × L_rec EXP, 25% chest chance). **Removed (Jack, 2026-10-11): no random or scripted elites** (the 10% patrol elite and the one scripted path elite per realm are gone). Elites appear only where a level places one on purpose (mini-boss and quest fights). | §2.3, §7.8 |
 | 15 | Enemy roles are **normal / elite / boss**, with `boss_type` = location or realm. There's no gatekeeper role. | §2.3, §10.3 |
 | 16 | **Special mechanics simulated:** Queen Bee summons (capped at 2, half-HP workers), Hydra Double Bite, Shadow Dragon Curse Chain, Troll Regrow. | §7.9 |
 | 17 | **v3.2 caps (Jack's caps, as in the prototype build):** at most **3 new words per battle** (hard cap, also early in a location; was 4), and **Tired at 30 questions in normal battles (elites included) and 45 in every boss battle** (the 40 tier was the location boss; it's now 45 like the realm boss). | §2.5, §3.3, §11.1 |
@@ -141,10 +141,9 @@ BATTLE_INIT (HP/MP carried over from the map; Friendship gauge = 0)
 On each enemy reaching HP 0: DROP (EXP + gold now; chest roll, §7.2). Summoned workers drop nothing.
 CHECK_END:  all enemies dead (or boss dead: remaining minions flee)  -> VICTORY
             hero HP <= 0 (and no Second Wind)                         -> DEFEAT
-            boss HP <= 50% (first time)                               -> BOSS_CHECKPOINT (save only, NO heal)
 VICTORY  -> REWARDS (EXP, gold, chest contents, proficiency summary) -> MAP (HP/MP as they are)
 DEFEAT   -> INN: full HP/MP, lose gold per §7.5 (keep items, EXP and drops already collected);
-            boss: next attempt starts at 50% boss HP if the checkpoint was reached
+            boss: the next attempt starts fresh at full boss HP (Jack, 2026-10-11: no boss retry mechanic)
 END_FLEE -> MAP (no loss; answers so far still count)
 ```
 
@@ -217,9 +216,9 @@ Enemy attack:  right (block)  -> max(0, ATK_e - 1.25*DEF_h)                     
 | role | boss_type | hp | atk | def | gold | exp | chest_chance | adds | where |
 |---|---|---|---|---|---|---|---|---|---|
 | normal | | round(H(t) × base) | round(1.1 × DEF_ref) | t | 1 × G | 6 × L_rec | 0.10 | – | path fights and patrols |
-| elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | 1 scripted path fight per realm; 10% of boss-approach patrols (§7.8) |
+| elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | only where a level places one: mini-boss and quest fights (Jack, 2026-10-11; §7.8) |
 | boss | location | round(5 × base × m(t)) (v3.6) | round(0.8 × round(1.2 × DEF_ref)) (v3.6) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
-| boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location; 50% checkpoint (save only) |
+| boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location |
 
 **Boss HP and ATK (v3.6; location bosses v3.7).** m(t) is the boss HP multiplier in `data/boss_hp.csv`, tuned so that a kid who enters with full MP and spends it all on spells still needs about **15 correct answers for a location boss and about 20 for a realm boss** (targets, Jack): location bosses × 1.2–1.9 (v3.7; v3.6 was × 2.0–2.7 for 20), realm bosses × 1.05–1.85 (realm bosses already had more HP, and from t4 they face the kid's two strongest spells with a bigger pool). Boss ATK is × 0.8 so the longer fights don't raise defeats. The check is one boss fight from full HP and MP at the recommended level with full gear and the 2 strongest spells of towns t and t−1 (`build/v3/explore/boss_harness.py`, 600 fights per cell):
 
@@ -492,7 +491,7 @@ The justification is unchanged. Battles always outlast the 7 items, and re-askin
 
 ## 5. Difficulty by location (updated for curriculum v2)
 
-Every location = **8 scripted path fights** (one of them the realm's scripted elite, in the elite's home location) + a boss-approach zone (patrols while readiness is under the trigger, §7.4) + the location boss. There are 20 locations (3/2/2/3/2/2/2/2/2 per realm), with the same ids as v2 (`L1.1` … `L9.2`).
+Every location = **8 scripted path fights** + a boss-approach zone (patrols while readiness is under the trigger, §7.4) + the location boss. There are 20 locations (3/2/2/3/2/2/2/2/2 per realm), with the same ids as v2 (`L1.1` … `L9.2`).
 
 **Per realm** (`data/realm_difficulty.csv`). Minutes are sim estimates per location at 75% accuracy with light practice. "saver" trains until the trigger clears; "spender" goes to the boss after the 2 forced patrols.
 
@@ -945,7 +944,7 @@ EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's reco
 
 1. Walking from the last path fight to the boss gate while below the trigger, the kid meets **2 patrols** ("each approach trip"). They can't be sneaked past. This is the only forced cost.
 2. After those 2, the **boss gate is always open**. The kid chooses **Enter** (fight the boss now) or **Train**, which spawns another patrol right away and is repeatable.
-3. **Elite patrols:** each patrol has a **10%** chance to include the location's elite in place of one normal enemy. If the location has no elite of its own, it uses the realm's elite. The elite glows gold on the map, so the kid can see it's worth more (2 × G, 25% chest).
+3. *Removed (Jack, 2026-10-11): no elite patrols.* Patrols use the location's normal roster only.
 4. When readiness reaches the trigger, patrols disappear (one optional wandering patrol stays for farming), and the gate glows "Ready!".
 5. If the kid loses to the boss, they wake at the inn. Walking back to the gate triggers up to 2 more patrols if still below the trigger.
 6. Patrol fights use the normal 7-item selection, which already favors the least-proficient items. So patrols target exactly what's missing.
@@ -965,7 +964,6 @@ At 0 HP the kid wakes at the inn with full HP and MP and keeps all items, EXP an
 | 4 | starter_and_broke_potion | 1 Honey Potion at the start; after a defeat or pity stay with 0 potions and gold < inn, get 1 free |
 | 5 | courage | +20% DEF per consecutive defeat (max +60%), cleared by a win |
 | 6 | minimum_payout | Enemy gold never below 80% of base; every defeated enemy pays |
-| 7 | boss_checkpoint | After the boss drops below 50% HP, retries start there (save only, no heal) |
 | 8 | companion_team_attack | Friendship gauge fills faster on wrong answers (see companion table) |
 
 The sim label **"nets+"** = all 8. **"none"** = a flat 10% defeat fee with no other nets, as a stress test. Evidence is in §7.6.
@@ -1077,7 +1075,7 @@ Practice swaps battle time for practice time. Total time stays about the same, a
 
 ### 7.8 Elites
 
-**Rule** (from the roster brief, now part of the spec): an elite is a named, tougher normal enemy.
+**Rule** (from the roster brief, now part of the spec): an elite is a named, tougher normal enemy. **Jack, 2026-10-11: elites never spawn at random.** There is no patrol elite chance, no scripted path elite and no location `elite` field. An elite fights only where a level places it on purpose (mini-boss and quest fights).
 
 | stat | value |
 |---|---|
@@ -1087,13 +1085,12 @@ Practice swaps battle time for practice time. Total time stays about the same, a
 | gold | 2 × G |
 | exp | 10 × L_rec |
 | chest_chance | 0.25 (normal chest table) |
-| scripted | 1 per realm: the middle path fight (fight 4 of 8) of the elite's home location (`location_id` in `enemies.json`); it replaces one normal enemy |
-| patrols | 10% of boss-approach patrols replace one normal enemy with an elite |
+| placement | hand-placed fights only (mini-boss, quest); no random or scripted spawn (Jack, 2026-10-11) |
 | role / boss_type | `elite` / empty |
 
-The roster's 9 elites (one per realm) are in §2.3 (`role = elite`): swift_horned_rabbit (L1.3), royal_guard_bee (L2.2), mimic (L3.2), goblin_brute (L4.2), swamp_wisp (L5.1), zombie_knight (L6.2), cliff_golem (L7.1), fire_elemental (L8.2), gargoyle (L9.1).
+The roster's 9 elites (one per realm) are in §2.3 (`role = elite`). Today they appear in mini-boss and quest fights: swift_horned_rabbit (L1.3), royal_guard_bee (L2.2), mimic (L3.2), goblin_brute (L4.2), swamp_wisp (L5.1), zombie_knight (L6.2), cliff_golem (L7.1), fire_elemental (L8.2), gargoyle (L9.1).
 
-**Sim** (`data/sim/sim_elites.csv`, single battle from full HP, speech on, companion on):
+**Sim** (`data/sim/sim_elites.csv`, single battle from full HP, speech on, companion on; v3.x, when elites still spawned at random):
 
 | tier | acc | win_rate_normal | win_rate_with_elite | questions_normal | questions_with_elite | hp_lost_normal | hp_lost_with_elite |
 |---|---|---|---|---|---|---|---|
@@ -1474,9 +1471,9 @@ CustomItem {
 Realm    { id; name; themeText; tierBase: number; locationIds: string[]; bossLocationId: string; overview /* §8.6 */ }
 Location { id /* 'L1.1' … */; realmId; name; nameZh; tier: number; itemIds: string[];      // 47–60 in the core curriculum
            enemiesPerBattle: [min, max]; mcOptions: number; reviewSlots: number; pathFights: 8;
-           enemyRoster: { enemyId; weight }[]; bossId; scriptedEliteId?: string;         // every location ends in a boss
+           enemyRoster: { enemyId; weight }[]; bossId;                                   // every location ends in a boss
            unlock: { requires: string[] /* previous location ids whose boss must be beaten */ };
-           bossApproach: { trigger: number /* 0.20 speech, 0.40 reading */; patrolsPerTrip: 2; eliteChance: 0.10; roster: EnemyRef[] };
+           bossApproach: { trigger: number /* 0.20 speech, 0.40 reading */; patrolsPerTrip: 2; roster: EnemyRef[] };
            previewIntro /* §8.6 */ }
 Enemy    { id; nameZh; nameEn; art; role: 'normal' | 'elite' | 'boss'; bossType?: 'location' | 'realm';
            statsFromTier: true; overrides?; minions?: EnemyRef[]; special?: SpecialId /* §7.9 */; shoutItemId: string }
@@ -1512,15 +1509,15 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | Proficient-item review weight | 0.15, raised by 1.5 × min(overdue, 2) when a way is due | §3.2 |
 | Readiness | proficient ÷ the location's own pool | §7.4 |
 | Boss-approach trigger | **20%** (speech on), **40%** (reading mode) | §7.7 (Director's call, v3.1) |
-| Patrols per approach trip / elite chance | 2 / 10% | §7.4, §7.8 |
-| Path fights per location | 8 (one is the scripted elite in its home location) | §5 |
+| Patrols per approach trip | 2 (no elite chance, Jack, 2026-10-11) | §7.4 |
+| Path fights per location | 8 | §5 |
 | Carry-over cap | 20 earlier items | §3.3 |
 | Spoken cap | 50% of questions per battle | §3.4 |
 | K_BLOCK / K_BROKEN / BROKEN_FLOOR | 1.25 / 0.5 / 0.5 | unchanged |
 | Rounding | half-up (`Math.round`) for all combat damage, as in the prototype | sim switched in v3.2 |
 | Enemy ATK normal / elite / location boss / realm boss | 1.1 / 1.2 / 1.2 / 1.3 × DEF_ref; bosses × 0.8 (v3.6) | §2.3 |
 | Enemy HP normal / elite / location boss / realm boss | H(t) / 2 × H(t) / 5 × m(t) / 7 × m(t) × base; m(t) location 1.2–1.9, realm 1.05–1.85 (v3.7, `data/boss_hp.csv`) | §2.3 |
-| Boss minions / checkpoint | 1 (location) or 1–2 (realm) / 50% save point, no heal | |
+| Boss minions | 1 (location) or 1–2 (realm); no checkpoint: a retry starts at full boss HP (Jack, 2026-10-11) | |
 | Streak tiers | 3 / 6 / 10 → ×1.25 / 1.5 / 2.0 | |
 | Spoken bonus | ×1.25 damage, +1 streak | |
 | Soft cap (Tired: enemy ATK × 0.7, hero damage × 1.5) | **30 questions** in normal battles (elites included), **45** in all boss battles (v3.2; the location boss was 40) | §2.5 |
@@ -1554,7 +1551,7 @@ Local-first (IndexedDB plus a JSON export). No third-party analytics.
 - **Economy:** gold earned by source (drops, chests, boss), spent on inn / potions / gear, defeat fees, free-inn uses, Courage level at each fight, gold at each inn visit, **battles between restores**, defeat streak length.
 - **Progress:** pool proficiency % at each boss attempt, patrols fought per location, the kid choosing "go to the boss anyway", time per location.
 - **Speech health:** error codes by device, void rate, sessions where speech was paused, and **measured false rejects** (Jack or a parent tags a sample of graded-mismatch transcripts as "actually correct"). This replaces the sim's ASR assumptions with real numbers.
-- **v3 additions:** companion attacks per battle and whether they landed a kill; spoken-cap hits per battle; elite encounters (scripted/patrol) and their outcome; Queen Bee summons and Hydra double-bite broken blocks; Return Feather uses; **v3.3:** spell purchases (realm, gold before and after, gear owned), casts, fizzles, MP at cast, Ward-reduced hits, quest accept and complete times; **practice**: mode, questions, correct, practice credits granted, time in Preview, whether "Go fight!" was pressed from the Preview, and readiness at the gate with vs without practice.
+- **v3 additions:** companion attacks per battle and whether they landed a kill; spoken-cap hits per battle; Queen Bee summons and Hydra double-bite broken blocks; Return Feather uses; **v3.3:** spell purchases (realm, gold before and after, gear owned), casts, fizzles, MP at cast, Ward-reduced hits, quest accept and complete times; **practice**: mode, questions, correct, practice credits granted, time in Preview, whether "Go fight!" was pressed from the Preview, and readiness at the gate with vs without practice.
 
 KPIs: accuracy 75–85% per realm; normal-battle defeat rate < 10%; boss first-try win rate 60–85%; free-inn uses < 1 per realm after tier 1; spoken accuracy within 10 points of reading accuracy; **time per location < 60 min (speech on)**; Preview used by > 50% of kids in at least half the locations.
 
@@ -1614,7 +1611,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - 1 world graph and 9 realm overworld graphs. The world graph links the realms in order; realm *N* opens when realm *N*−1's realm boss is defeated, and each realm has a danger-0 exit edge back to the world map (v3.9.2, §12.3).
   - 26 dungeon levels in 12 dungeons, one graph per level, joined by two-way stairs or portals.
   - Towns and villages are nodes that open the town screen.
-- **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster, elite and boss. Zones are placed on the graphs, and one zone can span several levels.
+- **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster and boss (the zone `elite` field is not used since Jack, 2026-10-11). Zones are placed on the graphs, and one zone can span several levels.
 - **Battles on edges:** random battles happen on edges, with `danger` 0–3 and `steps` encounter rolls per edge.
 - **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 6 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, story and treasure (v3.8–v3.9.1 also listed `portal`; dropped in v3.9.2 because portals are edges). Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, graph, edge, crossing and step (FNV-1a 32-bit → mulberry32, §12.3), so reloading never re-rolls.
 

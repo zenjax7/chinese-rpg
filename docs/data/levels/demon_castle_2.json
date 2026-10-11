@@ -1,0 +1,1553 @@
+{
+ "schema": "level/0.2",
+ "id": "demon_castle_2",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "demon_castle",
+ "level": 2,
+ "levels": 5,
+ "optional": false,
+ "title": {
+  "zh": "魔王城 第2层",
+  "en": "Demon King's Castle - level 2"
+ },
+ "entry": "stairs_1",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Demon King's Gate",
+   "zh": "魔王城门"
+  },
+  "emoji": "🏰",
+  "background": {
+   "map": "bg_map_demon_castle_2",
+   "battle": "bg_battle_r9"
+  },
+  "desyPool": "L9.1",
+  "words": [
+   "C540",
+   "C546",
+   "C548",
+   "C549",
+   "C995",
+   "C996",
+   "C997",
+   "C998",
+   "C999",
+   "C1000",
+   "C1001",
+   "C1002",
+   "C1003",
+   "C1004",
+   "C1005",
+   "C1006",
+   "C1007",
+   "C1008",
+   "C550",
+   "C551",
+   "C552",
+   "C553",
+   "C554",
+   "C555",
+   "C556",
+   "C557",
+   "C1009",
+   "C1010",
+   "C1011",
+   "C1012",
+   "C1013",
+   "C1014",
+   "C1015",
+   "C1016",
+   "C1017",
+   "C1018",
+   "C1019",
+   "C1020",
+   "C558",
+   "C559",
+   "C560",
+   "C561",
+   "C562",
+   "C563",
+   "C564",
+   "C565",
+   "C566",
+   "C567"
+  ],
+  "G": 72,
+  "recLevel": [
+   22,
+   25
+  ],
+  "gearTier": 9,
+  "difficulty": {
+   "mcOptions": 6,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "imp",
+    "weight": 1
+   },
+   {
+    "enemy": "demon_knight",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e6",
+   "kind": "locboss",
+   "enemy": "shadow_dragon"
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.14,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Demon King's Gate path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.35,
+   "title": {
+    "zh": "小路",
+    "en": "Demon King's Gate path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 3,
+   "kind": "inn",
+   "x": 0.32,
+   "y": 0.35,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_3",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Demon King's Gate path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 5,
+   "kind": "inn",
+   "x": 0.5,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 6,
+   "kind": "boss",
+   "x": 0.59,
+   "y": 0.05,
+   "title": {
+    "zh": "暗影龙",
+    "en": "Shadow-Cursed Dragon"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "inn_2",
+   "idx": 8,
+   "kind": "inn",
+   "x": 0.41,
+   "y": 0.35,
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "npc_1",
+   "idx": 9,
+   "kind": "npc",
+   "x": 0.5,
+   "y": 0.35,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q9_dragonlings",
+     "role": "step",
+     "step": "s5",
+     "in": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q9_dragonlings"
+        },
+        "do": [
+         {
+          "scene": "sc_demon_castle_2__demon_castle_2_npc_1_step_q9_dragonlings"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 10,
+   "kind": "chest",
+   "x": 0.59,
+   "y": 0.35,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q9_second_wind",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "treasure_1.1",
+        "node": "treasure_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q9_second_wind"
+        },
+        "do": [
+         {
+          "scene": "sc_q9_second_wind_badge"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 11,
+   "kind": "story",
+   "x": 0.41,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 12,
+   "kind": "miniboss",
+   "x": 0.23,
+   "y": 0.65,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 14,
+   "kind": "npc",
+   "x": 0.68,
+   "y": 0.65,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q9_pipi_surrender",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_2.1",
+        "node": "npc_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q9_pipi_surrender"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q9_pipi_surrender_offer"
+     },
+     "in": {
+      "scene": "sc_q9_pipi_surrender_wait"
+     },
+     "post": {
+      "scene": "sc_q9_pipi_surrender_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc_3",
+   "idx": 15,
+   "kind": "npc",
+   "x": 0.32,
+   "y": 0.65,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 16,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.65,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 17,
+   "kind": "chest",
+   "x": 0.41,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 18,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.35,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 19,
+   "kind": "story",
+   "x": 0.86,
+   "y": 0.35,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 20,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_3",
+   "idx": 21,
+   "kind": "story",
+   "x": 0.77,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "npc_4",
+   "idx": 22,
+   "kind": "inn",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_4",
+   "idx": 23,
+   "kind": "story",
+   "x": 0.86,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_4",
+   "idx": 24,
+   "kind": "chest",
+   "x": 0.59,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_1",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "campfire_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "campfire_1",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "inn_2",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "npc_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "campfire_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e12",
+   "from": "path_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "npc_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "path_4",
+   "to": "npc_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e15",
+   "from": "npc_2",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 16
+  },
+  {
+   "id": "e16",
+   "from": "path_2",
+   "to": "npc_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 17
+  },
+  {
+   "id": "e17",
+   "from": "inn_2",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 18
+  },
+  {
+   "id": "e18",
+   "from": "npc_3",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 19
+  },
+  {
+   "id": "e19",
+   "from": "npc_2",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 20
+  },
+  {
+   "id": "e20",
+   "from": "path_5",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 21
+  },
+  {
+   "id": "e21",
+   "from": "story_1",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 22
+  },
+  {
+   "id": "e22",
+   "from": "npc_2",
+   "to": "story_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 23
+  },
+  {
+   "id": "e23",
+   "from": "story_2",
+   "to": "npc_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 24
+  },
+  {
+   "id": "e24",
+   "from": "story_3",
+   "to": "story_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 25
+  },
+  {
+   "id": "e25",
+   "from": "deadend_1",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 26
+  },
+  {
+   "id": "x_boss_1_demon_castle_3",
+   "idx": 27,
+   "from": "boss_1",
+   "to": {
+    "graph": "demon_castle_3",
+    "node": "entry_gate"
+   },
+   "kind": "stairs"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.3",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__demon_castle_2_story_1"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "gargoyle"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "demon_castle_2.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_2.2",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__ambient"
+    }
+   ]
+  },
+  {
+   "id": "npc_3.1",
+   "node": "npc_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__demon_castle_2_npc_3_banter"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__demon_castle_2_story_2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_3.1",
+   "node": "story_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__demon_castle_2_story_3"
+    }
+   ]
+  },
+  {
+   "id": "story_4.1",
+   "node": "story_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_2__demon_castle_2_story_4"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q9_pipi_surrender",
+   "story": "main",
+   "type": "escort",
+   "title": {
+    "zh": "皮皮投降",
+    "en": "Pipi Gives Up"
+   },
+   "giver": {
+    "npc": "pipi",
+    "graph": "demon_castle_2",
+    "node": "npc_2"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "granny_bai",
+    "graph": "realm_9",
+    "node": "entry_town"
+   },
+   "returnToGiver": false,
+   "requires": {
+    "bossDefeated": "demon_castle_2"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "pipi"
+     },
+     "where": {
+      "graph": "demon_castle_2",
+      "node": "npc_2"
+     },
+     "note": "Abandoned after the curse breaks: 我投降!"
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "pipi",
+      "to": {
+       "graph": "realm_9",
+       "node": "entry_town"
+      }
+     },
+     "where": {
+      "maps": [
+       "demon_castle_1",
+       "demon_castle_2",
+       "realm_9",
+       "shadow_vault_1",
+       "shadow_vault_2"
+      ]
+     },
+     "note": "Feather and inn warp allowed; Pipi jokes along the way."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_9",
+      "node": "entry_town"
+     },
+     "note": "Pipi trades a secret Throne Hall key for a second chance."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q9_pipi_surrender_offer",
+    "progress": "sc_q9_pipi_surrender_wait",
+    "turnIn": "sc_q9_pipi_surrender_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 4
+    },
+    "goldValue": 288,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 480,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [
+     "throne_shortcut"
+    ],
+    "valueG": 4.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C1028",
+    "C1027",
+    "C1046",
+    "C1047",
+    "C568"
+   ],
+   "summary": "Bring the abandoned imp Pipi safely back to Lantern Light Camp, where he trades a secret key for a second chance."
+  }
+ ],
+ "scenes": {
+  "sc_demon_castle_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_npc_1_step_q9_dragonlings": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_npc_1_step_q9_dragonlings",
+   "title": "demon_castle_2.npc_1.step_q9_dragonlings",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q9_dragonlings: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_npc_3_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_npc_3_banter",
+   "title": "demon_castle_2.npc_3.banter",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_story_1",
+   "title": "demon_castle_2.story_1",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_story_2",
+   "title": "demon_castle_2.story_2",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_story_3": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_story_3",
+   "title": "demon_castle_2.story_3",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_2__demon_castle_2_story_4": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_2__demon_castle_2_story_4",
+   "title": "demon_castle_2.story_4",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_q9_second_wind_badge": {
+   "schema": "scene/0.2",
+   "id": "sc_q9_second_wind_badge",
+   "title": "Granny Bai's old badge",
+   "density": "D6",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "node": "treasure_1",
+    "on": "enter",
+    "cond": {
+     "questActive": "q9_second_wind"
+    }
+   },
+   "background": "bg_castle_storeroom",
+   "music": "gentle_memory",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "surprised"
+    }
+   },
+   "words": [
+    "C565"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Under a pile of rusty keys, something small and silver glints: a badge shaped like a bell.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "surprised",
+     "en": "This is Granny Bai's!",
+     "zh": "这是白奶奶的！",
+     "zhTrad": "這是白奶奶的！",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "surprised",
+     "en": "How can you tell?",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "Her name is on it. And a tiny drawing of her... with a lot more hair.",
+     "zh": "上边有她的名字。",
+     "zhTrad": "上邊有她的名字。",
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "On the back, in small scratchy letters, someone carved a promise.",
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "thinking",
+     "en": "Even if it's hard, don't give up.",
+     "zh": "就算很难，也不要放弃。",
+     "zhTrad": "就算很難，也不要放棄。",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "She used to be a hero. A real one.",
+     "zh": "她以前是英雄。",
+     "zhTrad": "她以前是英雄。",
+     "vo": null
+    },
+    {
+     "id": "l8",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "She still is! And she makes the best tea in nine realms.",
+     "zh": "她现在也是！",
+     "zhTrad": "她現在也是！",
+     "vo": null
+    },
+    {
+     "id": "l9",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "neutral",
+     "en": "What do you do with the badge?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "Read the promise out loud: {C565}",
+       "tokens": [
+        "C565"
+       ],
+       "goto": "l10",
+       "correct": true
+      },
+      {
+       "id": "c2",
+       "en": "Hide it and keep it a secret.",
+       "goto": "l9b"
+      }
+     ]
+    },
+    {
+     "id": "l9b",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "No secrets from Granny! ...But we can make it a surprise.",
+     "vo": null
+    },
+    {
+     "id": "l10",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "We must give it back to her!",
+     "zh": "我们一定要给她！",
+     "zhTrad": "我們一定要給她！",
+     "vo": null
+    },
+    {
+     "id": "l11",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "You tuck the badge safely into your pack. It feels warm, like a cup of Granny Bai's tea.",
+     "vo": null,
+     "end": true
+    }
+   ]
+  }
+ },
+ "characters": [
+  "hero",
+  "narrator",
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

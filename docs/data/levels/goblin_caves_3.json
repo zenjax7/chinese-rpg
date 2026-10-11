@@ -1,0 +1,1170 @@
+{
+ "schema": "level/0.2",
+ "id": "goblin_caves_3",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "goblin_caves",
+ "level": 3,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "哥布林洞穴 第3层",
+  "en": "Goblin Caves - level 3"
+ },
+ "entry": "entry_gate",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Goblin 'School'",
+   "zh": "哥布林学校"
+  },
+  "emoji": "⛏️",
+  "background": {
+   "map": "bg_map_goblin_caves_3",
+   "battle": "bg_battle_r4"
+  },
+  "desyPool": "L4.3",
+  "words": [
+   "C261",
+   "C262",
+   "C263",
+   "C264",
+   "C265",
+   "C266",
+   "C267",
+   "C268",
+   "C269",
+   "C270",
+   "C271",
+   "C758",
+   "C759",
+   "C760",
+   "C761",
+   "C762",
+   "C763",
+   "C764",
+   "C765",
+   "C290",
+   "C291",
+   "C292",
+   "C293",
+   "C294",
+   "C295",
+   "C296",
+   "C297",
+   "C298",
+   "C299",
+   "C213",
+   "C214",
+   "C215",
+   "C216",
+   "C217",
+   "C218",
+   "C219",
+   "C766",
+   "C767",
+   "C768",
+   "C769",
+   "C770",
+   "C771",
+   "C772",
+   "C773",
+   "C774",
+   "C775",
+   "C776",
+   "C220"
+  ],
+  "G": 27,
+  "recLevel": [
+   7,
+   10
+  ],
+  "gearTier": 4,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "goblin",
+    "weight": 1
+   },
+   {
+    "enemy": "goblin_monitor",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_4",
+   "gateEdge": "e5",
+   "kind": "realmboss",
+   "enemy": "goblin_king",
+   "reward": {
+    "heroic": "goblin_crown",
+    "zh": "哥布林王冠",
+    "en": "Goblin Crown",
+    "effect": "+10% gold",
+    "text": "Goblin Crown 哥布林王冠 is yours!"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.1788,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Goblin 'School' path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.3068,
+   "y": 0.2,
+   "title": {
+    "zh": "小路",
+    "en": "Goblin 'School' path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.2,
+   "title": {
+    "zh": "小路",
+    "en": "Goblin 'School' path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.5644,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_4",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.6932,
+   "y": 0.05,
+   "title": {
+    "zh": "哥布林大王",
+    "en": "Goblin King (the 'Headmaster')"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "treasure_1",
+   "idx": 6,
+   "kind": "chest",
+   "x": 0.3068,
+   "y": 0.5,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "fork",
+   "x": 0.5644,
+   "y": 0.35,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.6932,
+   "y": 0.35,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 9,
+   "kind": "story",
+   "x": 0.8212,
+   "y": 0.35,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q4_homework",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q4_homework"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q4_homework_offer"
+     },
+     "in": {
+      "scene": "sc_q4_homework_wait"
+     },
+     "post": {
+      "scene": "sc_q4_homework_thanks"
+     }
+    },
+    {
+     "quest": "q4_school_bell",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "story_1.2",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q4_school_bell"
+        },
+        "do": [
+         {
+          "scene": "sc_goblin_caves_3__goblin_caves_3_story_1_step_q4_school_bell"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 11,
+   "kind": "inn",
+   "x": 0.5644,
+   "y": 0.65,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_2",
+   "idx": 12,
+   "kind": "chest",
+   "x": 0.6932,
+   "y": 0.65,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.3068,
+   "y": 0.8,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 14,
+   "kind": "chest",
+   "x": 0.4356,
+   "y": 0.8,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 15,
+   "kind": "waypoint",
+   "x": 0.8212,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_4",
+   "idx": 16,
+   "kind": "chest",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_5",
+   "idx": 17,
+   "kind": "inn",
+   "x": 0.5644,
+   "y": 0.95,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_6",
+   "idx": 18,
+   "kind": "chest",
+   "x": 0.6932,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "entry_gate",
+   "idx": 19,
+   "kind": "stairs_up",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_4",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "deadend_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "treasure_1",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_5",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_4",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "path_1",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e14",
+   "from": "path_6",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e15",
+   "from": "deadend_1",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e16",
+   "from": "path_7",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 16
+  },
+  {
+   "id": "e17",
+   "from": "treasure_3",
+   "to": "treasure_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 17
+  },
+  {
+   "id": "e18",
+   "from": "path_4",
+   "to": "treasure_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 18
+  },
+  {
+   "id": "e6_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "tunnel",
+   "idx": 19,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 20,
+   "from": "entry_gate",
+   "to": {
+    "graph": "goblin_caves_2",
+    "node": "boss_1"
+   },
+   "kind": "stairs"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.3",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_goblin_caves_3__goblin_caves_3_story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_6.1",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_6.2",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q4_homework",
+   "story": "side",
+   "type": "slay",
+   "title": {
+    "zh": "作业回来了",
+    "en": "Homework Rescue"
+   },
+   "giver": {
+    "npc": "teacher_zhang",
+    "graph": "goblin_caves_3",
+    "node": "story_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "goblin_caves_3"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "teacher_zhang"
+     },
+     "where": {
+      "graph": "goblin_caves_3",
+      "node": "story_1"
+     },
+     "note": "After the Headmaster falls, the hall monitors still hoard the class's homework."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "kill",
+      "enemy": "goblin_monitor",
+      "n": 6,
+      "scope": {
+       "maps": [
+        "goblin_caves_3"
+       ]
+      }
+     },
+     "where": {
+      "maps": [
+       "goblin_caves_3"
+      ]
+     },
+     "note": "They hand pages back when beaten."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "teacher_zhang",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "goblin_caves_3",
+      "node": "story_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q4_homework_offer",
+    "progress": "sc_q4_homework_wait",
+    "turnIn": "sc_q4_homework_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 135,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 135,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C233",
+    "C234",
+    "C763",
+    "C261",
+    "C262",
+    "C271"
+   ],
+   "summary": "Beat 6 goblin hall monitors to win back the class's homework for Teacher Zhang."
+  }
+ ],
+ "scenes": {
+  "sc_goblin_caves_3__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_3__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "goblin_caves_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_goblin_caves_3__goblin_caves_3_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_3__goblin_caves_3_story_1",
+   "title": "goblin_caves_3.story_1",
+   "trigger": {
+    "graph": "goblin_caves_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_goblin_caves_3__goblin_caves_3_story_1_step_q4_school_bell": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_3__goblin_caves_3_story_1_step_q4_school_bell",
+   "title": "goblin_caves_3.story_1.step_q4_school_bell",
+   "trigger": {
+    "graph": "goblin_caves_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q4_school_bell: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

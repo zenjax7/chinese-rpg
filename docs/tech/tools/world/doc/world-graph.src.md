@@ -3,6 +3,8 @@
 Repo path: `docs/design/world-graph.md` · Data: `docs/data/world/` · Tools: `docs/tech/tools/world/` · Spec summary: combat-spec.md §12.
 Written 2026-10-02 (PT) by Desy; v3.9 update the same night (§0.1). It builds on GameDev's graph schema in `docs/tech/architecture.md` §6 (`graph/0.2`) and publishes it as **`graph/0.3`**. GameDev's names stay wherever they work. §13 answers GameDev's 14 questions one by one.
 
+> **Jack's rules of 2026-10-11 that supersede parts of this doc** (recorded in [decisions.md](../decisions.md); Desy updates the sections and the sim in her next handoff): no battle budget, no pre-boss practice patrols and no guaranteed fight after empty steps (§4.3, §4); walked edges roll at **50%** of the normal chance (not ×0.05); nodes may have no event (blank); progression is by map links only, with no boss-gated unlocks (§1.1; boss conditions on links go), plus optional quest gates `lockedUntilQuest` / `lockedScene` on nodes and edges; unvisited nodes look identical until visited (fog, below). The map format and editor are in [tech/level-editor.md](../tech/level-editor.md).
+
 ## 0.00 What changed in v3.9.2 and v3.9.3 (Jack 2026-10-03 PT; text brought up to date 2026-10-09 PT)
 
 - **Realm links (§1, §14.1):** `world.json` carries `realms[]`, one entry per realm: `{realm, node, graph, entry, enterEdge, exitEdge, linkEdge, unlock, realmBossZone, next}`. Realm *N* (N ≥ 2) opens when realm *N*−1's realm-boss zone is defeated: `unlock = {bossDefeated: <zone>}`, and the same condition is on the world path `linkEdge` `w{N-1}{N}` (danger 0). Realm 1 has no unlock and no link edge. The game's `realmOpen()` reads `realms[].unlock`.
@@ -39,7 +41,7 @@ Sim, v3.9 → v3.9.1 (100 seeds per profile):
 - **No free inn warp.** The Return Feather (`world_rules.returnFeather`) is the only fast way back to a town. It costs **2×G** (2 normal kills at every tier; 12 gold in realm 1 → 144 in realm 9). It flies to the **last inn used or any visited town or village**, and works anywhere on the map outside battle and the boss room. Carry limit 3. Sold in town and village item shops, **not at inns**. Kids start with 2 (§12.1).
 - **Town/village density:** towns + villages = `max(1, round(nodes / (20 + 5(t−1))))` in v3.9, which gave 1, 1, 1, 2, 2, 2, 3, 3, 3 (v3.8 had 1, 1, 2, 2, 2, 3, 3, 4, 4). **v3.9.1 uses `ceil` → 1, 1, 2, 2, 2, 3, 3, 3, 4 (§0.0).** Extra settlements are villages (inn + save + item shop with Feathers).
 - **Inn rule per realm:** `maxHopsToInn` is 3 in realms 1–3 and 5 in realms 4–9. Standalone campfire inns fill the gaps (realm 3 now has 8 inns, realm 9 has 21).
-- **Fog of war (approved):** visited nodes plus "?" for nodes one open edge away. Towns, villages and bosses are landmarks (`fog: "landmark"`): shown once their zone is open. Revealed state lives in player progress (`progress.schema.json`), never in the graph file.
+- **Fog of war (approved):** visited nodes plus "?" for nodes one open edge away. Towns, villages and bosses are landmarks (`fog: "landmark"`): shown once their zone is open. Revealed state lives in player progress (`progress.schema.json`), never in the graph file. **Jack, 2026-10-11 (hidden node types):** on top of the fog, every unvisited node looks identical in the game (no icon, title or kind hint, landmarks included) and its type is revealed only when the player arrives; the editor shows everything. Renderer plan: [tech/level-editor.md §11](../tech/level-editor.md#11-game-graph-renderer-hidden-nodes-and-fog).
 - **graph/0.3 accepted by GameDev.** Node `x`/`y` are now normalised 0–1 per graph (0.05–0.95, with the graph's `aspect` = width/height). Edges carry a stable `idx` (`edgeIdxMax`) for the `walked` bitset. `world_rules.json` stays its own file.
 - **Tutorial as data:** the realm-1 village `firstEnter` event plays scene `sc_r1_opening` (data/dialogue), then `meadow_intro`, then the tutorial battle (`fight {kind: tutorial, canLose: false}`, one horned rabbit), then the after-line. A later `enter` event plays `sc_r1_village_banter` once Clover Hills is beaten. New action `scene`.
 - **Story alignment:** the companion speaker is `xiaolong` (小龙, the baby dragon). Pandas are the innkeepers (`innkeeper_panda`, "every inn's panda is a cousin"). Realm-1 lines follow story density D1 (English lines with at most one `{Cxxx}` word token, tokens in at most 30% of lines); the validator checks it.
@@ -130,7 +132,7 @@ Edge fields:
 - `danger` 0–3 and `steps` 1–8 (required on in-graph edges)
 - `terrain`
 - `patrol: true` marks the boss-approach edge: no random battles, Train/patrol rule
-- `scripted {enemies, fill, once, step}`: a fixed elite fight, e.g. the swift rabbit on realm 1's `e11`
+- `scripted {enemies, fill, once, step}`: the scripted path elite, e.g. the swift rabbit on realm 1's `e11`. **Removed (Jack, 2026-10-11: no random or scripted elites).** The 9 legacy edges are not converted to docs/data/levels.
 - `cond` (blocks traversal while false), `opens` (shortcut id), `label`
 
 ## 4. Encounters on edges
@@ -144,7 +146,7 @@ Each step on an edge rolls `p = encounterRate[danger] × (1 + depthStep × (leve
 | base rate per step | 0 | 0.60 | 0.85 | 0.95 |
 | dungeon level 3 (+20%) | 0 | 0.72 | 0.95 (cap) | 0.95 |
 
-- **Encounter size:** 1–3 enemies, taken from the zone's `enemiesPerBattle` and capped by balance.json `combat.maxEnemies` = 3. Enemies come from the zone `roster` (weights, `packs`). On an elite roll (balance.json `eliteReplaceChance`), one enemy becomes the zone `elite`.
+- **Encounter size:** 1–3 enemies, taken from the zone's `enemiesPerBattle` and capped by balance.json `combat.maxEnemies` = 3. Enemies come from the zone `roster` (weights, `packs`). There is no elite roll (Jack, 2026-10-11: no random elites; balance.json `eliteReplaceChance` and the zone `elite` are dropped).
 - **Edges outside every zone:** they use the zone of their `to` node. A shared trunk uses the next undefeated zone.
 
 ### 4.2 Safe edges (no rolls)
@@ -224,7 +226,7 @@ v3.9.2: the `portal` outcome is gone (no event used it). Portals are edges (§3)
 | System (v3.7) | On the graph |
 |---|---|
 | Word pools: 7 items per battle, ≤ 3 new, 47–60 items per location | Per **zone**. Every random battle on an edge uses the zone of the edge, so the learning model is unchanged. Patrols and the boss use the same zone |
-| Enemy tiers, elites | Zone `tier`, `roster`, `elite`; scripted elites on edges (`scripted`) replace prototype "fight 4 = elite" |
+| Enemy tiers, elites | Zone `tier`, `roster`. No random or scripted elites (Jack, 2026-10-11); elites only in hand-placed mini-boss and quest fights |
 | Patrol rule (speech 20%, reading 40%; 2 forced patrols per trip) | At the **approach inn**: the boss edge has `patrol: true`. Train/patrol happens there (§13 Q8). Re-armed by resting at any *other* inn (save `graphState.approachArmed`, as in the prototype) |
 | Boss gates and unlocks | A boss node blocks every edge through it until its zone is beaten. Next-zone edges carry `cond: {bossDefeated}`. Realm unlocks are on the world graph |
 | Inns, midpoint inn, save points | `inn` nodes (`save: true`), ≤ 3 hops away in realms 1–3 and ≤ 5 in realms 4–9; campfires are inns. Inn price = towns.json G of the realm |
@@ -348,7 +350,7 @@ GameDev said "meadow/forest become two 13-node overworld graphs from mapNodes". 
 - **clover_hills** (L1.2): Big Grey Wolf at `c_den`.
 - **warren** (L1.3): Horned Rabbit King at `w_throne`, the realm boss.
 
-Little Hill Village is the town node. Farmer Li offers the hoe hook, and the hoe is in the old well. A thief mini-boss guards the golden-carrot hook. The midpoint campfire inn sits in Clover Hills, and the boss-approach inn sits before the throne. The swift-rabbit elite is scripted on `e11`.
+Little Hill Village is the town node. Farmer Li offers the hoe hook, and the hoe is in the old well. A thief mini-boss guards the golden-carrot hook. The midpoint campfire inn sits in Clover Hills, and the boss-approach inn sits before the throne. (The swift-rabbit elite scripted on `e11` was removed, Jack, 2026-10-11.)
 
 ![Realm 1](../data/world/diagrams/realm_1.png)
 
@@ -387,12 +389,12 @@ The biggest single graph (the realm 8 overworld, 93 nodes) is in `data/world/dia
 ## 12. Respawn, saving and fast travel
 
 - **Save:** GameDev's save state as written, plus a few fields.
-  - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed, bossCheckpoint}`, and `graph_progress` bitsets by node `idx`.
+  - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed}`, and `graph_progress` bitsets by node `idx`.
   - Added: `edgeCrossings` (for seeding) and `edgeProgress` (turn-back).
 - **Defeat:** wake at `lastInn`, which can be on another level or in the town. Gold loss as in v3.7. Edges stay walked.
 - **Feather (v3.9, wording v3.9.2):** to `lastInn` (the one place last rested) or any town or village ever entered (`visitedTowns`), from anywhere outside battle and the boss room. Other inns don't count. No inn warp. Rules in §12.1.
-- **Fog of war:** player progress keeps `visited`, `walked` and `revealed` bitsets per graph (node `idx` / edge `idx`). The UI shows visited nodes, "?" for nodes one open edge away, and landmark nodes (`fog: "landmark"`) once their zone is open. Schema: `progress.schema.json`, example `examples/progress_example.json`.
-- **Boss retry:** `bossCheckpoint` as in v3.7 (spec §7.4).
+- **Fog of war:** player progress keeps `visited`, `walked` and `revealed` bitsets per graph (node `idx` / edge `idx`). The UI shows visited nodes, "?" for nodes one open edge away, and landmark nodes (`fog: "landmark"`) once their zone is open. **Since 2026-10-11 (Jack):** an unvisited node, landmark or not, is drawn like every other unvisited node, with no icon, title or kind in the DOM; its type shows only once visited ([tech/level-editor.md §11](../tech/level-editor.md#11-game-graph-renderer-hidden-nodes-and-fog)). Schema: `progress.schema.json`, example `examples/progress_example.json`.
+- **Boss retry:** none (Jack, 2026-10-11). A lost boss fight restarts at full boss HP like any fight. `graphState.bossCheckpoint` is dropped.
 
 ### 12.1 Return Feather rules (v3.9)
 
@@ -423,7 +425,7 @@ Mostly. Fights, elites and gates move to edges (`danger`/`steps`, `scripted`, `p
 - **Loops:** allowed (a few per realm).
 - **One-way drops:** allowed only if an inn stays reachable; the validator checks for one-way traps.
 - **Backtracking:** always allowed. Walked edges roll at ×0.05.
-- **Fog of war (approved in v3.9):** visited nodes are shown, plus the neighbours of visited nodes as "?" (kind icon hidden until visited). Towns, villages and bosses (`fog: "landmark"`) are always shown once their zone is open. The revealed state is player progress, not graph data.
+- **Fog of war (approved in v3.9):** visited nodes are shown, plus the neighbours of visited nodes as "?" (kind icon hidden until visited). Towns, villages and bosses (`fog: "landmark"`) are always shown once their zone is open. The revealed state is player progress, not graph data. **2026-10-11 (Jack):** every unvisited node looks identical, landmarks included; the type and icon appear only on arrival ([tech/level-editor.md §11](../tech/level-editor.md#11-game-graph-renderer-hidden-nodes-and-fog)).
 
 **4. How do shortcuts open, and are they two-way after?**
 By a `lever` node, an event action `openShortcut`, or a boss clear (`on: clear` → `openShortcut`). Before that the `shortcut` edge is closed (`cond: {shortcutOpen: id}`). After opening it is two-way and permanent (save `shortcuts`).

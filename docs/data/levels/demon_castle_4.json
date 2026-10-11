@@ -1,0 +1,695 @@
+{
+ "schema": "level/0.2",
+ "id": "demon_castle_4",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "demon_castle",
+ "level": 4,
+ "levels": 5,
+ "optional": false,
+ "title": {
+  "zh": "魔王城 第4层",
+  "en": "Demon King's Castle - level 4"
+ },
+ "entry": "stairs_1",
+ "aspect": 5.273,
+ "settings": {
+  "title": {
+   "en": "Throne Hall",
+   "zh": "王座大厅"
+  },
+  "emoji": "🏰",
+  "background": {
+   "map": "bg_map_demon_castle_4",
+   "battle": "bg_battle_r9"
+  },
+  "desyPool": "L9.2",
+  "words": [
+   "C568",
+   "C569",
+   "C570",
+   "C571",
+   "C572",
+   "C573",
+   "C574",
+   "C575",
+   "C576",
+   "C577",
+   "C578",
+   "C579",
+   "C1021",
+   "C1022",
+   "C1023",
+   "C1024",
+   "C1025",
+   "C1026",
+   "C1027",
+   "C1028",
+   "C1029",
+   "C1030",
+   "C1031",
+   "C1032",
+   "C1033",
+   "C1034",
+   "C1035",
+   "C1036",
+   "C1037",
+   "C1038",
+   "C1039",
+   "C1040",
+   "C580",
+   "C581",
+   "C582",
+   "C583",
+   "C584",
+   "C1041",
+   "C1042",
+   "C1043",
+   "C1044",
+   "C1045",
+   "C1046",
+   "C1047",
+   "C1048",
+   "C1049",
+   "C1050",
+   "C1051",
+   "C585"
+  ],
+  "G": 72,
+  "recLevel": [
+   22,
+   25
+  ],
+  "gearTier": 9,
+  "difficulty": {
+   "mcOptions": 6,
+   "reviewSlots": 4,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "imp",
+    "weight": 1
+   },
+   {
+    "enemy": "demon_knight",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1788,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 2,
+   "kind": "inn",
+   "x": 0.3068,
+   "y": 0.275,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_2",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.4356,
+   "y": 0.275,
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 0.5644,
+   "y": 0.05,
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 5,
+   "kind": "npc",
+   "x": 0.4356,
+   "y": 0.725,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.5,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 7,
+   "kind": "miniboss",
+   "x": 0.3068,
+   "y": 0.725,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.6932,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 9,
+   "kind": "npc",
+   "x": 0.8212,
+   "y": 0.5,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "npc_3",
+   "idx": 10,
+   "kind": "npc",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 11,
+   "kind": "story",
+   "x": 0.5644,
+   "y": 0.95,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_3",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_5",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "campfire_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_2",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "campfire_1",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "npc_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "deadend_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "path_3",
+   "to": "npc_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "npc_2",
+   "to": "npc_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "npc_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_4__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_4__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_4__demon_castle_4_npc_1_banter"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "gargoyle"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "demon_castle_4.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_4__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_2.1",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_4__demon_castle_4_npc_2_banter"
+    }
+   ]
+  },
+  {
+   "id": "npc_3.1",
+   "node": "npc_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_4__demon_castle_4_npc_3_banter"
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_4__demon_castle_4_story_1"
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_demon_castle_4__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_4__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "demon_castle_4",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_demon_castle_4__demon_castle_4_npc_1_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_4__demon_castle_4_npc_1_banter",
+   "title": "demon_castle_4.npc_1.banter",
+   "trigger": {
+    "graph": "demon_castle_4",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_4__demon_castle_4_npc_2_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_4__demon_castle_4_npc_2_banter",
+   "title": "demon_castle_4.npc_2.banter",
+   "trigger": {
+    "graph": "demon_castle_4",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_4__demon_castle_4_npc_3_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_4__demon_castle_4_npc_3_banter",
+   "title": "demon_castle_4.npc_3.banter",
+   "trigger": {
+    "graph": "demon_castle_4",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_demon_castle_4__demon_castle_4_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_4__demon_castle_4_story_1",
+   "title": "demon_castle_4.story_1",
+   "trigger": {
+    "graph": "demon_castle_4",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

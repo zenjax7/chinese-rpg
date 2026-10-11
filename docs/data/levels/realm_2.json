@@ -1,0 +1,1128 @@
+{
+ "schema": "level/0.2",
+ "id": "realm_2",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "zh": "蜂巢森林",
+  "en": "Honeycomb Forest"
+ },
+ "entry": "entry_town",
+ "aspect": 5.273,
+ "settings": {
+  "title": {
+   "en": "Flower Glade",
+   "zh": "花海林地"
+  },
+  "background": {
+   "map": "bg_map_realm_2",
+   "battle": "bg_battle_r2"
+  },
+  "desyPool": "L2.1",
+  "words": [
+   "C093",
+   "C094",
+   "C095",
+   "C096",
+   "C097",
+   "C098",
+   "C099",
+   "C100",
+   "C101",
+   "C102",
+   "C103",
+   "C104",
+   "C105",
+   "C106",
+   "C107",
+   "C108",
+   "C109",
+   "C110",
+   "C111",
+   "C112",
+   "C113",
+   "C114",
+   "C115",
+   "C116",
+   "C117",
+   "C118",
+   "C119",
+   "C120",
+   "C121",
+   "C122",
+   "C123",
+   "C124",
+   "C125",
+   "C126",
+   "C127",
+   "C128",
+   "C129",
+   "C621",
+   "C622",
+   "C623",
+   "C624",
+   "C625",
+   "C626",
+   "C627",
+   "C628",
+   "C629",
+   "C630",
+   "C631",
+   "C632",
+   "C633",
+   "C634",
+   "C635",
+   "C636",
+   "C637",
+   "C638",
+   "C639",
+   "C640",
+   "C641",
+   "C642"
+  ],
+  "G": 12,
+  "recLevel": [
+   3,
+   5
+  ],
+  "gearTier": 2,
+  "difficulty": {
+   "mcOptions": 3,
+   "reviewSlots": 1,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   1,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "giant_bee",
+    "weight": 1
+   },
+   {
+    "enemy": "sapling_sprite",
+    "weight": 1
+   },
+   {
+    "enemy": "forest_spider",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e5",
+   "kind": "locboss",
+   "enemy": "greedy_bear"
+  }
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "蜂蜜镇",
+    "en": "Honey Town"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 2,
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q2_lost_panda",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q2_lost_panda_offer"
+     },
+     "in": {
+      "scene": "sc_q2_lost_panda_wait"
+     },
+     "post": {
+      "scene": "sc_q2_lost_panda_thanks"
+     }
+    },
+    {
+     "quest": "q2_spider_silk",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q2_spider_silk_offer"
+     },
+     "in": {
+      "scene": "sc_q2_spider_silk_wait"
+     },
+     "post": {
+      "scene": "sc_q2_spider_silk_thanks"
+     }
+    },
+    {
+     "quest": "q2_bubble_lesson",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q2_bubble_lesson_offer"
+     },
+     "in": {
+      "scene": "sc_q2_bubble_lesson_wait"
+     },
+     "post": {
+      "scene": "sc_q2_bubble_lesson_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Flower Glade path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.275,
+   "title": {
+    "zh": "小路",
+    "en": "Flower Glade path"
+   },
+   "quests": [
+    {
+     "quest": "q2_bubble_lesson",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Flower Glade path"
+   },
+   "quests": [
+    {
+     "quest": "q2_bubble_lesson",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.6497,
+   "y": 0.275,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.8003,
+   "y": 0.275,
+   "title": {
+    "zh": "贪吃熊",
+    "en": "Greedy Bear"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.725,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   },
+   "quests": [
+    {
+     "quest": "q2_lost_panda",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "path_4.1",
+        "node": "path_4",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q2_lost_panda"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_2__realm_2_path_4_step_q2_lost_panda"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 8,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 9,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q2_lost_panda",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "treasure_2.1",
+        "node": "treasure_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q2_lost_panda"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_2__realm_2_treasure_2_step_q2_lost_panda"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.725,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   },
+   "quests": [
+    {
+     "quest": "q2_bubble_lesson",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3",
+   "idx": 11,
+   "kind": "chest",
+   "x": 0.8003,
+   "y": 0.725,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 5,
+   "terrain": "grass",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "grass",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "path_2",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "path_3",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_5",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 11
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_2"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 12
+  },
+  {
+   "id": "x_boss_1_great_hive_1",
+   "idx": 13,
+   "from": "boss_1",
+   "to": {
+    "graph": "great_hive_1",
+    "node": "entry_gate"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.2",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.3",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q2_lost_panda",
+   "story": "side",
+   "type": "find",
+   "title": {
+    "zh": "找熊猫",
+    "en": "Duoduo's Lost Panda"
+   },
+   "giver": {
+    "npc": "duoduo",
+    "graph": "realm_2",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_2"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "duoduo"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Duoduo (6) lost her toy panda picking flowers in the woods (Jack's 'lost item in the woods')."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "path_4"
+     },
+     "note": "Xiaolong spots a trail of paw-print stickers."
+    },
+    {
+     "id": "s3",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "toy_panda",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "treasure_2"
+     },
+     "note": "Up a hollow tree at a dead end (quest item fires before the chest)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "duoduo",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Duoduo hugs it: 谢谢!"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_lost_panda_offer",
+    "progress": "sc_q2_lost_panda_wait",
+    "turnIn": "sc_q2_lost_panda_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 9
+    },
+    "goldValue": 108,
+    "exp": {
+     "L": 10
+    },
+    "expValue": 40,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 10.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C155",
+    "C145",
+    "C143",
+    "C142",
+    "C454",
+    "C007"
+   ],
+   "summary": "Follow the sticker trail through the Flower Glade to find Duoduo's toy panda and bring it home."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q2_spider_silk",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "收集蜘蛛丝",
+    "en": "Silk for the Bee Veils"
+   },
+   "giver": {
+    "npc": "granny_mi",
+    "graph": "realm_2",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": true,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_mi"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "The beekeeper's veils are torn; the bees are cranky."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "collect",
+      "item": "spider_silk",
+      "n": 5,
+      "dropFrom": [
+       "forest_spider"
+      ],
+      "dropChance": 0.35
+     },
+     "where": {
+      "maps": [
+       "realm_2"
+      ]
+     },
+     "note": "Drops from Forest Spiders."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_mi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Granny Mi sews new veils."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_spider_silk_offer",
+    "progress": "sc_q2_spider_silk_wait",
+    "turnIn": "sc_q2_spider_silk_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 11
+    },
+    "goldValue": 132,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 60,
+    "items": {
+     "honey": 2
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 13.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C115",
+    "C122",
+    "C119",
+    "C118",
+    "C121"
+   ],
+   "summary": "Collect 5 strands of spider silk so Granny Mi can mend her bee veils."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q2_bubble_lesson",
+   "story": "main",
+   "type": "fetch",
+   "title": {
+    "zh": "白奶奶的泡泡课",
+    "en": "Granny Bai's Bubble Lesson"
+   },
+   "giver": {
+    "npc": "granny_bai",
+    "graph": "realm_2",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Granny Bai 'happens to be in town' and offers a first spell lesson."
+    },
+    {
+     "id": "s2",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "soap_flower",
+      "n": 3,
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "path_2",
+      "refs": [
+       "realm_2/path_2",
+       "realm_2/path_3",
+       "realm_2/path_5"
+      ]
+     },
+     "note": "3 soap-flowers on side branches (quest items)."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "words",
+      "n": 8,
+      "map": "realm_2"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Answer 8 Flower Glade (L2.1) words correctly in battles."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "She teaches 泡泡术; Honey Town's shelf shows 'Granny Bai's lesson' instead of a price."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_bubble_lesson_offer",
+    "progress": "sc_q2_bubble_lesson_wait",
+    "turnIn": "sc_q2_bubble_lesson_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 60,
+    "items": {},
+    "gear": [],
+    "spells": [
+     "bubble_spell"
+    ],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 540,
+    "spellRule": "The spell replaces buying it: its magic-shop shelf shows this quest instead of a price while the quest is open; if the kid already owns it, the giver pays its shop price in gold instead."
+   },
+   "words": [
+    "C093",
+    "C094",
+    "C107",
+    "C119",
+    "C642"
+   ],
+   "summary": "Gather 3 soap-flowers and learn 8 forest words; Granny Bai teaches you your first spell, Bubble Spell."
+  }
+ ],
+ "scenes": {
+  "sc_realm_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "realm_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_2__realm_2_path_4_step_q2_lost_panda": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_2__realm_2_path_4_step_q2_lost_panda",
+   "title": "realm_2.path_4.step_q2_lost_panda",
+   "trigger": {
+    "graph": "realm_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q2_lost_panda: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_2__realm_2_treasure_2_step_q2_lost_panda": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_2__realm_2_treasure_2_step_q2_lost_panda",
+   "title": "realm_2.treasure_2.step_q2_lost_panda",
+   "trigger": {
+    "graph": "realm_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q2_lost_panda: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

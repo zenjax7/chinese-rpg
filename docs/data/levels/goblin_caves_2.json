@@ -1,0 +1,1077 @@
+{
+ "schema": "level/0.2",
+ "id": "goblin_caves_2",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "goblin_caves",
+ "level": 2,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "哥布林洞穴 第2层",
+  "en": "Goblin Caves - level 2"
+ },
+ "entry": "entry_gate",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Crystal Tunnels",
+   "zh": "水晶隧道"
+  },
+  "emoji": "⛏️",
+  "background": {
+   "map": "bg_map_goblin_caves_2",
+   "battle": "bg_battle_r4"
+  },
+  "desyPool": "L4.2",
+  "words": [
+   "C253",
+   "C254",
+   "C255",
+   "C719",
+   "C720",
+   "C721",
+   "C722",
+   "C723",
+   "C724",
+   "C725",
+   "C726",
+   "C727",
+   "C728",
+   "C729",
+   "C730",
+   "C731",
+   "C732",
+   "C733",
+   "C734",
+   "C735",
+   "C736",
+   "C737",
+   "C738",
+   "C739",
+   "C740",
+   "C741",
+   "C742",
+   "C743",
+   "C744",
+   "C745",
+   "C746",
+   "C747",
+   "C748",
+   "C749",
+   "C750",
+   "C751",
+   "C752",
+   "C753",
+   "C754",
+   "C755",
+   "C756",
+   "C757",
+   "C256",
+   "C257",
+   "C258",
+   "C259",
+   "C260"
+  ],
+  "G": 27,
+  "recLevel": [
+   7,
+   10
+  ],
+  "gearTier": 4,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "cave_bat",
+    "weight": 1
+   },
+   {
+    "enemy": "goblin",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e5",
+   "kind": "locboss",
+   "enemy": "goblin_warden"
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Crystal Tunnels path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 2,
+   "kind": "inn",
+   "x": 0.3503,
+   "y": 0.2,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_2",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Crystal Tunnels path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.6497,
+   "y": 0.35,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.8003,
+   "y": 0.35,
+   "title": {
+    "zh": "哥布林守卫",
+    "en": "Goblin Warden"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "deadend_1",
+   "idx": 7,
+   "kind": "miniboss",
+   "x": 0.3503,
+   "y": 0.5,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q4_free_classmates",
+     "role": "step",
+     "step": "s4",
+     "in": {
+      "events": [
+       {
+        "id": "deadend_1.1",
+        "node": "deadend_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q4_free_classmates"
+        },
+        "do": [
+         {
+          "scene": "sc_goblin_caves_2__goblin_caves_2_deadend_1_step_q4_free_classmates"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_3",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.8,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 9,
+   "kind": "miniboss",
+   "x": 0.5,
+   "y": 0.35,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q4_free_classmates",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "miniboss",
+        "cond": {
+         "questActive": "q4_free_classmates"
+        },
+        "do": [
+         {
+          "fight": {
+           "enemies": [
+            "goblin_brute",
+            "goblin"
+           ],
+           "kind": "miniboss"
+          },
+          "quest": "q4_free_classmates"
+         },
+         {
+          "setFlag": "q4_free_classmates.s3"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 10,
+   "kind": "story",
+   "x": 0.5,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q4_free_classmates",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q4_free_classmates"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q4_free_classmates_offer"
+     },
+     "in": {
+      "scene": "sc_q4_free_classmates_wait"
+     },
+     "post": {
+      "scene": "sc_q4_free_classmates_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 11,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q4_free_classmates",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "treasure_1.1",
+        "node": "treasure_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q4_free_classmates"
+        },
+        "do": [
+         {
+          "scene": "sc_goblin_caves_2__goblin_caves_2_treasure_1_step_q4_free_classmates"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 12,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 13,
+   "kind": "inn",
+   "x": 0.8003,
+   "y": 0.65,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "treasure_2",
+   "idx": 14,
+   "kind": "chest",
+   "x": 0.95,
+   "y": 0.65,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "entry_gate",
+   "idx": 15,
+   "kind": "stairs_up",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "campfire_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_2",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "path_3",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "deadend_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "path_3",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e12",
+   "from": "treasure_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "path_5",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e6_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "tunnel",
+   "idx": 16,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 17,
+   "from": "entry_gate",
+   "to": {
+    "graph": "goblin_caves_1",
+    "node": "boss_1"
+   },
+   "kind": "stairs"
+  },
+  {
+   "id": "x_boss_1_goblin_caves_3",
+   "idx": 18,
+   "from": "boss_1",
+   "to": {
+    "graph": "goblin_caves_3",
+    "node": "entry_gate"
+   },
+   "kind": "stairs"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.2",
+   "node": "deadend_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "goblin_brute"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "goblin_caves_2.deadend_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.3",
+   "node": "deadend_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "goblin_brute"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "goblin_caves_2.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_goblin_caves_2__goblin_caves_2_story_1"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.3",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q4_free_classmates",
+   "story": "main",
+   "type": "rescue",
+   "title": {
+    "zh": "救同学",
+    "en": "Three Kids in the Crystal Tunnels"
+   },
+   "giver": {
+    "npc": "teacher_zhang",
+    "graph": "goblin_caves_2",
+    "node": "story_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "uncle_shi",
+    "graph": "realm_4",
+    "node": "town_2"
+   },
+   "returnToGiver": false,
+   "requires": {
+    "bossDefeated": "goblin_caves_1"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "story",
+     "objective": {
+      "type": "collect",
+      "item": "paper_plane_note",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "goblin_caves_2",
+      "node": "story_1"
+     },
+     "note": "A paper-plane note from Teacher Zhang (the offer): three kids are hidden in the tunnels."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "talk",
+      "npc": "kid_a"
+     },
+     "where": {
+      "graph": "goblin_caves_2",
+      "node": "treasure_1"
+     },
+     "note": "Kid 1 locked in a crystal cupboard (the chest node)."
+    },
+    {
+     "id": "s3",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "goblin_brute",
+       "goblin"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "goblin_caves_2",
+      "node": "miniboss_1"
+     },
+     "note": "Kid 2 guarded by a brute 'on detention duty'."
+    },
+    {
+     "id": "s4",
+     "event": "story",
+     "objective": {
+      "type": "talk",
+      "npc": "kid_b"
+     },
+     "where": {
+      "graph": "goblin_caves_2",
+      "node": "deadend_1"
+     },
+     "note": "Kid 3 behind a door that opens for 请 + 谢谢."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "uncle_shi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_4",
+      "node": "town_2"
+     },
+     "note": "The kids run home; parents cheer."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q4_free_classmates_offer",
+    "progress": "sc_q4_free_classmates_wait",
+    "turnIn": "sc_q4_free_classmates_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 4
+    },
+    "goldValue": 108,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 225,
+    "items": {},
+    "gear": [
+     {
+      "id": "shield_t4_fine",
+      "tier": 4,
+      "slot": "shield",
+      "rarity": "fine",
+      "zh": "好石盾",
+      "en": "Fine Stone Shield",
+      "stat": "DEF",
+      "value": 5,
+      "perk": "",
+      "goldValue": 264
+     }
+    ],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 13.8,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C224",
+    "C223",
+    "C222",
+    "C253",
+    "C255",
+    "C740"
+   ],
+   "summary": "Use Teacher Zhang's paper-plane note to find three classmates hidden in the Crystal Tunnels and send them home."
+  }
+ ],
+ "scenes": {
+  "sc_goblin_caves_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "goblin_caves_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_goblin_caves_2__goblin_caves_2_deadend_1_step_q4_free_classmates": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_2__goblin_caves_2_deadend_1_step_q4_free_classmates",
+   "title": "goblin_caves_2.deadend_1.step_q4_free_classmates",
+   "trigger": {
+    "graph": "goblin_caves_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q4_free_classmates: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_goblin_caves_2__goblin_caves_2_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_2__goblin_caves_2_story_1",
+   "title": "goblin_caves_2.story_1",
+   "trigger": {
+    "graph": "goblin_caves_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_goblin_caves_2__goblin_caves_2_treasure_1_step_q4_free_classmates": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_2__goblin_caves_2_treasure_1_step_q4_free_classmates",
+   "title": "goblin_caves_2.treasure_1.step_q4_free_classmates",
+   "trigger": {
+    "graph": "goblin_caves_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q4_free_classmates: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

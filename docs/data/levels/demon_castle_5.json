@@ -1,0 +1,776 @@
+{
+ "schema": "level/0.2",
+ "id": "demon_castle_5",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "demon_castle",
+ "level": 5,
+ "levels": 5,
+ "optional": false,
+ "title": {
+  "zh": "魔王城 第5层",
+  "en": "Demon King's Castle - level 5"
+ },
+ "entry": "stairs_1",
+ "aspect": 10.545,
+ "settings": {
+  "title": {
+   "en": "Throne Hall",
+   "zh": "王座大厅"
+  },
+  "emoji": "🏰",
+  "background": {
+   "map": "bg_map_demon_castle_5",
+   "battle": "bg_battle_r9"
+  },
+  "desyPool": "L9.2",
+  "words": [
+   "C568",
+   "C569",
+   "C570",
+   "C571",
+   "C572",
+   "C573",
+   "C574",
+   "C575",
+   "C576",
+   "C577",
+   "C578",
+   "C579",
+   "C1021",
+   "C1022",
+   "C1023",
+   "C1024",
+   "C1025",
+   "C1026",
+   "C1027",
+   "C1028",
+   "C1029",
+   "C1030",
+   "C1031",
+   "C1032",
+   "C1033",
+   "C1034",
+   "C1035",
+   "C1036",
+   "C1037",
+   "C1038",
+   "C1039",
+   "C1040",
+   "C580",
+   "C581",
+   "C582",
+   "C583",
+   "C584",
+   "C1041",
+   "C1042",
+   "C1043",
+   "C1044",
+   "C1045",
+   "C1046",
+   "C1047",
+   "C1048",
+   "C1049",
+   "C1050",
+   "C1051",
+   "C585"
+  ],
+  "G": 72,
+  "recLevel": [
+   22,
+   25
+  ],
+  "gearTier": 9,
+  "difficulty": {
+   "mcOptions": 6,
+   "reviewSlots": 4,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "imp",
+    "weight": 1
+   },
+   {
+    "enemy": "demon_knight",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_9",
+   "gateEdge": "e4",
+   "kind": "realmboss",
+   "enemy": "demon_king",
+   "reward": {
+    "heroic": null,
+    "zh": "",
+    "en": "",
+    "effect": "",
+    "text": "the Demon King drops cosmetics and a title; the game is won"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Throne Hall path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 3,
+   "kind": "inn",
+   "x": 0.59,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_9",
+   "idx": 4,
+   "kind": "boss",
+   "x": 0.77,
+   "y": 0.05,
+   "title": {
+    "zh": "魔王",
+    "en": "Demon King"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_3",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 6,
+   "kind": "story",
+   "x": 0.59,
+   "y": 0.95,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "inn_2",
+   "idx": 8,
+   "kind": "inn",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "demon_castle_4",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "inn_1",
+   "to": "boss_9",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "path_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "story_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "story_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "path_4",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_demon_castle_5__demon_castle_5_story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_demon_castle_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_demon_castle_5__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_5__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "demon_castle_5",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_demon_castle_5__demon_castle_5_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_demon_castle_5__demon_castle_5_story_1",
+   "title": "demon_castle_5.story_1",
+   "trigger": {
+    "graph": "demon_castle_5",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_r9_before_demon_king": {
+   "schema": "scene/0.2",
+   "id": "sc_r9_before_demon_king",
+   "title": "The last door",
+   "density": "D6",
+   "trigger": {
+    "graph": "demon_castle_5",
+    "node": "boss_9",
+    "on": "enter",
+    "cond": {
+     "all": [
+      {
+       "flag": "pact_elves"
+      },
+      {
+       "flag": "pact_dwarves"
+      },
+      {
+       "flag": "pact_beastfolk"
+      },
+      {
+       "flag": "pact_dragons"
+      }
+     ]
+    }
+   },
+   "background": "bg_throne_doors",
+   "music": "final_resolve",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "neutral"
+    },
+    "R1": {
+     "char": "general_mo",
+     "expr": "angry"
+    },
+    "R2": {
+     "char": "fei",
+     "expr": "neutral"
+    }
+   },
+   "words": [
+    "C1038",
+    "C007",
+    "C1023",
+    "C576"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The great doors creak open. General Mo stands before the throne, sword drawn.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "angry",
+     "en": "Halt. None of you may go in.",
+     "zh": "你们不可以进去。",
+     "zhTrad": "你們不可以進去。",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "angry",
+     "en": "We must unite! All of us. Look behind me.",
+     "zh": "我们必须团结起来！",
+     "zhTrad": "我們必須團結起來！",
+     "zhId": "C1038",
+     "tokens": [
+      "C1038"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Behind you stand elves, dwarves, beastfolk and dragons: a friend from every realm.",
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "fei",
+     "side": "R2",
+     "expr": "happy",
+     "en": "We're friends, so we came together.",
+     "zh": "我们是朋友，所以我们一起来了。",
+     "zhTrad": "我們是朋友，所以我們一起來了。",
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "Why are you not afraid?",
+     "zh": "你们为什么不怕？",
+     "zhTrad": "你們為什麼不怕？",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "Because we have courage, and we trust our partners.",
+     "zh": "因为我们有勇气，而且我们信任伙伴。",
+     "zhTrad": "因為我們有勇氣，而且我們信任夥伴。",
+     "vo": null
+    },
+    {
+     "id": "l8",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "sad",
+     "en": "At the Colosseum you fought fairly. A knight serves his king... but a knight also chooses.",
+     "vo": null
+    },
+    {
+     "id": "l9",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "I surrender. Please, go in.",
+     "zh": "我投降。请进。",
+     "zhTrad": "我投降。請進。",
+     "vo": null,
+     "setFlags": [
+      "mo_stepped_aside"
+     ]
+    },
+    {
+     "id": "l10",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What do you say to General Mo?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C007}",
+       "tokens": [
+        "C007"
+       ],
+       "goto": "l11"
+      },
+      {
+       "id": "c2",
+       "en": "{C1023}? Come with us!",
+       "tokens": [
+        "C1023"
+       ],
+       "goto": "l11b",
+       "setFlags": [
+        "asked_mo_partner"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "l11",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Go. I will guard this door so that no one runs away. Not even him.",
+     "vo": null,
+     "goto": "l12"
+    },
+    {
+     "id": "l11b",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Partner... Hm. Perhaps, after. For now I guard this door.",
+     "vo": null
+    },
+    {
+     "id": "l12",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "One last time, my dears. Are you ready?",
+     "zh": "最后一次了。准备好了吗？",
+     "zhTrad": "最後一次了。準備好了嗎？",
+     "vo": null,
+     "swap": {
+      "slot": "R1",
+      "char": "granny_bai",
+      "expr": "happy"
+     }
+    },
+    {
+     "id": "l13",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "angry",
+     "en": "{C576}",
+     "tokens": [
+      "C576"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l14",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The Harmony Bell hums in your pack. Far above, the Demon King rises from his throne.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "final_battle_ready"
+    },
+    {
+     "startBattle": "boss_9"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "fei",
+  "general_mo",
+  "granny_bai",
+  "hero",
+  "narrator",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  }
+ }
+}

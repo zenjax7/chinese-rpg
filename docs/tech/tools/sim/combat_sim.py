@@ -27,7 +27,8 @@ LOCS = {1:3,2:2,3:2,4:3,5:2,6:2,7:2,8:2,9:2}
 REVIEW_SLOTS = {1:1,2:1,3:2,4:2,5:2,6:2,7:3,8:3,9:3}   # realm 1 location 1 uses 0
 PATH_ENCOUNTERS = 6        # scripted fights per location before the boss approach zone
 LOCAL_ITEMS = 30   # v2 value; v3 uses LOC_SIZES from the curriculum
-_POOLS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'curriculum_location_pools.csv')
+_POOLS = (os.path.join(os.environ['DESY_ROOT'], 'data', 'curriculum_location_pools.csv') if os.environ.get('DESY_ROOT') else   # 2026-10-10: repo path
+          os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'data', 'curriculum', 'curriculum_location_pools.csv'))
 def _loc_sizes():
     c = collections.Counter()
     for r in csv.DictReader(open(_POOLS, encoding='utf-8')): c[(int(r['realm_no']), int(r['location_no']))] += 1

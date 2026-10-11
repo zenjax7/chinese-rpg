@@ -1,0 +1,1023 @@
+{
+ "schema": "level/0.2",
+ "id": "griffin_spire_2",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "griffin_spire",
+ "level": 2,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "狮鹫塔 第2层",
+  "en": "Griffin Spire - level 2"
+ },
+ "entry": "stairs_1",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Griffin Summit",
+   "zh": "狮鹫之巅"
+  },
+  "emoji": "🏔️",
+  "background": {
+   "map": "bg_map_griffin_spire_2",
+   "battle": "bg_battle_r7"
+  },
+  "desyPool": "L7.2",
+  "words": [
+   "C912",
+   "C913",
+   "C914",
+   "C915",
+   "C459",
+   "C460",
+   "C461",
+   "C462",
+   "C463",
+   "C464",
+   "C465",
+   "C466",
+   "C467",
+   "C468",
+   "C469",
+   "C916",
+   "C917",
+   "C918",
+   "C919",
+   "C920",
+   "C921",
+   "C922",
+   "C923",
+   "C470",
+   "C471",
+   "C472",
+   "C473",
+   "C474",
+   "C475",
+   "C476",
+   "C477",
+   "C478",
+   "C479",
+   "C480",
+   "C481",
+   "C482",
+   "C483",
+   "C484",
+   "C485",
+   "C486",
+   "C487",
+   "C924",
+   "C925",
+   "C926",
+   "C927",
+   "C928",
+   "C929",
+   "C930",
+   "C931",
+   "C932",
+   "C933",
+   "C934",
+   "C935",
+   "C936",
+   "C937",
+   "C938",
+   "C939",
+   "C940",
+   "C941"
+  ],
+  "G": 54,
+  "recLevel": [
+   16,
+   19
+  ],
+  "gearTier": 7,
+  "difficulty": {
+   "mcOptions": 5,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "harpy",
+    "weight": 1
+   },
+   {
+    "enemy": "griffin",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 2,
+   "kind": "inn",
+   "x": 0.3503,
+   "y": 0.2,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_2",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.5,
+   "y": 0.2,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 0.6497,
+   "y": 0.05,
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 5,
+   "kind": "miniboss",
+   "x": 0.3503,
+   "y": 0.5,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_chick",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "miniboss",
+        "cond": {
+         "questActive": "q7_griffin_chick"
+        },
+        "do": [
+         {
+          "fight": {
+           "enemies": [
+            "griffin",
+            "harpy"
+           ],
+           "kind": "miniboss"
+          },
+          "quest": "q7_griffin_chick"
+         },
+         {
+          "setFlag": "q7_griffin_chick.s2"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc_1",
+   "idx": 6,
+   "kind": "npc",
+   "x": 0.6497,
+   "y": 0.35,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_chick",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q7_griffin_chick"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q7_griffin_chick_offer"
+     },
+     "in": {
+      "scene": "sc_q7_griffin_chick_wait"
+     },
+     "post": {
+      "scene": "sc_q7_griffin_chick_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_3",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 8,
+   "kind": "chest",
+   "x": 0.8003,
+   "y": 0.35,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_feathers",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.8,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 12,
+   "kind": "inn",
+   "x": 0.8003,
+   "y": 0.65,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 13,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 14,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.8,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_feathers",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "griffin_spire_1",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "griffin_spire_3",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "campfire_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_2",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "path_2",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_3",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "path_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e12",
+   "from": "path_6",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "path_7",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "campfire_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "cliff_golem"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "griffin_spire_2.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_griffin_spire_2__ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_griffin_spire_2__griffin_spire_2_story_1"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q7_griffin_chick",
+   "story": "side",
+   "type": "rescue",
+   "title": {
+    "zh": "小狮鹫回家",
+    "en": "A Chick Far From the Nest"
+   },
+   "giver": {
+    "npc": "griffin_chick",
+    "graph": "griffin_spire_2",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "griffin_mother",
+    "graph": "griffin_spire_3",
+    "node": "npc_1"
+   },
+   "returnToGiver": false,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "griffin_chick"
+     },
+     "where": {
+      "graph": "griffin_spire_2",
+      "node": "npc_1"
+     },
+     "note": "A fluffy chick blown down by the storm (too young to be bewitched)."
+    },
+    {
+     "id": "s2",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "griffin",
+       "harpy"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "griffin_spire_2",
+      "node": "miniboss_1"
+     },
+     "note": "Harpies want the chick."
+    },
+    {
+     "id": "s3",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "griffin_chick",
+      "to": {
+       "graph": "griffin_spire_3",
+       "node": "npc_1"
+      }
+     },
+     "where": {
+      "maps": [
+       "griffin_spire_1",
+       "griffin_spire_2",
+       "griffin_spire_3"
+      ]
+     },
+     "note": "Carry it upstairs."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "griffin_mother",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "griffin_spire_3",
+      "node": "npc_1"
+     },
+     "note": "Its mother: 'Free our king.'"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q7_griffin_chick_offer",
+    "progress": "sc_q7_griffin_chick_wait",
+    "turnIn": "sc_q7_griffin_chick_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 9
+    },
+    "goldValue": 486,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 450,
+    "items": {
+     "manatea": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 15.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C912",
+    "C911",
+    "C915",
+    "C914",
+    "C913",
+    "C468"
+   ],
+   "summary": "Save a griffin chick from harpies and carry it up the Spire to its mother below the King's roost."
+  }
+ ],
+ "scenes": {
+  "sc_griffin_spire_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "griffin_spire_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_griffin_spire_2__griffin_spire_2_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_2__griffin_spire_2_story_1",
+   "title": "griffin_spire_2.story_1",
+   "trigger": {
+    "graph": "griffin_spire_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  }
+ }
+}

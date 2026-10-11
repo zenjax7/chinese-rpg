@@ -1,0 +1,2359 @@
+{
+ "schema": "level/0.2",
+ "id": "realm_5",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "zh": "九头蛇沼泽",
+  "en": "Hydra Swamp"
+ },
+ "entry": "entry_town",
+ "aspect": 2.071,
+ "settings": {
+  "title": {
+   "en": "Misty Marsh",
+   "zh": "迷雾沼泽"
+  },
+  "emoji": "🌫️",
+  "background": {
+   "map": "bg_map_realm_5",
+   "battle": "bg_battle_r5"
+  },
+  "desyPool": "L5.1",
+  "words": [
+   "C302",
+   "C304",
+   "C305",
+   "C306",
+   "C307",
+   "C308",
+   "C309",
+   "C310",
+   "C311",
+   "C312",
+   "C313",
+   "C314",
+   "C315",
+   "C316",
+   "C317",
+   "C318",
+   "C319",
+   "C320",
+   "C321",
+   "C322",
+   "C323",
+   "C324",
+   "C325",
+   "C326",
+   "C777",
+   "C778",
+   "C779",
+   "C780",
+   "C781",
+   "C782",
+   "C783",
+   "C784",
+   "C785",
+   "C786",
+   "C787",
+   "C788",
+   "C789",
+   "C790",
+   "C791",
+   "C792",
+   "C793",
+   "C794",
+   "C795",
+   "C796",
+   "C797",
+   "C798",
+   "C799"
+  ],
+  "G": 36,
+  "recLevel": [
+   10,
+   13
+  ],
+  "gearTier": 5,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "bog_monster",
+    "weight": 1
+   },
+   {
+    "enemy": "bog_lizard",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e8",
+   "kind": "locboss",
+   "enemy": "bog_toad"
+  }
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "芦苇村",
+    "en": "Reed Village"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 5,
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q5_invitations",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q5_invitations_offer"
+     },
+     "in": {
+      "scene": "sc_q5_invitations_wait"
+     },
+     "post": {
+      "scene": "sc_q5_invitations_thanks"
+     }
+    },
+    {
+     "quest": "q5_pocket_watches",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q5_pocket_watches_offer"
+     },
+     "in": {
+      "scene": "sc_q5_pocket_watches_wait"
+     },
+     "post": {
+      "scene": "sc_q5_pocket_watches_thanks"
+     }
+    },
+    {
+     "quest": "q5_fog_bottle",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q5_fog_bottle_offer"
+     },
+     "in": {
+      "scene": "sc_q5_fog_bottle_wait"
+     },
+     "post": {
+      "scene": "sc_q5_fog_bottle_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.1501,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Misty Marsh path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.2502,
+   "y": 0.2348,
+   "title": {
+    "zh": "小路",
+    "en": "Misty Marsh path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.2348,
+   "title": {
+    "zh": "小路",
+    "en": "Misty Marsh path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.4503,
+   "y": 0.1464,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.5497,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Misty Marsh path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.0596,
+   "title": {
+    "zh": "小路",
+    "en": "Misty Marsh path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 7,
+   "kind": "inn",
+   "x": 0.7498,
+   "y": 0.4116,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 8,
+   "kind": "boss",
+   "x": 0.8499,
+   "y": 0.5,
+   "title": {
+    "zh": "泥潭巨蛙",
+    "en": "Giant Bog Toad"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_6",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.4503,
+   "y": 0.3232,
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_2",
+   "idx": 11,
+   "kind": "village",
+   "x": 0.5497,
+   "y": 0.1786,
+   "title": {
+    "zh": "芦苇村分站",
+    "en": "Reed Village outpost 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ],
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q5_muddy_road",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q5_muddy_road_offer"
+     },
+     "in": {
+      "scene": "sc_q5_muddy_road_wait"
+     },
+     "post": {
+      "scene": "sc_q5_muddy_road_thanks"
+     }
+    },
+    {
+     "quest": "q5_invitations",
+     "role": "step",
+     "step": "s2"
+    },
+    {
+     "quest": "q5_invitations",
+     "role": "step",
+     "step": "s3"
+    },
+    {
+     "quest": "q5_escort_xiaohe",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  },
+  {
+   "id": "path_7",
+   "idx": 12,
+   "kind": "waypoint",
+   "x": 0.2502,
+   "y": 0.4116,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_8",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.4116,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_9",
+   "idx": 14,
+   "kind": "waypoint",
+   "x": 0.4503,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_10",
+   "idx": 15,
+   "kind": "waypoint",
+   "x": 0.5497,
+   "y": 0.3071,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 16,
+   "kind": "inn",
+   "x": 0.6497,
+   "y": 0.2059,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_11",
+   "idx": 17,
+   "kind": "waypoint",
+   "x": 0.2502,
+   "y": 0.5884,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_12",
+   "idx": 18,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.5884,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_13",
+   "idx": 19,
+   "kind": "waypoint",
+   "x": 0.4503,
+   "y": 0.6768,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_14",
+   "idx": 20,
+   "kind": "inn",
+   "x": 0.5497,
+   "y": 0.4357,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 21,
+   "kind": "miniboss",
+   "x": 0.6497,
+   "y": 0.3537,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "path_15",
+   "idx": 22,
+   "kind": "waypoint",
+   "x": 0.2502,
+   "y": 0.7652,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 23,
+   "kind": "npc",
+   "x": 0.3503,
+   "y": 0.7652,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q5_escort_xiaohe",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q5_escort_xiaohe"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q5_escort_xiaohe_offer"
+     },
+     "in": {
+      "scene": "sc_q5_escort_xiaohe_wait"
+     },
+     "post": {
+      "scene": "sc_q5_escort_xiaohe_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 24,
+   "kind": "chest",
+   "x": 0.5497,
+   "y": 0.5643,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_16",
+   "idx": 25,
+   "kind": "fork",
+   "x": 0.5497,
+   "y": 0.6929,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_17",
+   "idx": 26,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 27,
+   "kind": "chest",
+   "x": 0.7498,
+   "y": 0.5884,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_18",
+   "idx": 28,
+   "kind": "waypoint",
+   "x": 0.4503,
+   "y": 0.8536,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 29,
+   "kind": "chest",
+   "x": 0.5497,
+   "y": 0.8214,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_4",
+   "idx": 30,
+   "kind": "chest",
+   "x": 0.5497,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 31,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.6463,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_5",
+   "idx": 32,
+   "kind": "chest",
+   "x": 0.6497,
+   "y": 0.7941,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "treasure_6",
+   "idx": 33,
+   "kind": "chest",
+   "x": 0.6497,
+   "y": 0.9404,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "grass",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "grass",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "campfire_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_5",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 8
+  },
+  {
+   "id": "e10",
+   "from": "path_3",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_6",
+   "to": "town_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_1",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "path_7",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 13
+  },
+  {
+   "id": "e14",
+   "from": "path_8",
+   "to": "path_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 14
+  },
+  {
+   "id": "e15",
+   "from": "path_9",
+   "to": "path_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 15
+  },
+  {
+   "id": "e16",
+   "from": "path_10",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 16
+  },
+  {
+   "id": "e17",
+   "from": "path_1",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 17
+  },
+  {
+   "id": "e18",
+   "from": "path_11",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 18
+  },
+  {
+   "id": "e19",
+   "from": "path_12",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 19
+  },
+  {
+   "id": "e20",
+   "from": "path_13",
+   "to": "path_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 20
+  },
+  {
+   "id": "e21",
+   "from": "path_14",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 21
+  },
+  {
+   "id": "e22",
+   "from": "path_1",
+   "to": "path_15",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 22
+  },
+  {
+   "id": "e23",
+   "from": "path_15",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 23
+  },
+  {
+   "id": "e24",
+   "from": "campfire_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 24
+  },
+  {
+   "id": "e25",
+   "from": "path_6",
+   "to": "path_16",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 25
+  },
+  {
+   "id": "e26",
+   "from": "path_16",
+   "to": "path_17",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 26
+  },
+  {
+   "id": "e27",
+   "from": "path_17",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 27
+  },
+  {
+   "id": "e28",
+   "from": "path_8",
+   "to": "path_18",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 28
+  },
+  {
+   "id": "e29",
+   "from": "path_18",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 29
+  },
+  {
+   "id": "e30",
+   "from": "path_18",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 30
+  },
+  {
+   "id": "e31",
+   "from": "path_16",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 31
+  },
+  {
+   "id": "e32",
+   "from": "path_10",
+   "to": "treasure_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 32
+  },
+  {
+   "id": "e33",
+   "from": "path_16",
+   "to": "treasure_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 33
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_5"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 34
+  },
+  {
+   "id": "x_boss_1_hydra_lair_1",
+   "idx": 35,
+   "from": "boss_1",
+   "to": {
+    "graph": "hydra_lair_1",
+    "node": "entry_gate"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_10.1",
+   "node": "path_10",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_11.1",
+   "node": "path_11",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_12.1",
+   "node": "path_12",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_13.1",
+   "node": "path_13",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "swamp_wisp"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_5.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_15.1",
+   "node": "path_15",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_5__ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_16.1",
+   "node": "path_16",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_17.1",
+   "node": "path_17",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_18.1",
+   "node": "path_18",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_5__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_5.1",
+   "node": "treasure_5",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_5.2",
+   "node": "treasure_5",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_6.1",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_6.2",
+   "node": "treasure_6",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q5_invitations",
+   "story": "side",
+   "type": "deliver",
+   "title": {
+    "zh": "生日请帖",
+    "en": "Grandpa Turtle's Birthday Invitations"
+   },
+   "giver": {
+    "npc": "grandpa_turtle",
+    "graph": "realm_5",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle"
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     },
+     "note": "His 1,000th birthday! Three invitations to hand out."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "invitation",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "town_2"
+     }
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "invitation",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "town_2"
+     }
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "invitation",
+      "to": null
+     },
+     "where": {
+      "graph": "hydra_lair_1",
+      "node": "npc_1"
+     }
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     },
+     "note": "Party scene with cake."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_invitations_offer",
+    "progress": "sc_q5_invitations_wait",
+    "turnIn": "sc_q5_invitations_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 216,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 240,
+    "items": {
+     "bighoney": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 8.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C322",
+    "C308",
+    "C309",
+    "C310",
+    "C311",
+    "C325"
+   ],
+   "summary": "Hand Grandpa Turtle's birthday invitations to three friends around the swamp and come back for cake."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q5_muddy_road",
+   "story": "side",
+   "type": "slay",
+   "title": {
+    "zh": "别迟到",
+    "en": "Mud on the School Road"
+   },
+   "giver": {
+    "npc": "ferry_auntie",
+    "graph": "realm_5",
+    "node": "town_2"
+   },
+   "alsoOnBoard": true,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "ferry_auntie"
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "town_2"
+     },
+     "note": "Bog monsters make the village kids 迟到 every morning."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "kill",
+      "enemy": "bog_monster",
+      "n": 8,
+      "scope": {
+       "maps": [
+        "hydra_lair_1",
+        "hydra_lair_2",
+        "realm_5"
+       ]
+      }
+     },
+     "where": {
+      "maps": [
+       "realm_5"
+      ]
+     }
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "ferry_auntie",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "town_2"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_muddy_road_offer",
+    "progress": "sc_q5_muddy_road_wait",
+    "turnIn": "sc_q5_muddy_road_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 216,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 180,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C781",
+    "C782",
+    "C304",
+    "C313",
+    "C323"
+   ],
+   "summary": "Clear 8 bog monsters off the morning road so the swamp kids stop being late for school."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q5_escort_xiaohe",
+   "story": "side",
+   "type": "escort",
+   "title": {
+    "zh": "送小荷回家",
+    "en": "Xiaohe in the Mist"
+   },
+   "giver": {
+    "npc": "xiaohe",
+    "graph": "realm_5",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "xiaohe_grandma",
+    "graph": "realm_5",
+    "node": "town_2"
+   },
+   "returnToGiver": false,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaohe"
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "npc_1"
+     },
+     "note": "A girl followed a wisp's light and got lost."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "xiaohe",
+      "to": {
+       "graph": "realm_5",
+       "node": "path_1"
+      }
+     },
+     "where": {
+      "maps": [
+       "realm_5"
+      ]
+     },
+     "note": "She follows you and hides during fights. At the Misty Marsh fork (path_1) she wants to follow the wisp again: 一会儿 / 现在 (choice in the step scene)."
+    },
+    {
+     "id": "s3",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "xiaohe",
+      "to": {
+       "graph": "realm_5",
+       "node": "town_2"
+      }
+     },
+     "where": {
+      "maps": [
+       "realm_5"
+      ]
+     },
+     "note": "On to Reed Village outpost 1 (realm_5/town_2)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaohe_grandma",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "town_2"
+     },
+     "note": "Grandma rewards you."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_escort_xiaohe_offer",
+    "progress": "sc_q5_escort_xiaohe_wait",
+    "turnIn": "sc_q5_escort_xiaohe_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 216,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 180,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 7.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C320",
+    "C303",
+    "C318",
+    "C319",
+    "C784",
+    "C307"
+   ],
+   "summary": "Walk little Xiaohe safely through the fog to her grandma's house at the outpost."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q5_pocket_watches",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "怀表",
+    "en": "Tick-Tock Lizards"
+   },
+   "giver": {
+    "npc": "grandpa_turtle",
+    "graph": "realm_5",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_5"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle"
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     },
+     "note": "Bog lizards stole the town clock's spare watches."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "collect",
+      "item": "pocket_watch",
+      "n": 5,
+      "dropFrom": [
+       "bog_lizard"
+      ],
+      "dropChance": 0.35
+     },
+     "where": {
+      "maps": [
+       "hydra_lair_1",
+       "hydra_lair_2"
+      ]
+     }
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_pocket_watches_offer",
+    "progress": "sc_q5_pocket_watches_wait",
+    "turnIn": "sc_q5_pocket_watches_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 216,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 180,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C314",
+    "C315",
+    "C317",
+    "C777",
+    "C326"
+   ],
+   "summary": "Take back 5 pocket watches from the bog lizards so Grandpa Turtle can fix the town clock."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q5_fog_bottle",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "雾瓶",
+    "en": "Madame Mist's Fog Bottle"
+   },
+   "giver": {
+    "npc": "grandpa_turtle",
+    "graph": "realm_5",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "flag": "met_madame_mist"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle"
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     },
+     "note": "After meeting Madame Mist: 'Her fog comes from a bottle. Break it!'"
+    },
+    {
+     "id": "s2",
+     "event": "portal",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "hydra_lair_1",
+      "node": "entry_gate"
+     }
+    },
+    {
+     "id": "s3",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "swamp_wisp",
+       "bog_monster",
+       "bog_lizard"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "hydra_lair_2",
+      "node": "miniboss_1"
+     },
+     "note": "Guardians of the bottle."
+    },
+    {
+     "id": "s4",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "fog_bottle",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "hydra_lair_2",
+      "node": "miniboss_1"
+     }
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_5",
+      "node": "entry_town"
+     },
+     "note": "He seals it and gives you his old shell shield."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_fog_bottle_offer",
+    "progress": "sc_q5_fog_bottle_wait",
+    "turnIn": "sc_q5_fog_bottle_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 30
+    },
+    "expValue": 360,
+    "items": {},
+    "gear": [
+     {
+      "id": "shield_t5_heroic",
+      "tier": 5,
+      "slot": "shield",
+      "rarity": "heroic",
+      "zh": "龟壳盾",
+      "en": "Turtle-Shell Shield",
+      "stat": "DEF",
+      "value": 7,
+      "perk": "heroic: first broken block per battle leaks 1 less",
+      "goldValue": 507
+     }
+    ],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 14.1,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C539",
+    "C821",
+    "C820",
+    "C542",
+    "C324"
+   ],
+   "summary": "Beat the guardians of Madame Mist's fog bottle on the Lair's lower level and bring it to Grandpa Turtle to seal."
+  }
+ ],
+ "scenes": {
+  "sc_realm_5__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_5__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "realm_5",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  }
+ }
+}

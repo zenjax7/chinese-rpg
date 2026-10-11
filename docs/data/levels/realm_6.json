@@ -1,0 +1,2252 @@
+{
+ "schema": "level/0.2",
+ "id": "realm_6",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "zh": "僵尸之地",
+  "en": "Zombie Lands"
+ },
+ "entry": "entry_town",
+ "aspect": 2.117,
+ "settings": {
+  "title": {
+   "en": "Gloomy Village",
+   "zh": "灰雾村"
+  },
+  "emoji": "🕯️",
+  "background": {
+   "map": "bg_map_realm_6",
+   "battle": "bg_battle_r6"
+  },
+  "desyPool": "L6.1",
+  "words": [
+   "C357",
+   "C358",
+   "C359",
+   "C360",
+   "C361",
+   "C362",
+   "C363",
+   "C364",
+   "C365",
+   "C366",
+   "C367",
+   "C368",
+   "C369",
+   "C370",
+   "C371",
+   "C378",
+   "C379",
+   "C380",
+   "C381",
+   "C382",
+   "C383",
+   "C384",
+   "C385",
+   "C386",
+   "C828",
+   "C829",
+   "C830",
+   "C831",
+   "C832",
+   "C833",
+   "C834",
+   "C835",
+   "C836",
+   "C837",
+   "C838",
+   "C839",
+   "C840",
+   "C841",
+   "C842",
+   "C843",
+   "C387",
+   "C388",
+   "C389",
+   "C390",
+   "C391",
+   "C392",
+   "C393",
+   "C394",
+   "C395",
+   "C396",
+   "C397",
+   "C398",
+   "C399",
+   "C400",
+   "C401",
+   "C402",
+   "C403",
+   "C404",
+   "C405",
+   "C406"
+  ],
+  "G": 45,
+  "recLevel": [
+   13,
+   16
+  ],
+  "gearTier": 6,
+  "difficulty": {
+   "mcOptions": 5,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "zombie",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e10",
+   "kind": "locboss",
+   "enemy": "zombie_mayor"
+  }
+ },
+ "nodes": [
+  {
+   "id": "entry_town",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "晨光小镇",
+    "en": "Dawn Chapel"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 6,
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q6_medicine_herbs",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q6_medicine_herbs_offer"
+     },
+     "in": {
+      "scene": "sc_q6_medicine_herbs_wait"
+     },
+     "post": {
+      "scene": "sc_q6_medicine_herbs_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1253,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.275,
+   "y": 0.4097,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.3193,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 5,
+   "kind": "inn",
+   "x": 0.4247,
+   "y": 0.3193,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.5753,
+   "y": 0.3193,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Gloomy Village path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 9,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.3193,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 10,
+   "kind": "boss",
+   "x": 0.8003,
+   "y": 0.1387,
+   "title": {
+    "zh": "丧尸村长",
+    "en": "Zombie Mayor"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "portal_2",
+   "idx": 12,
+   "kind": "portal",
+   "x": 0.3503,
+   "y": 0.5,
+   "title": {
+    "zh": "旧矿洞",
+    "en": "Old Mine (optional) door"
+   },
+   "quests": [
+    {
+     "quest": "q6_old_mine",
+     "role": "step",
+     "step": "s1",
+     "in": {
+      "events": [
+       {
+        "id": "portal_2.1",
+        "node": "portal_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_old_mine"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_6__realm_6_portal_2_step_q6_old_mine"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_8",
+   "idx": 13,
+   "kind": "fork",
+   "x": 0.4247,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Side road"
+   }
+  },
+  {
+   "id": "town_2",
+   "idx": 14,
+   "kind": "village",
+   "x": 0.5,
+   "y": 0.1995,
+   "title": {
+    "zh": "晨光小镇分站",
+    "en": "Dawn Chapel outpost 1"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ],
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q6_hot_soup",
+     "role": "step",
+     "step": "s1",
+     "in": {
+      "events": [
+       {
+        "id": "town_2.1",
+        "node": "town_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_hot_soup"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_6__realm_6_town_2_step_q6_hot_soup"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q6_hot_soup",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q6_hot_soup_offer"
+     },
+     "in": {
+      "scene": "sc_q6_hot_soup_wait"
+     },
+     "post": {
+      "scene": "sc_q6_hot_soup_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 15,
+   "kind": "story",
+   "x": 0.275,
+   "y": 0.5903,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q6_medicine_herbs",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_medicine_herbs"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_6__realm_6_story_1_step_q6_medicine_herbs"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_9",
+   "idx": 16,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.6807,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_10",
+   "idx": 17,
+   "kind": "waypoint",
+   "x": 0.4247,
+   "y": 0.6807,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_11",
+   "idx": 18,
+   "kind": "inn",
+   "x": 0.5,
+   "y": 0.3505,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_2",
+   "idx": 19,
+   "kind": "story",
+   "x": 0.5753,
+   "y": 0.5,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 20,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "path_12",
+   "idx": 21,
+   "kind": "fork",
+   "x": 0.725,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_13",
+   "idx": 22,
+   "kind": "fork",
+   "x": 0.8003,
+   "y": 0.3193,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 23,
+   "kind": "chest",
+   "x": 0.8747,
+   "y": 0.3193,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_3",
+   "idx": 24,
+   "kind": "story",
+   "x": 0.5,
+   "y": 0.6495,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 25,
+   "kind": "waypoint",
+   "x": 0.8747,
+   "y": 0.5,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   },
+   "quests": [
+    {
+     "quest": "q6_medicine_herbs",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2",
+   "idx": 26,
+   "kind": "chest",
+   "x": 0.8003,
+   "y": 0.5,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 27,
+   "kind": "npc",
+   "x": 0.8747,
+   "y": 0.6807,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q6_hot_soup",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_hot_soup"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_6__realm_6_npc_1_step_q6_hot_soup"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_3",
+   "idx": 28,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.8005,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "deadend_3",
+   "idx": 29,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.95,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   },
+   "quests": [
+    {
+     "quest": "q6_medicine_herbs",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4",
+   "idx": 30,
+   "kind": "chest",
+   "x": 0.5753,
+   "y": 0.6807,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 31,
+   "kind": "miniboss",
+   "x": 0.95,
+   "y": 0.4097,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "story_4",
+   "idx": 32,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.5903,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "deadend_4",
+   "idx": 33,
+   "kind": "waypoint",
+   "x": 0.8003,
+   "y": 0.6807,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   },
+   "quests": [
+    {
+     "quest": "q6_medicine_herbs",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "path_14",
+   "idx": 34,
+   "kind": "waypoint",
+   "x": 0.8003,
+   "y": 0.8613,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "inn_2",
+   "idx": 35,
+   "kind": "inn",
+   "x": 0.8747,
+   "y": 0.8613,
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "village_2x",
+   "idx": 36,
+   "kind": "village",
+   "x": 0.725,
+   "y": 0.6807,
+   "title": {
+    "zh": "晨光小镇村2",
+    "en": "Dawn Chapel village 2"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "shops": [
+    "items"
+   ],
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q6_hot_soup",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_portal_2",
+   "from": "portal_2",
+   "kind": "portal",
+   "to": {
+    "graph": "old_mine_1",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "entry_town",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_4",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "campfire_1",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_6",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "path_7",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_3",
+   "to": "portal_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "path_4",
+   "to": "path_8",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "path_8",
+   "to": "town_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 15
+  },
+  {
+   "id": "e15",
+   "from": "path_2",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 16
+  },
+  {
+   "id": "e16",
+   "from": "path_3",
+   "to": "path_9",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 17
+  },
+  {
+   "id": "e17",
+   "from": "path_9",
+   "to": "path_10",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 18
+  },
+  {
+   "id": "e18",
+   "from": "path_10",
+   "to": "path_11",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 19
+  },
+  {
+   "id": "e19",
+   "from": "path_11",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 20
+  },
+  {
+   "id": "e20",
+   "from": "path_8",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 21
+  },
+  {
+   "id": "e21",
+   "from": "path_7",
+   "to": "path_12",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 22
+  },
+  {
+   "id": "e22",
+   "from": "path_12",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 23
+  },
+  {
+   "id": "e23",
+   "from": "path_13",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 24
+  },
+  {
+   "id": "e24",
+   "from": "path_8",
+   "to": "story_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 25
+  },
+  {
+   "id": "e25",
+   "from": "path_13",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 26
+  },
+  {
+   "id": "e26",
+   "from": "path_12",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 27
+  },
+  {
+   "id": "e27",
+   "from": "path_13",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 28
+  },
+  {
+   "id": "e28",
+   "from": "campfire_1",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 29
+  },
+  {
+   "id": "e29",
+   "from": "path_10",
+   "to": "deadend_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 30
+  },
+  {
+   "id": "e30",
+   "from": "deadend_1",
+   "to": "treasure_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 31
+  },
+  {
+   "id": "e31",
+   "from": "treasure_1",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 32
+  },
+  {
+   "id": "e32",
+   "from": "npc_1",
+   "to": "story_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 33
+  },
+  {
+   "id": "e33",
+   "from": "path_12",
+   "to": "deadend_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 34
+  },
+  {
+   "id": "e34",
+   "from": "path_12",
+   "to": "path_14",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 35
+  },
+  {
+   "id": "e35",
+   "from": "path_14",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 36
+  },
+  {
+   "id": "e36",
+   "from": "inn_2",
+   "to": "path_13",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 37
+  },
+  {
+   "id": "v2x",
+   "from": "path_7",
+   "to": "village_2x",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 38
+  },
+  {
+   "id": "exit_entry_town",
+   "from": "entry_town",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_6"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 39
+  },
+  {
+   "id": "x_boss_1_moonlit_crypt_1",
+   "idx": 40,
+   "from": "boss_1",
+   "to": {
+    "graph": "moonlit_crypt_1",
+    "node": "entry_gate"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_8.1",
+   "node": "path_8",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_6__realm_6_story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_9.1",
+   "node": "path_9",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_10.1",
+   "node": "path_10",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_6__realm_6_story_2"
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_12.1",
+   "node": "path_12",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_13.1",
+   "node": "path_13",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_3.1",
+   "node": "story_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_6__realm_6_story_3"
+    }
+   ]
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_6__ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.1",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_3.1",
+   "node": "deadend_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.1",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_4.2",
+   "node": "treasure_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "zombie_knight"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "realm_6.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_4.1",
+   "node": "story_4",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_6__realm_6_story_4"
+    }
+   ]
+  },
+  {
+   "id": "deadend_4.1",
+   "node": "deadend_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_14.1",
+   "node": "path_14",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_6__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q6_medicine_herbs",
+   "story": "main",
+   "type": "fetch",
+   "title": {
+    "zh": "找草药",
+    "en": "Herbs for Dr. An"
+   },
+   "giver": {
+    "npc": "dr_an",
+    "graph": "realm_6",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "entry_town"
+     },
+     "note": "Dawn Chapel is out of medicine."
+    },
+    {
+     "id": "s2",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "sun_herb",
+      "n": 3,
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "deadend_2",
+      "refs": [
+       "realm_6/deadend_2",
+       "realm_6/deadend_3",
+       "realm_6/deadend_4"
+      ]
+     },
+     "note": "3 herb patches at dead ends."
+    },
+    {
+     "id": "s3",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "story_1"
+     },
+     "note": "Xiaolong sniffs one and sneezes."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "entry_town"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q6_medicine_herbs_offer",
+    "progress": "sc_q6_medicine_herbs_wait",
+    "turnIn": "sc_q6_medicine_herbs_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 8
+    },
+    "goldValue": 360,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 300,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 8.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C400",
+    "C399",
+    "C398",
+    "C402",
+    "C366",
+    "C383"
+   ],
+   "summary": "Gather 3 sun-herbs from the foggy village's corners so Dr. An can brew medicine."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q6_hot_soup",
+   "story": "side",
+   "type": "deliver",
+   "title": {
+    "zh": "送热汤",
+    "en": "Hot Soup Rounds"
+   },
+   "giver": {
+    "npc": "cook_ma",
+    "graph": "realm_6",
+    "node": "town_2"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_6"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "cook_ma"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "town_2"
+     },
+     "note": "Cured villagers are weak; soup helps."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "soup",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "npc_1"
+     },
+     "note": "你怎么了? / 我头疼"
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "soup",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "town_2"
+     },
+     "note": "你没事吧? / 没事"
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "deliver",
+      "item": "soup",
+      "to": null
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "village_2x"
+     }
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "cook_ma",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "town_2"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q6_hot_soup_offer",
+    "progress": "sc_q6_hot_soup_wait",
+    "turnIn": "sc_q6_hot_soup_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 225,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 225,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C635",
+    "C386",
+    "C385",
+    "C403",
+    "C384",
+    "C358"
+   ],
+   "summary": "Carry Cook Ma's hot soup to three recovering villagers and ask how they feel."
+  }
+ ],
+ "scenes": {
+  "sc_realm_6__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_npc_1_step_q6_hot_soup": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_npc_1_step_q6_hot_soup",
+   "title": "realm_6.npc_1.step_q6_hot_soup",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_hot_soup: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_portal_2_step_q6_old_mine": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_portal_2_step_q6_old_mine",
+   "title": "realm_6.portal_2.step_q6_old_mine",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_old_mine: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_story_1",
+   "title": "realm_6.story_1",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_story_1_step_q6_medicine_herbs": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_story_1_step_q6_medicine_herbs",
+   "title": "realm_6.story_1.step_q6_medicine_herbs",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_medicine_herbs: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_story_2",
+   "title": "realm_6.story_2",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_story_3": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_story_3",
+   "title": "realm_6.story_3",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_story_4": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_story_4",
+   "title": "realm_6.story_4",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_town_2_step_q6_hot_soup": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_town_2_step_q6_hot_soup",
+   "title": "realm_6.town_2.step_q6_hot_soup",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_hot_soup: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

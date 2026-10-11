@@ -4,11 +4,13 @@ Reuses combat_sim.battle (campaign hooks: species, spell casts, Soaked, kill acc
 Gear model: the kid enters realm t wearing tier t-1 gear and buys the tier-t weapon (+3 ATK), armor (+2 DEF), shield (+1 DEF)."""
 import sys, random, statistics, collections, json, math
 from multiprocessing import Pool
-sys.path.insert(0, '/workspace/desy/build'); sys.path.insert(0, '/workspace/desy/build/v3')
+import os
+_HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path[:0] = [_HERE, os.path.join(_HERE, '..', 'data')]   # 2026-10-10: repo-relative (was /workspace/desy/build)
 import combat_sim as C
 import spells_data as D
-sys.path.insert(0, '/workspace/desy/build/v3/archive_v3_3')
-import spells_data_v3_3 as D33
+try: import spells_data_v3_3 as D33          # v3.3 archive (Desy's tree only); needed only for opt rules != 'v34'
+except ImportError: D33 = None
 
 SPELL_BY_ID = {s['id']: s for s in D.SPELLS}
 SEC_PER_CAST = D.CAST_ANIM_SEC     # v3.5: 2-3 s cast animation, a tap skips it (v3.4 assumed 5 s)

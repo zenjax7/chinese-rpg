@@ -1,0 +1,13 @@
+profile,mode,seeds,hours_target,hours,hours_delta_pct,defeats_target,defeats,defeats_delta,battles_zone,patrols,within_tolerance
+50% saver no spells,beeline,100,27.97,27.97,0.0,51.7,51.7,-0.01,22.2,12.2,True
+50% saver no spells,explore,100,31.56,31.56,-0.01,25.5,25.5,0.03,22.1,6.4,True
+50% saver free,beeline,100,28.02,28.02,-0.0,51.5,51.5,0.0,22.4,12.4,True
+50% saver free,explore,100,31.28,31.28,-0.01,13.6,13.6,-0.05,24.1,8.1,True
+50% spender no spells,beeline,100,20.46,20.46,0.02,70.9,70.9,-0.03,15.1,4.4,True
+50% spender no spells,explore,100,27.53,27.53,0.01,40.4,40.4,-0.01,18.0,2.0,True
+50% spender free,beeline,100,20.46,20.46,0.02,70.9,70.9,-0.03,15.1,4.4,True
+50% spender free,explore,100,26.34,26.34,-0.01,29.3,29.3,0.03,18.1,2.1,True
+75% saver no spells,beeline,100,18.5,18.5,0.0,0.1,0.1,-0.05,17.2,8.3,True
+75% saver no spells,explore,100,22.36,22.36,0.01,0.0,0.0,0.02,18.3,3.9,True
+75% saver free,beeline,100,18.64,18.64,0.01,0.0,0.0,0.03,18.3,9.3,True
+75% saver free,explore,100,22.23,22.23,0.02,0.0,0.0,0.02,19.3,4.5,True

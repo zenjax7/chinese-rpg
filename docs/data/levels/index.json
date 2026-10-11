@@ -1,0 +1,408 @@
+{
+ "schema": "levels_index/0.1",
+ "start": {
+  "graph": "realm_1",
+  "node": "village"
+ },
+ "maps": [
+  {
+   "id": "world",
+   "state": "beta",
+   "kind": "world",
+   "title": {
+    "zh": "世界地图",
+    "en": "World map"
+   }
+  },
+  {
+   "id": "bazaar_cellars_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "夜市地窖 第1层",
+    "en": "Bazaar Cellars - level 1"
+   }
+  },
+  {
+   "id": "beast_pens_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "兽栏 第1层",
+    "en": "Beast Pens (optional) - level 1"
+   }
+  },
+  {
+   "id": "beast_pens_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "兽栏 第2层",
+    "en": "Beast Pens (optional) - level 2"
+   }
+  },
+  {
+   "id": "cloud_caves_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "云洞 第1层",
+    "en": "Cloud Caves (optional) - level 1"
+   }
+  },
+  {
+   "id": "clover_hills",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "en": "Clover Hills",
+    "zh": "三叶草山坡"
+   }
+  },
+  {
+   "id": "demon_castle_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "魔王城 第1层",
+    "en": "Demon King's Castle - level 1"
+   }
+  },
+  {
+   "id": "demon_castle_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "魔王城 第2层",
+    "en": "Demon King's Castle - level 2"
+   }
+  },
+  {
+   "id": "demon_castle_3",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "魔王城 第3层",
+    "en": "Demon King's Castle - level 3"
+   }
+  },
+  {
+   "id": "demon_castle_4",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "魔王城 第4层",
+    "en": "Demon King's Castle - level 4"
+   }
+  },
+  {
+   "id": "demon_castle_5",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "魔王城 第5层",
+    "en": "Demon King's Castle - level 5"
+   }
+  },
+  {
+   "id": "goblin_caves_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "哥布林洞穴 第1层",
+    "en": "Goblin Caves - level 1"
+   }
+  },
+  {
+   "id": "goblin_caves_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "哥布林洞穴 第2层",
+    "en": "Goblin Caves - level 2"
+   }
+  },
+  {
+   "id": "goblin_caves_3",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "哥布林洞穴 第3层",
+    "en": "Goblin Caves - level 3"
+   }
+  },
+  {
+   "id": "great_hive_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "大蜂巢 第1层",
+    "en": "Great Hive - level 1"
+   }
+  },
+  {
+   "id": "griffin_spire_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "狮鹫塔 第1层",
+    "en": "Griffin Spire - level 1"
+   }
+  },
+  {
+   "id": "griffin_spire_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "狮鹫塔 第2层",
+    "en": "Griffin Spire - level 2"
+   }
+  },
+  {
+   "id": "griffin_spire_3",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "狮鹫塔 第3层",
+    "en": "Griffin Spire - level 3"
+   }
+  },
+  {
+   "id": "hydra_lair_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "九头蛇巢穴 第1层",
+    "en": "Hydra's Lair - level 1"
+   }
+  },
+  {
+   "id": "hydra_lair_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "九头蛇巢穴 第2层",
+    "en": "Hydra's Lair - level 2"
+   }
+  },
+  {
+   "id": "moonlit_crypt_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "月光地穴 第1层",
+    "en": "Moonlit Crypt - level 1"
+   }
+  },
+  {
+   "id": "moonlit_crypt_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "月光地穴 第2层",
+    "en": "Moonlit Crypt - level 2"
+   }
+  },
+  {
+   "id": "old_mine_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "旧矿洞 第1层",
+    "en": "Old Mine (optional) - level 1"
+   }
+  },
+  {
+   "id": "realm_1",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "新手草原",
+    "en": "Starter Meadow"
+   }
+  },
+  {
+   "id": "realm_2",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "蜂巢森林",
+    "en": "Honeycomb Forest"
+   }
+  },
+  {
+   "id": "realm_3",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "十字路口集市",
+    "en": "Crossroads Market"
+   }
+  },
+  {
+   "id": "realm_4",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "哥布林洞穴",
+    "en": "Goblin Caves"
+   }
+  },
+  {
+   "id": "realm_5",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "九头蛇沼泽",
+    "en": "Hydra Swamp"
+   }
+  },
+  {
+   "id": "realm_6",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "僵尸之地",
+    "en": "Zombie Lands"
+   }
+  },
+  {
+   "id": "realm_7",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "狮鹫山峰",
+    "en": "Griffin Peaks"
+   }
+  },
+  {
+   "id": "realm_8",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "食人魔角斗场",
+    "en": "Ogre Colosseum"
+   }
+  },
+  {
+   "id": "realm_9",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "zh": "魔王城",
+    "en": "Demon King's Castle"
+   }
+  },
+  {
+   "id": "shadow_vault_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "暗影宝库 第1层",
+    "en": "Shadow Vault (optional) - level 1"
+   }
+  },
+  {
+   "id": "shadow_vault_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "暗影宝库 第2层",
+    "en": "Shadow Vault (optional) - level 2"
+   }
+  },
+  {
+   "id": "undercroft_1",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "角斗场地下 第1层",
+    "en": "Colosseum Undercroft - level 1"
+   }
+  },
+  {
+   "id": "undercroft_2",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "角斗场地下 第2层",
+    "en": "Colosseum Undercroft - level 2"
+   }
+  },
+  {
+   "id": "undercroft_3",
+   "state": "beta",
+   "kind": "dungeon_level",
+   "title": {
+    "zh": "角斗场地下 第3层",
+    "en": "Colosseum Undercroft - level 3"
+   }
+  },
+  {
+   "id": "warren",
+   "state": "beta",
+   "kind": "overworld",
+   "title": {
+    "en": "Horned Rabbit Warren",
+    "zh": "角兔窝"
+   }
+  }
+ ],
+ "globals": {
+  "questItems": [
+   {
+    "id": "farmers_hoe",
+    "zh": "锄头",
+    "en": "Farmer Li's hoe",
+    "emoji": "🪓",
+    "quest": "q1_hoe"
+   },
+   {
+    "id": "golden_carrot",
+    "zh": "金萝卜",
+    "en": "Golden carrot",
+    "emoji": "🥕",
+    "quest": "q1_carrot"
+   }
+  ],
+  "speakers": {
+   "xiaolong": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   },
+   "innkeeper_panda": {
+    "zh": "熊猫掌柜",
+    "en": "Panda innkeeper"
+   },
+   "granny_bai": {
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   },
+   "farmer_li": {
+    "zh": "李农夫",
+    "en": "Farmer Li"
+   },
+   "grandpa_wang": {
+    "zh": "王爷爷",
+    "en": "Grandpa Wang"
+   },
+   "traveller": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "narrator": {
+    "zh": "",
+    "en": "Narrator"
+   },
+   "xiaoming": {
+    "zh": "小明",
+    "en": "Xiaoming"
+   },
+   "mayor_hu": {
+    "zh": "胡镇长",
+    "en": "Mayor Hu"
+   }
+  }
+ },
+ "_note": "Generated by docs/tech/tools/levels/convert_levels.py from the v3.9.x world data. One file per map; no realms. GameDev seeds the DB from these files; afterwards the export writes them."
+}

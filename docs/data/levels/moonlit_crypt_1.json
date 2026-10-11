@@ -1,0 +1,1016 @@
+{
+ "schema": "level/0.2",
+ "id": "moonlit_crypt_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "moonlit_crypt",
+ "level": 1,
+ "levels": 2,
+ "optional": false,
+ "title": {
+  "zh": "月光地穴 第1层",
+  "en": "Moonlit Crypt - level 1"
+ },
+ "entry": "entry_gate",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Moonlit Graveyard",
+   "zh": "月光墓园"
+  },
+  "emoji": "🕯️",
+  "background": {
+   "map": "bg_map_moonlit_crypt_1",
+   "battle": "bg_battle_r6"
+  },
+  "desyPool": "L6.2",
+  "words": [
+   "C844",
+   "C845",
+   "C846",
+   "C847",
+   "C848",
+   "C849",
+   "C850",
+   "C851",
+   "C852",
+   "C853",
+   "C854",
+   "C855",
+   "C856",
+   "C857",
+   "C858",
+   "C859",
+   "C860",
+   "C861",
+   "C862",
+   "C407",
+   "C408",
+   "C409",
+   "C410",
+   "C411",
+   "C412",
+   "C413",
+   "C414",
+   "C415",
+   "C416",
+   "C417",
+   "C418",
+   "C419",
+   "C420",
+   "C421",
+   "C422",
+   "C863",
+   "C864",
+   "C865",
+   "C866",
+   "C867",
+   "C868",
+   "C869",
+   "C870",
+   "C871",
+   "C872",
+   "C873",
+   "C874",
+   "C875",
+   "C876",
+   "C877",
+   "C878",
+   "C879",
+   "C880",
+   "C881",
+   "C882",
+   "C883",
+   "C884",
+   "C885",
+   "C547",
+   "C424"
+  ],
+  "G": 45,
+  "recLevel": [
+   13,
+   16
+  ],
+  "gearTier": 6,
+  "difficulty": {
+   "mcOptions": 5,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "zombie",
+    "weight": 1
+   },
+   {
+    "enemy": "rattle_skeleton",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "campfire_1",
+   "idx": 3,
+   "kind": "inn",
+   "x": 0.59,
+   "y": 0.5,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "path_3",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.2,
+   "title": {
+    "zh": "小路",
+    "en": "Moonlit Graveyard path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 5,
+   "kind": "stairs_down",
+   "x": 0.95,
+   "y": 0.05,
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 6,
+   "kind": "npc",
+   "x": 0.77,
+   "y": 0.5,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q6_lost_dog",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q6_lost_dog"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q6_lost_dog_offer"
+     },
+     "in": {
+      "scene": "sc_q6_lost_dog_wait"
+     },
+     "post": {
+      "scene": "sc_q6_lost_dog_thanks"
+     }
+    },
+    {
+     "quest": "q6_rattle_bones",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.2",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q6_rattle_bones"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q6_rattle_bones_offer"
+     },
+     "in": {
+      "scene": "sc_q6_rattle_bones_wait"
+     },
+     "post": {
+      "scene": "sc_q6_rattle_bones_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "fork",
+   "x": 0.77,
+   "y": 0.8,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   },
+   "quests": [
+    {
+     "quest": "q6_lost_dog",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "path_4.1",
+        "node": "path_4",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_lost_dog"
+        },
+        "do": [
+         {
+          "scene": "sc_moonlit_crypt_1__moonlit_crypt_1_path_4_step_q6_lost_dog"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deadend_1",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.95,
+   "y": 0.35,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 9,
+   "kind": "chest",
+   "x": 0.95,
+   "y": 0.65,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 10,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.95,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q6_lost_dog",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_lost_dog"
+        },
+        "do": [
+         {
+          "scene": "sc_moonlit_crypt_1__moonlit_crypt_1_story_1_step_q6_lost_dog"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "entry_gate",
+   "idx": 11,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "moonlit_crypt_2",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "campfire_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "campfire_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_3",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "campfire_1",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "campfire_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "deadend_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "path_4",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "path_4",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e11_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 13,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 14,
+   "from": "entry_gate",
+   "to": {
+    "graph": "realm_6",
+    "node": "boss_1"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_moonlit_crypt_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_moonlit_crypt_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_moonlit_crypt_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.3",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_moonlit_crypt_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_4.2",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_moonlit_crypt_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_moonlit_crypt_1__moonlit_crypt_1_story_1"
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q6_lost_dog",
+   "story": "side",
+   "type": "find",
+   "title": {
+    "zh": "小黑去哪儿了",
+    "en": "Where's Blackie?"
+   },
+   "giver": {
+    "npc": "gravekeeper_zhou",
+    "graph": "moonlit_crypt_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "gravekeeper_zhou"
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "npc_1"
+     },
+     "note": "His dog chased a skeleton's bone boomerang into the crypt."
+    },
+    {
+     "id": "s2",
+     "event": "nothing",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "path_4"
+     },
+     "note": "Empty kennel, only paw prints (a 'nothing' beat that points onward)."
+    },
+    {
+     "id": "s3",
+     "event": "story",
+     "objective": {
+      "type": "collect",
+      "item": "blackie",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "story_1"
+     },
+     "note": "Blackie is chewing the boomerang, very proud."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "gravekeeper_zhou",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "npc_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q6_lost_dog_offer",
+    "progress": "sc_q6_lost_dog_wait",
+    "turnIn": "sc_q6_lost_dog_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 225,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 225,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C148",
+    "C408",
+    "C409",
+    "C410",
+    "C414",
+    "C871"
+   ],
+   "summary": "Follow the paw prints into the Moonlit Crypt and bring the gravekeeper's dog Blackie home."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q6_rattle_bones",
+   "story": "side",
+   "type": "slay",
+   "title": {
+    "zh": "吵闹的骷髅",
+    "en": "Too Much Rattling"
+   },
+   "giver": {
+    "npc": "gravekeeper_zhou",
+    "graph": "moonlit_crypt_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "questClaimed": "q6_lost_dog"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "gravekeeper_zhou"
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "npc_1"
+     },
+     "note": "Skeletons keep knocking over the flowers."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "kill",
+      "enemy": "rattle_skeleton",
+      "n": 8,
+      "scope": {
+       "maps": [
+        "moonlit_crypt_1",
+        "moonlit_crypt_2"
+       ]
+      }
+     },
+     "where": {
+      "maps": [
+       "moonlit_crypt_1",
+       "moonlit_crypt_2"
+      ]
+     }
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "gravekeeper_zhou",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "moonlit_crypt_1",
+      "node": "npc_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q6_rattle_bones_offer",
+    "progress": "sc_q6_rattle_bones_wait",
+    "turnIn": "sc_q6_rattle_bones_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 5
+    },
+    "goldValue": 225,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 225,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 5.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C881",
+    "C869",
+    "C416",
+    "C415",
+    "C417"
+   ],
+   "summary": "Scatter 8 rattle skeletons so the gravekeeper can replant the flowers."
+  }
+ ],
+ "scenes": {
+  "sc_moonlit_crypt_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_moonlit_crypt_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "moonlit_crypt_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_moonlit_crypt_1__moonlit_crypt_1_path_4_step_q6_lost_dog": {
+   "schema": "scene/0.2",
+   "id": "sc_moonlit_crypt_1__moonlit_crypt_1_path_4_step_q6_lost_dog",
+   "title": "moonlit_crypt_1.path_4.step_q6_lost_dog",
+   "trigger": {
+    "graph": "moonlit_crypt_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_lost_dog: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_moonlit_crypt_1__moonlit_crypt_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_moonlit_crypt_1__moonlit_crypt_1_story_1",
+   "title": "moonlit_crypt_1.story_1",
+   "trigger": {
+    "graph": "moonlit_crypt_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_moonlit_crypt_1__moonlit_crypt_1_story_1_step_q6_lost_dog": {
+   "schema": "scene/0.2",
+   "id": "sc_moonlit_crypt_1__moonlit_crypt_1_story_1_step_q6_lost_dog",
+   "title": "moonlit_crypt_1.story_1.step_q6_lost_dog",
+   "trigger": {
+    "graph": "moonlit_crypt_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_lost_dog: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}
