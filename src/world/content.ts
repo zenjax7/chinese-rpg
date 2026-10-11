@@ -13,7 +13,8 @@ export function registerContent(c: RealmContent) {
   for (const e of c.enemies) if (!ENEMIES[e.id]) ENEMIES[e.id] = { ...e, py: '' };
   for (const i of c.items) if (!ITEM[i.id]) { const it = { ...i, py: '' }; ITEM[i.id] = it; ITEMS.push(it); }
   c.locations.forEach((l, k) => {
-    if (!LOC[l.id]) LOC[l.id] = { ...l, bossReward: l.bossReward || { text: '' }, packs: l.packs || {}, scripted: l.scripted || {} };
+    // Jack Oct 11: no random or scripted path elites, so a zone's elite / scripted fields are not copied
+    if (!LOC[l.id]) { const { elite: _e, scripted: _s, ...rest } = l as any; LOC[l.id] = { ...rest, bossReward: l.bossReward || { text: '' }, packs: l.packs || {}, scripted: {} }; }
     if (!order.some(o => o.id === l.id)) order.push({ id: l.id, realm: c.realm, k });
   });
   for (const [z, ids] of Object.entries(c.pools)) if (!POOLS[z]) POOLS[z] = ids.filter(id => ITEM[id]);
@@ -24,7 +25,7 @@ export function registerContent(c: RealmContent) {
 }
 /** Graph-mode battle state for content zones (S.locs is keyed by location id; classic only creates meadow / forest). */
 export function ensureLocState() {
-  for (const o of order) S.locs[o.id] ??= { unlocked: true, bossDefeated: false, pathCleared: 0, previewSeen: false, patrolsLeft: 0, approachArmed: true, bossCheckpoint: false, patrolsFought: 0 };
+  for (const o of order) S.locs[o.id] ??= { unlocked: true, bossDefeated: false, pathCleared: 0, previewSeen: false };
 }
 /** Fetch + register realm `realm`'s content once; false when this realm has no content file (realms 1–2 live in the classic tables). */
 export function loadRealmContent(realm: number, files: Record<string, string> | undefined): Promise<boolean> {

@@ -50,9 +50,9 @@ export function migrateProgress(old: any, start: { graph: string; node: string }
     pos, lastInn: ref(o.lastInn, start), visitedTowns: (Array.isArray(o.visitedTowns) ? o.visitedTowns : []).filter((r: any) => r && ID.test(r.graph) && ID.test(r.node)).map((r: any) => ({ graph: r.graph, node: r.node })),
     graphs, eventsDone: strs(o.eventsDone), eventLastFired: Object.fromEntries(Object.entries(o.eventLastFired || {}).filter(([, n]) => Number.isInteger(n))),
     shortcuts: strs(o.shortcuts), zonesDefeated: strs(o.zonesDefeated ?? o.bosses).filter(x => ID.test(x)), flags: strs(o.flags),
-    zone: { id: typeof z.id === 'string' && ID.test(z.id) ? z.id : 'none', freshBattles: Number.isInteger(z.freshBattles) ? z.freshBattles : 0, pity: Number.isInteger(z.pity) ? z.pity : 0,
-      approachArmed: typeof z.approachArmed === 'boolean' ? z.approachArmed : true, patrolsLeft: Number.isInteger(z.patrolsLeft) ? z.patrolsLeft : 0,
-      bossCheckpoint: z.bossCheckpoint && typeof z.bossCheckpoint === 'object' ? z.bossCheckpoint : null },
+    // Jack Oct 11: no battle budget / pity / patrols / boss checkpoint; an old save's freshBattles, pity, approachArmed, patrolsLeft and
+    // bossCheckpoint are dropped here (they are still allowed by progress.schema.json, so such saves load without a migration)
+    zone: { id: typeof z.id === 'string' && ID.test(z.id) ? z.id : 'none' },
     safeUntil: Object.fromEntries(Object.entries(o.safeUntil || {}).filter(([, n]) => Number.isInteger(n))), hops: Number.isInteger(o.hops) && o.hops >= 0 ? o.hops : 0,
     feathers: Math.max(0, Math.min(carry, Number.isInteger(o.feathers) ? o.feathers : 0)),
   };

@@ -15,8 +15,9 @@ export interface EnemyDef { id: string; zh: string; py: string; en: string; emoj
     summonEveryNTurns?: { n: number; enemy: string; maxOnScreen: number; maxSummons?: number }; coinGrab?: number; bigHuffEveryN?: { n: number; extraBrokenDamage: number } }; }
 export interface LocationDef { id: string; name: string; zh: string; emoji: string; tier: number; G: number; recLevel: [number, number];
   enemiesPerBattle: [number, number]; mcOptions: number; reviewSlots: number; pathFights: number;
+  /** classic placed path fights by fight number (Jack Oct 11: no elites here; no random elite either, so no `elite` field) */
   roster: { enemy: string; weight: number }[]; boss: string; packs: Record<string, number>; scripted: Record<string, string[]>;
-  elite?: string; desyPool?: string; unlockRequires: string[]; bg: string;
+  desyPool?: string; unlockRequires: string[]; bg: string;
   bossReward: { skill?: string; heroic?: string; text: string };
   mapNodes?: { x: number; y: number; kind: 'inn' | 'fight' | 'gate' | 'boss' }[]; }
 export interface GearDef { id: string; slot: 'weapon' | 'armor' | 'shield' | 'charm'; tier: number; rarity: string; zh: string; en: string;

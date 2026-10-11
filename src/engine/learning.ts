@@ -52,11 +52,11 @@ export function earlierItems(locId: string): string[] {
 /** Carried-over "debt": seen, not-yet-proficient earlier items, oldest first, capped (spec §3.3). */
 export function carried(locId: string) { return earlierItems(locId).filter(id => prog(id).seen && !proficient(id)).slice(0, L().carryOverCap); }
 export function bossPool(locId: string) { return [...POOLS[locId], ...carried(locId)]; }
+/** Proficient words of the location's own pool (the 📚 meter). Jack Oct 11: no patrol trigger, so nothing is gated on it. */
 export function readiness(locId: string) {
   const pool = POOLS[locId];   // v3: the location's own pool only (carried-over items still appear in battles)
   const n = pool.filter(id => proficient(id)).length;
-  const trigger = speechOn() ? L().bossTriggerSpeech : L().bossTrigger;
-  return { n, total: pool.length, need: Math.ceil(trigger * pool.length), frac: n / pool.length, trigger, ready: n / pool.length >= trigger };
+  return { n, total: pool.length, frac: n / pool.length };
 }
 
 /** Spec §3.3 with Jack's cap of 3 new items per battle. Returns the battle's focus items (weakest first) and which are new. */

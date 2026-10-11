@@ -6,8 +6,9 @@ export const ALL_WAYS: WayKey[] = ['rZE', 'rEZ', 'sZE', 'sEZ'];
 export const WAY_LABEL: Record<WayKey, string> = { rZE: 'Read ZH→EN', rEZ: 'Read EN→ZH', sZE: 'Say ZH→EN', sEZ: 'Say EN→ZH' };
 export interface WayStat { c: number; a: number; box: number; last: number; due: number; wrongRun: number; pc?: number /* practice credit used */; }
 export interface ItemProg { seen: boolean; ways: Record<WayKey, WayStat>; recentMiss: number; }
-export interface LocState { unlocked: boolean; bossDefeated: boolean; pathCleared: number; previewSeen: boolean;
-  patrolsLeft: number; approachArmed: boolean; bossCheckpoint: boolean; patrolsFought: number; }
+/** Classic location state. Jack Oct 11: no practice patrols and no boss checkpoint (older saves may still carry patrolsLeft,
+ *  approachArmed, bossCheckpoint and patrolsFought; load() drops them). */
+export interface LocState { unlocked: boolean; bossDefeated: boolean; pathCleared: number; previewSeen: boolean; }
 export interface SaveState {
   version: number;
   consent: { given: boolean; speech: boolean; at: number };
@@ -67,7 +68,7 @@ export function newState(): SaveState {
   };
   for (const g of s.gear) { const d = GEAR[g]; if (d && !s.equip[d.slot]) s.equip[d.slot] = g; }
   LOCATIONS.forEach((l, i) => s.practice[l.id] = { done: [], rewarded: false, stickers: [] });
-  LOCATIONS.forEach((l, i) => s.locs[l.id] = { unlocked: i === 0, bossDefeated: false, pathCleared: 0, previewSeen: false, patrolsLeft: 0, approachArmed: true, bossCheckpoint: false, patrolsFought: 0 });
+  LOCATIONS.forEach((l, i) => s.locs[l.id] = { unlocked: i === 0, bossDefeated: false, pathCleared: 0, previewSeen: false });
   refreshSkills(s);
   const h = heroStats(s); s.hp = h.maxHp; s.mp = h.maxMp;
   return s;
@@ -89,13 +90,17 @@ function load(): SaveState {
   try {
     let raw = store.load(KEY);
     if (!raw && KEY === KEY_V4) { raw = store.load(KEY_V3); if (raw) { const m = JSON.parse(raw); m.migratedFrom = 'v3'; raw = JSON.stringify(m); } }
-    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); fillSkillSlots(s); return s; } }
+    if (raw) { const s = JSON.parse(raw); if (s && s.version === 3) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); dropRemovedLocFields(s); fillSkillSlots(s); return s; } }
   } catch { /* ignore */ }
   return newState();
 }
+/** Jack Oct 11: the patrol and boss-checkpoint fields of an older save are dropped on load (the save still loads). */
+export function dropRemovedLocFields(s: SaveState) {
+  for (const l of Object.values(s.locs || {}) as any[]) for (const k of ['patrolsLeft', 'approachArmed', 'bossCheckpoint', 'patrolsFought']) delete l[k];
+}
 export function save() { store.save(KEY, JSON.stringify(S)); }
 export function resetAll() { store.remove(KEY); S = newState(); save(); }
-export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); S = s; save(); }
+export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; migrateGearIds(s); dropRemovedLocFields(s); S = s; save(); }
 
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }
 

@@ -4,11 +4,14 @@
 
 // ---------------- data types (only the fields the runtime uses; the files carry more) ----------------
 export interface Txt { zh: string; en: string }
-export interface GNode { id: string; idx: number; kind: string; x: number; y: number; zone?: string; title?: Txt; boss?: string; fog?: string;
+/** Quest gate (Jack Oct 11, level-editor §2.6.1): a node or edge with lockedUntilQuest stays impassable until that quest is turned in;
+ *  lockedScene (optional) plays when the player tries to cross, else the default line (LOCK_LINE). */
+export interface Lock { lockedUntilQuest?: string; lockedScene?: string }
+export interface GNode extends Lock { id: string; idx: number; kind: string; x: number; y: number; zone?: string; title?: Txt; boss?: string;
   services?: string[]; campfire?: boolean; save?: boolean; npc?: string; town?: number }
 export interface NodeRef { graph: string; node: string }
-export interface GEdge { id: string; idx: number; from: string; to: string | NodeRef; kind: string; danger?: number; steps?: number; patrol?: boolean;
-  cond?: Cond; scripted?: { enemies: string[]; fill?: boolean; once?: boolean; step?: number } }
+export interface GEdge extends Lock { id: string; idx: number; from: string; to: string | NodeRef; kind: string; danger?: number; steps?: number; patrol?: boolean;
+  cond?: Cond }
 export type Action = Record<string, any>;
 export interface GEvent { id: string; node: string; on: string; once?: boolean; cooldown?: number; cond?: Cond; outcome?: string; do?: Action[];
   pick?: { weight: number; outcome?: string; once?: boolean; cooldown?: number; cond?: Cond; do: Action[] }[]; tutorial?: boolean }
@@ -45,14 +48,15 @@ export interface Progress {
   pos: { graph: string; node: string; edge: string | null; step: number };
   lastInn: NodeRef; visitedTowns: NodeRef[]; graphs: Record<string, GraphProg>;
   eventsDone: string[]; eventLastFired: Record<string, number>; shortcuts: string[]; zonesDefeated: string[]; flags: string[];
-  zone: { id: string; freshBattles: number; pity: number; approachArmed: boolean; patrolsLeft: number; bossCheckpoint: object | null };
+  /** the zone the hero is in (Jack Oct 11: no battle budget, pity, patrols or boss checkpoint; old saves may still carry those fields) */
+  zone: { id: string };
   safeUntil: Record<string, number>; hops: number; feathers: number;
 }
 /** zone: the start node's zone id (the schema wants a non-empty id). */
 export function newProgress(seed: number, start: NodeRef, dataVersion = '', feathers = 2, zone = 'none'): Progress {
   return { schema: 'progress/0.3', dataVersion, seed: seed >>> 0, pos: { graph: start.graph, node: start.node, edge: null, step: 0 },
     lastInn: { ...start }, visitedTowns: [], graphs: {}, eventsDone: [], eventLastFired: {}, shortcuts: [], zonesDefeated: [], flags: [],
-    zone: { id: zone, freshBattles: 0, pity: 0, approachArmed: true, patrolsLeft: 0, bossCheckpoint: null }, safeUntil: {}, hops: 0, feathers };
+    zone: { id: zone }, safeUntil: {}, hops: 0, feathers };
 }
 export function gp(P: Progress, gid: string): GraphProg {
   return P.graphs[gid] ??= { visited: '', walked: '', revealed: '', crossings: {}, edgeProgress: {}, visits: {} };
@@ -110,28 +114,42 @@ const graphsCache: Record<string, Graph> = {};
 export function registerGraph(g: Graph) { graphsCache[g.id] = g; }
 export function isVisited(P: Progress, gid: string, node: string) { const g = graphsCache[gid]; const n = g && nodeOf(g, node); return !!n && bitGet(gp(P, gid).visited, n.idx); }
 
-/** Can the hero walk this edge now? (edge cond; a shortcut until opened) */
-export function edgeOpen(e: GEdge, x: Ctx) { return evalCond(e.cond, x) && (e.kind !== 'shortcut' || x.P.shortcuts.includes(e.id)); }
+/** The edge's own condition (edge cond; a shortcut until opened), without quest gates. */
+export function edgeCondOpen(e: GEdge, x: Ctx) { return evalCond(e.cond, x) && (e.kind !== 'shortcut' || x.P.shortcuts.includes(e.id)); }
+/** The default blocked line of a quest gate (Desy's default, level-editor §2.6.1). */
+export const LOCK_LINE: Txt = { zh: '路不通。', en: 'The way is blocked.' };
+/** Quest gate: locked while its quest is not turned in (state 'completed'). Default pending Jack's Q-J15: locks never reopen or relock. */
+export function locked(l: Lock | undefined | null, x: Ctx): boolean { return !!l?.lockedUntilQuest && x.quests[l.lockedUntilQuest]?.s !== 'completed'; }
+/** The quest gate in the way of crossing edge e from `from`: the edge's own lock, else a lock on the in-graph node it leads to. */
+export function lockOnWay(g: Graph, e: GEdge, from: string, x: Ctx): Lock | null {
+  if (locked(e, x)) return e;
+  const o = otherEnd(e, from); const n = typeof o === 'string' ? nodeOf(g, o) : (graphsCache[o.graph] && nodeOf(graphsCache[o.graph], o.node));
+  return n && locked(n, x) ? n : null;
+}
+/** Can the hero walk this edge now? (edge cond, shortcut, and no quest gate on the edge or the node it leads to) */
+export function edgeOpen(e: GEdge, x: Ctx, g?: Graph, from?: string) {
+  if (!edgeCondOpen(e, x) || locked(e, x)) return false;
+  return !(g && from !== undefined && lockOnWay(g, e, from, x));
+}
 
-/** World map: a realm opens when its world.json realms[].unlock condition holds (v3.9.2: bossDefeated of the previous realm's
- *  realm-boss zone; realm 1 has none). Without realms[] data: realm t+1 opens when realm t's realm boss (zone bossKind 'realmboss') is defeated. */
-export function realmOpen(realm: number, P: Progress, zones: Zone[], realms: RealmLink[] = [], x?: Ctx) {
+/** World map (Jack Oct 11: progression by links only): a realm node is open unless the data gives its link an unlock condition. */
+export function realmOpen(realm: number, P: Progress, realms: RealmLink[] = [], x?: Ctx) {
   const r = realms.find(a => a.realm === realm);
-  if (r) return !r.unlock || evalCond(r.unlock, x || { P, quests: {} });
-  return realm <= 1 || zones.some(z => z.realm === realm - 1 && z.bossKind === 'realmboss' && P.zonesDefeated.includes(z.id));
+  return !r?.unlock || evalCond(r.unlock, x || { P, quests: {} });
 }
 
 // ---------------- fog of war ----------------
-export type FogState = 'visited' | 'seen' | 'landmark' | 'hidden';
-/** visited nodes; '?' for nodes one open edge away from a visited node; landmarks (town, village, boss or node.fog='landmark'); revealed bits. */
-export function fog(g: Graph, P: Progress, x: Ctx, landmarkKinds: string[] = ['town', 'village', 'boss']): Record<string, FogState> {
+export type FogState = 'visited' | 'seen' | 'hidden';
+/** visited nodes; '?' for nodes one edge away from a visited node (an open edge, or one closed only by a quest gate, so the player can
+ *  walk up to the lock) and for revealed bits. Jack Oct 11 (hidden node types): no landmarks; every unvisited node looks the same and
+ *  a node's type shows only once visited. */
+export function fog(g: Graph, P: Progress, x: Ctx): Record<string, FogState> {
   const pr = gp(P, g.id); const out: Record<string, FogState> = {};
   const vis = new Set(bitList(pr.visited)); const rev = new Set(bitList(pr.revealed));
-  for (const n of g.nodes) out[n.id] = vis.has(n.idx) ? 'visited' : 'hidden';
+  for (const n of g.nodes) out[n.id] = vis.has(n.idx) ? 'visited' : rev.has(n.idx) ? 'seen' : 'hidden';
   for (const n of g.nodes) if (vis.has(n.idx)) for (const e of edgesAt(g, n.id)) {
-    const o = otherEnd(e, n.id); if (typeof o === 'string' && out[o] === 'hidden' && edgeOpen(e, x)) out[o] = 'seen';
+    const o = otherEnd(e, n.id); if (typeof o === 'string' && out[o] === 'hidden' && edgeCondOpen(e, x)) out[o] = 'seen';
   }
-  for (const n of g.nodes) if (out[n.id] === 'hidden' && (rev.has(n.idx) || n.fog === 'landmark' || landmarkKinds.includes(n.kind))) out[n.id] = 'landmark';
   return out;
 }
 export function markVisited(P: Progress, g: Graph, node: string) {
@@ -150,23 +168,20 @@ export function edgeSafe(g: Graph, e: GEdge, P: Progress, rules: any): boolean {
   const su = P.safeUntil[`${g.id}/${e.idx}`]; if (su !== undefined && P.hops <= su) return true;
   return false;
 }
+/** Encounter chance of one step (Jack Oct 11: walked edges × rules.clearedStepMult = 0.5 from docs/data/levels/world_rules.json;
+ *  no battle budget and no pity roll, so a step's chance never depends on earlier steps). */
 export function stepRate(g: Graph, e: GEdge, P: Progress, rules: any): { p: number; fresh: boolean } {
   const base = rules.encounterRate[String(e.danger ?? 0)] ?? 0;
   let p = Math.min(rules.maxRate, base * (1 + rules.depthStep * ((g.level || 1) - 1)));
   const fresh = !bitGet(gp(P, g.id).walked, e.idx);
-  if (!fresh) p *= rules.clearedStepMult;
-  else if (P.zone.freshBattles >= rules.zoneBattleBudget) p *= rules.budgetSpentMult;
-  else if (P.zone.pity >= rules.pityRolls) p = 1;
+  if (!fresh) p *= rules.clearedStepMult ?? 0.5;
   return { p, fresh };
 }
-/** Roll one step of an edge. Pure in (seed, graph, edge, crossing, step); updates pity / fresh counters. */
+/** Roll one step of an edge. Pure in (seed, graph, edge, crossing, step); changes nothing in P. */
 export function rollStep(g: Graph, e: GEdge, step: number, P: Progress, rules: any): boolean {
   if (edgeSafe(g, e, P, rules)) return false;
   const crossing = gp(P, g.id).crossings[e.idx] || 0;
-  const { p, fresh } = stepRate(g, e, P, rules);
-  const hit = roll(`${P.seed}|${g.id}|${e.id}|${crossing}|${step}`) < p;
-  if (fresh) { if (hit) { P.zone.freshBattles++; P.zone.pity = 0; } else P.zone.pity++; }
-  return hit;
+  return roll(`${P.seed}|${g.id}|${e.id}|${crossing}|${step}`) < stepRate(g, e, P, rules).p;
 }
 /** The zone an edge's battles use: its own nodes' zone, else the `to` node's (§4.1). */
 export function edgeZone(g: Graph, e: GEdge): string | undefined {
@@ -204,10 +219,13 @@ export function chestTier(gear: ShopGear[], realm: number, rarity = 'fine'): num
   return below.length ? Math.max(...below) : Math.min(...ts);
 }
 
-// ---------------- arrival events (§5.2: first eligible event per arrival) ----------------
+// ---------------- arrival events (Jack Oct 11: every eligible event runs, in data order; a node may have none) ----------------
 export interface Fired { ev: GEvent; actions: Action[]; key: string; outcome?: string }
-export function pickEvent(g: Graph, node: string, on: string, x: Ctx, first: boolean): Fired | null {
-  const P = x.P; const n = nodeOf(g, node)!; const visits = gp(P, g.id).visits[n.idx] || 0;
+/** The first eligible event (pickEvents()[0]). */
+export function pickEvent(g: Graph, node: string, on: string, x: Ctx, first: boolean): Fired | null { return pickEvents(g, node, on, x, first)[0] || null; }
+/** Every eligible event of this node for `on`, in data order (a weighted event contributes its one picked option). */
+export function pickEvents(g: Graph, node: string, on: string, x: Ctx, first: boolean): Fired[] {
+  const P = x.P; const n = nodeOf(g, node); if (!n) return []; const visits = gp(P, g.id).visits[n.idx] || 0; const out: Fired[] = [];
   for (const ev of g.events || []) {
     if (ev.node !== node) continue;
     if (!(ev.on === on || (on === 'enter' && ev.on === 'firstEnter' && first))) continue;
@@ -220,13 +238,13 @@ export function pickEvent(g: Graph, node: string, on: string, x: Ctx, first: boo
       if (!opts.length) continue;
       const tot = opts.reduce((s, a) => s + a.o.weight, 0); let r = roll(`${P.seed}|${g.id}|${node}|${visits}`) * tot;   // world-graph §4: saveSeed | graph | node | visit
       const ch = opts.find(a => (r -= a.o.weight) < 0) || opts[opts.length - 1];
-      return { ev, actions: ch.o.do, key: ch.k, outcome: ch.o.outcome };
+      out.push({ ev, actions: ch.o.do, key: ch.k, outcome: ch.o.outcome }); continue;
     }
     if (ev.once && P.eventsDone.includes(key)) continue;
     if (ev.cooldown && P.eventLastFired[key] !== undefined && visits - P.eventLastFired[key] < ev.cooldown) continue;
-    return { ev, actions: ev.do || [], key, outcome: ev.outcome };
+    out.push({ ev, actions: ev.do || [], key, outcome: ev.outcome });
   }
-  return null;
+  return out;
 }
 export function markFired(P: Progress, g: Graph, f: Fired, onceOpt?: boolean) {
   const n = nodeOf(g, f.ev.node)!; const visits = gp(P, g.id).visits[n.idx] || 0;
@@ -323,7 +341,7 @@ export function questFightAt(quests: Quest[], x: Ctx, gid: string, node: string)
   return null;
 }
 
-// ---------------- Return Feather (rules.returnFeather, realmBossFeather) ----------------
+// ---------------- Return Feather (rules.returnFeather; boss Feathers are on:clear events of the boss nodes) ----------------
 /** v3.9.2 destinationRule: exactly the last inn used plus every town or village ever entered. Other inns are never destinations.
  *  kindOf: the node kind when known (graph loaded); entries whose kind is known and is not town/village are dropped (old saves). */
 export function featherDestinations(P: Progress, title: (r: NodeRef) => string, kindOf: (r: NodeRef) => string | undefined = r => { const g = graphsCache[r.graph]; return g && nodeOf(g, r.node)?.kind; }): { ref: NodeRef; label: string; kind: 'inn' | 'town' }[] {
