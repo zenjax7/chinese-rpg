@@ -73,22 +73,24 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 
 ## Planned: level editor and level endpoints (not built)
 
-**Status: planned, from [level-editor.md](level-editor.md), which is proposed and pending Jack's approval. None of these routes exist yet.**
+**Status: planned, from [level-editor.md](level-editor.md) (r1, 2026-10-11: maps without realms, `level/0.2`), which is proposed and pending Jack's approval. None of these routes exist yet.**
 
 | Route | Who | What |
 |---|---|---|
-| `GET /api/v1/levels/index` | public | Latest content release: `{release, levels: {id: {v, hash, realm, kind, title}}, start}`. `CDN-Cache-Control: s-maxage=300, stale-while-revalidate`, ETag `r<release>` |
-| `GET /api/v1/levels/:id?v=N` | public | One published level (`level/0.1`) at version N: `immutable`, ETag = content hash. Without `v`: 302 to the current version |
+| `GET /api/v1/levels/index` | public | Latest content release: `{release, levels: {id: {v, hash, state, kind, title}}, start}` (beta and golden maps only, never drafts). `CDN-Cache-Control: s-maxage=300, stale-while-revalidate`, ETag `r<release>` |
+| `GET /api/v1/levels/:id?v=N` | public | One published map (`level/0.2`) at version N: `immutable`, ETag = content hash. Without `v`: 302 to the current version |
 | `GET /api/v1/levels/quests?r=R` | public | The compiled quest list of release R (immutable) |
-| `GET /api/v1/editor/levels` | editor | Level list with draft/published state, versions and error counts |
+| `GET /api/v1/editor/levels` | editor | Map list with lifecycle state (draft/beta/golden), versions and error counts |
 | `GET /api/v1/editor/levels/:id/draft` | editor | The draft + `draftRev` + validation (also used by Playtest) |
 | `PUT /api/v1/editor/levels/:id/draft` | editor | Autosave `{draftRev, body}`. Validated and stored even with errors. 409 on a stale `draftRev` |
-| `POST /api/v1/editor/levels` | editor | Create a level (kind, realm, id checked against retired ids) |
-| `POST /api/v1/editor/publish` | editor, session < 12 h | Publish one level or a set `{levels: [{id, draftRev}], note}` in one transaction → new versions, `level_revisions` rows, a `content_releases` row. 422 with errors |
+| `POST /api/v1/editor/levels` | editor | Create a map (kind and a unique id; starts as draft) |
+| `POST /api/v1/editor/publish` | editor, session < 12 h | Publish one level or a set `{levels: [{id, draftRev}], note, goldenConfirm?}` in one transaction (a golden map needs the owner's confirm, checked by role on the server) → new versions, `level_revisions` rows, a `content_releases` row. 422 with errors |
 | `GET /api/v1/editor/levels/:id/revisions` | editor | Publish history and checkpoints |
 | `POST /api/v1/editor/levels/:id/rollback` | editor, session < 12 h | Republish revision vM as a new version |
 | `POST /api/v1/editor/import` | editor, session < 12 h | Import level JSON (e.g. a repo edit by Desy) as the **draft** only |
-| `GET /api/v1/editor/export?state=published[&level=]` | editor session **or** Bearer `export:read` token | Read-only export of the published levels (`state=draft` needs the session). GameDev's box uses it to write `docs/data/levels/` |
+| `GET /api/v1/editor/export?state=published[&level=]` | editor session **or** Bearer `export:read` token | Read-only export of the published maps and editor-made learn items, plus the audio-pending word list (`state=draft` needs the session). GameDev's box uses it to write `docs/data/levels/` and the word audio |
+| `POST /api/v1/editor/levels/:id/state` | owner, session < 12 h | Move a map between draft, beta and golden (leaving golden needs the golden confirm) |
+| `GET`, `POST /api/v1/editor/learn-items` | editor | List and create learn items (new ids from the server; audio marked pending) |
 | `POST /api/v1/editor/tokens`, `DELETE /api/v1/editor/tokens/:id` | owner, session < 12 h | Create (shown once) and revoke read-only export tokens |
 
 - **Editor routes** accept only an `EditorCtx`: a session user in the `editors` table or in `EDITOR_GOOGLE_SUBS`. They use the `app_editor` DB role, which has no grant on player tables.
