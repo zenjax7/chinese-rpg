@@ -1,0 +1,19 @@
+{
+ "schema": "levels_index/0.1",
+ "start": {
+  "graph": "bridge_town",
+  "node": "town"
+ },
+ "maps": [
+  {
+   "id": "bridge_town",
+   "state": "draft",
+   "kind": "overworld",
+   "title": {
+    "en": "Bridge Town (lock fixture)",
+    "zh": "桥镇"
+   }
+  }
+ ],
+ "_note": "Fixture (unreachable) for lockedUntilQuest (Jack 2026-10-11): the broken bridge opens when q1_bridge_materials is done; the planks are beyond the bridge (unreachable: validate_levels must fail)."
+}

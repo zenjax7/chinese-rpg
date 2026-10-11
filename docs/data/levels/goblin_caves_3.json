@@ -82,8 +82,7 @@
   "gearTier": 4,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -188,8 +187,7 @@
    "title": {
     "zh": "哥布林大王",
     "en": "Goblin King (the 'Headmaster')"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "treasure_1",
@@ -732,14 +730,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_4.1",
    "node": "path_4",
    "on": "enter",
@@ -856,14 +846,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_6.1",
    "node": "path_6",
    "on": "enter",
@@ -908,14 +890,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_7.1",
@@ -964,14 +938,6 @@
    ]
   },
   {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_6.1",
    "node": "treasure_6",
    "on": "enter",
@@ -982,14 +948,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -1064,11 +1022,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q4_homework_offer",
-    "progress": "sc_q4_homework_wait",
-    "turnIn": "sc_q4_homework_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5

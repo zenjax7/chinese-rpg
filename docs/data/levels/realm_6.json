@@ -91,8 +91,7 @@
   "gearTier": 6,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    3,
@@ -133,7 +132,6 @@
    ],
    "hub": "village",
    "town": 6,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q6_medicine_herbs",
@@ -273,8 +271,7 @@
    "title": {
     "zh": "丧尸村长",
     "en": "Zombie Mayor"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "portal_2",
@@ -343,7 +340,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q6_hot_soup",
@@ -720,7 +716,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q6_hot_soup",
@@ -1596,14 +1591,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_3.1",
    "node": "story_3",
    "on": "enter",
@@ -1652,14 +1639,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "npc_1.2",
    "node": "npc_1",
    "on": "enter",
@@ -1682,14 +1661,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "deadend_3.1",
@@ -1728,14 +1699,6 @@
    ]
   },
   {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "miniboss_1.1",
    "node": "miniboss_1",
    "on": "enter",
@@ -1763,14 +1726,6 @@
      "setFlag": "realm_6.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_4.1",
@@ -1926,11 +1881,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_medicine_herbs_offer",
-    "progress": "sc_q6_medicine_herbs_wait",
-    "turnIn": "sc_q6_medicine_herbs_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 8
@@ -2050,11 +2000,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_hot_soup_offer",
-    "progress": "sc_q6_hot_soup_wait",
-    "turnIn": "sc_q6_hot_soup_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5

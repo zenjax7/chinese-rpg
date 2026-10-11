@@ -2,7 +2,7 @@
  "schema": "level/0.2",
  "id": "world",
  "state": "beta",
- "kind": "world",
+ "kind": "overworld",
  "level": 0,
  "title": {
   "zh": "世界地图",
@@ -146,10 +146,7 @@
     "graph": "realm_2",
     "node": "entry_town"
    },
-   "idx": 1,
-   "cond": {
-    "bossDefeated": "warren"
-   }
+   "idx": 1
   },
   {
    "id": "x_realm_3",
@@ -159,10 +156,7 @@
     "graph": "realm_3",
     "node": "entry_town"
    },
-   "idx": 2,
-   "cond": {
-    "bossDefeated": "great_hive_1"
-   }
+   "idx": 2
   },
   {
    "id": "x_realm_4",
@@ -172,10 +166,7 @@
     "graph": "realm_4",
     "node": "entry_town"
    },
-   "idx": 3,
-   "cond": {
-    "bossDefeated": "bazaar_cellars_1"
-   }
+   "idx": 3
   },
   {
    "id": "x_realm_5",
@@ -185,10 +176,7 @@
     "graph": "realm_5",
     "node": "entry_town"
    },
-   "idx": 4,
-   "cond": {
-    "bossDefeated": "goblin_caves_3"
-   }
+   "idx": 4
   },
   {
    "id": "x_realm_6",
@@ -198,10 +186,7 @@
     "graph": "realm_6",
     "node": "entry_town"
    },
-   "idx": 5,
-   "cond": {
-    "bossDefeated": "hydra_lair_2"
-   }
+   "idx": 5
   },
   {
    "id": "x_realm_7",
@@ -211,10 +196,7 @@
     "graph": "realm_7",
     "node": "entry_town"
    },
-   "idx": 6,
-   "cond": {
-    "bossDefeated": "moonlit_crypt_2"
-   }
+   "idx": 6
   },
   {
    "id": "x_realm_8",
@@ -224,10 +206,7 @@
     "graph": "realm_8",
     "node": "entry_town"
    },
-   "idx": 7,
-   "cond": {
-    "bossDefeated": "griffin_spire_3"
-   }
+   "idx": 7
   },
   {
    "id": "x_realm_9",
@@ -237,10 +216,7 @@
     "graph": "realm_9",
     "node": "entry_town"
    },
-   "idx": 8,
-   "cond": {
-    "bossDefeated": "undercroft_3"
-   }
+   "idx": 8
   },
   {
    "id": "w12",
@@ -250,9 +226,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "warren"
-   },
    "idx": 9
   },
   {
@@ -263,9 +236,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "great_hive_1"
-   },
    "idx": 10
   },
   {
@@ -276,9 +246,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "bazaar_cellars_1"
-   },
    "idx": 11
   },
   {
@@ -289,9 +256,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "goblin_caves_3"
-   },
    "idx": 12
   },
   {
@@ -302,9 +266,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "hydra_lair_2"
-   },
    "idx": 13
   },
   {
@@ -315,9 +276,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "moonlit_crypt_2"
-   },
    "idx": 14
   },
   {
@@ -328,9 +286,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "griffin_spire_3"
-   },
    "idx": 15
   },
   {
@@ -341,9 +296,6 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "cond": {
-    "bossDefeated": "undercroft_3"
-   },
    "idx": 16
   }
  ],

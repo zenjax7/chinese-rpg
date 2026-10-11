@@ -1,0 +1,481 @@
+profile,mode,data,location,boss,own_random,patrols,all_before_boss
+50% saver no spells,beeline,v391,meadow,locboss,10.81,9.58,20.39
+50% saver no spells,beeline,v391,clover_hills,locboss,6.82,15.55,22.37
+50% saver no spells,beeline,v391,warren,realmboss,7.37,15.06,22.43
+50% saver no spells,beeline,v391,forest,locboss,8.75,15.07,23.82
+50% saver no spells,beeline,v391,great_hive,realmboss,7.85,16.02,23.87
+50% saver no spells,beeline,v391,crossroads_highway,locboss,9.45,11.57,21.02
+50% saver no spells,beeline,v391,night_bazaar,realmboss,8.04,12.78,20.82
+50% saver no spells,beeline,v391,cave_mouth,locboss,9.11,10.54,19.65
+50% saver no spells,beeline,v391,crystal_tunnels,locboss,9.59,9.31,18.9
+50% saver no spells,beeline,v391,goblin_school,realmboss,10.22,9.59,19.81
+50% saver no spells,beeline,v391,misty_marsh,locboss,8.25,10.52,18.77
+50% saver no spells,beeline,v391,hydra_s_lair,realmboss,8.57,10.4,18.97
+50% saver no spells,beeline,v391,gloomy_village,locboss,8.8,10.78,19.58
+50% saver no spells,beeline,v391,moonlit_graveyard,realmboss,8.32,11.14,19.46
+50% saver no spells,beeline,v391,windy_cliffs,locboss,9.75,13.83,23.58
+50% saver no spells,beeline,v391,griffin_summit,realmboss,9.41,14.72,24.13
+50% saver no spells,beeline,v391,training_pits,locboss,8.68,12.58,21.26
+50% saver no spells,beeline,v391,grand_colosseum,realmboss,9.24,12.66,21.9
+50% saver no spells,beeline,v391,demon_king_s_gate,locboss,9.32,11.49,20.81
+50% saver no spells,beeline,v391,throne_hall,realmboss,9.63,10.99,20.62
+50% saver no spells,beeline,now,realm_1,locboss,30.58,0,30.58
+50% saver no spells,beeline,now,clover_hills,locboss,34.47,0,34.47
+50% saver no spells,beeline,now,warren,realmboss,13.88,0,13.88
+50% saver no spells,beeline,now,realm_2,locboss,61.46,0,61.46
+50% saver no spells,beeline,now,great_hive_1,realmboss,20.77,0,20.77
+50% saver no spells,beeline,now,realm_3,locboss,130.03,0,130.03
+50% saver no spells,beeline,now,bazaar_cellars_1,realmboss,30.15,0,30.15
+50% saver no spells,beeline,now,goblin_caves_1,locboss,73.3,0,73.3
+50% saver no spells,beeline,now,goblin_caves_2,locboss,118.98,0,118.98
+50% saver no spells,beeline,now,goblin_caves_3,realmboss,60.81,0,60.81
+50% saver no spells,beeline,now,realm_5,locboss,18.13,0,18.13
+50% saver no spells,beeline,now,hydra_lair_2,realmboss,20.06,0,20.06
+50% saver no spells,beeline,now,realm_6,locboss,29.81,0,29.81
+50% saver no spells,beeline,now,moonlit_crypt_2,realmboss,13.67,0,13.67
+50% saver no spells,beeline,now,realm_7,locboss,22.01,0,22.01
+50% saver no spells,beeline,now,griffin_spire_3,realmboss,33.42,0,33.42
+50% saver no spells,beeline,now,realm_8,locboss,27.3,0,27.3
+50% saver no spells,beeline,now,undercroft_3,realmboss,16.32,0,16.32
+50% saver no spells,beeline,now,demon_castle_2,locboss,39.43,0,39.43
+50% saver no spells,beeline,now,demon_castle_5,realmboss,44.71,0,44.71
+50% saver no spells,explore,v391,meadow,locboss,11.57,8.68,20.25
+50% saver no spells,explore,v391,clover_hills,locboss,5.63,16.41,22.04
+50% saver no spells,explore,v391,warren,realmboss,9.36,11.51,21.87
+50% saver no spells,explore,v391,forest,locboss,10.28,13.81,24.09
+50% saver no spells,explore,v391,great_hive,realmboss,10.49,10.84,23.18
+50% saver no spells,explore,v391,crossroads_highway,locboss,10.81,8.77,20.59
+50% saver no spells,explore,v391,night_bazaar,realmboss,11.67,7.62,20.34
+50% saver no spells,explore,v391,cave_mouth,locboss,11.34,6.13,18.6
+50% saver no spells,explore,v391,crystal_tunnels,locboss,11.23,3.72,18.38
+50% saver no spells,explore,v391,goblin_school,realmboss,11.25,7.91,19.16
+50% saver no spells,explore,v391,misty_marsh,locboss,12.36,5.27,18.63
+50% saver no spells,explore,v391,hydra_s_lair,realmboss,12.25,3.82,18.59
+50% saver no spells,explore,v391,gloomy_village,locboss,13.51,2.39,18.83
+50% saver no spells,explore,v391,moonlit_graveyard,realmboss,14.32,0.7,19.57
+50% saver no spells,explore,v391,windy_cliffs,locboss,17.02,1.84,23.28
+50% saver no spells,explore,v391,griffin_summit,realmboss,11.6,9.12,22.51
+50% saver no spells,explore,v391,training_pits,locboss,17.81,1.83,21.65
+50% saver no spells,explore,v391,grand_colosseum,realmboss,14.03,4.31,21.16
+50% saver no spells,explore,v391,demon_king_s_gate,locboss,23.3,0.06,27.72
+50% saver no spells,explore,v391,throne_hall,realmboss,13.22,3.84,19.63
+50% saver no spells,explore,now,realm_1,locboss,39.19,0,39.19
+50% saver no spells,explore,now,clover_hills,locboss,34.87,0,34.87
+50% saver no spells,explore,now,warren,realmboss,18.32,0,19.34
+50% saver no spells,explore,now,realm_2,locboss,89.9,0,89.9
+50% saver no spells,explore,now,great_hive_1,realmboss,28.4,0,30.51
+50% saver no spells,explore,now,realm_3,locboss,141.74,0,142.74
+50% saver no spells,explore,now,bazaar_cellars_1,realmboss,45.73,0,46.87
+50% saver no spells,explore,now,goblin_caves_1,locboss,144.59,0,146.07
+50% saver no spells,explore,now,goblin_caves_2,locboss,120.81,0,125.05
+50% saver no spells,explore,now,goblin_caves_3,realmboss,82.1,0,82.1
+50% saver no spells,explore,now,realm_5,locboss,66.6,0,67.69
+50% saver no spells,explore,now,hydra_lair_2,realmboss,96.6,0,99.92
+50% saver no spells,explore,now,realm_6,locboss,108.35,0,113.61
+50% saver no spells,explore,now,moonlit_crypt_2,realmboss,130.01,0,136.05
+50% saver no spells,explore,now,realm_7,locboss,171.05,0,176.22
+50% saver no spells,explore,now,griffin_spire_3,realmboss,67.38,0,70.04
+50% saver no spells,explore,now,realm_8,locboss,176.47,0,178.99
+50% saver no spells,explore,now,undercroft_3,realmboss,92.42,0,96.76
+50% saver no spells,explore,now,demon_castle_2,locboss,250.66,0,255.59
+50% saver no spells,explore,now,demon_castle_5,realmboss,119.52,0,121.92
+50% saver free,beeline,v391,meadow,locboss,10.81,9.58,20.39
+50% saver free,beeline,v391,clover_hills,locboss,6.82,15.55,22.37
+50% saver free,beeline,v391,warren,realmboss,7.37,15.06,22.43
+50% saver free,beeline,v391,forest,locboss,8.75,15.07,23.82
+50% saver free,beeline,v391,great_hive,realmboss,7.85,16.26,24.11
+50% saver free,beeline,v391,crossroads_highway,locboss,9.33,12.24,21.57
+50% saver free,beeline,v391,night_bazaar,realmboss,8.03,13.42,21.45
+50% saver free,beeline,v391,cave_mouth,locboss,9.28,10.96,20.24
+50% saver free,beeline,v391,crystal_tunnels,locboss,9.71,9.76,19.47
+50% saver free,beeline,v391,goblin_school,realmboss,10.42,9.93,20.35
+50% saver free,beeline,v391,misty_marsh,locboss,8.05,11.03,19.08
+50% saver free,beeline,v391,hydra_s_lair,realmboss,8.52,10.68,19.2
+50% saver free,beeline,v391,gloomy_village,locboss,8.75,10.92,19.67
+50% saver free,beeline,v391,moonlit_graveyard,realmboss,8.43,11.06,19.49
+50% saver free,beeline,v391,windy_cliffs,locboss,9.64,13.73,23.37
+50% saver free,beeline,v391,griffin_summit,realmboss,9.35,14.73,24.08
+50% saver free,beeline,v391,training_pits,locboss,8.86,12.96,21.82
+50% saver free,beeline,v391,grand_colosseum,realmboss,9.26,12.87,22.13
+50% saver free,beeline,v391,demon_king_s_gate,locboss,9.13,11.57,20.7
+50% saver free,beeline,v391,throne_hall,realmboss,9.72,10.83,20.55
+50% saver free,beeline,now,realm_1,locboss,30.58,0,30.58
+50% saver free,beeline,now,clover_hills,locboss,34.47,0,34.47
+50% saver free,beeline,now,warren,realmboss,13.88,0,13.88
+50% saver free,beeline,now,realm_2,locboss,58.64,0,58.64
+50% saver free,beeline,now,great_hive_1,realmboss,21.7,0,21.7
+50% saver free,beeline,now,realm_3,locboss,153.82,0,153.82
+50% saver free,beeline,now,bazaar_cellars_1,realmboss,31.29,0,31.29
+50% saver free,beeline,now,goblin_caves_1,locboss,88.73,0,88.73
+50% saver free,beeline,now,goblin_caves_2,locboss,140.12,0,140.12
+50% saver free,beeline,now,goblin_caves_3,realmboss,63.37,0,63.37
+50% saver free,beeline,now,realm_5,locboss,22.93,0,22.93
+50% saver free,beeline,now,hydra_lair_2,realmboss,21.85,0,21.85
+50% saver free,beeline,now,realm_6,locboss,30.04,0,30.04
+50% saver free,beeline,now,moonlit_crypt_2,realmboss,13.48,0,13.48
+50% saver free,beeline,now,realm_7,locboss,22.65,0,22.65
+50% saver free,beeline,now,griffin_spire_3,realmboss,33.74,0,33.74
+50% saver free,beeline,now,realm_8,locboss,27.42,0,27.42
+50% saver free,beeline,now,undercroft_3,realmboss,16.39,0,16.39
+50% saver free,beeline,now,demon_castle_2,locboss,37.8,0,37.8
+50% saver free,beeline,now,demon_castle_5,realmboss,43.16,0,43.16
+50% saver free,explore,v391,meadow,locboss,11.57,8.68,20.25
+50% saver free,explore,v391,clover_hills,locboss,5.63,16.41,22.04
+50% saver free,explore,v391,warren,realmboss,9.36,11.51,21.87
+50% saver free,explore,v391,forest,locboss,10.28,13.81,24.09
+50% saver free,explore,v391,great_hive,realmboss,10.47,13.2,25.48
+50% saver free,explore,v391,crossroads_highway,locboss,11.67,11.72,24.39
+50% saver free,explore,v391,night_bazaar,realmboss,11.76,11.26,24.02
+50% saver free,explore,v391,cave_mouth,locboss,12.71,6.67,20.4
+50% saver free,explore,v391,crystal_tunnels,locboss,11.9,4.49,20.08
+50% saver free,explore,v391,goblin_school,realmboss,12.59,8.71,21.3
+50% saver free,explore,v391,misty_marsh,locboss,12.5,5.54,19.04
+50% saver free,explore,v391,hydra_s_lair,realmboss,12.57,3.64,18.81
+50% saver free,explore,v391,gloomy_village,locboss,13.86,5.96,22.82
+50% saver free,explore,v391,moonlit_graveyard,realmboss,14.5,2.48,21.33
+50% saver free,explore,v391,windy_cliffs,locboss,17.86,4.65,26.76
+50% saver free,explore,v391,griffin_summit,realmboss,11.87,13.26,27.2
+50% saver free,explore,v391,training_pits,locboss,18.78,4.66,25.45
+50% saver free,explore,v391,grand_colosseum,realmboss,13.98,8.59,24.97
+50% saver free,explore,v391,demon_king_s_gate,locboss,23.47,0.26,27.97
+50% saver free,explore,v391,throne_hall,realmboss,13.61,7.46,23.51
+50% saver free,explore,now,realm_1,locboss,39.19,0,39.19
+50% saver free,explore,now,clover_hills,locboss,34.87,0,34.87
+50% saver free,explore,now,warren,realmboss,18.32,0,19.34
+50% saver free,explore,now,realm_2,locboss,90.55,0,90.55
+50% saver free,explore,now,great_hive_1,realmboss,31.19,0,33.35
+50% saver free,explore,now,realm_3,locboss,212.85,0,213.86
+50% saver free,explore,now,bazaar_cellars_1,realmboss,48.85,0,49.96
+50% saver free,explore,now,goblin_caves_1,locboss,204.88,0,206.12
+50% saver free,explore,now,goblin_caves_2,locboss,182.13,0,185.94
+50% saver free,explore,now,goblin_caves_3,realmboss,103.35,0,103.35
+50% saver free,explore,now,realm_5,locboss,91.81,0,92.87
+50% saver free,explore,now,hydra_lair_2,realmboss,119.41,0,122.65
+50% saver free,explore,now,realm_6,locboss,146.62,0,151.23
+50% saver free,explore,now,moonlit_crypt_2,realmboss,164.24,0,170.16
+50% saver free,explore,now,realm_7,locboss,205.92,0,209.93
+50% saver free,explore,now,griffin_spire_3,realmboss,67.71,0,69.57
+50% saver free,explore,now,realm_8,locboss,226.79,0,229
+50% saver free,explore,now,undercroft_3,realmboss,116,0,120.56
+50% saver free,explore,now,demon_castle_2,locboss,251.86,0,256.63
+50% saver free,explore,now,demon_castle_5,realmboss,117.65,0,119.88
+50% spender no spells,beeline,v391,meadow,locboss,8.74,4.04,12.78
+50% spender no spells,beeline,v391,clover_hills,locboss,6.58,3.66,10.24
+50% spender no spells,beeline,v391,warren,realmboss,7.33,2.02,9.35
+50% spender no spells,beeline,v391,forest,locboss,8.68,2.1,10.78
+50% spender no spells,beeline,v391,great_hive,realmboss,8,2,10
+50% spender no spells,beeline,v391,crossroads_highway,locboss,9.19,2.28,11.47
+50% spender no spells,beeline,v391,night_bazaar,realmboss,9,2.74,11.74
+50% spender no spells,beeline,v391,cave_mouth,locboss,9.57,3.83,13.4
+50% spender no spells,beeline,v391,crystal_tunnels,locboss,10.59,4.68,15.27
+50% spender no spells,beeline,v391,goblin_school,realmboss,10.65,3.93,14.58
+50% spender no spells,beeline,v391,misty_marsh,locboss,8.68,3.13,11.81
+50% spender no spells,beeline,v391,hydra_s_lair,realmboss,8.96,3.75,12.71
+50% spender no spells,beeline,v391,gloomy_village,locboss,9.28,4.59,13.87
+50% spender no spells,beeline,v391,moonlit_graveyard,realmboss,9.23,4.72,13.95
+50% spender no spells,beeline,v391,windy_cliffs,locboss,10.37,7.04,17.41
+50% spender no spells,beeline,v391,griffin_summit,realmboss,9.83,7.37,17.2
+50% spender no spells,beeline,v391,training_pits,locboss,9.52,5.35,14.87
+50% spender no spells,beeline,v391,grand_colosseum,realmboss,9.81,6.03,15.84
+50% spender no spells,beeline,v391,demon_king_s_gate,locboss,10.19,8.09,18.28
+50% spender no spells,beeline,v391,throne_hall,realmboss,10.56,6.13,16.69
+50% spender no spells,beeline,now,realm_1,locboss,35.84,0,35.84
+50% spender no spells,beeline,now,clover_hills,locboss,64.16,0,64.16
+50% spender no spells,beeline,now,warren,realmboss,14.94,0,14.94
+50% spender no spells,beeline,now,realm_2,locboss,67.4,0,67.4
+50% spender no spells,beeline,now,great_hive_1,realmboss,23.95,0,23.95
+50% spender no spells,beeline,now,realm_3,locboss,149.77,0,149.77
+50% spender no spells,beeline,now,bazaar_cellars_1,realmboss,32.52,0,32.52
+50% spender no spells,beeline,now,goblin_caves_1,locboss,92.41,0,92.41
+50% spender no spells,beeline,now,goblin_caves_2,locboss,122.19,0,122.19
+50% spender no spells,beeline,now,goblin_caves_3,realmboss,75.55,0,75.55
+50% spender no spells,beeline,now,realm_5,locboss,28.76,0,28.76
+50% spender no spells,beeline,now,hydra_lair_2,realmboss,23.47,0,23.47
+50% spender no spells,beeline,now,realm_6,locboss,36.24,0,36.24
+50% spender no spells,beeline,now,moonlit_crypt_2,realmboss,16.52,0,16.52
+50% spender no spells,beeline,now,realm_7,locboss,25.38,0,25.38
+50% spender no spells,beeline,now,griffin_spire_3,realmboss,44.16,0,44.16
+50% spender no spells,beeline,now,realm_8,locboss,30.56,0,30.56
+50% spender no spells,beeline,now,undercroft_3,realmboss,20.28,0,20.28
+50% spender no spells,beeline,now,demon_castle_2,locboss,46.95,0,46.95
+50% spender no spells,beeline,now,demon_castle_5,realmboss,52.04,0,52.04
+50% spender no spells,explore,v391,meadow,locboss,10.1,3.92,14.02
+50% spender no spells,explore,v391,clover_hills,locboss,5.9,4,9.9
+50% spender no spells,explore,v391,warren,realmboss,9.39,2,12.4
+50% spender no spells,explore,v391,forest,locboss,10.74,2,12.74
+50% spender no spells,explore,v391,great_hive,realmboss,10.39,2,14.26
+50% spender no spells,explore,v391,crossroads_highway,locboss,10.94,2,13.94
+50% spender no spells,explore,v391,night_bazaar,realmboss,11.46,2,14.6
+50% spender no spells,explore,v391,cave_mouth,locboss,12.21,2.03,15.47
+50% spender no spells,explore,v391,crystal_tunnels,locboss,11.6,1.81,17.3
+50% spender no spells,explore,v391,goblin_school,realmboss,11.62,2.1,13.72
+50% spender no spells,explore,v391,misty_marsh,locboss,12.57,1.96,15.57
+50% spender no spells,explore,v391,hydra_s_lair,realmboss,12.71,1.73,17.31
+50% spender no spells,explore,v391,gloomy_village,locboss,13.19,1.85,18.04
+50% spender no spells,explore,v391,moonlit_graveyard,realmboss,14.56,0.66,20.41
+50% spender no spells,explore,v391,windy_cliffs,locboss,16.65,1.04,22.29
+50% spender no spells,explore,v391,griffin_summit,realmboss,11.99,3.28,17.82
+50% spender no spells,explore,v391,training_pits,locboss,17.71,1.23,21
+50% spender no spells,explore,v391,grand_colosseum,realmboss,14.38,1.81,19.29
+50% spender no spells,explore,v391,demon_king_s_gate,locboss,22.95,0.04,27.41
+50% spender no spells,explore,v391,throne_hall,realmboss,13.73,2.11,19.07
+50% spender no spells,explore,now,realm_1,locboss,51.23,0,51.23
+50% spender no spells,explore,now,clover_hills,locboss,64.61,0,64.61
+50% spender no spells,explore,now,warren,realmboss,19.65,0,20.69
+50% spender no spells,explore,now,realm_2,locboss,93.41,0,93.41
+50% spender no spells,explore,now,great_hive_1,realmboss,32.09,0,34.55
+50% spender no spells,explore,now,realm_3,locboss,165.06,0,166.11
+50% spender no spells,explore,now,bazaar_cellars_1,realmboss,57.62,0,59.23
+50% spender no spells,explore,now,goblin_caves_1,locboss,165.39,0,166.91
+50% spender no spells,explore,now,goblin_caves_2,locboss,129.08,0,133.57
+50% spender no spells,explore,now,goblin_caves_3,realmboss,94.01,0,94.01
+50% spender no spells,explore,now,realm_5,locboss,79.8,0,80.97
+50% spender no spells,explore,now,hydra_lair_2,realmboss,101.03,0,105.02
+50% spender no spells,explore,now,realm_6,locboss,124.95,0,130.77
+50% spender no spells,explore,now,moonlit_crypt_2,realmboss,145.26,0,151.65
+50% spender no spells,explore,now,realm_7,locboss,180.48,0,186.59
+50% spender no spells,explore,now,griffin_spire_3,realmboss,74.03,0,76.94
+50% spender no spells,explore,now,realm_8,locboss,187.89,0,190.77
+50% spender no spells,explore,now,undercroft_3,realmboss,97.96,0,103.09
+50% spender no spells,explore,now,demon_castle_2,locboss,252.15,0,257.79
+50% spender no spells,explore,now,demon_castle_5,realmboss,131.08,0,133.92
+50% spender free,beeline,v391,meadow,locboss,8.74,4.04,12.78
+50% spender free,beeline,v391,clover_hills,locboss,6.58,3.66,10.24
+50% spender free,beeline,v391,warren,realmboss,7.33,2.02,9.35
+50% spender free,beeline,v391,forest,locboss,8.68,2.1,10.78
+50% spender free,beeline,v391,great_hive,realmboss,8,2,10
+50% spender free,beeline,v391,crossroads_highway,locboss,9.19,2.28,11.47
+50% spender free,beeline,v391,night_bazaar,realmboss,9,2.74,11.74
+50% spender free,beeline,v391,cave_mouth,locboss,9.57,3.83,13.4
+50% spender free,beeline,v391,crystal_tunnels,locboss,10.59,4.68,15.27
+50% spender free,beeline,v391,goblin_school,realmboss,10.65,3.93,14.58
+50% spender free,beeline,v391,misty_marsh,locboss,8.68,3.13,11.81
+50% spender free,beeline,v391,hydra_s_lair,realmboss,8.96,3.75,12.71
+50% spender free,beeline,v391,gloomy_village,locboss,9.28,4.59,13.87
+50% spender free,beeline,v391,moonlit_graveyard,realmboss,9.23,4.72,13.95
+50% spender free,beeline,v391,windy_cliffs,locboss,10.37,7.04,17.41
+50% spender free,beeline,v391,griffin_summit,realmboss,9.83,7.37,17.2
+50% spender free,beeline,v391,training_pits,locboss,9.52,5.35,14.87
+50% spender free,beeline,v391,grand_colosseum,realmboss,9.81,6.03,15.84
+50% spender free,beeline,v391,demon_king_s_gate,locboss,10.19,8.09,18.28
+50% spender free,beeline,v391,throne_hall,realmboss,10.56,6.13,16.69
+50% spender free,beeline,now,realm_1,locboss,35.84,0,35.84
+50% spender free,beeline,now,clover_hills,locboss,64.16,0,64.16
+50% spender free,beeline,now,warren,realmboss,14.94,0,14.94
+50% spender free,beeline,now,realm_2,locboss,67.35,0,67.35
+50% spender free,beeline,now,great_hive_1,realmboss,24.11,0,24.11
+50% spender free,beeline,now,realm_3,locboss,164.93,0,164.93
+50% spender free,beeline,now,bazaar_cellars_1,realmboss,31.45,0,31.45
+50% spender free,beeline,now,goblin_caves_1,locboss,102.97,0,102.97
+50% spender free,beeline,now,goblin_caves_2,locboss,148.82,0,148.82
+50% spender free,beeline,now,goblin_caves_3,realmboss,75.32,0,75.32
+50% spender free,beeline,now,realm_5,locboss,31.11,0,31.11
+50% spender free,beeline,now,hydra_lair_2,realmboss,24.59,0,24.59
+50% spender free,beeline,now,realm_6,locboss,38.22,0,38.22
+50% spender free,beeline,now,moonlit_crypt_2,realmboss,16.04,0,16.04
+50% spender free,beeline,now,realm_7,locboss,26.43,0,26.43
+50% spender free,beeline,now,griffin_spire_3,realmboss,43.25,0,43.25
+50% spender free,beeline,now,realm_8,locboss,31.23,0,31.23
+50% spender free,beeline,now,undercroft_3,realmboss,20.28,0,20.28
+50% spender free,beeline,now,demon_castle_2,locboss,47.19,0,47.19
+50% spender free,beeline,now,demon_castle_5,realmboss,53.22,0,53.22
+50% spender free,explore,v391,meadow,locboss,10.1,3.92,14.02
+50% spender free,explore,v391,clover_hills,locboss,5.9,4,9.9
+50% spender free,explore,v391,warren,realmboss,9.39,2,12.4
+50% spender free,explore,v391,forest,locboss,10.74,2,12.74
+50% spender free,explore,v391,great_hive,realmboss,10.39,2,14.26
+50% spender free,explore,v391,crossroads_highway,locboss,10.94,2,13.94
+50% spender free,explore,v391,night_bazaar,realmboss,11.79,2,14.92
+50% spender free,explore,v391,cave_mouth,locboss,12.5,2,15.77
+50% spender free,explore,v391,crystal_tunnels,locboss,11.73,1.84,17.49
+50% spender free,explore,v391,goblin_school,realmboss,11.76,2.04,13.8
+50% spender free,explore,v391,misty_marsh,locboss,12.72,2.03,15.77
+50% spender free,explore,v391,hydra_s_lair,realmboss,12.66,1.74,17.18
+50% spender free,explore,v391,gloomy_village,locboss,13.34,1.9,18.31
+50% spender free,explore,v391,moonlit_graveyard,realmboss,14.95,0.96,20.85
+50% spender free,explore,v391,windy_cliffs,locboss,17.78,1.7,24.05
+50% spender free,explore,v391,griffin_summit,realmboss,11.54,3.03,16.89
+50% spender free,explore,v391,training_pits,locboss,18.69,1.55,22.32
+50% spender free,explore,v391,grand_colosseum,realmboss,14.31,2.13,19.62
+50% spender free,explore,v391,demon_king_s_gate,locboss,23.09,0.2,27.49
+50% spender free,explore,v391,throne_hall,realmboss,13.54,2.2,18.22
+50% spender free,explore,now,realm_1,locboss,51.23,0,51.23
+50% spender free,explore,now,clover_hills,locboss,64.61,0,64.61
+50% spender free,explore,now,warren,realmboss,19.65,0,20.69
+50% spender free,explore,now,realm_2,locboss,93.67,0,93.67
+50% spender free,explore,now,great_hive_1,realmboss,31.32,0,33.88
+50% spender free,explore,now,realm_3,locboss,213.2,0,214.23
+50% spender free,explore,now,bazaar_cellars_1,realmboss,58.62,0,59.96
+50% spender free,explore,now,goblin_caves_1,locboss,221.02,0,222.6
+50% spender free,explore,now,goblin_caves_2,locboss,182.5,0,186.97
+50% spender free,explore,now,goblin_caves_3,realmboss,115.4,0,115.4
+50% spender free,explore,now,realm_5,locboss,95.25,0,96.42
+50% spender free,explore,now,hydra_lair_2,realmboss,120.73,0,124.9
+50% spender free,explore,now,realm_6,locboss,147.43,0,153.16
+50% spender free,explore,now,moonlit_crypt_2,realmboss,172.9,0,179.31
+50% spender free,explore,now,realm_7,locboss,213.17,0,218.74
+50% spender free,explore,now,griffin_spire_3,realmboss,77.41,0,80.27
+50% spender free,explore,now,realm_8,locboss,231.83,0,234.56
+50% spender free,explore,now,undercroft_3,realmboss,120.92,0,126.65
+50% spender free,explore,now,demon_castle_2,locboss,249.52,0,255.24
+50% spender free,explore,now,demon_castle_5,realmboss,126.91,0,129.52
+75% saver no spells,beeline,v391,meadow,locboss,9.03,6.86,15.89
+75% saver no spells,beeline,v391,clover_hills,locboss,6.6,10.83,17.43
+75% saver no spells,beeline,v391,warren,realmboss,7.35,10.64,17.99
+75% saver no spells,beeline,v391,forest,locboss,8.2,11.14,19.34
+75% saver no spells,beeline,v391,great_hive,realmboss,7.1,11.27,18.37
+75% saver no spells,beeline,v391,crossroads_highway,locboss,8.42,9.28,17.7
+75% saver no spells,beeline,v391,night_bazaar,realmboss,7.78,9.58,17.36
+75% saver no spells,beeline,v391,cave_mouth,locboss,7.98,6.72,14.7
+75% saver no spells,beeline,v391,crystal_tunnels,locboss,7.9,6.59,14.49
+75% saver no spells,beeline,v391,goblin_school,realmboss,8.82,5.72,14.54
+75% saver no spells,beeline,v391,misty_marsh,locboss,7.22,7.18,14.4
+75% saver no spells,beeline,v391,hydra_s_lair,realmboss,7.95,6.64,14.59
+75% saver no spells,beeline,v391,gloomy_village,locboss,7.85,7.01,14.86
+75% saver no spells,beeline,v391,moonlit_graveyard,realmboss,7.54,6.92,14.46
+75% saver no spells,beeline,v391,windy_cliffs,locboss,7.69,9.76,17.45
+75% saver no spells,beeline,v391,griffin_summit,realmboss,8.16,9.54,17.7
+75% saver no spells,beeline,v391,training_pits,locboss,7.99,8.51,16.5
+75% saver no spells,beeline,v391,grand_colosseum,realmboss,8.46,7.77,16.23
+75% saver no spells,beeline,v391,demon_king_s_gate,locboss,7.63,7.66,15.29
+75% saver no spells,beeline,v391,throne_hall,realmboss,8.88,6.74,15.62
+75% saver no spells,beeline,now,realm_1,locboss,16.19,0,16.19
+75% saver no spells,beeline,now,clover_hills,locboss,12.13,0,12.13
+75% saver no spells,beeline,now,warren,realmboss,8.82,0,8.82
+75% saver no spells,beeline,now,realm_2,locboss,16.48,0,16.48
+75% saver no spells,beeline,now,great_hive_1,realmboss,10.99,0,10.99
+75% saver no spells,beeline,now,realm_3,locboss,37.47,0,37.47
+75% saver no spells,beeline,now,bazaar_cellars_1,realmboss,11.65,0,11.65
+75% saver no spells,beeline,now,goblin_caves_1,locboss,14,0,14
+75% saver no spells,beeline,now,goblin_caves_2,locboss,31.05,0,31.05
+75% saver no spells,beeline,now,goblin_caves_3,realmboss,15.68,0,15.68
+75% saver no spells,beeline,now,realm_5,locboss,10.49,0,10.49
+75% saver no spells,beeline,now,hydra_lair_2,realmboss,10.69,0,10.69
+75% saver no spells,beeline,now,realm_6,locboss,10.51,0,10.51
+75% saver no spells,beeline,now,moonlit_crypt_2,realmboss,7.95,0,7.95
+75% saver no spells,beeline,now,realm_7,locboss,10,0,10
+75% saver no spells,beeline,now,griffin_spire_3,realmboss,11.83,0,11.83
+75% saver no spells,beeline,now,realm_8,locboss,11.17,0,11.17
+75% saver no spells,beeline,now,undercroft_3,realmboss,9.59,0,9.59
+75% saver no spells,beeline,now,demon_castle_2,locboss,12.39,0,12.39
+75% saver no spells,beeline,now,demon_castle_5,realmboss,12.75,0,12.75
+75% saver no spells,explore,v391,meadow,locboss,10.27,5.78,16.05
+75% saver no spells,explore,v391,clover_hills,locboss,5.06,12.39,17.45
+75% saver no spells,explore,v391,warren,realmboss,8.99,7.63,17.62
+75% saver no spells,explore,v391,forest,locboss,9.95,9.2,19.15
+75% saver no spells,explore,v391,great_hive,realmboss,9.7,6.72,17.88
+75% saver no spells,explore,v391,crossroads_highway,locboss,9.9,6.37,17.27
+75% saver no spells,explore,v391,night_bazaar,realmboss,10.33,5.43,16.76
+75% saver no spells,explore,v391,cave_mouth,locboss,11.08,2.96,15.04
+75% saver no spells,explore,v391,crystal_tunnels,locboss,10.2,2.02,14.7
+75% saver no spells,explore,v391,goblin_school,realmboss,10.16,4.4,14.56
+75% saver no spells,explore,v391,misty_marsh,locboss,12.02,2.04,15.06
+75% saver no spells,explore,v391,hydra_s_lair,realmboss,11.6,1.34,15.28
+75% saver no spells,explore,v391,gloomy_village,locboss,12.19,1.22,15.93
+75% saver no spells,explore,v391,moonlit_graveyard,realmboss,13.72,0.08,17.8
+75% saver no spells,explore,v391,windy_cliffs,locboss,16.04,0.36,19.84
+75% saver no spells,explore,v391,griffin_summit,realmboss,10.6,5.63,17.47
+75% saver no spells,explore,v391,training_pits,locboss,17.01,0.44,19.45
+75% saver no spells,explore,v391,grand_colosseum,realmboss,13.09,1.79,16.88
+75% saver no spells,explore,v391,demon_king_s_gate,locboss,21.92,0,25.92
+75% saver no spells,explore,v391,throne_hall,realmboss,12.98,1.22,16.2
+75% saver no spells,explore,now,realm_1,locboss,25.08,0,25.08
+75% saver no spells,explore,now,clover_hills,locboss,11.47,0,11.47
+75% saver no spells,explore,now,warren,realmboss,12.16,0,13.16
+75% saver no spells,explore,now,realm_2,locboss,31.1,0,31.1
+75% saver no spells,explore,now,great_hive_1,realmboss,17.47,0,19.47
+75% saver no spells,explore,now,realm_3,locboss,50.38,0,51.38
+75% saver no spells,explore,now,bazaar_cellars_1,realmboss,24.44,0,25.44
+75% saver no spells,explore,now,goblin_caves_1,locboss,52.6,0,53.62
+75% saver no spells,explore,now,goblin_caves_2,locboss,37.26,0,40.3
+75% saver no spells,explore,now,goblin_caves_3,realmboss,35.95,0,35.95
+75% saver no spells,explore,now,realm_5,locboss,45.73,0,46.73
+75% saver no spells,explore,now,hydra_lair_2,realmboss,61.82,0,64.48
+75% saver no spells,explore,now,realm_6,locboss,60.38,0,63.39
+75% saver no spells,explore,now,moonlit_crypt_2,realmboss,70.26,0,74.61
+75% saver no spells,explore,now,realm_7,locboss,114.6,0,117.6
+75% saver no spells,explore,now,griffin_spire_3,realmboss,37.55,0,38.84
+75% saver no spells,explore,now,realm_8,locboss,123.99,0,125.99
+75% saver no spells,explore,now,undercroft_3,realmboss,67.28,0,69.58
+75% saver no spells,explore,now,demon_castle_2,locboss,171.87,0,175.87
+75% saver no spells,explore,now,demon_castle_5,realmboss,69.74,0,71.74
+75% saver free,beeline,v391,meadow,locboss,9.03,6.86,15.89
+75% saver free,beeline,v391,clover_hills,locboss,6.6,10.83,17.43
+75% saver free,beeline,v391,warren,realmboss,7.35,10.64,17.99
+75% saver free,beeline,v391,forest,locboss,8.2,11.14,19.34
+75% saver free,beeline,v391,great_hive,realmboss,7.13,12.2,19.33
+75% saver free,beeline,v391,crossroads_highway,locboss,8.33,10.1,18.43
+75% saver free,beeline,v391,night_bazaar,realmboss,7.58,10.45,18.03
+75% saver free,beeline,v391,cave_mouth,locboss,8.42,7.11,15.53
+75% saver free,beeline,v391,crystal_tunnels,locboss,8.44,6.79,15.23
+75% saver free,beeline,v391,goblin_school,realmboss,9.44,6.61,16.05
+75% saver free,beeline,v391,misty_marsh,locboss,7.56,7.05,14.61
+75% saver free,beeline,v391,hydra_s_lair,realmboss,8.22,6.91,15.13
+75% saver free,beeline,v391,gloomy_village,locboss,8.28,9.07,17.35
+75% saver free,beeline,v391,moonlit_graveyard,realmboss,7.7,8.48,16.18
+75% saver free,beeline,v391,windy_cliffs,locboss,7.9,10.99,18.89
+75% saver free,beeline,v391,griffin_summit,realmboss,8.5,10.79,19.29
+75% saver free,beeline,v391,training_pits,locboss,8.02,11.13,19.15
+75% saver free,beeline,v391,grand_colosseum,realmboss,8.39,10.22,18.61
+75% saver free,beeline,v391,demon_king_s_gate,locboss,7.95,8.92,16.87
+75% saver free,beeline,v391,throne_hall,realmboss,8.65,8.84,17.49
+75% saver free,beeline,now,realm_1,locboss,16.19,0,16.19
+75% saver free,beeline,now,clover_hills,locboss,12.13,0,12.13
+75% saver free,beeline,now,warren,realmboss,8.82,0,8.82
+75% saver free,beeline,now,realm_2,locboss,16.54,0,16.54
+75% saver free,beeline,now,great_hive_1,realmboss,11.35,0,11.35
+75% saver free,beeline,now,realm_3,locboss,41.94,0,41.94
+75% saver free,beeline,now,bazaar_cellars_1,realmboss,13.13,0,13.13
+75% saver free,beeline,now,goblin_caves_1,locboss,17.04,0,17.04
+75% saver free,beeline,now,goblin_caves_2,locboss,46.07,0,46.07
+75% saver free,beeline,now,goblin_caves_3,realmboss,19.47,0,19.47
+75% saver free,beeline,now,realm_5,locboss,17.13,0,17.13
+75% saver free,beeline,now,hydra_lair_2,realmboss,15.26,0,15.26
+75% saver free,beeline,now,realm_6,locboss,14.04,0,14.04
+75% saver free,beeline,now,moonlit_crypt_2,realmboss,9.01,0,9.01
+75% saver free,beeline,now,realm_7,locboss,13.29,0,13.29
+75% saver free,beeline,now,griffin_spire_3,realmboss,14.75,0,14.75
+75% saver free,beeline,now,realm_8,locboss,15.36,0,15.36
+75% saver free,beeline,now,undercroft_3,realmboss,11.37,0,11.37
+75% saver free,beeline,now,demon_castle_2,locboss,12.56,0,12.56
+75% saver free,beeline,now,demon_castle_5,realmboss,13.24,0,13.24
+75% saver free,explore,v391,meadow,locboss,10.27,5.78,16.05
+75% saver free,explore,v391,clover_hills,locboss,5.06,12.39,17.45
+75% saver free,explore,v391,warren,realmboss,8.99,7.63,17.62
+75% saver free,explore,v391,forest,locboss,9.96,9.18,19.14
+75% saver free,explore,v391,great_hive,realmboss,9.96,7.75,19.17
+75% saver free,explore,v391,crossroads_highway,locboss,10.15,7.41,18.56
+75% saver free,explore,v391,night_bazaar,realmboss,10.79,6.58,18.37
+75% saver free,explore,v391,cave_mouth,locboss,11.65,3.63,16.28
+75% saver free,explore,v391,crystal_tunnels,locboss,10.72,2.24,15.63
+75% saver free,explore,v391,goblin_school,realmboss,11.3,5.1,16.4
+75% saver free,explore,v391,misty_marsh,locboss,12.25,1.97,15.22
+75% saver free,explore,v391,hydra_s_lair,realmboss,12.53,1.01,15.92
+75% saver free,explore,v391,gloomy_village,locboss,12.89,1.04,16.67
+75% saver free,explore,v391,moonlit_graveyard,realmboss,14.42,0.11,18.53
+75% saver free,explore,v391,windy_cliffs,locboss,16.44,1.82,21.72
+75% saver free,explore,v391,griffin_summit,realmboss,10.99,7.86,20.16
+75% saver free,explore,v391,training_pits,locboss,17.61,1.25,20.86
+75% saver free,explore,v391,grand_colosseum,realmboss,13.73,3.08,18.81
+75% saver free,explore,v391,demon_king_s_gate,locboss,21.78,0.02,25.8
+75% saver free,explore,v391,throne_hall,realmboss,11.98,3.43,17.41
+75% saver free,explore,now,realm_1,locboss,25.08,0,25.08
+75% saver free,explore,now,clover_hills,locboss,11.47,0,11.47
+75% saver free,explore,now,warren,realmboss,12.16,0,13.16
+75% saver free,explore,now,realm_2,locboss,33.42,0,33.42
+75% saver free,explore,now,great_hive_1,realmboss,19.1,0,21.1
+75% saver free,explore,now,realm_3,locboss,59.38,0,60.38
+75% saver free,explore,now,bazaar_cellars_1,realmboss,27.86,0,28.86
+75% saver free,explore,now,goblin_caves_1,locboss,73.61,0,74.61
+75% saver free,explore,now,goblin_caves_2,locboss,56.34,0,59.34
+75% saver free,explore,now,goblin_caves_3,realmboss,44.67,0,44.67
+75% saver free,explore,now,realm_5,locboss,58.04,0,59.04
+75% saver free,explore,now,hydra_lair_2,realmboss,76.27,0,78.79
+75% saver free,explore,now,realm_6,locboss,71.33,0,74.33
+75% saver free,explore,now,moonlit_crypt_2,realmboss,82.25,0,86.88
+75% saver free,explore,now,realm_7,locboss,129.5,0,132.5
+75% saver free,explore,now,griffin_spire_3,realmboss,42.2,0,43.39
+75% saver free,explore,now,realm_8,locboss,140.27,0,142.27
+75% saver free,explore,now,undercroft_3,realmboss,75.74,0,78.13
+75% saver free,explore,now,demon_castle_2,locboss,174.59,0,178.59
+75% saver free,explore,now,demon_castle_5,realmboss,71.51,0,73.51

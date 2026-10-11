@@ -78,7 +78,7 @@ Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by defa
 | Active ways | 4 when speech works (the default after the consent gate). 2 (R-ZE, R-EZ) only when the browser has no speech recognition or the mic is blocked. |
 | Proficient | 2 correct answers (in total) in every active way. At most 1 of the 2 can come from Preview practice. |
 | Location | A village, dungeon or stage with a local pool of **47–60 items** (curriculum v2). It **ends in a boss**. The realm's last location has the realm boss. |
-| Readiness | The share of the location's own pool that's proficient. It decides boss-approach patrols (§7.4). |
+| Readiness | The share of the location's own pool that's proficient. Shown as information only; since Jack, 2026-10-11 it decides nothing (no patrols, §7.4). |
 | Carry-over | Up to 20 not-yet-proficient items from earlier locations. They're mixed into battle sets, but not counted in readiness. |
 | Role | `normal`, `elite` or `boss`. Bosses have `boss_type` = `location` or `realm`. |
 | Tier `t` | Numeric difficulty: realm 1 = 1 … realm 9 = 9, open-ended. All stats are formulas of `t`. |
@@ -169,7 +169,7 @@ Hero at the recommended level with common tier-t gear (these are the reference s
 
 | role | boss_type | hp | atk | def | gold | exp | chest_chance | adds | where |
 |---|---|---|---|---|---|---|---|---|---|
-| normal | | round(H(t) × base) | round(1.1 × DEF_ref) | t | 1 × G | 6 × L_rec | 0.10 | – | path fights and patrols |
+| normal | | round(H(t) × base) | round(1.1 × DEF_ref) | t | 1 × G | 6 × L_rec | 0.10 | – | random battles on edges |
 | elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | only where a level places one: mini-boss and quest fights (Jack, 2026-10-11; §7.8) |
 | boss | location | round(5 × base × m(t)) (v3.6) | round(0.8 × round(1.2 × DEF_ref)) (v3.6) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
 | boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location |
@@ -244,7 +244,7 @@ def pick_way(item):
 @@@ 5
 ## 5. Difficulty by location (updated for curriculum v2)
 
-Every location = **8 scripted path fights** + a boss-approach zone (patrols while readiness is under the trigger, §7.4) + the location boss. There are 20 locations (3/2/2/3/2/2/2/2/2 per realm), with the same ids as v2 (`L1.1` … `L9.2`).
+Every location = its map's random battles + the location boss. (**Jack, 2026-10-11**: no own-word battle target and no boss-approach patrols; v3.2–v3.9.1 had 8 scripted path fights + a patrol zone. The classic prototype loop in `src/` still runs 8 path fights; that is GameDev's prototype, not a design target.) There are 20 locations (3/2/2/3/2/2/2/2/2 per realm), with the same ids as v2 (`L1.1` … `L9.2`).
 
 **Per realm** (`data/realm_difficulty.csv`). Minutes are sim estimates per location at 75% accuracy with light practice. "saver" trains until the trigger clears; "spender" goes to the boss after the 2 forced patrols.
 
@@ -260,7 +260,7 @@ What changed from v2:
 - Enemy stat bands, gold and prices are unchanged.
 - **Time per location** with speech on is 41–68 min (saver) or 29–43 min (spender) at 75% accuracy with the 20% trigger, vs about 40–53 min for 30 items in v2. That's **~0.8–0.9 min per item vs ~1.3 in v2**, but locations are longer in absolute terms. Decided: keep the 60-item locations with the midpoint inn and save point, and judge length in the playtest. Save points split a location into 2–3 sessions (§11.4).
 
-**Boss-approach trigger:** patrols spawn while fewer than **20%** (speech on) or **40%** (reading only) of **the location's own pool** is proficient (§7.4).
+~~**Boss-approach trigger:** patrols spawn while fewer than 20% (speech on) or 40% (reading only) of the location's own pool is proficient.~~ Removed (**Jack, 2026-10-11**: no practice fights, §7.4).
 
 **Past realm 9, by formula:**
 - Stats: §2.3 with `L_rec = 24 + 3(t−9)`.
@@ -379,7 +379,11 @@ EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's reco
 - Starting kit: 24 gold (2 inn stays) plus 1 free Honey Potion.
 
 @@@ 7.4
-### 7.4 Boss-approach patrols (extra encounters)
+### 7.4 Boss-approach patrols: removed (**Jack, 2026-10-11**)
+
+**Jack, 2026-10-11**: **no practice fights at all.** No forced patrols before a boss, no 20% / 40% trigger, no Train button, no re-arming at inns, no wandering patrol. The boss approach is just the boss node's safe edge (`patrol: true` is only that marker now). The rest of this section is the v3–v3.9.3 record.
+
+#### (record) Boss-approach patrols
 
 **What:** the zone just before each location boss. While **readiness** is below the trigger, **patrols** (normal enemies of the location's roster) walk the approach path.
 
@@ -397,7 +401,7 @@ EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's reco
 6. Patrol fights use the normal 7-item selection, which already favors the least-proficient items. So patrols target exactly what's missing.
 7. Preview practice (§8) raises readiness before the kid even reaches the gate. Light practice cuts patrols by about 25–30%, and full practice by about 50–57%.
 
-**It never blocks the boss.**
+**It never blocked the boss.**
 
 @@@ 7.5
 ### 7.5 Defeat, the 0-HP rule, and safety nets (all decided)
@@ -475,6 +479,8 @@ The sim label **"nets+"** = all 8. **"none"** = a flat 10% defeat fee with no ot
 
 @@@ 7.7
 ### 7.7 Boss-approach tuning (proficiency cost, v3)
+
+*Record only: the trigger and patrols were removed by **Jack, 2026-10-11** (§7.4). The tables below are the v3.1–v3.2 sims.*
 
 Saver kid (trains until the trigger clears, capped at 40 patrols), 75% accuracy, v3 defaults. "Minutes" includes practice time (5 s per practice question) and battle time (9.2 s per question). Source: `data/sim/sim_patrols_minutes.csv`, `sim_trigger_tuning.csv`.
 
@@ -562,6 +568,8 @@ Single battle from full HP/MP with 1 potion, speech on, companion on, roster sta
 @@@ 7.10
 ### 7.10 Pacing summary (time per location)
 
+*Record (v3.2, linear loop with 8 path fights and patrols). Current times are in §12.5.*
+
 From `data/sim/sim_realms.csv` (light practice, v3.2 defaults, speech-on trigger 20%). Minutes per location:
 
 | tier | speech_saver_65 | speech_saver_75 | speech_spender_75 | reading_saver_75 | reading_spender_75 |
@@ -603,7 +611,7 @@ A whole playthrough (20 locations) is about 18 h for a speech-on saver at 75% ac
 | per realm | 94–150 | 9 pages; one "story arc" intro | Too many items for one sitting (a 150-item list is a textbook page, not a game screen). The kid would preview words they won't fight for another hour. Practice credit would be spent on items far from their battle use. |
 | **per location (chosen)** | 47–60 | Matches the unit the engine uses (each location's pool, readiness and boss). New items are practiced minutes before the battles that use them. Readiness at the gate reflects exactly this list. | 20 pages; needs a realm-level story hook → the realm overview |
 
-The **realm overview** is a single screen: the realm map, the realm boss silhouette, the 2–3 location names and topics (e.g. "Crossroads Market: shopping, money, comparisons"), and 6–8 "headline" items (one per topic) with audio. It's the story-arc intro. The item lists and practice are per location.
+The **realm overview** is a single screen (no map: node types show only on arrival, Jack's decision, 2026-10-11): the realm boss silhouette, the 2–3 location names and topics (e.g. "Crossroads Market: shopping, money, comparisons"), and 6–8 "headline" items (one per topic) with audio. It's the story-arc intro. The item lists and practice are per location.
 
 ### 8.2 The Preview page
 
@@ -646,7 +654,7 @@ Enter location (first time) -> PREVIEW (auto, skippable after 3 s)
           -> back to PREVIEW
   PREVIEW -> "Go fight!" -> LOCATION_MAP
 Realm gate (first time) -> REALM_OVERVIEW (story card, headline items with audio) -> first location's PREVIEW
-Boss gate below trigger -> "Train" (patrol) | "Practice" (opens PREVIEW filtered to "Not ready") | "Enter"
+Boss gate -> "Practice" (opens PREVIEW filtered to "Not ready") | "Enter"   (no "Train": Jack, 2026-10-11, no patrols)
 Inn menu -> "Practice words" -> PREVIEW
 ```
 
@@ -684,7 +692,6 @@ Location { id /* 'L1.1' … */; realmId; name; nameZh; tier: number; itemIds: st
            enemiesPerBattle: [min, max]; mcOptions: number; reviewSlots: number; pathFights: 8;
            enemyRoster: { enemyId; weight }[]; bossId;                                   // every location ends in a boss
            unlock: { requires: string[] /* previous location ids whose boss must be beaten */ };
-           bossApproach: { trigger: number /* 0.20 speech, 0.40 reading */; patrolsPerTrip: 2; roster: EnemyRef[] };
            previewIntro /* §8.6 */ }
 Enemy    { id; nameZh; nameEn; art; role: 'normal' | 'elite' | 'boss'; bossType?: 'location' | 'realm';
            statsFromTier: true; overrides?; minions?: EnemyRef[]; special?: SpecialId /* §7.9 */; shoutItemId: string }
@@ -717,9 +724,9 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | Proficiency | 2 correct (total) in each of 4 ways; 2 reading ways only without speech; ≤ 1 from practice | §3.1 |
 | Proficient-item review weight | 0.15, raised by 1.5 × min(overdue, 2) when a way is due | §3.2 |
 | Readiness | proficient ÷ the location's own pool | §7.4 |
-| Boss-approach trigger | **20%** (speech on), **40%** (reading mode) | §7.7 (Director's call, v3.1) |
-| Patrols per approach trip | 2 (no elite chance, Jack, 2026-10-11) | §7.4 |
-| Path fights per location | 8 | §5 |
+| ~~Boss-approach trigger~~ | removed (**Jack, 2026-10-11**) | §7.4 |
+| ~~Patrols per approach trip~~ | removed (**Jack, 2026-10-11**) | §7.4 |
+| ~~Path fights per location~~ | removed, no own-word battle target (**Jack, 2026-10-11**) | §5 |
 | Carry-over cap | 20 earlier items | §3.3 |
 | Spoken cap | 50% of questions per battle | §3.4 |
 | K_BLOCK / K_BROKEN / BROKEN_FLOOR | 1.25 / 0.5 / 0.5 | unchanged |
@@ -916,7 +923,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - Towns and villages are nodes that open the town screen.
 - **Zones:** each of the 20 locations is a **zone** (`data/world/zones.json`): word pool, roster and boss (the zone `elite` field is not used since Jack, 2026-10-11). Zones are placed on the graphs, and one zone can span several levels.
 - **Battles on edges:** random battles happen on edges, with `danger` 0–3 and `steps` encounter rolls per edge.
-- **Arrival events:** arriving at a node runs at most one event, the first eligible one in list order. There are 7 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, portal, story and treasure. Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, edge, crossing and step, so reloading never re-rolls.
+- **Arrival events:** a node may have no event (**Jack, 2026-10-11**; no filler events). Arriving runs every eligible event in list order (v3.8–v3.9.3: at most one, the first eligible). There are 7 outcomes: quest offer (hook), nothing, quest-linked mini-boss, quest item, portal, story and treasure. Events are fixed or weighted, and once, cooldown or repeatable. All randomness is seeded by save, edge, crossing and step, so reloading never re-rolls.
 
 **Encounter rules** (`data/world/world_rules.json`):
 
@@ -925,18 +932,18 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
 | rate per step by danger 0/1/2/3 | 0 / 0.60 / 0.85 / 0.95; × (1 + 0.1 × (dungeon level − 1)), max 0.95 |
 | enemies per encounter | zone `enemiesPerBattle`, max 3 (balance.json `combat.maxEnemies`) |
 | safe edges (no rolls) | touching a town, village or inn; the boss-approach edge (`patrol: true`); stairs and portals; after a boss or mini-boss clear, the way you came back to the nearest inn, for 20 hops or until the next inn rest |
-| walked edge | × 0.05 per step |
-| zone budget | after 8 fresh battles in a zone, fresh steps × 0.1 |
-| pity | after 2 empty fresh steps the next fresh step fights |
+| walked edge | × 0.5 per step (**Jack, 2026-10-11**; was × 0.05) |
+| ~~zone budget~~ | removed (**Jack, 2026-10-11**; was: after 8 fresh battles in a zone, fresh steps × 0.1) |
+| ~~pity~~ | removed (**Jack, 2026-10-11**; was: after 2 empty fresh steps the next fresh step fights) |
 | turn back | after a won battle mid-edge, a low-HP hero may turn back (walked steps stay walked) |
 | repel (`bell`, proposed) | 6 hops without random battles on danger ≤ 2 |
 | inns | every node ≤ `maxHopsToInn` hops from an inn or town (v3.9: 3 in realms 1–3, 5 in realms 4–9; stairs count 0); an approach inn next to every boss |
 | ~~inn warp~~ | v3.8 only; removed in v3.9 (§12.1). Return Feather instead |
 | towns + villages (v3.9.1) | max(1, ceil(nodes / (20 + 5(t−1)))), counting the main town: 1,1,2,2,2,3,3,3,4 (v3.9: round, 1,1,1,2,2,2,3,3,3) |
-| fog of war (v3.9) | visited nodes + "?" neighbours; towns, villages and bosses are landmarks; state in player progress (`progress.schema.json`) |
-| authoring target | each zone's shortest route expects 6.5–9.5 battles (v3.7: 8 path fights) |
+| fog of war (v3.9) | visited nodes + "?" neighbours; state in player progress (`progress.schema.json`). Jack's decision, 2026-10-11: every unvisited node looks the same, a node's type and icon show only on arrival, no landmarks (§12.5) |
+| ~~authoring target~~ | removed (**Jack, 2026-10-11**; was: each zone's shortest route expects 6.5–9.5 battles) |
 
-**Unchanged:** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn) now runs at the approach inn. Defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns; §12.1.)
+**Removed (**Jack, 2026-10-11**):** the patrol rule (speech 20%, reading 40%, 2 forced patrols, re-armed by resting at another inn). **Unchanged:** defeat wakes you at the last inn. (v3.9: the Return Feather also flies to visited towns; §12.1.)
 
 **Size.** Realm 1 has 17 nodes (authored, 3 zones). Later realms have 25 / 40 / 60 / 80 / 105 / 130 / 165 / 200 nodes, with 28–35% dead ends, 0–2 villages (v3.9), 2–21 inns and up to 5 dungeon levels. Realms 2–9 are generated reference layouts for the writers to replace. The per-realm table is `data/world/world_realm_table.csv`.
 
@@ -974,7 +981,7 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - A typical beeline kid buys 1–2 per realm; a no-spell saver buys 0.5–1.
   - The 2 free Feathers are a small conflict with budgeting: one free round trip, which delays the first purchase by about one realm.
 - **Density and inns:** towns + villages 1,1,1,2,2,2,3,3,3 (v3.8: 1,1,2,2,2,3,3,4,4); `maxHopsToInn` 3/3/3 then 5.
-- **Fog of war:** visited plus "?" neighbours; landmarks (`fog: "landmark"`); bitsets in `progress.schema.json`.
+- **Fog of war:** visited plus "?" neighbours; bitsets in `progress.schema.json`. (The v3.9 landmarks, `fog: "landmark"`, are gone: Jack's decision, 2026-10-11, §12.5.)
 - **Format (GameDev's answers):**
   - x/y normalised 0–1 with `aspect`; edges get a stable `idx`.
   - `world_rules.json` stays its own file.
@@ -1003,3 +1010,21 @@ v3.8, 2026-10-02 (PT), Jack. Full design in `world-graph.md` (repo `docs/design/
   - Defeats: 50% savers on beeline −0.1 to −0.5 (51.5 / 51.7), spenders −0.2.
   - Spells on beeline unchanged (75% saver 4.9). Explorers +0.6–0.7 spells.
   - Feathers bought fall by about 2–2.5 per campaign, because the boss Feathers replace purchases.
+
+### 12.5 Jack's rulings on the never-decided rules (2026-10-11 PT)
+
+Jack ruled on the audit list (`level-json-coverage.md` §9). These apply to the level/0.2 maps (`docs/data/levels`, rules in `docs/data/levels/world_rules.json`); the frozen v3.9.x seed in `docs/data/world` keeps its old numbers as the record.
+
+1. **No practice fights at all.** No zone battle budget (and no reset when the word pool changes), no forced boss-approach patrols, no 20% / 40% trigger, no re-arming at inns, no own-word battle targets (6.5–9.5, 8 path fights). (§5, §7.4, §11.1, §12)
+2. **No pity roll** (no guaranteed fight after 2 empty steps).
+3. **Walked edges roll at 50% of the normal rate** (was × 0.05).
+4. **Nodes may have no event.** No one-event-per-arrival requirement and no filler events; every eligible event runs, in list order. The 153 converted no-op `nothing` fallbacks are gone. The dead-end "80% nothing / 20% honey" pick stays: it is content (a small find), not filler.
+5. **Progression is purely by map links.** Beating a boss unlocks nothing and going around a boss node is fine; boss nodes stay fights. Every `bossDefeated` link condition is gone (11 portal/exit links, 8 world paths); `validate_levels.py` rejects one. What stays: the safe way back after a boss clear (§12, a safety rule, not a gate), the boss's safe approach edge, quest `requires` and story conditions on bosses (they gate quests and scenes, not links).
+
+**Quest locks (Jack's decision, 2026-10-11; his one exception to link-only progression).** A node or edge may carry `lockedUntilQuest: <quest id>`. Until that quest is completed (turned in) the player can't enter the node or cross the edge, in either direction. The optional `lockedScene` plays when they try (e.g. the workers at the broken bridge); without one the game shows one default blocked line ("The way is blocked." / 路不通。). Nothing else: no keys, no partial progress, no boss gates. `validate_levels.py` checks that the quest exists, that its giver, turn-in and every step can be reached from the start without crossing that lock or any lock whose quest depends on it, and that no locks are circular. No converted map uses one yet.
+
+**Map display (Jack's decision, 2026-10-11).** In game every unvisited node looks the same; a node's type and icon show only once the player arrives there. This sits on top of fog of war (visited nodes plus "?" for nodes one open edge away). There are no landmarks: towns, villages and bosses are not shown ahead of time. The editor shows everything.
+
+**Map format follow-ups (GameDev, level-editor.md §14; data only, no new rule).** The world map is an ordinary `overworld` map (no `world` kind). The realm-boss Feather (realms 3, 6, 8) is part of the boss reward (`settings.boss.reward.feather`), not a node event. Quest steps that mean "get there" are `event: nothing` + `objective: reach` (no `event: portal`). Quest offer/progress/turn-in scenes live only in the giver's node variants.
+
+**Sim** (100 seeds, 6 profiles; `docs/data/sim/sim_world_maps_simplified.csv`, boss-skip routes in `sim_world_boss_skips.csv`): vs v3.9.1, the 75% saver takes 16.5 h on beeline (18.5) and 59 h exploring (22.4) with about 1 defeat; the 50% saver takes 45 h on beeline (28.0) with 206 defeats (52) and 117 h exploring (31.6). Walked edges at 50% and no battle budget drive the rise; removing the patrols shortens beeline. The sim plays every location in gear-tier order, so it measures the rules, not boss skipping.

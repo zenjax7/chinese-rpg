@@ -92,8 +92,7 @@
   "gearTier": 2,
   "difficulty": {
    "mcOptions": 3,
-   "reviewSlots": 1,
-   "pathFights": 8
+   "reviewSlots": 1
   },
   "enemiesPerBattle": [
    1,
@@ -196,7 +195,6 @@
     "zh": "蜂后",
     "en": "Queen Bee"
    },
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q2_royal_jelly",
@@ -810,14 +808,6 @@
      "setFlag": "great_hive_1.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -921,11 +911,6 @@
      "note": "Yezi teaches Heal (spec: Honeycomb quest)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q2_royal_jelly_offer",
-    "progress": "sc_q2_royal_jelly_wait",
-    "turnIn": "sc_q2_royal_jelly_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 10

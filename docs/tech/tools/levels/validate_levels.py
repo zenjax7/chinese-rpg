@@ -6,10 +6,16 @@ Checks:
  1. schema: every map against docs/data/levels/schemas/level.schema.json (no realm, zone, retired, idxMax, elite, scriptedElite or
     scripted-edge fields can pass);
     index.json lists every map once and its start node exists.
- 2. graph: unique node ids and idx, unique edge ids, every edge end exists, entry exists; boss node exists, its gate edge touches it
-    and is the patrol edge; every map is reachable from the start over links (warning).
+ 2. graph: unique node ids and idx, unique edge ids, every edge end exists, entry exists; boss node exists, its approach edge
+    (settings.boss.gateEdge) touches it and is marked patrol: true (the safe approach; there are no patrols since Jack 2026-10-11);
+    every map is reachable from the start over links (warning).
  3. links: every cross-map edge {graph, node} resolves, and the target map has the return edge (both ways).
- 4. conditions: bossDefeated names a map with a boss; quest conditions name an existing quest.
+ 4c. boss chest: no item-giving on:clear event on the boss node (it is settings.boss.reward; LE F4).
+4. conditions: bossDefeated names a map with a boss; quest conditions name an existing quest; no edge condition uses bossDefeated
+    (Jack 2026-10-11: progression is purely by links).
+ 4b. quest locks (Jack 2026-10-11): lockedUntilQuest on a node or edge names an existing quest; lockedScene names a scene of that map;
+    the quest's giver, turn-in and every step position are reachable from the start without crossing that lock or any lock whose
+    quest depends on it; no circular locks (lock_errors; fixtures in docs/tech/tools/levels/fixtures/locks, test_locks.py).
  5. quests: unique ids; giver, turn-in, escort targets, every step position (node, refs, edges, maps, scope maps, words map) resolves;
     every step node carries a variant for that quest and step, and every variant points at a real quest and step (both ways).
  6. ids: every enemy (roster, boss, packs, fight actions, quest kill/drop enemies) exists in
@@ -23,13 +29,73 @@ sys.path.insert(0, os.path.join(HERE, '..', 'sim'))
 import world_loader as WL
 J = lambda p: json.load(open(p, encoding='utf-8'))
 
-def validate(d):
+def quest_positions(q):
+    """Where the player must stand for quest q: giver, turn-in (when it is a node) and every step position. -> [(label, [alternatives])],
+    each alternative 'map/node' or 'map/*' (any node of that map: area steps)."""
+    out = [('giver', [f"{q['giver']['graph']}/{q['giver']['node']}"])]
+    if isinstance(q.get('turnIn'), dict): out.append(('turn-in', [f"{q['turnIn']['graph']}/{q['turnIn']['node']}"]))
+    for o in q.get('objectives', []):
+        w = o.get('where') or {}
+        if 'node' in w: out.append((o['id'], [f"{w['graph']}/{w['node']}"] + [r for r in w.get('refs', []) if r != f"{w['graph']}/{w['node']}"]))
+        elif 'edges' in w: out.append((o['id'], [f"{w['graph']}/*"]))
+        elif 'maps' in w: out.append((o['id'], [f'{g}/*' for g in w['maps']]))
+    return out
+
+def lock_errors(maps, start, quests):
+    """Jack 2026-10-11: lockedUntilQuest on nodes and edges. Reachability over links (boss nodes are fights, not walls; one-way edges
+    one way; cross-map links as written). Lock A depends on lock B when A's quest has a position that can't be reached with B closed
+    (every other lock open). Errors: unknown quest / lockedScene, circular locks (incl. a lock on its own quest), and a quest position
+    unreachable with the lock and every lock depending on it (transitively) closed."""
+    err = []; adj = collections.defaultdict(list); locks = {}
+    for mid, m in maps.items():
+        for n in m['nodes']:
+            if n.get('lockedUntilQuest'): locks[f'node:{mid}/{n["id"]}'] = (n['lockedUntilQuest'], n.get('lockedScene'), mid)
+        for e in m['edges']:
+            k = f'edge:{mid}/{e["id"]}'
+            if e.get('lockedUntilQuest'): locks[k] = (e['lockedUntilQuest'], e.get('lockedScene'), mid)
+            a = f"{mid}/{e['from']}"; b = f"{e['to']['graph']}/{e['to']['node']}" if isinstance(e['to'], dict) else f"{mid}/{e['to']}"
+            adj[a].append((b, k))
+            if not isinstance(e['to'], dict) and e['kind'] != 'oneway': adj[b].append((a, k))
+    if not locks: return err
+    for k, (q, sc, mid) in locks.items():
+        if q not in quests: err.append(f'{k}: lockedUntilQuest {q} is not a quest')
+        if sc and sc not in maps[mid].get('scenes', {}): err.append(f'{k}: lockedScene {sc} is not a scene of {mid}')
+    s0 = f"{start['graph']}/{start['node']}"
+    def reach(closed):
+        seen = {s0}; dq = collections.deque([s0])
+        if f'node:{s0}' in closed: return set()
+        while dq:
+            u = dq.popleft()
+            for v, ek in adj[u]:
+                if v in seen or ek in closed or f'node:{v}' in closed: continue
+                seen.add(v); dq.append(v)
+        return seen
+    def missing(q, closed):
+        if q not in quests: return []
+        R = reach(closed); maps_r = {x.split('/')[0] for x in R}
+        return [lab for lab, alts in quest_positions(quests[q]) if not any((a.split('/')[0] in maps_r) if a.endswith('/*') else a in R for a in alts)]
+    dep = {k: {b for b in locks if b != k and missing(locks[k][0], {b})} for k in locks}   # k needs b open (k itself: the unreachable check below)
+    def closure(k):          # every lock that (transitively) needs k open
+        out = set(); todo = [k]
+        while todo:
+            x = todo.pop()
+            for y in locks:
+                if x in dep[y] and y not in out: out.add(y); todo.append(y)
+        return out
+    for k in locks:
+        c = closure(k)
+        if k in c: err.append(f"{k}: circular locks ({', '.join(sorted(x for x in c if k in closure(x)))}): its quest {locks[k][0]} can't be finished until another lock opens that waits on this one"); continue
+        miss = missing(locks[k][0], {k} | c)
+        if miss: err.append(f"{k}: quest {locks[k][0]} has {', '.join(miss)} unreachable from the start without crossing this lock or the locks that depend on it")
+    return err
+
+def validate(d, schema_dir=None):
     err, warn = [], []
     try:
         import jsonschema
     except ImportError:
         return ['jsonschema missing (pip install jsonschema)'], []
-    sch = J(os.path.join(d, 'schemas', 'level.schema.json')); V = jsonschema.Draft202012Validator(sch)
+    sch = J(os.path.join(schema_dir or os.path.join(d, 'schemas'), 'level.schema.json')); V = jsonschema.Draft202012Validator(sch)
     maps = {}
     for f in sorted(glob.glob(os.path.join(d, '*.json'))):
         m = J(f)
@@ -62,8 +128,11 @@ def validate(d):
         if b:
             ge = next((e for e in m['edges'] if e['id'] == b['gateEdge']), None)
             if b['node'] not in ns or ns[b['node']]['kind'] != 'boss': err.append(f'{mid}: boss node {b["node"]} missing or not kind boss')
-            if not ge or b['node'] not in (ge['from'], ge['to']) or not ge.get('patrol'): err.append(f'{mid}: gate edge {b["gateEdge"]} does not reach the boss as the patrol edge')
+            if not ge or b['node'] not in (ge['from'], ge['to']) or not ge.get('patrol'): err.append(f'{mid}: approach edge {b["gateEdge"]} does not reach the boss or lacks patrol: true (the safe-approach marker)')
             if not m['settings']['words']: err.append(f'{mid}: a boss map needs words')
+            for ev in m['events']:   # LE F4: the boss chest (Feather, gear, gold) is settings.boss.reward, never an on:clear node event
+                if ev['node'] == b['node'] and ev.get('on') == 'clear' and any(k in a for a in ev.get('do', []) for k in ('giveItem', 'giveGear', 'giveGold', 'openChest')):
+                    err.append(f"{mid}/{ev['id']}: boss chest as a node event (put it in settings.boss.reward)")
         elif m['settings']['words'] and not any(e.get('danger') for e in m['edges']): warn.append(f'{mid}: words but no battle edges')
     # 3. links both ways
     for mid, m in maps.items():
@@ -96,6 +165,10 @@ def validate(d):
         elif isinstance(x, list):
             for v in x: conds(v, lab)
     for mid, m in maps.items(): conds({k: m[k] for k in ('edges', 'events', 'nodes', 'quests', 'scenes')}, mid)
+    for mid, m in maps.items():
+        for e in m['edges']:
+            if 'bossDefeated' in json.dumps(e.get('cond')): err.append(f"{mid}/{e['id']}: link condition waits on a boss (Jack 2026-10-11: progression is purely by links)")
+    err.extend(lock_errors(maps, st, {k: v[1] for k, v in quests.items()}))
     variants = collections.defaultdict(list)
     for mid, m in maps.items():
         for n in m['nodes']:

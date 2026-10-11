@@ -81,8 +81,7 @@
   "gearTier": 5,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -1136,14 +1135,6 @@
    ]
   },
   {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_1.1",
    "node": "treasure_1",
    "on": "enter",
@@ -1154,14 +1145,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_3.1",
@@ -1258,14 +1241,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_3.1",
    "node": "treasure_3",
    "on": "enter",
@@ -1276,14 +1251,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_4.1",
@@ -1526,14 +1493,6 @@
    ]
   },
   {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_10.1",
    "node": "path_10",
    "on": "enter",
@@ -1578,14 +1537,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_12.1",
@@ -1668,14 +1619,6 @@
    ]
   },
   {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_14.1",
    "node": "path_14",
    "on": "enter",
@@ -1722,14 +1665,6 @@
    ]
   },
   {
-   "id": "treasure_7.2",
-   "node": "treasure_7",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_9.1",
    "node": "treasure_9",
    "on": "enter",
@@ -1740,14 +1675,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_9.2",
-   "node": "treasure_9",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "npc_3.2",
@@ -1855,11 +1782,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_lost_fishers_offer",
-    "progress": "sc_q5_lost_fishers_wait",
-    "turnIn": "sc_q5_lost_fishers_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6

@@ -8,7 +8,7 @@
   {
    "id": "world",
    "state": "beta",
-   "kind": "world",
+   "kind": "overworld",
    "title": {
     "zh": "世界地图",
     "en": "World map"

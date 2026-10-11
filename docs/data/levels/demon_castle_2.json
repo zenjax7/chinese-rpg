@@ -82,8 +82,7 @@
   "gearTier": 9,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -200,8 +199,7 @@
    "title": {
     "zh": "暗影龙",
     "en": "Shadow-Cursed Dragon"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "inn_2",
@@ -877,14 +875,6 @@
    ]
   },
   {
-   "id": "treasure_1.3",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.1",
    "node": "story_1",
    "on": "enter",
@@ -924,14 +914,6 @@
      "setFlag": "demon_castle_2.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_4.1",
@@ -1028,14 +1010,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_5.1",
    "node": "path_5",
    "on": "enter",
@@ -1094,14 +1068,6 @@
    ]
   },
   {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_3.1",
    "node": "story_3",
    "on": "enter",
@@ -1136,14 +1102,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -1225,11 +1183,6 @@
      "note": "Pipi trades a secret Throne Hall key for a second chance."
     }
    ],
-   "scenes": {
-    "offer": "sc_q9_pipi_surrender_offer",
-    "progress": "sc_q9_pipi_surrender_wait",
-    "turnIn": "sc_q9_pipi_surrender_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 4

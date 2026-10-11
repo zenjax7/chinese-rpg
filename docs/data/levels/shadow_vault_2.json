@@ -82,8 +82,7 @@
   "gearTier": 9,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -636,14 +635,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_2.1",
    "node": "path_2",
    "on": "enter",
@@ -707,14 +698,6 @@
    ]
   },
   {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.2",
    "node": "story_1",
    "on": "enter",
@@ -737,14 +720,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_3.1",
@@ -861,14 +836,6 @@
    ]
   },
   {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_4.1",
    "node": "treasure_4",
    "on": "enter",
@@ -879,14 +846,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_6.1",
@@ -1001,14 +960,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [],

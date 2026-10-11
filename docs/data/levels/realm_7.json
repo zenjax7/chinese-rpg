@@ -90,8 +90,7 @@
   "gearTier": 7,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -136,7 +135,6 @@
    ],
    "hub": "village",
    "town": 7,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q7_harpy_socks",
@@ -320,8 +318,7 @@
    "title": {
     "zh": "风龙",
     "en": "Wild Wind Dragon"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "portal_2",
@@ -390,7 +387,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q7_glacier_roses",
@@ -442,7 +438,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q7_forecast",
@@ -2402,14 +2397,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_11.1",
    "node": "path_11",
    "on": "enter",
@@ -2507,14 +2494,6 @@
    ]
   },
   {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_2.1",
    "node": "treasure_2",
    "on": "enter",
@@ -2527,14 +2506,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_3.1",
    "node": "treasure_3",
    "on": "enter",
@@ -2545,14 +2516,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_13.1",
@@ -2601,14 +2564,6 @@
    ]
   },
   {
-   "id": "treasure_4.3",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_5.1",
    "node": "treasure_5",
    "on": "enter",
@@ -2619,14 +2574,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "miniboss_2.1",
@@ -2656,14 +2603,6 @@
      "setFlag": "realm_7.miniboss_2.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_2.2",
-   "node": "miniboss_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_1.1",
@@ -2796,14 +2735,6 @@
    ]
   },
   {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_4.1",
    "node": "story_4",
    "on": "enter",
@@ -2826,14 +2757,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_7.2",
-   "node": "treasure_7",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_15.1",
@@ -2894,14 +2817,6 @@
    ]
   },
   {
-   "id": "treasure_8.2",
-   "node": "treasure_8",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_16.1",
    "node": "path_16",
    "on": "enter",
@@ -2946,14 +2861,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_9.2",
-   "node": "treasure_9",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "npc_3.1",
@@ -3072,14 +2979,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_10.2",
-   "node": "treasure_10",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_18.1",
@@ -3392,14 +3291,6 @@
    ]
   },
   {
-   "id": "treasure_11.2",
-   "node": "treasure_11",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "deadend_5.1",
    "node": "deadend_5",
    "on": "enter",
@@ -3638,14 +3529,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_12.2",
-   "node": "treasure_12",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -3702,7 +3585,7 @@
     },
     {
      "id": "s3",
-     "event": "portal",
+     "event": "nothing",
      "objective": {
       "type": "reach"
      },
@@ -3775,11 +3658,6 @@
      "note": "She teaches 雪球术 (or pays its 1,080-gold shop price if already owned)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_glacier_roses_offer",
-    "progress": "sc_q7_glacier_roses_wait",
-    "turnIn": "sc_q7_glacier_roses_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 0
@@ -3894,11 +3772,6 @@
      "note": "He gives you a map with a ? on it (marks the Cloud Caves door)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_lost_mapmaker_offer",
-    "progress": "sc_q7_lost_mapmaker_wait",
-    "turnIn": "sc_q7_lost_mapmaker_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 4
@@ -4001,11 +3874,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_harpy_socks_offer",
-    "progress": "sc_q7_harpy_socks_wait",
-    "turnIn": "sc_q7_harpy_socks_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 4
@@ -4115,11 +3983,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_golem_sign_offer",
-    "progress": "sc_q7_golem_sign_wait",
-    "turnIn": "sc_q7_golem_sign_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -4226,11 +4089,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_forecast_offer",
-    "progress": "sc_q7_forecast_wait",
-    "turnIn": "sc_q7_forecast_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 3

@@ -93,8 +93,7 @@
   "gearTier": 7,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -564,14 +563,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.1",
    "node": "story_1",
    "on": "enter",
@@ -657,11 +648,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q7_griffin_feathers_offer",
-    "progress": "sc_q7_griffin_feathers_wait",
-    "turnIn": "sc_q7_griffin_feathers_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 4

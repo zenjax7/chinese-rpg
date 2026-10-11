@@ -1,0 +1,61 @@
+option,profile,mode,seeds,hours,hours_now,hours_delta,defeats,defeats_now,defeats_delta,boss_first_wins,boss_first_wins_now,battles_loc
+A boss HP x1.3 + boss ATK x1.0,50% saver no spells,beeline,100,50.34,45.45,4.89,257.8,206.0,51.8,0.739,0.972,47.19
+A boss HP x1.3 + boss ATK x1.0,50% saver no spells,explore,100,117.24,116.75,0.5,339.8,327.1,12.8,0.921,0.994,104.72
+A boss HP x1.3 + boss ATK x1.0,50% saver free,beeline,100,52.56,47.59,4.98,277.3,220.8,56.5,0.738,0.97,50.59
+A boss HP x1.3 + boss ATK x1.0,50% saver free,explore,100,128.0,127.32,0.68,369.4,349.8,19.6,0.94,0.995,127.39
+A boss HP x1.3 + boss ATK x1.0,50% spender no spells,beeline,100,56.93,52.29,4.64,364.9,302.4,62.6,0.454,0.78,55.09
+A boss HP x1.3 + boss ATK x1.0,50% spender no spells,explore,100,124.77,123.95,0.82,502.9,488.2,14.7,0.778,0.95,116.26
+A boss HP x1.3 + boss ATK x1.0,50% spender free,beeline,100,58.95,53.88,5.07,392.5,323.9,68.6,0.457,0.771,58.85
+A boss HP x1.3 + boss ATK x1.0,50% spender free,explore,100,130.64,129.41,1.23,570.6,557.9,12.7,0.806,0.943,134.97
+A boss HP x1.3 + boss ATK x1.0,75% saver no spells,beeline,100,16.84,16.45,0.39,1.8,1.3,0.5,0.998,1.0,15.28
+A boss HP x1.3 + boss ATK x1.0,75% saver no spells,explore,100,59.24,59.14,0.1,1.3,1.2,0.1,1.0,1.0,58.8
+A boss HP x1.3 + boss ATK x1.0,75% saver free,beeline,100,18.45,18.53,-0.07,2.2,2.0,0.2,0.998,1.0,17.58
+A boss HP x1.3 + boss ATK x1.0,75% saver free,explore,100,62.83,62.32,0.5,2.3,2.5,-0.2,1.0,1.0,67.65
+B normal enemy ATK x1.1,50% saver no spells,beeline,100,56.01,45.45,10.56,350.3,206.0,144.4,0.958,0.972,55.78
+B normal enemy ATK x1.1,50% saver no spells,explore,100,126.92,116.75,10.17,516.7,327.1,189.6,0.987,0.994,118.78
+B normal enemy ATK x1.1,50% saver free,beeline,100,56.31,47.59,8.72,354.3,220.8,133.5,0.959,0.97,56.27
+B normal enemy ATK x1.1,50% saver free,explore,100,128.03,127.32,0.71,542.0,349.8,192.1,0.99,0.995,128.62
+B normal enemy ATK x1.1,50% spender no spells,beeline,100,63.22,52.29,10.93,461.4,302.4,159.0,0.786,0.78,65.54
+B normal enemy ATK x1.1,50% spender no spells,explore,100,135.68,123.95,11.74,703.4,488.2,215.2,0.946,0.95,132.76
+B normal enemy ATK x1.1,50% spender free,beeline,100,63.08,53.88,9.2,460.9,323.9,137.0,0.786,0.771,65.39
+B normal enemy ATK x1.1,50% spender free,explore,100,133.38,129.41,3.96,740.4,557.9,182.5,0.946,0.943,139.78
+B normal enemy ATK x1.1,75% saver no spells,beeline,100,17.01,16.45,0.56,4.6,1.3,3.3,1.0,1.0,15.88
+B normal enemy ATK x1.1,75% saver no spells,explore,100,59.65,59.14,0.52,4.6,1.2,3.4,1.0,1.0,59.6
+B normal enemy ATK x1.1,75% saver free,beeline,100,18.55,18.53,0.02,6.5,2.0,4.5,1.0,1.0,18.1
+B normal enemy ATK x1.1,75% saver free,explore,100,62.7,62.32,0.38,8.7,2.5,6.2,1.0,1.0,67.45
+C encounter rate x1.3,50% saver no spells,beeline,100,84.99,45.45,39.53,384.2,206.0,178.2,0.988,0.972,88.89
+C encounter rate x1.3,50% saver no spells,explore,100,168.28,116.75,51.54,439.1,327.1,112.0,0.999,0.994,165.92
+C encounter rate x1.3,50% saver free,beeline,100,94.86,47.59,47.27,447.6,220.8,226.8,0.983,0.97,106.6
+C encounter rate x1.3,50% saver free,explore,100,182.92,127.32,55.6,460.8,349.8,111.0,0.999,0.995,200.37
+C encounter rate x1.3,50% spender no spells,beeline,100,92.14,52.29,39.85,509.8,302.4,207.5,0.883,0.78,99.19
+C encounter rate x1.3,50% spender no spells,explore,100,175.17,123.95,51.22,614.4,488.2,126.2,0.988,0.95,178.78
+C encounter rate x1.3,50% spender free,beeline,100,100.56,53.88,46.68,599.6,323.9,275.7,0.866,0.771,116.12
+C encounter rate x1.3,50% spender free,explore,100,189.27,129.41,59.86,716.5,557.9,158.6,0.991,0.943,216.05
+C encounter rate x1.3,75% saver no spells,beeline,100,23.45,16.45,7.0,5.5,1.3,4.2,1.0,1.0,23.97
+C encounter rate x1.3,75% saver no spells,explore,100,77.46,59.14,18.33,3.9,1.2,2.7,1.0,1.0,82.5
+C encounter rate x1.3,75% saver free,beeline,100,28.61,18.53,10.08,7.8,2.0,5.8,1.0,1.0,31.26
+C encounter rate x1.3,75% saver free,explore,100,83.19,62.32,20.87,5.1,2.5,2.6,1.0,1.0,95.36
+D spell MP cost x1.5,50% saver no spells,beeline,100,45.45,45.45,0.0,206.0,206.0,0.0,0.972,0.972,43.09
+D spell MP cost x1.5,50% saver no spells,explore,100,116.75,116.75,0.0,327.1,327.1,0.0,0.994,0.994,104.7
+D spell MP cost x1.5,50% saver free,beeline,100,47.09,47.59,-0.49,216.8,220.8,-3.9,0.971,0.97,45.56
+D spell MP cost x1.5,50% saver free,explore,100,134.81,127.32,7.49,356.9,349.8,7.1,0.994,0.995,129.64
+D spell MP cost x1.5,50% spender no spells,beeline,100,52.29,52.29,0.0,302.4,302.4,0.0,0.78,0.78,51.75
+D spell MP cost x1.5,50% spender no spells,explore,100,123.95,123.95,0.0,488.2,488.2,0.0,0.95,0.95,116.23
+D spell MP cost x1.5,50% spender free,beeline,100,53.97,53.88,0.1,321.4,323.9,-2.5,0.772,0.771,54.51
+D spell MP cost x1.5,50% spender free,explore,100,133.93,129.41,4.52,541.9,557.9,-16.0,0.952,0.943,135.41
+D spell MP cost x1.5,75% saver no spells,beeline,100,16.45,16.45,0.0,1.3,1.3,0.0,1.0,1.0,15.09
+D spell MP cost x1.5,75% saver no spells,explore,100,59.14,59.14,0.0,1.2,1.2,0.0,1.0,1.0,58.79
+D spell MP cost x1.5,75% saver free,beeline,100,18.94,18.53,0.41,2.3,2.0,0.3,1.0,1.0,18.04
+D spell MP cost x1.5,75% saver free,explore,100,65.26,62.32,2.93,2.4,2.5,-0.1,1.0,1.0,68.54
+A+B,50% saver no spells,beeline,100,64.25,45.45,18.79,476,206.0,270.0,0.718,0.972,63.58
+A+B,50% saver no spells,explore,100,128.36,116.75,11.61,527.6,327.1,200.6,0.907,0.994,120.19
+A+B,50% saver free,beeline,100,64.35,47.59,16.76,479.3,220.8,258.5,0.717,0.97,63.9
+A+B,50% saver free,explore,100,129.16,127.32,1.84,557.2,349.8,207.4,0.908,0.995,129.66
+A+B,50% spender no spells,beeline,100,68.56,52.29,16.27,546.8,302.4,244.4,0.463,0.78,70.1
+A+B,50% spender no spells,explore,100,136.83,123.95,12.89,719.6,488.2,231.4,0.778,0.95,133.48
+A+B,50% spender free,beeline,100,68.92,53.88,15.04,551.8,323.9,227.9,0.467,0.771,70.62
+A+B,50% spender free,explore,100,134.38,129.41,4.97,751.6,557.9,193.7,0.774,0.943,139.4
+A+B,75% saver no spells,beeline,100,17.34,16.45,0.89,5.2,1.3,3.9,0.997,1.0,15.92
+A+B,75% saver no spells,explore,100,59.94,59.14,0.81,4.5,1.2,3.3,1.0,1.0,59.68
+A+B,75% saver free,beeline,100,18.41,18.53,-0.12,6.6,2.0,4.6,0.996,1.0,17.6
+A+B,75% saver free,explore,100,62.82,62.32,0.5,8.6,2.5,6.1,1.0,1.0,67.39

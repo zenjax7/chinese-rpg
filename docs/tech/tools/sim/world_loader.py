@@ -61,36 +61,34 @@ def _cond_open(c, done):
     return True
 
 def unlock_order(maps, start):
-    """Realm-less progression, read from the links: from the start node, walk every open edge (an unbeaten boss node blocks every
-    edge through it; links need their condition), beat the nearest reachable boss, repeat.
-    -> (boss maps in order, {map id: round in which it first becomes reachable}). Round r = after r bosses."""
+    """Realm-less progression, read from the links only (GameDev LE F3, Jack 2026-10-11): from the start node, walk every edge and
+    link (no boss walls: a boss node is a fight, not a wall; no link has a boss condition; quest locks (lockedUntilQuest) and quest
+    conditions count as open, since every quest is reachable without its own lock -- validate_levels checks that).
+    -> (boss maps by link distance from the start, {map id: 0 for every reachable map}). There are no rounds any more: every
+    reachable map is round 0. The sim plays locations in gearTier order, then this order."""
     adj = collections.defaultdict(list); boss = {}
     for mid, m in maps.items():
         b = (m.get('settings') or {}).get('boss')
         if b: boss[f"{mid}/{b['node']}"] = mid
         for e in m['edges']:
             a = f"{mid}/{e['from']}"
-            if isinstance(e['to'], dict): adj[a].append((f"{e['to']['graph']}/{e['to']['node']}", e.get('cond'))); continue
-            bb = f"{mid}/{e['to']}"; adj[a].append((bb, e.get('cond')))
-            if e['kind'] != 'oneway': adj[bb].append((a, e.get('cond')))
-    s0 = f"{start['graph']}/{start['node']}"; done = []; rnd = {}
-    for r in range(len(boss) + 1):
-        dist = {s0: 0}; q = collections.deque([s0])
-        while q:
-            u = q.popleft()
-            if u in boss and boss[u] not in done: continue          # standing on an unbeaten boss: no way on
-            for v, c in adj[u]:
-                if v in dist or not _cond_open(c, done): continue
-                dist[v] = dist[u] + 1; q.append(v)
-        for u in dist: rnd.setdefault(u.split('/')[0], r)
-        nxt = sorted((d, boss[u]) for u, d in dist.items() if u in boss and boss[u] not in done)
-        if not nxt: break
-        done.append(nxt[0][1])
-    return done, rnd
+            if isinstance(e['to'], dict): adj[a].append(f"{e['to']['graph']}/{e['to']['node']}"); continue
+            bb = f"{mid}/{e['to']}"; adj[a].append(bb)
+            if e['kind'] != 'oneway': adj[bb].append(a)
+    s0 = f"{start['graph']}/{start['node']}"; dist = {s0: 0}; q = collections.deque([s0])
+    while q:
+        u = q.popleft()
+        for v in adj[u]:
+            if v not in dist: dist[v] = dist[u] + 1; q.append(v)
+    rnd = {}
+    for u in dist: rnd.setdefault(u.split('/')[0], 0)
+    return [boss[u] for _, u in sorted((d, u) for u, d in dist.items() if u in boss)], rnd
 
 def met_words(maps, start):
     """Proposed met rule without realms: a word is met in map M when it is in the pool of a map that becomes reachable no later than M
-    (same or earlier round of unlock_order). Returns {map id: set of word ids} and the review order of maps."""
+    (same or earlier round of unlock_order). Since the walk is links-only (2026-10-11) every reachable map is round 0, so every word
+    of every reachable map counts as met everywhere (the rule no longer catches anything; see level-json-coverage.md Q-J13).
+    Returns {map id: set of word ids} and the review order of maps."""
     order, rnd = unlock_order(maps, start)
     seq = sorted(rnd, key=lambda m: (rnd[m], m))
     met, acc = {}, set()
@@ -102,7 +100,7 @@ def met_words(maps, start):
 
 def scene_met(maps, start):
     """met(map, trigger cond) -> the words met when a scene in `map` with that trigger condition can first play: the pools of every map
-    reachable by then (unlock_order rounds), where the round is the later of the map's own round and the round right after every boss
+    reachable by then (unlock_order rounds; all 0 since the walk is links-only), where the round is the later of the map's own round and the round right after every boss
     the condition names (e.g. a village scene gated on bossDefeated: clover_hills may use clover_hills words)."""
     order, rnd = unlock_order(maps, start)
     def bosses(c):
@@ -142,7 +140,7 @@ def _load_levels(d, world_dir):
         z = dict(id=mid, realm=st['gearTier'], order=k + 1, location=mid, pool=mid, tier=st['gearTier'], words=list(st['words']),
                  bossNode={'graph': mid, 'node': b['node']}, gateEdge={'graph': mid, 'edge': b['gateEdge']}, bossKind=b['kind'], boss=b.get('enemy'))
         if st.get('scriptedElite'): z['scriptedElite'] = st['scriptedElite']
-        z['clearFeather'] = sum(a.get('qty', 1) for e in graphs[mid]['events'] if e['node'] == b['node'] and e.get('on') == 'clear'
+        z['clearFeather'] = (b.get('reward') or {}).get('feather', 0) + sum(a.get('qty', 1) for e in graphs[mid]['events'] if e['node'] == b['node'] and e.get('on') == 'clear'
                                 for a in e.get('do', []) if a.get('giveItem') == 'feather')
         zones.append(z)
     quests = {q['id']: q for L in maps.values() for q in L.get('quests', [])}
@@ -250,6 +248,7 @@ class Realm:
     def __init__(self, t):
         rid = entry_graph(t); self.t = t; self.rid = rid; self.N = {}; self.E = {}; self.adj = collections.defaultdict(list); self.level = {}; self.EV = collections.defaultdict(list)
         todo = [rid]; seen = set(); xlinks = []
+        self.locks = {}; self.quest_done = set()   # Jack 2026-10-11: lockedUntilQuest (edge key -> quest id); world_sim sets quest_done = the kid's done quests
         while todo:
             g = GRAPHS[todo.pop()]
             if g['id'] in seen: continue
@@ -258,18 +257,20 @@ class Realm:
                 k = f"{g['id']}/{n['id']}"; self.N[k] = dict(n, graph=g['id'], key=k); self.level[k] = g.get('level', 0)
             for e in g['edges']:
                 a = f"{g['id']}/{e['from']}"
+                if e.get('lockedUntilQuest') and not isinstance(e.get('to'), dict): self.locks[f"{g['id']}/{e['id']}"] = e['lockedUntilQuest']
                 if isinstance(e.get('to'), dict):
                     tg = GRAPHS.get(e['to']['graph'], {})
                     # stairs/portal links to the other maps of this segment (v3.9.1: the realm's dungeon levels; never the world map)
-                    if e['kind'] in ('stairs', 'portal') and tg.get('kind') != 'world' and tg.get('realm') == t:
-                        todo.append(e['to']['graph']); xlinks.append((a, f"{e['to']['graph']}/{e['to']['node']}", e['kind']))
+                    if e['kind'] in ('stairs', 'portal') and tg.get('realm') == t:   # the world map has no word pool, so no tier
+                        todo.append(e['to']['graph']); xlinks.append((a, f"{e['to']['graph']}/{e['to']['node']}", e['kind'], e.get('lockedUntilQuest')))
                     continue
                 b = f"{g['id']}/{e['to']}"; k = f"{g['id']}/{e['id']}"
                 self.E[k] = dict(e, key=k, a=a, b=b, level=g.get('level', 0), graph=g['id']); self.adj[a].append((k, b))
                 if e['kind'] != 'oneway': self.adj[b].append((k, a))
             for ev in g.get('events', []): self.EV[f"{g['id']}/{ev['node']}"].append(ev)
-        for a, b, kind in xlinks:
+        for a, b, kind, lq in xlinks:
             ek = 'link:' + '|'.join(sorted((a, b)))
+            if lq: self.locks[ek] = lq
             if ek in self.E or b not in self.N: continue
             self.E[ek] = dict(id=ek, key=ek, a=a, b=b, danger=0, steps=1, kind=kind, level=0, graph=a.split('/')[0]); self.adj[a].append((ek, b)); self.adj[b].append((ek, a))
         self.entry = entry_node(t, rid)
@@ -286,15 +287,22 @@ class Realm:
             e['p'] = 0.0 if e['safe'] else rate(e['danger'], e['level'])
             nb, na = self.N.get(e['b']), self.N.get(e['a'])
             e['pool'] = (nb or {}).get('zone') or (na or {}).get('zone')   # engine edgeZone(): the to-node's zone, else the from-node's
+        for k, n in self.N.items():   # a locked node: every edge into it is closed until its quest is done
+            if n.get('lockedUntilQuest'):
+                for ek, _ in self.adj[k]: self.locks[ek] = n['lockedUntilQuest']
         self._path = {}; self._bl = {}
+    def closed(self):
+        """Jack 2026-10-11: the quest locks still closed (their quest not completed yet). Empty for every converted map."""
+        return frozenset(e for e, q in self.locks.items() if q not in self.quest_done) if self.locks else frozenset()
     def blocked(self, zi):
         if zi not in self._bl:
             b = set()   # an undefeated boss (current or later location) blocks every edge through its node; beaten bosses are open
             for z in self.zones[zi:]: b |= {k for k, _ in self.adj[z['boss']]}
             self._bl[zi] = b
-        return self._bl[zi]
+        cl = self.closed()
+        return self._bl[zi] | cl if cl else self._bl[zi]
     def path(self, a, b, zi):
-        key = (a, b, zi)
+        key = (a, b, zi, self.closed())
         if key in self._path: return self._path[key]
         bl = self.blocked(zi); prev = {a: None}; q = collections.deque([a])
         while q:
@@ -316,7 +324,7 @@ def entry_node(t, rid=None):
     if START is None: return f"{rid}/{GRAPHS[rid]['entry']}"
     if GRAPHS[START['graph']].get('realm') == t: return f"{START['graph']}/{START['node']}"
     hits = [f"{e['to']['graph']}/{e['to']['node']}" for g in GRAPHS.values() if g.get('realm') != t for e in g['edges']
-            if isinstance(e['to'], dict) and GRAPHS.get(e['to']['graph'], {}).get('realm') == t and g.get('kind') == 'world']
+            if isinstance(e['to'], dict) and GRAPHS.get(e['to']['graph'], {}).get('realm') == t and g.get('realm') is None]   # from the pool-less world map (kind overworld since 2026-10-11)
     assert len(hits) == 1, (t, hits); return hits[0]
 def realm(t):
     if t not in REALMS: REALMS[t] = Realm(t)

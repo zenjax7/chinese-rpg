@@ -82,8 +82,7 @@
   "gearTier": 1,
   "difficulty": {
    "mcOptions": 3,
-   "reviewSlots": 0,
-   "pathFights": 8
+   "reviewSlots": 0
   },
   "enemiesPerBattle": [
    1,
@@ -128,7 +127,6 @@
    ],
    "hub": "village",
    "town": 1,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q1_carrot",
@@ -291,8 +289,7 @@
    "title": {
     "zh": "乌鸦树",
     "en": "Crow's tree"
-   },
-   "fog": "landmark"
+   }
   }
  ],
  "edges": [
@@ -388,10 +385,7 @@
     "graph": "clover_hills",
     "node": "c_gate"
    },
-   "kind": "portal",
-   "cond": {
-    "bossDefeated": "realm_1"
-   }
+   "kind": "portal"
   }
  ],
  "events": [
@@ -671,11 +665,6 @@
      "note": "Return to Farmer Li."
     }
    ],
-   "scenes": {
-    "offer": "sc_q1_bounty_offer",
-    "progress": "sc_q1_bounty_wait",
-    "turnIn": "sc_q1_bounty_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 8
@@ -782,11 +771,6 @@
      "note": "Existing story farmer_thanks (m_farm.3)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q1_hoe_offer",
-    "progress": "sc_q1_hoe_wait",
-    "turnIn": "sc_q1_hoe_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 7

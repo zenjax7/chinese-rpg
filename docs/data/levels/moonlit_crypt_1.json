@@ -94,8 +94,7 @@
   "gearTier": 6,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    3,
@@ -694,14 +693,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.2",
    "node": "story_1",
    "on": "enter",
@@ -791,11 +782,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_lost_dog_offer",
-    "progress": "sc_q6_lost_dog_wait",
-    "turnIn": "sc_q6_lost_dog_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5
@@ -897,11 +883,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_rattle_bones_offer",
-    "progress": "sc_q6_rattle_bones_wait",
-    "turnIn": "sc_q6_rattle_bones_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5

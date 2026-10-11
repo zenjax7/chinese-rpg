@@ -11,8 +11,13 @@
       before each location boss, per dataset and mode).
   python docs/tech/tools/sim/run_world_sim.py ci [--seeds 4]
       fast checks (~10 s): engine RNG test vectors, spells table = docs/data/json/spells_full.json, determinism (same seed twice),
-      the transform runs, docs/data/levels (level/0.2 maps) runs identically to world + transform, the unlock order read from links
-      equals the old zone order, convert_levels.py --check, sane bands.
+      the transform runs, docs/data/levels (level/0.2 maps) runs and is deterministic, the sim's play order (gearTier, then link order)
+      equals the old zone order, no boss-gated link, the maps' world_rules.json, convert_levels.py --check, sane bands.
+  python docs/tech/tools/sim/run_world_sim.py simplify [--seeds 100]
+      Jack's section-9 rulings (2026-10-11): v3.9.1 | the previous maps run (sim_world_maps.csv, read, not re-run) | docs/data/levels now
+      (open links, no patrols / budget / pity, walked x0.5, every eligible arrival event) -> sim_world_maps_simplified.csv +
+      sim_world_maps_simplified_boss_approach.csv. --difficulty also runs the report-only difficulty options -> sim_world_difficulty_options.csv
+      (--only-difficulty: just those).
   python docs/tech/tools/sim/run_world_sim.py maps [--seeds 100]
       v3.9.1 (data + rules) vs the conversion alone (v3.9.1 rules) vs docs/data/levels with Jack's rules (no boss checkpoint, no random or
       scripted elites), 6 profiles x beeline/explore -> sim_world_maps.csv + sim_world_maps_boss_approach.csv (2026-10-11).
@@ -132,6 +137,57 @@ def maps(a):
         print(f"{key[0]:24s} {key[1]:8s} h {b['h']:6.2f} conv {c['h']:6.2f} ({c['h']-b['h']:+.2f}) maps {x['h']:6.2f} ({x['h']-b['h']:+.2f}, {100*(x['h']/b['h']-1):+.1f}%)  defeats {b['defeats']:5.1f} conv {c['defeats']:5.1f} ({c['defeats']-b['defeats']:+.1f}) maps {x['defeats']:5.1f} ({x['defeats']-b['defeats']:+.1f})")
     write('sim_world_maps.csv', rows); write('sim_world_maps_boss_approach.csv', prow); return 0
 
+# report-only difficulty options (2026-10-11, NOT in the spec): existing knobs only
+DIFFICULTY = [('A boss HP x1.3 + boss ATK x1.0', dict(boss_hp_scale=1.3, boss_atk={'locboss': 1.0, 'realmboss': 1.0})),
+              ('B normal enemy ATK x1.1', dict(enemy_atk_mult=1.1)),
+              ('C encounter rate x1.3', dict(rate_mult=1.3)),
+              ('D spell MP cost x1.5', dict(k_mult=1.5)),
+              ('A+B', dict(boss_hp_scale=1.3, boss_atk={'locboss': 1.0, 'realmboss': 1.0}, enemy_atk_mult=1.1))]
+# one removed rule put back at a time on today's maps (attribution of the delta vs the previous maps run)
+ATTRIB = [('+ patrols (v3.9.1 approach rule)', dict(patrols=True)), ('+ walked x0.05', dict(cleared_mult=0.05)),
+          ('+ budget 8 / x0.1 + pity 2', dict(budget=8, budget_mult=0.1, pity_rolls=2))]
+
+def simplify(a):
+    """Jack's section-9 rulings: v3.9.1 vs the previous maps run (sim_world_maps.csv) vs docs/data/levels now."""
+    if a.only_difficulty: return difficulty(a, run(dict(source='levels'), a.seeds))
+    d = v391_dir(a.v391); prev = {(r['profile'], r['mode']): r for r in csv.DictReader(open(os.path.join(SIM_OUT, 'sim_world_maps.csv')))}
+    t0 = time.time(); B = run(v391_cfg(d), a.seeds, V391); N = run(dict(source='levels'), a.seeds); print(f'base runs {time.time()-t0:.0f}s')
+    AT = {lab: run(dict(source='levels'), a.seeds, ex) for lab, ex in ATTRIB}
+    rows = []; prow = []
+    for key, b in B.items():
+        x = N[key]; p = prev[key]; ph, pd = float(p['hours_maps']), float(p['defeats_maps'])
+        r = dict(profile=key[0], mode=key[1], seeds=a.seeds, hours_v391=round(b['h'], 2), hours_prev_maps=ph, hours_now=round(x['h'], 2),
+                 hours_delta_v391=round(x['h'] - b['h'], 2), hours_delta_v391_pct=round(100*(x['h']/b['h'] - 1), 1), hours_delta_prev=round(x['h'] - ph, 2), hours_delta_prev_pct=round(100*(x['h']/ph - 1), 1),
+                 defeats_v391=round(b['defeats'], 1), defeats_prev_maps=pd, defeats_now=round(x['defeats'], 1), defeats_delta_v391=round(x['defeats'] - b['defeats'], 1), defeats_delta_prev=round(x['defeats'] - pd, 1),
+                 battles_loc_v391=round(b['battles_loc'], 2), battles_loc_prev=float(p['battles_zone_maps']), battles_loc_now=round(x['battles_loc'], 2),
+                 patrols_loc_now=round(x['patrols'], 2), boss_first_wins_now=round(x['boss_first'], 3))
+        for lab, R in AT.items(): r[f'hours {lab}'] = round(R[key]['h'], 2); r[f'defeats {lab}'] = round(R[key]['defeats'], 1)
+        rows.append(r)
+        for name, R in (('v391', B), ('now', N)):
+            for loc, v in R[key]['pre'].items():
+                prow.append(dict(profile=key[0], mode=key[1], data=name, location=loc, boss=v['kind'], own_random=round(v['rand'], 2), patrols=round(v['patrol'], 2), all_before_boss=round(v['all'], 2)))
+        print(f"{key[0]:24s} {key[1]:8s} h v391 {b['h']:6.2f} prev {ph:6.2f} now {x['h']:6.2f} ({x['h']-b['h']:+.2f} / {x['h']-ph:+.2f})  defeats {b['defeats']:5.1f} {pd:5.1f} {x['defeats']:5.1f}  bat/loc {x['battles_loc']:.1f}")
+    write('sim_world_maps_simplified.csv', rows); write('sim_world_maps_simplified_boss_approach.csv', prow)
+    import boss_skips; sk = boss_skips.analyse(); keys = list(dict.fromkeys(k for r in sk for k in r))
+    with open(os.path.join(SIM_OUT, 'sim_world_boss_skips.csv'), 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=keys, lineterminator='\n'); w.writeheader(); w.writerows(sk)
+    print('wrote docs/data/sim/sim_world_boss_skips.csv')
+    if a.difficulty: difficulty(a, N)
+    return 0
+
+def difficulty(a, N):
+    if True:
+        drows = []
+        for lab, ex in DIFFICULTY:
+            R = run(dict(source='levels'), a.seeds, ex)
+            for key, x in R.items():
+                n = N[key]; drows.append(dict(option=lab, profile=key[0], mode=key[1], seeds=a.seeds, hours=round(x['h'], 2), hours_now=round(n['h'], 2), hours_delta=round(x['h'] - n['h'], 2),
+                                              defeats=round(x['defeats'], 1), defeats_now=round(n['defeats'], 1), defeats_delta=round(x['defeats'] - n['defeats'], 1),
+                                              boss_first_wins=round(x['boss_first'], 3), boss_first_wins_now=round(n['boss_first'], 3), battles_loc=round(x['battles_loc'], 2)))
+            print(lab, 'done')
+        write('sim_world_difficulty_options.csv', drows)
+    return 0
+
 def ci(a):
     fails = []
     def check(name, ok, info=''):
@@ -148,25 +204,38 @@ def ci(a):
     pr = one(dict(source='world', transform='levels_proposal')); check('levels_proposal runs', pr['total_minutes'] > 0, str(sig(pr)))
     # the converted maps (docs/data/levels, level/0.2) run exactly like today's data + the transform, and a fresh conversion matches them
     if os.path.exists(os.path.join(WG.LEVELS_DIR, 'index.json')):
-        lv = one(dict(source='levels')); check('docs/data/levels run = world + levels_proposal', sig(lv) == sig(pr), f'{sig(lv)} vs {sig(pr)}')
-        lx = one(dict(source='levels'), mode='explore', kid='spender'); px = one(dict(source='world', transform='levels_proposal'), mode='explore', kid='spender')
-        check('  same in explore (50% spender)', sig(lx) == sig(px), f'{sig(lx)} vs {sig(px)}')
+        # (until 2026-10-11 the maps ran identically to world + levels_proposal; Jack's section-9 rulings -- open links, no budget/pity/patrols,
+        # walked x0.5, no filler events -- make them differ on purpose, so that check is gone; convert_levels --check below covers drift)
+        lv = one(dict(source='levels')); lv2 = one(dict(source='levels')); check('docs/data/levels runs, deterministic', lv['total_minutes'] > 0 and sig(lv) == sig(lv2), str(sig(lv)))
+        lx = one(dict(source='levels'), mode='explore', kid='spender'); check('  explore (50% spender) runs', lx['total_minutes'] > 0, str(sig(lx)))
         WG.configure(dict(source='levels'))
-        zw = [z['id'] for z in WG.ZONES]; WG.configure(dict(source='world', transform='levels_proposal'))
-        check('unlock order from links = zones.json order', zw == [z['bossNode']['graph'] for z in sorted(WG.ZONES, key=lambda z: (z['realm'], z['order']))], ', '.join(zw))
+        zw = [(z['realm'], z['id']) for z in sorted(WG.ZONES, key=lambda z: (z['realm'], z['order']))]; WG.configure(dict(source='world', transform='levels_proposal'))
+        check('sim play order (gearTier, then link order) = zones.json order', [m for _, m in zw] == [z['bossNode']['graph'] for z in sorted(WG.ZONES, key=lambda z: (z['realm'], z['order']))], ', '.join(m for _, m in zw))
+        lm = {m['id']: m for m in (json.load(open(f)) for f in glob.glob(os.path.join(WG.LEVELS_DIR, '*.json'))) if m.get('schema') == 'level/0.2'}
+        gated = [f"{m['id']}/{e['id']}" for m in lm.values() for e in m['edges'] if 'bossDefeated' in json.dumps(e.get('cond'))]
+        check('no boss-gated link (Jack 2026-10-11: progression purely by links)', not gated, ','.join(gated[:6]))
         maps = [json.load(open(f)) for f in glob.glob(os.path.join(WG.LEVELS_DIR, '*.json'))]
         bad = [m['id'] for m in maps if m.get('schema') == 'level/0.2' and m['settings'].get('G') and m['settings']['G'] != C.gold_per_enemy(m['settings']['gearTier'])]
         check('settings.G = the sim tier table', not bad, ','.join(bad))
         r = subprocess.run([sys.executable, os.path.join(HERE, '..', 'levels', 'convert_levels.py'), '--check'], capture_output=True, text=True)
         check('convert_levels --check (docs/data/levels up to date)', r.returncode == 0, (r.stdout + r.stderr).strip()[-200:])
+    # quest locks (Jack 2026-10-11): no converted map has one, so lock a realm-1 edge on the main route in memory and check the routing
+    WG.configure(dict(source='levels')); WG.REALMS.clear(); T = WG.realm(1); z = T.zones[0]; p0 = T.path(T.entry, z['approach'], 0)
+    lk = p0[len(p0)//2][0]; T.locks = {lk: 'q1_test_lock'}; T._path.clear(); T.quest_done = set(); p1 = T.path(T.entry, z['approach'], 0)
+    T.quest_done = {'q1_test_lock'}; p2 = T.path(T.entry, z['approach'], 0); WG.REALMS.clear()
+    check('sim honours lockedUntilQuest (closed: route avoids it; quest done: shortest route again)', (p1 is None or lk not in [e for e, _ in p1]) and p2 == p0, f'{lk}: {len(p0)} / {p1 and len(p1)} / {len(p2)} hops')
     en = one(dict(source='world', transform='levels_proposal'), ENGINE); check('engine switches run', en['total_minutes'] > 0, str(sig(en)))
     jr = one(dict(source='world'), None, p=0.5, kid='spender'); vr = one(dict(source='world'), V391, p=0.5, kid='spender')
-    check("Jack's 2026-10-11 rules are the default (no boss checkpoint, no random/scripted elites; differs from v391_rules)", sig(jr) != sig(vr), f'{sig(jr)} vs {sig(vr)}')
+    check("Jack's 2026-10-11 rules are the default (no boss checkpoint, no random/scripted elites, no patrols; differs from v391_rules)", sig(jr) != sig(vr), f'{sig(jr)} vs {sig(vr)}')
+    if os.path.exists(os.path.join(WG.LEVELS_DIR, 'world_rules.json')):
+        lr = json.load(open(os.path.join(WG.LEVELS_DIR, 'world_rules.json')))
+        left = [k for k in ('zoneBattleBudget', 'budgetSpentMult', 'pityRolls', 'beelineBattleTarget', 'beelineBattleRange') if k in lr]
+        check('levels world_rules: no budget / pity / beeline target, walked x0.5 (Jack 2026-10-11)', not left and lr.get('clearedStepMult') == 0.5, ','.join(left))
     t0 = time.time(); R = run(dict(source='world'), a.seeds); dt = time.time() - t0
     for k, x in R.items(): check(f'band {k[0]} {k[1]}', 10 < x['h'] < 45 and 0 <= x['defeats'] < 150 and 5 < x['battles_loc'] < 40, f"h {x['h']:.2f} defeats {x['defeats']:.1f} bat/loc {x['battles_loc']:.1f}")
     print(f'{len(fails)} failures, {dt:.0f}s for {a.seeds} seeds x {len(R)} configs'); return len(fails)
 
 if __name__ == '__main__':
-    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391')
+    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'simplify', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391'); ap.add_argument('--difficulty', action='store_true'); ap.add_argument('--only-difficulty', action='store_true')
     a = ap.parse_args(); a.seeds = a.seeds or (4 if a.what == 'ci' else 100)
-    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'ci': ci}[a.what](a) else 0)
+    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'simplify': simplify, 'ci': ci}[a.what](a) else 0)

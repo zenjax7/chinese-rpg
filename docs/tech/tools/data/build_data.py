@@ -216,11 +216,7 @@ rows = [
     ('keep_proficient_when_speech_added', 'yes', '', 'items proficient under 2 ways stay proficient; spoken ways still get scheduled'),
     ('nomatch_counts_as', 'wrong', '', 'heard speech but no words = graded wrong'),
     ('practice_credit_cap_per_way', 1, 'correct answers', 'Preview practice can supply at most 1 of the 2 correct answers per way'),
-    ('boss_trigger_speech', 0.20, 'share of the location pool proficient', 'patrols spawn while below; Director’s call v3.1 (was 0.25)'),
-    ('boss_trigger_no_speech', 0.40, 'share of the location pool proficient', ''),
     ('readiness_denominator', 'location pool only', '', 'carried-over items are still practiced but not counted (was local + carry-over)'),
-    ('forced_patrols_per_trip', 2, 'fights', 'each walk to the boss gate while below the trigger'),
-    ('path_fights', 8, 'fights', 'scripted fights per location before the boss approach (was 6)'),
     ('set_size', 7, 'items', ''), ('working_set', 10, 'items', ''), ('new_cap', 3, 'items per battle', 'hard cap, also early in a location (v3.2, was 4); a short set is never padded with unseen items'),
     ('tired_at_questions_normal', 30, 'questions', 'normal battles, elites included'),
     ('tired_at_questions_boss', 45, 'questions', 'location and realm bosses (v3.2: location boss was 40)'),
@@ -231,7 +227,7 @@ rows = [
     ('leitner_intervals', '0, 10 min, 1 d, 3 d, 7 d, 16 d, 35 d', '', 'wrong = −2 boxes; scheduling only'),
     ('sec_per_battle_question', 9.2, 's', 'sim estimate'), ('sec_per_practice_question', 5.0, 's', 'sim estimate'),
 ]
-emit('proficiency_patrol_settings', ['key', 'value', 'unit', 'notes'], rows)
+emit('proficiency_patrol_settings', ['key', 'value', 'unit', 'notes'], rows)   # 2026-10-11 (Jack): no trigger, no forced patrols, no path-fight target
 
 # ---------- companion ----------
 rows = [('gauge_full', 100, 'points', ''), ('gain_per_wrong', 20, 'points', 'any graded wrong answer (attack or block)'),

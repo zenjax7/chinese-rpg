@@ -93,8 +93,7 @@
   "gearTier": 7,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -737,14 +736,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "deadend_1.1",
    "node": "deadend_1",
    "on": "enter",
@@ -796,14 +787,6 @@
      "setFlag": "cloud_caves_1.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_1.2",
@@ -862,14 +845,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_4.1",
@@ -952,14 +927,6 @@
    ]
   },
   {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_7.1",
    "node": "path_7",
    "on": "enter",
@@ -1018,14 +985,6 @@
    ]
   },
   {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_5.1",
    "node": "treasure_5",
    "on": "enter",
@@ -1036,14 +995,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_8.1",
