@@ -220,8 +220,6 @@ rows = [
     ('boss_trigger_no_speech', 0.40, 'share of the location pool proficient', ''),
     ('readiness_denominator', 'location pool only', '', 'carried-over items are still practiced but not counted (was local + carry-over)'),
     ('forced_patrols_per_trip', 2, 'fights', 'each walk to the boss gate while below the trigger'),
-    ('elite_patrol_chance', 0.10, 'per patrol', 'one normal enemy is replaced by the location elite'),
-    ('scripted_elites_per_realm', 1, 'fights', 'middle path fight of the elite’s home location'),
     ('path_fights', 8, 'fights', 'scripted fights per location before the boss approach (was 6)'),
     ('set_size', 7, 'items', ''), ('working_set', 10, 'items', ''), ('new_cap', 3, 'items per battle', 'hard cap, also early in a location (v3.2, was 4); a short set is never padded with unseen items'),
     ('tired_at_questions_normal', 30, 'questions', 'normal battles, elites included'),
@@ -253,9 +251,8 @@ rows = [(1, 'pity_inn', 'If gold < inn price, the inn stay is free'),
         (4, 'starter_and_broke_potion', '1 Honey Potion at the start; after a defeat or pity stay with 0 potions and gold < inn, get 1 free'),
         (5, 'courage', '+20% DEF per consecutive defeat (max +60%), cleared by a win'),
         (6, 'minimum_payout', 'Enemy gold never below 80% of base; every defeated enemy pays'),
-        (7, 'boss_checkpoint', 'After the boss drops below 50% HP, retries start there (save only, no heal)'),
         (8, 'companion_team_attack', 'Friendship gauge fills faster on wrong answers (see companion table)')]
-emit('safety_nets', ['id', 'net', 'rule'], rows)
+emit('safety_nets', ['id', 'net', 'rule'], rows)   # 2026-10-11 (Jack): net 7 boss_checkpoint removed (no boss retry mechanic); ids kept
 
 # ---------- special mechanics ----------
 sp = parse_md(f'{SIM}/v3_specials.txt')

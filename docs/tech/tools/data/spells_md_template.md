@@ -161,7 +161,7 @@ One boss fight from full HP and full MP at the recommended level, with full gear
 
 {{BOSSCHECK}}
 
-The same numbers are in `data/boss_hp.csv` (spec §2.3). "50%: win" is a single fight with no retry; in the campaign, bosses also have the 50% checkpoint and retries.
+The same numbers are in `data/boss_hp.csv` (spec §2.3). "50%: win" is a single fight with no retry; in the campaign, bosses also have retries (v3.x tables also had the 50% checkpoint, removed Jack, 2026-10-11: a retry starts at full HP).
 
 ### 7.2 Key comparison, v3.6 → v3.7
 

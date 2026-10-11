@@ -108,7 +108,7 @@ Target a success rate that feels good but not trivial. The ~80% band is a common
 - **Show the correct answer immediately**, with audio, pinyin, and a one-line mnemonic, delivered by a companion in character (Miitopia-style personality: the Kind friend says "It's 餓, hungry! The 食 side is food!"). Prodigy also shows the correct answer after a mistake ([Prodigy](https://www.prodigygame.com/main-en/blog/is-prodigy-math-adaptive)).
 - **Partial effect, not zero.** A miss produces a "fizzle" (small chip damage or none) rather than a self-hit. The enemy still takes its normal turn, which is the natural stake.
 - **Companion assist meter.** Misses fill a "Friendship" gauge, and when it's full an ally performs a free team attack. Mistakes feed the relationship system instead of shaming the player.
-- **No hard fail state.** At 0 HP the party "retreats to the inn" with all XP and items kept, and the missed words get queued for review. Bosses get a checkpoint between phases.
+- **No hard fail state.** At 0 HP the party "retreats to the inn" with all XP and items kept, and the missed words get queued for review. ~~Bosses get a checkpoint between phases.~~ (Jack, 2026-10-11: no boss retry mechanic; a lost boss fight restarts fresh.)
 - **Hint tokens.** Remove one wrong option. They're earned through play and never sold.
 
 ---

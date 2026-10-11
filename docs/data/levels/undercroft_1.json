@@ -1,0 +1,1055 @@
+{
+ "schema": "level/0.2",
+ "id": "undercroft_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "undercroft",
+ "level": 1,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "角斗场地下 第1层",
+  "en": "Colosseum Undercroft - level 1"
+ },
+ "entry": "entry_gate",
+ "aspect": 2.117,
+ "settings": {
+  "title": {
+   "en": "Grand Colosseum",
+   "zh": "大角斗场"
+  },
+  "emoji": "🏟️",
+  "background": {
+   "map": "bg_map_undercroft_1",
+   "battle": "bg_battle_r8"
+  },
+  "desyPool": "L8.2",
+  "words": [
+   "C973",
+   "C974",
+   "C975",
+   "C976",
+   "C977",
+   "C978",
+   "C979",
+   "C980",
+   "C981",
+   "C509",
+   "C510",
+   "C511",
+   "C512",
+   "C513",
+   "C514",
+   "C515",
+   "C516",
+   "C517",
+   "C518",
+   "C519",
+   "C520",
+   "C521",
+   "C522",
+   "C523",
+   "C524",
+   "C525",
+   "C526",
+   "C527",
+   "C528",
+   "C529",
+   "C530",
+   "C531",
+   "C532",
+   "C533",
+   "C534",
+   "C535",
+   "C536",
+   "C537",
+   "C538",
+   "C982",
+   "C983",
+   "C984",
+   "C985",
+   "C986",
+   "C987",
+   "C988",
+   "C989",
+   "C990",
+   "C991",
+   "C992",
+   "C993",
+   "C994"
+  ],
+  "G": 63,
+  "recLevel": [
+   19,
+   22
+  ],
+  "gearTier": 8,
+  "difficulty": {
+   "mcOptions": 6,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "arena_troll",
+    "weight": 1
+   },
+   {
+    "enemy": "ogre_gladiator",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.4097,
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.59,
+   "y": 0.229,
+   "title": {
+    "zh": "小路",
+    "en": "Grand Colosseum path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 0.77,
+   "y": 0.05,
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.1995,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 7,
+   "kind": "story",
+   "x": 0.41,
+   "y": 0.5903,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 8,
+   "kind": "npc",
+   "x": 0.59,
+   "y": 0.4097,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "npc_2",
+   "idx": 9,
+   "kind": "npc",
+   "x": 0.59,
+   "y": 0.5903,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q8_singer_escort",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_2.1",
+        "node": "npc_2",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q8_singer_escort"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q8_singer_escort_offer"
+     },
+     "in": {
+      "scene": "sc_q8_singer_escort_wait"
+     },
+     "post": {
+      "scene": "sc_q8_singer_escort_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc_3",
+   "idx": 10,
+   "kind": "inn",
+   "x": 0.77,
+   "y": 0.3505,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_2",
+   "idx": 11,
+   "kind": "story",
+   "x": 0.77,
+   "y": 0.5,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "npc_4",
+   "idx": 12,
+   "kind": "npc",
+   "x": 0.77,
+   "y": 0.6495,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 13,
+   "kind": "chest",
+   "x": 0.77,
+   "y": 0.8005,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 14,
+   "kind": "inn",
+   "x": 0.59,
+   "y": 0.771,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "npc_5",
+   "idx": 15,
+   "kind": "npc",
+   "x": 0.77,
+   "y": 0.95,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  },
+  {
+   "id": "entry_gate",
+   "idx": 16,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5,
+   "quests": [
+    {
+     "quest": "q8_fan_letters",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "portal_1.1",
+        "node": "entry_gate",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q8_fan_letters"
+        },
+        "do": [
+         {
+          "scene": "sc_undercroft_1__realm_8_portal_1_step_q8_fan_letters"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "undercroft_2",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "path_4",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "path_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "story_1",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "story_1",
+   "to": "npc_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "npc_1",
+   "to": "npc_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "path_3",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e12",
+   "from": "npc_1",
+   "to": "npc_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "npc_2",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "path_2",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e15",
+   "from": "path_5",
+   "to": "npc_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 16
+  },
+  {
+   "id": "e11_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 17,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 18,
+   "from": "entry_gate",
+   "to": {
+    "graph": "realm_8",
+    "node": "boss_1"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_undercroft_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_undercroft_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_undercroft_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_undercroft_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__undercroft_1_story_1"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.1",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__undercroft_1_npc_1_banter"
+    }
+   ]
+  },
+  {
+   "id": "npc_2.2",
+   "node": "npc_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__undercroft_1_story_2"
+    }
+   ]
+  },
+  {
+   "id": "npc_4.1",
+   "node": "npc_4",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__undercroft_1_npc_4_banter"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_5.1",
+   "node": "npc_5",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_undercroft_1__undercroft_1_npc_5_banter"
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q8_singer_escort",
+   "story": "main",
+   "type": "escort",
+   "title": {
+    "zh": "开幕歌手",
+    "en": "The Opening Song"
+   },
+   "giver": {
+    "npc": "singer_meimei",
+    "graph": "undercroft_1",
+    "node": "npc_2"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "auto",
+   "returnToGiver": false,
+   "requires": {
+    "bossDefeated": "realm_8"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "singer_meimei"
+     },
+     "where": {
+      "graph": "undercroft_1",
+      "node": "npc_2"
+     },
+     "note": "The anthem singer is lost under the stands; the final can't start without her."
+    },
+    {
+     "id": "s2",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "ogre_gladiator",
+       "fire_elemental"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "undercroft_2",
+      "node": "miniboss_1"
+     },
+     "note": "Pipi's hired hecklers."
+    },
+    {
+     "id": "s3",
+     "event": "edge_battle",
+     "objective": {
+      "type": "escort",
+      "npc": "singer_meimei",
+      "to": {
+       "graph": "undercroft_3",
+       "node": "story_1"
+      }
+     },
+     "where": {
+      "maps": [
+       "undercroft_1",
+       "undercroft_2",
+       "undercroft_3"
+      ]
+     }
+    },
+    {
+     "id": "s4",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "undercroft_3",
+      "node": "story_1"
+     },
+     "note": "She sings; the crowd cheers 加油! (auto-complete)."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q8_singer_escort_offer",
+    "progress": "sc_q8_singer_escort_wait",
+    "turnIn": "sc_q8_singer_escort_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 6
+    },
+    "goldValue": 378,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 525,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 6.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C496",
+    "C972",
+    "C973",
+    "C966",
+    "C967",
+    "C523"
+   ],
+   "summary": "Lead the anthem singer through the Undercroft past Pipi's hecklers so the final can begin."
+  }
+ ],
+ "scenes": {
+  "sc_undercroft_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_undercroft_1__realm_8_portal_1_step_q8_fan_letters": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__realm_8_portal_1_step_q8_fan_letters",
+   "title": "realm_8.portal_1.step_q8_fan_letters",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q8_fan_letters: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_undercroft_1__undercroft_1_npc_1_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__undercroft_1_npc_1_banter",
+   "title": "undercroft_1.npc_1.banter",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_undercroft_1__undercroft_1_npc_4_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__undercroft_1_npc_4_banter",
+   "title": "undercroft_1.npc_4.banter",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_undercroft_1__undercroft_1_npc_5_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__undercroft_1_npc_5_banter",
+   "title": "undercroft_1.npc_5.banter",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(one-line ambient banter to write)"
+    }
+   ]
+  },
+  "sc_undercroft_1__undercroft_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__undercroft_1_story_1",
+   "title": "undercroft_1.story_1",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_undercroft_1__undercroft_1_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_1__undercroft_1_story_2",
+   "title": "undercroft_1.story_2",
+   "trigger": {
+    "graph": "undercroft_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

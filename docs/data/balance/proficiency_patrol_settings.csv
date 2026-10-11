@@ -9,8 +9,6 @@ boss_trigger_speech,0.2,share of the location pool proficient,patrols spawn whil
 boss_trigger_no_speech,0.4,share of the location pool proficient,
 readiness_denominator,location pool only,,carried-over items are still practiced but not counted (was local + carry-over)
 forced_patrols_per_trip,2,fights,each walk to the boss gate while below the trigger
-elite_patrol_chance,0.1,per patrol,one normal enemy is replaced by the location elite
-scripted_elites_per_realm,1,fights,middle path fight of the elite’s home location
 path_fights,8,fights,scripted fights per location before the boss approach (was 6)
 set_size,7,items,
 working_set,10,items,

@@ -1,0 +1,418 @@
+{
+ "schema": "level/0.2",
+ "id": "clover_hills",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "en": "Clover Hills",
+  "zh": "三叶草山坡"
+ },
+ "entry": "c_gate",
+ "aspect": 1.61,
+ "settings": {
+  "title": {
+   "en": "Clover Hills",
+   "zh": "三叶草山坡"
+  },
+  "desyPool": "L1.2",
+  "words": [
+   "C066",
+   "C067",
+   "C068",
+   "C069",
+   "C070",
+   "C071",
+   "C072",
+   "C073",
+   "C074",
+   "C075",
+   "C043",
+   "C044",
+   "C045",
+   "C046",
+   "C047",
+   "C048",
+   "C049",
+   "C050",
+   "C051",
+   "C052",
+   "C053",
+   "C054",
+   "C055",
+   "C056",
+   "C057",
+   "C058",
+   "C059",
+   "C060",
+   "C596",
+   "C061",
+   "C062",
+   "C063",
+   "C064",
+   "C065",
+   "C597",
+   "C598",
+   "C599",
+   "C600",
+   "C601",
+   "C602",
+   "C603",
+   "C604",
+   "C605",
+   "C606",
+   "C607",
+   "C608",
+   "C609"
+  ],
+  "G": 6,
+  "recLevel": [
+   1,
+   3
+  ],
+  "gearTier": 1,
+  "difficulty": {
+   "mcOptions": 3,
+   "reviewSlots": 1,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   1,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "horned_rabbit",
+    "weight": 3
+   },
+   {
+    "enemy": "mushroom_imp",
+    "weight": 2
+   },
+   {
+    "enemy": "wolf_pup",
+    "weight": 1
+   }
+  ],
+  "packs": {
+   "wolf_pup": 2
+  },
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "c_den",
+   "gateEdge": "g2",
+   "kind": "locboss",
+   "enemy": "big_grey_wolf"
+  }
+ },
+ "nodes": [
+  {
+   "id": "c_hills",
+   "idx": 0,
+   "kind": "waypoint",
+   "x": 0.7037,
+   "y": 0.4619,
+   "title": {
+    "zh": "三叶草山坡",
+    "en": "Clover Hills"
+   }
+  },
+  {
+   "id": "c_camp",
+   "idx": 1,
+   "kind": "inn",
+   "x": 0.7605,
+   "y": 0.6449,
+   "title": {
+    "zh": "半路营火",
+    "en": "Midpoint campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "c_ridge",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.8363,
+   "y": 0.3398,
+   "title": {
+    "zh": "风岭",
+    "en": "Windy ridge"
+   }
+  },
+  {
+   "id": "c_den",
+   "idx": 3,
+   "kind": "boss",
+   "x": 0.95,
+   "y": 0.2636,
+   "title": {
+    "zh": "狼窝",
+    "en": "Wolf den"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "c_gate",
+   "idx": 4,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "e8",
+   "from": "c_hills",
+   "to": "c_camp",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 0
+  },
+  {
+   "id": "e9",
+   "from": "c_hills",
+   "to": "c_ridge",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "grass",
+   "idx": 1
+  },
+  {
+   "id": "e10",
+   "from": "c_camp",
+   "to": "c_ridge",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "note": "loop past the campfire",
+   "idx": 2
+  },
+  {
+   "id": "g2",
+   "from": "c_ridge",
+   "to": "c_den",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 3
+  },
+  {
+   "id": "e7",
+   "kind": "path",
+   "danger": 2,
+   "steps": 5,
+   "terrain": "grass",
+   "idx": 4,
+   "from": "c_gate",
+   "to": "c_hills"
+  },
+  {
+   "id": "x_c_gate",
+   "idx": 5,
+   "from": "c_gate",
+   "to": {
+    "graph": "realm_1",
+    "node": "m_crow"
+   },
+   "kind": "portal"
+  },
+  {
+   "id": "x_c_den_warren",
+   "idx": 6,
+   "from": "c_den",
+   "to": {
+    "graph": "warren",
+    "node": "w_gate"
+   },
+   "kind": "portal",
+   "cond": {
+    "bossDefeated": "clover_hills"
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": "c_hills.1",
+   "node": "c_hills",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_clover_hills__clover_sign"
+    }
+   ]
+  },
+  {
+   "id": "c_hills.2",
+   "node": "c_hills",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_clover_hills__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c_camp.1",
+   "node": "c_camp",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_clover_hills__camp_welcome"
+    }
+   ]
+  },
+  {
+   "id": "c_ridge.1",
+   "node": "c_ridge",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_clover_hills__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_clover_hills__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_clover_hills__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "clover_hills",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_clover_hills__camp_welcome": {
+   "schema": "scene/0.2",
+   "id": "sc_clover_hills__camp_welcome",
+   "title": "camp_welcome",
+   "trigger": {
+    "graph": "clover_hills",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "innkeeper_panda",
+     "en": "Welcome to my campfire inn! Every inn's panda is my cousin, you know."
+    }
+   ]
+  },
+  "sc_clover_hills__clover_sign": {
+   "schema": "scene/0.2",
+   "id": "sc_clover_hills__clover_sign",
+   "title": "clover_sign",
+   "trigger": {
+    "graph": "clover_hills",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "The old sign counts the hills. Number {C066} is this one!",
+     "tokens": [
+      "C066"
+     ]
+    }
+   ]
+  }
+ },
+ "characters": [
+  "innkeeper_panda",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "innkeeper_panda": {
+   "name": {
+    "zh": "熊猫掌柜",
+    "en": "Panda innkeeper"
+   }
+  }
+ }
+}

@@ -30,11 +30,6 @@
   "rule": "Enemy gold never below 80% of base; every defeated enemy pays"
  },
  {
-  "id": 7,
-  "net": "boss_checkpoint",
-  "rule": "After the boss drops below 50% HP, retries start there (save only, no heal)"
- },
- {
   "id": 8,
   "net": "companion_team_attack",
   "rule": "Friendship gauge fills faster on wrong answers (see companion table)"

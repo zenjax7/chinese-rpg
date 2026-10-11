@@ -5,5 +5,4 @@
 4,starter_and_broke_potion,"1 Honey Potion at the start; after a defeat or pity stay with 0 potions and gold < inn, get 1 free"
 5,courage,"+20% DEF per consecutive defeat (max +60%), cleared by a win"
 6,minimum_payout,Enemy gold never below 80% of base; every defeated enemy pays
-7,boss_checkpoint,"After the boss drops below 50% HP, retries start there (save only, no heal)"
 8,companion_team_attack,Friendship gauge fills faster on wrong answers (see companion table)

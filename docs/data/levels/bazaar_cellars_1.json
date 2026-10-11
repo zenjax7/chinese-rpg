@@ -1,0 +1,1037 @@
+{
+ "schema": "level/0.2",
+ "id": "bazaar_cellars_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "bazaar_cellars",
+ "level": 1,
+ "levels": 1,
+ "optional": false,
+ "title": {
+  "zh": "夜市地窖 第1层",
+  "en": "Bazaar Cellars - level 1"
+ },
+ "entry": "entry_gate",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Night Bazaar",
+   "zh": "夜市"
+  },
+  "emoji": "🛒",
+  "background": {
+   "map": "bg_map_bazaar_cellars_1",
+   "battle": "bg_battle_r3"
+  },
+  "desyPool": "L3.2",
+  "words": [
+   "C195",
+   "C196",
+   "C197",
+   "C198",
+   "C684",
+   "C685",
+   "C199",
+   "C200",
+   "C201",
+   "C202",
+   "C203",
+   "C204",
+   "C686",
+   "C687",
+   "C688",
+   "C689",
+   "C690",
+   "C205",
+   "C206",
+   "C207",
+   "C208",
+   "C209",
+   "C210",
+   "C211",
+   "C212",
+   "C691",
+   "C692",
+   "C693",
+   "C694",
+   "C695",
+   "C696",
+   "C697",
+   "C698",
+   "C699",
+   "C700",
+   "C701",
+   "C702",
+   "C703",
+   "C704",
+   "C705",
+   "C706",
+   "C707",
+   "C708",
+   "C709",
+   "C710",
+   "C711",
+   "C377",
+   "C345",
+   "C346",
+   "C347",
+   "C348",
+   "C355",
+   "C423"
+  ],
+  "G": 18,
+  "recLevel": [
+   5,
+   7
+  ],
+  "gearTier": 3,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "road_bandit",
+    "weight": 1
+   },
+   {
+    "enemy": "slime",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "boss_3",
+   "gateEdge": "e5",
+   "kind": "realmboss",
+   "enemy": "mimic_king",
+   "reward": {
+    "heroic": "shield_t3_heroic",
+    "zh": "宝箱盾",
+    "en": "Mimic Shield",
+    "effect": "Thorns 25%",
+    "text": "Mimic Shield 宝箱盾 is yours!"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.35,
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.59,
+   "y": 0.35,
+   "title": {
+    "zh": "小路",
+    "en": "Night Bazaar path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.77,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_3",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.95,
+   "y": 0.05,
+   "title": {
+    "zh": "宝箱怪王",
+    "en": "Mimic King"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "treasure_1",
+   "idx": 6,
+   "kind": "chest",
+   "x": 0.77,
+   "y": 0.35,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q3_lost_wallet",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "treasure_1.1",
+        "node": "treasure_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q3_lost_wallet"
+        },
+        "do": [
+         {
+          "scene": "sc_bazaar_cellars_1__bazaar_cellars_1_treasure_1_step_q3_lost_wallet"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_2",
+   "idx": 7,
+   "kind": "chest",
+   "x": 0.77,
+   "y": 0.65,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 8,
+   "kind": "npc",
+   "x": 0.41,
+   "y": 0.65,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q3_lost_wallet",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q3_lost_wallet"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q3_lost_wallet_offer"
+     },
+     "in": {
+      "scene": "sc_q3_lost_wallet_wait"
+     },
+     "post": {
+      "scene": "sc_q3_lost_wallet_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 9,
+   "kind": "miniboss",
+   "x": 0.95,
+   "y": 0.35,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q3_lost_wallet",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q3_lost_wallet"
+        },
+        "do": [
+         {
+          "scene": "sc_bazaar_cellars_1__bazaar_cellars_1_miniboss_1_step_q3_lost_wallet"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q3_lost_wallet",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 11,
+   "kind": "inn",
+   "x": 0.77,
+   "y": 0.95,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 12,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 13,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.95,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "entry_gate",
+   "idx": 14,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_3",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_1",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "treasure_2",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "npc_1",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_5",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "treasure_2",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e6_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 14,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 15,
+   "from": "entry_gate",
+   "to": {
+    "graph": "realm_3",
+    "node": "boss_1"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_bazaar_cellars_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_bazaar_cellars_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_bazaar_cellars_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "boss_3.1",
+   "node": "boss_3",
+   "on": "clear",
+   "once": true,
+   "outcome": "item",
+   "do": [
+    {
+     "giveItem": "feather",
+     "qty": 1
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.3",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_bazaar_cellars_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "mimic"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "bazaar_cellars_1.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_bazaar_cellars_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_bazaar_cellars_1__bazaar_cellars_1_story_1"
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_bazaar_cellars_1__bazaar_cellars_1_story_2"
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q3_lost_wallet",
+   "story": "side",
+   "type": "find",
+   "title": {
+    "zh": "钱包不见了",
+    "en": "The Wallet in the Cellar"
+   },
+   "giver": {
+    "npc": "grandpa_lantern",
+    "graph": "bazaar_cellars_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_lantern"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "npc_1"
+     },
+     "note": "An old lantern seller dropped his wallet down here."
+    },
+    {
+     "id": "s2",
+     "event": "treasure",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "treasure_1"
+     },
+     "note": "Decoy: a normal chest, but no wallet. 'Not this one!'"
+    },
+    {
+     "id": "s3",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "mimic",
+       "slime"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "miniboss_1"
+     },
+     "note": "A mimic swallowed the wallet."
+    },
+    {
+     "id": "s4",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "red_wallet",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "miniboss_1"
+     }
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_lantern",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "npc_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_lost_wallet_offer",
+    "progress": "sc_q3_lost_wallet_wait",
+    "turnIn": "sc_q3_lost_wallet_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 8
+    },
+    "goldValue": 144,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 120,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 9.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C668",
+    "C191",
+    "C205",
+    "C206",
+    "C693",
+    "C703"
+   ],
+   "summary": "Track the old lantern seller's red wallet to the mimic that swallowed it, and give it back."
+  }
+ ],
+ "scenes": {
+  "sc_bazaar_cellars_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_bazaar_cellars_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "bazaar_cellars_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_bazaar_cellars_1__bazaar_cellars_1_miniboss_1_step_q3_lost_wallet": {
+   "schema": "scene/0.2",
+   "id": "sc_bazaar_cellars_1__bazaar_cellars_1_miniboss_1_step_q3_lost_wallet",
+   "title": "bazaar_cellars_1.miniboss_1.step_q3_lost_wallet",
+   "trigger": {
+    "graph": "bazaar_cellars_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q3_lost_wallet: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_bazaar_cellars_1__bazaar_cellars_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_bazaar_cellars_1__bazaar_cellars_1_story_1",
+   "title": "bazaar_cellars_1.story_1",
+   "trigger": {
+    "graph": "bazaar_cellars_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_bazaar_cellars_1__bazaar_cellars_1_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_bazaar_cellars_1__bazaar_cellars_1_story_2",
+   "title": "bazaar_cellars_1.story_2",
+   "trigger": {
+    "graph": "bazaar_cellars_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_bazaar_cellars_1__bazaar_cellars_1_treasure_1_step_q3_lost_wallet": {
+   "schema": "scene/0.2",
+   "id": "sc_bazaar_cellars_1__bazaar_cellars_1_treasure_1_step_q3_lost_wallet",
+   "title": "bazaar_cellars_1.treasure_1.step_q3_lost_wallet",
+   "trigger": {
+    "graph": "bazaar_cellars_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q3_lost_wallet: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

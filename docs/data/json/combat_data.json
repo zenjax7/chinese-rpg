@@ -3451,18 +3451,6 @@
    "notes": "each walk to the boss gate while below the trigger"
   },
   {
-   "key": "elite_patrol_chance",
-   "value": 0.1,
-   "unit": "per patrol",
-   "notes": "one normal enemy is replaced by the location elite"
-  },
-  {
-   "key": "scripted_elites_per_realm",
-   "value": 1,
-   "unit": "fights",
-   "notes": "middle path fight of the elite’s home location"
-  },
-  {
    "key": "path_fights",
    "value": 8,
    "unit": "fights",
@@ -3651,11 +3639,6 @@
    "id": 6,
    "net": "minimum_payout",
    "rule": "Enemy gold never below 80% of base; every defeated enemy pays"
-  },
-  {
-   "id": 7,
-   "net": "boss_checkpoint",
-   "rule": "After the boss drops below 50% HP, retries start there (save only, no heal)"
   },
   {
    "id": 8,

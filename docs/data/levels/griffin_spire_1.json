@@ -1,0 +1,739 @@
+{
+ "schema": "level/0.2",
+ "id": "griffin_spire_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "griffin_spire",
+ "level": 1,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "狮鹫塔 第1层",
+  "en": "Griffin Spire - level 1"
+ },
+ "entry": "entry_gate",
+ "aspect": 10.545,
+ "settings": {
+  "title": {
+   "en": "Griffin Summit",
+   "zh": "狮鹫之巅"
+  },
+  "emoji": "🏔️",
+  "background": {
+   "map": "bg_map_griffin_spire_1",
+   "battle": "bg_battle_r7"
+  },
+  "desyPool": "L7.2",
+  "words": [
+   "C912",
+   "C913",
+   "C914",
+   "C915",
+   "C459",
+   "C460",
+   "C461",
+   "C462",
+   "C463",
+   "C464",
+   "C465",
+   "C466",
+   "C467",
+   "C468",
+   "C469",
+   "C916",
+   "C917",
+   "C918",
+   "C919",
+   "C920",
+   "C921",
+   "C922",
+   "C923",
+   "C470",
+   "C471",
+   "C472",
+   "C473",
+   "C474",
+   "C475",
+   "C476",
+   "C477",
+   "C478",
+   "C479",
+   "C480",
+   "C481",
+   "C482",
+   "C483",
+   "C484",
+   "C485",
+   "C486",
+   "C487",
+   "C924",
+   "C925",
+   "C926",
+   "C927",
+   "C928",
+   "C929",
+   "C930",
+   "C931",
+   "C932",
+   "C933",
+   "C934",
+   "C935",
+   "C936",
+   "C937",
+   "C938",
+   "C939",
+   "C940",
+   "C941"
+  ],
+  "G": 54,
+  "recLevel": [
+   16,
+   19
+  ],
+  "gearTier": 7,
+  "difficulty": {
+   "mcOptions": 5,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "harpy",
+    "weight": 1
+   },
+   {
+    "enemy": "griffin",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "stairs_2",
+   "idx": 4,
+   "kind": "stairs_down",
+   "x": 0.6497,
+   "y": 0.05,
+   "title": {
+    "zh": "下楼梯",
+    "en": "Stairs down"
+   }
+  },
+  {
+   "id": "path_4",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 6,
+   "kind": "inn",
+   "x": 0.8003,
+   "y": 0.05,
+   "title": {
+    "zh": "营火",
+    "en": "Campfire inn"
+   },
+   "campfire": true,
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "npc_1",
+   "idx": 7,
+   "kind": "npc",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_feathers",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q7_griffin_feathers"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q7_griffin_feathers_offer"
+     },
+     "in": {
+      "scene": "sc_q7_griffin_feathers_wait"
+     },
+     "post": {
+      "scene": "sc_q7_griffin_feathers_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "treasure_1",
+   "idx": 8,
+   "kind": "chest",
+   "x": 0.8003,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_feathers",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 9,
+   "kind": "story",
+   "x": 0.3503,
+   "y": 0.95,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "entry_gate",
+   "idx": 10,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_2",
+   "from": "stairs_2",
+   "kind": "stairs",
+   "to": {
+    "graph": "griffin_spire_2",
+    "node": "stairs_1"
+   },
+   "idx": 1
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "stairs_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e6",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e7",
+   "from": "path_5",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "path_1",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 11,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 12,
+   "from": "entry_gate",
+   "to": {
+    "graph": "realm_7",
+    "node": "boss_1"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_griffin_spire_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_griffin_spire_1__griffin_spire_1_story_1"
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q7_griffin_feathers",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "狮鹫羽毛",
+    "en": "Shed Griffin Feathers"
+   },
+   "giver": {
+    "npc": "yezi",
+    "graph": "griffin_spire_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_7"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi"
+     },
+     "where": {
+      "graph": "griffin_spire_1",
+      "node": "npc_1"
+     },
+     "note": "Yezi needs shed feathers (never plucked!) for elf arrows."
+    },
+    {
+     "id": "s2",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "griffin_feather",
+      "n": 3,
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "griffin_spire_1",
+      "node": "treasure_1",
+      "refs": [
+       "griffin_spire_1/treasure_1",
+       "griffin_spire_2/treasure_1",
+       "griffin_spire_2/deadend_1"
+      ]
+     },
+     "note": "3 feather nests on the Spire's side branches."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "griffin_spire_1",
+      "node": "npc_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q7_griffin_feathers_offer",
+    "progress": "sc_q7_griffin_feathers_wait",
+    "turnIn": "sc_q7_griffin_feathers_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 4
+    },
+    "goldValue": 216,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 270,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 5.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C941",
+    "C466",
+    "C482",
+    "C477",
+    "C924"
+   ],
+   "summary": "Pick up 3 shed griffin feathers from the Spire's nests for Yezi's elf arrows."
+  }
+ ],
+ "scenes": {
+  "sc_griffin_spire_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "griffin_spire_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_griffin_spire_1__griffin_spire_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_1__griffin_spire_1_story_1",
+   "title": "griffin_spire_1.story_1",
+   "trigger": {
+    "graph": "griffin_spire_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  }
+ }
+}

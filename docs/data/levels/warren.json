@@ -1,0 +1,719 @@
+{
+ "schema": "level/0.2",
+ "id": "warren",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "en": "Horned Rabbit Warren",
+  "zh": "角兔窝"
+ },
+ "entry": "w_gate",
+ "aspect": 1.61,
+ "settings": {
+  "title": {
+   "en": "Horned Rabbit Warren",
+   "zh": "角兔窝"
+  },
+  "desyPool": "L1.3",
+  "words": [
+   "C272",
+   "C273",
+   "C274",
+   "C275",
+   "C276",
+   "C277",
+   "C278",
+   "C282",
+   "C283",
+   "C610",
+   "C611",
+   "C612",
+   "C613",
+   "C614",
+   "C176",
+   "C182",
+   "C336",
+   "C337",
+   "C338",
+   "C339",
+   "C353",
+   "C615",
+   "C616",
+   "C300",
+   "C301",
+   "C303",
+   "C372",
+   "C373",
+   "C376",
+   "C454",
+   "C076",
+   "C077",
+   "C078",
+   "C079",
+   "C080",
+   "C081",
+   "C082",
+   "C083",
+   "C084",
+   "C085",
+   "C086",
+   "C087",
+   "C088",
+   "C089",
+   "C090",
+   "C617",
+   "C618",
+   "C619",
+   "C620",
+   "C092",
+   "C091"
+  ],
+  "G": 6,
+  "recLevel": [
+   1,
+   3
+  ],
+  "gearTier": 1,
+  "difficulty": {
+   "mcOptions": 3,
+   "reviewSlots": 1,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   1,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "horned_rabbit",
+    "weight": 3
+   },
+   {
+    "enemy": "wolf_pup",
+    "weight": 2
+   }
+  ],
+  "packs": {
+   "wolf_pup": 2
+  },
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "w_throne",
+   "gateEdge": "g3",
+   "kind": "realmboss",
+   "enemy": "horned_rabbit_king",
+   "reward": {
+    "skill": "shield",
+    "heroic": "horn_dagger",
+    "text": "You learned Guardian Shield 守护盾, and found the Rabbit-Horn Dagger 角兔角!"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "w_path",
+   "idx": 0,
+   "kind": "waypoint",
+   "x": 0.8553,
+   "y": 0.1415,
+   "title": {
+    "zh": "兔洞小路",
+    "en": "Burrow path"
+   },
+   "npc": "xiaoming",
+   "quests": [
+    {
+     "quest": "q1_carrot",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "w_path.1",
+        "node": "w_path",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q1_carrot"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q1_carrot_offer"
+     },
+     "in": {
+      "scene": "sc_q1_carrot_wait"
+     },
+     "post": {
+      "scene": "sc_q1_carrot_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "w_lake",
+   "idx": 1,
+   "kind": "chest",
+   "x": 0.7226,
+   "y": 0.05,
+   "title": {
+    "zh": "三叶湖",
+    "en": "Clover lake"
+   },
+   "quests": [
+    {
+     "quest": "q1_carrot",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "w_lake.1",
+        "node": "w_lake",
+        "on": "enter",
+        "once": true,
+        "outcome": "item",
+        "cond": {
+         "questActive": "q1_carrot"
+        },
+        "do": [
+         {
+          "giveItem": "golden_carrot",
+          "qty": 1,
+          "quest": "q1_carrot"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w_tunnel",
+   "idx": 2,
+   "kind": "fork",
+   "x": 0.6468,
+   "y": 0.1873,
+   "title": {
+    "zh": "兔窝隧道",
+    "en": "Warren tunnels"
+   }
+  },
+  {
+   "id": "w_nest",
+   "idx": 3,
+   "kind": "miniboss",
+   "x": 0.4953,
+   "y": 0.05,
+   "title": {
+    "zh": "小偷窝",
+    "en": "Thief's nest"
+   },
+   "quests": [
+    {
+     "quest": "q1_carrot",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "w_nest.1",
+        "node": "w_nest",
+        "on": "enter",
+        "once": true,
+        "outcome": "miniboss",
+        "do": [
+         {
+          "fight": {
+           "enemies": [
+            "swift_horned_rabbit",
+            "wolf_pup"
+           ],
+           "kind": "miniboss"
+          },
+          "quest": "q1_carrot"
+         },
+         {
+          "giveGold": {
+           "G": 2
+          }
+         },
+         {
+          "giveItem": "honey",
+          "qty": 1
+         },
+         {
+          "setFlag": "realm_1.thiefBeaten"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w_camp",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.4384,
+   "y": 0.2636,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "w_throne",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.3058,
+   "y": 0.3551,
+   "title": {
+    "zh": "角兔王座",
+    "en": "Rabbit King's throne"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "w_gate",
+   "idx": 6,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_w_throne",
+   "from": "w_throne",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_1"
+   },
+   "cond": {
+    "bossDefeated": "warren"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e12",
+   "from": "w_path",
+   "to": "w_lake",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 1
+  },
+  {
+   "id": "e13",
+   "from": "w_path",
+   "to": "w_tunnel",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e14",
+   "from": "w_tunnel",
+   "to": "w_nest",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e15",
+   "from": "w_tunnel",
+   "to": "w_camp",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "g3",
+   "from": "w_camp",
+   "to": "w_throne",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e11",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "grass",
+   "idx": 6,
+   "from": "w_gate",
+   "to": "w_path"
+  },
+  {
+   "id": "x_w_gate",
+   "idx": 7,
+   "from": "w_gate",
+   "to": {
+    "graph": "clover_hills",
+    "node": "c_den"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "w_path.2",
+   "node": "w_path",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_warren__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "w_lake.2",
+   "node": "w_lake",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "w_lake.3",
+   "node": "w_lake",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "w_tunnel.1",
+   "node": "w_tunnel",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_warren__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "w_nest.2",
+   "node": "w_nest",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_warren__thief_gone"
+    }
+   ]
+  },
+  {
+   "id": "w_camp.1",
+   "node": "w_camp",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_warren__king_warning"
+    }
+   ]
+  },
+  {
+   "id": "w_throne.1",
+   "node": "w_throne",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "bossDefeated": "warren"
+   },
+   "do": [
+    {
+     "scene": "sc_warren__king_beaten"
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q1_carrot",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "金萝卜",
+    "en": "The Golden Carrot Thief"
+   },
+   "giver": {
+    "npc": "xiaoming",
+    "graph": "warren",
+    "node": "w_path"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "xiaoming",
+    "graph": "realm_1",
+    "node": "village"
+   },
+   "returnToGiver": false,
+   "requires": {
+    "bossDefeated": "clover_hills"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaoming"
+     },
+     "where": {
+      "graph": "warren",
+      "node": "w_path"
+     },
+     "note": "Xiaoming: '救命! A rabbit took my golden carrot!' (existing event w_path.1)"
+    },
+    {
+     "id": "s2",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "node": "w_nest",
+      "enemies": [
+       "swift_horned_rabbit",
+       "wolf_pup"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "warren",
+      "node": "w_nest"
+     },
+     "note": "Existing event w_nest.1 (thief mini-boss)."
+    },
+    {
+     "id": "s3",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "golden_carrot",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "warren",
+      "node": "w_lake"
+     },
+     "note": "The thief hid it by Clover Lake: existing event w_lake.1."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "xiaoming",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "Xiaoming waits at home in Little Hill Village (hook turnIn)."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q1_carrot_offer",
+    "progress": "sc_q1_carrot_wait",
+    "turnIn": "sc_q1_carrot_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 15
+    },
+    "goldValue": 90,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 40,
+    "items": {
+     "feather": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 17.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C076",
+    "C077",
+    "C078",
+    "C282",
+    "C090",
+    "C092"
+   ],
+   "summary": "Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming."
+  }
+ ],
+ "scenes": {
+  "sc_warren__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_warren__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "warren",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_warren__king_beaten": {
+   "schema": "scene/0.2",
+   "id": "sc_warren__king_beaten",
+   "title": "king_beaten",
+   "trigger": {
+    "graph": "warren",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "You did it! The road to Honeycomb Forest is open."
+    }
+   ]
+  },
+  "sc_warren__king_warning": {
+   "schema": "scene/0.2",
+   "id": "sc_warren__king_warning",
+   "title": "king_warning",
+   "trigger": {
+    "graph": "warren",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "The Horned Rabbit King is just ahead! Rest here first."
+    }
+   ]
+  },
+  "sc_warren__thief_gone": {
+   "schema": "scene/0.2",
+   "id": "sc_warren__thief_gone",
+   "title": "thief_gone",
+   "trigger": {
+    "graph": "warren",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "The carrot thief's nest is empty now."
+    }
+   ]
+  }
+ },
+ "characters": [
+  "xiaolong",
+  "xiaoming"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  }
+ }
+}

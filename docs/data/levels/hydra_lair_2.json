@@ -1,0 +1,828 @@
+{
+ "schema": "level/0.2",
+ "id": "hydra_lair_2",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "hydra_lair",
+ "level": 2,
+ "levels": 2,
+ "optional": false,
+ "title": {
+  "zh": "九头蛇巢穴 第2层",
+  "en": "Hydra's Lair - level 2"
+ },
+ "entry": "stairs_1",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Hydra's Lair",
+   "zh": "九头蛇巢穴"
+  },
+  "emoji": "🌫️",
+  "background": {
+   "map": "bg_map_hydra_lair_2",
+   "battle": "bg_battle_r5"
+  },
+  "desyPool": "L5.2",
+  "words": [
+   "C800",
+   "C801",
+   "C802",
+   "C803",
+   "C804",
+   "C805",
+   "C806",
+   "C807",
+   "C808",
+   "C809",
+   "C810",
+   "C327",
+   "C328",
+   "C329",
+   "C330",
+   "C331",
+   "C332",
+   "C333",
+   "C334",
+   "C335",
+   "C811",
+   "C812",
+   "C813",
+   "C814",
+   "C815",
+   "C816",
+   "C817",
+   "C351",
+   "C352",
+   "C354",
+   "C818",
+   "C819",
+   "C820",
+   "C821",
+   "C822",
+   "C823",
+   "C824",
+   "C825",
+   "C826",
+   "C827",
+   "C539",
+   "C541",
+   "C542",
+   "C543",
+   "C544",
+   "C545",
+   "C356"
+  ],
+  "G": 36,
+  "recLevel": [
+   10,
+   13
+  ],
+  "gearTier": 5,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "bog_monster",
+    "weight": 1
+   },
+   {
+    "enemy": "bog_lizard",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_5",
+   "gateEdge": "e5",
+   "kind": "realmboss",
+   "enemy": "hydra",
+   "reward": {
+    "heroic": "hydra_scale",
+    "zh": "九头蛇鳞",
+    "en": "Hydra Scale",
+    "effect": "first broken block per battle −50%",
+    "text": "Hydra Scale 九头蛇鳞 is yours!"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.23,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Hydra's Lair path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.41,
+   "y": 0.35,
+   "title": {
+    "zh": "小路",
+    "en": "Hydra's Lair path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.35,
+   "title": {
+    "zh": "小路",
+    "en": "Hydra's Lair path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.77,
+   "y": 0.2,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_5",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.95,
+   "y": 0.05,
+   "title": {
+    "zh": "九头蛇",
+    "en": "Hydra"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_4",
+   "idx": 6,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.95,
+   "y": 0.35,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 8,
+   "kind": "miniboss",
+   "x": 0.95,
+   "y": 0.65,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q5_fog_bottle",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q5_fog_bottle"
+        },
+        "do": [
+         {
+          "scene": "sc_hydra_lair_2__hydra_lair_2_miniboss_1_step_q5_fog_bottle"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q5_fog_bottle",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  },
+  {
+   "id": "path_5",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 0.95,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.77,
+   "y": 0.8,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_7",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 0.59,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 12,
+   "kind": "story",
+   "x": 0.41,
+   "y": 0.65,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "hydra_lair_1",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_5",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_4",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "deadend_1",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_6",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_7",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e13",
+   "from": "story_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 13
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "swamp_wisp"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "hydra_lair_2.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_hydra_lair_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_hydra_lair_2__hydra_lair_2_story_1"
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_hydra_lair_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_hydra_lair_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "hydra_lair_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_hydra_lair_2__hydra_lair_2_miniboss_1_step_q5_fog_bottle": {
+   "schema": "scene/0.2",
+   "id": "sc_hydra_lair_2__hydra_lair_2_miniboss_1_step_q5_fog_bottle",
+   "title": "hydra_lair_2.miniboss_1.step_q5_fog_bottle",
+   "trigger": {
+    "graph": "hydra_lair_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q5_fog_bottle: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_hydra_lair_2__hydra_lair_2_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_hydra_lair_2__hydra_lair_2_story_1",
+   "title": "hydra_lair_2.story_1",
+   "trigger": {
+    "graph": "hydra_lair_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

@@ -151,7 +151,7 @@ Edge fields:
 - `danger` 0–3 and `steps` 1–8 (required on in-graph edges)
 - `terrain`
 - `patrol: true` marks the boss-approach edge: no random battles, Train/patrol rule
-- `scripted {enemies, fill, once, step}`: a fixed elite fight, e.g. the swift rabbit on realm 1's `e11`
+- `scripted {enemies, fill, once, step}`: the scripted path elite, e.g. the swift rabbit on realm 1's `e11`. **Removed (Jack, 2026-10-11: no random or scripted elites).** The 9 legacy edges are not converted to docs/data/levels.
 - `cond` (blocks traversal while false), `opens` (shortcut id), `label`
 
 ## 4. Encounters on edges
@@ -165,7 +165,7 @@ Each step on an edge rolls `p = encounterRate[danger] × (1 + depthStep × (leve
 | base rate per step | 0 | 0.60 | 0.85 | 0.95 |
 | dungeon level 3 (+20%) | 0 | 0.72 | 0.95 (cap) | 0.95 |
 
-- **Encounter size:** 1–3 enemies, taken from the zone's `enemiesPerBattle` and capped by balance.json `combat.maxEnemies` = 3. Enemies come from the zone `roster` (weights, `packs`). On an elite roll (balance.json `eliteReplaceChance`), one enemy becomes the zone `elite`.
+- **Encounter size:** 1–3 enemies, taken from the zone's `enemiesPerBattle` and capped by balance.json `combat.maxEnemies` = 3. Enemies come from the zone `roster` (weights, `packs`). There is no elite roll (Jack, 2026-10-11: no random elites; balance.json `eliteReplaceChance` and the zone `elite` are dropped).
 - **Edges outside every zone:** they use the zone of their `to` node. A shared trunk uses the next undefeated zone.
 
 ### 4.2 Safe edges (no rolls)
@@ -245,7 +245,7 @@ v3.9.2: the `portal` outcome is gone (no event used it). Portals are edges (§3)
 | System (v3.7) | On the graph |
 |---|---|
 | Word pools: 7 items per battle, ≤ 3 new, 47–60 items per location | Per **zone**. Every random battle on an edge uses the zone of the edge, so the learning model is unchanged. Patrols and the boss use the same zone |
-| Enemy tiers, elites | Zone `tier`, `roster`, `elite`; scripted elites on edges (`scripted`) replace prototype "fight 4 = elite" |
+| Enemy tiers, elites | Zone `tier`, `roster`. No random or scripted elites (Jack, 2026-10-11); elites only in hand-placed mini-boss and quest fights |
 | Patrol rule (speech 20%, reading 40%; 2 forced patrols per trip) | At the **approach inn**: the boss edge has `patrol: true`. Train/patrol happens there (§13 Q8). Re-armed by resting at any *other* inn (save `graphState.approachArmed`, as in the prototype) |
 | Boss gates and unlocks | A boss node blocks every edge through it until its zone is beaten. Next-zone edges carry `cond: {bossDefeated}`. Realm unlocks are on the world graph |
 | Inns, midpoint inn, save points | `inn` nodes (`save: true`), ≤ 3 hops away in realms 1–3 and ≤ 5 in realms 4–9; campfires are inns. Inn price = towns.json G of the realm |
@@ -443,7 +443,7 @@ GameDev said "meadow/forest become two 13-node overworld graphs from mapNodes". 
 - **clover_hills** (L1.2): Big Grey Wolf at `c_den`.
 - **warren** (L1.3): Horned Rabbit King at `w_throne`, the realm boss.
 
-Little Hill Village is the town node. Farmer Li offers the hoe hook, and the hoe is in the old well. A thief mini-boss guards the golden-carrot hook. The midpoint campfire inn sits in Clover Hills, and the boss-approach inn sits before the throne. The swift-rabbit elite is scripted on `e11`.
+Little Hill Village is the town node. Farmer Li offers the hoe hook, and the hoe is in the old well. A thief mini-boss guards the golden-carrot hook. The midpoint campfire inn sits in Clover Hills, and the boss-approach inn sits before the throne. (The swift-rabbit elite scripted on `e11` was removed, Jack, 2026-10-11.)
 
 ![Realm 1](../data/world/diagrams/realm_1.png)
 
@@ -631,12 +631,12 @@ The biggest single graph (the realm 8 overworld, 93 nodes) is in `data/world/dia
 ## 12. Respawn, saving and fast travel
 
 - **Save:** GameDev's save state as written, plus a few fields.
-  - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed, bossCheckpoint}`, and `graph_progress` bitsets by node `idx`.
+  - From §6: `pos {realm, graph, node, dungeon, level}`, `lastInn {graph, node}`, `shortcuts`, `bosses` (zone ids), `flags`, `eventsDone`, `graphState {patrolsLeft, approachArmed}`, and `graph_progress` bitsets by node `idx`.
   - Added: `edgeCrossings` (for seeding) and `edgeProgress` (turn-back).
 - **Defeat:** wake at `lastInn`, which can be on another level or in the town. Gold loss as in v3.7. Edges stay walked.
 - **Feather (v3.9, wording v3.9.2):** to `lastInn` (the one place last rested) or any town or village ever entered (`visitedTowns`), from anywhere outside battle and the boss room. Other inns don't count. No inn warp. Rules in §12.1.
 - **Fog of war:** player progress keeps `visited`, `walked` and `revealed` bitsets per graph (node `idx` / edge `idx`). The UI shows visited nodes, "?" for nodes one open edge away, and landmark nodes (`fog: "landmark"`) once their zone is open. Schema: `progress.schema.json`, example `examples/progress_example.json`.
-- **Boss retry:** `bossCheckpoint` as in v3.7 (spec §7.4).
+- **Boss retry:** none (Jack, 2026-10-11). A lost boss fight restarts at full boss HP like any fight. `graphState.bossCheckpoint` is dropped.
 
 ### 12.1 Return Feather rules (v3.9)
 

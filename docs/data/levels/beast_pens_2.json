@@ -1,0 +1,357 @@
+{
+ "schema": "level/0.2",
+ "id": "beast_pens_2",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "beast_pens",
+ "level": 2,
+ "levels": 2,
+ "optional": true,
+ "title": {
+  "zh": "兽栏 第2层",
+  "en": "Beast Pens (optional) - level 2"
+ },
+ "entry": "stairs_1",
+ "aspect": 10.545,
+ "settings": {
+  "title": {
+   "en": "Training Pits",
+   "zh": "训练场"
+  },
+  "emoji": "🏟️",
+  "background": {
+   "map": "bg_map_beast_pens_2",
+   "battle": "bg_battle_r8"
+  },
+  "desyPool": "L8.1",
+  "words": [
+   "C488",
+   "C489",
+   "C490",
+   "C491",
+   "C492",
+   "C493",
+   "C494",
+   "C495",
+   "C496",
+   "C497",
+   "C498",
+   "C499",
+   "C500",
+   "C501",
+   "C502",
+   "C503",
+   "C504",
+   "C505",
+   "C506",
+   "C507",
+   "C508",
+   "C942",
+   "C943",
+   "C944",
+   "C945",
+   "C946",
+   "C947",
+   "C948",
+   "C949",
+   "C950",
+   "C951",
+   "C952",
+   "C953",
+   "C954",
+   "C955",
+   "C956",
+   "C957",
+   "C958",
+   "C959",
+   "C960",
+   "C961",
+   "C962",
+   "C963",
+   "C964",
+   "C965",
+   "C966",
+   "C967",
+   "C968",
+   "C969",
+   "C970",
+   "C971",
+   "C972"
+  ],
+  "G": 63,
+  "recLevel": [
+   19,
+   22
+  ],
+  "gearTier": 8,
+  "difficulty": {
+   "mcOptions": 6,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "arena_troll",
+    "weight": 1
+   },
+   {
+    "enemy": "ogre_gladiator",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_down",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "楼梯",
+    "en": "Stairs"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "暗厅",
+    "en": "Dark hall"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 2,
+   "kind": "chest",
+   "x": 0.95,
+   "y": 0.05,
+   "title": {
+    "zh": "宝库",
+    "en": "Vault"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 3,
+   "kind": "waypoint",
+   "x": 0.95,
+   "y": 0.95,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   },
+   "quests": [
+    {
+     "quest": "q8_caged_beasts",
+     "role": "step",
+     "step": "s4",
+     "in": {
+      "events": [
+       {
+        "id": "deadend_1.1",
+        "node": "deadend_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q8_caged_beasts"
+        },
+        "do": [
+         {
+          "scene": "sc_beast_pens_2__beast_pens_2_deadend_1_step_q8_caged_beasts"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "beast_pens_1",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_1",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_beast_pens_2__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_fine"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_1.2",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_beast_pens_2__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_beast_pens_2__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "beast_pens_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_beast_pens_2__beast_pens_2_deadend_1_step_q8_caged_beasts": {
+   "schema": "scene/0.2",
+   "id": "sc_beast_pens_2__beast_pens_2_deadend_1_step_q8_caged_beasts",
+   "title": "beast_pens_2.deadend_1.step_q8_caged_beasts",
+   "trigger": {
+    "graph": "beast_pens_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q8_caged_beasts: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

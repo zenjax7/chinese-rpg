@@ -2,7 +2,9 @@
 Used by build_data.py (writes data/spells.*, data/quests.*, spec tables) and by build/spells_sim.py (campaign sim).
 Prices are multiples of G(t) = gold per normal enemy at the selling town (G = 3 x L_rec(t))."""
 import csv, json, collections
-ROOT = '/workspace/desy'
+import os
+ROOT = os.environ.get('DESY_ROOT', '/workspace/desy')   # only write_json() and char_notes() use ROOT (Desy's tree)
+_REPO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'data')
 LREC = [2, 4, 6, 9, 12, 15, 18, 21, 24]
 def G(t): return 3 * LREC[t-1]
 TOWNS = {1: ('Village of 小山', '小山村'), 2: ('Honey Town', '蜂蜜镇'), 3: ('Crossroads Market', '十字路口集市'),
@@ -111,7 +113,7 @@ def char_notes(zh):
     return ' · '.join(out)
 
 # ---------------- quests ----------------
-E = json.load(open(ROOT + '/enemies.json', encoding='utf-8'))
+E = json.load(open(ROOT + '/enemies.json' if os.environ.get('DESY_ROOT') else os.path.join(_REPO_DATA, 'json', 'enemies-art-roster.json'), encoding='utf-8'))   # same file (repo twin)
 EN = {e['id']: e for e in E}
 def realm_normals(t):
     seen = []

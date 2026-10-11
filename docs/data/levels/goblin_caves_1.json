@@ -1,0 +1,1249 @@
+{
+ "schema": "level/0.2",
+ "id": "goblin_caves_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "goblin_caves",
+ "level": 1,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "哥布林洞穴 第1层",
+  "en": "Goblin Caves - level 1"
+ },
+ "entry": "stairs_1",
+ "aspect": 2.172,
+ "settings": {
+  "title": {
+   "en": "Cave Mouth",
+   "zh": "洞口"
+  },
+  "emoji": "⛏️",
+  "background": {
+   "map": "bg_map_goblin_caves_1",
+   "battle": "bg_battle_r4"
+  },
+  "desyPool": "L4.1",
+  "words": [
+   "C279",
+   "C280",
+   "C281",
+   "C284",
+   "C285",
+   "C286",
+   "C287",
+   "C288",
+   "C289",
+   "C712",
+   "C713",
+   "C714",
+   "C715",
+   "C716",
+   "C717",
+   "C718",
+   "C221",
+   "C222",
+   "C223",
+   "C224",
+   "C225",
+   "C226",
+   "C227",
+   "C228",
+   "C229",
+   "C230",
+   "C231",
+   "C232",
+   "C233",
+   "C234",
+   "C235",
+   "C236",
+   "C237",
+   "C238",
+   "C239",
+   "C240",
+   "C241",
+   "C242",
+   "C243",
+   "C244",
+   "C245",
+   "C246",
+   "C247",
+   "C248",
+   "C249",
+   "C250",
+   "C251",
+   "C252"
+  ],
+  "G": 27,
+  "recLevel": [
+   7,
+   10
+  ],
+  "gearTier": 4,
+  "difficulty": {
+   "mcOptions": 4,
+   "reviewSlots": 2,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   2,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "cave_bat",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_1",
+   "gateEdge": "e5",
+   "kind": "locboss",
+   "enemy": "echo_bat"
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.1997,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Cave Mouth path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.3146,
+   "title": {
+    "zh": "小路",
+    "en": "Cave Mouth path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.5,
+   "y": 0.1292,
+   "title": {
+    "zh": "小路",
+    "en": "Cave Mouth path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.6497,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_1",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.8003,
+   "y": 0.3146,
+   "title": {
+    "zh": "回声大蝙蝠",
+    "en": "Giant Echo Bat"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "fork",
+   "x": 0.5,
+   "y": 0.3146,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "story_1",
+   "idx": 8,
+   "kind": "story",
+   "x": 0.3503,
+   "y": 0.5,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 9,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.2303,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_6",
+   "idx": 10,
+   "kind": "waypoint",
+   "x": 0.8003,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 11,
+   "kind": "npc",
+   "x": 0.95,
+   "y": 0.5927,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q4_glow_moss",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q4_glow_moss"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q4_glow_moss_offer"
+     },
+     "in": {
+      "scene": "sc_q4_glow_moss_wait"
+     },
+     "post": {
+      "scene": "sc_q4_glow_moss_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_7",
+   "idx": 12,
+   "kind": "waypoint",
+   "x": 0.3503,
+   "y": 0.6854,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "deadend_1",
+   "idx": 13,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.5,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "deadend_2",
+   "idx": 14,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.4107,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "treasure_1",
+   "idx": 15,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.6854,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "deadend_3",
+   "idx": 16,
+   "kind": "waypoint",
+   "x": 0.6497,
+   "y": 0.5893,
+   "title": {
+    "zh": "死胡同",
+    "en": "Dead end"
+   }
+  },
+  {
+   "id": "story_2",
+   "idx": 17,
+   "kind": "story",
+   "x": 0.6497,
+   "y": 0.7697,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   }
+  },
+  {
+   "id": "treasure_2",
+   "idx": 18,
+   "kind": "chest",
+   "x": 0.6497,
+   "y": 0.95,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 19,
+   "kind": "miniboss",
+   "x": 0.8003,
+   "y": 0.6854,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   }
+  },
+  {
+   "id": "treasure_3",
+   "idx": 20,
+   "kind": "chest",
+   "x": 0.5,
+   "y": 0.8708,
+   "title": {
+    "zh": "宝藏",
+    "en": "Treasure spot"
+   },
+   "quests": [
+    {
+     "quest": "q4_lost_schoolbag",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "treasure_3.1",
+        "node": "treasure_3",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q4_lost_schoolbag"
+        },
+        "do": [
+         {
+          "scene": "sc_goblin_caves_1__goblin_caves_1_treasure_3_step_q4_lost_schoolbag"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "realm_4",
+    "node": "portal_1"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 3,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_1",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e9",
+   "from": "story_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "note": "loop",
+   "idx": 10
+  },
+  {
+   "id": "e10",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e11",
+   "from": "path_5",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e12",
+   "from": "path_6",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 13
+  },
+  {
+   "id": "e13",
+   "from": "path_1",
+   "to": "path_7",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 14
+  },
+  {
+   "id": "e14",
+   "from": "path_7",
+   "to": "deadend_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 15
+  },
+  {
+   "id": "e15",
+   "from": "path_3",
+   "to": "deadend_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 16
+  },
+  {
+   "id": "e16",
+   "from": "path_2",
+   "to": "treasure_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 17
+  },
+  {
+   "id": "e17",
+   "from": "path_4",
+   "to": "deadend_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 18
+  },
+  {
+   "id": "e18",
+   "from": "deadend_1",
+   "to": "story_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 19
+  },
+  {
+   "id": "e19",
+   "from": "treasure_1",
+   "to": "treasure_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 20
+  },
+  {
+   "id": "e20",
+   "from": "deadend_3",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 21
+  },
+  {
+   "id": "e21",
+   "from": "path_7",
+   "to": "treasure_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 22
+  },
+  {
+   "id": "x_boss_1_goblin_caves_2",
+   "idx": 23,
+   "from": "boss_1",
+   "to": {
+    "graph": "goblin_caves_2",
+    "node": "entry_gate"
+   },
+   "kind": "stairs"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.1",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_goblin_caves_1__goblin_caves_1_story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_goblin_caves_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_7.1",
+   "node": "path_7",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_goblin_caves_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_1.1",
+   "node": "deadend_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deadend_2.1",
+   "node": "deadend_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.1",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_1.2",
+   "node": "treasure_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "deadend_3.1",
+   "node": "deadend_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 80,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 20,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_2.1",
+   "node": "story_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_goblin_caves_1__goblin_caves_1_story_2"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.1",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_2.2",
+   "node": "treasure_2",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "miniboss_1.1",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "goblin_brute"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "goblin_caves_1.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  },
+  {
+   "id": "treasure_3.2",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "treasure_3.3",
+   "node": "treasure_3",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q4_glow_moss",
+   "story": "side",
+   "type": "fetch",
+   "title": {
+    "zh": "石大叔的灯",
+    "en": "Uncle Shi's Lamps"
+   },
+   "giver": {
+    "npc": "uncle_shi",
+    "graph": "goblin_caves_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "uncle_shi"
+     },
+     "where": {
+      "graph": "goblin_caves_1",
+      "node": "npc_1"
+     },
+     "note": "The dwarf foreman's lamps went out; bats love the dark."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "collect",
+      "item": "glow_moss",
+      "n": 5,
+      "dropFrom": [
+       "cave_bat"
+      ],
+      "dropChance": 0.35
+     },
+     "where": {
+      "maps": [
+       "goblin_caves_1",
+       "realm_4"
+      ]
+     },
+     "note": "Glow-moss clings to cave bats."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "uncle_shi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "goblin_caves_1",
+      "node": "npc_1"
+     }
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q4_glow_moss_offer",
+    "progress": "sc_q4_glow_moss_wait",
+    "turnIn": "sc_q4_glow_moss_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 9
+    },
+    "goldValue": 243,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 135,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 10.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C286",
+    "C281",
+    "C718",
+    "C222"
+   ],
+   "summary": "Collect 5 clumps of glow-moss from cave bats so Uncle Shi's dwarves can light the mine again."
+  }
+ ],
+ "scenes": {
+  "sc_goblin_caves_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "goblin_caves_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_goblin_caves_1__goblin_caves_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_1__goblin_caves_1_story_1",
+   "title": "goblin_caves_1.story_1",
+   "trigger": {
+    "graph": "goblin_caves_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_goblin_caves_1__goblin_caves_1_story_2": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_1__goblin_caves_1_story_2",
+   "title": "goblin_caves_1.story_2",
+   "trigger": {
+    "graph": "goblin_caves_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_goblin_caves_1__goblin_caves_1_treasure_3_step_q4_lost_schoolbag": {
+   "schema": "scene/0.2",
+   "id": "sc_goblin_caves_1__goblin_caves_1_treasure_3_step_q4_lost_schoolbag",
+   "title": "goblin_caves_1.treasure_3.step_q4_lost_schoolbag",
+   "trigger": {
+    "graph": "goblin_caves_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q4_lost_schoolbag: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

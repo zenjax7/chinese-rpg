@@ -1,0 +1,1045 @@
+{
+ "schema": "level/0.2",
+ "id": "great_hive_1",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "great_hive",
+ "level": 1,
+ "levels": 1,
+ "optional": false,
+ "title": {
+  "zh": "大蜂巢 第1层",
+  "en": "Great Hive - level 1"
+ },
+ "entry": "entry_gate",
+ "aspect": 3.515,
+ "settings": {
+  "title": {
+   "en": "Great Hive",
+   "zh": "大蜂巢"
+  },
+  "background": {
+   "map": "bg_map_great_hive_1",
+   "battle": "bg_battle_r2"
+  },
+  "desyPool": "L2.2",
+  "words": [
+   "C643",
+   "C644",
+   "C130",
+   "C131",
+   "C132",
+   "C133",
+   "C134",
+   "C135",
+   "C136",
+   "C137",
+   "C138",
+   "C139",
+   "C140",
+   "C141",
+   "C645",
+   "C646",
+   "C647",
+   "C648",
+   "C649",
+   "C650",
+   "C651",
+   "C652",
+   "C653",
+   "C340",
+   "C341",
+   "C342",
+   "C343",
+   "C344",
+   "C349",
+   "C350",
+   "C654",
+   "C374",
+   "C375",
+   "C142",
+   "C143",
+   "C144",
+   "C145",
+   "C655",
+   "C146",
+   "C147",
+   "C148",
+   "C149",
+   "C150",
+   "C151",
+   "C152",
+   "C153",
+   "C154",
+   "C155",
+   "C156",
+   "C157",
+   "C158",
+   "C656",
+   "C657",
+   "C658",
+   "C659",
+   "C660",
+   "C160",
+   "C161",
+   "C159"
+  ],
+  "G": 12,
+  "recLevel": [
+   3,
+   5
+  ],
+  "gearTier": 2,
+  "difficulty": {
+   "mcOptions": 3,
+   "reviewSlots": 1,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   1,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "giant_bee",
+    "weight": 1
+   },
+   {
+    "enemy": "forest_spider",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "boss_2",
+   "gateEdge": "e5",
+   "kind": "realmboss",
+   "enemy": "queen_bee",
+   "reward": {
+    "heroic": "queens_crown",
+    "text": "The Queen's Crown 蜂后之冠 is yours! (end of prototype)"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "地牢口",
+    "en": "Dungeon mouth"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.1788,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Great Hive path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.3068,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Great Hive path"
+   }
+  },
+  {
+   "id": "path_3",
+   "idx": 3,
+   "kind": "fork",
+   "x": 0.4356,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Great Hive path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 4,
+   "kind": "inn",
+   "x": 0.5644,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_2",
+   "idx": 5,
+   "kind": "boss",
+   "x": 0.6932,
+   "y": 0.2,
+   "title": {
+    "zh": "蜂后",
+    "en": "Queen Bee"
+   },
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q2_royal_jelly",
+     "role": "step",
+     "step": "s4",
+     "in": {
+      "events": [
+       {
+        "id": "boss_2.1",
+        "node": "boss_2",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q2_royal_jelly"
+        },
+        "do": [
+         {
+          "scene": "sc_great_hive_1__great_hive_1_boss_2_step_q2_royal_jelly"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc_1",
+   "idx": 6,
+   "kind": "npc",
+   "x": 0.5644,
+   "y": 0.35,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q2_royal_jelly",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q2_royal_jelly"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q2_royal_jelly_offer"
+     },
+     "in": {
+      "scene": "sc_q2_royal_jelly_wait"
+     },
+     "post": {
+      "scene": "sc_q2_royal_jelly_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_4",
+   "idx": 7,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.65,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "path_5",
+   "idx": 8,
+   "kind": "waypoint",
+   "x": 0.6932,
+   "y": 0.5,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "inn_2",
+   "idx": 9,
+   "kind": "inn",
+   "x": 0.8212,
+   "y": 0.5,
+   "title": {
+    "zh": "隐藏客栈",
+    "en": "Hidden inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "potions"
+   ]
+  },
+  {
+   "id": "story_1",
+   "idx": 10,
+   "kind": "story",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "故事点",
+    "en": "Story spot"
+   },
+   "quests": [
+    {
+     "quest": "q2_royal_jelly",
+     "role": "step",
+     "step": "s3",
+     "in": {
+      "events": [
+       {
+        "id": "story_1.1",
+        "node": "story_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q2_royal_jelly"
+        },
+        "do": [
+         {
+          "scene": "sc_great_hive_1__great_hive_1_story_1_step_q2_royal_jelly"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "path_6",
+   "idx": 11,
+   "kind": "waypoint",
+   "x": 0.5644,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "miniboss_1",
+   "idx": 12,
+   "kind": "miniboss",
+   "x": 0.6932,
+   "y": 0.8,
+   "title": {
+    "zh": "小头目",
+    "en": "Mini-boss lair"
+   },
+   "quests": [
+    {
+     "quest": "q2_royal_jelly",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "miniboss_1.1",
+        "node": "miniboss_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "miniboss",
+        "cond": {
+         "questActive": "q2_royal_jelly"
+        },
+        "do": [
+         {
+          "fight": {
+           "enemies": [
+            "royal_guard_bee",
+            "giant_bee"
+           ],
+           "kind": "miniboss"
+          },
+          "quest": "q2_royal_jelly"
+         },
+         {
+          "setFlag": "q2_royal_jelly.s2"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "entry_gate",
+   "idx": 13,
+   "kind": "portal",
+   "title": {
+    "en": "Way in",
+    "zh": "入口"
+   },
+   "x": 0.05,
+   "y": 0.5
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "path_3",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "inn_1",
+   "to": "boss_2",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  },
+  {
+   "id": "e7",
+   "from": "path_3",
+   "to": "path_4",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "tunnel",
+   "idx": 7
+  },
+  {
+   "id": "e8",
+   "from": "path_4",
+   "to": "path_5",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 8
+  },
+  {
+   "id": "e9",
+   "from": "path_5",
+   "to": "inn_2",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 9
+  },
+  {
+   "id": "e10",
+   "from": "inn_2",
+   "to": "story_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 10
+  },
+  {
+   "id": "e11",
+   "from": "path_3",
+   "to": "path_6",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 11
+  },
+  {
+   "id": "e12",
+   "from": "path_6",
+   "to": "miniboss_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 12
+  },
+  {
+   "id": "e6_in",
+   "kind": "path",
+   "danger": 2,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 13,
+   "from": "entry_gate",
+   "to": "stairs_1"
+  },
+  {
+   "id": "x_entry_gate",
+   "idx": 14,
+   "from": "entry_gate",
+   "to": {
+    "graph": "realm_2",
+    "node": "boss_1"
+   },
+   "kind": "portal"
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_great_hive_1__ambient"
+    }
+   ]
+  },
+  {
+   "id": "path_4.1",
+   "node": "path_4",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_5.1",
+   "node": "path_5",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_great_hive_1__great_hive_1_story_1"
+    }
+   ]
+  },
+  {
+   "id": "path_6.1",
+   "node": "path_6",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_great_hive_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.2",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "miniboss",
+   "do": [
+    {
+     "fight": {
+      "enemies": [
+       "royal_guard_bee"
+      ],
+      "kind": "miniboss"
+     }
+    },
+    {
+     "giveGold": {
+      "G": 2
+     }
+    },
+    {
+     "giveItem": "honey",
+     "qty": 1
+    },
+    {
+     "setFlag": "great_hive_1.miniboss_1.beaten"
+    }
+   ]
+  },
+  {
+   "id": "miniboss_1.3",
+   "node": "miniboss_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "nothing",
+   "do": []
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q2_royal_jelly",
+   "story": "main",
+   "type": "fetch",
+   "title": {
+    "zh": "蜂后的蜂王浆",
+    "en": "The Queen's Stolen Jelly"
+   },
+   "giver": {
+    "npc": "yezi",
+    "graph": "great_hive_1",
+    "node": "npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": {
+    "bossDefeated": "realm_2"
+   },
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi"
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "npc_1"
+     },
+     "note": "Yezi the elf: the bees blame Honey Town for a theft."
+    },
+    {
+     "id": "s2",
+     "event": "miniboss",
+     "objective": {
+      "type": "kill",
+      "enemies": [
+       "royal_guard_bee",
+       "giant_bee"
+      ],
+      "desyType": "fight"
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "miniboss_1"
+     },
+     "note": "Guards around Pipi's stash."
+    },
+    {
+     "id": "s3",
+     "event": "story",
+     "objective": {
+      "type": "collect",
+      "item": "royal_jelly",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "story_1"
+     },
+     "note": "Pipi's stash: the jar and a red feather. First proof it was Pipi."
+    },
+    {
+     "id": "s4",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "desyType": "boss",
+      "maps": [
+       "great_hive_1"
+      ]
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "boss_2"
+     },
+     "note": "After the Queen's battle, give the jelly back (clear scene)."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "npc_1"
+     },
+     "note": "Yezi teaches Heal (spec: Honeycomb quest)."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_royal_jelly_offer",
+    "progress": "sc_q2_royal_jelly_wait",
+    "turnIn": "sc_q2_royal_jelly_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 10
+    },
+    "goldValue": 120,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 100,
+    "items": {
+     "manatea": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [
+     "heal"
+    ],
+    "flags": [],
+    "valueG": 16.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C130",
+    "C134",
+    "C138",
+    "C135",
+    "C342",
+    "C343"
+   ],
+   "summary": "Find the royal jelly Pipi stole, return it to the Queen Bee, and Yezi teaches you Heal."
+  }
+ ],
+ "scenes": {
+  "sc_great_hive_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_great_hive_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "great_hive_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_great_hive_1__great_hive_1_boss_2_step_q2_royal_jelly": {
+   "schema": "scene/0.2",
+   "id": "sc_great_hive_1__great_hive_1_boss_2_step_q2_royal_jelly",
+   "title": "great_hive_1.boss_2.step_q2_royal_jelly",
+   "trigger": {
+    "graph": "great_hive_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q2_royal_jelly: scene from data/dialogue)"
+    }
+   ]
+  },
+  "sc_great_hive_1__great_hive_1_story_1": {
+   "schema": "scene/0.2",
+   "id": "sc_great_hive_1__great_hive_1_story_1",
+   "title": "great_hive_1.story_1",
+   "trigger": {
+    "graph": "great_hive_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "(story beat to write)"
+    }
+   ]
+  },
+  "sc_great_hive_1__great_hive_1_story_1_step_q2_royal_jelly": {
+   "schema": "scene/0.2",
+   "id": "sc_great_hive_1__great_hive_1_story_1_step_q2_royal_jelly",
+   "title": "great_hive_1.story_1.step_q2_royal_jelly",
+   "trigger": {
+    "graph": "great_hive_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q2_royal_jelly: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}

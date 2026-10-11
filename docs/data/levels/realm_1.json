@@ -1,0 +1,1585 @@
+{
+ "schema": "level/0.2",
+ "id": "realm_1",
+ "state": "beta",
+ "kind": "overworld",
+ "level": 0,
+ "title": {
+  "zh": "新手草原",
+  "en": "Starter Meadow"
+ },
+ "entry": "village",
+ "aspect": 1.61,
+ "settings": {
+  "title": {
+   "en": "Village Meadow",
+   "zh": "村边草地"
+  },
+  "background": {
+   "map": "bg_map_realm_1",
+   "battle": "bg_battle_r1"
+  },
+  "desyPool": "L1.1",
+  "words": [
+   "C001",
+   "C002",
+   "C003",
+   "C004",
+   "C005",
+   "C006",
+   "C007",
+   "C008",
+   "C009",
+   "C010",
+   "C011",
+   "C012",
+   "C013",
+   "C014",
+   "C015",
+   "C016",
+   "C017",
+   "C018",
+   "C019",
+   "C020",
+   "C586",
+   "C587",
+   "C588",
+   "C589",
+   "C590",
+   "C021",
+   "C022",
+   "C023",
+   "C024",
+   "C025",
+   "C026",
+   "C027",
+   "C028",
+   "C029",
+   "C030",
+   "C031",
+   "C032",
+   "C033",
+   "C034",
+   "C035",
+   "C036",
+   "C037",
+   "C038",
+   "C039",
+   "C040",
+   "C041",
+   "C042",
+   "C591",
+   "C592",
+   "C593",
+   "C594",
+   "C595"
+  ],
+  "G": 6,
+  "recLevel": [
+   1,
+   3
+  ],
+  "gearTier": 1,
+  "difficulty": {
+   "mcOptions": 3,
+   "reviewSlots": 0,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   1,
+   2
+  ],
+  "roster": [
+   {
+    "enemy": "horned_rabbit",
+    "weight": 3
+   },
+   {
+    "enemy": "mushroom_imp",
+    "weight": 2
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 3,
+  "boss": {
+   "node": "m_crow",
+   "gateEdge": "g1",
+   "kind": "locboss",
+   "enemy": "big_beak_crow"
+  }
+ },
+ "nodes": [
+  {
+   "id": "village",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.05,
+   "y": 0.8127,
+   "title": {
+    "zh": "小山村",
+    "en": "Little Hill Village"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "shop"
+   ],
+   "hub": "village",
+   "town": 1,
+   "fog": "landmark",
+   "quests": [
+    {
+     "quest": "q1_carrot",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
+  },
+  {
+   "id": "m_fork",
+   "idx": 1,
+   "kind": "fork",
+   "x": 0.2205,
+   "y": 0.7517,
+   "title": {
+    "zh": "草地路口",
+    "en": "Meadow crossroads"
+   }
+  },
+  {
+   "id": "m_farm",
+   "idx": 2,
+   "kind": "npc",
+   "x": 0.1921,
+   "y": 0.95,
+   "title": {
+    "zh": "李农夫的田",
+    "en": "Farmer Li's field"
+   },
+   "npc": "farmer_li",
+   "quests": [
+    {
+     "quest": "q1_hoe",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "m_farm.1",
+        "node": "m_farm",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q1_hoe"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q1_hoe_offer"
+     },
+     "in": {
+      "scene": "sc_q1_hoe_wait"
+     },
+     "post": {
+      "scene": "sc_q1_hoe_thanks"
+     }
+    },
+    {
+     "quest": "q1_bounty",
+     "role": "giver",
+     "pre": {
+      "events": [
+       {
+        "id": "m_farm.2",
+        "node": "m_farm",
+        "on": "enter",
+        "once": true,
+        "outcome": "quest_offer",
+        "do": [
+         {
+          "offerQuest": "q1_bounty"
+         }
+        ]
+       }
+      ],
+      "scene": "sc_q1_bounty_offer"
+     },
+     "in": {
+      "scene": "sc_q1_bounty_wait"
+     },
+     "post": {
+      "scene": "sc_q1_bounty_thanks"
+     }
+    }
+   ]
+  },
+  {
+   "id": "m_well",
+   "idx": 3,
+   "kind": "chest",
+   "x": 0.3532,
+   "y": 0.95,
+   "title": {
+    "zh": "老井",
+    "en": "Old well"
+   },
+   "quests": [
+    {
+     "quest": "q1_hoe",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "m_well.1",
+        "node": "m_well",
+        "on": "enter",
+        "once": true,
+        "outcome": "item",
+        "cond": {
+         "questActive": "q1_hoe"
+        },
+        "do": [
+         {
+          "giveItem": "farmers_hoe",
+          "qty": 1,
+          "quest": "q1_hoe"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q1_hoe",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
+  },
+  {
+   "id": "m_field",
+   "idx": 4,
+   "kind": "waypoint",
+   "x": 0.4005,
+   "y": 0.6754,
+   "title": {
+    "zh": "长草地",
+    "en": "Long grass"
+   }
+  },
+  {
+   "id": "m_grass",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.5142,
+   "y": 0.5686,
+   "title": {
+    "zh": "山路",
+    "en": "Hill road"
+   }
+  },
+  {
+   "id": "m_crow",
+   "idx": 6,
+   "kind": "boss",
+   "x": 0.5711,
+   "y": 0.4161,
+   "title": {
+    "zh": "乌鸦树",
+    "en": "Crow's tree"
+   },
+   "fog": "landmark"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "from": "village",
+   "to": "m_fork",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "terrain": "road",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "m_fork",
+   "to": "m_farm",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "grass",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "m_fork",
+   "to": "m_well",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "m_fork",
+   "to": "m_field",
+   "kind": "path",
+   "danger": 2,
+   "steps": 5,
+   "terrain": "grass",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "m_farm",
+   "to": "m_field",
+   "kind": "path",
+   "danger": 1,
+   "steps": 2,
+   "terrain": "grass",
+   "note": "loop: the farm track rejoins the long grass",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "m_field",
+   "to": "m_grass",
+   "kind": "path",
+   "danger": 2,
+   "steps": 4,
+   "terrain": "grass",
+   "idx": 6
+  },
+  {
+   "id": "g1",
+   "from": "m_grass",
+   "to": "m_crow",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 7
+  },
+  {
+   "id": "exit_village",
+   "from": "village",
+   "kind": "exit",
+   "to": {
+    "graph": "world",
+    "node": "realm_1"
+   },
+   "danger": 0,
+   "note": "v3.9.2: leave the realm to the world map from its entry settlement; no battles, always open",
+   "idx": 19
+  },
+  {
+   "id": "x_m_crow_clover_hills",
+   "idx": 20,
+   "from": "m_crow",
+   "to": {
+    "graph": "clover_hills",
+    "node": "c_gate"
+   },
+   "kind": "portal",
+   "cond": {
+    "bossDefeated": "realm_1"
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": "village.1",
+   "node": "village",
+   "on": "firstEnter",
+   "once": true,
+   "outcome": "story",
+   "tutorial": true,
+   "do": [
+    {
+     "scene": "sc_r1_opening"
+    },
+    {
+     "scene": "sc_realm_1__meadow_intro"
+    },
+    {
+     "scene": "sc_realm_1__tutorial_first_battle"
+    },
+    {
+     "fight": {
+      "kind": "tutorial",
+      "enemies": [
+       "horned_rabbit"
+      ],
+      "fill": false,
+      "canLose": false
+     }
+    },
+    {
+     "scene": "sc_realm_1__tutorial_first_battle_after"
+    }
+   ]
+  },
+  {
+   "id": "village.2",
+   "node": "village",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "bossDefeated": "clover_hills"
+   },
+   "do": [
+    {
+     "scene": "sc_r1_village_banter"
+    }
+   ]
+  },
+  {
+   "id": "m_fork.1",
+   "node": "m_fork",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m_farm.3",
+   "node": "m_farm",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_1__farmer_thanks"
+    }
+   ]
+  },
+  {
+   "id": "m_well.2",
+   "node": "m_well",
+   "on": "enter",
+   "once": true,
+   "outcome": "treasure",
+   "do": [
+    {
+     "openChest": "chest_normal"
+    }
+   ]
+  },
+  {
+   "id": "m_well.3",
+   "node": "m_well",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_1__well_hint"
+    }
+   ]
+  },
+  {
+   "id": "m_field.1",
+   "node": "m_field",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m_grass.1",
+   "node": "m_grass",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_realm_1__crow_boss_intro"
+    }
+   ]
+  },
+  {
+   "id": "m_grass.2",
+   "node": "m_grass",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_realm_1__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q1_bounty",
+   "story": "side",
+   "type": "slay",
+   "title": {
+    "zh": "赶走角兔",
+    "en": "Rabbits in the Cabbages"
+   },
+   "giver": {
+    "npc": "farmer_li",
+    "graph": "realm_1",
+    "node": "m_farm"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Farmer Li's cabbages are being nibbled (existing event m_farm.2)."
+    },
+    {
+     "id": "s2",
+     "event": "edge_battle",
+     "objective": {
+      "type": "kill",
+      "enemy": "horned_rabbit",
+      "n": 8,
+      "scope": {
+       "maps": [
+        "clover_hills",
+        "realm_1",
+        "warren"
+       ]
+      }
+     },
+     "where": {
+      "graph": "realm_1",
+      "edges": [
+       "e2",
+       "e3",
+       "e4",
+       "e5",
+       "e6"
+      ]
+     },
+     "note": "Any fight in realm 1 counts."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Return to Farmer Li."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q1_bounty_offer",
+    "progress": "sc_q1_bounty_wait",
+    "turnIn": "sc_q1_bounty_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 8
+    },
+    "goldValue": 48,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 30,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 9.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C001",
+    "C007",
+    "C039",
+    "C038",
+    "C011"
+   ],
+   "summary": "Chase 8 horned rabbits away from Farmer Li's cabbage field, then tell him they're gone."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q1_hoe",
+   "story": "side",
+   "type": "find",
+   "title": {
+    "zh": "找回锄头",
+    "en": "The Lost Hoe"
+   },
+   "giver": {
+    "npc": "farmer_li",
+    "graph": "realm_1",
+    "node": "m_farm"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Li: 'My hoe! Where did it go?' (existing event m_farm.1)"
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "m_well"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "Existing story event well_hint (m_well.3)."
+    },
+    {
+     "id": "s3",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "farmers_hoe",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "Existing event m_well.1 (cond questActive q1_hoe)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Existing story farmer_thanks (m_farm.3)."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q1_hoe_offer",
+    "progress": "sc_q1_hoe_wait",
+    "turnIn": "sc_q1_hoe_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 7
+    },
+    "goldValue": 42,
+    "exp": {
+     "L": 10
+    },
+    "expValue": 20,
+    "items": {
+     "honey": 1
+    },
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 8.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C035",
+    "C037",
+    "C594",
+    "C595",
+    "C007"
+   ],
+   "summary": "Farmer Li dropped his hoe somewhere; spot the glint in the old well and bring it back."
+  }
+ ],
+ "scenes": {
+  "sc_realm_1__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_1__crow_boss_intro": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__crow_boss_intro",
+   "title": "crow_boss_intro",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "The Big-Beak Crow guards the hill road!"
+    }
+   ]
+  },
+  "sc_realm_1__farmer_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__farmer_thanks",
+   "title": "farmer_thanks",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "farmer_li",
+     "en": "{C007}, little hero!",
+     "tokens": [
+      "C007"
+     ]
+    }
+   ]
+  },
+  "sc_realm_1__meadow_intro": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__meadow_intro",
+   "title": "meadow_intro",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "This is Starter Meadow! Tap a place to walk there. Monsters hide in the long grass."
+    }
+   ]
+  },
+  "sc_realm_1__tutorial_first_battle": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__tutorial_first_battle",
+   "title": "tutorial_first_battle",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Look out, a horned rabbit! Answer the questions to fight it."
+    }
+   ]
+  },
+  "sc_realm_1__tutorial_first_battle_after": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__tutorial_first_battle_after",
+   "title": "tutorial_first_battle_after",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "You won your first battle! Now let's explore."
+    }
+   ]
+  },
+  "sc_realm_1__well_hint": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_1__well_hint",
+   "title": "well_hint",
+   "trigger": {
+    "graph": "realm_1",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Something shiny is down in the old well... Farmer Li lost something!"
+    }
+   ]
+  },
+  "sc_q1_hoe_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q1_hoe_offer",
+   "title": "The lost hoe (offer)",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "m_farm",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q1_hoe"
+     }
+    }
+   },
+   "background": "bg_farm",
+   "music": "village_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "neutral"
+    },
+    "R1": {
+     "char": "farmer_li",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C037",
+    "C007"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "surprised",
+     "en": "Oh! Hello there, little hero. And... is that a dragon?",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "worried",
+     "en": "My hoe is gone! I put it down, the fog rolled in, and now... {C037}?",
+     "tokens": [
+      "C037"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "thinking",
+     "en": "(He sniffs the air and points toward the old well.)",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Will you look for it? I'll pay you, of course.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "Yes, I'll find it!",
+       "goto": "l5",
+       "setFlags": [
+        "accept_q1_hoe"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l6"
+      }
+     ]
+    },
+    {
+     "id": "l5",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "happy",
+     "en": "{C007}! Bring it back here when you find it.",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l6",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "sad",
+     "en": "All right. I'll be right here, worrying.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q1_hoe"
+     },
+     "acceptQuest": "q1_hoe"
+    }
+   ]
+  },
+  "sc_q1_hoe_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q1_hoe_thanks",
+   "title": "The lost hoe (turn-in)",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "m_farm",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q1_hoe"
+    },
+    "replaces": "farmer_thanks"
+   },
+   "background": "bg_farm",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "farmer_li",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C595",
+    "C007",
+    "C008",
+    "C005"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "surprised",
+     "en": "My hoe! It was down {C595}, in the old well?",
+     "tokens": [
+      "C595"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "happy",
+     "en": "{C007}, little hero! Here, this is for you.",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What do you say back?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C008}",
+       "tokens": [
+        "C008"
+       ],
+       "goto": "l4",
+       "correct": true
+      },
+      {
+       "id": "c2",
+       "en": "{C005}",
+       "tokens": [
+        "C005"
+       ],
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Ha! Such good manners.",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "farmer_li",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Leaving already? Don't forget: when someone says thank you, you can say you're welcome.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q1_hoe"
+    }
+   ]
+  },
+  "sc_r1_opening": {
+   "schema": "scene/0.2",
+   "id": "sc_r1_opening",
+   "title": "A birthday egg",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "village",
+    "on": "firstEnter",
+    "replaces": "village.1 (plays before meadow_intro)"
+   },
+   "background": "bg_village_morning",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "happy"
+    },
+    "R2": {
+     "char": "xiaolong",
+     "expr": "neutral"
+    }
+   },
+   "teaches": [
+    "C001",
+    "C007"
+   ],
+   "words": [
+    "C001",
+    "C007"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Little Hill Village. Today is {hero}'s birthday.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Happy birthday, {hero}! I found this by the old well this morning. It's warm... and it's wiggling.",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Crack... crack... POP! A tiny golden dragon tumbles out of the egg.",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "xiaolong",
+     "side": "R2",
+     "expr": "surprised",
+     "en": "{C001}!",
+     "tokens": [
+      "C001"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "surprised",
+     "en": "It... talked?!",
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "surprised",
+     "en": "A golden dragon! I haven't seen one of those since... well. Since I was young and brave and had knees that worked.",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "xiaolong",
+     "side": "R2",
+     "expr": "happy",
+     "en": "{C001}! {C001}!",
+     "tokens": [
+      "C001"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l8",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "One word is all he knows. Words are precious, little one. Lately the creatures out in the meadow have been forgetting theirs.",
+     "vo": null
+    },
+    {
+     "id": "l9",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "worried",
+     "en": "A grey fog rolled over the hills. Now the rabbits are grumpy and the crows won't stop shouting.",
+     "vo": null
+    },
+    {
+     "id": "l10",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What should I say to the little dragon?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C001}!",
+       "tokens": [
+        "C001"
+       ],
+       "goto": "l11",
+       "correct": true,
+       "setFlags": [
+        "r1_said_hello"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Wave and say nothing.",
+       "goto": "l12"
+      }
+     ]
+    },
+    {
+     "id": "l11",
+     "speaker": "xiaolong",
+     "side": "R2",
+     "expr": "happy",
+     "en": "(He spins in a circle and hugs your leg.)",
+     "vo": null,
+     "goto": "l13"
+    },
+    {
+     "id": "l12",
+     "speaker": "xiaolong",
+     "side": "R2",
+     "expr": "sad",
+     "en": "(He tilts his head, waiting... then hugs your leg anyway.)",
+     "vo": null
+    },
+    {
+     "id": "l13",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "When someone gives you a present, we say {C007}. Go on, try it!",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l14",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "happy",
+     "en": "{C007}, Granny Bai!",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l15",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Ha! Good manners. He looks like a Xiaolong to me. Little Dragon. Now take my old stick... and this hungry fellow.",
+     "vo": null
+    },
+    {
+     "id": "l16",
+     "speaker": "xiaolong",
+     "side": "R2",
+     "expr": "happy",
+     "en": "(He chews the stick. Then he chews your sleeve.)",
+     "vo": null
+    },
+    {
+     "id": "l17",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Farmer Li down the road needs help. Talk kindly, answer bravely, and the fog will clear. Off you go!",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "met_xiaolong"
+    },
+    {
+     "joinParty": "xiaolong"
+    },
+    {
+     "setFlag": "met_granny_bai"
+    }
+   ]
+  },
+  "sc_r1_village_banter": {
+   "schema": "scene/0.2",
+   "id": "sc_r1_village_banter",
+   "title": "Counting rabbits",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "village",
+    "on": "enter",
+    "cond": {
+     "bossDefeated": "clover_hills"
+    }
+   },
+   "background": "bg_village_afternoon",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "xiaoming",
+     "expr": "happy"
+    },
+    "R2": {
+     "char": "farmer_li",
+     "expr": "neutral"
+    }
+   },
+   "words": [
+    "C043",
+    "C070",
+    "C046",
+    "C068",
+    "C071"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaoming",
+     "side": "R1",
+     "expr": "happy",
+     "en": "{hero}! You beat the wolf in Clover Hills? Everyone is talking about it!",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "{C043}! {C043}!",
+     "tokens": [
+      "C043"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "surprised",
+     "en": "Whoa, Xiaolong. You learned a new word!",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "farmer_li",
+     "side": "R2",
+     "expr": "happy",
+     "en": "The fog is thinner now. Three rabbits came back to my field this morning. Watch, I'll count them.",
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "farmer_li",
+     "side": "R2",
+     "expr": "thinking",
+     "en": "One... two... {C070}!",
+     "tokens": [
+      "C070"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "xiaoming",
+     "side": "R1",
+     "expr": "surprised",
+     "en": "{C046}!",
+     "tokens": [
+      "C046"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What comes after two?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C068}",
+       "tokens": [
+        "C068"
+       ],
+       "goto": "l8",
+       "correct": true,
+       "setFlags": [
+        "r1_counted_rabbits"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "{C071}",
+       "tokens": [
+        "C071"
+       ],
+       "goto": "l9"
+      }
+     ]
+    },
+    {
+     "id": "l8",
+     "speaker": "farmer_li",
+     "side": "R2",
+     "expr": "happy",
+     "en": "Ha! Yes, that's the one. My brain is still a little foggy.",
+     "vo": null,
+     "goto": "l10"
+    },
+    {
+     "id": "l9",
+     "speaker": "xiaoming",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Hmm, that's more rabbits than we have! It's three. Count with me.",
+     "vo": null
+    },
+    {
+     "id": "l10",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "(He counts on his claws, gets to three, then eats a carrot.)",
+     "vo": null
+    },
+    {
+     "id": "l11",
+     "speaker": "xiaoming",
+     "side": "R1",
+     "expr": "worried",
+     "en": "There's a Horned Rabbit with a shiny crown in the Warren now. A red imp put it on his head!",
+     "vo": null
+    },
+    {
+     "id": "l12",
+     "speaker": "farmer_li",
+     "side": "R2",
+     "expr": "worried",
+     "en": "Be careful in those tunnels, little hero.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "heard_about_crown"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "farmer_li",
+  "granny_bai",
+  "hero",
+  "narrator",
+  "xiaolong",
+  "xiaoming"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "farmer_li": {
+   "name": {
+    "zh": "李农夫",
+    "en": "Farmer Li"
+   }
+  }
+ }
+}

@@ -1,0 +1,485 @@
+{
+ "schema": "level/0.2",
+ "id": "griffin_spire_3",
+ "state": "beta",
+ "kind": "dungeon_level",
+ "dungeon": "griffin_spire",
+ "level": 3,
+ "levels": 3,
+ "optional": false,
+ "title": {
+  "zh": "狮鹫塔 第3层",
+  "en": "Griffin Spire - level 3"
+ },
+ "entry": "stairs_1",
+ "aspect": 10.545,
+ "settings": {
+  "title": {
+   "en": "Griffin Summit",
+   "zh": "狮鹫之巅"
+  },
+  "emoji": "🏔️",
+  "background": {
+   "map": "bg_map_griffin_spire_3",
+   "battle": "bg_battle_r7"
+  },
+  "desyPool": "L7.2",
+  "words": [
+   "C912",
+   "C913",
+   "C914",
+   "C915",
+   "C459",
+   "C460",
+   "C461",
+   "C462",
+   "C463",
+   "C464",
+   "C465",
+   "C466",
+   "C467",
+   "C468",
+   "C469",
+   "C916",
+   "C917",
+   "C918",
+   "C919",
+   "C920",
+   "C921",
+   "C922",
+   "C923",
+   "C470",
+   "C471",
+   "C472",
+   "C473",
+   "C474",
+   "C475",
+   "C476",
+   "C477",
+   "C478",
+   "C479",
+   "C480",
+   "C481",
+   "C482",
+   "C483",
+   "C484",
+   "C485",
+   "C486",
+   "C487",
+   "C924",
+   "C925",
+   "C926",
+   "C927",
+   "C928",
+   "C929",
+   "C930",
+   "C931",
+   "C932",
+   "C933",
+   "C934",
+   "C935",
+   "C936",
+   "C937",
+   "C938",
+   "C939",
+   "C940",
+   "C941"
+  ],
+  "G": 54,
+  "recLevel": [
+   16,
+   19
+  ],
+  "gearTier": 7,
+  "difficulty": {
+   "mcOptions": 5,
+   "reviewSlots": 3,
+   "pathFights": 8
+  },
+  "enemiesPerBattle": [
+   3,
+   3
+  ],
+  "roster": [
+   {
+    "enemy": "harpy",
+    "weight": 1
+   },
+   {
+    "enemy": "griffin",
+    "weight": 1
+   }
+  ],
+  "packs": {},
+  "encounters": null,
+  "maxHopsToInn": 5,
+  "boss": {
+   "node": "boss_7",
+   "gateEdge": "e4",
+   "kind": "realmboss",
+   "enemy": "griffin_king",
+   "reward": {
+    "heroic": "griffin_feather",
+    "zh": "狮鹫羽",
+    "en": "Griffin Feather",
+    "effect": "Frost costs 5 MP instead of 8",
+    "text": "Griffin Feather 狮鹫羽 is yours!"
+   }
+  }
+ },
+ "nodes": [
+  {
+   "id": "stairs_1",
+   "idx": 0,
+   "kind": "stairs_up",
+   "x": 0.05,
+   "y": 0.5,
+   "title": {
+    "zh": "上楼梯",
+    "en": "Stairs up"
+   }
+  },
+  {
+   "id": "path_1",
+   "idx": 1,
+   "kind": "waypoint",
+   "x": 0.275,
+   "y": 0.5,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "path_2",
+   "idx": 2,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.05,
+   "title": {
+    "zh": "小路",
+    "en": "Griffin Summit path"
+   }
+  },
+  {
+   "id": "inn_1",
+   "idx": 3,
+   "kind": "inn",
+   "x": 0.725,
+   "y": 0.05,
+   "title": {
+    "zh": "营地客栈",
+    "en": "Boss-approach inn"
+   },
+   "save": true,
+   "services": [
+    "inn",
+    "save",
+    "practice",
+    "potions"
+   ]
+  },
+  {
+   "id": "boss_7",
+   "idx": 4,
+   "kind": "boss",
+   "x": 0.95,
+   "y": 0.5,
+   "title": {
+    "zh": "狮鹫王",
+    "en": "Griffin King"
+   },
+   "fog": "landmark"
+  },
+  {
+   "id": "path_3",
+   "idx": 5,
+   "kind": "waypoint",
+   "x": 0.5,
+   "y": 0.95,
+   "title": {
+    "zh": "弯路",
+    "en": "Winding path"
+   }
+  },
+  {
+   "id": "npc_1",
+   "idx": 6,
+   "kind": "npc",
+   "x": 0.725,
+   "y": 0.95,
+   "title": {
+    "zh": "旅人",
+    "en": "Traveller"
+   },
+   "quests": [
+    {
+     "quest": "q7_griffin_chick",
+     "role": "step",
+     "step": "s4",
+     "in": {
+      "events": [
+       {
+        "id": "npc_1.1",
+        "node": "npc_1",
+        "on": "enter",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q7_griffin_chick"
+        },
+        "do": [
+         {
+          "scene": "sc_griffin_spire_3__griffin_spire_3_npc_1_step_q7_griffin_chick"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "x_stairs_1",
+   "from": "stairs_1",
+   "kind": "stairs",
+   "to": {
+    "graph": "griffin_spire_2",
+    "node": "stairs_2"
+   },
+   "idx": 0
+  },
+  {
+   "id": "e1",
+   "from": "stairs_1",
+   "to": "path_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 1
+  },
+  {
+   "id": "e2",
+   "from": "path_1",
+   "to": "path_2",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 2
+  },
+  {
+   "id": "e3",
+   "from": "path_2",
+   "to": "inn_1",
+   "kind": "path",
+   "danger": 2,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 3
+  },
+  {
+   "id": "e4",
+   "from": "inn_1",
+   "to": "boss_7",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "patrol": true,
+   "terrain": "boss_approach",
+   "idx": 4
+  },
+  {
+   "id": "e5",
+   "from": "path_1",
+   "to": "path_3",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 5
+  },
+  {
+   "id": "e6",
+   "from": "path_3",
+   "to": "npc_1",
+   "kind": "path",
+   "danger": 1,
+   "steps": 1,
+   "terrain": "tunnel",
+   "idx": 6
+  }
+ ],
+ "events": [
+  {
+   "id": "path_1.1",
+   "node": "path_1",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_2.1",
+   "node": "path_2",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "path_3.1",
+   "node": "path_3",
+   "on": "enter",
+   "pick": [
+    {
+     "weight": 70,
+     "outcome": "nothing",
+     "once": false,
+     "do": []
+    },
+    {
+     "weight": 15,
+     "outcome": "story",
+     "once": false,
+     "do": [
+      {
+       "scene": "sc_griffin_spire_3__ambient"
+      }
+     ]
+    },
+    {
+     "weight": 15,
+     "outcome": "item",
+     "cooldown": 4,
+     "do": [
+      {
+       "giveItem": "honey",
+       "qty": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": false,
+   "outcome": "story",
+   "do": [
+    {
+     "scene": "sc_griffin_spire_3__ambient"
+    }
+   ]
+  }
+ ],
+ "quests": [],
+ "scenes": {
+  "sc_griffin_spire_3__ambient": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_3__ambient",
+   "title": "ambient",
+   "trigger": {
+    "graph": "griffin_spire_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "xiaolong",
+     "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_griffin_spire_3__griffin_spire_3_npc_1_step_q7_griffin_chick": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_3__griffin_spire_3_npc_1_step_q7_griffin_chick",
+   "title": "griffin_spire_3.npc_1.step_q7_griffin_chick",
+   "trigger": {
+    "graph": "griffin_spire_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q7_griffin_chick: scene from data/dialogue)"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "traveller",
+  "xiaolong"
+ ],
+ "npcs": {
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "traveller": {
+   "name": {
+    "zh": "旅人",
+    "en": "Traveller"
+   }
+  }
+ }
+}
