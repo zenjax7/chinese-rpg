@@ -181,7 +181,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await tid('back').click();
 
   // ---- boss battle: cast on turn 1, back to back ----
-  await edit(s => { s.level = 12; s.where = 'forest'; s.locs.forest.pathCleared = 8; s.locs.forest.patrolsLeft = 0; s.locs.forest.approachArmed = false; s.locs.forest.bossCheckpoint = false; });
+  await edit(s => { s.level = 12; s.where = 'forest'; s.locs.forest.pathCleared = 8; });
   await p.reload(); await tid('location').waitFor(); await rest(34); await tid('location').waitFor();
   if (await tid('act-boss').count()) {
     await hintFree('boss gate');

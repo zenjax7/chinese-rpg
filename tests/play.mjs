@@ -249,18 +249,10 @@ await tid(p, 'act-bag').click(); await tid(p, 'items').waitFor(); await tid(p, '
 check(await tid(p, 'inn').getAttribute('data-place') === 'meadow' && await tid(p, 'inn').getAttribute('data-node') === '8', 'Return Feather warps to the last inn used (meadow approach)');
 await tid(p, 'back').click(); await tid(p, 'location').waitFor();
 const rd = await tid(p, 'readiness').innerText(); log(rd);
-let patrols = 0;
-while (await tid(p, 'act-patrol').count()) {
-  await tid(p, 'act-patrol').click(); r = await playBattle(p, () => true, { action: async pg => {   // Heal lives in the ✨ Skills sub-menu now
-    if (await hp(pg) >= 25 || !await tid(pg, 'act-skills').isEnabled()) return 'act-attack';
-    await tid(pg, 'act-skills').click(); await tid(pg, 'skills-menu').waitFor();
-    if (await tid(pg, 'act-heal').count() && await tid(pg, 'act-heal').isEnabled()) return 'act-heal';
-    await tid(pg, 'act-back').click(); await tid(pg, 'action-menu').waitFor(); return 'act-attack'; } });
-  patrols++; if (r.result === 'win') await tid(p, 'victory-ok').click(); else { log('patrol', r.result); break; }
-  await tid(p, 'location').waitFor();
-}
-check(patrols === 2, `2 forced patrols before the boss gate (fought ${patrols})`);
-check(await tid(p, 'act-boss').count() === 1 && await tid(p, 'act-train').count() === 1, 'boss gate offers Enter + Train');
+// Jack Oct 11: no practice patrols (no forced patrols, no Train, no "patrols leave at" trigger): the boss is next once the path is clear
+check(await tid(p, 'act-patrol').count() === 0 && await tid(p, 'act-train').count() === 0 && await tid(p, 'act-boss').count() === 1 && !/patrol/i.test(await tid(p, 'location').innerText()),
+  `no practice patrols: the cleared path leads straight to the boss (no Patrol / Train button, no patrol text; meter “${rd.replace(/\n+/g, ' ')}”)`);
+{ const lm = (await save_(p)).locs.meadow; check(!['patrolsLeft', 'approachArmed', 'bossCheckpoint', 'patrolsFought'].some(k => k in lm), `classic save: no patrol / boss-checkpoint fields (${Object.keys(lm).join(', ')})`); }
 await tid(p, 'act-bag').click(); await tid(p, 'items').waitFor(); if (await tid(p, 'use-honey').isEnabled()) await tid(p, 'use-honey').click(); await tid(p, 'back').click();
 await tid(p, 'act-boss').click(); r = await playBattle(p, () => true, { insight: false, shot: '/tmp/proto-boss.png' });
 check((await p.evaluate(() => window.__proto.audio.music)).includes('mus_battle_boss'), 'boss fight uses boss music');
@@ -310,12 +302,7 @@ await tid(p, 'location').waitFor(); await debugSet(p, { level: 8, gold: 200 });
   const hs = await p.locator('#toasts').innerText(); check(/New skill slot! .*Guardian Shield/.test(hs), 'toast: new skill slot filled'); }
 await tid(p, 'debug-open').click(); await tid(p, 'dbg-clearpath').click(); await tid(p, 'location').waitFor();
 log('forest approach:', await tid(p, 'location').innerText().then(t => t.replace(/\n+/g, ' | ')));
-for (let tries = 0; tries < 6 && await tid(p, 'act-patrol').count(); tries++) {
-  await tid(p, 'act-patrol').click(); r = await playBattle(p, () => true); log('forest patrol', r.result, JSON.stringify(r.stats));
-  if (r.result === 'win') await tid(p, 'victory-ok').click();
-  else { await tid(p, 'back').click().catch(() => {}); if (await tid(p, 'town').count()) await goLoc(p, 'forest'); }   // a random patrol loss: wake at the inn, walk back
-  await tid(p, 'location').waitFor();
-}
+check(await tid(p, 'act-patrol').count() === 0 && await tid(p, 'act-boss').count() === 1, 'forest: no patrols before the Queen Bee either');
 if (await tid(p, 'act-inn').count()) { await tid(p, 'act-inn').click(); await tid(p, 'inn-stay').click(); await tid(p, 'back').click(); }
 { const sq = await save_(p); log('queen kit:', JSON.stringify(sq.equip), 'skills', sq.skillsEquipped.join(','), 'inv', JSON.stringify(sq.inv), 'hp', await hp(p), '/', await maxHp(p));
   check((sq.inv.honey || 0) >= 3 && sq.equip.armor === 'petal_cloak' && sq.equip.shield === 'beeswax' && sq.equip.weapon === 'horn_dagger', 'Queen Bee kit: dagger + tier-2 armor/shield + 3 Honey Potions');

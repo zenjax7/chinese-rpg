@@ -44,8 +44,8 @@ for (const [W, H] of VPS) {
     if (await tid('victory').count()) break;
     await p.waitForTimeout(250);
   }
-  // boss: jump the save to the boss gate (path cleared, patrols gone), reload, enter the lair
-  await p.evaluate(k => { const s = JSON.parse(localStorage.getItem(k)); const l = s.locs.meadow; l.pathCleared = 8; l.patrolsLeft = 0; l.approachArmed = false; l.previewSeen = true;
+  // boss: jump the save to the boss gate (path cleared; no patrols since Jack's Oct 11 rules), reload, enter the lair
+  await p.evaluate(k => { const s = JSON.parse(localStorage.getItem(k)); const l = s.locs.meadow; l.pathCleared = 8; l.previewSeen = true;
     s.where = 'meadow'; s.level = 3; s.hp = 40; localStorage.setItem(k, JSON.stringify(s)); }, KEY);
   await p.reload(); await tid('location').waitFor(); await shot('map-boss-gate', 1200);
   await tid('act-boss').click(); await tid('action-menu').waitFor({ timeout: 20000 }); await shot('boss-battle', 900);
