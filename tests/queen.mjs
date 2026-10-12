@@ -21,7 +21,7 @@ for (let run = 0; run < +RUNS; run++) {
   await tid(p, 'consent-answer').fill(String(+m[1] * +m[2])); await tid(p, 'consent-ok').click(); await tid(p, 'town').waitFor();
   await p.evaluate(k => { const s = JSON.parse(localStorage.getItem('chinese-rpg-proto-v3'));
     s.level = 8; s.locs.meadow.bossDefeated = true; s.locs.meadow.pathCleared = 8; s.locs.forest.unlocked = true; s.locs.forest.previewSeen = true;
-    Object.assign(s.locs.forest, { pathCleared: 8, patrolsLeft: 0, approachArmed: false });
+    Object.assign(s.locs.forest, { pathCleared: 8 });
     s.gear = [...new Set([...s.gear, ...Object.values(k.equip).filter(Boolean)])]; s.equip = k.equip; s.inv.honey = k.survive ? 3 : 0;
     localStorage.setItem('chinese-rpg-proto-v3', JSON.stringify(s)); }, kit);
   await p.reload(); await tid(p, 'town').waitFor();
@@ -29,9 +29,8 @@ for (let run = 0; run < +RUNS; run++) {
   if (!kit.survive) await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('chinese-rpg-proto-v3')); s.skillsEquipped = s.skillsEquipped.filter(x => x === 'insight'); localStorage.setItem('chinese-rpg-proto-v3', JSON.stringify(s)); });
   if (!kit.survive) { await p.reload(); await tid(p, 'town').waitFor(); }
   await tid(p, 'go-adventure').click(); await tid(p, 'loc-forest').click(); await tid(p, 'location').waitFor();
-  // walking in from the village re-arms the approach patrols; skip them (this script measures the boss fight only)
-  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('chinese-rpg-proto-v3')); Object.assign(s.locs.forest, { patrolsLeft: 0, approachArmed: false }); localStorage.setItem('chinese-rpg-proto-v3', JSON.stringify(s)); });
-  await p.reload(); await tid(p, 'location').waitFor(); await tid(p, 'act-boss').click({ timeout: 8000 }).catch(async e => { await p.screenshot({ path: '/tmp/queen-fail.png' }); console.log(await p.locator('#ui').innerText()); throw e; });
+  // Jack Oct 11: no approach patrols, so the cleared path leads straight to the boss
+  await tid(p, 'act-boss').click({ timeout: 8000 }).catch(async e => { await p.screenshot({ path: '/tmp/queen-fail.png' }); console.log(await p.locator('#ui').innerText()); throw e; });
   await tid(p, 'battle').waitFor({ state: 'attached' });
   const used = { potion: 0, heal: 0 }; let q = 0, waits = 0, out = '';
   for (let step = 0; step < 3000 && !out; step++) {

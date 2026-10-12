@@ -83,8 +83,7 @@
   "gearTier": 9,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 4,
-   "pathFights": 8
+   "reviewSlots": 4
   },
   "enemiesPerBattle": [
    3,
@@ -511,14 +510,6 @@
      "setFlag": "demon_castle_4.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_3.1",

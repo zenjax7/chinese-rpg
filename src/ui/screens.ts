@@ -156,8 +156,6 @@ export function inn(msg = '', place = 'town', node = 0) {
       if ((S.inv.honey || 0) + (S.inv.bighoney || 0) === 0) { S.inv[B.economy.brokePotion] = (S.inv[B.economy.brokePotion] || 0) + 1; m += `<br>🍯 The innkeeper slips you a free ${CONS[B.economy.brokePotion].en}.`; }
     } else { S.gold -= price; S.stats.paidInn++; m = `You paid ${price} 🪙 and slept well.`; }
     S.hp = hs.maxHp; S.mp = hs.maxMp; S.lastInn = { place, node }; if (place === 'town') graphHooks.onRest?.();
-    // resting away from the boss approach re-arms the approach patrols; the approach inn itself does not (spec v3 §7.3/§7.4)
-    if (!(place !== 'town' && node >= LOC[place].pathFights)) for (const l of LOCATIONS) S.locs[l.id].approachArmed = true;
     save(); toast('💤 HP and MP restored!'); inn(m, place, node);
   });
   on('#back', backTo);
@@ -367,8 +365,7 @@ export function settings() {
 // =============== location ===============
 export async function enterLocation(id: string, fromTown = false) {
   const st = S.locs[id]; setCurrentLoc(id);
-  S.where = id;
-  if (fromTown) st.approachArmed = true;
+  S.where = id; void fromTown;
   save();
   for (const d of onArrive(id)) {   // v3.3: a carried letter is delivered (and paid) on arrival in the next town's realm
     playSfx('sfx_gold'); hud();
@@ -376,10 +373,6 @@ export async function enterLocation(id: string, fromTown = false) {
   }
   if (!st.previewSeen) { await preview(id); st.previewSeen = true; save(); }
   locationScreen(id);
-}
-function armApproach(id: string) {
-  const st = S.locs[id];
-  if (st.pathCleared >= LOC[id].pathFights && st.approachArmed) { st.patrolsLeft = readiness(id).ready ? 0 : B.learning.patrolsPerTrip; st.approachArmed = false; save(); }
 }
 type MapNode = { x: number; y: number; kind: 'inn' | 'fight' | 'gate' | 'boss'; fight?: number; innAt?: number };
 /** Node positions on the painted path (locations.json mapNodes), mapped onto the logical path: inns, fights, gate, boss. */
@@ -394,7 +387,7 @@ function mapNodes(l: LocationDef): MapNode[] {
   return seq;
 }
 export function locationScreen(id: string, note = '') {
-  const l = LOC[id]; const st = S.locs[id]; setCurrentLoc(id); view.mode('map', parseInt(l.bg), BG.map(l)); playMusic('mus_village'); hud(); armApproach(id);
+  const l = LOC[id]; const st = S.locs[id]; setCurrentLoc(id); view.mode('map', parseInt(l.bg), BG.map(l)); playMusic('mus_village'); hud();   // Jack Oct 11: no practice patrols before the boss
   setTitle(locTitle(l));
   const rd = readiness(id); const pathDone = st.pathCleared >= l.pathFights;
   const underLv = S.level <= l.recLevel[0] - 2;
@@ -405,24 +398,22 @@ export function locationScreen(id: string, note = '') {
   const gateI = idx(n => n.kind === 'gate'), bossI = idx(n => n.kind === 'boss');
   const restedHere = S.lastInn && S.lastInn.place === id && S.lastInn.node === innNow;
   let heroI = st.pathCleared === 0 || restedHere ? idx(n => n.kind === 'inn' && n.innAt === innNow) : idx(n => n.fight === st.pathCleared - 1);
-  if (pathDone && st.patrolsLeft === 0 && !restedHere) heroI = gateI;
+  if (pathDone && !restedHere) heroI = gateI;
   if (heroI < 0) heroI = 0;
   let act: { a: string; tid: string; label: string; to: number };
   if (!pathDone) act = { a: 'path', tid: 'act-path', label: `Go! Fight ${st.pathCleared + 1}`, to: idx(n => n.fight === st.pathCleared) };
-  else if (st.patrolsLeft > 0) act = { a: 'patrol', tid: 'act-patrol', label: 'Fight the patrol', to: gateI };
-  else act = { a: 'boss', tid: 'act-boss', label: `Boss!${st.bossCheckpoint ? ' 🚩' : ''}`, to: bossI };
+  else act = { a: 'boss', tid: 'act-boss', label: 'Boss!', to: bossI };
   const nodeHtml = nodes.map((n, i) => {
     let cls = n.kind, ic = '⚔️', tid = '', dis = '';
     if (n.kind === 'fight') { const done = n.fight! < st.pathCleared; cls += done ? ' done' : n.fight === st.pathCleared ? ' next' : ''; ic = done ? '✔' : '⚔️'; tid = `node-f${n.fight}`; }
     else if (n.kind === 'inn') { ic = '🛏️'; if (n.innAt === innNow) { cls += ' here'; tid = 'act-inn'; } }
-    else if (n.kind === 'gate') { ic = '🚧'; cls += pathDone && st.patrolsLeft === 0 ? ' done' : pathDone ? ' next' : ''; if (pathDone && st.patrolsLeft === 0) ic = '✔'; }
-    else { ic = '👑'; cls += st.bossDefeated ? ' done' : ''; if (pathDone && st.patrolsLeft === 0 && !st.bossDefeated) cls += ' next'; }
+    else if (n.kind === 'gate') { ic = pathDone ? '✔' : '🚧'; cls += pathDone ? ' done' : ''; }
+    else { ic = '👑'; cls += st.bossDefeated ? ' done' : ''; if (pathDone && !st.bossDefeated) cls += ' next'; }
     return `<button class="mapnode ${cls}" data-node="${i}" ${tid ? `data-testid="${tid}"` : ''} ${dis} style="left:${n.x}px;top:${n.y}px" aria-label="${n.kind}">${ic}</button>`;
   }).join('');
   const chip = (i: number, html: string, cls = '', dx = 48, dy = -64) => nodes[i] ? `<div class="tip ${cls}" style="left:${nodes[i].x + dx}px;top:${nodes[i].y + dy}px">${html}</div>` : '';
   const chips = [
     !pathDone ? chip(act.to, `⚔️ Fight ${st.pathCleared + 1} of ${l.pathFights}`, '', -70, -86) : '',
-    !rd.ready && !st.bossDefeated && (!pathDone || st.patrolsLeft > 0) ? chip(gateI, `🚧 Patrols leave at ${rd.need} ready words (you have ${rd.n})`, 'warn', -520, -60) : '',
     chip(bossI, `${zh(bossName(l))} · Boss${st.bossDefeated ? ' ✔' : ''}`, 'boss', 56, -26),
   ].join('');
   const pts = nodes.map(n => `${n.x},${n.y}`).join(' ');
@@ -442,8 +433,7 @@ export function locationScreen(id: string, note = '') {
       <button class="secondary" data-act="bag" data-testid="act-bag"><span class="ic">🎒</span>Bag</button>
       <button class="secondary" data-act="preview" data-testid="act-preview" style="width:220px;line-height:1.1"><span class="ic">📖</span>Words &amp; practice</button>
       <div class="meter" data-testid="readiness">📚 Ready words <b>${rd.n} / ${rd.total}</b><div class="bar gold"><i style="width:${Math.round(100 * rd.n / rd.total)}%"></i></div>
-        <span class="muted">${st.bossDefeated ? '👑 boss beaten' : rd.ready ? '✨ Ready for the boss!' : `patrols leave at ${rd.need}`}</span></div>
-      ${act.a === 'boss' ? `<button class="secondary" data-act="train" data-testid="act-train" style="width:150px;line-height:1.1">🏋️ Train</button>` : ''}
+        <span class="muted">${st.bossDefeated ? '👑 boss beaten' : ''}</span></div>
       <button class="primary" data-act="${act.a}" data-testid="${act.tid}" data-key="enter" style="${act.a === 'boss' ? 'min-width:250px' : ''}"><span class="ic">${act.a === 'boss' ? '👑' : '⚔️'}</span>${act.label}</button>
     </div></div>`);
   if (note) toast(note);
@@ -455,7 +445,7 @@ export function locationScreen(id: string, note = '') {
   $$('.mapnode').forEach(b => b.addEventListener('click', () => {
     const n = nodes[+b.dataset.node!]; if (b.dataset.testid === 'act-inn') return;
     const txt = n.kind === 'fight' ? (n.fight! < st.pathCleared ? `✔ Fight ${n.fight! + 1}: done` : n.fight === st.pathCleared ? `⚔️ Fight ${n.fight! + 1}: press Go!` : `⚔️ Fight ${n.fight! + 1}: ahead`)
-      : n.kind === 'inn' ? '🛏️ An inn. Reach it first to rest here.' : n.kind === 'gate' ? (rd.ready ? '🚧 The patrols are gone!' : `🚧 Patrols leave at ${rd.need} ready words (you have ${rd.n})`) : `👑 ${zh(bossName(l))} waits at the big tree.`;
+      : n.kind === 'inn' ? '🛏️ An inn. Reach it first to rest here.' : n.kind === 'gate' ? (pathDone ? '🚧 The way to the boss is open.' : '🚧 The way to the boss: clear the path first.') : `👑 ${zh(bossName(l))} waits at the big tree.`;
     $('#nodetip').innerHTML = `<div class="tip" style="left:${n.x - 40}px;top:${n.y + 40}px">${txt}</div>`;
     setTimeout(() => { const t = $('#nodetip'); if (t) t.innerHTML = ''; }, 2200);
   }));
@@ -466,9 +456,8 @@ export function locationScreen(id: string, note = '') {
   };
   on('[data-act]', async (_e, el) => {
     const a = el.dataset.act!;
-    if (a === 'path' || a === 'patrol' || a === 'boss' || a === 'train') { $$('.bottombar button').forEach(b => (b as HTMLButtonElement).disabled = true); await walk(a === 'train' ? gateI : act.to); }
+    if (a === 'path' || a === 'boss') { $$('.bottombar button').forEach(b => (b as HTMLButtonElement).disabled = true); await walk(act.to); }
     if (a === 'path') return doBattle(id, 'path');
-    if (a === 'patrol' || a === 'train') return doBattle(id, 'patrol');
     if (a === 'boss') return doBattle(id, 'boss');
     if (a === 'preview') { await preview(id); return locationScreen(id); }
     if (a === 'gearshop') { town(); return shop(); }   // the warning's shortcut: back to the village shop
@@ -484,7 +473,6 @@ function feather(id: string) {
   // v3: warp to the last inn used (or this location's entrance inn if none yet)
   if ((S.inv.feather || 0) <= 0) return;
   const t = S.lastInn || { place: id, node: 0 }; S.inv.feather--;
-  if (t.place === 'town' || t.node < LOC[t.place].pathFights) for (const l2 of LOCATIONS) S.locs[l2.id].approachArmed = true;
   save(); toast(`🪶 Whoosh! You fly to ${t.place === 'town' ? 'the village inn' : 'the inn'}.`);
   if (t.place === 'town') { S.where = 'town'; view.mode('town', undefined, BG.village()); } else { S.where = t.place; setCurrentLoc(t.place); view.mode('map', parseInt(LOC[t.place].bg), BG.map(LOC[t.place])); }
   return inn(`🪶 The Return Feather carried you to ${innName(t.place, t.node)}.`, t.place, t.node);
@@ -497,7 +485,6 @@ async function doBattle(id: string, kind: BattleKind) {
   if (res.outcome === 'flee') return kind === 'walk' ? town() : locationScreen(id, '🏃 You got away safely.');
   let extra = '';
   if (kind === 'path') st.pathCleared = Math.min(LOC[id].pathFights, st.pathCleared + 1);
-  if (kind === 'patrol') { st.patrolsFought++; if (st.patrolsLeft > 0) st.patrolsLeft--; }
   if (kind === 'boss') {
     const first = !st.bossDefeated; st.bossDefeated = true;
     const i = LOCATIONS.findIndex(l => l.id === id); const next = LOCATIONS[i + 1];
@@ -547,7 +534,6 @@ export function applyDefeat(): { fee: number; potion: boolean } {
   const h = heroStats(); S.hp = h.maxHp; S.mp = h.maxMp;
   let potion = false;
   if ((S.inv.honey || 0) + (S.inv.bighoney || 0) === 0 && S.gold < price) { S.inv[e.brokePotion] = (S.inv[e.brokePotion] || 0) + 1; potion = true; }
-  for (const l of LOCATIONS) S.locs[l.id].approachArmed = true;
   S.where = w.place; save();
   return { fee, potion };
 }
@@ -558,7 +544,7 @@ function defeat(id: string) {
   inn(`<div data-testid="defeat-msg">🐼 “There, there. You were so brave! Rest now.”<br>😵 <b>You fainted!</b> Your friends carried you back to the last inn you rested at.
     You keep all your items, EXP and treasure. ${fee ? `The doctor's fee was ${fee} 🪙.` : 'The doctor treated you for free.'}
     ❤️ HP and MP fully restored.${potion ? ' 🍯 The innkeeper gives you a free Honey Potion.' : ''}
-    💪 Courage +${Math.round((h.courageMult - 1) * 100)}% DEF until your next win.${S.locs[id].bossCheckpoint ? ' 🚩 Your boss checkpoint is saved.' : ''}</div>`, w.place, w.node);
+    💪 Courage +${Math.round((h.courageMult - 1) * 100)}% DEF until your next win.</div>`, w.place, w.node);   // Jack Oct 11: no boss checkpoint (a boss starts fresh)
 }
 
 // =============== preview: a paged "book" of word cards (spec §6.3) ===============
@@ -614,7 +600,7 @@ export function debugPanel(onChange: () => void) {
       <button class="danger" id="reset" data-testid="dbg-reset">Reset everything</button>
       <button id="close" data-testid="dbg-close">Close</button></div>
     <p class="muted">Speech: consent ${S.consent.speech ? 'yes' : 'no'}, session ${session.speechBlocked ? 'paused (' + esc(session.speechBlockReason) + ')' : 'ok'}, voids ${session.voids}. Stats: ${esc(JSON.stringify(S.stats))}. Courage ${S.courage}.
-      ${LOCATIONS.map(l => { const r = readiness(l.id); return `${l.name}: ready ${r.n}/${r.total} (trigger ${Math.round(r.trigger * 100)}%), path ${S.locs[l.id].pathCleared}, patrols left ${S.locs[l.id].patrolsLeft}`; }).join(' · ')}</p>
+      ${LOCATIONS.map(l => { const r = readiness(l.id); return `${l.name}: ready ${r.n}/${r.total}, path ${S.locs[l.id].pathCleared}`; }).join(' · ')}</p>
     <h3>🎤 Speech log (raw transcripts, alternatives, confidence; newest first)</h3>
     <div data-testid="dbg-srlog" style="max-height:220px;overflow:auto">${srLog.length ? srDebugHtml(10) : '<p class="muted">No recognition attempts yet.</p>'}</div>
     <h3>Item mastery (correct/attempts, Leitner box)</h3>
@@ -628,7 +614,7 @@ export function debugPanel(onChange: () => void) {
     const lv = Math.max(1, +(($('#dl') as HTMLInputElement).value) | 0); S.level = lv; if (S.exp >= expToNext(lv)) S.exp = 0; refreshSkills(S);
     S.hp = +(($('#dh') as HTMLInputElement).value) | 0; S.mp = +(($('#dm') as HTMLInputElement).value) | 0; clampHpMp(); save(); hud(); closeModal(); onChange(); flushNotices();
   }, m);
-  on('#clearpath', () => { for (const l of LOCATIONS.filter(x => S.where === 'town' || x.id === S.where)) { S.locs[l.id].pathCleared = l.pathFights; S.locs[l.id].approachArmed = true; } save(); closeModal(); onChange(); }, m);
+  on('#clearpath', () => { for (const l of LOCATIONS.filter(x => S.where === 'town' || x.id === S.where)) { S.locs[l.id].pathCleared = l.pathFights; } save(); closeModal(); onChange(); }, m);
   on('#tiergear', () => {   // preset: the §6.2 recommended (common) gear for the tier, worn; nothing else changes
     const t = dbgLoc().tier;
     for (const g of [...tierGear(t), ...GEAR_LIST.filter(x => x.slot === 'charm' && x.tier === t && x.rarity === 'common')]) { if (!S.gear.includes(g.id)) S.gear.push(g.id); S.equip[g.slot] = g.id; }

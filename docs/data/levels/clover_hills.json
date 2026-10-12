@@ -73,8 +73,7 @@
   "gearTier": 1,
   "difficulty": {
    "mcOptions": 3,
-   "reviewSlots": 1,
-   "pathFights": 8
+   "reviewSlots": 1
   },
   "enemiesPerBattle": [
    1,
@@ -157,8 +156,7 @@
    "title": {
     "zh": "狼窝",
     "en": "Wolf den"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "c_gate",
@@ -243,10 +241,7 @@
     "graph": "warren",
     "node": "w_gate"
    },
-   "kind": "portal",
-   "cond": {
-    "bossDefeated": "clover_hills"
-   }
+   "kind": "portal"
   }
  ],
  "events": [

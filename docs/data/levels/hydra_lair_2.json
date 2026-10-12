@@ -81,8 +81,7 @@
   "gearTier": 5,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -187,8 +186,7 @@
    "title": {
     "zh": "九头蛇",
     "en": "Hydra"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_4",
@@ -632,14 +630,6 @@
      "setFlag": "hydra_lair_2.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_5.1",

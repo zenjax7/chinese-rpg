@@ -83,8 +83,7 @@
   "gearTier": 9,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 4,
-   "pathFights": 8
+   "reviewSlots": 4
   },
   "enemiesPerBattle": [
    3,
@@ -178,8 +177,7 @@
    "title": {
     "zh": "魔王",
     "en": "Demon King"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_3",

@@ -77,8 +77,7 @@
   "gearTier": 1,
   "difficulty": {
    "mcOptions": 3,
-   "reviewSlots": 1,
-   "pathFights": 8
+   "reviewSlots": 1
   },
   "enemiesPerBattle": [
    1,
@@ -283,8 +282,7 @@
    "title": {
     "zh": "角兔王座",
     "en": "Rabbit King's throne"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "w_gate",
@@ -306,9 +304,6 @@
    "to": {
     "graph": "world",
     "node": "realm_1"
-   },
-   "cond": {
-    "bossDefeated": "warren"
    },
    "idx": 0
   },
@@ -430,14 +425,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "w_lake.3",
-   "node": "w_lake",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "w_tunnel.1",
@@ -603,11 +590,6 @@
      "note": "Xiaoming waits at home in Little Hill Village (hook turnIn)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q1_carrot_offer",
-    "progress": "sc_q1_carrot_wait",
-    "turnIn": "sc_q1_carrot_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 15

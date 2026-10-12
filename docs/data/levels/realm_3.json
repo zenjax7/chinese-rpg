@@ -85,8 +85,7 @@
   "gearTier": 3,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -131,7 +130,6 @@
    ],
    "hub": "village",
    "town": 3,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q3_stolen_hats",
@@ -234,8 +232,7 @@
    "title": {
     "zh": "山贼头目",
     "en": "Bandit Boss"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_4",
@@ -583,7 +580,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q3_rescue_fei",
@@ -1139,14 +1135,6 @@
    ]
   },
   {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_8.1",
    "node": "path_8",
    "on": "enter",
@@ -1193,14 +1181,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_9.1",
    "node": "path_9",
    "on": "enter",
@@ -1245,14 +1225,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_2.2",
@@ -1311,14 +1283,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_13.1",
@@ -1473,11 +1437,6 @@
      "note": "Reunion; Fei grumbles 谢谢."
     }
    ],
-   "scenes": {
-    "offer": "sc_q3_rescue_fei_offer",
-    "progress": "sc_q3_rescue_fei_wait",
-    "turnIn": "sc_q3_rescue_fei_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5
@@ -1585,11 +1544,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q3_stolen_hats_offer",
-    "progress": "sc_q3_stolen_hats_wait",
-    "turnIn": "sc_q3_stolen_hats_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -1701,11 +1655,6 @@
      "note": "Qian meets you at the outpost."
     }
    ],
-   "scenes": {
-    "offer": "sc_q3_caravan_offer",
-    "progress": "sc_q3_caravan_wait",
-    "turnIn": "sc_q3_caravan_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -1813,11 +1762,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q3_slime_rainbow_offer",
-    "progress": "sc_q3_slime_rainbow_wait",
-    "turnIn": "sc_q3_slime_rainbow_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 5

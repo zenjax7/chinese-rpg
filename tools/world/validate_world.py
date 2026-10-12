@@ -2,7 +2,7 @@
   python3 tools/world/validate_world.py [data_dir]   (default docs/data/world)  -> exit 1 on errors.  npm run validate:world
 Realms come from the graphs in index.json (no fixed 1..9 loop).
 Checks: JSON Schema (data/world/schemas), unique ids/idx, edge and event references, two-way stairs/portals, enemy/item/quest/pool refs,
-zones (one boss node + one patrol edge each), v2 quests (data/quests.json) and hooks, scene refs (data/dialogue), realm-1 word density D1, speakers,, reachability with one-way edges, inn coverage (<= maxHopsToInn hops), beeline battle budget per zone."""
+zones (one boss node + one patrol edge each), v2 quests (data/quests.json) and hooks, scene refs (data/dialogue), realm-1 word density D1, speakers,, reachability with one-way edges, inn coverage (<= maxHopsToInn hops), expected beeline battles per zone (reported only; no target since Jack 2026-10-11)."""
 import json, os, sys, csv, glob, collections
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
@@ -214,13 +214,13 @@ if not schema_or_ref_errors:
                     E(f"realm {t}: realm boss {bg}/{bn} has no clear event giving a Return Feather (world_rules.realmBossFeather)")
         stats[t]['towns_villages'] = have
         stats[t]['max_hops_to_inn'] = max(dist.get(k, 99) for k in T.N)
-        # beeline battle budget per zone (expected random battles on the shortest route from the previous boss to the approach node)
-        pos = T.entry; lo, hi = rules['beelineBattleRange']; zb = []
+        # beeline battles per zone, reported (expected random battles on the shortest route from the previous boss to the approach node)
+        pos = T.entry; zb = []
         for zi, z in enumerate(T.zones):
             p = T.path(pos, z['approach'], zi)
             if p is None: E(f"realm {t}: zone {z['id']} approach unreachable"); continue
             ex = sum(T.E[e]['p']*T.E[e]['steps'] for e, _ in p); zb.append(round(ex, 2))
-            if not lo <= ex <= hi: E(f"realm {t}: zone {z['id']} beeline expects {ex:.2f} battles (range {lo}-{hi})")
+            # no range check since Jack 2026-10-11 (no own-word battle targets); the expected count is only reported
             pos = z['boss']
         stats[t]['beeline_expected'] = zb
 # ---- v3.9 hooks <-> data/quests.json

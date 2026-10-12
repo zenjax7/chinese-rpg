@@ -1,5 +1,5 @@
 {
- "_note": "Spec v3 (realm_location_difficulty) values for tiers 1-2; enemies from desy/data. Prototype collapses each realm into one location: meadow uses the L1.1 pool, forest the L2.1 pool; path fights host the realm's other location bosses (crow, grey wolf, bear) and the scripted elite at the middle fight (4). elite = replaces one normal enemy in 10% of patrols. packs = enemies that always come in a group of N. mapNodes = node positions on the painted location map, in 1280x720 frame coordinates, in path order (inn, 4 fights, inn, 4 fights, inn, patrol gate, boss); a location without them gets an automatic layout.",
+ "_note": "Spec v3 (realm_location_difficulty) values for tiers 1-2; enemies from desy/data. Prototype collapses each realm into one location: meadow uses the L1.1 pool, forest the L2.1 pool; path fights host the realm's other location bosses (crow, grey wolf, bear). Jack Oct 11: no random elites and no scripted path elites (the elite fight at path fight 4 and the `elite` field are gone). packs = enemies that always come in a group of N. mapNodes = node positions on the painted location map, in 1280x720 frame coordinates, in path order (inn, 4 fights, inn, 4 fights, inn, patrol gate, boss); a location without them gets an automatic layout.",
  "locations": [
   {
    "id": "meadow",
@@ -51,14 +51,10 @@
     "3": [
      "crow"
     ],
-    "4": [
-     "swiftrabbit"
-    ],
     "6": [
      "greywolf"
     ]
    },
-   "elite": "swiftrabbit",
    "desyPool": "L1.1",
    "mapNodes": [
     {
@@ -173,12 +169,8 @@
    "scripted": {
     "3": [
      "bear"
-    ],
-    "4": [
-     "guardbee"
     ]
    },
-   "elite": "guardbee",
    "desyPool": "L2.1",
    "mapNodes": [
     {

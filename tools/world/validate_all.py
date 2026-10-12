@@ -7,6 +7,9 @@
  5. tools/world/build_world.py              runtime data: resolves every quest position; src/data/world/ + public/world/graphs/ must be up to date
  6. docs/tech/tools/world/ (v3.9.4)        Desy's world tools (make_world_data -> world_gen -> make_realm_content -> make_schemas), run into a
                                             temp dir (WORLD_OUT), must reproduce every generated file in docs/data/world byte for byte
+ 7. docs/tech/tools/levels/ (level/0.2 maps, LE §14 F7): validate_levels.py must report 0 errors (schema, links, quest locks,
+                                            boss reward), test_locks.py must pass (lock fixtures), convert_levels.py --check must find
+                                            docs/data/levels up to date
 Exit 1 on any failure."""
 import json, os, subprocess, sys, glob, filecmp, shutil, tempfile
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -73,5 +76,10 @@ ok = not terr and not regen
 print(f"{'✅' if ok else '❌'} world tools reproduce docs/data/world byte for byte{'' if ok else ': ' + (terr or ', '.join(sorted(regen)[:8]))}")
 if not ok: fails.append('world tools drift')
 shutil.rmtree(wout)
+# 7. level/0.2 maps (docs/data/levels)
+lt = os.path.join('docs', 'tech', 'tools', 'levels')
+run('validate_levels (0 errors)', [os.path.join(lt, 'validate_levels.py')], lambda o, c: c == 0 and 'ERRORS: 0' in o)
+run('test_locks (quest-lock fixtures)', [os.path.join(lt, 'test_locks.py')], lambda o, c: c == 0 and '0 failures' in o)
+run('convert_levels --check (docs/data/levels up to date)', [os.path.join(lt, 'convert_levels.py'), '--check'])
 print('FAILED: ' + ', '.join(fails) if fails else 'world + story data: all checks passed')
 sys.exit(1 if fails else 0)

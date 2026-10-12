@@ -2,8 +2,13 @@
 It is spells_sim.py (the v3.3-v3.7 campaign: purchasable spells, quests, gear, learning model, combat_sim.battle) with the v3.8-v3.9
 realm-graph traversal (formerly the generated world_sim.py = build_world_sim.py splicing world_loop.py.txt in). World data comes from
 world_loader.py (docs/data/world or docs/data/levels, optional 'levels_proposal' transform); opt['data'] is passed to WG.configure().
-Defaults reproduce the v3.9.1 tables (sim_world_v391.csv) exactly. Engine-faithful switches (src/world/graph.ts + engine.ts, all off by
-default, see run_world_sim.py 'engine' preset): patrols, budget_key='edge', rng='engine'.
+opt v391_rules=True reproduces the v3.9.1 tables (sim_world_v391.csv) exactly. Engine-faithful switches (src/world/graph.ts + engine.ts,
+see run_world_sim.py 'engine' preset): budget_key='edge', rng='engine'.
+2026-10-11 (Jack's section-9 rulings, the default): no boss-approach patrols (opt patrols=True puts them back), no battle budget and no
+pity when the rules file has none (docs/data/levels/world_rules.json; opts budget / budget_mult / pity_rolls put them back), walked edges at
+the rules' clearedStepMult (0.5 for the maps), every eligible arrival event runs in list order (v391_rules: the first one only), and
+lockedUntilQuest gates (world_loader.Realm.locks) stay closed until their quest is turned in. Report-only difficulty knobs: boss_hp_scale,
+enemy_atk_mult, enemy_hp_mult (plus the existing rate_mult, k_mult, boss_atk).
 2026-10-11 (Jack, firm): no boss retry mechanic (a lost boss fight restarts at full boss HP) and no random strong or elite enemies
 (no 10% patrol elite, no scripted path elite, no location `elite` field). Those rules now run only with opt v391_rules=True (or one at a time: v391_checkpoint / v391_elites), kept solely so
 `run_world_sim.py calibrate` can still reproduce the historical v3.9.1 tables. Deliberately placed fights (bosses, mini-bosses, quest
@@ -61,6 +66,8 @@ def campaign(args):
     C.BOSS_HP_MULT.clear()
     C.BOSS_ATK_MULT.clear(); C.BOSS_ATK_MULT.update(opt.get('boss_atk', getattr(D, 'BOSS_ATK_MULT', {})) if v34 else {})
     if opt.get('boss_hp', True) and v34: C.BOSS_HP_MULT.update(D.BOSS_HP_MULT)     # v3.6 boss HP
+    if opt.get('boss_hp_scale'): C.BOSS_HP_MULT.update({k: v*opt['boss_hp_scale'] for k, v in C.BOSS_HP_MULT.items()})   # report-only difficulty option
+    C.ENEMY_SCALE.update(atk=opt.get('enemy_atk_mult', 1.0), hp=opt.get('enemy_hp_mult', 1.0))                          # report-only difficulty option
     C.WORKING_SET = C.DEFAULT_WORKING_SET
     pol = dict(C.POLICIES[kid]); nets = C.NETS['nets+']
     order = opt.get('order', 'gear_first')
@@ -181,17 +188,22 @@ def campaign(args):
         def world_zone(loc):
             nonlocal uid, prior, q_words_pool, drops
             T = WG.realm(t); RU = WG.RULES; Z = T.zones[loc]; zi = loc
-            cmult = opt.get('cleared_mult', RU['clearedStepMult']); pity_n = RU['pityRolls']
-            budget = opt.get('budget', RU['zoneBattleBudget']); bmult = opt.get('budget_mult', RU['budgetSpentMult']); pmult = opt.get('rate_mult', 1.0)
+            # Jack 2026-10-11: no battle budget and no pity roll; the level/0.2 rules (docs/data/levels/world_rules.json) have neither key,
+            # walked edges at clearedStepMult 0.5. The seed rules (docs/data/world) still carry them, so v3.9.1 calibration is unchanged.
+            cmult = opt.get('cleared_mult', RU['clearedStepMult']); pity_n = opt.get('pity_rolls', RU.get('pityRolls', 10**9))
+            budget = opt.get('budget', RU.get('zoneBattleBudget', 10**9)); bmult = opt.get('budget_mult', RU.get('budgetSpentMult', 1.0)); pmult = opt.get('rate_mult', 1.0)
             safe_hops = RU['safe']['afterBossClear']['hops']
             explorer = world == 'explore'
             if loc == 0:
                 S['_wr'] = dict(pos=T.entry, last_inn=T.entry, cleared=set(), prog={}, pity=0, scripted=set(), visited={T.entry}, armed=True, last_fire={},
                                 visits=collections.Counter({T.entry: 1}), once=set(), qa=set(), qd=set(), items=collections.Counter(), safe_until={}, hops=0, enc=0)
             W = S['_wr']; W['armed'] = True
+            T.quest_done = W['qd']   # Jack 2026-10-11: lockedUntilQuest gates open once their quest is completed (turned in)
             engine_pity = opt.get('budget_key', 'loc') == 'edge'
             if not engine_pity: W['enc'] = 0      # 'loc': the budget resets when the location (= word pool) starts; 'edge': engine edgeZone rule in hop()
-            erng = opt.get('rng') == 'engine'; W.setdefault('cross', collections.Counter()); legacy = bool(opt.get('v391_rules') or opt.get('v391_elites')); legacy_cp = bool(opt.get('v391_rules') or opt.get('v391_checkpoint'))   # v3.9.1 rules, calibration / attribution only
+            erng = opt.get('rng') == 'engine'; W.setdefault('cross', collections.Counter()); legacy = bool(opt.get('v391_rules') or opt.get('v391_elites')); legacy_cp = bool(opt.get('v391_rules') or opt.get('v391_checkpoint'))
+            patrols_on = opt.get('patrols', bool(opt.get('v391_rules')))   # Jack 2026-10-11: no practice patrols; v3.9.1 had them
+            one_event = bool(opt.get('v391_rules'))   # v3.9.1: one arrival event per visit (first eligible); Jack 2026-10-11: every eligible event, list order   # v3.9.1 rules, calibration / attribution only
             b0 = dict(rand=R['path_battles'] + R['side_battles'] + R['back_battles'] - R['minis'] - R.get('tutorial', 0), mini=R['minis'], all=R['battles'])
             RF = RU['returnFeather']; fprice = max(1, round(opt.get('feather_G', RF['priceG'])*C.gold_per_enemy(t)))
             if t == 1 and loc == 0: S['feather'] = opt.get('start_feathers', RF['start'])
@@ -332,12 +344,14 @@ def campaign(args):
                             if x <= 0: ch = p; break
                         if ch.get('once'): W['once'].add(ch['_key'])
                         W['last_fire'][ch['_key']] = W['visits'][node]
-                        return run(ch, node, ch.get('outcome', 'nothing'))
+                        ok = run(ch, node, ch.get('outcome', 'nothing'))
+                        if one_event or not ok: return ok
+                        continue
                     ok = run(e, node, e.get('outcome', 'nothing'))
                     if ok:
                         if e.get('once'): W['once'].add(e['_key'])
                         W['last_fire'][e['_key']] = W['visits'][node]
-                    return ok
+                    if one_event or not ok: return ok
                 return True
             def wake():
                 W['pos'] = W['last_inn']; W['safe_until'].clear()
@@ -452,7 +466,7 @@ def campaign(args):
                     left = [k for k in todo if k not in W['visited'] and T.path(W['pos'], k, zi) is not None]
                     if not left: break
                     goto(min(left, key=lambda k: (len(T.path(W['pos'], k, zi)), todo.index(k))))
-            assert goto(Z['approach']), ('no route to approach', Z['id'], W['pos'])
+            assert goto(Z['approach']), ('no route to approach (a lockedUntilQuest gate whose quest the kid has not completed?)' if T.closed() else 'no route to approach', Z['id'], W['pos'])
             # ---- boss approach (Train happens at the approach node; the gate edge itself has no random battles)
             pat = 0; first = True; kind = Z['bossKind']
             def patrol():
@@ -465,7 +479,7 @@ def campaign(args):
                 for _ in range(60):
                     if W['pos'] != Z['approach']: goto(Z['approach'])
                     if first: R['ready_gate'].append(C.pool_score(L, local, 'items')); first = False
-                    if W['armed'] and not ready() and opt.get('patrols', True):
+                    if W['armed'] and not ready() and patrols_on:
                         W['armed'] = False; ok = True
                         for i in range(opt.get('forced', 2)):
                             if not patrol(): ok = False; break
@@ -473,7 +487,7 @@ def campaign(args):
                     W['armed'] = False
                     return
             at_gate()
-            for _ in range(300 if opt.get('patrols', True) else 0):
+            for _ in range(300 if patrols_on else 0):
                 if ready() or pat >= pol['max_patrols']: break
                 at_gate()
                 if need_rest(): rest_trip(); continue

@@ -3427,34 +3427,10 @@
    "notes": "Preview practice can supply at most 1 of the 2 correct answers per way"
   },
   {
-   "key": "boss_trigger_speech",
-   "value": 0.2,
-   "unit": "share of the location pool proficient",
-   "notes": "patrols spawn while below; Director’s call v3.1 (was 0.25)"
-  },
-  {
-   "key": "boss_trigger_no_speech",
-   "value": 0.4,
-   "unit": "share of the location pool proficient",
-   "notes": ""
-  },
-  {
    "key": "readiness_denominator",
    "value": "location pool only",
    "unit": "",
    "notes": "carried-over items are still practiced but not counted (was local + carry-over)"
-  },
-  {
-   "key": "forced_patrols_per_trip",
-   "value": 2,
-   "unit": "fights",
-   "notes": "each walk to the boss gate while below the trigger"
-  },
-  {
-   "key": "path_fights",
-   "value": 8,
-   "unit": "fights",
-   "notes": "scripted fights per location before the boss approach (was 6)"
   },
   {
    "key": "set_size",

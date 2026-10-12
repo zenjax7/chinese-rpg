@@ -64,6 +64,8 @@ export async function ensureProgress() {
     // every load: the saved progress must validate against progress.schema.json; older or damaged ones are migrated (src/world/progress.ts)
     const errs = validateProgress(S.world, PROGRESS_SCHEMA, COMMON_SCHEMA);
     if (errs.length) { console.warn('graph save: migrating progress (' + errs.slice(0, 3).join('; ') + ')'); S.world = migrateProgress(S.world, W.idx!.start, fr.carry) as E.Progress; proto().migratedProgress = errs; }
+    // Jack Oct 11: an older save's battle budget / pity / patrol / boss checkpoint fields are valid but unused: drop them
+    const z: any = S.world!.zone; S.world!.zone = { id: typeof z?.id === 'string' && z.id ? z.id : 'none' };
   }
   S.storyQuests ??= {}; S.scenesSeen ??= []; S.party ??= [];
   syncFeathers(); save();
@@ -117,18 +119,17 @@ function zoneOf(g: E.Graph, node?: string, e?: E.GEdge): E.Zone | undefined {
   return (zid && W.zones[zid]) || W.idx!.zones.find(z => z.realm === g.realm);
 }
 const battleLoc = (z?: E.Zone) => (z && LOC[z.location] ? z.location : (z?.realm ?? 1) >= 2 && LOC.forest ? 'forest' : 'meadow');
-async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string }): Promise<BattleResult['outcome']> {
+async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   const loc = battleLoc(z); setCurrentLoc(loc);
-  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, noElite: !!o.enemies };
-  S.locs[loc].bossCheckpoint = false;
+  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
-  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'patrol', 0, opts); } finally { battleHooks.onCorrect = undefined; }
+  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; }
   if (res.outcome === 'win') {
     if (res.kills?.length) questUpdate(E.questEvent(W.quests, ctx(), { type: 'kill', enemies: res.kills, realm: g.realm }));
     saveW(); await rewards(res, o.label || '');
   } else if (res.outcome === 'defeat') {
     if (o.canLose === false) { const h = heroStats(); S.hp = h.maxHp; S.mp = h.maxMp; saveW(); await dialog('🐲 小龙 Xiaolong', `<p>“${zh('没关系')}! It's OK!” Xiaolong pulls you back up. Let's try that again later.</p>`, ['OK']); }
-    else { await defeated(); }
+    else { await defeated(o.wakeAt); }
   }
   return res.outcome;
 }
@@ -140,10 +141,13 @@ function onCorrect(itemId: string) {
     if (s && s.objective.type === 'words' && s.objective.pool === pool) proto().wordsCount = { quest: q.id, n: st.obj[s.id], of: E.wordsNeeded(s) }; }
   questUpdate(ch);
 }
-async function defeated() {
-  const { fee } = applyDefeat(); P().pos = { graph: P().lastInn.graph, node: P().lastInn.node, edge: null, step: 0 };
-  await graph(P().lastInn.graph); saveW(); cloudTrigger('defeat'); hud();
-  await dialog('😵 You fainted!', `<p data-testid="defeat-msg">🐼 “There, there. You were so brave!” Your friends carried you back to <b>${esc(nodeTitle(P().lastInn))}</b>. HP and MP are full.${fee ? ` The doctor's fee was ${fee} 🪙.` : ''}</p>`, ['OK']);
+/** A defeat: the usual fee / Courage / full HP and MP; the hero wakes at the last inn, or at `to` (Jack Oct 12: a lost boss fight
+ *  sends the hero back to the node they came from). */
+async function defeated(to?: E.NodeRef) {
+  const w = to || P().lastInn;
+  const { fee } = applyDefeat(); P().pos = { graph: w.graph, node: w.node, edge: null, step: 0 };
+  await graph(w.graph); saveW(); cloudTrigger('defeat'); hud();
+  await dialog('😵 You fainted!', `<p data-testid="defeat-msg">🐼 “There, there. You were so brave!” Your friends carried you back to <b>${esc(nodeTitle(w))}</b>. HP and MP are full.${fee ? ` The doctor's fee was ${fee} 🪙.` : ''}</p>`, ['OK']);
 }
 
 // ---------------- actions ----------------
@@ -265,27 +269,32 @@ function bag(back: () => void) { itemsScreen(back, 'graph', () => featherPicker(
 
 // ---------------- movement ----------------
 let busy = false;
+/** The node the hero last walked from (Jack Oct 12: where a fled or lost boss fight sends them back to). */
+let cameFrom: E.NodeRef | null = null;
 async function walk(e: E.GEdge) {
   if (busy) return; busy = true;
   try {
     const g = W.graphs[P().pos.graph]; const from = P().pos.node;
+    // Jack Oct 12: no way on past an unbeaten boss (only reachable from an old save or a teleport): the boss fight comes first
+    if (E.unbeatenBoss(E.nodeOf(g, from), P())) return void await arrive(from);
+    cameFrom = { graph: g.id, node: from };
     if (typeof e.to === 'object') {   // stairs / portal / exit
       const tgt = e.to as E.NodeRef; const meta = W.idx!.graphs.find(x => x.id === tgt.graph);
       const wn = g.kind === 'world' ? E.nodeOf(g, e.from) as any : null;
       if (!meta || (wn && wn.inBuild === false && !allRealms())) { await dialog(`🚧 ${zh('还没开放')} Not in this build`, `<p data-testid="not-in-build">${esc(wn?.title?.en || tgt.graph)} is not in this build yet.</p>`, ['OK']); return; }
-      if (!E.edgeOpen(e, ctx()) || (wn && !realmNodeOpen(wn, ctx()))) { toast('🔒 The way is closed.'); return; }
-      await graph(tgt.graph); P().pos = { graph: tgt.graph, node: tgt.node, edge: null, step: 0 }; P().hops++; saveW(); cloudTrigger('graphChange', tgt.graph);
+      if (!E.edgeCondOpen(e, ctx()) || (wn && !realmNodeOpen(wn, ctx()))) { toast('🔒 The way is closed.'); return; }
+      await graph(tgt.graph);
+      { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); } P().pos = { graph: tgt.graph, node: tgt.node, edge: null, step: 0 }; P().hops++; saveW(); cloudTrigger('graphChange', tgt.graph);
       return void await arrive(tgt.node);
     }
-    if (!E.edgeOpen(e, ctx())) { toast('🔒 The way is closed.'); return; }
+    if (!E.edgeCondOpen(e, ctx())) { toast('🔒 The way is closed.'); return; }
+    { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); }   // quest gate: the blocked line, the hero stays put
     const to = E.otherEnd(e, from) as string; const steps = e.steps || 1; const pr = E.gp(P(), g.id);
-    const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { ...P().zone, id: z.id, freshBattles: 0, pity: 0 };
+    const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { id: z.id };
     for (let s = pr.edgeProgress[e.idx] || 0; s < steps; s++) {
       P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
-      const scr = e.scripted; const sk = `${g.id}/${e.id}#scripted`;
-      let out: string | null = null;
-      if (scr && (scr.step ?? 0) === s && !P().eventsDone.includes(sk)) { out = await fight(g, z, { enemies: scr.enemies }); if (out === 'win' && scr.once !== false) P().eventsDone.push(sk); }
-      else if (!proto().noEncounters && E.rollStep(g, e, s, P(), R())) out = await fight(g, z, {});
+      let out: string | null = null;   // Jack Oct 11: no scripted path elites; every step is one seeded roll
+      if (!proto().noEncounters && E.rollStep(g, e, s, P(), R())) out = await fight(g, z, {});
       if (out === 'defeat') return graphScreen();
       if (out === 'flee') { P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); toast('🏃 You ran back.'); return graphScreen(); }
     }
@@ -293,26 +302,43 @@ async function walk(e: E.GEdge) {
     await arrive(to);
   } finally { busy = false; }
 }
-/** Arrival: boss fight, one event, quest hooks, then town / inn / map. */
+/** A quest gate in the way: its lockedScene if the build has it, else the default line "The way is blocked." / 路不通。 */
+async function blocked(l: E.Lock, g: E.Graph) {
+  proto().lastBlocked = { quest: l.lockedUntilQuest, scene: l.lockedScene || null };
+  const sc = l.lockedScene ? await scene(l.lockedScene) : null;
+  if (sc) await runScene(sc, g);
+  else await dialog(`🔒 ${zh(E.LOCK_LINE.zh)}`, `<p data-testid="lock-blocked">${zh(E.LOCK_LINE.zh)} ${esc(E.LOCK_LINE.en)}</p>`, ['OK']);
+  graphScreen();
+}
+/** Arrival: boss fight, every eligible event (Jack Oct 11; a node may have none), quest hooks, then town / inn / map. */
 export async function arrive(node: string) {
   offeredNow.clear();
   const g = W.graphs[P().pos.graph]; const n = E.nodeOf(g, node)!;
   const first = !E.bitGet(E.gp(P(), g.id).visited, n.idx); E.markVisited(P(), g, node); saveW(); cloudTrigger('nodeChange', `${g.id}/${node}`);
   graphScreen();
   if (n.kind === 'boss' && n.boss && !P().zonesDefeated.includes(n.boss)) {
-    const f = E.pickEvent(g, node, 'enter', ctx(), first); if (f) { E.markFired(P(), g, f); for (const a of f.actions.filter(a => a.dialogue || a.scene)) await doAction(a, g); }
-    const z = W.zones[n.boss]; const out = await fight(g, z, { boss: true, label: `<p>👑 ${zh(z?.title.zh || '')} ${esc(z?.title.en || '')} is clear!</p>` });
-    if (out !== 'win') { if (out === 'flee') { const back = E.edgesAt(g, node).map(e => E.otherEnd(e, node)).find(o => typeof o === 'string' && E.bitGet(E.gp(P(), g.id).visited, E.nodeOf(g, o as string)!.idx)); if (back) P().pos.node = back as string; saveW(); } return graphScreen(); }
+    for (const f of E.pickEvents(g, node, 'enter', ctx(), first)) { E.markFired(P(), g, f); for (const a of f.actions.filter(a => a.dialogue || a.scene)) await doAction(a, g); }
+    // Jack Oct 11: no boss checkpoint; a boss fight after a loss starts fresh
+    const z = W.zones[n.boss]; const out = await fight(g, z, { boss: true, wakeAt: back(g, node), label: `<p>👑 ${zh(z?.title.zh || '')} ${esc(z?.title.en || '')} is clear!</p>` });
+    if (out !== 'win') {   // Jack Oct 12: a flee or a loss sends the hero back to the previous node; nothing past the boss opens
+      if (out === 'flee') { const b = back(g, node); P().pos = { graph: b.graph, node: b.node, edge: null, step: 0 }; await graph(b.graph); saveW(); } return graphScreen(); }
     await bossCleared(g, n, z); return openNode();
   }
-  const f = E.pickEvent(g, node, 'enter', ctx(), first);
   let handledFight = false;
-  if (f) { E.markFired(P(), g, f, f.ev.pick?.[+f.key.split('#')[1]]?.once); saveW();
+  for (const f of E.pickEvents(g, node, 'enter', ctx(), first)) {   // re-checked one by one: an earlier event can change a later one's condition
+    if (!E.pickEvents(g, node, 'enter', ctx(), first).some(f2 => f2.key === f.key)) continue;
+    E.markFired(P(), g, f, f.ev.pick?.[+f.key.split('#')[1]]?.once); saveW();
     for (const a of f.actions) { if (a.fight) handledFight = true; if (await doAction(a, g) === 'stop') return graphScreen(); } }
   if (!handledFight) { const qf = E.questFightAt(W.quests, ctx(), g.id, node);
     if (qf) { const out = await fight(g, zoneOf(g, node), { enemies: qf.enemies }); if (out === 'win') questUpdate(E.questEvent(W.quests, ctx(), { type: 'fightWon', graph: g.id, node })); else return graphScreen(); } }
   await questsAtNode(g, node);
   saveW(); openNode();
+}
+/** The node before the boss: where the hero walked from, else a visited neighbour, else the last inn. */
+function back(g: E.Graph, node: string): E.NodeRef {
+  const cf = cameFrom; if (cf && cf.graph === g.id && cf.node !== node && E.edgesAt(g, node).some(e => E.otherEnd(e, node) === cf.node)) return cf;
+  const o = E.edgesAt(g, node).map(e => E.otherEnd(e, node)).find(o => typeof o === 'string' && E.bitGet(E.gp(P(), g.id).visited, E.nodeOf(g, o as string)!.idx));
+  return o ? { graph: g.id, node: o as string } : P().lastInn;
 }
 async function bossCleared(g: E.Graph, n: E.GNode, z?: E.Zone) {
   const P_ = P(); if (!P_.zonesDefeated.includes(n.boss!)) P_.zonesDefeated.push(n.boss!);
@@ -321,10 +347,10 @@ async function bossCleared(g: E.Graph, n: E.GNode, z?: E.Zone) {
   // the classic towns, skills and quests read S.locs: a realm boss maps onto that realm's classic location
   if (z?.bossKind === 'realmboss') { const loc = z.realm === 1 ? 'meadow' : z.realm === 2 ? 'forest' : null;
     if (loc && S.locs[loc]) { S.locs[loc].bossDefeated = true; S.locs[loc].pathCleared = LOC[loc].pathFights; const nx = loc === 'meadow' ? 'forest' : null; if (nx && S.locs[nx]) S.locs[nx].unlocked = true; refreshSkills(S); } }
-  const f = E.pickEvent(g, n.id, 'clear', ctx(), false);
+  // every eligible on:clear event, then the realm-boss Feather of realms 3 / 6 / 8 (unless an on:clear event already gave one; no tip, by design)
   const givesFeather = (g.events || []).some(e => e.node === n.id && e.on === 'clear' && (e.do || []).some(a => a.giveItem === 'feather'));
-  if (f) { E.markFired(P_, g, f); for (const a of f.actions) await doAction(a, g); }
-  const rb = R().realmBossFeather; if (rb && !givesFeather && z?.bossKind === 'realmboss' && rb.realms.includes(g.realm)) giveItem('feather', rb.qty || 1);   // no tip, by design
+  for (const f of E.pickEvents(g, n.id, 'clear', ctx(), false)) { E.markFired(P_, g, f); for (const a of f.actions) await doAction(a, g); }
+  const rb = R().realmBossFeather; if (rb && !givesFeather && z?.bossKind === 'realmboss' && rb.realms.includes(g.realm)) giveItem('feather', rb.qty || 1);
   saveW(); flushNotices();
 }
 /** After arriving or loading: towns open the village screens, everything else shows the map. */
@@ -347,18 +373,18 @@ function rest(g: E.Graph, n: E.GNode) {
   render(dlg({ testid: 'inn', cls: 'narrow', title: `🛏️ ${zh(n.title?.zh || '客栈')} ${esc(n.title?.en || 'Inn')}`, body: `<p>❤️ HP ${S.hp}/${h.maxHp} · 🔷 MP ${S.mp}/${h.maxMp}</p><p class="muted">A night's rest restores all HP and MP. This inn becomes your Return Feather inn.</p>`,
     foot: `<button id="stay" data-testid="inn-stay" data-key="enter">${S.gold < price ? '😴 Rest for free' : `😴 Stay the night <span class="en">${price} 🪙</span>`}</button>` }));
   on('#stay', () => { if (S.gold >= price) { S.gold -= price; S.stats.paidInn++; } else S.stats.freeInn++;
-    const hh = heroStats(); S.hp = hh.maxHp; S.mp = hh.maxMp; P().lastInn = { graph: g.id, node: n.id }; P().zone.approachArmed = true; clearSafe(); saveW(); cloudTrigger('inn', `${g.id}/${n.id}`); toast('💤 HP and MP restored!'); graphScreen(); });
+    const hh = heroStats(); S.hp = hh.maxHp; S.mp = hh.maxMp; P().lastInn = { graph: g.id, node: n.id }; clearSafe(); saveW(); cloudTrigger('inn', `${g.id}/${n.id}`); toast('💤 HP and MP restored!'); graphScreen(); });
   on('#back', () => graphScreen());
 }
 
 // ---------------- the map (SVG over the Phaser background) ----------------
 const ICON: Record<string, string> = { town: '🏘️', village: '🏡', inn: '🛏️', boss: '👑', miniboss: '💀', chest: '🧰', story: '📖', npc: '🙂', portal: '🌀', stairs_up: '⬆️', stairs_down: '⬇️', fork: '•', waypoint: '•', shop: '🛒' };
 const allRealms = () => /[?&]realms=all\b/.test(location.search) || !!proto().allRealms;
-/** World map (v3.9.2 world.json realms[]): realm N opens when its unlock condition holds (the previous realm's realm boss); ?realms=all opens all.
- *  Realms are left through their own exit edge (kind exit, from the entry town / village). */
+/** World map: Jack Oct 11, progression by links only: a realm node is open unless the data gives it an unlock condition (the build drops
+ *  the old bossDefeated unlocks); ?realms=all opens all. Realms are left through their own exit edge (kind exit, from the entry town / village). */
 const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
   const rl = W.idx!.realms?.find(r => r.node === n.id); const r = rl?.realm ?? Number(String(n.id).match(/(\d+)$/)?.[1] || 1);
-  return E.realmOpen(r, x.P, W.idx!.zones, W.idx!.realms || [], x); };
+  return E.realmOpen(r, x.P, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
 const MAXZ = 4, MW = 1160, MH = 410, OX = 60, OY = 130;   // the node area keeps nodes + labels clear of the HUD and the bottom bar (top 592)
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
@@ -376,7 +402,7 @@ export function graphScreen() {
   const ttl = g.title || W.idx!.graphs.find(x => x.id === g.id)?.title;
   const lvl = g.kind === 'dungeon_level' && g.level && !(ttl?.zh || '').includes('层') ? ` · ${zh(`第${g.level}层`)} Level ${g.level}` : '';   // most titles already name the level
   setTitle(`${isWorld ? '🌍' : g.kind === 'dungeon_level' ? '🕳️' : '🗺️'} ${zh(ttl?.zh || '')} ${esc(ttl?.en || g.id)}${lvl}`);
-  const x = ctx(); const fogS: Record<string, E.FogState> = isWorld ? Object.fromEntries(g.nodes.map(n => [n.id, 'visited' as E.FogState])) : E.fog(g, P(), x, R().fog?.landmarkKinds);
+  const x = ctx(); const fogS: Record<string, E.FogState> = isWorld ? Object.fromEntries(g.nodes.map(n => [n.id, 'visited' as E.FogState])) : E.fog(g, P(), x);
   const dense = g.nodes.length > 60; const rr = dense ? 17 : 22;
   const adj = new Map<string, E.GEdge>(); for (const e of E.edgesAt(g, here)) { const o = E.otherEnd(e, here); adj.set(typeof o === 'string' ? o : `@${e.id}`, e); }
   // on the world map every open realm node is one tap away (through its own portal edge)
@@ -386,14 +412,21 @@ export function graphScreen() {
     const open = allRealms() || E.edgeOpen(e, x); return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${open ? ' walked' : ' closed'}" data-edge="${e.id}"/>`; }).join('')
     : g.edges.filter(e => typeof e.to === 'string').map(e => { const a = E.nodeOf(g, e.from)!, b = E.nodeOf(g, e.to as string)!;
     if (fogS[a.id] === 'hidden' || fogS[b.id] === 'hidden' || (fogS[a.id] !== 'visited' && fogS[b.id] !== 'visited')) return '';
-    const walked = E.bitGet(pr.walked, e.idx); const open = E.edgeOpen(e, x);
-    return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${walked ? ' walked' : ''}${open ? '' : ' closed'}${e.patrol ? ' patrol' : ''}" data-edge="${e.id}"/>`; }).join('');
+    const walked = E.bitGet(pr.walked, e.idx); const open = E.edgeCondOpen(e, x);
+    // quest gate on the edge (or on the node it leads to): a 🔒 marker at the middle of the line; tapping the far node shows the blocked line
+    const lk = E.locked(e, x) || [a, b].some(m => fogS[m.id] !== 'visited' && E.locked(m, x));
+    const lock = lk ? `<text class="lock" data-testid="glock-${e.id}" x="${(px(a) + px(b)) / 2}" y="${(py(a) + py(b)) / 2 + 8}">🔒</text>` : '';
+    return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${walked ? ' walked' : ''}${open ? '' : ' closed'}${lk ? ' locked' : ''}" data-edge="${e.id}"/>${lock}`; }).join('');
+  // Jack Oct 11 (hidden node types): an unvisited node carries no kind, title, icon or id in the DOM: only its index and fog state
   const nodes = g.nodes.map(n => { const f = fogS[n.id]; if (f === 'hidden') return '';
-    const isHere = n.id === here; const next = isWorld ? worldPick.has(n.id) && !isHere : adj.has(n.id) && E.edgeOpen(adj.get(n.id)!, x);
-    const done = n.kind === 'boss' && P().zonesDefeated.includes(n.boss || '');
-    const ic = f === 'seen' ? '?' : done ? '✔' : isWorld ? (worldPick.has(n.id) ? '🌀' : '🔒') : (ICON[n.kind] || '•');
-    const label = f === 'visited' || f === 'landmark' ? (n.title ? `${n.title.zh}` : '') : '';
-    return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}" data-node="${n.id}" data-testid="gnode-${n.id}" data-fog="${f}" data-kind="${n.kind}" transform="translate(${px(n)},${py(n)})">
+    const isHere = n.id === here; const ae = adj.get(n.id); const next = isWorld ? worldPick.has(n.id) && !isHere : !!ae && E.edgeCondOpen(ae, x);
+    const lockedWay = !isWorld && !!ae && next && !!E.lockOnWay(g, ae, here, x);
+    const known = f === 'visited';
+    const done = known && n.kind === 'boss' && P().zonesDefeated.includes(n.boss || '');
+    const ic = !known ? '?' : done ? '✔' : isWorld ? (worldPick.has(n.id) ? '🌀' : '🔒') : (ICON[n.kind] || '•');
+    const label = known && n.title ? `${n.title.zh}` : '';
+    const ident = known ? `data-node="${n.id}" data-testid="gnode-${n.id}" data-kind="${n.kind}"` : `data-testid="gnode-i${n.idx}"`;
+    return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}${lockedWay ? ' locked' : ''}" data-idx="${n.idx}" ${ident} data-fog="${f}" transform="translate(${px(n)},${py(n)})">
       <circle r="${isHere ? rr + 4 : rr}"/><text class="ic" y="${dense ? 6 : 8}">${ic}</text>${label ? `<text class="lb" y="${rr + 22}" lang="zh-CN">${esc(label)}</text>` : ''}</g>`; }).join('');
   const exits = [...adj.entries()].filter(([k]) => k.startsWith('@')).map(([, e]) => { const t = e.to as E.NodeRef; const meta = W.idx!.graphs.find(m => m.id === t.graph);
     const lab = e.kind === 'exit' ? `🌍 ${zh('世界地图')} World map` : e.kind === 'stairs' ? (hn.kind === 'stairs_up' ? `⬆️ ${zh('上楼')} Up` : `⬇️ ${zh('下楼')} Down`) : `🌀 ${meta?.title?.zh ? zh(meta.title.zh) + ' ' : ''}${esc(meta?.title?.en || t.graph)}`;
@@ -403,7 +436,7 @@ export function graphScreen() {
   const act = hn.kind === 'inn' ? `<button data-testid="act-rest" id="rest">🛏️ ${zh('休息')} Rest</button>` : (hn.kind === 'town' || hn.kind === 'village') ? `<button data-testid="act-town" id="intown">🏘️ ${zh('进去')} Go in</button>` : '';
   render(`<div data-testid="graph" class="screen graph" data-graph="${g.id}" data-node="${here}" data-kind="${g.kind}" data-nodes="${g.nodes.length}">
     <style>.graph svg{position:absolute;left:0;top:0;width:1280px;height:720px;pointer-events:auto;touch-action:none}.graph .ge{stroke:#f6e7c1;stroke-width:5;stroke-dasharray:10 8;opacity:.8}.graph .ge.walked{stroke-dasharray:none}
-    .graph .ge.closed{stroke:#a33;opacity:.6}.graph .gn circle{fill:#fff8e6;stroke:#7a581e;stroke-width:3}.graph .gn.seen circle{fill:#cfc7b4;opacity:.85}.graph .gn.landmark circle{fill:#e8dfc8;opacity:.8}
+    .graph .ge.closed{stroke:#a33;opacity:.6}.graph .gn circle{fill:#fff8e6;stroke:#7a581e;stroke-width:3}.graph .gn.seen circle{fill:#cfc7b4;opacity:.85}.graph .ge.locked{stroke:#c9a227;stroke-dasharray:4 6}.graph text.lock{font-size:20px;text-anchor:middle;pointer-events:none}.graph .gn.next.locked circle{stroke:#c9a227}
     .graph .gn.here circle{fill:#ffd95a;stroke:#d4a84a;stroke-width:5}.graph .gn.next{cursor:pointer}.graph .gn.next circle{stroke:#2a8f3a;stroke-width:5;animation:gpulse 1.2s infinite}
     @keyframes gpulse{50%{stroke-width:8}}.graph .gn text.ic{font-size:${dense ? 17 : 22}px;text-anchor:middle;pointer-events:none}.graph .gn text.lb{font:700 ${dense ? 13 : 16}px 'Noto Sans SC';text-anchor:middle;fill:#fff;paint-order:stroke;stroke:#0d1b3d;stroke-width:4px;pointer-events:none}
     .graph .zoom{position:absolute;right:24px;top:100px;display:flex;flex-direction:column;gap:8px}.graph .zoom .zl{font:700 14px Nunito;color:#fff;text-align:center;text-shadow:0 1px 2px #000}</style>
@@ -415,7 +448,7 @@ export function graphScreen() {
       <div class="hint" data-testid="graph-hint">${esc(hn.title ? `${hn.title.en}` : '')} · 🪶×${S.inv.feather || 0}${follow}</div>${exits}${act}
     </div></div>`);
   const svg = $('[data-testid="graph-svg"]') as unknown as SVGSVGElement;
-  svg.querySelectorAll('.gn.next').forEach(el => el.addEventListener('click', () => { if (moved) return; const id = (el as HTMLElement).dataset.node!; const e = isWorld ? worldPick.get(id) : adj.get(id); if (e) walk(e); }));
+  svg.querySelectorAll('.gn.next').forEach(el => el.addEventListener('click', () => { if (moved) return; const id = g.nodes.find(n => n.idx === +(el as HTMLElement).dataset.idx!)?.id; if (!id) return; const e = isWorld ? worldPick.get(id) : adj.get(id); if (e) walk(e); }));
   on('[data-exit]', (_e, el) => { const e = g.edges.find(x2 => x2.id === el.dataset.exit); if (e) walk(e); });
   on('#rest', () => rest(g, hn)); on('#intown', () => enterTown(g, hn));
   on('#gbag', () => bag(graphScreen)); on('#gq', () => questLog());
@@ -462,6 +495,6 @@ export async function startGraph() {
   if (!E.nodeOf(W.graphs[p.pos.graph], p.pos.node)) p.pos = { ...W.idx!.start, edge: null, step: 0 };
   await graph(p.lastInn.graph).catch(() => {});
   const g = W.graphs[p.pos.graph]; const n = E.nodeOf(g, p.pos.node)!;
-  if (!E.bitGet(E.gp(p, g.id).visited, n.idx)) return arrive(n.id);   // brand new game: the start village (tutorial event)
+  if (!E.bitGet(E.gp(p, g.id).visited, n.idx) || E.unbeatenBoss(n, p)) return arrive(n.id);   // brand new game (tutorial event), or standing at an unbeaten boss
   p.pos.edge = null; p.pos.step = 0; saveW(); openNode();
 }

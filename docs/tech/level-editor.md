@@ -4,6 +4,13 @@
 **Owner:** GameDev. **Content owner:** Desy. Her companion doc [design/level-json-coverage.md](../design/level-json-coverage.md) is the must-cover checklist and the conversion record; this doc uses her names and her schema [`docs/data/levels/schemas/level.schema.json`](../data/levels/schemas/level.schema.json) (`level/0.2`). GameDev leads the final schema.
 **Standing rule (Jack, 2026-10-11):** no mechanic, system or rule that Jack hasn't approved. Anything unclear is in the open questions (§13), not in the design.
 
+### Jack's Oct 12 additions (r2, 2026-10-12)
+
+- **Game rules (§1.2):** a boss node blocks passage until beaten (flee or loss → back to the previous node; avoidable only by another route), built in the engine; normal enemy ATK ×1.1, applied by Desy in the data. Validator: an informational boss cut-vertex note (§2.6.1).
+- **Docs:** a worked two-map collect quest and `setFlag` in plain words (§2.6.2).
+- **Access (§9):** no automatic GitHub export and no cadence (backups only when Jack asks); GameDev's box holds an **admin DB connection string** under a written policy (§9.5); a permanent, revocable **draft-write API key** for Desy (§9.2.1); no Google token on the box. Threats and security notes updated (§10.3, §10.4), including an admin-credential leak and no Neon IP allowlist on Free.
+- **Q11** reworded as Desy's own design items.
+
 ### Jack's round-1 decisions applied in r1 (2026-10-11)
 
 | # | Decision | Where |
@@ -30,7 +37,7 @@
 6. [Save, validate, publish, rollback](#6-save-validate-publish-rollback)
 7. [Runtime load path and saves](#7-runtime-load-path-and-saves)
 8. [Seeding from Desy's maps](#8-seeding-from-desys-maps)
-9. [Source of truth: DB live, repo export by GameDev](#9-source-of-truth-db-live-repo-export-by-gamedev)
+9. [Source of truth: DB live, repo backups by GameDev on request](#9-source-of-truth-db-live-repo-backups-by-gamedev-on-request)
 10. [Rollout, risks, security and privacy](#10-rollout-risks-security-and-privacy)
 11. [Game graph renderer: hidden nodes and fog](#11-game-graph-renderer-hidden-nodes-and-fog)
 12. [Engine changes the new rules need (later, separate task)](#12-engine-changes-the-new-rules-need-later-separate-task)
@@ -78,7 +85,7 @@ Checked on 2026-10-10 at about 09:30 PT in headless Chrome against `https://chin
 7. **Validators** ported to TypeScript, checked in CI against Desy's `validate_levels.py`, run in the browser and in the Function.
 8. **Flow:** autosave drafts (never blocked), Publish (blocked by errors) in one transaction; rollback = republish an old revision.
 9. **Runtime:** `GET /api/v1/levels/index` + `GET /api/v1/levels/:id?v=N` (CDN-cached), IndexedDB, the bundled last export as the offline fallback. Saves record each map's version hash for the beta reset.
-10. **Source of truth:** the DB is live; GameDev's box exports published maps, new learn items and generated word audio to the repo with gh (cadence: every 30 minutes, **not yet confirmed by Jack**).
+10. **Source of truth:** the DB is live. GameDev's box backs up published maps, new learn items and generated word audio to the repo with gh **only when Jack asks** (Oct 12: no schedule). GameDev's box holds an admin DB connection string; Desy gets a draft-write API key (§9).
 
 ```mermaid
 flowchart LR
@@ -91,8 +98,9 @@ flowchart LR
   end
   FN -->|"role app_editor: level tables only"| DB[("Neon Postgres<br/>levels, level_revisions,<br/>content_releases, learn_items")]
   FN -->|"role app_player: player tables"| DB2[("same DB<br/>parents, children, saves")]
-  BOX["GameDev box<br/>(export token, local TTS, gh)"] -->|"GET /api/v1/editor/export (read-only)"| FN
-  BOX -->|"git push (Jack's identity)"| GH["GitHub repo<br/>docs/data/levels, word audio"]
+  BOX["GameDev box<br/>(admin DB URL, local TTS, gh;<br/>no Google token)"] -->|"admin connection (Jack's explicit asks only<br/>for publish / state / player data)"| DB
+  DESY["Desy's box<br/>(draft-write API key)"] -->|"/api/v1/editor/drafts (levels:draft-write + levels:read)"| FN
+  BOX -->|"git push when Jack asks (Jack's identity)"| GH["GitHub repo<br/>docs/data/levels, word audio"]
   ARTY["Arty"] -->|"git push art (stable ids)"| GH
   GH -->|"deploy"| Vercel
   GH -->|"CI: validate_all, validate_levels, sim"| CI["GitHub Actions"]
@@ -109,6 +117,8 @@ The editor, the validators and the renderer plan follow these and nothing that c
 - **Blank nodes.** Any node may have no event at all. "Blank" is a first-class choice in the editor, and no validator requires an event.
 - **Progression by links only.** A map opens when a link to it can be walked. No link is gated on a boss; a boss can be skipped. Quest gates (§2.6.1) are the one exception Jack made.
 - **Hidden node types until visited** (§11).
+- **A boss node blocks passage (Jack, 2026-10-12).** The player can't go on to any node past a boss node until that boss is beaten. Fleeing or losing the boss fight sends the player back to the node they came from (a loss still costs the usual defeat fee; HP and MP are restored there instead of at the inn). A boss is avoidable only if the map has another route that doesn't go through its node. Implemented in the engine (`unbeatenBoss`, `reachable` in `src/world/engine.ts`; `arrive`/`walk` in `src/ui/graph.ts`).
+- **Normal enemy ATK ×1.1 (Jack, 2026-10-12).** Applied by Desy in the data (`enemies.csv` / combat data), not in the engine or the editor.
 
 ---
 
@@ -245,7 +255,7 @@ Exactly Desy's `settings` block (R4):
 - **What happens:** a new learn item gets an auto-generated TTS clip, added to the static assets as `vo/<id>` (the `vo` section of `public/assets-manifest.json`; `src/engine/voice.ts` already plays `vo/<itemId>` when the manifest lists it and falls back to browser TTS otherwise).
 - **The editor has no GitHub write**, so the audio is made and committed by **GameDev's box**:
   1. On save or publish, the server marks a new or changed word `audio: pending` in `learn_items`.
-  2. The box's export routine (§9.2) also reads the pending list (ids, Chinese and pinyin only) with the same read-only token.
+  2. When Jack asks for a backup (§9.2), GameDev's box also reads the pending list (ids, Chinese and pinyin only) and generates the audio.
   3. The box generates the clips with a **free, local TTS engine** (no paid API and no API key; the engine is picked in phase 5 after a licence check), writes them under `public/audio/vo/`, rebuilds the manifest, and commits them **in the same commit as the export**.
   4. The push redeploys Vercel. The editor reloads the manifest (§2.7); when the manifest lists the id, the flag clears.
 - **Until then** the editor shows "🔈 audio pending" on the word and on every scene line that uses it. Publishing is not blocked: the game falls back to browser TTS, as it does for every word today (the `vo` list is empty now).
@@ -293,6 +303,32 @@ stateDiagram-v2
   - the quest's **giver and every step** (and its turn-in) can be reached from the start **without crossing this gate**;
   - **no circular locks** (gate A needs a quest whose steps sit behind gate B, which needs a quest behind gate A): checked as a cycle in the gate → quest → gate graph;
   - `lockedScene`, if set, exists.
+- **Boss cut-vertex note (Oct 12, informational only).** For each boss node the validator reports whether it is a **cut vertex** of the map's walkable graph from the start node (every route to the nodes behind it goes through the boss: "boss blocks N nodes") or **avoidable** (another route exists). It is a note, never a warning or an error; both are valid designs. Desy's `validate_levels.py` and the TS port add it (§14).
+
+#### 2.6.2 Worked example: a two-map collect quest, and `setFlag` (Oct 12)
+
+Grandma Wu on `meadow_1` wants a **teapot lid** (found on her map) and a **tea tin** (found on `bazaar_cellars_1`, a different map). The quest completes as soon as the player **holds both**, in any order.
+
+```json
+{
+  "schema": "quest/0.2", "id": "q_tea_set", "story": "side",
+  "title": {"zh": "茶具", "en": "Grandma Wu's Tea Set"},
+  "giver": {"npc": "grandma_wu", "graph": "meadow_1", "node": "npc_2"},
+  "turnIn": "auto", "order": "any", "requires": null,
+  "objectives": [
+    {"id": "s1", "event": "quest_offer", "objective": {"type": "talk", "npc": "grandma_wu"}, "where": {"graph": "meadow_1", "node": "npc_2"}},
+    {"id": "s2", "event": "item", "objective": {"type": "collect", "item": "teapot_lid", "n": 1, "source": "nodeItem"}, "where": {"graph": "meadow_1", "node": "treasure_3"}},
+    {"id": "s3", "event": "item", "objective": {"type": "collect", "item": "tea_tin", "n": 1, "source": "nodeItem"}, "where": {"graph": "bazaar_cellars_1", "node": "treasure_2"}}
+  ],
+  "rewards": {"gold": 20}
+}
+```
+
+- **s2** is on the giver's map; **s3** is a **cross-map step**: its `where` names another map. Steps may name any map (§2.6), so the editor's quest view lists s3 under `bazaar_cellars_1` too.
+- Each collect step is done when the item is **in the bag** (an item already carried counts). With `order: "any"` the two can be found in either order; with `turnIn: "auto"` the quest is **completed** the moment both are held, with no trip back. (With `turnIn: "giver"` it would go to *ready* and finish at Grandma Wu.)
+- The validator checks that both `where` nodes exist and are reachable without crossing a gate that this quest itself opens.
+
+**`setFlag`, in plain words.** A flag is a **named yes/no fact stored in the player's save**, for example `meadow_1.bridge_fixed`. An event action `{"setFlag": "meadow_1.bridge_fixed"}` turns it to *yes*; it stays *yes* for the rest of that save (a beta reset of the map clears that map's flags, §2.9). Later content checks it with the condition `{"flag": "meadow_1.bridge_fixed"}`: a scene line or a whole scene (`cond`), a quest step or quest `requires`, an edge (`cond`, so a path only appears once it is true), or a node event. Example: when the player gives the carpenter the planks, the event runs `{"setFlag": "meadow_1.bridge_fixed"}`; the river edge has `"cond": {"flag": "meadow_1.bridge_fixed"}` and opens, and the ferryman's scene has a line with `"cond": {"not": {"flag": "meadow_1.bridge_fixed"}}` ("No bridge yet, so it's my boat or nothing!") that stops showing. A quest gate (§2.6.1) is the one lock that checks a quest instead of a flag.
 
 ### 2.7 Assets by id only (R3)
 
@@ -501,9 +537,9 @@ erDiagram
 - **`level_revisions`**: append-only. `kind = 'publish'` (one per publish, never pruned), `'checkpoint'` (a draft snapshot at most every 10 minutes, pruned after 90 days by the existing daily cron), `'golden-unlock'` (Jack's confirm, §4.1).
 - **`content_releases`** + **`release_levels`**: the published set, with the compiled index and quest list, so the public index route is one row read.
 - **`learn_items`**: words made in the editor (§2.5.1), `audio_state` ∈ `pending`, `ready`. The ids continue the global numbering. The curriculum rows stay in the repo; the server reads them from the deploy for validation.
-- **`editors`**: the allowlist, `role` ∈ `owner` (Jack), `tester`, `viewer` (export only). See §4.1.
-- **`editor_tokens`**: hashed read-only tokens, `scope = 'export:read'` (§9).
-- **`audit_log`** (exists): adds `actor_type 'editor'` and the actions `editor.signin`, `level.save` (sampled), `level.publish`, `level.state`, `level.golden_unlock`, `level.rollback`, `level.import`, `export.read`, `token.create`, `token.revoke`, `debug.use`.
+- **`editors`**: the allowlist, `role` ∈ `owner` (Jack), `tester`, `drafter` (the API key's identity: Desy, GameDev). See §4.1.
+- **`editor_tokens`**: permanent, revocable API keys, hashed at rest (peppered), `scope = 'levels:draft-write levels:read'` (§9). No other scope exists.
+- **`audit_log`** (exists): adds `actor_type 'editor'` and the actions `editor.signin`, `level.save` (sampled), `level.publish`, `level.state`, `level.golden_unlock`, `level.rollback`, `level.import`, `levels.read`, `draft.write` (API key), `token.create`, `token.revoke`, `debug.use`, and `admin.player_update` / `admin.player_delete` (every admin change to player data, §9.5).
 - **Seed:** the tables are seeded from `docs/data/levels/` (§8).
 
 **Size:** a map is about 30–60 KB raw with scenes and quests (about 15 KB compressed). 38 maps plus 2,000 publish revisions, 2,000 checkpoints and 2,000 releases stay **well under 100 MB**, next to player data at about 0.25–0.5 MB per active child. Unlimited maps (R4) grow this by about 30 KB per new map plus its revisions.
@@ -517,7 +553,7 @@ erDiagram
 - **A separate Postgres role** `app_editor`: `select, insert, update` on the level tables, `insert` only on `level_revisions` and `audit_log`, `select` on `users`, `accounts` and `sessions`, and **no grant on any player table**. The public level routes use the read-only role `app_levels_ro`.
 - **CSRF** checks as today (same-origin `Origin`, not `Sec-Fetch-Site: cross-site`, `application/json`, `X-App-Request: 1`); sessions stay SameSite=Lax and httpOnly.
 - **Step-up:** publish, rollback, import, token creation and the golden confirm need a session younger than 12 hours.
-- **Rate limits** per editor: save 240/h; publish, rollback and import 30/h; export 60/h per token.
+- **Rate limits** per editor: save 240/h; publish, rollback and import 30/h; API key 600 draft writes/h and 600 reads/h per key.
 
 ### 4.1 Roles and the golden lock
 
@@ -525,7 +561,8 @@ erDiagram
 |---|---|
 | `owner` (Jack) | everything: edit, change state, publish, roll back, import, tokens, **confirm golden edits**, grant the tester role |
 | `tester` | play beta maps and use the in-game debug menu (§4.2); no editor writes |
-| `viewer` | export only (the token's identity) |
+| `drafter` (API key: Desy, GameDev) | create and edit **draft** maps, levels and scenes; read levels. **Cannot** publish, change state to beta or golden, confirm golden edits, roll back, or touch player saves, accounts or PII |
+| GameDev (admin DB access, §9.5) | full DB access on its box, used only for drafts and for what Jack explicitly asks (player-data updates or deletions, a publish or state change); never on its own |
 
 **Golden lock.** Saving a draft over a golden map, publishing it, or moving it out of golden is refused unless the request carries a **golden confirm** made by an `owner`. The editor asks Jack to confirm ("This map is golden. Change it?"); the server checks that the session's role is `owner` (with step-up), writes a `golden-unlock` revision and an audit row, and allows that change. No other role can do it, even with a crafted request.
 
@@ -714,7 +751,7 @@ sequenceDiagram
 | Map files | one miss per `(id, v)` per region | 1M CDN requests, 100 GB |
 | Neon wake-ups | index misses only | 100 CU-hours (still the first limit) |
 | Editor | one user | negligible |
-| GameDev export + TTS | an index poll every 30 minutes, on the box | $0 |
+| GameDev backup + TTS | only when Jack asks, on the box | $0 |
 
 ---
 
@@ -730,45 +767,53 @@ The conversion is **done**. Desy's `docs/tech/tools/levels/convert_levels.py` wr
 
 ---
 
-## 9. Source of truth: DB live, repo export by GameDev
+## 9. Source of truth: DB live, repo backups by GameDev on request
 
-Jack's decisions (2026-10-10): the editor and backend get **no GitHub write access**, and **GameDev exports** published maps into the repo from its own box with the signed-in gh CLI. The DB wins for map content; docs, code, schemas and global tables stay GitHub-primary.
+Jack's decisions (2026-10-10, updated 2026-10-12): the editor and backend get **no GitHub write access**. **GameDev backs up** published maps into the repo from its own box with the signed-in gh CLI, **only when Jack asks**. The DB wins for map content; docs, code, schemas and global tables stay GitHub-primary.
 
 ### 9.1 Roles
 
 | Where | Holds | Truth for |
 |---|---|---|
 | **Neon DB** | drafts, published maps, revisions, releases, editor-made learn items | live map content |
-| **GitHub `docs/data/levels/`** | the latest published JSON per map + `RELEASE.json`, with history | history, backup, seed, recovery, CI, the sim, Desy's reading copy |
+| **GitHub `docs/data/levels/`** | the published JSON per map + `RELEASE.json` as of the last backup Jack asked for, with history | history, backup, seed, recovery, CI, the sim, Desy's reading copy |
 | **GitHub `public/`** | art from Arty, word audio from the box, the manifest | assets |
 | **GitHub, everything else** | docs, code, schemas, validators, global tables, the frozen seed | unchanged |
 
-### 9.2 The export loop
+| Who | Credential | Where it lives | Can | Cannot |
+|---|---|---|---|---|
+| Jack | Google session (editor) | his browser | everything, incl. **publish, beta/golden, golden confirm, rollback** | — |
+| GameDev | **admin DB connection string** (separate Neon role) | only `~/.config/chinese-rpg/` on GameDev's box, mode 600 | full DB access; by policy: drafts, and anything else **only on Jack's explicit request** | by policy, never publishes, changes state or confirms golden on its own |
+| Desy (and GameDev, for API-only work) | **draft-write API key**, scopes `levels:draft-write` + `levels:read` | only `~/.config/chinese-rpg/` on the holder's box, mode 600 | create and edit draft maps, levels and scenes directly, bypassing the editor UI; read levels | publish, beta/golden, golden confirm, rollback, player saves, accounts, PII (enforced by the server) |
+
+There is **no Google token** on GameDev's box. No credential is ever in the repo, in Actions, in Vercel client code, in a URL or in a log.
+
+### 9.2 Backups to GitHub (only when Jack asks)
 
 ```mermaid
 sequenceDiagram
   autonumber
   participant J as Jack
-  participant API as /api/v1 (Vercel)
   participant B as GameDev box
+  participant DB as Neon DB
   participant GH as GitHub
-  J->>API: Publish (release 57), or save a new word
-  loop every 30 min (proposed), or when Jack says published
-    B->>API: GET /api/v1/levels/index (public)
-    API-->>B: release 57 (repo has 56)
-  end
-  B->>API: GET /api/v1/editor/export?state=published (read-only token)
-  API-->>B: release 57 maps, new learn items, audio-pending words
+  J->>B: "back up levels changed in the last 2 weeks"
+  B->>DB: read published maps changed since then, new learn items, audio-pending words (admin connection, read only)
   B->>B: write docs/data/levels/ID.json + RELEASE.json, generate word audio (local TTS), rebuild manifest
   B->>B: validate_levels.py, TS validators, parity, gitleaks
-  B->>GH: commit "levels: release 57, audio 3 words" as Jack Song, push
-  GH->>GH: CI, then Pages + Vercel deploy (audio live, editor flag clears)
+  B->>GH: commit "levels: backup (release 57), audio 3 words" as Jack Song, push
+  GH->>GH: CI, then Pages + Vercel deploy
 ```
 
-- **Cadence:** every 30 minutes plus on demand. **Jack hasn't confirmed this cadence** (§13 Q2).
-- **The endpoint** `GET /api/v1/editor/export` is GET only and takes either Jack's editor session (the **Download JSON** button) or a Bearer token with scope `export:read`. The token can't save, publish, import or read drafts; the only draft-side data it sees is the audio-pending word list (ids, text and pinyin).
-- **The credential lives only on GameDev's box** (`~/.config/chinese-rpg/export-token`, mode 600, outside every repo): never in the repo, in Actions, in a URL or in a log; hashed at rest; revocable. gitleaks runs before every export commit and again in CI.
-- **The commit** touches only `docs/data/levels/**`, the learn-items file (§13 Q8) and `public/audio/vo/**` + the manifest. Author `Jack Song <48544849+zenjax7@users.noreply.github.com>`, pushed to `main`, which deploys Pages and Vercel. If the validators fail on an export, GameDev still commits it (the repo mirrors what players see) and flags it to Jack as a parity bug.
+- **No schedule.** There is no automatic export and no cadence; GameDev backs up only on Jack's explicit request, with the scope he names (e.g. "levels changed in the last 2 weeks").
+- **The commit** touches only `docs/data/levels/**`, the learn-items file (§13 Q8) and `public/audio/vo/**` + the manifest. Author `Jack Song <48544849+zenjax7@users.noreply.github.com>`, pushed to `main`, which deploys Pages and Vercel. If the validators fail on a backup, GameDev still commits it (the repo mirrors what players see) and flags it to Jack as a parity bug.
+- Jack's **Download JSON** button in the editor stays (`GET /api/v1/editor/export`, editor session only).
+
+### 9.2.1 The draft-write API key
+
+- **Permanent and revocable**: no expiry; Jack revokes or rotates it in the editor. Hashed at rest (peppered, `EDITOR_KEY_PEPPER`), shown once at creation, audited (`token.create`, `token.revoke`, every `draft.write`).
+- **Routes:** `GET /api/v1/editor/levels[/:id]` (`levels:read`, drafts and published), `PUT /api/v1/editor/drafts/:id` and `POST /api/v1/editor/drafts` (`levels:draft-write`: maps, levels, scenes; the same validators and optimistic lock as the editor's autosave). Every other editor route refuses a key, whatever it claims.
+- **Kept for Desy**: she has no DB access, so the key lets her write drafts straight from her tools. GameDev can use it too when it doesn't need admin access.
 
 ### 9.3 Conflict rules
 
@@ -778,6 +823,16 @@ sequenceDiagram
 ### 9.4 Backups and disaster recovery
 
 Three layers: Neon's restore window, `level_revisions`, and the git history. `server/seed-levels.mjs --restore` loads the repo copy into a fresh database. Local dev seeds PGlite from the same files.
+
+### 9.5 GameDev's admin DB access (Jack, 2026-10-12)
+
+- **The credential:** a separate admin connection string (its own Neon role), stored only on GameDev's box in `~/.config/chinese-rpg/` (mode 600); never in the repo, Actions, Vercel client code or logs. Revocable and rotatable in Neon at any time.
+- **Policy:**
+  - GameDev and Desy may create and edit **drafts**.
+  - **Publishing, beta/golden changes and golden confirms stay Jack's, through the editor.** GameDev never does them via admin access unless Jack explicitly asks.
+  - **Player data:** Jack can ask GameDev to update or delete player info; GameDev does it **only on his explicit request**. Every admin change to player data writes an `audit_log` row (`admin.player_update` / `admin.player_delete`, with Jack's request noted).
+  - **Deletions** follow the COPPA parent-request flow (verified parent request, delete the child's data, confirm to the parent), as for any deletion.
+- **IP allowlist:** Neon's IP Allow is a **Scale-plan feature** and is **not available on the Free plan** we use, so the admin connection can't be IP-restricted today. Mitigations: the credential stays on one box, mode 600, and is rotated on any suspicion.
 
 ---
 
@@ -795,7 +850,7 @@ Sizes: S ≈ up to 2 days, M ≈ 3–5 days, L ≈ 1–2 weeks of agent work.
 | 2 | `003_levels.sql` + roles; `seed-levels.mjs`; public routes; the game loads maps from the API with IndexedDB and the bundled fallback; `mapVersions` + the beta reset; save migration; **the graph world for every player** (guests save locally) | M–L | a Vercel preview plays from the DB for a guest and a child; reset and migration tests pass |
 | 3 | Editor MVP: auth and roles, `editor.html`, map list, canvas, inspector, map settings, word pool, autosave, 409, bundle guard | L | Jack edits and saves a draft; the game bundle's sha is unchanged |
 | 4 | Dialogue editor, quest view and variants, quest gates, learn items, inline validation, Playtest, tester debug menu | L | Jack writes a quest with a gate end to end and plays it from the draft |
-| 5 | Publish (single and set), lifecycle states and the golden confirm, releases, history, rollback, import, the export endpoint and tokens; GameDev's export + TTS routine | M | a publish reaches players within 5 minutes; the export commit with audio lands and CI is green |
+| 5 | Publish (single and set), lifecycle states and the golden confirm, releases, history, rollback, import, Download JSON, the draft-write API key; GameDev's on-request backup + TTS | M | a publish reaches players within 5 minutes; a backup commit Jack asked for, with audio, lands and CI is green |
 | 6 | Remove the zone and realm code (`src/world/engine.ts`, `src/ui/graph.ts`, `src/world/content.ts`, `src/data.ts`, `src/world/progress.ts`, `src/engine/battle.ts`, `server/progress.ts`, `server/dal/saves.ts`, the tests); retire `docs/data/world/` as a runtime input | M | `rg -n "zone|realm" src server` finds only migration aliases |
 
 There is no separate "classic for guests" phase (R1).
@@ -823,14 +878,15 @@ There is no separate "classic for guests" phase (R1).
 | The CDN doesn't cache function responses as expected | checked on a preview in phase 2; fallback: static files rebuilt by a deploy hook |
 | Neon paused or over quota | IndexedDB and the bundled fallback for players; the editor keeps unsent drafts |
 | A stolen Google session | allowlist by `sub`, 12-hour step-up, audit, rollback |
-| The export token leaks | it reads only data that is already public, plus pending word text; revocable |
+| The draft-write API key leaks | it can only write drafts and read levels (no publish, no state change, no player data); every write is audited; Jack revokes it in the editor and restores drafts from `level_revisions` |
+| **GameDev's admin DB credential leaks** | **full DB exposure, player data included.** Rotate it in Neon **immediately** (reset the role's password / drop the role), review `audit_log` and Neon's logs, follow the COPPA breach steps if player data may have been read. No Neon IP allowlist on Free (§9.5); the credential exists only on GameDev's box, mode 600 |
 
 ### 10.4 Security and privacy notes
 
 - **The editor never touches child data** (types, DAL, Postgres grants). The only cross-touch is the affected-save **count** at publish.
 - **The tester debug menu** is server-gated by role, loaded only after the role check, audited, and acts only on the tester's own save.
 - **Map content and word lists are public data** with no personal data in them.
-- **No secrets in the repo:** `.env.example` gets `DATABASE_URL_EDITOR`, `DATABASE_URL_LEVELS_RO`, `EDITOR_GOOGLE_SUBS` and `EXPORT_TOKEN_PEPPER`; the values live in Vercel. The export token lives only on GameDev's box; there is no GitHub credential in Vercel or the backend.
+- **No secrets in the client or the repo:** the game's and the editor's JS/TS and the built bundle (`dist/`) contain **no secrets**. The Google client secret, the DB URLs and the peppers (`DATABASE_URL_EDITOR`, `DATABASE_URL_LEVELS_RO`, `EDITOR_GOOGLE_SUBS`, `EDITOR_KEY_PEPPER`) are **Vercel server env only**; `.env.example` lists the names. CI (`.github/workflows/deploy.yml`) runs gitleaks on the repo before the build and on `dist/` after it, and fails on a hit; `check:dist` also refuses server env names in the bundle. The admin DB URL and the API keys live only on their holders' boxes; there is no GitHub credential in Vercel or the backend.
 - CSP is unchanged for `/editor`.
 
 ---
@@ -863,6 +919,7 @@ Not part of this docs change. Done after Desy's simplified spec arrives. Line nu
 | Blank nodes | confirm that arrival handling in `src/ui/graph.ts` and the event pick in `src/world/engine.ts` accept a node with no events |
 | Links-only progression | `src/world/engine.ts` 100 (`bossDefeated` on edges) and 116–118 (`realmOpen`); `src/ui/graph.ts` 361 and 379–383 (world-map realm locks) |
 | Quest gates | `src/world/engine.ts` (`edgeOpen` and a node-entry check for `lockedUntilQuest`); `src/ui/graph.ts` (the default blocked line or `lockedScene`) |
+| Boss blocks passage (Oct 12) | **done**: `src/world/engine.ts` (`unbeatenBoss`, `reachable`); `src/ui/graph.ts` (`arrive`, `walk`, `back`, `defeated(to)`) |
 | Hidden node types | `src/world/engine.ts` 125–134 (`fog`, landmark kinds); `src/ui/graph.ts` 391–396 (`data-kind`, icon, label) |
 | Map lifecycle | `src/world/progress.ts` (`mapVersions`, beta reset); `server/progress.ts`; `server/dal/saves.ts`; `src/net/cloud.ts` 60 |
 | Guests in graph | `src/world/mode.ts` 1–14 (classic default); `src/main.ts` |
@@ -873,7 +930,7 @@ Not part of this docs change. Done after Desy's simplified spec arrives. Line nu
 ## 13. Open questions for Jack
 
 1. **Approve the overall plan?** Not yet approved; this doc stays PROPOSED and nothing is built.
-2. **The 30-minute export cadence** for GameDev's box (§9.2): not yet confirmed. *Default:* poll every 30 minutes, export only when the release changes, plus "published" on request.
+2. *(Closed Oct 12: no automatic export; GameDev backs up to GitHub only when Jack asks, §9.2.)*
 3. **The beta-reset defaults** (§2.9) are the Director's and not locked: a completed quest's reward can be earned again; quests given on other maps are unaffected; quest items stay. Also Desy's Q-J3b: does a reset un-defeat the map's boss? *Default:* no.
 4. **Existing classic saves** (guests who played classic before R1): do they get a one-time "start the new world" offer, or does classic stay reachable for a while? *Default:* none set; your call.
 5. **Landmarks under hidden nodes** (§11): should towns, villages and bosses still show their position early (as plain unvisited markers)? *Default:* keep today's fog visibility, with no icon or title.
@@ -882,7 +939,7 @@ Not part of this docs change. Done after Desy's simplified spec arrives. Line nu
 8. **Where editor-made learn items land in the repo:** a file the export writes next to the maps, or merged into `curriculum.csv` by Desy? *Default:* the export writes `docs/data/levels/learn_items.csv`, and Desy folds it into the curriculum when she next edits it.
 9. **A new-words threshold** for the editor's warning (§2.5.2): which number, if any? *Default:* none; the editor shows the count only.
 10. **Quest `requires` with `bossDefeated`:** 17 quests are offered only after a boss is beaten. A quest offer isn't a map unlock, so they are kept until you rule. Keep them?
-11. Desy's other open items ([level-json-coverage.md §8](../design/level-json-coverage.md#8-questions-for-jack-each-with-our-default): the Feather, the realm_1 split, the doorways, the starting state of the 38 maps) stand as she wrote them.
+11. **Desy's own open design items** (not a security item): the Feather, the realm_1 split, the doorways, and the starting state of the 38 maps ([level-json-coverage.md §8](../design/level-json-coverage.md#8-questions-for-jack-each-with-our-default)). They stand as she wrote them, for Jack.
 
 ## 14. Follow-ups for Desy
 
@@ -894,3 +951,5 @@ Her `handoff_maps` predates part of Jack's round 1. Her next handoff brings the 
 - **F5.** Replace the 9 quest steps with `event: portal` by `event: nothing` + `objective: {type: reach}`; stop storing quest `scenes` (derived from the variants).
 - **F6.** Spec and sim: remove the battle budget, pity and practice patrols, set walked edges to 50%, and allow blank nodes in combat-spec, world-graph and the sim (rows 3, 5, 7 and 12 of her §9 audit are now decided by Jack). `docs/data/world/` stays frozen, so where the new global values live is hers to propose.
 - **F7.** `validate_levels.py` in CI: her handoff didn't ask for it, so it isn't in `deploy.yml` yet. GameDev adds it when she agrees.
+- **F-Oct12a.** Normal enemy ATK ×1.1 in the enemy data (Jack approved Oct 12; engine and editor unchanged).
+- **F-Oct12b.** `validate_levels.py`: the informational boss cut-vertex / avoidable note (§2.6.1); never an error or warning.

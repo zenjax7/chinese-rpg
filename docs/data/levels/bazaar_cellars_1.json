@@ -87,8 +87,7 @@
   "gearTier": 3,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -117,7 +116,8 @@
     "zh": "宝箱盾",
     "en": "Mimic Shield",
     "effect": "Thorns 25%",
-    "text": "Mimic Shield 宝箱盾 is yours!"
+    "text": "Mimic Shield 宝箱盾 is yours!",
+    "feather": 1
    }
   }
  },
@@ -193,8 +193,7 @@
    "title": {
     "zh": "宝箱怪王",
     "en": "Mimic King"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "treasure_1",
@@ -646,19 +645,6 @@
    ]
   },
   {
-   "id": "boss_3.1",
-   "node": "boss_3",
-   "on": "clear",
-   "once": true,
-   "outcome": "item",
-   "do": [
-    {
-     "giveItem": "feather",
-     "qty": 1
-    }
-   ]
-  },
-  {
    "id": "treasure_1.2",
    "node": "treasure_1",
    "on": "enter",
@@ -671,14 +657,6 @@
    ]
   },
   {
-   "id": "treasure_1.3",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_2.1",
    "node": "treasure_2",
    "on": "enter",
@@ -689,14 +667,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "npc_1.2",
@@ -738,14 +708,6 @@
      "setFlag": "bazaar_cellars_1.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_4.1",
@@ -899,11 +861,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q3_lost_wallet_offer",
-    "progress": "sc_q3_lost_wallet_wait",
-    "turnIn": "sc_q3_lost_wallet_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 8

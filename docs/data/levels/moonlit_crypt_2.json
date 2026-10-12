@@ -94,8 +94,7 @@
   "gearTier": 6,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    3,
@@ -124,7 +123,8 @@
     "zh": "解药瓶",
     "en": "Cure Flask",
     "effect": "Heal +10%",
-    "text": "Cure Flask 解药瓶 is yours!"
+    "text": "Cure Flask 解药瓶 is yours!",
+    "feather": 1
    }
   }
  },
@@ -211,8 +211,7 @@
    "title": {
     "zh": "病魔",
     "en": "Sickness Fiend"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_5",
@@ -1430,19 +1429,6 @@
    ]
   },
   {
-   "id": "boss_6.1",
-   "node": "boss_6",
-   "on": "clear",
-   "once": true,
-   "outcome": "item",
-   "do": [
-    {
-     "giveItem": "feather",
-     "qty": 1
-    }
-   ]
-  },
-  {
    "id": "path_5.1",
    "node": "path_5",
    "on": "enter",
@@ -1540,14 +1526,6 @@
    ]
   },
   {
-   "id": "deadend_1.3",
-   "node": "deadend_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.1",
    "node": "story_1",
    "on": "enter",
@@ -1604,14 +1582,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_2.2",
@@ -1684,14 +1654,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_10.1",
    "node": "path_10",
    "on": "enter",
@@ -1748,14 +1710,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_11.1",
@@ -1836,14 +1790,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_4.1",
@@ -2127,14 +2073,6 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "miniboss_2.1",
    "node": "miniboss_2",
    "on": "enter",
@@ -2162,14 +2100,6 @@
      "setFlag": "moonlit_crypt_2.miniboss_2.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_2.2",
-   "node": "miniboss_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_20.1",
@@ -2230,14 +2160,6 @@
    ]
   },
   {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "miniboss_3.1",
    "node": "miniboss_3",
    "on": "enter",
@@ -2267,14 +2189,6 @@
    ]
   },
   {
-   "id": "miniboss_3.2",
-   "node": "miniboss_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_7.1",
    "node": "treasure_7",
    "on": "enter",
@@ -2285,14 +2199,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_7.2",
-   "node": "treasure_7",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_6.1",
@@ -2387,11 +2293,6 @@
      "note": "Dad and daughter hug (he waits at npc_2)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_knight_dad_offer",
-    "progress": "sc_q6_knight_dad_wait",
-    "turnIn": "sc_q6_knight_dad_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 0

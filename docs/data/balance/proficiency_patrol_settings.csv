@@ -5,11 +5,7 @@ active_ways_no_speech,2,ways,"R-ZE, R-EZ; only for browsers without the Web Spee
 keep_proficient_when_speech_added,yes,,items proficient under 2 ways stay proficient; spoken ways still get scheduled
 nomatch_counts_as,wrong,,heard speech but no words = graded wrong
 practice_credit_cap_per_way,1,correct answers,Preview practice can supply at most 1 of the 2 correct answers per way
-boss_trigger_speech,0.2,share of the location pool proficient,patrols spawn while below; Director’s call v3.1 (was 0.25)
-boss_trigger_no_speech,0.4,share of the location pool proficient,
 readiness_denominator,location pool only,,carried-over items are still practiced but not counted (was local + carry-over)
-forced_patrols_per_trip,2,fights,each walk to the boss gate while below the trigger
-path_fights,8,fights,scripted fights per location before the boss approach (was 6)
 set_size,7,items,
 working_set,10,items,
 new_cap,3,items per battle,"hard cap, also early in a location (v3.2, was 4); a short set is never padded with unseen items"

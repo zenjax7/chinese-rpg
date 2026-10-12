@@ -89,8 +89,7 @@
   "gearTier": 2,
   "difficulty": {
    "mcOptions": 3,
-   "reviewSlots": 1,
-   "pathFights": 8
+   "reviewSlots": 1
   },
   "enemiesPerBattle": [
    1,
@@ -139,7 +138,6 @@
    ],
    "hub": "village",
    "town": 2,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q2_lost_panda",
@@ -256,8 +254,7 @@
    "title": {
     "zh": "贪吃熊",
     "en": "Greedy Bear"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_4",
@@ -639,14 +636,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_2.2",
    "node": "treasure_2",
    "on": "enter",
@@ -657,14 +646,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_2.3",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_5.1",
@@ -711,14 +692,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -801,11 +774,6 @@
      "note": "Duoduo hugs it: 谢谢!"
     }
    ],
-   "scenes": {
-    "offer": "sc_q2_lost_panda_offer",
-    "progress": "sc_q2_lost_panda_wait",
-    "turnIn": "sc_q2_lost_panda_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 9
@@ -904,11 +872,6 @@
      "note": "Granny Mi sews new veils."
     }
    ],
-   "scenes": {
-    "offer": "sc_q2_spider_silk_offer",
-    "progress": "sc_q2_spider_silk_wait",
-    "turnIn": "sc_q2_spider_silk_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 11
@@ -1022,11 +985,6 @@
      "note": "She teaches 泡泡术; Honey Town's shelf shows 'Granny Bai's lesson' instead of a price."
     }
    ],
-   "scenes": {
-    "offer": "sc_q2_bubble_lesson_offer",
-    "progress": "sc_q2_bubble_lesson_wait",
-    "turnIn": "sc_q2_bubble_lesson_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 0

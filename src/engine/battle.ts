@@ -11,12 +11,13 @@ import { matchZh, matchEn } from './match';
 import { view, HERO_X, BASE_Y } from '../phaser/view';
 import { $, $$, esc, render, hud, toast, sleep, on, zh, setBattleHud, setTitle, flyTo, DEBUG } from '../ui/dom';
 
-export type BattleKind = 'path' | 'patrol' | 'boss' | 'walk';
+/** path = a classic path fight, field = a graph-mode random fight, boss, walk = the classic walk home. Jack Oct 11: no practice patrols. */
+export type BattleKind = 'path' | 'field' | 'boss' | 'walk';
 export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number; gold: number; loot: string[]; levels: number; learned: string[];
   questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[];
   /** Desy enemy ids of every foe beaten (graph-mode quest kill counts). */ kills?: string[]; }
-/** Graph mode (?world=graph): fixed enemies (Desy ids or runtime ids), a zone roster override, no elite swap. */
-export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string; noElite?: boolean; }
+/** Graph mode (?world=graph): fixed enemies (Desy ids or runtime ids), a zone roster override. Jack Oct 11: no random elites anywhere. */
+export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string; }
 export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.values(ENEMIES).map(e => [e.desyId.split(' ')[0], e.id]));
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
 interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
@@ -53,7 +54,7 @@ export function brokenDamage(atkE: number, defH: number) { return r(Math.max(Mat
 export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, opts: BattleOpts = {}): Promise<BattleResult> {
   const base = LOC[locId];
   const optRoster = opts.roster?.map(r => ({ enemy: runtimeEnemy(r.enemy), weight: r.weight })).filter(r => r.enemy);
-  const loc = { ...base, ...(optRoster?.length ? { roster: optRoster, packs: undefined } : {}), ...(opts.boss && runtimeEnemy(opts.boss) ? { boss: runtimeEnemy(opts.boss) } : {}), ...(opts.noElite ? { elite: undefined } : {}) } as typeof base;
+  const loc = { ...base, ...(optRoster?.length ? { roster: optRoster, packs: undefined } : {}), ...(opts.boss && runtimeEnemy(opts.boss) ? { boss: runtimeEnemy(opts.boss) } : {}) } as typeof base;
   const fixed = (opts.enemies || []).map(runtimeEnemy).filter(Boolean) as string[]; const isBoss = kind === 'boss';
   // ---- BATTLE_INIT
   const foes: Foe[] = [];
@@ -61,7 +62,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(mk)); return f; };
   const scripted = fixed.length ? fixed : kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
   if (isBoss) {
-    const b = withMinions(loc.boss); if (S.locs[locId].bossCheckpoint) b.hp = Math.floor(b.maxHp * C().bossCheckpointFrac);
+    withMinions(loc.boss);   // Jack Oct 11: no boss checkpoint; a boss fight always starts at full HP
   } else if (scripted) {
     for (const id of scripted) { if (ENEMIES[id].minions.length) withMinions(id); else foes.push(mk(id)); }
   } else {
@@ -69,9 +70,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     const n = loc.packs?.[first] ?? Math.floor(rnd(loc.enemiesPerBattle[0], loc.enemiesPerBattle[1] + 1));
     foes.push(mk(first));
     for (let i = 1; i < Math.min(n, C().maxEnemies); i++) foes.push(mk(loc.packs?.[first] ? first : pickWeighted(loc.roster).enemy));
-    // v3: in patrol / random fights, 10% chance one normal enemy is replaced by the location elite
-    const forced = (window as any).__proto.forceElite; (window as any).__proto.forceElite = false;
-    if (kind !== 'walk' && loc.elite && (forced || Math.random() < B.learning.eliteReplaceChance)) foes[foes.length - 1] = mk(loc.elite);
+    // Jack Oct 11: no random elites (the elites only appear as placed fights)
   }
   foes.splice(C().maxEnemies);
   const leader = ['locboss', 'realmboss'].includes(foes[0].d.kind) ? foes[0] : null;   // boss down => minions flee
@@ -82,7 +81,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const ctx: WayCtx = { asked: 0, spoken: 0, cooling: new Set() };
   (window as any).__proto.summons = 0;
   const wpn = S.equip.weapon ? GEAR[S.equip.weapon] : null;
-  const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], checkpointHit: S.locs[locId].bossCheckpoint, casts: 0, lastCastQ: -1 };
+  const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], casts: 0, lastCastQ: -1 };
   const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false, gearGot: [], equipped: [] };
   const tired = () => bs.q >= tiredAt;
   // v3.5 cast rule: no per-battle cap and no unlock; MP is the only limit (cast any turn, back to back)
@@ -354,17 +353,12 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   }
   const bossDead = () => !!leader && !leader.alive;
   const allDead = () => foes.every(f => !f.alive);
-  function checkCheckpoint() {
-    if (isBoss && !bs.checkpointHit && foes[0].alive && foes[0].hp <= foes[0].maxHp * C().bossCheckpointFrac) {
-      bs.checkpointHit = true; S.locs[locId].bossCheckpoint = true; save(); log('🚩 Checkpoint saved! (A retry will start here. No heal.)'); toast('🚩 Boss checkpoint saved');
-    }
-  }
   async function hit(f: Foe, mult = 1, spoken = false) {
     const h = heroStats(); const i = foes.indexOf(f);
     let d = Math.max(1, Math.round(heroDamage(h.atk, bs.streak, spoken, tired(), f.d.def_) * mult * f_web));
     if (f.d.mech.waxShieldFirstHit && !f.waxUsed) { f.waxUsed = true; d = f.d.mech.waxShieldFirstHit; log(`🕯️ ${f.d.zh}'s wax shield soaks up the hit!`); }
     f.hp -= d; view.hitEnemy(i, d, { spoken }); setTimeout(() => playSfx('sfx_hit'), 250); log(`⚔️ You hit ${zhName(f)} for ${d}${spoken ? ' (🎤 voice ×1.25)' : ''}${bs.streak >= 3 ? ` (streak ×${streakMult(bs.streak)})` : ''}`);
-    if (f.hp <= 0) kill(f); else { checkCheckpoint(); halfTriggers(f); }
+    if (f.hp <= 0) kill(f); else halfTriggers(f);
     refresh(); await sleep(750);
   }
 
@@ -417,7 +411,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     sk.remove(); document.removeEventListener('keydown', key);
     log(`${sp.emoji} ${zh(sp.zh)} ${esc(sp.en)} hits ${hitList.map((f, k) => `${zhName(f)} for ${dmgs[k]}`).join(', ')}${tiredNow ? ' (😪 ×' + R.tiredMult + ')' : ''}`);
     for (const l of lines) log(l, false);
-    for (const f of hitList) { if (f.hp <= 0 && f.alive) kill(f); else if (f.alive) { checkCheckpoint(); halfTriggers(f); } }
+    for (const f of hitList) { if (f.hp <= 0 && f.alive) kill(f); else if (f.alive) halfTriggers(f); }
     info.qAfter = bs.q; info.streakAfter = bs.streak; info.mpEnd = S.mp; info.done = true;
     refresh(); save(); await sleep(250);
   }
@@ -438,7 +432,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
         bs.gauge = 0; (window as any).__proto.companionHits = ((window as any).__proto.companionHits || 0) + 1;
         msg(`🐲 ${zh('小龙')} is ready!`); await sleep(400);
         t.hp -= d; view.hitEnemy(foes.indexOf(t), d, { companion: true }); setTimeout(() => playSfx('sfx_hit'), 250); log(`🐲 ${zh('小龙')}: ${zh('我来帮你!')} ${zh('小龙')} breathes fire on ${zhName(t)} for ${d}!`);
-        if (t.hp <= 0) kill(t); else { checkCheckpoint(); halfTriggers(t); }
+        if (t.hp <= 0) kill(t); else halfTriggers(t);
         refresh(); await sleep(1100);
         if (bossDead() || allDead()) { res.outcome = 'win'; break; }
       }
@@ -531,7 +525,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
   if (res.outcome === 'win') view.companion('cheer');
-  if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; if (isBoss) S.locs[locId].bossCheckpoint = false; res.kills = foes.map(f => f.d.desyId.split(' ')[0]); }
+  if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; res.kills = foes.map(f => f.d.desyId.split(' ')[0]); }
   save(); setBattleHud(null); view.clearFocus();
   (window as any).__proto.q = null; (window as any).__proto.battleLog = bs.log.slice(0, 200);
   return res;

@@ -82,8 +82,7 @@
   "gearTier": 4,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -177,8 +176,7 @@
    "title": {
     "zh": "回声大蝙蝠",
     "en": "Giant Echo Bat"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_4",
@@ -938,14 +936,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "deadend_3.1",
    "node": "deadend_3",
    "on": "enter",
@@ -994,14 +984,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "miniboss_1.1",
    "node": "miniboss_1",
    "on": "enter",
@@ -1031,14 +1013,6 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_3.2",
    "node": "treasure_3",
    "on": "enter",
@@ -1049,14 +1023,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_3.3",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -1129,11 +1095,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q4_glow_moss_offer",
-    "progress": "sc_q4_glow_moss_wait",
-    "turnIn": "sc_q4_glow_moss_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 9

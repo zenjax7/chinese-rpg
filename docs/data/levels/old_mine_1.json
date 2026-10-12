@@ -94,8 +94,7 @@
   "gearTier": 6,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    3,
@@ -553,14 +552,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_2.1",
    "node": "path_2",
    "on": "enter",
@@ -641,14 +632,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "deadend_1.2",
    "node": "deadend_1",
    "on": "enter",
@@ -676,14 +659,6 @@
      "setFlag": "old_mine_1.deadend_1.beaten"
     }
    ]
-  },
-  {
-   "id": "deadend_1.3",
-   "node": "deadend_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "story_2.2",
@@ -814,7 +789,7 @@
    "objectives": [
     {
      "id": "s1",
-     "event": "portal",
+     "event": "nothing",
      "objective": {
       "type": "reach"
      },
@@ -882,11 +857,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q6_old_mine_offer",
-    "progress": "sc_q6_old_mine_wait",
-    "turnIn": "sc_q6_old_mine_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 7

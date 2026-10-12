@@ -1,0 +1,211 @@
+{
+ "schema": "level/0.2",
+ "id": "bridge_town",
+ "state": "draft",
+ "kind": "overworld",
+ "title": {
+  "en": "Bridge Town (lock fixture)",
+  "zh": "桥镇"
+ },
+ "entry": "town",
+ "settings": {
+  "title": {
+   "en": "Bridge Town",
+   "zh": "桥镇"
+  },
+  "words": []
+ },
+ "nodes": [
+  {
+   "id": "town",
+   "idx": 0,
+   "kind": "town",
+   "x": 0.1,
+   "y": 0.5,
+   "title": {
+    "en": "Riverside",
+    "zh": "河边镇"
+   },
+   "services": [
+    "inn"
+   ]
+  },
+  {
+   "id": "camp",
+   "idx": 1,
+   "kind": "npc",
+   "x": 0.3,
+   "y": 0.3,
+   "npc": "foreman",
+   "title": {
+    "en": "Workers' camp",
+    "zh": "工人营地"
+   },
+   "quests": [
+    {
+     "quest": "q1_bridge_materials",
+     "role": "giver"
+    }
+   ]
+  },
+  {
+   "id": "lumber",
+   "idx": 2,
+   "kind": "item",
+   "x": 0.3,
+   "y": 0.7,
+   "title": {
+    "en": "Lumber pile",
+    "zh": "木材堆"
+   }
+  },
+  {
+   "id": "bridge_w",
+   "idx": 3,
+   "kind": "path",
+   "x": 0.5,
+   "y": 0.5
+  },
+  {
+   "id": "bridge_e",
+   "idx": 4,
+   "kind": "path",
+   "x": 0.7,
+   "y": 0.5
+  },
+  {
+   "id": "quarry",
+   "idx": 5,
+   "kind": "item",
+   "x": 0.9,
+   "y": 0.5,
+   "title": {
+    "en": "Quarry",
+    "zh": "采石场"
+   },
+   "quests": [
+    {
+     "quest": "q1_bridge_materials",
+     "role": "step",
+     "step": "s2"
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "idx": 0,
+   "from": "town",
+   "to": "camp",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1
+  },
+  {
+   "id": "e2",
+   "idx": 1,
+   "from": "town",
+   "to": "lumber",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1
+  },
+  {
+   "id": "e3",
+   "idx": 2,
+   "from": "town",
+   "to": "bridge_w",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1
+  },
+  {
+   "id": "bridge",
+   "idx": 3,
+   "from": "bridge_w",
+   "to": "bridge_e",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1,
+   "lockedUntilQuest": "q1_bridge_materials",
+   "lockedScene": "sc_bridge_town__workers",
+   "note": "the broken bridge (Jack's example)"
+  },
+  {
+   "id": "e5",
+   "idx": 4,
+   "from": "bridge_e",
+   "to": "quarry",
+   "kind": "path",
+   "danger": 0,
+   "steps": 1
+  }
+ ],
+ "events": [],
+ "quests": [
+  {
+   "schema": "quest/0.2",
+   "id": "q1_bridge_materials",
+   "type": "fetch",
+   "title": {
+    "en": "Bridge Materials",
+    "zh": "修桥的材料"
+   },
+   "giver": {
+    "npc": "foreman",
+    "graph": "bridge_town",
+    "node": "camp"
+   },
+   "turnIn": "giver",
+   "objectives": [
+    {
+     "id": "s1",
+     "objective": {
+      "type": "talk",
+      "npc": "foreman"
+     },
+     "where": {
+      "graph": "bridge_town",
+      "node": "camp"
+     }
+    },
+    {
+     "id": "s2",
+     "objective": {
+      "type": "collect",
+      "item": "planks"
+     },
+     "where": {
+      "graph": "bridge_town",
+      "node": "quarry"
+     }
+    }
+   ],
+   "rewards": {}
+  }
+ ],
+ "scenes": {
+  "sc_bridge_town__workers": {
+   "schema": "scene/0.2",
+   "id": "sc_bridge_town__workers",
+   "title": "workers at the broken bridge",
+   "trigger": {
+    "graph": "bridge_town",
+    "on": "locked"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "foreman",
+     "en": "The bridge is broken. We need planks before anyone can cross.",
+     "zh": "桥坏了。要有木板才能过去。"
+    }
+   ]
+  }
+ },
+ "characters": [
+  "foreman"
+ ],
+ "npcs": {}
+}

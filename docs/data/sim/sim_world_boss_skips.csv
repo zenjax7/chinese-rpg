@@ -1,0 +1,31 @@
+kind,boss_map,boss_node,tier,skippable,nodes_behind,maps_behind,steps,expected_battles,hops,route_maps,bosses_on_route,bosses_fought
+behind_boss,realm_1,realm_1/m_crow,1,False,12,clover_hills warren,,,,,,
+behind_boss,clover_hills,clover_hills/c_den,1,False,7,warren,,,,,,
+behind_boss,warren,warren/w_throne,1,True,0,,,,,,,
+behind_boss,realm_2,realm_2/boss_1,2,False,14,great_hive_1,,,,,,
+behind_boss,great_hive_1,great_hive_1/boss_2,2,True,0,,,,,,,
+behind_boss,realm_3,realm_3/boss_1,3,False,15,bazaar_cellars_1,,,,,,
+behind_boss,bazaar_cellars_1,bazaar_cellars_1/boss_3,3,True,0,,,,,,,
+behind_boss,goblin_caves_1,goblin_caves_1/boss_1,4,False,35,goblin_caves_2 goblin_caves_3,,,,,,
+behind_boss,goblin_caves_2,goblin_caves_2/boss_1,4,False,20,goblin_caves_3,,,,,,
+behind_boss,goblin_caves_3,goblin_caves_3/boss_4,4,True,0,,,,,,,
+behind_boss,realm_5,realm_5/boss_1,5,False,47,hydra_lair_1 hydra_lair_2,,,,,,
+behind_boss,hydra_lair_2,hydra_lair_2/boss_5,5,True,0,,,,,,,
+behind_boss,realm_6,realm_6/boss_1,6,False,57,moonlit_crypt_1 moonlit_crypt_2,,,,,,
+behind_boss,moonlit_crypt_2,moonlit_crypt_2/boss_6,6,True,0,,,,,,,
+behind_boss,realm_7,realm_7/boss_1,7,False,33,griffin_spire_1 griffin_spire_2 griffin_spire_3,,,,,,
+behind_boss,griffin_spire_3,griffin_spire_3/boss_7,7,True,0,,,,,,,
+behind_boss,realm_8,realm_8/boss_1,8,False,51,undercroft_1 undercroft_2 undercroft_3,,,,,,
+behind_boss,undercroft_3,undercroft_3/boss_8,8,True,0,,,,,,,
+behind_boss,demon_castle_2,demon_castle_2/boss_1,9,False,48,demon_castle_3 demon_castle_4 demon_castle_5,,,,,,
+behind_boss,demon_castle_5,demon_castle_5/boss_9,9,True,0,,,,,,,
+skip_beeline,demon_castle_5,demon_castle_5/boss_9,9,,,,34,15.52,40,realm_1 > world > realm_9 > demon_castle_1 > demon_castle_2 > demon_castle_3 > demon_castle_4 > demon_castle_5,2,demon_castle_2 demon_castle_5
+full_beeline,demon_castle_5,demon_castle_5/boss_9,9,,,,422,248.6,353,all 20 bosses in campaign order,20,
+first_boss_of_tier_no_boss_beaten,realm_2,realm_2/boss_1,2,,,,13,7.65,8,realm_1 > world > realm_2,1,realm_2
+first_boss_of_tier_no_boss_beaten,realm_3,realm_3/boss_1,3,,,,14,7.65,9,realm_1 > world > realm_3,1,realm_3
+first_boss_of_tier_no_boss_beaten,goblin_caves_1,goblin_caves_1/boss_1,4,,,,12,4.35,13,realm_1 > world > realm_4 > goblin_caves_1,1,goblin_caves_1
+first_boss_of_tier_no_boss_beaten,realm_5,realm_5/boss_1,5,,,,17,6.8,14,realm_1 > world > realm_5,1,realm_5
+first_boss_of_tier_no_boss_beaten,realm_6,realm_6/boss_1,6,,,,19,7.65,17,realm_1 > world > realm_6,1,realm_6
+first_boss_of_tier_no_boss_beaten,realm_7,realm_7/boss_1,7,,,,18,5.95,18,realm_1 > world > realm_7,1,realm_7
+first_boss_of_tier_no_boss_beaten,realm_8,realm_8/boss_1,8,,,,21,7.65,19,realm_1 > world > realm_8,1,realm_8
+first_boss_of_tier_no_boss_beaten,demon_castle_2,demon_castle_2/boss_1,9,,,,21,6.97,24,realm_1 > world > realm_9 > demon_castle_1 > demon_castle_2,1,demon_castle_2

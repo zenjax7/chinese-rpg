@@ -93,8 +93,7 @@
   "gearTier": 7,
   "difficulty": {
    "mcOptions": 5,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -188,8 +187,7 @@
    "title": {
     "zh": "狮鹫王",
     "en": "Griffin King"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_3",

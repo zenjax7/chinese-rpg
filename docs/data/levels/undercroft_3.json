@@ -86,8 +86,7 @@
   "gearTier": 8,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -116,7 +115,8 @@
     "zh": "冠军腰带",
     "en": "Champion Belt",
     "effect": "streak 10 tier = ×2.25",
-    "text": "Champion Belt 冠军腰带 is yours!"
+    "text": "Champion Belt 冠军腰带 is yours!",
+    "feather": 1
    }
   }
  },
@@ -181,8 +181,7 @@
    "title": {
     "zh": "食人魔冠军",
     "en": "Ogre Champion"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "miniboss_1",
@@ -629,19 +628,6 @@
    ]
   },
   {
-   "id": "boss_8.1",
-   "node": "boss_8",
-   "on": "clear",
-   "once": true,
-   "outcome": "item",
-   "do": [
-    {
-     "giveItem": "feather",
-     "qty": 1
-    }
-   ]
-  },
-  {
    "id": "miniboss_1.1",
    "node": "miniboss_1",
    "on": "enter",
@@ -669,14 +655,6 @@
      "setFlag": "undercroft_3.miniboss_1.beaten"
     }
    ]
-  },
-  {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_3.1",
@@ -929,14 +907,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [],

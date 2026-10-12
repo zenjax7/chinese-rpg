@@ -81,8 +81,7 @@
   "gearTier": 4,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -188,8 +187,7 @@
    "title": {
     "zh": "哥布林守卫",
     "en": "Goblin Warden"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "deadend_1",
@@ -677,14 +675,6 @@
    ]
   },
   {
-   "id": "deadend_1.3",
-   "node": "deadend_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_3.1",
    "node": "path_3",
    "on": "enter",
@@ -748,14 +738,6 @@
    ]
   },
   {
-   "id": "miniboss_1.3",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "story_1.2",
    "node": "story_1",
    "on": "enter",
@@ -778,14 +760,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_1.3",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_4.1",
@@ -832,14 +806,6 @@
      "openChest": "chest_fine"
     }
    ]
-  },
-  {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -944,11 +910,6 @@
      "note": "The kids run home; parents cheer."
     }
    ],
-   "scenes": {
-    "offer": "sc_q4_free_classmates_offer",
-    "progress": "sc_q4_free_classmates_wait",
-    "turnIn": "sc_q4_free_classmates_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 4

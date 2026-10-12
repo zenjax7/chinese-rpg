@@ -86,8 +86,7 @@
   "gearTier": 8,
   "difficulty": {
    "mcOptions": 6,
-   "reviewSlots": 3,
-   "pathFights": 8
+   "reviewSlots": 3
   },
   "enemiesPerBattle": [
    3,
@@ -781,14 +780,6 @@
    ]
   },
   {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "npc_5.1",
    "node": "npc_5",
    "on": "enter",
@@ -887,11 +878,6 @@
      "note": "She sings; the crowd cheers 加油! (auto-complete)."
     }
    ],
-   "scenes": {
-    "offer": "sc_q8_singer_escort_offer",
-    "progress": "sc_q8_singer_escort_wait",
-    "turnIn": "sc_q8_singer_escort_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6

@@ -78,8 +78,7 @@
   "gearTier": 5,
   "difficulty": {
    "mcOptions": 4,
-   "reviewSlots": 2,
-   "pathFights": 8
+   "reviewSlots": 2
   },
   "enemiesPerBattle": [
    2,
@@ -124,7 +123,6 @@
    ],
    "hub": "village",
    "town": 5,
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q5_invitations",
@@ -268,8 +266,7 @@
    "title": {
     "zh": "泥潭巨蛙",
     "en": "Giant Bog Toad"
-   },
-   "fog": "landmark"
+   }
   },
   {
    "id": "path_6",
@@ -301,7 +298,6 @@
    "shops": [
     "items"
    ],
-   "fog": "landmark",
    "quests": [
     {
      "quest": "q5_muddy_road",
@@ -1437,14 +1433,6 @@
    ]
   },
   {
-   "id": "miniboss_1.2",
-   "node": "miniboss_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_15.1",
    "node": "path_15",
    "on": "enter",
@@ -1501,14 +1489,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_1.2",
-   "node": "treasure_1",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "path_16.1",
@@ -1591,14 +1571,6 @@
    ]
   },
   {
-   "id": "treasure_2.2",
-   "node": "treasure_2",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "path_18.1",
    "node": "path_18",
    "on": "enter",
@@ -1645,14 +1617,6 @@
    ]
   },
   {
-   "id": "treasure_3.2",
-   "node": "treasure_3",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_4.1",
    "node": "treasure_4",
    "on": "enter",
@@ -1663,14 +1627,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_4.2",
-   "node": "treasure_4",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   },
   {
    "id": "deadend_2.1",
@@ -1709,14 +1665,6 @@
    ]
   },
   {
-   "id": "treasure_5.2",
-   "node": "treasure_5",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
-  },
-  {
    "id": "treasure_6.1",
    "node": "treasure_6",
    "on": "enter",
@@ -1727,14 +1675,6 @@
      "openChest": "chest_normal"
     }
    ]
-  },
-  {
-   "id": "treasure_6.2",
-   "node": "treasure_6",
-   "on": "enter",
-   "once": false,
-   "outcome": "nothing",
-   "do": []
   }
  ],
  "quests": [
@@ -1827,11 +1767,6 @@
      "note": "Party scene with cake."
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_invitations_offer",
-    "progress": "sc_q5_invitations_wait",
-    "turnIn": "sc_q5_invitations_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -1931,11 +1866,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_muddy_road_offer",
-    "progress": "sc_q5_muddy_road_wait",
-    "turnIn": "sc_q5_muddy_road_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -2052,11 +1982,6 @@
      "note": "Grandma rewards you."
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_escort_xiaohe_offer",
-    "progress": "sc_q5_escort_xiaohe_wait",
-    "turnIn": "sc_q5_escort_xiaohe_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -2156,11 +2081,6 @@
      }
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_pocket_watches_offer",
-    "progress": "sc_q5_pocket_watches_wait",
-    "turnIn": "sc_q5_pocket_watches_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 6
@@ -2225,7 +2145,7 @@
     },
     {
      "id": "s2",
-     "event": "portal",
+     "event": "nothing",
      "objective": {
       "type": "reach"
      },
@@ -2282,11 +2202,6 @@
      "note": "He seals it and gives you his old shell shield."
     }
    ],
-   "scenes": {
-    "offer": "sc_q5_fog_bottle_offer",
-    "progress": "sc_q5_fog_bottle_wait",
-    "turnIn": "sc_q5_fog_bottle_thanks"
-   },
    "rewards": {
     "gold": {
      "G": 0
