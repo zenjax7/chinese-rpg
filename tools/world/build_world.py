@@ -192,6 +192,10 @@ realms = next((g.get('realms') for g in graphs.values() if g['kind'] == 'world')
 #   - no scripted path elites (edge `scripted`), no fog landmarks (node `fog`): every unvisited node looks the same
 LEVEL_RULES = os.path.join(SRC, 'levels', 'world_rules.json')
 if os.path.exists(LEVEL_RULES): rules = J(LEVEL_RULES)
+# the realm-boss Feathers (realms 3/6/8) live in the level files as settings.boss.reward.feather; the frozen seed's graphs have no
+# on:clear Feather event, so keep the seed's realmBossFeather rule until the game reads the level files
+if 'realmBossFeather' not in rules and isinstance(J(os.path.join(SRC, 'world', 'world_rules.json')).get('realmBossFeather'), dict):
+    rules['realmBossFeather'] = J(os.path.join(SRC, 'world', 'world_rules.json'))['realmBossFeather']
 def drop_boss_cond(c):
     """A condition without its bossDefeated parts (None when nothing is left)."""
     if not isinstance(c, dict): return c

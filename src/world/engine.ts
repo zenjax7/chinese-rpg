@@ -138,6 +138,19 @@ export function realmOpen(realm: number, P: Progress, realms: RealmLink[] = [], 
   return !r?.unlock || evalCond(r.unlock, x || { P, quests: {} });
 }
 
+// ---------------- boss nodes block passage (Jack Oct 12) ----------------
+/** An unbeaten boss node: the hero can't go on past it until the boss is beaten (a flee or a loss sends them back to the node
+ *  they came from). A boss is avoidable only through another route that does not go through that node. */
+export const unbeatenBoss = (n: GNode | undefined, P: Progress) => !!n && n.kind === 'boss' && !!n.boss && !P.zonesDefeated.includes(n.boss);
+/** Nodes reachable from `start` in graph g over condition-open in-graph edges without passing through an unbeaten boss node
+ *  (the boss node itself can be reached, never left). Used by the tests and the editor's informational cut-vertex note. */
+export function reachable(g: Graph, start: string, x: Ctx): Set<string> {
+  const seen = new Set([start]); const q = [start];
+  while (q.length) { const n = q.shift()!; if (n !== start && unbeatenBoss(nodeOf(g, n), x.P)) continue;
+    for (const e of edgesAt(g, n)) { const o = otherEnd(e, n); if (typeof o === 'string' && !seen.has(o) && edgeOpen(e, x, g, n)) { seen.add(o); q.push(o); } } }
+  return seen;
+}
+
 // ---------------- fog of war ----------------
 export type FogState = 'visited' | 'seen' | 'hidden';
 /** visited nodes; '?' for nodes one edge away from a visited node (an open edge, or one closed only by a quest gate, so the player can

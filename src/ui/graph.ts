@@ -119,7 +119,7 @@ function zoneOf(g: E.Graph, node?: string, e?: E.GEdge): E.Zone | undefined {
   return (zid && W.zones[zid]) || W.idx!.zones.find(z => z.realm === g.realm);
 }
 const battleLoc = (z?: E.Zone) => (z && LOC[z.location] ? z.location : (z?.realm ?? 1) >= 2 && LOC.forest ? 'forest' : 'meadow');
-async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string }): Promise<BattleResult['outcome']> {
+async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
@@ -129,7 +129,7 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
     saveW(); await rewards(res, o.label || '');
   } else if (res.outcome === 'defeat') {
     if (o.canLose === false) { const h = heroStats(); S.hp = h.maxHp; S.mp = h.maxMp; saveW(); await dialog('🐲 小龙 Xiaolong', `<p>“${zh('没关系')}! It's OK!” Xiaolong pulls you back up. Let's try that again later.</p>`, ['OK']); }
-    else { await defeated(); }
+    else { await defeated(o.wakeAt); }
   }
   return res.outcome;
 }
@@ -141,10 +141,13 @@ function onCorrect(itemId: string) {
     if (s && s.objective.type === 'words' && s.objective.pool === pool) proto().wordsCount = { quest: q.id, n: st.obj[s.id], of: E.wordsNeeded(s) }; }
   questUpdate(ch);
 }
-async function defeated() {
-  const { fee } = applyDefeat(); P().pos = { graph: P().lastInn.graph, node: P().lastInn.node, edge: null, step: 0 };
-  await graph(P().lastInn.graph); saveW(); cloudTrigger('defeat'); hud();
-  await dialog('😵 You fainted!', `<p data-testid="defeat-msg">🐼 “There, there. You were so brave!” Your friends carried you back to <b>${esc(nodeTitle(P().lastInn))}</b>. HP and MP are full.${fee ? ` The doctor's fee was ${fee} 🪙.` : ''}</p>`, ['OK']);
+/** A defeat: the usual fee / Courage / full HP and MP; the hero wakes at the last inn, or at `to` (Jack Oct 12: a lost boss fight
+ *  sends the hero back to the node they came from). */
+async function defeated(to?: E.NodeRef) {
+  const w = to || P().lastInn;
+  const { fee } = applyDefeat(); P().pos = { graph: w.graph, node: w.node, edge: null, step: 0 };
+  await graph(w.graph); saveW(); cloudTrigger('defeat'); hud();
+  await dialog('😵 You fainted!', `<p data-testid="defeat-msg">🐼 “There, there. You were so brave!” Your friends carried you back to <b>${esc(nodeTitle(w))}</b>. HP and MP are full.${fee ? ` The doctor's fee was ${fee} 🪙.` : ''}</p>`, ['OK']);
 }
 
 // ---------------- actions ----------------
@@ -266,10 +269,15 @@ function bag(back: () => void) { itemsScreen(back, 'graph', () => featherPicker(
 
 // ---------------- movement ----------------
 let busy = false;
+/** The node the hero last walked from (Jack Oct 12: where a fled or lost boss fight sends them back to). */
+let cameFrom: E.NodeRef | null = null;
 async function walk(e: E.GEdge) {
   if (busy) return; busy = true;
   try {
     const g = W.graphs[P().pos.graph]; const from = P().pos.node;
+    // Jack Oct 12: no way on past an unbeaten boss (only reachable from an old save or a teleport): the boss fight comes first
+    if (E.unbeatenBoss(E.nodeOf(g, from), P())) return void await arrive(from);
+    cameFrom = { graph: g.id, node: from };
     if (typeof e.to === 'object') {   // stairs / portal / exit
       const tgt = e.to as E.NodeRef; const meta = W.idx!.graphs.find(x => x.id === tgt.graph);
       const wn = g.kind === 'world' ? E.nodeOf(g, e.from) as any : null;
@@ -311,8 +319,9 @@ export async function arrive(node: string) {
   if (n.kind === 'boss' && n.boss && !P().zonesDefeated.includes(n.boss)) {
     for (const f of E.pickEvents(g, node, 'enter', ctx(), first)) { E.markFired(P(), g, f); for (const a of f.actions.filter(a => a.dialogue || a.scene)) await doAction(a, g); }
     // Jack Oct 11: no boss checkpoint; a boss fight after a loss starts fresh
-    const z = W.zones[n.boss]; const out = await fight(g, z, { boss: true, label: `<p>👑 ${zh(z?.title.zh || '')} ${esc(z?.title.en || '')} is clear!</p>` });
-    if (out !== 'win') { if (out === 'flee') { const back = E.edgesAt(g, node).map(e => E.otherEnd(e, node)).find(o => typeof o === 'string' && E.bitGet(E.gp(P(), g.id).visited, E.nodeOf(g, o as string)!.idx)); if (back) P().pos.node = back as string; saveW(); } return graphScreen(); }
+    const z = W.zones[n.boss]; const out = await fight(g, z, { boss: true, wakeAt: back(g, node), label: `<p>👑 ${zh(z?.title.zh || '')} ${esc(z?.title.en || '')} is clear!</p>` });
+    if (out !== 'win') {   // Jack Oct 12: a flee or a loss sends the hero back to the previous node; nothing past the boss opens
+      if (out === 'flee') { const b = back(g, node); P().pos = { graph: b.graph, node: b.node, edge: null, step: 0 }; await graph(b.graph); saveW(); } return graphScreen(); }
     await bossCleared(g, n, z); return openNode();
   }
   let handledFight = false;
@@ -325,6 +334,12 @@ export async function arrive(node: string) {
   await questsAtNode(g, node);
   saveW(); openNode();
 }
+/** The node before the boss: where the hero walked from, else a visited neighbour, else the last inn. */
+function back(g: E.Graph, node: string): E.NodeRef {
+  const cf = cameFrom; if (cf && cf.graph === g.id && cf.node !== node && E.edgesAt(g, node).some(e => E.otherEnd(e, node) === cf.node)) return cf;
+  const o = E.edgesAt(g, node).map(e => E.otherEnd(e, node)).find(o => typeof o === 'string' && E.bitGet(E.gp(P(), g.id).visited, E.nodeOf(g, o as string)!.idx));
+  return o ? { graph: g.id, node: o as string } : P().lastInn;
+}
 async function bossCleared(g: E.Graph, n: E.GNode, z?: E.Zone) {
   const P_ = P(); if (!P_.zonesDefeated.includes(n.boss!)) P_.zonesDefeated.push(n.boss!);
   cloudTrigger('bossDefeated', n.boss);
@@ -332,8 +347,10 @@ async function bossCleared(g: E.Graph, n: E.GNode, z?: E.Zone) {
   // the classic towns, skills and quests read S.locs: a realm boss maps onto that realm's classic location
   if (z?.bossKind === 'realmboss') { const loc = z.realm === 1 ? 'meadow' : z.realm === 2 ? 'forest' : null;
     if (loc && S.locs[loc]) { S.locs[loc].bossDefeated = true; S.locs[loc].pathCleared = LOC[loc].pathFights; const nx = loc === 'meadow' ? 'forest' : null; if (nx && S.locs[nx]) S.locs[nx].unlocked = true; refreshSkills(S); } }
-  // every eligible on:clear event (the boss Feathers of realms 3 / 6 / 8 are on:clear events of their boss nodes; no tip, by design)
+  // every eligible on:clear event, then the realm-boss Feather of realms 3 / 6 / 8 (unless an on:clear event already gave one; no tip, by design)
+  const givesFeather = (g.events || []).some(e => e.node === n.id && e.on === 'clear' && (e.do || []).some(a => a.giveItem === 'feather'));
   for (const f of E.pickEvents(g, n.id, 'clear', ctx(), false)) { E.markFired(P_, g, f); for (const a of f.actions) await doAction(a, g); }
+  const rb = R().realmBossFeather; if (rb && !givesFeather && z?.bossKind === 'realmboss' && rb.realms.includes(g.realm)) giveItem('feather', rb.qty || 1);
   saveW(); flushNotices();
 }
 /** After arriving or loading: towns open the village screens, everything else shows the map. */
@@ -478,6 +495,6 @@ export async function startGraph() {
   if (!E.nodeOf(W.graphs[p.pos.graph], p.pos.node)) p.pos = { ...W.idx!.start, edge: null, step: 0 };
   await graph(p.lastInn.graph).catch(() => {});
   const g = W.graphs[p.pos.graph]; const n = E.nodeOf(g, p.pos.node)!;
-  if (!E.bitGet(E.gp(p, g.id).visited, n.idx)) return arrive(n.id);   // brand new game: the start village (tutorial event)
+  if (!E.bitGet(E.gp(p, g.id).visited, n.idx) || E.unbeatenBoss(n, p)) return arrive(n.id);   // brand new game (tutorial event), or standing at an unbeaten boss
   p.pos.edge = null; p.pos.step = 0; saveW(); openNode();
 }

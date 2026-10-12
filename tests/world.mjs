@@ -3,7 +3,7 @@
 // Saves are validated against docs/data/world/schemas/progress.schema.json with tools/world/validate_save.py (needs jsonschema:
 // WORLD_PY=/path/to/python, default /workspace/desy/.venv/bin/python if present, else python3).
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,8 +33,12 @@ export async function worldUnitTests({ check, log = console.log }) {
   const a1 = rollsFor(12345), a2 = rollsFor(12345);
   const raw = seed => Array.from({ length: 6 }, (_, k) => E.roll(`${seed}|realm_1|${e2.id}|0|${k}`).toFixed(4)).join(',');
   check(JSON.stringify(a1) === JSON.stringify(a2) && raw(12345) === raw(12345) && raw(12345) !== raw(999), `world: same seed → same encounter rolls on ${e2.id} (${a1.map(Number).join('')}; raw ${raw(12345)} vs seed 999 ${raw(999)})`);
-  const P0 = E.newProgress(1, idx.start); P0.zone.pity = rules.pityRolls;
-  check(E.stepRate(g1, e2, P0, rules).p === 1, 'world: pity → the next fresh step always fights');
+  const P0 = E.newProgress(1, idx.start);
+  // Jack Oct 11: no battle budget, no pity, no patrols; walked edges ×0.5 from docs/data/levels/world_rules.json
+  check(['zoneBattleBudget', 'budgetSpentMult', 'pityRolls', 'patrolsPerTrip'].every(k => !(k in rules)) && rules.clearedStepMult === 0.5 && JSON.stringify(Object.keys(P0.zone)) === '["id"]',
+    `world: no battle budget / pity / patrols in the rules or the save zone (zone ${JSON.stringify(P0.zone)}), clearedStepMult ${rules.clearedStepMult}`);
+  { const Pb = E.newProgress(1, idx.start); const p0 = E.stepRate(g1, e2, Pb, rules).p; for (let k = 0; k < 40; k++) E.rollStep(g1, e2, k % (e2.steps || 1), Pb, rules);
+    check(E.stepRate(g1, e2, Pb, rules).p === p0 && p0 === rules.encounterRate[String(e2.danger)], `world: the step rate never drifts (no budget / pity): ${p0}`); }
   const Pw = E.newProgress(1, idx.start); E.finishEdge(Pw, g1, e2);
   check(Math.abs(E.stepRate(g1, e2, Pw, rules).p - rules.encounterRate[String(e2.danger)] * rules.clearedStepMult) < 1e-9, 'world: walked edge rolls × clearedStepMult');
   const safeE = g1.edges.find(e => e.from === 'village' || e.to === 'village');
@@ -55,21 +59,15 @@ export async function worldUnitTests({ check, log = console.log }) {
     const fg = { id: 'realm_1', kind: 'overworld', realm: 1, nodes: [{ id: 'a', idx: 0, kind: 'fork', x: 0, y: 0 }, { id: 'b', idx: 1, kind: 'fork', x: 1, y: 0 }], edges: [{ id: 'e1', idx: 0, from: 'a', to: 'b', kind: 'path', danger: 1 }] };
     const at = rate => { const Pv = E.newProgress(12345, idx.start); return E.rollStep(fg, fg.edges[0], 0, Pv, { ...rules, encounterRate: { 1: rate }, maxRate: 1 }); };
     check(at(0.093) === true && at(0.092) === false, 'seed: rollStep(seed 12345, realm_1 e1, crossing 0, step 0) rolls exactly vector 1 (fights at rate 0.093, not at 0.092)'); }
-  // world map: realm t+1 opens when realm t's realm boss falls
-  const Pr = E.newProgress(1, idx.start);
-  check(E.realmOpen(1, Pr, idx.zones) && !E.realmOpen(2, Pr, idx.zones), 'world map: realm 1 open, realm 2 locked at the start');
-  Pr.zonesDefeated.push('warren'); check(E.realmOpen(2, Pr, idx.zones) && !E.realmOpen(3, Pr, idx.zones), 'world map: the realm 1 realm boss (warren) opens realm 2 only');
-  // v3.9.2 world.json realms[]: unlock conditions, link edges, exit edges
+  // Jack Oct 11 links-only progression: no bossDefeated unlocks; every realm the world map links to is open
   const RL = idx.realms; const Pu = E.newProgress(1, idx.start); const xu = { P: Pu, quests: {} }; const gw = J('graphs/world.json');
   check(RL.length === 9 && RL.every((r, i) => r.realm === i + 1), `realms[]: 9 realms in order`);
-  check(E.realmOpen(1, Pu, idx.zones, RL, xu) && RL.slice(1).every(r => !E.realmOpen(r.realm, Pu, idx.zones, RL, xu)), 'realms[]: only realm 1 is open on a new save');
-  let chain = true; for (const r of RL.slice(1)) { const prev = RL.find(a => a.realm === r.realm - 1);
-    chain &&= r.unlock?.bossDefeated === prev.realmBossZone && idx.zones.find(z => z.id === prev.realmBossZone)?.bossKind === 'realmboss';
-    Pu.zonesDefeated.push(prev.realmBossZone); chain &&= E.realmOpen(r.realm, Pu, idx.zones, RL, xu) && (r.next == null || !E.realmOpen(r.next, Pu, idx.zones, RL, xu)); }
-  check(chain, `realms[]: realm N unlocks on bossDefeated of realm N−1's realm-boss zone, one at a time (${RL.slice(1).map(r => r.unlock.bossDefeated).join(', ')})`);
+  check(RL.every(r => !JSON.stringify(r.unlock || {}).includes('bossDefeated') && E.realmOpen(r.realm, Pu, RL, xu)), 'realms[]: links-only — no bossDefeated unlock, every realm open on a new save');
+  check(gw.edges.every(e => !JSON.stringify(e.cond || {}).includes('bossDefeated')) && idx.graphs.every(m => J(`graphs/${m.id}.json`).edges.every(e => !JSON.stringify(e.cond || {}).includes('bossDefeated') && !('scripted' in e))),
+    'links-only: no edge anywhere carries a bossDefeated condition or a scripted path elite');
   const links = RL.filter(r => r.linkEdge).map(r => gw.edges.find(e => e.id === r.linkEdge));
-  check(links.length === 8 && links.every((e, i) => e && e.kind === 'path' && (e.danger ?? 0) === 0 && e.to === RL[i + 1].node && e.from === RL[i].node && e.cond?.bossDefeated === RL[i + 1].unlock.bossDefeated),
-    `realms[]: link edges ${RL.filter(r => r.linkEdge).map(r => r.linkEdge).join(',')} join realm N−1 → N on the world map, danger 0, same condition as the unlock`);
+  check(links.length === 8 && links.every((e, i) => e && e.kind === 'path' && (e.danger ?? 0) === 0 && e.to === RL[i + 1].node && e.from === RL[i].node && E.edgeOpen(e, xu, gw, e.from)),
+    `realms[]: link edges ${RL.filter(r => r.linkEdge).map(r => r.linkEdge).join(',')} join realm N−1 → N on the world map, danger 0, open`);
   const ex = []; for (const r of RL) { const g = J(`graphs/${r.graph}.json`); const e = g.edges.find(e => e.id === r.exitEdge); const en = gw.edges.find(e => e.id === r.enterEdge);
     if (!(e && e.kind === 'exit' && e.from === r.entry && e.to?.graph === 'world' && e.to?.node === r.node && (e.danger ?? 0) === 0 && en && en.from === r.node && en.to?.graph === r.graph && en.to?.node === r.entry)) ex.push(r.realm);
     else { E.registerGraph(g); if (!E.edgeSafe(g, e, E.newProgress(1, idx.start), rules)) ex.push(r.realm + '(unsafe)'); } }
@@ -85,10 +83,10 @@ export async function worldUnitTests({ check, log = console.log }) {
     `content: realms 3–9 have enemies, bosses, rosters, word pools (no pinyin) for every zone → in build${cbad.length ? ' — missing: ' + cbad.slice(0, 6).join(', ') : ''}`);
   // fog
   const Pf = E.newProgress(7, idx.start); E.markVisited(Pf, g1, 'village');
-  const x = { P: Pf, quests: {} }; const fog = E.fog(g1, Pf, x, rules.fog.landmarkKinds);
+  const x = { P: Pf, quests: {} }; const fog = E.fog(g1, Pf, x);
   const nb = E.edgesAt(g1, 'village').map(e => E.otherEnd(e, 'village')).filter(o => typeof o === 'string');
-  check(fog.village === 'visited' && nb.every(n => fog[n] === 'seen') && g1.nodes.filter(n => n.kind === 'boss').every(n => fog[n.id] === 'landmark')
-    && Object.values(fog).includes('hidden'), `world: fog = visited + '?' neighbours (${nb.join(',')}) + landmarks; the rest hidden`);
+  check(fog.village === 'visited' && nb.every(n => fog[n] === 'seen') && !Object.values(fog).includes('landmark') && g1.nodes.filter(n => n.kind === 'boss').every(n => fog[n.id] !== 'visited')
+    && Object.values(fog).includes('hidden'), `world: fog = visited + '?' neighbours (${nb.join(',')}) ; no landmarks (hidden node types), the rest hidden`);
   // feathers
   check(E.addFeathers(2, 1, 3) === 1 && E.addFeathers(3, 1, 3) === 0 && E.addFeathers(1, 5, 3) === 2, 'world: Return Feather carry cap 3');
   Pf.visitedTowns.push({ graph: 'realm_2', node: 'entry_town' }); Pf.lastInn = { graph: 'realm_1', node: 'm_inn' }; Pf.pos.node = 'm_fork';
@@ -229,6 +227,34 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
     const ch = E.questEvent(quests, x, { type: 'arrive', graph: g.id, node: 'end' });
     check(E.pickEvent(g, 'end', 'enter', x, true) === null && E.questFightAt(quests, x, g.id, 'end') === null && ch.length === 0 && E.edgesAt(g, 'end').length === 1,
       'dead ends: a one-edge waypoint with no event is empty (no event, no fight, no quest change; the only way on is back)'); }
+  { // Jack Oct 11: every eligible arrival event runs, in data order; a blank node (no events) is fine
+    const g = { id: 'unit_events', kind: 'overworld', realm: 1, nodes: [{ id: 'a', idx: 0, kind: 'waypoint', x: 0, y: 0 }, { id: 'b', idx: 1, kind: 'waypoint', x: 1, y: 0 }],
+      edges: [{ id: 'e1', idx: 0, from: 'a', to: 'b', kind: 'path', danger: 0, steps: 1 }],
+      events: [{ id: 'ev1', idx: 0, node: 'a', on: 'enter', outcome: 'story', do: [] }, { id: 'ev2', idx: 1, node: 'a', on: 'enter', outcome: 'item', do: [] }] }; E.registerGraph(g);
+    const P = E.newProgress(3, idx.start); const x = { P, quests: {}, inv: {} };
+    const evs = E.pickEvents(g, 'a', 'enter', x, true);
+    check(evs.length === 2 && evs[0].outcome === 'story' && evs[1].outcome === 'item' && E.pickEvent(g, 'a', 'enter', x, true).outcome === 'story', `events: every eligible arrival event runs, in data order (${evs.map(e => e.outcome).join(', ')})`);
+    check(E.pickEvents(g, 'b', 'enter', x, true).length === 0 && E.pickEvent(g, 'b', 'enter', x, true) === null, 'events: a blank node (no events) arrives with nothing to run'); }
+  { // Jack Oct 11 quest gates: lockedUntilQuest on a node or an edge stays impassable until that quest is complete
+    const g = { id: 'unit_locks', kind: 'overworld', realm: 1, nodes: [{ id: 'a', idx: 0, kind: 'waypoint', x: 0, y: 0 }, { id: 'b', idx: 1, kind: 'waypoint', x: 1, y: 0, lockedUntilQuest: 'q1_hoe', lockedScene: 'sc_x' }, { id: 'c', idx: 2, kind: 'waypoint', x: 0, y: 1 }],
+      edges: [{ id: 'ab', idx: 0, from: 'a', to: 'b', kind: 'path', danger: 0 }, { id: 'ac', idx: 1, from: 'a', to: 'c', kind: 'path', danger: 0, lockedUntilQuest: 'q1_hoe' }], events: [] }; E.registerGraph(g);
+    const P = E.newProgress(3, idx.start); const sq = {}; const x = { P, quests: sq, inv: {} };
+    const [ab, ac] = g.edges; const lk = E.lockOnWay(g, ab, 'a', x);
+    check(!E.edgeOpen(ab, x, g, 'a') && !E.edgeOpen(ac, x, g, 'a') && lk?.lockedScene === 'sc_x' && E.lockOnWay(g, ac, 'a', x)?.lockedScene === undefined && E.LOCK_LINE.en === 'The way is blocked.',
+      `quest gates: a locked node and a locked edge are impassable before the quest (node lock shows its lockedScene; default line “${E.LOCK_LINE.en}”)`);
+    sq.q1_hoe = { s: 'active', step: 0, obj: {} }; check(!E.edgeOpen(ab, x, g, 'a'), 'quest gates: an active (not complete) quest keeps the gate shut');
+    sq.q1_hoe = { s: 'completed' }; check(E.edgeOpen(ab, x, g, 'a') && E.edgeOpen(ac, x, g, 'a') && !E.locked(g.nodes[1], x), 'quest gates: open once the quest is complete'); }
+  { // Jack Oct 12: a boss node blocks passage until its boss is beaten; avoidable only through another route
+    const mk = alt => { const g = { id: alt ? 'unit_boss_alt' : 'unit_boss', kind: 'overworld', realm: 1,
+      nodes: [{ id: 'a', idx: 0, kind: 'waypoint', x: 0, y: 0 }, { id: 'b', idx: 1, kind: 'boss', boss: 'meadow', zone: 'meadow', x: 1, y: 0 }, { id: 'c', idx: 2, kind: 'waypoint', x: 2, y: 0 }, { id: 'd', idx: 3, kind: 'waypoint', x: 1, y: 1 }],
+      edges: [{ id: 'ab', idx: 0, from: 'a', to: 'b', kind: 'path', danger: 0 }, { id: 'bc', idx: 1, from: 'b', to: 'c', kind: 'path', danger: 0 }, { id: 'cd', idx: 2, from: 'c', to: 'd', kind: 'path', danger: 0 }]
+        .concat(alt ? [{ id: 'ad', idx: 3, from: 'a', to: 'd', kind: 'path', danger: 0 }] : []), events: [] }; E.registerGraph(g); return g; };
+    const g = mk(false), ga = mk(true); const P = E.newProgress(3, idx.start); const x = { P, quests: {}, inv: {} };
+    const r0 = E.reachable(g, 'a', x);
+    check(E.unbeatenBoss(g.nodes[1], P) && r0.has('b') && !r0.has('c') && !r0.has('d'), `boss blocks passage: nothing past an unbeaten boss is reachable (from a: ${[...r0].join(',')})`);
+    const ra = E.reachable(ga, 'a', x); check(ra.has('c') && ra.has('d'), `boss blocks passage: an alternate route around the boss still works (from a: ${[...ra].join(',')})`);
+    P.zonesDefeated.push('meadow'); const r1 = E.reachable(g, 'a', x);
+    check(!E.unbeatenBoss(g.nodes[1], P) && r1.has('c') && r1.has('d'), `boss blocks passage: after the win the way on is open (from a: ${[...r1].join(',')})`); }
   // ---- gear tiers 1–9 (gear_items.csv → src/data/shop.json) and the shops that stock them ----
   const SHOP = JSON.parse(readFileSync(path.join(ROOT, 'src/data/shop.json'), 'utf8')).gear; const rows = csv('docs/data/items/gear_items.csv');
   const core = SHOP.filter(g => g.slot !== 'charm'); const byCsv = Object.fromEntries(core.map(g => [g.csvId || g.id, g]));
@@ -284,7 +310,11 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const B = BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph';
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('response', r => { if (r.status() >= 400) errs.push(`${r.status()} ${r.url()}`); });
-  const tid = id => p.locator(`[data-testid="${id}"]`);
+  // Jack Oct 11 hidden node types: an unvisited node is only `gnode-i<idx>` (no id / kind in the DOM). Tests address nodes by id:
+  // gsel(id) = the visited testid or the unvisited idx testid (only when the id is unique across the built graphs).
+  const NIDX = {}; for (const f of readdirSync(path.join(ROOT, 'public/world/graphs'))) for (const n of JSON.parse(readFileSync(path.join(ROOT, 'public/world/graphs', f), 'utf8')).nodes) (NIDX[n.id] ||= []).push(n.idx);
+  const gsel = (n, suf = '') => `[data-testid="gnode-${n}"]${suf}` + (NIDX[n]?.length === 1 ? `, [data-testid="gnode-i${NIDX[n][0]}"]${suf}` : '');
+  const tid = id => id.startsWith('gnode-') && !id.startsWith('gnode-i') ? p.locator(gsel(id.slice(6))) : p.locator(`[data-testid="${id}"]`);
   const sv = () => p.evaluate(k => JSON.parse(localStorage.getItem(k)), KEY4);
   const edit = fn => p.evaluate(([k, src]) => { const s = JSON.parse(localStorage.getItem(k)); (0, eval)(src)(s); localStorage.setItem(k, JSON.stringify(s)); }, [KEY4, fn.toString()]);
   const shot = async name => { if (!shots) return; await p.waitForTimeout(400); await p.screenshot({ path: shots + name + '.png' }); log('saved', shots + name + '.png'); };
@@ -367,9 +397,13 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   // ---- the graph with fog; move; fog persists over reload ----
   await p.evaluate(() => { window.__proto.noEncounters = true; });
   await tid('go-adventure').click(); await tid('graph').waitFor();
-  const fogOf = () => p.evaluate(() => Object.fromEntries([...document.querySelectorAll('[data-testid^="gnode-"]')].map(e => [e.dataset.node, e.dataset.fog])));
+  const fogOf = () => p.evaluate(() => Object.fromEntries([...document.querySelectorAll('[data-testid^="gnode-"]')].map(e => [e.dataset.node || e.dataset.testid.slice(6), e.dataset.fog])));
   let f0 = await fogOf();
-  check(f0.village === 'visited' && f0.m_fork === 'seen' && f0.m_crow === 'landmark' && !('m_well' in f0), `fog: village visited, m_fork '?', bosses as landmarks, far nodes hidden (${JSON.stringify(f0)})`);
+  check(f0.village === 'visited' && f0['i' + NIDX.m_fork[0]] === 'seen' && !Object.values(f0).includes('landmark') && !('m_well' in f0) && !('i' + NIDX.m_well[0] in f0),
+    `fog: village visited, m_fork '?', no landmarks, far nodes hidden (${JSON.stringify(f0)})`);
+  { const un = await p.evaluate(() => [...document.querySelectorAll('.gn:not(.visited)')].map(e => [e.dataset.testid, e.dataset.kind, e.dataset.node, e.textContent.trim()]));
+    check(un.length >= 1 && un.every(([t, k, n, txt]) => /^gnode-i\d+$/.test(t) && k === undefined && n === undefined) && new Set(un.map(u => u[3])).size === 1,
+      `hidden node types: every unvisited node looks the same and carries no id / kind in the DOM (${JSON.stringify(un.slice(0, 3))})`); }
   await shot('2026-10-03-graph-fog-start');
   await tid('gnode-m_fork').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'm_fork', null, { timeout: 15000 });
   await skipScenes(3);
@@ -381,7 +415,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const settle = async () => { for (let k = 0; k < 40; k++) { await p.waitForTimeout(250); const st = await state();
       if (st === 'scene') await tid('scene-skip').click().catch(() => {}); else if (st === 'dialog') await tid('dialog-btn-1').click().catch(() => {});
       else if (['menu', 'mc', 'continue', 'target', 'victory', 'wait'].includes(st) && await tid('battle').count()) await battle(); else if (st === 'left' && k > 2) return; } };
-  for (const n of ['m_field', 'm_farm']) { if (await p.locator(`[data-testid="gnode-${n}"].next`).count()) { await tid('gnode-' + n).click(); await settle(); } }
+  for (const n of ['m_field', 'm_farm']) { if (await p.locator(gsel(n, '.next')).count()) { await tid('gnode-' + n).click(); await settle(); } }
   if (!(await tid('graph').count()) && await tid('town').count()) await tid('go-adventure').click();
   await tid('graph').waitFor({ timeout: 10000 }).catch(() => {});
   await shot('2026-10-03-graph-realm-fog');
@@ -419,7 +453,10 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   // m_farm's once-events (q1_hoe offer, then q1_bounty) may have fired on the earlier walk; Farmer Li offers q1_hoe again as its giver
   for (let i = 0; i < 40 && !(await tid('scene').count()); i++) { await p.waitForTimeout(250); if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
   await tid('scene').waitFor({ timeout: 5000 });
-  sc = await scene(); check(sc.id === 'sc_q1_hoe_offer', `quest offer: Farmer Li's offer scene (${sc.id})`);
+  // Jack Oct 11: every eligible arrival event runs (in data order), so other m_farm scenes (farmer_thanks) can come first: skip them
+  for (let i = 0; i < 60 && (await scene())?.id !== 'sc_q1_hoe_offer'; i++) { await p.waitForTimeout(250); if ((await scene())?.id === 'sc_q1_hoe_offer') break;
+    if (await tid('scene').count()) { if (await tid('scene-skip').count()) await tid('scene-skip').click().catch(() => {}); else await p.keyboard.press('Enter'); } else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+  sc = await scene(); check(sc?.id === 'sc_q1_hoe_offer', `quest offer: Farmer Li's offer scene (${sc.id})`);
   for (let i = 0; i < 20 && !(await tid('scene-choice-0').count()); i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(120); }
   await tid('scene-choice-0').click(); await skipScenes(6);
   for (let k = 0; k < 3 && await tid('dialog').count(); k++) await tid('dialog-btn-1').click();   // decline the second offer (q1_bounty) for now
@@ -495,15 +532,64 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await p.mouse.move(640, 360); await p.mouse.wheel(0, -400); await p.waitForTimeout(150); const z3 = await tid('zoom-level').innerText();
   const vb0 = await tid('graph-svg').getAttribute('viewBox'); await p.mouse.move(640, 300); await p.mouse.down(); await p.mouse.move(500, 250, { steps: 5 }); await p.mouse.up(); const vb1 = await tid('graph-svg').getAttribute('viewBox');
   check(z2 === '×1.5' && parseFloat(z3.slice(1)) > 1.5 && vb0 !== vb1, `map: ± buttons, the wheel and dragging zoom and scroll (${z2} → wheel ${z3}; drag moved the view)`);
-  await tid('zoom-home').click(); await tid('gnode-n106').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'n106', null, { timeout: 8000 }).catch(() => {});
+  await tid('zoom-home').click(); await tid('gnode-i106').click();   // n106 is unvisited: hidden node types → idx testid
+  await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'n106', null, { timeout: 8000 }).catch(() => {});
   check((await tid('graph').getAttribute('data-node')) === 'n106', 'map: tapping an adjacent node on the 200-node graph moves there');
   await p.evaluate(() => { const P = window.__proto.world.P(); delete P.graphs.synthetic_200; });
+  { // ---- Jack Oct 12: a boss node blocks passage; flee → back to the previous node; pass after a win; an alternate route still works ----
+    const bg = { id: 'synthetic_boss', kind: 'overworld', realm: 1, title: { zh: '试', en: 'Boss test' },
+      nodes: [{ id: 'sa', idx: 0, kind: 'waypoint', x: 0.1, y: 0.5, zone: 'meadow' }, { id: 'sb', idx: 1, kind: 'boss', boss: 'meadow', zone: 'meadow', x: 0.5, y: 0.5 },
+        { id: 'sc', idx: 2, kind: 'waypoint', x: 0.9, y: 0.5, zone: 'meadow' }, { id: 'sd', idx: 3, kind: 'waypoint', x: 0.5, y: 0.9, zone: 'meadow' }],
+      edges: [{ id: 'sab', idx: 0, from: 'sa', to: 'sb', kind: 'path', danger: 0, steps: 1 }, { id: 'sbc', idx: 1, from: 'sb', to: 'sc', kind: 'path', danger: 0, steps: 1 },
+        { id: 'sad', idx: 2, from: 'sa', to: 'sd', kind: 'path', danger: 0, steps: 1 }, { id: 'sdc', idx: 3, from: 'sd', to: 'sc', kind: 'path', danger: 0, steps: 1 }], events: [] };
+    await p.evaluate(async g => { const w = window.__proto.world; window.__proto.noEncounters = true; w.W.graphs[g.id] = g; w.E.registerGraph(g);
+      const P = w.P(); P.zonesDefeated = P.zonesDefeated.filter(z => z !== 'meadow'); await w.goto(g.id, 'sa'); }, bg);
+    const pos = async () => (await sv()).world.pos.node;
+    const toBattle = async () => { for (let i = 0; i < 80; i++) { const st = await state(); if (st === 'menu') return true;
+      if (st === 'scene') await tid('scene-skip').click().catch(() => {}); else if (st === 'dialog') await tid('dialog-btn-0').click().catch(() => {}); await p.waitForTimeout(100); } return false; };
+    const toMap = async () => { for (let i = 0; i < 80; i++) { if (await tid('graph').count() && !(await tid('dialog').count()) && !(await tid('scene').count())) return;
+      if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); await p.waitForTimeout(100); } };
+    const flee = async () => { await tid('act-flee').click(); await toMap(); };
+    // the boss node is unvisited: tap it by its idx testid
+    await tid('gnode-i1').click(); const b1 = await toBattle(); await flee();
+    let s1 = await sv(); const vis = i => p.evaluate(([g, i]) => window.__proto.world.E.bitGet(window.__proto.world.P().graphs[g]?.visited || '', i), ['synthetic_boss', i]);
+    check(b1 && s1.world.pos.graph === 'synthetic_boss' && s1.world.pos.node === 'sa' && !(await vis(2)) && !s1.world.zonesDefeated.includes('meadow'),
+      `boss blocks passage: walking into the unbeaten boss starts the fight; fleeing returns to the previous node (at ${s1.world.pos.node}, sc not visited)`);
+    // an old save / teleport standing on the unbeaten boss: walking on to sc fights the boss first
+    await p.evaluate(() => window.__proto.world.goto('synthetic_boss', 'sb')); await toBattle().then(async ok => { if (ok) await flee(); });
+    if ((await pos()) === 'sb') { await tid('gnode-i2').click(); }   // sc is unvisited: idx testid
+    const b2 = await toBattle(); if (b2) await flee();
+    check(b2 && (await pos()) !== 'sc' && !(await vis(2)), `boss blocks passage: you can't walk on past an unbeaten boss (at ${await pos()})`);
+    // the alternate route sa → sd → sc never touches the boss
+    await p.evaluate(() => window.__proto.world.goto('synthetic_boss', 'sa')); await toMap();
+    await tid('gnode-i3').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'sd', null, { timeout: 8000 }).catch(() => {}); await toMap();
+    await tid('gnode-i2').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'sc', null, { timeout: 8000 }).catch(() => {}); await toMap();
+    s1 = await sv(); check(s1.world.pos.node === 'sc' && !s1.world.zonesDefeated.includes('meadow'), `boss blocks passage: an alternate route around the boss still works (sa → sd → sc, boss unbeaten; at ${s1.world.pos.node})`);
+    // win the boss, then the way on through it is open
+    await p.evaluate(() => window.__proto.world.goto('synthetic_boss', 'sa')); await toMap();
+    await p.locator(gsel('sb')).first().click(); const b3 = await toBattle(); const r3 = b3 ? await battle() : 'none'; await toMap();
+    const at3 = await pos(); if (at3 === 'sb') { await p.locator(gsel('sc')).first().click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.node === 'sc', null, { timeout: 8000 }).catch(() => {}); await toMap(); }
+    s1 = await sv(); check(r3 === 'win' && at3 === 'sb' && s1.world.zonesDefeated.includes('meadow') && s1.world.pos.node === 'sc', `boss blocks passage: after the win you stand on the boss node and can walk on (${r3}; at ${at3} → ${s1.world.pos.node})`);
+    await p.evaluate(() => { const P = window.__proto.world.P(); delete P.graphs.synthetic_boss; }); await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
+  }
+  { // ---- Jack Oct 11 quest gates in the UI: a locked node can't be entered; the default blocked line shows ----
+    const lg = { id: 'synthetic_lock', kind: 'overworld', realm: 1, title: { zh: '锁', en: 'Lock test' },
+      nodes: [{ id: 'la', idx: 0, kind: 'waypoint', x: 0.2, y: 0.5, zone: 'meadow' }, { id: 'lb', idx: 1, kind: 'waypoint', x: 0.8, y: 0.5, zone: 'meadow', lockedUntilQuest: 'q1_hoe' }],
+      edges: [{ id: 'lab', idx: 0, from: 'la', to: 'lb', kind: 'path', danger: 0, steps: 1 }], events: [] };
+    await p.evaluate(async g => { const w = window.__proto.world; w.W.graphs[g.id] = g; w.E.registerGraph(g); delete w.quests().q1_hoe; await w.goto(g.id, 'la'); }, lg);
+    const lockCls = await tid('gnode-i1').getAttribute('class');
+    await tid('gnode-i1').click(); await tid('lock-blocked').waitFor({ timeout: 8000 }).catch(() => {});
+    const msg = await tid('lock-blocked').count() ? await tid('lock-blocked').innerText() : '';
+    if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click();
+    check(/locked/.test(lockCls || '') && /The way is blocked/.test(msg) && (await sv()).world.pos.node === 'la', `quest gates (UI): the locked node shows a lock, tapping it shows “${msg}” and you stay put`);
+    await p.evaluate(() => { const P = window.__proto.world.P(); delete P.graphs.synthetic_lock; });
+  }
   // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
-  check(await p.locator('[data-testid="gnode-realm_2"].next').count() === 0, 'world map: realm 2 is locked before the realm 1 realm boss');
+  check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_9', '.next')).count() === 1, 'world map (links-only, Jack Oct 11: no boss-gated unlocks): every linked realm is open from the start, before the realm 1 realm boss');
   await edit(s => { if (!s.world.zonesDefeated.includes('warren')) s.world.zonesDefeated.push('warren'); }); await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
   await shot('2026-10-03-graph-world-map');
-  check(await p.locator('[data-testid="gnode-realm_2"].next').count() === 1 && await p.locator('[data-testid="gnode-realm_3"].next').count() === 0, 'world map: beating warren opens realm 2 (realm 3 still locked)');
+  check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_3', '.next')).count() === 1, 'world map: realms 2 and 3 open (no realm boss needed)');
   await tid('gnode-realm_2').click();
   for (let i = 0; i < 40 && !(await tid('town').count()); i++) { await p.waitForTimeout(250);   // first-visit scenes / dialogues / quest offers ("Later")
     if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
@@ -513,11 +599,11 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   check(await tid('go-world').count() === 0 && await tid('gexit-exit_entry_town').count() === 1, 'world map: the realm 2 entry town has its v3.9.2 exit edge (no fallback button)');
   await tid('gexit-exit_entry_town').click(); await p.waitForFunction(() => document.querySelector('[data-testid=graph]')?.dataset.graph === 'world', null, { timeout: 8000 });
   check((await sv()).world.pos.node === 'realm_2', 'world map: the exit edge exit_entry_town leads back to the realm 2 world node');
-  check(await p.locator('[data-testid="graph-svg"] line[data-edge="w12"].walked').count() === 1 && await p.locator('[data-testid="graph-svg"] line[data-edge="w23"].closed').count() === 1,
-    'world map: link edge w12 is open, w23 is closed until the realm 2 realm boss');
+  check(await p.locator('[data-testid="graph-svg"] line[data-edge="w12"].walked').count() === 1 && await p.locator('[data-testid="graph-svg"] line[data-edge="w23"].closed').count() === 0,
+    'world map: link edges w12 and w23 are open (links-only: no boss condition)');
   // ---- realm 3: opens after great_hive (world.json realms[].unlock); its content (enemies, words) loads on entry ----
   await edit(s => { s.world.zonesDefeated.push('great_hive'); s.level = Math.max(s.level, 12); }); await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
-  check(await p.locator('[data-testid="gnode-realm_3"].next').count() === 1 && await p.locator('[data-testid="gnode-realm_4"].next').count() === 0, 'world map: beating great_hive opens realm 3 (realm 4 still locked)');
+  check(await p.locator(gsel('realm_3', '.next')).count() === 1 && await p.locator(gsel('realm_4', '.next')).count() === 1, 'world map: realm 3 and on stay open (links-only)');
   await tid('gnode-realm_3').click();
   for (let i = 0; i < 40 && !(await tid('town').count()); i++) { await p.waitForTimeout(250);
     if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
