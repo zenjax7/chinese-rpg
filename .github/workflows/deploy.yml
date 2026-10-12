@@ -58,6 +58,13 @@ jobs:
       # The static site must never contain server code or server env names (docs/tech/api.md).
       - run: npm run check:dist
 
+      # Jack Oct 12: the built bundle carries no secrets. Scan dist/ for secret-like strings and fail on a hit.
+      - name: gitleaks (dist)
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz | tar -xz gitleaks
+          ./gitleaks dir dist --no-banner --redact
+          rm gitleaks
+
       # Headless tests (tests/play.mjs) are not run here: they need a running server on :8795 and a local
       # Chrome at /usr/bin/google-chrome. Run `npm test` locally before pushing.
 
