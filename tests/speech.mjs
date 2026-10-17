@@ -29,7 +29,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
         active++; let ended = false; const end = () => { if (ended) return; ended = true; active--; this.onend && this.onend(); };
         this.__end = end;
         setTimeout(() => { this.onstart && this.onstart();
-          if (plan.earlyEnd) { setTimeout(end, 40); return; }
+          if (plan.earlyEnd) { queueMicrotask(end); return; }   // right after onstart: a timer could fire late on a loaded box (past the game's 1 s restart window)
           setTimeout(() => {
             if (plan.interims || plan.finals) { this.onsoundstart && this.onsoundstart(); this.onspeechstart && this.onspeechstart(); }
             for (const t of plan.interims || []) { const r = [{ transcript: t, confidence: 0 }]; r.isFinal = false; this.onresult && this.onresult({ resultIndex: 0, results: [r] }); }
@@ -103,7 +103,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
           : style === 'contained' ? [{ finals: [[q.way === 'sEZ' ? '嗯' + say + '。' : 'um ' + say, 0.7]] }]
           : [{ interims: [say], finals: [[say, 0.8]], delay: 1500 }];                                            // slow final
         const before = await p.evaluate(id => (window.__proto.sayCount || {})[id] || 0, q.id); const atQ = await p.evaluate(id => (window.__qSay || {})[id] || 0, q.id);
-        await p.evaluate(pl => window.__srPlan.push(...pl), plan);
+        await p.evaluate(pl => { window.__srPlan.length = 0; window.__srPlan.push(...pl); }, plan);   // a plan left over from an earlier question must not answer this one
         const n0 = await p.evaluate(() => window.__utter.length);
         await tid('mic').click();
         await p.waitForSelector('[data-testid="fb-ok"],[data-testid="fb-bad"]', { timeout: 15000 });
