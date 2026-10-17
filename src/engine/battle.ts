@@ -17,7 +17,9 @@ export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number;
   questions: number; correct: number; spoken: number; voids: number; tired: boolean; gearGot: string[]; equipped: string[];
   /** Desy enemy ids of every foe beaten (graph-mode quest kill counts). */ kills?: string[]; }
 /** Graph mode (?world=graph): fixed enemies (Desy ids or runtime ids), a zone roster override. Jack Oct 11: no random elites anywhere. */
-export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string; }
+export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string;
+  /** the word pool's cycle key when a map brings its own pool (learning.ts cycleFill); default: the location */
+  poolKey?: string; }
 export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.values(ENEMIES).map(e => [e.desyId.split(' ')[0], e.id]));
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
 interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
@@ -76,7 +78,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const leader = ['locboss', 'realmboss'].includes(foes[0].d.kind) ? foes[0] : null;   // boss down => minions flee
   const hero = { webbed: false, rooted: false, webMult: 1 };
   const tiredAt = (C().tiredAtQuestions as Record<string, number>)[leader ? leader.d.kind : 'normal'] ?? C().tiredAtQuestions.normal;   // v3.2: 30 normal (elites too), 45 every boss
-  const set = chooseBattleSet(locId, loc.reviewSlots + (isBoss ? 1 : 0));
+  const set = chooseBattleSet(locId, loc.reviewSlots + (isBoss ? 1 : 0), opts.poolKey);
   const feed = new QuestionFeed(set.ids);
   const ctx: WayCtx = { asked: 0, spoken: 0, cooling: new Set() };
   (window as any).__proto.summons = 0;

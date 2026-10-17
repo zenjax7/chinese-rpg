@@ -5,11 +5,15 @@ export type WayKey = 'rZE' | 'rEZ' | 'sZE' | 'sEZ';
 export const ALL_WAYS: WayKey[] = ['rZE', 'rEZ', 'sZE', 'sEZ'];
 export const WAY_LABEL: Record<WayKey, string> = { rZE: 'Read ZH→EN', rEZ: 'Read EN→ZH', sZE: 'Say ZH→EN', sEZ: 'Say EN→ZH' };
 export interface WayStat { c: number; a: number; box: number; last: number; due: number; wrongRun: number; pc?: number /* practice credit used */; }
+/** used = words already drawn into a battle in the current cycle; last = the previous battle's words (avoided when a new cycle starts). */
+export interface WordCycle { used: string[]; last: string[] }
 export interface ItemProg { seen: boolean; ways: Record<WayKey, WayStat>; recentMiss: number; }
 /** Classic location state. Jack Oct 11: no practice patrols and no boss checkpoint (older saves may still carry patrolsLeft,
  *  approachArmed, bossCheckpoint and patrolsFought; load() drops them). */
 export interface LocState { unlocked: boolean; bossDefeated: boolean; pathCleared: number; previewSeen: boolean; }
 export interface SaveState {
+  /** Jack Oct 17: per word pool, the battle fill's draw-without-replacement cycle (learning.ts cycleFill). Optional: older saves start a fresh cycle. */
+  wordCycles?: Record<string, WordCycle>;
   /** level-editor.md §7.3: the version hash of each map this save last played ({mapId: hash}), for the beta reset */
   mapVersions?: Record<string, string>;
   version: number;

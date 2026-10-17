@@ -139,19 +139,20 @@ function zoneOf(g: E.Graph, node?: string, e?: E.GEdge): E.Zone | undefined {
   return (zid && W.zones[zid]) || W.idx!.zones.find(z => z.realm === g.realm);
 }
 const battleLoc = (z?: E.Zone) => (z && LOC[z.location] ? z.location : (z?.realm ?? 1) >= 2 && LOC.forest ? 'forest' : 'meadow');
-/** A map loaded from the API fights with its own word pool (settings.words, §2.5.1), limited to words the game has loaded. */
-function mapPool(g: E.Graph, loc: string): () => void {
+/** A map loaded from the API fights with its own word pool (settings.words, §2.5.1), limited to words the game has loaded.
+ *  That pool has its own draw cycle (poolKey `map:<id>`). */
+function mapPool(g: E.Graph, loc: string): { restore: () => void; poolKey?: string } {
   const words = (g as LevelGraph).words?.filter(id => ITEM[id]);
-  if (!words?.length) return () => {};
+  if (!words?.length) return { restore: () => {} };
   const before = POOLS[loc]; POOLS[loc] = words;
-  return () => { POOLS[loc] = before; };
+  return { restore: () => { POOLS[loc] = before; }, poolKey: `map:${g.id}` };
 }
 async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
-  const restorePool = mapPool(g, loc);
-  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; restorePool(); }
+  const pool = mapPool(g, loc); opts.poolKey = pool.poolKey;
+  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; pool.restore(); }
   if (res.outcome === 'win') {
     if (res.kills?.length) questUpdate(E.questEvent(W.quests, ctx(), { type: 'kill', enemies: res.kills, realm: g.realm }));
     saveW(); await rewards(res, o.label || '');

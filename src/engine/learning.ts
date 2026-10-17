@@ -1,5 +1,5 @@
 import { B, ITEM, ITEMS, POOLS, POOL_ORDER, Item } from '../data';
-import { S, WayKey, ALL_WAYS, ItemProg, WayStat, speechOn } from './state';
+import { S, WayKey, ALL_WAYS, ItemProg, WayStat, WordCycle, speechOn } from './state';
 
 const L = () => B.learning;
 const MIN = 60_000;
@@ -37,11 +37,6 @@ export function weightedSample<T>(items: T[], w: number[], k: number): T[] {
   const keyed = items.map((it, i) => ({ it, key: Math.pow(Math.random(), 1 / Math.max(w[i], 1e-6)) }));
   keyed.sort((a, b) => b.key - a.key); return keyed.slice(0, k).map(x => x.it);
 }
-function wLocal(id: string) {
-  const l = L();
-  if (proficient(id)) return l.proficientWeight + l.overdueWeight * Math.min(maxOverdue(id), l.overdueCap);
-  return l.localBaseWeight + l.localProgressWeight * (1 - progress(id)) + l.recentMissWeight * prog(id).recentMiss;
-}
 function wReview(id: string) {
   const l = L();
   return (proficient(id) ? l.proficientWeight : l.localBaseWeight + l.localProgressWeight * (1 - progress(id))) + l.overdueWeight * Math.min(maxOverdue(id), l.overdueCap);
@@ -59,8 +54,38 @@ export function readiness(locId: string) {
   return { n, total: pool.length, frac: n / pool.length };
 }
 
-/** Spec §3.3 with Jack's cap of 3 new items per battle. Returns the battle's focus items (weakest first) and which are new. */
-export function chooseBattleSet(locId: string, reviewSlots: number): { ids: string[]; newIds: string[] } {
+function shuffle<T>(xs: T[]): T[] {
+  const a = [...xs];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function wordCycle(key: string): WordCycle { return ((S.wordCycles ??= {})[key] ??= { used: [], last: [] }); }
+/** Jack Oct 17: the battle fill draws without replacement across battles: words not yet drawn in this pool's cycle first, in random
+ *  order. Only when every candidate was drawn does a new cycle start, and then the previous battle's words come last. */
+export function cycleFill(key: string, pool: string[], candidates: string[], k: number): string[] {
+  if (k <= 0 || !candidates.length) return [];
+  const c = wordCycle(key); const inPool = new Set(pool);
+  let used = new Set(c.used.filter(id => inPool.has(id)));
+  const out = shuffle(candidates.filter(id => !used.has(id))).slice(0, k);
+  if (out.length < k) {
+    used = new Set();
+    const last = new Set(c.last); const more = candidates.filter(id => !out.includes(id));
+    out.push(...[...shuffle(more.filter(id => !last.has(id))), ...shuffle(more.filter(id => last.has(id)))].slice(0, k - out.length));
+  }
+  c.used = [...used, ...out];
+  return out;
+}
+/** Marks a battle's words as drawn in the pool's cycle and remembers them as the previous battle. */
+function noteBattleSet(key: string, pool: string[], ids: string[]) {
+  const c = wordCycle(key); const inPool = new Set(pool);
+  c.used = [...new Set([...c.used, ...ids.filter(id => inPool.has(id))])];
+  c.last = [...ids];
+}
+
+/** Spec §3.3 with Jack's cap of 3 new items per battle. Returns the battle's focus items (weakest first) and which are new.
+ *  The review slots and the new items follow the learning rules as before; the rest of the set (the fill) comes from the pool's
+ *  draw-without-replacement cycle (cycleFill), keyed by `poolKey` (the location, or a map with its own word pool). */
+export function chooseBattleSet(locId: string, reviewSlots: number, poolKey = locId): { ids: string[]; newIds: string[] } {
   const l = L();
   const review = earlierItems(locId).filter(id => prog(id).seen);
   const s: string[] = weightedSample(review, review.map(wReview), reviewSlots);
@@ -71,8 +96,10 @@ export function chooseBattleSet(locId: string, reviewSlots: number): { ids: stri
   if (active.length + s.length < l.setSize - q) q = Math.min(unseen.length, l.setSize - s.length - active.length);
   q = Math.min(q, l.newCap);                        // Jack: at most 3 new items per battle, always
   const newIds = unseen.slice(0, q); s.push(...newIds);
-  const rest = [...local, ...carried(locId)].filter(id => prog(id).seen && !s.includes(id));
-  s.push(...weightedSample(rest, rest.map(wLocal), l.setSize - s.length));
+  const pool = [...local, ...carried(locId)];
+  const rest = pool.filter(id => prog(id).seen && !s.includes(id));
+  s.push(...cycleFill(poolKey, pool, rest, l.setSize - s.length));
+  noteBattleSet(poolKey, pool, s);
   const key: Record<string, number> = {}; for (const id of s) key[id] = progress(id) + Math.random() * 0.08;
   s.sort((a, b) => key[a] - key[b]);
   return { ids: s, newIds };

@@ -29,7 +29,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
         active++; let ended = false; const end = () => { if (ended) return; ended = true; active--; this.onend && this.onend(); };
         this.__end = end;
         setTimeout(() => { this.onstart && this.onstart();
-          if (plan.earlyEnd) { setTimeout(end, 40); return; }
+          if (plan.earlyEnd) { queueMicrotask(end); return; }   // right after onstart: a timer could fire late on a loaded box (past the game's 1 s restart window)
           setTimeout(() => {
             if (plan.interims || plan.finals) { this.onsoundstart && this.onsoundstart(); this.onspeechstart && this.onspeechstart(); }
             for (const t of plan.interims || []) { const r = [{ transcript: t, confidence: 0 }]; r.isFinal = false; this.onresult && this.onresult({ resultIndex: 0, results: [r] }); }
@@ -45,6 +45,9 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
     // (a MutationObserver runs before the battle code reaches its sayItem(), which comes after an await)
     new MutationObserver(recs => { for (const r of recs) for (const n of r.addedNodes) if (n.nodeType === 1 && (n.matches?.('[data-testid="question"]') || n.querySelector?.('[data-testid="question"]')))
       window.__qSay = { ...(window.__proto?.sayCount || {}) }; }).observe(document, { childList: true, subtree: true });
+    // latch the first feedback verdict after each mic tap (window.__verdict is reset before the tap)
+    new MutationObserver(() => { if (window.__verdict !== null) return; const t = document.querySelector('[data-testid="fb-ok"],[data-testid="fb-bad"]');
+      if (t) window.__verdict = t.getAttribute('data-testid'); }).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-testid'] });
   });
   const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
@@ -103,12 +106,15 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
           : style === 'contained' ? [{ finals: [[q.way === 'sEZ' ? '嗯' + say + '。' : 'um ' + say, 0.7]] }]
           : [{ interims: [say], finals: [[say, 0.8]], delay: 1500 }];                                            // slow final
         const before = await p.evaluate(id => (window.__proto.sayCount || {})[id] || 0, q.id); const atQ = await p.evaluate(id => (window.__qSay || {})[id] || 0, q.id);
-        await p.evaluate(pl => window.__srPlan.push(...pl), plan);
-        const n0 = await p.evaluate(() => window.__utter.length);
+        await p.evaluate(pl => { window.__srPlan.length = 0; window.__srPlan.push(...pl); }, plan);   // a plan left over from an earlier question must not answer this one
+        const n0 = await p.evaluate(() => { window.__verdict = null; return window.__utter.length; });
         await tid('mic').click();
-        await p.waitForSelector('[data-testid="fb-ok"],[data-testid="fb-bad"]', { timeout: 15000 });
+        // read the verdict in the page, at the DOM mutation that shows it: #bmsg's data-testid is cleared again by the next msg(),
+        // so on a loaded box a later count()/getAttribute() can miss a right answer: a MutationObserver latches it
+        const verdict = await (await p.waitForFunction(() => window.__verdict, null, { timeout: 15000 })).jsonValue();
         if (await p.locator('#micmsg [data-testid="sr-debug"]').count()) dbgShown++;
-        const ok = await tid('fb-ok').count(); spokenQ++; if (ok) spokenOk++;
+        const ok = verdict === 'fb-ok'; spokenQ++; if (ok) spokenOk++;
+        if (!ok) log('speech miss', style, q.way, q.id, JSON.stringify(await p.evaluate(() => window.__srLog.slice(-3).map(r => r.plan))), '|', (await p.locator('#micmsg').innerText().catch(() => '')).replace(/\s+/g, ' ').slice(0, 600));
         await p.waitForTimeout(1200);
         const after = await p.evaluate(id => (window.__proto.sayCount || {})[id] || 0, q.id); const n1 = await p.evaluate(() => window.__utter.length);
         replayed.push({ id: q.id, way: q.way, style, ok: !!ok, sayAfterMic: after - before, tts: n1 - n0 });
