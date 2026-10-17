@@ -21,6 +21,7 @@ export interface Graph { id: string; kind: string; realm: number; dungeon?: stri
 export interface Zone { id: string; realm: number; order: number; title: Txt; location: string; bossNode?: NodeRef; bossKind?: string; boss?: string;
   enemiesPerBattle?: number[]; roster?: { enemy: string; weight: number }[]; elite?: string; tier?: number }
 export interface WorldIndex { contentVersion: string; dataVersion: string; start: NodeRef; rules: any; zones: Zone[];
+  /** leveling v2: each map's level settings by map id (docs/data/levels settings subset, build_world.py) */ mapLevels?: Record<string, any>;
   graphs: { id: string; kind: string; realm: number; dungeon?: string; level?: number; title?: Txt }[]; scenes: string[];
   words: Record<string, Txt>; speakers: Record<string, Txt>;
   /** v3.9.2 world.json realms[]: realm links, unlock conditions, exit edges */

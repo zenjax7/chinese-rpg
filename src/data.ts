@@ -4,6 +4,8 @@ import enemiesJ from './data/enemies.json';
 import locationsJ from './data/locations.json';
 import shopJ from './data/shop.json';
 import skillsJ from './data/skills.json';
+import levelingJ from './data/leveling.json';
+import type { Archetype } from './shared/leveling';
 
 export interface Item { id: string; zh: string; trad: string; py: string; en: string; enPrimary: string; type: string; pos: string;
   topic: string; loc: string; speaking: boolean; reading: boolean; altZh: string[]; altEn: string[]; }
@@ -45,6 +47,8 @@ export const CONSUMABLES: ConsumableDef[] = (shopJ as any).consumables;
 export const CONS: Record<string, ConsumableDef> = Object.fromEntries(CONSUMABLES.map(c => [c.id, c]));
 export const SKILLS: SkillDef[] = (skillsJ as any).skills;
 export const SKILL: Record<string, SkillDef> = Object.fromEntries(SKILLS.map(s => [s.id, s]));
+/** Leveling v2 (§2.3): archetype offsets by Desy enemy id and boss m(t) by "tier,kind" (tools/build_data.py). */
+export const LEVELING = levelingJ as { archetype: Record<string, Archetype>; bossHpMult: Record<string, number> };
 
 // ---- v3.3: towns, spells, quests ----
 import spellsJ from './data/spells.json';

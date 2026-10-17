@@ -8,10 +8,13 @@ import BUNDLED from '../data/world/level-hashes.json';
 
 export interface LevelIndex { release: number; start: { graph: string; node: string }; maps: Record<string, { v: number; hash: string; state: string }> }
 export interface ApiLevel { id: string; version: number; state: string; kind: string; title?: any; entry: string; aspect?: number; dungeon?: string; level?: number;
-  settings: { words?: string[]; background?: { map?: string; battle?: string }; boss?: { node?: string } }; nodes: any[]; edges: any[]; events?: any[];
+  settings: { words?: string[]; background?: { map?: string; battle?: string }; boss?: { node?: string; enemy?: string; level?: number }; gearTier?: number;
+    recLevel?: [number, number]; enemyLevel?: [number, number]; eliteLevel?: number; roster?: { enemy: string; weight: number; level?: number | [number, number] }[] };
+  nodes: any[]; edges: any[]; events?: any[];
   scenes?: Record<string, any>; npcs?: any }
 /** The runtime graph of an API map: the engine Graph plus the map's own word pool (§2.5.1) and scenes (§2.8). */
-export type LevelGraph = Graph & { words?: string[]; levelHash?: string; levelState?: string; scenes?: Record<string, any> };
+export type LevelGraph = Graph & { words?: string[]; levelHash?: string; levelState?: string; scenes?: Record<string, any>;
+  /** leveling v2: the published map's settings (gearTier, recLevel, enemyLevel, eliteLevel, boss.level, roster[].level) */ levelSettings?: ApiLevel['settings'] };
 
 const HASHES = (BUNDLED as { hashes: Record<string, string> }).hashes;
 export const bundledHash = (id: string): string | undefined => HASHES[id];
@@ -56,7 +59,7 @@ export function levelToGraph(lv: ApiLevel, base: Graph | null, zones: Record<str
   });
   return { id: lv.id, kind: lv.kind, realm, dungeon: lv.dungeon, level: lv.level, title: lv.title, entry: lv.entry, aspect: lv.aspect,
     nodes, edges: lv.edges.map((e, i) => ({ idx: i, ...e })), events: lv.events ?? [], npcs: lv.npcs, background: lv.settings.background,
-    words: lv.settings.words, scenes: lv.scenes ?? {}, levelHash: hash, levelState: lv.state } as LevelGraph;
+    words: lv.settings.words, scenes: lv.scenes ?? {}, levelHash: hash, levelState: lv.state, levelSettings: lv.settings } as LevelGraph;
 }
 
 /** §2.9 beta reset of one map: its fog bitsets, events done, visit and crossing counters, shortcuts and edge progress go; a player

@@ -16,6 +16,7 @@ import { playScene, Scene, SceneEnv } from '../world/scene';
 import { loadRealmContent } from '../world/content';
 import { levelIndex, publishedLevel, levelToGraph, resetMap, bundledHash, type LevelGraph } from '../world/levels';
 import { battleHooks } from '../engine/battle';
+import { mapLevels } from '../shared/leveling';
 
 // ---------------- data ----------------
 export const W: { idx: E.WorldIndex | null; quests: E.Quest[]; graphs: Record<string, E.Graph>; scenes: Record<string, Scene | null>; zones: Record<string, E.Zone> } =
@@ -148,7 +149,10 @@ function mapPool(g: E.Graph, loc: string): () => void {
 }
 async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   const loc = battleLoc(z); setCurrentLoc(loc);
-  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
+  // leveling v2: the level settings of the map being played: a published map's own, else the bundled ones of the zone's map
+  // (realm_1's clover_hills / warren zones are their own maps), else of the graph's map
+  const ml = W.idx!.mapLevels || {}; const levels = mapLevels((g as LevelGraph).levelSettings ?? (z && ml[z.id]) ?? ml[g.id]);
+  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, levels };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
   const restorePool = mapPool(g, loc);
   let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; restorePool(); }
