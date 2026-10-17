@@ -5,6 +5,7 @@ import progressSchema from '../docs/data/world/schemas/progress.schema.json' wit
 import commonSchema from '../docs/data/world/schemas/common.schema.json' with { type: 'json' };
 import worldIndex from '../src/data/world/index.json' with { type: 'json' };
 import balance from '../src/data/balance.json' with { type: 'json' };
+import { expToNextAt } from '../src/shared/leveling.js';
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 ajv.addSchema(commonSchema as object);
@@ -53,8 +54,7 @@ export function positionColumns(s: Snap) {
 /** §9.6: plausibility FLAGS, never rejections, so a save from a newer build is never lost. */
 export function plausibilityFlags(s: Snap): string[] {
   const f: string[] = [];
-  const per = (balance as any).hero?.expToNextPerLevel ?? 100;
-  if (s.exp >= per * s.level) f.push('exp_over_curve');
+  if (s.exp >= expToNextAt(s.level, (balance as any).hero)) f.push('exp_over_curve');   // leveling v2 curve (combat-spec §2.1)
   if (s.debug === true) f.push('debug');
   const w = s.world ?? {};
   if (w.pos?.graph && !graphs.has(w.pos.graph)) f.push('unknown_graph');
