@@ -1,6 +1,6 @@
 /** v3.9.2 graph world UI (?world=graph). Data: src/data/world/ + public/world/graphs/ (tools/world/build_world.py from Desy's docs/data). Progress lives in
  *  S.world (progress/0.3), story quests in S.storyQuests, seen scenes in S.scenesSeen, all in the v4 save. Classic mode never loads this. */
-import { B, LOC, CONS, TOWNS, GEAR, GEAR_LIST, ITEM } from '../data';
+import { B, LOC, CONS, TOWNS, GEAR, GEAR_LIST, ITEM, POOLS } from '../data';
 import { S, save, heroStats, refreshSkills, gainGear, equipLine, worldPrice, addExp, cloudTrigger, store } from '../engine/state';
 import { validateProgress, migrateProgress } from '../world/progress';
 import PROGRESS_SCHEMA from '../data/world/progress.schema.json';
@@ -14,6 +14,7 @@ import { playMusic, playSfx } from '../audio/audio';
 import * as E from '../world/engine';
 import { playScene, Scene, SceneEnv } from '../world/scene';
 import { loadRealmContent } from '../world/content';
+import { levelIndex, publishedLevel, levelToGraph, resetMap, bundledHash, type LevelGraph } from '../world/levels';
 import { battleHooks } from '../engine/battle';
 
 // ---------------- data ----------------
@@ -32,8 +33,25 @@ export async function loadWorld() {
   W.zones = Object.fromEntries(W.idx!.zones.map(z => [z.id, z]));
   worldPrice.featherG = W.idx!.rules.returnFeather?.priceG ?? 2;
 }
+/** A published map from the API when it differs from the bundled copy (level-editor.md §7), else the static graph. */
+async function loadGraph(id: string): Promise<E.Graph> {
+  const api = await publishedLevel(id);
+  if (!api) return J(`world/graphs/${id}.json`);
+  const base = await J(`world/graphs/${id}.json`).catch(() => null);
+  const g = levelToGraph(api.level, base, W.zones, api.hash);
+  for (const [sid, sc] of Object.entries(g.scenes ?? {})) W.scenes[sid] = sc;   // the map's own scenes (§2.8) win over the bundled ones
+  return g;
+}
+/** §2.9 / §7.3: a beta map whose published hash differs from the one this save last played is reset; the hash is then recorded. */
+async function syncMapVersion(g: E.Graph) {
+  const m = (await levelIndex())?.maps[g.id]; if (!m || !S.world) return;
+  const seen = (S.mapVersions ??= {});
+  const last = seen[g.id] ?? (P().graphs[g.id] ? bundledHash(g.id) : undefined);
+  if (last && last !== m.hash && m.state === 'beta') resetMap(P(), S.storyQuests ??= {}, W.quests, g);
+  if (seen[g.id] !== m.hash) { seen[g.id] = m.hash; saveW(); }
+}
 export async function graph(id: string): Promise<E.Graph> {
-  if (!W.graphs[id]) { const g = await J(`world/graphs/${id}.json`); W.graphs[id] = g; E.registerGraph(g); }
+  if (!W.graphs[id]) { const g = await loadGraph(id); W.graphs[id] = g; E.registerGraph(g); await syncMapVersion(g); }
   const g = W.graphs[id]; if (g.realm >= 3) await loadRealmContent(g.realm, W.idx?.content);   // realm 3–9 enemies, words, zones (world/content.ts)
   return g;
 }
@@ -69,6 +87,8 @@ export async function ensureProgress() {
   }
   S.storyQuests ??= {}; S.scenesSeen ??= []; S.party ??= [];
   syncFeathers(); save();
+  const idx = await levelIndex();   // §7.3 on load: maps this save played whose published hash changed
+  for (const id of Object.keys(S.world!.graphs)) { const m = idx?.maps[id]; if (m && m.hash !== (S.mapVersions?.[id] ?? bundledHash(id))) await syncMapVersion(await graph(id)); }
 }
 function syncFeathers() { const c = R().returnFeather?.carry ?? 3; S.inv.feather = Math.min(c, S.inv.feather || 0); P().feathers = S.inv.feather; }
 function saveW() { syncFeathers(); save(); }
@@ -119,11 +139,19 @@ function zoneOf(g: E.Graph, node?: string, e?: E.GEdge): E.Zone | undefined {
   return (zid && W.zones[zid]) || W.idx!.zones.find(z => z.realm === g.realm);
 }
 const battleLoc = (z?: E.Zone) => (z && LOC[z.location] ? z.location : (z?.realm ?? 1) >= 2 && LOC.forest ? 'forest' : 'meadow');
+/** A map loaded from the API fights with its own word pool (settings.words, §2.5.1), limited to words the game has loaded. */
+function mapPool(g: E.Graph, loc: string): () => void {
+  const words = (g as LevelGraph).words?.filter(id => ITEM[id]);
+  if (!words?.length) return () => {};
+  const before = POOLS[loc]; POOLS[loc] = words;
+  return () => { POOLS[loc] = before; };
+}
 async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
-  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; }
+  const restorePool = mapPool(g, loc);
+  let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; restorePool(); }
   if (res.outcome === 'win') {
     if (res.kills?.length) questUpdate(E.questEvent(W.quests, ctx(), { type: 'kill', enemies: res.kills, realm: g.realm }));
     saveW(); await rewards(res, o.label || '');
