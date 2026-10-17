@@ -62,7 +62,7 @@ emit('hero_stats', ['tier', 'realm', 'rec_level', 'rec_level_range', 'gear_tier'
 # ---------- enemy_stat_bands ----------
 ROLE_KIND = [('normal', '', 'normal'), ('elite', '', 'elite'), ('boss', 'location', 'locboss'), ('boss', 'realm', 'realmboss')]
 EXPM = {'normal': 6, 'elite': 10, 'locboss': 20, 'realmboss': 50}
-FORM = {'normal': ('H(t) × base', '1.1 × DEF_ref'), 'elite': ('2 × H(t) × base', '1.2 × DEF_ref'),
+FORM = {'normal': ('H(t) × base', '1.21 × DEF_ref'), 'elite': ('2 × H(t) × base', '1.2 × DEF_ref'),
         'locboss': ('5 × base × m(t) (v3.7, boss_hp table)', '0.8 × 1.2 × DEF_ref (v3.6)'), 'realmboss': ('7 × base × m(t) (v3.6, boss_hp table)', '0.8 × 1.3 × DEF_ref (v3.6)')}
 import spells_data as SD0
 MINIONS = {'normal': lambda t: 0, 'elite': lambda t: 0, 'locboss': lambda t: 1, 'realmboss': lambda t: 1 if t <= 3 else 2}

@@ -5,14 +5,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 16,
-  "atk": 4,
+  "atk": 5,
   "def": 1,
   "gold": 6,
   "exp": 12,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 1,
@@ -65,14 +65,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 27,
-  "atk": 9,
+  "atk": 10,
   "def": 2,
   "gold": 12,
   "exp": 24,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 2,
@@ -125,14 +125,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 31,
-  "atk": 13,
+  "atk": 15,
   "def": 3,
   "gold": 18,
   "exp": 36,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 3,
@@ -185,14 +185,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 36,
-  "atk": 18,
+  "atk": 19,
   "def": 4,
   "gold": 27,
   "exp": 54,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 4,
@@ -245,14 +245,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 46,
-  "atk": 22,
+  "atk": 24,
   "def": 5,
   "gold": 36,
   "exp": 72,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 5,
@@ -305,14 +305,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 48,
-  "atk": 26,
+  "atk": 29,
   "def": 6,
   "gold": 45,
   "exp": 90,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 6,
@@ -365,14 +365,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 57,
-  "atk": 31,
+  "atk": 34,
   "def": 7,
   "gold": 54,
   "exp": 108,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 7,
@@ -425,14 +425,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 64,
-  "atk": 35,
+  "atk": 39,
   "def": 8,
   "gold": 63,
   "exp": 126,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 8,
@@ -485,14 +485,14 @@
   "role": "normal",
   "boss_type": "",
   "hp": 73,
-  "atk": 40,
+  "atk": 44,
   "def": 9,
   "gold": 72,
   "exp": 144,
   "chest_chance": 0.1,
   "minions": 0,
   "hp_formula": "H(t) × base",
-  "atk_formula": "1.1 × DEF_ref"
+  "atk_formula": "1.21 × DEF_ref"
  },
  {
   "tier": 9,

@@ -4,7 +4,8 @@
 
 fixtures/locks/valid        the broken bridge opens when q1_bridge_materials is done; the planks are on the near side -> 0 errors
 fixtures/locks/unreachable  the same map with the planks beyond the bridge -> exactly one lock error (step s2 unreachable)
-plus two in-memory cases: a lock on the quest's own giver (circular) and an unknown quest id.
+plus in-memory cases: a lock on the quest's own giver, two circular locks, an unknown quest id, and (Jack 2026-10-12: a boss
+node blocks passage) a step beyond a boss with no lock in the way (reachable by beating it) and the same step with a lock before the boss.
 Both fixtures go through the full validate_levels.validate (schema = docs/data/levels/schemas)."""
 import os, sys, copy, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
@@ -28,4 +29,13 @@ qq['q2_quarry_key'] = q2
 e = V.lock_errors({'bridge_town': c}, st, qq); check('circular: two locks waiting on each other', len(e) == 2 and all('circular' in x for x in e), '; '.join(e))
 c = copy.deepcopy(m); c['edges'][3]['lockedUntilQuest'] = 'q1_nope'
 e = V.lock_errors({'bridge_town': c}, st, q); check('unknown quest id', any('is not a quest' in x for x in e), '; '.join(e))
+# Jack 2026-10-12: a boss node blocks passage. Boss at bridge_e; planks at the quarry, beyond the boss.
+c = copy.deepcopy(m); c['settings']['boss'] = {'node': 'bridge_e', 'gateEdge': 'bridge', 'kind': 'locboss', 'enemy': 'goblin'}
+qq = copy.deepcopy(q); qq['q1_bridge_materials']['objectives'][1]['where']['node'] = 'quarry'
+c['edges'][4]['lockedUntilQuest'] = 'q1_bridge_materials'; c['edges'][3].pop('lockedUntilQuest'); c['edges'][3].pop('lockedScene', None)
+e = V.lock_errors({'bridge_town': c}, st, qq); check('boss block: a step beyond the lock is unreachable even past a beaten boss', len(e) == 1 and 's2' in e[0], '; '.join(e))
+c['edges'][4].pop('lockedUntilQuest'); c['edges'][1]['lockedUntilQuest'] = 'q1_bridge_materials'   # lock elsewhere (town-lumber); planks beyond the boss
+e = V.lock_errors({'bridge_town': c}, st, qq); check('boss block: a step beyond a boss is reachable by beating it', not e, '; '.join(e))
+c['edges'][1].pop('lockedUntilQuest'); c['edges'][3]['lockedUntilQuest'] = 'q1_bridge_materials'   # lock on the way to the boss
+e = V.lock_errors({'bridge_town': c}, st, qq); check('boss block: a boss behind the lock stays a wall (step beyond it unreachable)', len(e) == 1 and 's2' in e[0], '; '.join(e))
 print(f'{len(fails)} failures'); sys.exit(1 if fails else 0)

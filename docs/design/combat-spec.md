@@ -215,7 +215,7 @@ Enemy attack:  right (block)  -> max(0, ATK_e - 1.25*DEF_h)                     
 
 | role | boss_type | hp | atk | def | gold | exp | chest_chance | adds | where |
 |---|---|---|---|---|---|---|---|---|---|
-| normal | | round(H(t) × base) | round(1.1 × DEF_ref) | t | 1 × G | 6 × L_rec | 0.10 | – | random battles on edges |
+| normal | | round(H(t) × base) | round(1.21 × DEF_ref) (**Jack, 2026-10-12**: ×1.1 on the old 1.1; bosses and elites unchanged) | t | 1 × G | 6 × L_rec | 0.10 | – | random battles on edges |
 | elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | only where a level places one: mini-boss and quest fights (Jack, 2026-10-11; §7.8) |
 | boss | location | round(5 × base × m(t)) (v3.6) | round(0.8 × round(1.2 × DEF_ref)) (v3.6) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
 | boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location |
@@ -249,39 +249,39 @@ Values by tier (`data/enemy_stat_bands.csv`):
 
 | tier | role | boss_type | hp | atk | def | gold | exp | chest_chance | minions |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | normal |  | 16 | 4 | 1 | 6 | 12 | 0.1 | 0 |
+| 1 | normal |  | 16 | 5 | 1 | 6 | 12 | 0.1 | 0 |
 | 1 | elite |  | 32 | 5 | 1 | 12 | 20 | 0.25 | 0 |
 | 1 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 1 |
 | 1 | boss | realm | 57 | 4 | 1 | 60 | 100 | 1 | 1 |
-| 2 | normal |  | 27 | 9 | 2 | 12 | 24 | 0.1 | 0 |
+| 2 | normal |  | 27 | 10 | 2 | 12 | 24 | 0.1 | 0 |
 | 2 | elite |  | 54 | 10 | 2 | 24 | 40 | 0.25 | 0 |
 | 2 | boss | location | 70 | 8 | 2 | 60 | 80 | 1 | 1 |
 | 2 | boss | realm | 104 | 8 | 2 | 120 | 200 | 1 | 1 |
-| 3 | normal |  | 31 | 13 | 3 | 18 | 36 | 0.1 | 0 |
+| 3 | normal |  | 31 | 15 | 3 | 18 | 36 | 0.1 | 0 |
 | 3 | elite |  | 62 | 14 | 3 | 36 | 60 | 0.25 | 0 |
 | 3 | boss | location | 118 | 11 | 3 | 90 | 120 | 1 | 1 |
 | 3 | boss | realm | 163 | 13 | 3 | 180 | 300 | 1 | 1 |
-| 4 | normal |  | 36 | 18 | 4 | 27 | 54 | 0.1 | 0 |
+| 4 | normal |  | 36 | 19 | 4 | 27 | 54 | 0.1 | 0 |
 | 4 | elite |  | 72 | 19 | 4 | 54 | 90 | 0.25 | 0 |
 | 4 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 1 |
 | 4 | boss | realm | 118 | 17 | 4 | 270 | 450 | 1 | 2 |
-| 5 | normal |  | 46 | 22 | 5 | 36 | 72 | 0.1 | 0 |
+| 5 | normal |  | 46 | 24 | 5 | 36 | 72 | 0.1 | 0 |
 | 5 | elite |  | 92 | 24 | 5 | 72 | 120 | 0.25 | 0 |
 | 5 | boss | location | 189 | 19 | 5 | 180 | 240 | 1 | 1 |
 | 5 | boss | realm | 173 | 21 | 5 | 360 | 600 | 1 | 2 |
-| 6 | normal |  | 48 | 26 | 6 | 45 | 90 | 0.1 | 0 |
+| 6 | normal |  | 48 | 29 | 6 | 45 | 90 | 0.1 | 0 |
 | 6 | elite |  | 96 | 29 | 6 | 90 | 150 | 0.25 | 0 |
 | 6 | boss | location | 216 | 23 | 6 | 225 | 300 | 1 | 1 |
 | 6 | boss | realm | 185 | 25 | 6 | 450 | 750 | 1 | 2 |
-| 7 | normal |  | 57 | 31 | 7 | 54 | 108 | 0.1 | 0 |
+| 7 | normal |  | 57 | 34 | 7 | 54 | 108 | 0.1 | 0 |
 | 7 | elite |  | 114 | 34 | 7 | 108 | 180 | 0.25 | 0 |
 | 7 | boss | location | 241 | 27 | 7 | 270 | 360 | 1 | 1 |
 | 7 | boss | realm | 280 | 29 | 7 | 540 | 900 | 1 | 2 |
-| 8 | normal |  | 64 | 35 | 8 | 63 | 126 | 0.1 | 0 |
+| 8 | normal |  | 64 | 39 | 8 | 63 | 126 | 0.1 | 0 |
 | 8 | elite |  | 128 | 38 | 8 | 126 | 210 | 0.25 | 0 |
 | 8 | boss | location | 296 | 30 | 8 | 315 | 420 | 1 | 1 |
 | 8 | boss | realm | 246 | 34 | 8 | 630 | 1050 | 1 | 2 |
-| 9 | normal |  | 73 | 40 | 9 | 72 | 144 | 0.1 | 0 |
+| 9 | normal |  | 73 | 44 | 9 | 72 | 144 | 0.1 | 0 |
 | 9 | elite |  | 146 | 43 | 9 | 144 | 240 | 0.25 | 0 |
 | 9 | boss | location | 346 | 34 | 9 | 360 | 480 | 1 | 1 |
 | 9 | boss | realm | 397 | 38 | 9 | 720 | 1200 | 1 | 2 |
@@ -290,70 +290,70 @@ The 50-enemy roster (`enemies.json`, built by `build/enemies/build_enemies.py`) 
 
 | id | name_zh | name_en | location_id | role | boss_type | hp | atk | def | gold | exp | chest_chance | sample_shout_zh |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| horned_rabbit | 角兔 | Horned Rabbit | L1.1 | normal |  | 16 | 4 | 1 | 6 | 12 | 0.1 | 你好 |
-| mushroom_imp | 蘑菇小妖 | Mushroom Imp | L1.1 | normal |  | 18 | 4 | 1 | 6 | 12 | 0.1 | 谁 |
-| wolf_pup | 小狼 | Wolf Pup | L1.2 | normal |  | 14 | 4 | 1 | 6 | 12 | 0.1 | 你是谁 |
+| horned_rabbit | 角兔 | Horned Rabbit | L1.1 | normal |  | 16 | 5 | 1 | 6 | 12 | 0.1 | 你好 |
+| mushroom_imp | 蘑菇小妖 | Mushroom Imp | L1.1 | normal |  | 18 | 5 | 1 | 6 | 12 | 0.1 | 谁 |
+| wolf_pup | 小狼 | Wolf Pup | L1.2 | normal |  | 14 | 5 | 1 | 6 | 12 | 0.1 | 你是谁 |
 | swift_horned_rabbit | 疾风角兔 | Swift Horned Rabbit | L1.3 | elite |  | 32 | 5 | 1 | 12 | 20 | 0.25 | 看 |
 | big_beak_crow | 大嘴乌鸦 | Big-Beak Crow | L1.1 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 什么 |
 | big_grey_wolf | 大灰狼 | Big Grey Wolf | L1.2 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 你好吗 |
 | horned_rabbit_king | 角兔王 | Horned Rabbit King | L1.3 | boss | realm | 57 | 4 | 1 | 60 | 100 | 1 | 欢迎 |
-| giant_bee | 巨蜂 | Giant Bee | L2.1 | normal |  | 23 | 10 | 2 | 12 | 24 | 0.1 | 蜂蜜 |
-| sapling_sprite | 小树精 | Sapling Sprite | L2.1 | normal |  | 31 | 8 | 2 | 12 | 24 | 0.1 | 尝一尝 |
-| forest_spider | 森林蜘蛛 | Forest Spider | L2.1 | normal |  | 27 | 9 | 2 | 12 | 24 | 0.1 | 好吃 |
+| giant_bee | 巨蜂 | Giant Bee | L2.1 | normal |  | 23 | 11 | 2 | 12 | 24 | 0.1 | 蜂蜜 |
+| sapling_sprite | 小树精 | Sapling Sprite | L2.1 | normal |  | 31 | 9 | 2 | 12 | 24 | 0.1 | 尝一尝 |
+| forest_spider | 森林蜘蛛 | Forest Spider | L2.1 | normal |  | 27 | 10 | 2 | 12 | 24 | 0.1 | 好吃 |
 | royal_guard_bee | 近卫蜂 | Royal Guard Bee | L2.2 | elite |  | 54 | 10 | 2 | 24 | 40 | 0.25 | 不要 |
 | greedy_bear | 贪吃熊 | Greedy Bear | L2.1 | boss | location | 70 | 8 | 2 | 60 | 80 | 1 | 饿 |
 | queen_bee | 蜂后 | Queen Bee | L2.2 | boss | realm | 104 | 8 | 2 | 120 | 200 | 1 | 请给我…… |
-| road_bandit | 山贼 | Road Bandit | L3.1 | normal |  | 26 | 14 | 3 | 18 | 36 | 0.1 | 钱包 |
-| slime | 史莱姆 | Slime | L3.2 | normal |  | 36 | 12 | 3 | 18 | 36 | 0.1 | 绿色 |
+| road_bandit | 山贼 | Road Bandit | L3.1 | normal |  | 26 | 16 | 3 | 18 | 36 | 0.1 | 钱包 |
+| slime | 史莱姆 | Slime | L3.2 | normal |  | 36 | 14 | 3 | 18 | 36 | 0.1 | 绿色 |
 | mimic | 宝箱怪 | Mimic | L3.2 | elite |  | 62 | 14 | 3 | 36 | 60 | 0.25 | 礼物 |
 | bandit_boss | 山贼头目 | Bandit Boss | L3.1 | boss | location | 118 | 11 | 3 | 90 | 120 | 1 | 多少钱 |
 | mimic_king | 宝箱怪王 | Mimic King | L3.2 | boss | realm | 163 | 13 | 3 | 180 | 300 | 1 | 第一 |
-| cave_bat | 洞穴蝙蝠 | Cave Bat | L4.1 | normal |  | 31 | 20 | 4 | 27 | 54 | 0.1 | 小朋友 |
-| goblin | 哥布林 | Goblin | L4.2 | normal |  | 36 | 18 | 4 | 27 | 54 | 0.1 | 开始 |
-| goblin_monitor | 哥布林班长 | Goblin Hall Monitor | L4.3 | normal |  | 32 | 18 | 5 | 27 | 54 | 0.1 | 上课 |
+| cave_bat | 洞穴蝙蝠 | Cave Bat | L4.1 | normal |  | 31 | 21 | 4 | 27 | 54 | 0.1 | 小朋友 |
+| goblin | 哥布林 | Goblin | L4.2 | normal |  | 36 | 19 | 4 | 27 | 54 | 0.1 | 开始 |
+| goblin_monitor | 哥布林班长 | Goblin Hall Monitor | L4.3 | normal |  | 32 | 19 | 5 | 27 | 54 | 0.1 | 上课 |
 | goblin_brute | 哥布林壮汉 | Goblin Brute | L4.2 | elite |  | 72 | 19 | 4 | 54 | 90 | 0.25 | 作业 |
 | echo_bat | 回声大蝙蝠 | Giant Echo Bat | L4.1 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 我不懂 |
 | goblin_warden | 哥布林守卫 | Goblin Warden | L4.2 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 请安静 |
 | goblin_king | 哥布林大王 | Goblin King (the 'Headmaster') | L4.3 | boss | realm | 118 | 17 | 4 | 270 | 450 | 1 | 考试 |
-| bog_monster | 沼泽怪 | Bog Monster | L5.1 | normal |  | 53 | 20 | 5 | 36 | 72 | 0.1 | 迟到 |
-| bog_lizard | 沼泽蜥蜴 | Bog Lizard | L5.2 | normal |  | 39 | 24 | 5 | 36 | 72 | 0.1 | 马上 |
+| bog_monster | 沼泽怪 | Bog Monster | L5.1 | normal |  | 53 | 22 | 5 | 36 | 72 | 0.1 | 迟到 |
+| bog_lizard | 沼泽蜥蜴 | Bog Lizard | L5.2 | normal |  | 39 | 26 | 5 | 36 | 72 | 0.1 | 马上 |
 | swamp_wisp | 鬼火 | Swamp Wisp | L5.1 | elite |  | 92 | 24 | 5 | 72 | 120 | 0.25 | 晚上 |
 | bog_toad | 泥潭巨蛙 | Giant Bog Toad | L5.1 | boss | location | 189 | 19 | 5 | 180 | 240 | 1 | 一会儿 |
 | hydra | 九头蛇 | Hydra | L5.2 | boss | realm | 173 | 21 | 5 | 360 | 600 | 1 | 现在几点 |
-| zombie | 丧尸 | Zombie | L6.1 | normal |  | 55 | 23 | 6 | 45 | 90 | 0.1 | 我头疼 |
-| rattle_skeleton | 骷髅 | Rattle Skeleton | L6.2 | normal |  | 43 | 26 | 7 | 45 | 90 | 0.1 | 找 |
+| zombie | 丧尸 | Zombie | L6.1 | normal |  | 55 | 26 | 6 | 45 | 90 | 0.1 | 我头疼 |
+| rattle_skeleton | 骷髅 | Rattle Skeleton | L6.2 | normal |  | 43 | 29 | 7 | 45 | 90 | 0.1 | 找 |
 | zombie_knight | 丧尸骑士 | Zombie Knight | L6.2 | elite |  | 96 | 29 | 6 | 90 | 150 | 0.25 | 我累了 |
 | zombie_mayor | 丧尸村长 | Zombie Mayor | L6.1 | boss | location | 216 | 23 | 6 | 225 | 300 | 1 | 别担心 |
 | sickness_fiend | 病魔 | Sickness Fiend | L6.2 | boss | realm | 185 | 25 | 6 | 450 | 750 | 1 | 生病 |
-| harpy | 鹰身女妖 | Harpy | L7.1 | normal |  | 48 | 34 | 7 | 54 | 108 | 0.1 | 往左走 |
-| griffin | 狮鹫 | Griffin | L7.2 | normal |  | 57 | 31 | 7 | 54 | 108 | 0.1 | 上 |
+| harpy | 鹰身女妖 | Harpy | L7.1 | normal |  | 48 | 37 | 7 | 54 | 108 | 0.1 | 往左走 |
+| griffin | 狮鹫 | Griffin | L7.2 | normal |  | 57 | 34 | 7 | 54 | 108 | 0.1 | 上 |
 | cliff_golem | 石头人 | Cliff Golem | L7.1 | elite |  | 114 | 34 | 7 | 108 | 180 | 0.25 | 一直走 |
 | wind_dragon | 风龙 | Wild Wind Dragon | L7.1 | boss | location | 241 | 27 | 7 | 270 | 360 | 1 | 远 |
 | griffin_king | 狮鹫王 | Griffin King | L7.2 | boss | realm | 280 | 29 | 7 | 540 | 900 | 1 | 出发 |
-| arena_troll | 巨魔 | Arena Troll | L8.1 | normal |  | 74 | 32 | 8 | 63 | 126 | 0.1 | 踢足球 |
-| ogre_gladiator | 食人魔斗士 | Ogre Gladiator | L8.2 | normal |  | 64 | 35 | 8 | 63 | 126 | 0.1 | 胜利 |
+| arena_troll | 巨魔 | Arena Troll | L8.1 | normal |  | 74 | 36 | 8 | 63 | 126 | 0.1 | 踢足球 |
+| ogre_gladiator | 食人魔斗士 | Ogre Gladiator | L8.2 | normal |  | 64 | 39 | 8 | 63 | 126 | 0.1 | 胜利 |
 | fire_elemental | 火元素 | Fire Elemental | L8.2 | elite |  | 128 | 38 | 8 | 126 | 210 | 0.25 | 跳舞 |
 | minotaur | 牛头人 | Minotaur | L8.1 | boss | location | 296 | 30 | 8 | 315 | 420 | 1 | 比赛 |
 | ogre_champion | 食人魔冠军 | Ogre Champion | L8.2 | boss | realm | 246 | 34 | 8 | 630 | 1050 | 1 | 没问题 |
-| imp | 小恶魔 | Imp | L9.1 | normal |  | 62 | 44 | 9 | 72 | 144 | 0.1 | 其实 |
-| demon_knight | 恶魔骑士 | Demon Knight | L9.2 | normal |  | 66 | 40 | 10 | 72 | 144 | 0.1 | 攻击 |
+| imp | 小恶魔 | Imp | L9.1 | normal |  | 62 | 48 | 9 | 72 | 144 | 0.1 | 其实 |
+| demon_knight | 恶魔骑士 | Demon Knight | L9.2 | normal |  | 66 | 44 | 10 | 72 | 144 | 0.1 | 攻击 |
 | gargoyle | 石像鬼 | Gargoyle | L9.1 | elite |  | 146 | 43 | 9 | 144 | 240 | 0.25 | 终于 |
 | shadow_dragon | 暗影龙 | Shadow-Cursed Dragon | L9.1 | boss | location | 346 | 34 | 9 | 360 | 480 | 1 | 力量 |
 | demon_king | 魔王 | Demon King | L9.2 | boss | realm | 397 | 38 | 9 | 720 | 1200 | 1 | 统治 |
 
 ### 2.4 Worked examples
 
-Normal and boss numbers are unchanged from v2. The two elite rows are new.
+Boss numbers are unchanged from v2; the two elite rows are new. Normal enemy ATK is ×1.1 (**Jack, 2026-10-12**: 1.21 × DEF_ref).
 
 | Location | Hero (HP / ATK / DEF) | Enemy (HP / ATK / DEF) | Hit (streak 0) | Correct block | Broken block |
 |---|---|---|---|---|---|
-| Starter Meadow (t1), horned rabbit | 42 / 6 / 4 | 16 / 4 / 1 | 6 − 0.5 = 5.5 → **6** (3 hits) | 4 − 5 → **0** | max(2, 4 − 2) = **2** |
+| Starter Meadow (t1), horned rabbit | 42 / 6 / 4 | 16 / 5 / 1 | 6 − 0.5 = 5.5 → **6** (3 hits) | 5 − 5 → **0** | max(2.5, 5 − 2) = **3** |
 | Starter Meadow location boss | 42 / 6 / 4 | 28 / 5 / 1 | 6 (5 hits) | 5 − 5 → **0** | max(3, 3) = **3** |
 | Queen Bee 蜂后 (t2 realm boss) | 54 / 10 / 8 | 63 / 10 / 2 | 10 − 1 = **9** (7 hits) | 10 − 10 → **0** | max(5, 10 − 4) = **6** |
-| Hydra Swamp (t5), bog lizard | 102 / 23 / 20 | 46 / 22 / 5 | 20.5 → **21** (3 hits; 2 on a streak) | 22 − 25 → **0** | max(11, 12) = **12** |
+| Hydra Swamp (t5), bog lizard | 102 / 23 / 20 | 46 / 24 / 5 | 20.5 → **21** (3 hits; 2 on a streak) | 24 − 25 → **0** | max(12, 14) = **14** |
 | Hydra 九头蛇 (t5 realm boss) | 102 / 23 / 20 | 144 / 26 / 5 | 21 (7 hits) | 26 − 25 = **1** (leak) | max(13, 16) = **16** |
-| Hydra Swamp, **under-geared** (tier-3 gear, L9) vs bog lizard | 84 / 15 / 13 | 46 / 22 / 5 | 12.5 → **13** (4 hits) | 22 − 16.25 = 5.75 → **6** | 22 − 6.5 = 15.5 → **16** |
-| Demon King's Castle (t9), demon knight | 174 / 41 / 36 | 73 / 40 / 9 | 36.5 → **37** (2 hits) | 40 − 45 → **0** | max(20, 22) = **22** |
+| Hydra Swamp, **under-geared** (tier-3 gear, L9) vs bog lizard | 84 / 15 / 13 | 46 / 24 / 5 | 12.5 → **13** (4 hits) | 24 − 16.25 = 7.75 → **8** | 24 − 6.5 = 17.5 → **18** |
+| Demon King's Castle (t9), demon knight | 174 / 41 / 36 | 73 / 44 / 9 | 36.5 → **37** (2 hits) | 44 − 45 → **0** | max(22, 26) = **26** |
 | Demon King 魔王 (t9 realm boss) | 174 / 41 / 36 | 256 / 47 / 9 | 37 (7 hits) | 47 − 45 = **2** | max(24, 29) = **29** |
 | Demon King, under-geared (tier-7 gear, L21) | 156 / 33 / 29 | 256 / 47 / 9 | 33 − 4.5 = 28.5 → **29** (9 hits) | 47 − 36.25 = 10.75 → **11** | 47 − 14.5 = 32.5 → **33** |
 | Horned Rabbit Warren (t1), **elite** swift horned rabbit | 42 / 6 / 4 | 32 / 5 / 1 | 6 − 0.5 → **6** (6 hits) | 5 − 5 → **0** | max(3, 3) = **3** |
@@ -497,15 +497,15 @@ Every location = its map's random battles + the location boss. (**Jack, 2026-10-
 
 | tier | realm | realm_zh | locations | pool_items | items_per_location | enemies_per_fight | mc_options | review_slots | normal_hp_atk_def | elite_hp_atk_def | location_boss_hp_atk | realm_boss_hp_atk | rec_level_range | gear_tier | hero_hp_mp_atk_def | gold_per_normal | inn_price | honey_potion_price | minutes_speech_saver_75 | minutes_speech_spender_75 | minutes_reading_saver_75 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Starter Meadow | 新手草原 | 3 | 150 | 52/47/51 | 1–2 | 3 | 0 (loc 1), 1 | 16 / 4 / 1 | 32 / 5 / 1 | 28 / 5 | 38 / 5 (角兔王) | 1–3 | 1 | 42 / 14 / 6 / 4 | 6 | 12 | 6 | 41 | 29 | 27 |
-| 2 | Honeycomb Forest | 蜂巢森林 | 2 | 118 | 59/59 | 1–2 | 3 | 1 | 27 / 9 / 2 | 54 / 10 / 2 | 45 / 10 | 63 / 10 (蜂后) | 3–5 | 2 | 54 / 18 / 10 / 8 | 12 | 24 | 12 | 49 | 32 | 33 |
-| 3 | Crossroads Market | 十字路口集市 | 2 | 107 | 54/53 | 2 | 4 | 2 | 31 / 13 / 3 | 62 / 14 / 3 | 62 / 14 | 88 / 16 (宝箱怪王) | 5–7 | 3 | 66 / 22 / 14 / 12 | 18 | 36 | 18 | 54 | 36 | 35 |
-| 4 | Goblin Caves | 哥布林洞穴 | 3 | 143 | 48/47/48 | 2–3 | 4 | 2 | 36 / 18 / 4 | 72 / 19 / 4 | 80 / 19 | 112 / 21 (哥布林大王) | 7–10 | 4 | 84 / 28 / 18 / 16 | 27 | 54 | 27 | 49 | 37 | 32 |
-| 5 | Hydra Swamp | 九头蛇沼泽 | 2 | 94 | 47/47 | 2–3 | 4 | 2 | 46 / 22 / 5 | 92 / 24 / 5 | 102 / 24 | 144 / 26 (九头蛇) | 10–13 | 5 | 102 / 34 / 23 / 20 | 36 | 72 | 36 | 50 | 37 | 32 |
-| 6 | Zombie Lands | 僵尸之地 | 2 | 120 | 60/60 | 3 | 5 | 2 | 48 / 26 / 6 | 96 / 29 / 6 | 120 / 29 | 168 / 31 (病魔) | 13–16 | 6 | 120 / 40 / 27 / 24 | 45 | 90 | 45 | 58 | 43 | 39 |
-| 7 | Griffin Peaks | 狮鹫山峰 | 2 | 118 | 59/59 | 3 | 5 | 3 | 57 / 31 / 7 | 114 / 34 / 7 | 142 / 34 | 200 / 36 (狮鹫王) | 16–19 | 7 | 138 / 46 / 32 / 28 | 54 | 108 | 54 | 68 | 43 | 43 |
-| 8 | Ogre Colosseum | 食人魔角斗场 | 2 | 104 | 52/52 | 3 | 6 | 3 | 64 / 35 / 8 | 128 / 38 / 8 | 160 / 38 | 224 / 42 (食人魔冠军) | 19–22 | 8 | 156 / 52 / 36 / 32 | 63 | 126 | 63 | 64 | 42 | 39 |
-| 9 | Demon King's Castle | 魔王城 | 2 | 97 | 48/49 | 3 | 6 | 3 (boss: 4) | 73 / 40 / 9 | 146 / 43 / 9 | 182 / 43 | 256 / 47 (魔王) | 22–25 | 9 | 174 / 58 / 41 / 36 | 72 | 144 | 72 | 60 | 41 | 37 |
+| 1 | Starter Meadow | 新手草原 | 3 | 150 | 52/47/51 | 1–2 | 3 | 0 (loc 1), 1 | 16 / 5 / 1 | 32 / 5 / 1 | 28 / 5 | 38 / 5 (角兔王) | 1–3 | 1 | 42 / 14 / 6 / 4 | 6 | 12 | 6 | 41 | 29 | 27 |
+| 2 | Honeycomb Forest | 蜂巢森林 | 2 | 118 | 59/59 | 1–2 | 3 | 1 | 27 / 10 / 2 | 54 / 10 / 2 | 45 / 10 | 63 / 10 (蜂后) | 3–5 | 2 | 54 / 18 / 10 / 8 | 12 | 24 | 12 | 49 | 32 | 33 |
+| 3 | Crossroads Market | 十字路口集市 | 2 | 107 | 54/53 | 2 | 4 | 2 | 31 / 15 / 3 | 62 / 14 / 3 | 62 / 14 | 88 / 16 (宝箱怪王) | 5–7 | 3 | 66 / 22 / 14 / 12 | 18 | 36 | 18 | 54 | 36 | 35 |
+| 4 | Goblin Caves | 哥布林洞穴 | 3 | 143 | 48/47/48 | 2–3 | 4 | 2 | 36 / 19 / 4 | 72 / 19 / 4 | 80 / 19 | 112 / 21 (哥布林大王) | 7–10 | 4 | 84 / 28 / 18 / 16 | 27 | 54 | 27 | 49 | 37 | 32 |
+| 5 | Hydra Swamp | 九头蛇沼泽 | 2 | 94 | 47/47 | 2–3 | 4 | 2 | 46 / 24 / 5 | 92 / 24 / 5 | 102 / 24 | 144 / 26 (九头蛇) | 10–13 | 5 | 102 / 34 / 23 / 20 | 36 | 72 | 36 | 50 | 37 | 32 |
+| 6 | Zombie Lands | 僵尸之地 | 2 | 120 | 60/60 | 3 | 5 | 2 | 48 / 29 / 6 | 96 / 29 / 6 | 120 / 29 | 168 / 31 (病魔) | 13–16 | 6 | 120 / 40 / 27 / 24 | 45 | 90 | 45 | 58 | 43 | 39 |
+| 7 | Griffin Peaks | 狮鹫山峰 | 2 | 118 | 59/59 | 3 | 5 | 3 | 57 / 34 / 7 | 114 / 34 / 7 | 142 / 34 | 200 / 36 (狮鹫王) | 16–19 | 7 | 138 / 46 / 32 / 28 | 54 | 108 | 54 | 68 | 43 | 43 |
+| 8 | Ogre Colosseum | 食人魔角斗场 | 2 | 104 | 52/52 | 3 | 6 | 3 | 64 / 39 / 8 | 128 / 38 / 8 | 160 / 38 | 224 / 42 (食人魔冠军) | 19–22 | 8 | 156 / 52 / 36 / 32 | 63 | 126 | 63 | 64 | 42 | 39 |
+| 9 | Demon King's Castle | 魔王城 | 2 | 97 | 48/49 | 3 | 6 | 3 (boss: 4) | 73 / 44 / 9 | 146 / 43 / 9 | 182 / 43 | 256 / 47 (魔王) | 22–25 | 9 | 174 / 58 / 41 / 36 | 72 | 144 | 72 | 60 | 41 | 37 |
 
 **Per location** (`data/realm_location_difficulty.csv`; the CSV also has v1 item counts, normal enemy ids and patrol counts):
 
@@ -874,7 +874,7 @@ How to read this:
 
 ### 7.1 Unlocks: by map links only (no percentage gates, no boss gates)
 
-- **Jack, 2026-10-11**: **progression is purely by map links.** Beating a boss unlocks nothing, and going around a boss node is fine. A boss node is still a fight you have to win to walk through it. (v3–v3.9.3: the next location and realm unlocked on beating the boss.) The one exception is a quest lock (§12.5).
+- **Jack, 2026-10-11**: **progression is purely by map links.** Beating a boss unlocks nothing. A boss node is still a fight, and it **blocks passage** (Jack, 2026-10-12): you can't move past it without beating its boss, and fleeing returns you to the node you came from. (v3–v3.9.3: the next location and realm unlocked on beating the boss.) The one exception is a quest lock (§12.5).
 - No proficiency, Learned or level gate is ever required. Levels remain a recommendation, shown as a warning if the kid is 2+ levels under.
 - Every later pool folds in earlier items (review slots plus carried-over non-proficient items). (The boss-approach practice that used to back this up is gone, §7.4.)
 
@@ -1741,7 +1741,9 @@ Jack ruled on the audit list (`level-json-coverage.md` §9). These apply to the 
 2. **No pity roll** (no guaranteed fight after 2 empty steps).
 3. **Walked edges roll at 50% of the normal rate** (was × 0.05).
 4. **Nodes may have no event.** No one-event-per-arrival requirement and no filler events; every eligible event runs, in list order. The 153 converted no-op `nothing` fallbacks are gone. The dead-end "80% nothing / 20% honey" pick stays: it is content (a small find), not filler.
-5. **Progression is purely by map links.** Beating a boss unlocks nothing and going around a boss node is fine; boss nodes stay fights. Every `bossDefeated` link condition is gone (11 portal/exit links, 8 world paths); `validate_levels.py` rejects one. What stays: the safe way back after a boss clear (§12, a safety rule, not a gate), the boss's safe approach edge, quest `requires` and story conditions on bosses (they gate quests and scenes, not links).
+5. **Progression is purely by map links.** Beating a boss unlocks nothing; boss nodes stay fights and block passage (Jack, 2026-10-12, below). Every `bossDefeated` link condition is gone (11 portal/exit links, 8 world paths); `validate_levels.py` rejects one. What stays: the safe way back after a boss clear (§12, a safety rule, not a gate), the boss's safe approach edge, quest `requires` and story conditions on bosses (they gate quests and scenes, not links).
+
+**Boss nodes block passage (Jack's decision, 2026-10-12).** The player can't move past a boss node without beating its boss; fleeing the boss fight returns them to the node they came from. "Skippable" only means a map may have an alternate route that never goes through that node. On today's maps no boss has one: each of 11 bosses is the only way to the maps behind it, and the other 9 sit at a dead end with nothing behind them, so a kid avoids those only by not going there. Only `demon_castle_2` (and the final boss) must be beaten to finish.
 
 **Quest locks (Jack's decision, 2026-10-11; his one exception to link-only progression).** A node or edge may carry `lockedUntilQuest: <quest id>`. Until that quest is completed (turned in) the player can't enter the node or cross the edge, in either direction. The optional `lockedScene` plays when they try (e.g. the workers at the broken bridge); without one the game shows one default blocked line ("The way is blocked." / 路不通。). Nothing else: no keys, no partial progress, no boss gates. `validate_levels.py` checks that the quest exists, that its giver, turn-in and every step can be reached from the start without crossing that lock or any lock whose quest depends on it, and that no locks are circular. No converted map uses one yet.
 
@@ -1750,3 +1752,5 @@ Jack ruled on the audit list (`level-json-coverage.md` §9). These apply to the 
 **Map format follow-ups (GameDev, level-editor.md §14; data only, no new rule).** The world map is an ordinary `overworld` map (no `world` kind). The realm-boss Feather (realms 3, 6, 8) is part of the boss reward (`settings.boss.reward.feather`), not a node event. Quest steps that mean "get there" are `event: nothing` + `objective: reach` (no `event: portal`). Quest offer/progress/turn-in scenes live only in the giver's node variants.
 
 **Sim** (100 seeds, 6 profiles; `docs/data/sim/sim_world_maps_simplified.csv`, boss-skip routes in `sim_world_boss_skips.csv`): vs v3.9.1, the 75% saver takes 16.5 h on beeline (18.5) and 59 h exploring (22.4) with about 1 defeat; the 50% saver takes 45 h on beeline (28.0) with 206 defeats (52) and 117 h exploring (31.6). Walked edges at 50% and no battle budget drive the rise; removing the patrols shortens beeline. The sim plays every location in gear-tier order, so it measures the rules, not boss skipping.
+
+**Sim after Jack's 2026-10-12 decisions** (100 seeds, `docs/data/sim/sim_world_bossblock.csv`; the sim always kept boss nodes as walls, so the change is the normal enemy ATK ×1.1): 75% saver beeline 17.0 h / 4.6 defeats (was 16.5 / 1.3; v3.9.1 18.5 / 0.1), explore 59.7 h / 4.6; 50% saver beeline 56.0 h / 350 defeats (was 45.5 / 206; v3.9.1 28.0 / 52), explore 126.9 h / 517.

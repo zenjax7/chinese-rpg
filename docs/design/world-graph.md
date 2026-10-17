@@ -9,7 +9,7 @@ This document describes the v3.9.x seed (`docs/data/world`, frozen). For the lev
 - **No practice fights:** no zone battle budget (§4.3), no boss-approach patrols, trigger, Train or re-arming (§4.2, §6), no beeline battle target (§4.5).
 - **No pity roll** (§4.3). **Walked edges roll at 50%** of the normal rate (was ×0.05, §4.3).
 - **Nodes may have no event;** every eligible arrival event runs, in list order; no filler `nothing` events (§5.2).
-- **Progression purely by links:** no `bossDefeated` conditions on links; realms and dungeons are open (§1, §6). Boss nodes stay fights; going around one is fine.
+- **Progression purely by links:** no `bossDefeated` conditions on links; realms and dungeons are open (§1, §6). Boss nodes stay fights and **block passage** (Jack's decision, 2026-10-12): no moving past one without beating its boss; fleeing returns the player to the node they came from; "skippable" only means a map may have an alternate route that never goes through that node.
 - **Quest locks** (his one exception): `lockedUntilQuest` / `lockedScene` on a node or edge (combat-spec §12.5).
 - **Map display (Jack's decision, 2026-10-11):** every unvisited node looks the same in game; a node's type and icon show only on arrival, on top of fog of war. No landmarks (§0, §12, §13 below describe the seed's landmarks). The editor shows everything; renderer plan in [tech/level-editor.md §11](../tech/level-editor.md#11-game-graph-renderer-hidden-nodes-and-fog).
 The rest of this document is unchanged and still describes the seed.
@@ -258,7 +258,7 @@ v3.9.2: the `portal` outcome is gone (no event used it). Portals are edges (§3)
 | Word pools: 7 items per battle, ≤ 3 new, 47–60 items per location | Per **zone**. Every random battle on an edge uses the zone of the edge, so the learning model is unchanged. Patrols and the boss use the same zone |
 | Enemy tiers, elites | Zone `tier`, `roster`. No random or scripted elites (Jack, 2026-10-11); elites only in hand-placed mini-boss and quest fights |
 | ~~Patrol rule~~ (speech 20%, reading 40%; 2 forced patrols per trip) | Removed (Jack, 2026-10-11). The boss edge keeps `patrol: true` as the safe-approach marker only |
-| Boss gates and unlocks | Maps (Jack, 2026-10-11): no unlocks; a boss node is a fight you win to walk through it, and going around it is fine. Seed: next-zone edges and realm links carry `cond: {bossDefeated}` |
+| Boss gates and unlocks | Maps (Jack, 2026-10-11): no unlocks; a boss node is a fight that blocks passage until won (Jack, 2026-10-12; fleeing returns you to the node you came from); a map may route around it. Seed: next-zone edges and realm links carry `cond: {bossDefeated}` |
 | Inns, midpoint inn, save points | `inn` nodes (`save: true`), ≤ 3 hops away in realms 1–3 and ≤ 5 in realms 4–9; campfires are inns. Inn price = towns.json G of the realm |
 | Return Feather | v3.9: flies to the last inn used or any visited town/village; usable anywhere outside battle and the boss room. 2×G, carry 3, start with 2. Town/village item shops only |
 | Magic shop, gear smith | In towns only. v3.9: the v3.8 inn warp is **removed**. To shop from deep in a dungeon, walk (≤ 6 hops) or fly to a town with a Feather and fly (or walk) back to the last inn |

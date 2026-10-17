@@ -138,11 +138,11 @@ def maps(a):
     write('sim_world_maps.csv', rows); write('sim_world_maps_boss_approach.csv', prow); return 0
 
 # report-only difficulty options (2026-10-11, NOT in the spec): existing knobs only
+# (B, normal enemy ATK x1.1, was approved by Jack 2026-10-12 and is now the default (combat_sim.NORMAL_ATK_K = 1.21); the committed
+# sim_world_difficulty_options.csv is the 2026-10-11 run, before that, and still lists B and A+B.)
 DIFFICULTY = [('A boss HP x1.3 + boss ATK x1.0', dict(boss_hp_scale=1.3, boss_atk={'locboss': 1.0, 'realmboss': 1.0})),
-              ('B normal enemy ATK x1.1', dict(enemy_atk_mult=1.1)),
               ('C encounter rate x1.3', dict(rate_mult=1.3)),
-              ('D spell MP cost x1.5', dict(k_mult=1.5)),
-              ('A+B', dict(boss_hp_scale=1.3, boss_atk={'locboss': 1.0, 'realmboss': 1.0}, enemy_atk_mult=1.1))]
+              ('D spell MP cost x1.5', dict(k_mult=1.5))]
 # one removed rule put back at a time on today's maps (attribution of the delta vs the previous maps run)
 ATTRIB = [('+ patrols (v3.9.1 approach rule)', dict(patrols=True)), ('+ walked x0.05', dict(cleared_mult=0.05)),
           ('+ budget 8 / x0.1 + pity 2', dict(budget=8, budget_mult=0.1, pity_rolls=2))]
@@ -174,6 +174,20 @@ def simplify(a):
     print('wrote docs/data/sim/sim_world_boss_skips.csv')
     if a.difficulty: difficulty(a, N)
     return 0
+
+def bossblock(a):
+    """Jack 2026-10-12: a boss node blocks passage (the sim always honoured it) + normal enemy ATK x1.1 (option B, now the default).
+    v3.9.1 vs the previous simplify run (sim_world_maps_simplified.csv, hours_now) vs docs/data/levels now -> sim_world_bossblock.csv."""
+    d = v391_dir(a.v391); prev = {(r['profile'], r['mode']): r for r in csv.DictReader(open(os.path.join(SIM_OUT, 'sim_world_maps_simplified.csv')))}
+    t0 = time.time(); B = run(v391_cfg(d), a.seeds, V391); N = run(dict(source='levels'), a.seeds); print(f'runs {time.time()-t0:.0f}s')
+    rows = []
+    for key, b in B.items():
+        x = N[key]; p = prev[key]; ph, pd = float(p['hours_now']), float(p['defeats_now'])
+        rows.append(dict(profile=key[0], mode=key[1], seeds=a.seeds, hours_v391=round(b['h'], 2), hours_prev_simplify=ph, hours_now=round(x['h'], 2),
+                         hours_delta_prev=round(x['h'] - ph, 2), defeats_v391=round(b['defeats'], 1), defeats_prev_simplify=pd, defeats_now=round(x['defeats'], 1),
+                         defeats_delta_prev=round(x['defeats'] - pd, 1), battles_loc_now=round(x['battles_loc'], 2), boss_first_wins_now=round(x['boss_first'], 3)))
+        print(f"{key[0]:24s} {key[1]:8s} h v391 {b['h']:6.2f} prev {ph:6.2f} now {x['h']:6.2f}  defeats {b['defeats']:5.1f} {pd:5.1f} {x['defeats']:5.1f}")
+    write('sim_world_bossblock.csv', rows); return 0
 
 def difficulty(a, N):
     if True:
@@ -224,6 +238,18 @@ def ci(a):
     lk = p0[len(p0)//2][0]; T.locks = {lk: 'q1_test_lock'}; T._path.clear(); T.quest_done = set(); p1 = T.path(T.entry, z['approach'], 0)
     T.quest_done = {'q1_test_lock'}; p2 = T.path(T.entry, z['approach'], 0); WG.REALMS.clear()
     check('sim honours lockedUntilQuest (closed: route avoids it; quest done: shortest route again)', (p1 is None or lk not in [e for e, _ in p1]) and p2 == p0, f'{lk}: {len(p0)} / {p1 and len(p1)} / {len(p2)} hops')
+    # Jack 2026-10-12: a boss node blocks passage. Every node beyond an unbeaten boss of a segment is unroutable until that boss is beaten
+    WG.configure(dict(source='levels')); WG.REALMS.clear(); bad = []; n = 0
+    for t in sorted({z['realm'] for z in WG.ZONES}):
+        T = WG.realm(t)
+        for zi, z in enumerate(T.zones):
+            beyond = [k for k in T.N if k not in T.bosses and T.path(T.entry, k, len(T.zones)) and not T.path(T.entry, k, zi)]
+            for k in beyond:
+                p = T.path(T.entry, k, zi + 1); n += 1
+                if p is not None and not any(v in T.bosses[:zi + 1] for _, v in p) and T.path(T.entry, k, zi) is not None: bad.append(k)
+            if zi == 0 and t == 1 and not beyond: bad.append('no node behind the first boss?')
+    WG.REALMS.clear()
+    check('sim honours the boss block (nodes beyond an unbeaten boss are unroutable; Jack 2026-10-12)', not bad and n > 0, f'{n} node/boss pairs checked; ' + ','.join(bad[:4]))
     en = one(dict(source='world', transform='levels_proposal'), ENGINE); check('engine switches run', en['total_minutes'] > 0, str(sig(en)))
     jr = one(dict(source='world'), None, p=0.5, kid='spender'); vr = one(dict(source='world'), V391, p=0.5, kid='spender')
     check("Jack's 2026-10-11 rules are the default (no boss checkpoint, no random/scripted elites, no patrols; differs from v391_rules)", sig(jr) != sig(vr), f'{sig(jr)} vs {sig(vr)}')
@@ -236,6 +262,6 @@ def ci(a):
     print(f'{len(fails)} failures, {dt:.0f}s for {a.seeds} seeds x {len(R)} configs'); return len(fails)
 
 if __name__ == '__main__':
-    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'simplify', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391'); ap.add_argument('--difficulty', action='store_true'); ap.add_argument('--only-difficulty', action='store_true')
+    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'simplify', 'bossblock', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391'); ap.add_argument('--difficulty', action='store_true'); ap.add_argument('--only-difficulty', action='store_true')
     a = ap.parse_args(); a.seeds = a.seeds or (4 if a.what == 'ci' else 100)
-    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'simplify': simplify, 'ci': ci}[a.what](a) else 0)
+    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'simplify': simplify, 'bossblock': bossblock, 'ci': ci}[a.what](a) else 0)

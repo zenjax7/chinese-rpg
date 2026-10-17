@@ -49,11 +49,13 @@ def lrec(t): return LREC[t-1] if t <= 9 else 24 + 3*(t-9)
 def hero_stats(t):
     L = lrec(t); g = t
     return dict(HP=30+6*L, MP=10+2*L, ATK=3*g+2+L//2, DEF=(2*g+1)+g+L//3)
+NORMAL_ATK_K = 1.21   # normal enemy ATK = round(1.21 x DEF_ref): Jack 2026-10-12 approved option B (x1.1 on the old 1.1); bosses and elites unchanged.
+                      # world_sim sets 1.1 for v391_rules and the pre-graph (v3.7) loop, so the historical tables still reproduce.
 ENEMY_SCALE = dict(atk=1.0, hp=1.0)   # 2026-10-11 report-only difficulty options (normal enemies' ATK / HP scaling); 1.0 = the tables as authored
 def enemy(t, kind='normal'):
     round = builtins.round   # stat bands stay as authored in the roster (enemies.json / prototype); half-up applies to combat resolution
     h = hero_stats(t); base = max(1, h['ATK'] - 0.5*t)
-    if kind == 'normal':  return dict(HP=round(ENEMY_SCALE['hp']*HITS[t]*base), ATK=round(ENEMY_SCALE['atk']*1.1*h['DEF']), DEF=t, kind=kind)
+    if kind == 'normal':  return dict(HP=round(ENEMY_SCALE['hp']*HITS[t]*base), ATK=round(ENEMY_SCALE['atk']*NORMAL_ATK_K*h['DEF']), DEF=t, kind=kind)
     if kind == 'elite':   return dict(HP=2*round(HITS[t]*base), ATK=round(1.2*h['DEF']), DEF=t, kind=kind)   # 2x normal HP, location-boss ATK
     if kind == 'locboss': return dict(HP=round(5*base),       ATK=round(1.2*h['DEF']), DEF=t, kind=kind)
     if kind == 'realmboss': return dict(HP=round(7*base),     ATK=round(1.3*h['DEF']), DEF=t, kind=kind)
