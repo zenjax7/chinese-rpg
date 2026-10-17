@@ -79,8 +79,8 @@
   ],
   "G": 18,
   "recLevel": [
-   5,
-   7
+   21,
+   23
   ],
   "gearTier": 3,
   "difficulty": {
@@ -91,6 +91,11 @@
    2,
    2
   ],
+  "enemyLevel": [
+   18,
+   20
+  ],
+  "eliteLevel": 20,
   "roster": [
    {
     "enemy": "road_bandit",
@@ -108,7 +113,8 @@
    "node": "boss_1",
    "gateEdge": "e5",
    "kind": "locboss",
-   "enemy": "bandit_boss"
+   "enemy": "bandit_boss",
+   "level": 23
   }
  },
  "nodes": [

@@ -37,6 +37,10 @@ Dates are 2026, Pacific time.
 - **Oct 2** — v3.6: boss ATK × 0.8 (Director's default, adopted). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 28)
 - **Oct 2** — v3.7: location bosses need about 15 correct answers, realm bosses about 20 (even after spending full MP). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 30)
 - **Oct 9** — Spell FX never cover the enemy's name, HP bar or target arrow: that UI draws above every spell FX layer. Area spells that travel (tornado) start at the first target, not at the caster (Arty's screenshot review).
+- **2026-10-17 — Decided (Jack, via Director): leveling v2.** EXP from L to L+1 = round(15 + 1.5(L−1)²), no level cap; hero HP 30 + 4L, MP 10 + L, ATK + (L−1), DEF + floor((L−1)/3), SPD = L; EXP and gold stay per realm (6 / 10 / 20 / 50 × L_rec). [combat-spec.md §2.1](design/combat-spec.md#21-hero-stats)
+- **2026-10-17 — Decided (Jack, via Director): enemy levels.** Every enemy has a level on the hero's scale; its stats and SPD come from the level (combat-spec §2.3; t1 normal HP factor 2.4). Each map sets `enemyLevel` [lo, hi] (normals roll in it), `eliteLevel` and `boss.level` (`data/balance/enemy_levels.csv`); `recLevel` stays, on the hero's scale. [combat-spec.md §2.3](design/combat-spec.md#23-enemy-stats-by-role-and-tier)
+- **2026-10-17 — Decided (Director, speed design delegated by Jack): speed.** At the start of each round the hero gets clamp(floor(hero SPD ÷ the highest SPD among living enemies), 1, 3) actions, each a normal hero turn, then the enemies act; recomputed only at the next round's start. [combat-spec.md §1.1](design/combat-spec.md#11-turn-order)
+- **2026-10-17 — Decided (Director): the real-leveling sim is the standard.** The campaign sim on `docs/data/levels` levels the hero from L1 (EXP from kills, quests and proficiency, with damping) and uses enemy levels and speed; the legacy model (hero fixed at L_rec) is kept only for the historical tables. [tech/tools/sim/run_world_sim.py](tech/tools/sim/run_world_sim.py) (`leveling`, `ci`)
 
 ## World, travel and quests
 

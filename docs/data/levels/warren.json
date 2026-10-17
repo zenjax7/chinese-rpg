@@ -71,8 +71,8 @@
   ],
   "G": 6,
   "recLevel": [
-   1,
-   3
+   14,
+   16
   ],
   "gearTier": 1,
   "difficulty": {
@@ -83,6 +83,11 @@
    1,
    2
   ],
+  "enemyLevel": [
+   12,
+   14
+  ],
+  "eliteLevel": 14,
   "roster": [
    {
     "enemy": "horned_rabbit",
@@ -103,6 +108,7 @@
    "gateEdge": "g3",
    "kind": "realmboss",
    "enemy": "horned_rabbit_king",
+   "level": 15,
    "reward": {
     "skill": "shield",
     "heroic": "horn_dagger",

@@ -75,8 +75,8 @@
   ],
   "G": 27,
   "recLevel": [
-   7,
-   10
+   28,
+   33
   ],
   "gearTier": 4,
   "difficulty": {
@@ -87,6 +87,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   27,
+   29
+  ],
+  "eliteLevel": 29,
   "roster": [
    {
     "enemy": "cave_bat",
@@ -104,7 +109,8 @@
    "node": "boss_1",
    "gateEdge": "e5",
    "kind": "locboss",
-   "enemy": "goblin_warden"
+   "enemy": "goblin_warden",
+   "level": 32
   }
  },
  "nodes": [

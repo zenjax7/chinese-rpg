@@ -85,8 +85,8 @@
   ],
   "G": 45,
   "recLevel": [
-   13,
-   16
+   38,
+   40
   ],
   "gearTier": 6,
   "difficulty": {
@@ -97,6 +97,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   37,
+   39
+  ],
+  "eliteLevel": 39,
   "roster": [
    {
     "enemy": "zombie",
@@ -110,7 +115,8 @@
    "node": "boss_1",
    "gateEdge": "e10",
    "kind": "locboss",
-   "enemy": "zombie_mayor"
+   "enemy": "zombie_mayor",
+   "level": 39
   }
  },
  "nodes": [

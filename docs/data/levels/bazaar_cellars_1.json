@@ -81,8 +81,8 @@
   ],
   "G": 18,
   "recLevel": [
-   5,
-   7
+   23,
+   26
   ],
   "gearTier": 3,
   "difficulty": {
@@ -93,6 +93,11 @@
    2,
    2
   ],
+  "enemyLevel": [
+   22,
+   24
+  ],
+  "eliteLevel": 24,
   "roster": [
    {
     "enemy": "road_bandit",
@@ -111,6 +116,7 @@
    "gateEdge": "e5",
    "kind": "realmboss",
    "enemy": "mimic_king",
+   "level": 25,
    "reward": {
     "heroic": "shield_t3_heroic",
     "zh": "宝箱盾",

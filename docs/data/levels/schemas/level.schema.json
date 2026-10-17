@@ -179,6 +179,24 @@
      "weight": {
       "type": "number",
       "exclusiveMinimum": 0
+     },
+     "level": {
+      "oneOf": [
+       {
+        "type": "integer",
+        "minimum": 1
+       },
+       {
+        "type": "array",
+        "items": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "minItems": 2,
+        "maxItems": 2
+       }
+      ],
+      "description": "leveling v2: optional per-roster-entry level or [lo, hi], overriding settings.enemyLevel for this enemy"
      }
     },
     "additionalProperties": false
@@ -231,7 +249,8 @@
       "type": "integer"
      },
      "minItems": 2,
-     "maxItems": 2
+     "maxItems": 2,
+     "description": "the recommended hero level [min, max] (hero scale, leveling v2); shown to the player, and enemy EXP is damped 3+ levels above max (combat-spec §7.2)"
     },
     "gearTier": {
      "type": "integer",
@@ -266,6 +285,21 @@
      "minItems": 2,
      "maxItems": 2
     },
+    "enemyLevel": {
+     "type": "array",
+     "items": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "minItems": 2,
+     "maxItems": 2,
+     "description": "leveling v2 (Jack 2026-10-17): [lo, hi]; each normal enemy rolls its level uniformly in it. Required when the map has a roster. Stats come from the level (combat-spec §2.3)."
+    },
+    "eliteLevel": {
+     "type": "integer",
+     "minimum": 1,
+     "description": "leveling v2: the level of elite-role enemies in this map's mini-boss fights; default enemyLevel[1] (hi)"
+    },
     "roster": {
      "$ref": "#/$defs/weighted"
     },
@@ -292,7 +326,8 @@
       "node",
       "gateEdge",
       "kind",
-      "enemy"
+      "enemy",
+      "level"
      ],
      "additionalProperties": false,
      "properties": {
@@ -312,6 +347,11 @@
       "enemy": {
        "type": "string"
       },
+      "level": {
+       "type": "integer",
+       "minimum": 1,
+       "description": "leveling v2 (Jack 2026-10-17): the boss's level; its stats and SPD come from it (combat-spec §2.3)"
+      },
       "reward": {
        "type": [
         "object",
@@ -329,6 +369,11 @@
      },
      "description": "The map's boss. Its node blocks passage (Jack's decision, 2026-10-12): the player can't move past it without beating the boss; fleeing returns them to the node they came from. Beating it unlocks nothing else."
     }
+   },
+   "dependentRequired": {
+    "roster": [
+     "enemyLevel"
+    ]
    }
   },
   "node": {

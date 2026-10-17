@@ -57,9 +57,7 @@ def sprite_for(did):
 def enemy_row(did):
     d, f = STATS[did], FULL[did]
     kind = 'normal' if d['role'] == 'normal' else 'elite' if d['role'] == 'elite' else ('realmboss' if d['boss_type'] == 'realm' else 'locboss')
-    hp, atk = d['hp'], d['atk']
-    if kind in ('locboss', 'realmboss'):
-        r = BHP[(d['realm'], 'realm' if kind == 'realmboss' else 'location')]; hp, atk = int(r['hp']), int(r['atk'])
+    hp, atk = d['hp'], d['atk']   # leveling v2 (2026-10-17): bosses too; enemies.csv holds every enemy at its level, boss HP x m(t) and ATK x0.8 included
     return dict(id=did, desyId=did, sprite=sprite_for(did), spriteTint=None, headAnchor=HEAD_ANCHOR_DEFAULT, zh=d['name_zh'], py=d['pinyin'], en=d['name_en'],
                 emoji=EMOJI.get(did, '❓'), color=COLOR[d['realm']], tier=d['realm'], level=d['level'], kind=kind, role=d['role'], hp=hp, atk=atk, def_=d['def'],
                 exp=d['exp'], gold=d['gold'], chestRate=d['chest_chance'], minions=minions_of(d['minions']), mech={},

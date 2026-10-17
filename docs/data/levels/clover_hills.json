@@ -67,8 +67,8 @@
   ],
   "G": 6,
   "recLevel": [
-   1,
-   3
+   11,
+   14
   ],
   "gearTier": 1,
   "difficulty": {
@@ -79,6 +79,11 @@
    1,
    2
   ],
+  "enemyLevel": [
+   10,
+   12
+  ],
+  "eliteLevel": 12,
   "roster": [
    {
     "enemy": "horned_rabbit",
@@ -102,7 +107,8 @@
    "node": "c_den",
    "gateEdge": "g2",
    "kind": "locboss",
-   "enemy": "big_grey_wolf"
+   "enemy": "big_grey_wolf",
+   "level": 13
   }
  },
  "nodes": [
