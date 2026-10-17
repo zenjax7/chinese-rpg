@@ -1,13 +1,15 @@
 {
  "_note": "Tuning numbers from combat-spec.md v3 / desy/data/combat_data.json, plus Jack's prototype decisions (newCap 3, Tired 30/45) Times in ms. Jack Oct 11: no boss checkpoint (bossCheckpointFrac), no patrol trigger / forced patrols (bossTrigger, bossTriggerSpeech, patrolsPerTrip) and no random elites (eliteReplaceChance).",
  "hero": {
+  "_note": "Leveling v2 (Jack 2026-10-17, combat-spec §2.1): HP hpBase + hpPerLevel x L, MP mpBase + mpPerLevel x L, ATK + atkPerLevel x (L-1), DEF + floor((L-1)/defLevelDiv), SPD = L; EXP from L to L+1 = round(expBase + expQuad x (L-1)^2); no level cap. src/shared/leveling.ts",
   "hpBase": 30,
-  "hpPerLevel": 6,
+  "hpPerLevel": 4,
   "mpBase": 10,
-  "mpPerLevel": 2,
-  "atkLevelDiv": 2,
+  "mpPerLevel": 1,
+  "atkPerLevel": 1,
   "defLevelDiv": 3,
-  "expToNextPerLevel": 100,
+  "expBase": 15,
+  "expQuad": 1.5,
   "startLevel": 1
  },
  "combat": {

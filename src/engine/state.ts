@@ -1,5 +1,6 @@
 import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, SKILLS, CONS } from '../data';
 import type { GearDef } from '../data';
+import { heroLevelStats, expToNextAt } from '../shared/leveling';
 
 export type WayKey = 'rZE' | 'rEZ' | 'sZE' | 'sEZ';
 export const ALL_WAYS: WayKey[] = ['rZE', 'rEZ', 'sZE', 'sEZ'];
@@ -111,16 +112,17 @@ export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; m
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }
 
 export function heroStats(s: SaveState = S) {
-  const L = s.level; const h = B.hero;
-  let atk = Math.floor(L / h.atkLevelDiv), def = Math.floor(L / h.defLevelDiv), maxHp = h.hpBase + h.hpPerLevel * L, maxMp = h.mpBase + h.mpPerLevel * L;
+  const L = s.level;
+  let { atk, def, maxHp, maxMp } = heroLevelStats(L, B.hero); const spd = L;   // leveling v2 (§2.1): SPD = level
   for (const slot of ['weapon', 'armor', 'shield', 'charm'] as const) {
     const id = s.equip[slot]; if (!id) continue; if (slot === 'charm' && L < B.slots.charmUnlockLevel) continue;
     const g = GEAR[id]; if (!g) continue; atk += g.atk || 0; def += g.def || 0; maxMp += g.mp || 0; maxHp += g.hp || 0;
   }
   const courageMult = 1 + B.economy.courageStep * Math.min(B.economy.courageMaxStacks, s.courage);
-  return { atk, def, defBattle: def * courageMult, courageMult, maxHp, maxMp };
+  return { atk, def, defBattle: def * courageMult, courageMult, maxHp, maxMp, spd };
 }
-export function expToNext(L: number) { return B.hero.expToNextPerLevel * L; }
+/** Leveling v2 (§2.1): round(15 + 1.5(L−1)²), no cap. */
+export function expToNext(L: number) { return expToNextAt(L, B.hero); }
 /** Adds EXP; returns the number of levels gained. Level-ups add the max-HP/MP increase to current HP/MP (no full heal: no auto-heal rule). */
 export function addExp(n: number): number {
   S.exp += n; let gained = 0;
