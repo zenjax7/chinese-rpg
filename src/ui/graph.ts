@@ -148,6 +148,9 @@ function mapPool(g: E.Graph, loc: string): { restore: () => void; poolKey?: stri
   return { restore: () => { POOLS[loc] = before; }, poolKey: `map:${g.id}` };
 }
 async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
+  // tests: every battle is logged with where it started; __proto.fakeBattle ('win' | 'flee') skips playing it
+  const tp = proto(); (tp.battles ??= []).push({ graph: g.id, node: P().pos.node, edge: P().pos.edge, step: P().pos.step });
+  if (tp.fakeBattle === 'win' || tp.fakeBattle === 'flee') return tp.fakeBattle;
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;

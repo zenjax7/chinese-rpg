@@ -3,6 +3,7 @@
 // Saves are validated against docs/data/world/schemas/progress.schema.json with tools/world/validate_save.py (needs jsonschema:
 // WORLD_PY=/path/to/python, default /workspace/desy/.venv/bin/python if present, else python3).
 import { tapAsm } from './asm.mjs';
+import { travelUnitTests, travelTests } from './travel.mjs';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -305,6 +306,7 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
   const csvGid = Object.fromEntries(rows.map(r => [r.id, byCsv[r.id].id]));
   check(Object.values(srcs).every(n => n === 1) && unplaced.every(r => !srcs[csvGid[r.id]]) && rows.filter(r => r.rarity === 'heroic' && !/^none/.test(r.source)).every(r => srcs[csvGid[r.id]] === 1)
     && Object.keys(srcs).every(id => GID[id]), `heroic sources: each placed piece has exactly one source, the 24 unplaced have none, every source names real gear (${Object.keys(srcs).sort().join(', ')})`);
+  await travelUnitTests({ check });
 }
 
 export async function worldTests({ browser, BASE, check, log = console.log, shots = '' }) {
@@ -816,6 +818,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await q.goto(BASE + (BASE.includes('?') ? '&' : '?') + 'world=classic'); await q.locator('[data-testid="town"]').waitFor({ timeout: 15000 });
   check(!(await q.locator('[data-testid="graph"]').count()) && (await q.evaluate(k => localStorage.getItem(k), KEY3)) === v3before, '?world=classic: back to the classic village on the v3 save');
   await c2.close();
+  await travelTests({ browser, BASE, check, log });
 }
 
 // standalone: node tests/world.mjs [baseUrl]
