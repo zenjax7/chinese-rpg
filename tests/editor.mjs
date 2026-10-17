@@ -82,6 +82,13 @@ try {
   await commit(tid('ed-line-zh').last(), '你好');
   check(await tid('ed-line').count() === lines0 + 1, `dialogue: "+ line" adds a line (${lines0} → ${lines0 + 1})`);
 
+  // map settings: leveling v2 enemy levels (Jack 2026-10-17)
+  await tid('ed-tab-settings').click();
+  check(await tid('ed-enemy-level-min').inputValue() === '40' && await tid('ed-enemy-level-max').inputValue() === '42' && await tid('ed-elite-level').inputValue() === '42',
+    'settings: enemy level min / max and elite level show the map\'s values (40 / 42 / 42)');
+  await tid('ed-enemy-level-max').fill('43');
+  await tid('ed-roster-level-0').fill('41');
+
   // word pool: search and add a word
   await tid('ed-tab-words').click();
   const words0 = await tid('ed-word').count();
@@ -96,6 +103,7 @@ try {
   check(hall?.title?.en === 'Smoke Test Hall' && d1.draft.edges.some(e => e.from === 'stairs_1' && e.to === 'smoke_hall' && e.danger === 0) &&
     Object.values(d1.draft.scenes || {}).some(s => s.lines.some(l => l.en === 'Smoke test line.' && l.zh === '你好')) && d1.draft.settings.words.length === words0 + 1,
     `autosave: the server draft has the node, the link, the line and the word (draft_rev ${d1.draft_rev})`);
+  check(JSON.stringify(d1.draft.settings.enemyLevel) === '[40,43]' && d1.draft.settings.roster[0].level === 41, `autosave: enemy level max 43 and a roster level 41 (${JSON.stringify(d1.draft.settings.enemyLevel)}, ${d1.draft.settings.roster[0].level})`);
   await p.reload(); await tid(`ed-map-${MAP}`).click(); await p.waitForSelector('[data-id="smoke_hall"]', { timeout: 10000 });
   check(true, 'reload: the saved draft comes back');
 
