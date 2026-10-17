@@ -312,8 +312,11 @@ if (r.result === 'win') await tid(p, 'victory-ok').click(); else await tid(p, 'b
 // Queen Bee: summons at most 2 workers
 if (await tid(p, 'town').count()) await goLoc(p, 'forest');
 await tid(p, 'location').waitFor(); await debugSet(p, { level: 8, gold: 200 });
-{ const sv8 = await save_(p); check(sv8.skillsEquipped.length === 3 && sv8.skillsEquipped.includes('shield'), 'L8 opens a 3rd skill slot and Guardian Shield fills it automatically: ' + sv8.skillsEquipped.join(','));
-  const hs = await p.locator('#toasts').innerText(); check(/New skill slot! .*Guardian Shield/.test(hs), 'toast: new skill slot filled'); }
+// leveling v2: the hero passes L8 during the Rabbit King fight (EXP round(15 + 1.5(L−1)²)), so the 3rd slot opens mid-battle and takes the
+// skill earned first (Double Strike, L5); Guardian Shield comes with the boss reward afterwards and is owned, unslotted (fill-in-earned-order rule)
+{ const sv8 = await save_(p); check(sv8.skillsEquipped.length === 3 && sv8.slotsSeen === 3 && sv8.skills.includes('shield'),
+    `L8+: 3 skill slots, all filled in the order the skills were earned; Guardian Shield owned (${sv8.skillsEquipped.join(',')}; owned ${sv8.skills.join(',')})`); }
+await debugSet(p, { level: 19 });   // leveling v2: the Queen Bee is level 19 (great_hive_1 boss.level; recLevel 19–21)
 await tid(p, 'debug-open').click(); await tid(p, 'dbg-clearpath').click(); await tid(p, 'location').waitFor();
 log('forest approach:', await tid(p, 'location').innerText().then(t => t.replace(/\n+/g, ' | ')));
 check(await tid(p, 'act-patrol').count() === 0 && await tid(p, 'act-boss').count() === 1, 'forest: no patrols before the Queen Bee either');
@@ -321,20 +324,20 @@ if (await tid(p, 'act-inn').count()) { await tid(p, 'act-inn').click(); await ti
 { const sq = await save_(p); log('queen kit:', JSON.stringify(sq.equip), 'skills', sq.skillsEquipped.join(','), 'inv', JSON.stringify(sq.inv), 'hp', await hp(p), '/', await maxHp(p));
   check((sq.inv.honey || 0) >= 3 && sq.equip.armor === 'petal_cloak' && sq.equip.shield === 'beeswax' && sq.equip.weapon === 'horn_dagger', 'Queen Bee kit: dagger + tier-2 armor/shield + 3 Honey Potions');
 }
-// Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L8), 75% (every 4th answer wrong), potion/Heal below 40% HP
+// Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L19, her level), 75% (every 4th answer wrong), potion/Heal below 40% HP
 let qn = 0; survive.used = { potion: 0, heal: 0 }; await p.screenshot({ path: '/tmp/proto-forest-gate.png' }); await tid(p, 'act-boss').click();
 let queenStats = null; const qAct = survive(0.4);
 r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png', action: async pg => { if (!queenStats) queenStats = await pg.evaluate(() => window.__proto.foes().find(f => f.id === 'queenbee')); return qAct(pg); } });
-check(queenStats && queenStats.maxHp === 104 && queenStats.atk === 8, `v3.7 Queen Bee stats: ${queenStats?.maxHp} HP / ${queenStats?.atk} ATK (boss_hp.csv realm tier 2: 104 / 8)`);
-{ // v3.7: location bosses target ~15 correct answers (boss_hp.csv hp/atk: tier 1 location 34/4, tier 2 location 70/8); realm bosses ~20 (rabbitking 57/4)
+check(queenStats && queenStats.maxHp === 277 && queenStats.atk === 14 && queenStats.level === 19, `leveling v2 Queen Bee stats: L${queenStats?.level} ${queenStats?.maxHp} HP / ${queenStats?.atk} ATK (combat_data: L19 277 / 14, HP x m(t), ATK x 0.8)`);
+{ // leveling v2: boss stats from combat_data.json at each boss's level (crow L10, grey wolf L13, bear L17, rabbit king L15; HP x m(t), ATK x 0.8)
   const { createRequire } = await import('node:module'); const en = createRequire(import.meta.url)('../src/data/enemies.json').enemies;
   const st = id => { const e = en.find(x => x.id === id); return e ? `${e.hp}/${e.atk}` : '?'; };
   const got = ['crow', 'greywolf', 'bear', 'rabbitking'].map(st).join(' ');
-  check(got === '34/4 34/4 70/8 57/4', `v3.7 boss table: crow, grey wolf, bear, rabbit king = ${got} (boss_hp.csv: 34/4 34/4 70/8 57/4)`);
+  check(got === '78/6 94/8 171/11 185/8', `leveling v2 boss table: crow, grey wolf, bear, rabbit king = ${got} (combat_data.json: 78/6 94/8 171/11 185/8)`);
 }
 const summons = await p.evaluate(() => [...document.querySelectorAll('#blog div')].filter(d => /calls for help/.test(d.textContent)).length).catch(() => -1);
 log('queen battle', r.result, JSON.stringify(r.stats));
-check(r.result === 'win', `beat the Queen Bee at L8 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);
+check(r.result === 'win', `beat the Queen Bee at L19 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);
 const qlog = await p.evaluate(() => window.__proto.summons);
 check(qlog === undefined ? true : qlog <= 2, 'Queen Bee summons ≤ 2');
 if (r.result === 'win') await tid(p, 'victory-ok').click(); else await tid(p, 'back').click();
