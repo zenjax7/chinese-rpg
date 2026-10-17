@@ -106,6 +106,7 @@ Object.assign(proto(), { world: {
   fight: async (zone?: string, boss = false) => { const g = W.graphs[P().pos.graph]; const out = await fight(g, zone ? W.zones[zone] : zoneOf(g, P().pos.node), { boss }); graphScreen(); return out; },
   drop: (id: string) => { const q = W.quests.find(x => x.id === id)!; E.dropQuest(q, ctx()); saveW(); },
   validate: (p?: unknown) => validateProgress(p ?? S.world, PROGRESS_SCHEMA, COMMON_SCHEMA),
+  xy: (id: string) => { const n = E.nodeOf(W.graphs[P().pos.graph], id); return n ? nodeXY(n) : null; },
 } });
 
 // ---------------- scenes & dialogue ----------------
@@ -149,7 +150,8 @@ function mapPool(g: E.Graph, loc: string): { restore: () => void; poolKey?: stri
 }
 async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
   // tests: every battle is logged with where it started; __proto.fakeBattle ('win' | 'flee') skips playing it
-  const tp = proto(); (tp.battles ??= []).push({ graph: g.id, node: P().pos.node, edge: P().pos.edge, step: P().pos.step });
+  const tp = proto(); (tp.battles ??= []).push({ graph: g.id, node: P().pos.node, edge: P().pos.edge, step: P().pos.step, party: tp.party && { ...tp.party } });
+  await battleTransition();
   if (tp.fakeBattle === 'win' || tp.fakeBattle === 'flee') return tp.fakeBattle;
   const loc = battleLoc(z); setCurrentLoc(loc);
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined };   // Jack Oct 11: no random elites, a boss always starts fresh
@@ -164,6 +166,23 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
     else { await defeated(o.wakeAt); }
   }
   return res.outcome;
+}
+/** Map → battle (Director Oct 17): a short flash-to-dark screen effect, about 1 s; a tap or any key skips it. */
+const TRANSITION_MS = 1000;
+function battleTransition(): Promise<void> {
+  return new Promise(res => {
+    const el = document.createElement('div'); el.className = 'btrans'; el.dataset.testid = 'battle-transition';
+    el.innerHTML = `<style>.btrans{position:absolute;inset:0;z-index:20;pointer-events:auto;animation:btrans ${TRANSITION_MS}ms linear forwards}
+      @keyframes btrans{0%{background:rgba(255,255,255,0)}10%{background:#fff}20%{background:rgba(255,255,255,0)}30%{background:#fff}45%{background:rgba(255,255,255,.2)}100%{background:#0d1b3d}}</style>`;
+    (ui()?.parentElement || document.body).appendChild(el);
+    const t0 = performance.now(); let over = false;
+    const end = (skipped: boolean) => { if (over) return; over = true; clearTimeout(timer); el.remove(); document.removeEventListener('keydown', key, true);
+      proto().lastTransition = { ms: Math.round(performance.now() - t0), skipped }; res(); };
+    const key = (ev: KeyboardEvent) => { ev.preventDefault(); ev.stopPropagation(); end(true); };
+    const timer = setTimeout(() => end(false), TRANSITION_MS);
+    el.addEventListener('click', ev => { ev.stopPropagation(); end(true); });
+    document.addEventListener('keydown', key, true);
+  });
 }
 /** quests.md §2a words steps: every correct battle answer to an item of the step's pool (Desy's pool id = ITEM.loc) adds 1. */
 function onCorrect(itemId: string) {
@@ -304,7 +323,7 @@ let busy = false;
 /** The node the hero last walked from (Jack Oct 12: where a fled or lost boss fight sends them back to). */
 let cameFrom: E.NodeRef | null = null;
 async function walk(e: E.GEdge) {
-  if (busy) return; busy = true;
+  if (busy) return; busy = true; proto().walking = true;
   try {
     const g = W.graphs[P().pos.graph]; const from = P().pos.node;
     // Jack Oct 12: no way on past an unbeaten boss (only reachable from an old save or a teleport): the boss fight comes first
@@ -323,16 +342,39 @@ async function walk(e: E.GEdge) {
     { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); }   // quest gate: the blocked line, the hero stays put
     const to = E.otherEnd(e, from) as string; const steps = e.steps || 1; const pr = E.gp(P(), g.id);
     const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { id: z.id };
-    for (let s = pr.edgeProgress[e.idx] || 0; s < steps; s++) {
-      P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
-      let out: string | null = null;   // Jack Oct 11: no scripted path elites; every step is one seeded roll
-      if (!proto().noEncounters && E.rollStep(g, e, s, P(), R())) out = await fight(g, z, {});
-      if (out === 'defeat') return graphScreen();
-      if (out === 'flee') { P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); toast('🏃 You ran back.'); return graphScreen(); }
+    const a = E.nodeOf(g, from)!, b = E.nodeOf(g, to)!; const msStep = walkMsPerStep(); const t0 = performance.now();
+    let s = pr.edgeProgress[e.idx] || 0; let t = s / steps;
+    P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
+    // Director Oct 17 (Jack's playtest: 4 battles on a 4-step edge): at most one battle per crossing. The existing per-step roll picks the
+    // first step that hits (Jack Oct 11: no scripted path elites); the party walks to that point on the edge, stops there and fights.
+    const hit = proto().noEncounters ? -1 : E.edgeEncounter(g, e, s, P(), R());
+    if (hit >= 0) {
+      await walkParty(a, b, t, (hit + 0.5) / steps, (hit + 0.5 - s) * msStep); t = (hit + 0.5) / steps; s = hit;
+      P().pos.step = s; pr.edgeProgress[e.idx] = s; saveW();
+      const out = await fight(g, z, {});
+      // a turned-back crossing counts as a crossing: the next try is a fresh roll (it used to repeat this same battle every time)
+      if (out === 'defeat') { E.abandonEdge(P(), g, e); partyAt = null; saveW(); return graphScreen(); }
+      if (out === 'flee') { E.abandonEdge(P(), g, e); partyAt = null; P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); toast('🏃 You ran back.'); return graphScreen(); }
+      graphScreen();   // after the win the party walks on from where it stopped
     }
-    E.finishEdge(P(), g, e); P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
+    await walkParty(a, b, t, 1, (1 - t) * steps * msStep);
+    proto().lastWalk = { edge: e.id, ms: Math.round(performance.now() - t0) };
+    E.finishEdge(P(), g, e); partyAt = null; P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
     await arrive(to);
-  } finally { busy = false; }
+  } finally { busy = false; proto().walking = false; partyAt = null; }
+}
+/** The party walk speed: rules.walkSecPerStep (1.5 s) per edge step; tests may set __proto.walkMs. */
+const walkMsPerStep = () => proto().walkMs ?? (R().walkSecPerStep ?? 1.5) * 1000;
+/** Where the party stands mid-walk (null: on its node). */
+let partyAt: { x: number; y: number } | null = null;
+/** Move the party sprite along the edge a → b from fraction t0 to t1 in `ms` (Director Oct 17: the party walks slowly to the tapped node). */
+function walkParty(a: E.GNode, b: E.GNode, t0: number, t1: number, ms: number): Promise<void> {
+  const A = nodeXY(a), Bp = nodeXY(b); const st = performance.now();
+  return new Promise(res => { const tick = () => {
+    const k = ms > 0 ? Math.min(1, (performance.now() - st) / ms) : 1; const f = t0 + (t1 - t0) * k;
+    partyAt = { x: A.x + (Bp.x - A.x) * f, y: A.y + (Bp.y - A.y) * f }; proto().party = partyAt;
+    document.querySelector('[data-testid="party-sprite"]')?.setAttribute('transform', `translate(${partyAt.x},${partyAt.y})`);
+    if (k < 1) requestAnimationFrame(tick); else res(); }; tick(); });
 }
 /** A quest gate in the way: its lockedScene if the build has it, else the default line "The way is blocked." / 路不通。 */
 async function blocked(l: E.Lock, g: E.Graph) {
@@ -359,6 +401,9 @@ export async function arrive(node: string) {
   let handledFight = false;
   for (const f of E.pickEvents(g, node, 'enter', ctx(), first)) {   // re-checked one by one: an earlier event can change a later one's condition
     if (!E.pickEvents(g, node, 'enter', ctx(), first).some(f2 => f2.key === f.key)) continue;
+    // Director Oct 17 (Jack's playtest): at most one battle per arrival; a later fight event (e.g. Desy's miniboss_N.2 after the quest
+    // fight miniboss_N.1) is not marked fired and runs on a later visit
+    if (handledFight && f.actions.some(a => a.fight)) continue;
     E.markFired(P(), g, f, f.ev.pick?.[+f.key.split('#')[1]]?.once); saveW();
     for (const a of f.actions) { if (a.fight) handledFight = true; if (await doAction(a, g) === 'stop') return graphScreen(); } }
   if (!handledFight) { const qf = E.questFightAt(W.quests, ctx(), g.id, node);
@@ -419,12 +464,14 @@ const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
   return E.realmOpen(r, x.P, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
 const MAXZ = 4, MW = 1160, MH = 410, OX = 60, OY = 130;   // the node area keeps nodes + labels clear of the HUD and the bottom bar (top 592)
+/** A node's point in the map's SVG coordinates. */
+const nodeXY = (n: E.GNode) => ({ x: OX + n.x * MW, y: OY + n.y * MH });
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
 const vb = () => `${640 - 640 / zoom - panX} ${360 - 360 / zoom - panY} ${1280 / zoom} ${720 / zoom}`;
 export function graphScreen() {
   const g = W.graphs[P().pos.graph]; if (!g) return;
   const here = P().pos.node; const hn = E.nodeOf(g, here)!;
-  const px = (n: E.GNode) => OX + n.x * MW, py = (n: E.GNode) => OY + n.y * MH;
+  const px = (n: E.GNode) => nodeXY(n).x, py = (n: E.GNode) => nodeXY(n).y;
   if (zoomGraph !== g.id) {   // big graphs (up to ~200 nodes) open zoomed in on the hero; pinch / wheel / ± and drag to look around
     zoomGraph = g.id; zoom = g.nodes.length > 120 ? 3 : g.nodes.length > 60 ? 2 : 1; panX = 640 - px(hn); panY = 360 - py(hn); clampPan();
   }
@@ -460,6 +507,11 @@ export function graphScreen() {
     const ident = known ? `data-node="${n.id}" data-testid="gnode-${n.id}" data-kind="${n.kind}"` : `data-testid="gnode-i${n.idx}"`;
     return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}${lockedWay ? ' locked' : ''}" data-idx="${n.idx}" ${ident} data-fog="${f}" transform="translate(${px(n)},${py(n)})">
       <circle r="${isHere ? rr + 4 : rr}"/><text class="ic" y="${dense ? 6 : 8}">${ic}</text>${label ? `<text class="lb" y="${rr + 22}" lang="zh-CN">${esc(label)}</text>` : ''}</g>`; }).join('');
+  // Director Oct 17: the party on the map, the hero's battle sprite (idle frame) scaled down; no map sprite exists yet
+  const pp = partyAt || nodeXY(hn); proto().party = pp; const sh = view.spriteSheet('hero'); const ps = dense ? 48 : 64;
+  const party = `<g class="party" data-testid="party-sprite" transform="translate(${pp.x},${pp.y})">${sh
+    ? `<svg x="${-ps / 2}" y="${-ps * 0.92 - rr + 4}" width="${ps}" height="${ps}" viewBox="0 0 ${sh.fw} ${sh.fh}"><image href="sprites/${sh.file}" width="${sh.fw * sh.frames}" height="${sh.fh}"/></svg>`
+    : `<text class="ic" y="${-rr - 2}" style="font-size:${ps * 0.6}px">🧙</text>`}</g>`;
   const exits = [...adj.entries()].filter(([k]) => k.startsWith('@')).map(([, e]) => { const t = e.to as E.NodeRef; const meta = W.idx!.graphs.find(m => m.id === t.graph);
     const lab = e.kind === 'exit' ? `🌍 ${zh('世界地图')} World map` : e.kind === 'stairs' ? (hn.kind === 'stairs_up' ? `⬆️ ${zh('上楼')} Up` : `⬇️ ${zh('下楼')} Down`) : `🌀 ${meta?.title?.zh ? zh(meta.title.zh) + ' ' : ''}${esc(meta?.title?.en || t.graph)}`;
     return `<button class="secondary" data-exit="${e.id}" data-testid="gexit-${e.id}">${lab}</button>`; }).join('');
@@ -471,8 +523,8 @@ export function graphScreen() {
     .graph .ge.closed{stroke:#a33;opacity:.6}.graph .gn circle{fill:#fff8e6;stroke:#7a581e;stroke-width:3}.graph .gn.seen circle{fill:#cfc7b4;opacity:.85}.graph .ge.locked{stroke:#c9a227;stroke-dasharray:4 6}.graph text.lock{font-size:20px;text-anchor:middle;pointer-events:none}.graph .gn.next.locked circle{stroke:#c9a227}
     .graph .gn.here circle{fill:#ffd95a;stroke:#d4a84a;stroke-width:5}.graph .gn.next{cursor:pointer}.graph .gn.next circle{stroke:#2a8f3a;stroke-width:5;animation:gpulse 1.2s infinite}
     @keyframes gpulse{50%{stroke-width:8}}.graph .gn text.ic{font-size:${dense ? 17 : 22}px;text-anchor:middle;pointer-events:none}.graph .gn text.lb{font:700 ${dense ? 13 : 16}px 'Noto Sans SC';text-anchor:middle;fill:#fff;paint-order:stroke;stroke:#0d1b3d;stroke-width:4px;pointer-events:none}
-    .graph .zoom{position:absolute;right:24px;top:100px;display:flex;flex-direction:column;gap:8px}.graph .zoom .zl{font:700 14px Nunito;color:#fff;text-align:center;text-shadow:0 1px 2px #000}</style>
-    <svg viewBox="${vb()}" data-testid="graph-svg">${lines}${nodes}</svg>
+    .graph .party{pointer-events:none}.graph .party text{text-anchor:middle}.graph .zoom{position:absolute;right:24px;top:100px;display:flex;flex-direction:column;gap:8px}.graph .zoom .zl{font:700 14px Nunito;color:#fff;text-align:center;text-shadow:0 1px 2px #000}</style>
+    <svg viewBox="${vb()}" data-testid="graph-svg">${lines}${nodes}${party}</svg>
     <div class="zoom"><button class="secondary" id="zin" data-testid="zoom-in" aria-label="Zoom in">＋</button><button class="secondary" id="zout" data-testid="zoom-out" aria-label="Zoom out">－</button><button class="secondary" id="zhome" data-testid="zoom-home" aria-label="Centre on the hero">◎</button><div class="zl" data-testid="zoom-level">×${zoom.toFixed(1)}</div></div>
     <div class="bottombar panel">
       <button class="secondary" id="gbag" data-testid="go-items" data-key="1"><span class="ic">🎒</span>${zh('背包')} Bag</button>
