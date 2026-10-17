@@ -261,7 +261,6 @@ export function asmTap(s: AsmState, ch: string): 'ok' | 'correct' | 'wrong' | 'i
   return 'ok';
 }
 // exposed for automated tests (tests/world.mjs, tests/play.mjs)
-(window as any).__proto = (window as any).__proto || {};
-(window as any).__proto.asm = { assemblyEligible, rezForm, assemblyD, assemblyCandidates, assemblyDistractors, assemblyTray, asmStart, asmTap, prog,
+if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { asm: { assemblyEligible, rezForm, assemblyD, assemblyCandidates, assemblyDistractors, assemblyTray, asmStart, asmTap, prog,
   pool: (loc: string) => POOLS[loc] || [], item: (id: string) => ITEM[id], ids: () => ITEMS.map(i => i.id), log: () => S.log,
-  feed: (ids: string[]) => new QuestionFeed(ids) };
+  feed: (ids: string[]) => new QuestionFeed(ids) } });
