@@ -73,7 +73,7 @@ PIN lockouts: 5 wrong in a row lock for 15 minutes, 10 wrong in 24 hours lock fo
 
 ## Planned: level editor and level endpoints (not built)
 
-**Status: planned, from [level-editor.md](level-editor.md) (r1, 2026-10-11: maps without realms, `level/0.2`), which is proposed and pending Jack's approval. None of these routes exist yet.**
+**Status: planned, from [level-editor.md](level-editor.md) (r1, 2026-10-11: maps without realms, `level/0.2`), approved by Jack 2026-10-16 (PT) via Director; build started.**
 
 | Route | Who | What |
 |---|---|---|
