@@ -37,6 +37,7 @@ Dates are 2026, Pacific time.
 - **Oct 2** — v3.6: boss ATK × 0.8 (Director's default, adopted). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 28)
 - **Oct 2** — v3.7: location bosses need about 15 correct answers, realm bosses about 20 (even after spending full MP). [combat-spec.md: What changed from v2](design/combat-spec.md#what-changed-from-v2-jacks-decisions) (row 30)
 - **Oct 9** — Spell FX never cover the enemy's name, HP bar or target arrow: that UI draws above every spell FX layer. Area spells that travel (tornado) start at the first target, not at the caster (Arty's screenshot review).
+- **Oct 17** — Decided (Jack): new quiz type **character assembly**, shown as an R-EZ question. The player sees English and a tray of single characters (the answer's plus `mcOptions − 1` distractors from the current map's pool, met words first) and taps them in order. It's for multi-character, all-Han, `reading = Y` items and alternates with MC from the item's 2nd R-EZ question. The first wrong tap = one wrong answer (miss or broken block). It counts as R-EZ for proficiency. No timer, no undo, no pinyin. [combat-spec.md §9.4](design/combat-spec.md#94-character-assembly-r-ez-quiz-type-jack-2026-10-17)
 
 ## World, travel and quests
 

@@ -1,8 +1,8 @@
 // Battle state machine (spec §1.2) driven by async UI prompts. Numbers come from src/data/*.json.
-import { B, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef } from '../data';
+import { B, POOLS, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef } from '../data';
 import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
-import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses } from './learning';
+import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
 import { listen, speechSupported, quietForMic, noteGrade, srDebugHtml } from './speech';
 import { sayItem } from './voice';
 import { playSfx, playMusic, playSting, beep, holdMusicForMic, playSpellSfx } from '../audio/audio';
@@ -26,7 +26,9 @@ interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext
   skipWhy?: string; soaked?: boolean; summoned?: boolean; fx?: string | null; }
 /** Graph mode listens to correct battle answers (quests.md §2a words steps). Practice and preview never run a battle, so they never count. */
 export const battleHooks: { onCorrect?: (itemId: string) => void } = {};
-type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean };
+type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean;
+  /** R-EZ only (§9.4.9): the form, and for assembly the tapped sequence, the wrong slot and the distractor characters. */
+  form?: RezForm; taps?: string[]; wrongSlot?: number | null; tray?: string[] };
 
 const C = () => B.combat;
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -145,13 +147,13 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
 
   // ---- ASK
   async function ask(turn: 'attack' | 'defense' | 'heal' | 'spell', foe?: Foe, spell?: SpellDef): Promise<Outcome> {
-    let { id, way, why } = feed.next(ctx);
+    let { id, way, why, form: reForm, tray: reTray } = feed.next(ctx);
     const item = ITEM[id];
     let reprompts = 0;
     let out: Outcome;
     for (;;) {
       if (way[0] === 's' && !speechOn()) way = pickWay(id, ctx);
-      out = await renderQuestion(id, way, turn, foe, reprompts, spell);
+      out = await renderQuestion(id, way, turn, foe, reprompts, spell, way === 'rEZ' ? (reForm ?? rezForm(id)) : undefined, reForm ? reTray : undefined);
       if ((out as any).tech) {
         reprompts++;
         if (reprompts > B.speech.maxTechReprompts) {
@@ -167,9 +169,10 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     }
     banner(null); view.clearFocus(); side('');
     bs.q++; res.questions++;
-    feed.record(id, way, out.result);
+    feed.record(id, way, out.result, out.form, out.tray);
     (window as any).__proto.lastOutcome = { id, way, ...out };
-    S.log.unshift({ t: Date.now(), id, way, why, turn, result: out.result, spoken: out.spoken, hinted: out.hinted, fast: out.fast }); S.log.length = Math.min(S.log.length, 300);
+    const asmLog = out.form ? { form: out.form, ...(out.form === 'assembly' ? { taps: out.taps, wrongSlot: out.wrongSlot ?? null } : {}) } : {};
+    S.log.unshift({ t: Date.now(), id, way, why, turn, result: out.result, spoken: out.spoken, hinted: out.hinted, fast: out.fast, ...asmLog }); S.log.length = Math.min(S.log.length, 300);
     if (out.result === 'void') { res.voids++; return out; }
     // companion gauge (v3): +20 wrong, +5 correct, 0 for hinted answers
     const CG = B.companion; const before = bs.gauge;
@@ -197,8 +200,14 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   }
   function bs_exp(n: number, msg: string) { const lv = addExp(n); res.exp += n; res.levels += lv; if (lv) playSfx('sfx_level_up'); log(msg); toast(msg); }
 
-  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number, spell?: SpellDef): Promise<Outcome & { tech?: boolean; fatal?: string }> {
+  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number, spell?: SpellDef, form?: RezForm, prevTray?: string[]): Promise<Outcome & { tech?: boolean; fatal?: string }> {
     const item = ITEM[id]; const p = prog(id);
+    if (form === 'assembly') {
+      const first = Object.values(p.ways).every(w => w.a === 0);
+      const dch = assemblyDistractors(id, POOLS[currentLoc] || [], assemblyD(LOC[currentLoc].mcOptions, first), prevTray);
+      if (dch.length) return renderAssembly(id, turn, foe, dch, spell);
+      form = 'mc';   // §9.4.4: no candidates at all -> ask as MC
+    }
     // Spell banner (top centre) always holds the stimulus: gold edge = I'm casting, red = the enemy casts at me (spec §4.2)
     const head = turn === 'defense' ? `🛡️ ${foe ? zhName(foe) : ''} casts a spell! Block it!` : turn === 'heal' ? '💚 Heal spell!'
       : turn === 'spell' && spell ? `${spell.emoji} ${zh(spell.zh)} ${esc(spell.en)}! Answer right to cast it!` : '⚔️ Cast your spell!';
@@ -244,7 +253,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       if (ins) ins.disabled = true;
       const correct = pick === id;
       await feedback(id, correct, turn, undefined);
-      return { result: correct ? 'correct' : 'wrong', spoken: false, hinted, fast };
+      return { result: correct ? 'correct' : 'wrong', spoken: false, hinted, fast, ...(form ? { form } : {}) };
     }
     // ---- spoken ways: one 150px mic in the dock centre, nothing else tappable (spec §4.3)
     const zhAns = way === 'sEZ';
@@ -279,6 +288,48 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     await sleep(800);
     await feedback(id, correct, turn, heard, true);
     return { result: correct ? 'correct' : 'wrong', spoken: true, hinted: false, fast: false };
+  }
+
+  /** §9.4 character assembly: English prompt, n slots in the banner, a tray of single-character tiles in the dock; each tap checked at once. */
+  async function renderAssembly(id: string, turn: string, foe: Foe | undefined, dch: string[], spell?: SpellDef): Promise<Outcome> {
+    const item = ITEM[id]; const en = esc(item.enPrimary);
+    const head = turn === 'defense' ? `🛡️ ${foe ? zhName(foe) : ''} casts a spell! Block it!` : turn === 'heal' ? '💚 Heal spell!'
+      : turn === 'spell' && spell ? `${spell.emoji} ${zh(spell.zh)} ${esc(spell.en)}! Answer right to cast it!` : '⚔️ Cast your spell!';
+    const cls = turn === 'defense' ? 'def' : turn === 'heal' ? 'heal' : turn === 'spell' ? 'atk magic' : 'atk';
+    const st = asmStart(id);
+    const prompt = turn === 'defense' ? `Block it! Build '${en}' in Chinese.` : `Cast '${en}'! Build it in Chinese.`;
+    banner(`<div class="h">${head}</div><div class="stim asm-p">${prompt}</div><div class="slots" data-testid="asm-slots">${st.answer.map((_, i) => `<span class="slot" data-testid="asm-slot" data-i="${i}" lang="zh-CN"></span>`).join('')}</div>`, cls + ' asm');
+    view.focus({ turn: turn === 'spell' ? (foe ? 'attack' : 'heal') : turn, target: (turn === 'attack' || turn === 'spell') && foe ? foes.indexOf(foe) : undefined, attacker: turn === 'defense' && foe ? foes.indexOf(foe) : undefined });
+    const unlockDelay = bs.focus ? C().focusDelayMs : 0; bs.focus = false;
+    msg(prompt);
+    // §9.4.5: Insight isn't offered on assembly: the button is shown disabled
+    side(S.skillsEquipped.includes('insight') ? `<button class="ghost" id="insight" data-testid="insight" disabled>💡 Insight · ${SKILL.insight.mp} MP</button>` : '');
+    const tray = assemblyTray(id, dch);
+    const dock = $('#dock'); if (tray.length > 7) dock?.classList.add('asm2');
+    const main = await dockMain(`<div class="tray" data-testid="question" data-way="rEZ" data-form="assembly">${tray.map((ch, k) =>
+      `<button class="tile" data-t="${ch}" data-testid="tile" ${k < 9 ? `data-key="${k + 1}"` : ''} lang="zh-CN" disabled>${ch}</button>`).join('')}</div>`);
+    (window as any).__proto.q = { id, way: 'rEZ', form: 'assembly', answerId: id, zh: item.zh, en: item.enPrimary, turn, tray, distractors: dch };
+    await sleep(C().textUnlockMs);   // §9.4.7: no timer; input unlocks after the text-prompt delay
+    if (unlockDelay) await sleep(unlockDelay);
+    $$('#bmain .tile').forEach(b => { (b as HTMLButtonElement).disabled = false; b.classList.add('live'); });
+    const t0 = performance.now();
+    const slots = $$('#banner .slot');
+    const result = await new Promise<'correct' | 'wrong'>(res => on('.tile', (_e, el) => {
+      const b = el as HTMLButtonElement; if (b.disabled) return;
+      const r0 = asmTap(st, b.dataset.t!);
+      if (r0 === 'ignored') return;
+      if (r0 === 'wrong') { b.classList.add('wrong'); res('wrong'); return; }
+      const sl = slots[st.filled - 1]; sl.textContent = b.dataset.t!; sl.classList.add('filled');
+      b.disabled = true; b.classList.add('used');   // the tile's place stays as a gap
+      if (r0 === 'correct') res('correct');
+    }, main!));
+    const fast = performance.now() - t0 < C().fastAnswerMs;
+    $$('#bmain .tile').forEach(b => { (b as HTMLButtonElement).disabled = true; b.classList.remove('live'); });
+    const correct = result === 'correct';
+    slots.forEach((sl, i) => { if (!sl.textContent) { sl.textContent = st.answer[i]; } sl.classList.add('right'); });
+    dock?.classList.remove('asm2');
+    await feedback(id, correct, turn, undefined);
+    return { result, spoken: false, hinted: false, fast, form: 'assembly', taps: [...st.taps], wrongSlot: st.wrongSlot, tray: dch };
   }
 
   /** Feedback lives on the cards (✔/✘) and the message line; the dock never grows. Wrong = the correct word's audio, never pinyin. */

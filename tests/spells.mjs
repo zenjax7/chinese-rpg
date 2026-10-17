@@ -1,5 +1,6 @@
 // v3.4 spells, magic shop and quests (seeded saves). Used by tests/play.mjs; standalone: node tests/spells.mjs [baseUrl] [shotPrefix]
 // shotPrefix (optional) saves the magic shop / Spellbook / cast mid-animation / quest board screenshots.
+import { tapAsm } from './asm.mjs';
 import { chromium } from 'playwright-core';
 import { pathToFileURL } from 'node:url';
 
@@ -66,7 +67,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     if (has('victory')) return 'victory'; if (has('inn')) return 'inn'; if (has('location') || has('town')) return 'left';
     const c = document.querySelector('[data-testid="continue"]'); if (c && !c.disabled) return 'continue';
     if (has('action-menu')) return 'menu'; if (document.querySelector('[data-testid^="target-"]:not([data-testid="target-menu"])')) return 'target';
-    if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; return 'wait'; });
+    if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; if (document.querySelector('[data-testid="tile"]:not([disabled])')) return 'asm'; return 'wait'; });
   const cs = () => p.evaluate(() => window.__proto.castState());
   async function openBook() { await tid('act-skills').click(); await tid('tab-spells').waitFor(); if (!(await tid('spellbook').count())) await tid('tab-spells').click(); await tid('spellbook').waitFor(); }
   async function closeBook() { await tid('act-back').click(); await tid('action-menu').waitFor(); }
@@ -81,6 +82,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
       else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
       else if (st === 'mc') { const q = await p.evaluate(() => window.__proto.q); const ok = answer(q);
         await p.locator(ok ? `[data-testid="opt"][data-o="${q.answerId}"]` : `[data-testid="opt"]:not([data-o="${q.answerId}"]):not(.gone)`).first().click(); }
+      else if (st === 'asm') { const q = await p.evaluate(() => window.__proto.q); await tapAsm(p, answer(q)); }
       if (st === 'wait') { if (++waits > 400) throw new Error('spells: battle stalled'); } else waits = 0;
       await p.waitForTimeout(60);
     }
