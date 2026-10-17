@@ -469,6 +469,7 @@ def pick_way(item):
 - Presentation per way:
   - **R-ZE:** characters + audio (for `reading = N` items the audio is the main stimulus), English options. No pinyin.
   - **R-EZ:** English prompt; Chinese options as characters only (no pinyin, v3.2). The correct answer's audio plays in the feedback.
+    Eligible multi-character items alternate between MC and **character assembly** (tap the characters in order), from the item's 2nd R-EZ question on (§9.4, Jack 2026-10-17).
   - **S-ZE:** Chinese audio + characters; the kid says the English meaning (`en-US` recognizer).
   - **S-EZ:** English prompt plus a picture if available; the kid says the Chinese (`zh-CN` recognizer).
 - The first-ever question on an item uses one fewer MC option (minimum 2).
@@ -1413,6 +1414,60 @@ def synonym(c, t):
 - Fallback: if fewer than k candidates survive, relax the rules in this order: level, then length, then topic. Never relax the synonym, answer or homophone rules. If the options still fall short, show fewer options.
 - Option display: EN→ZH options show characters only. There is no pinyin anywhere in the game UI (v3.2); `reading = N` items lean on the audio. ZH→EN options show the **primary English sense only**, in a consistent format.
 - Quality loop: if one distractor draws more than 40% of an item's wrong answers across ≥20 attempts, flag the pair for review (it may be an unlisted synonym).
+
+### 9.4 Character assembly (R-EZ quiz type, Jack 2026-10-17)
+
+Approved by Jack on 2026-10-17 (PT). The player sees an English word or phrase and a tray of single Chinese characters: the answer's characters plus distractors (e.g. "hello" with 有 他 你 不 好). They tap the characters in order (你, then 好). It is another way to show an **R-EZ** question (§0, §3.4). It is not a new way.
+
+**1. Eligible items**
+- An item is eligible when its `simplified` form has **2 or more characters, all of them Han characters** (no ……, letters, digits or punctuation), and it has `reading = Y`. In curriculum v2 that's 628 of 1,051 items (2–8 characters).
+- **Single-character items** (289), sentence frames with …… and `A比B……` (41), and `reading = N` items always get R-EZ as multiple choice (§3.4). Assembly with one character would be MC without the English, and `reading = N` items aren't meant to be read without audio.
+
+**2. When it is used (selection)**
+- The engine picks `(item, way)` as now (§3.3–§3.4, spoken cap included). Assembly changes only how an R-EZ question looks.
+- An R-EZ question on an eligible item is shown as **assembly when that item's `R-EZ.attempts` is odd**, and as MC when it's even. So the first R-EZ question on an item is always MC, and after that the two forms take turns.
+- A **re-ask after a miss** (§4) keeps the form of the missed question: an assembly miss is re-asked as assembly with the tray reshuffled and one distractor swapped. This mirrors the MC re-ask.
+- Assembly is a reading question: it never counts toward the 50% spoken cap and works the same in 4-way and reading mode.
+- Scope: battle questions (attack, defense, and question-type skills). Practice modes are unchanged.
+
+**3. Tray size (mirrors MC options)**
+- Tray = the answer's characters (n tiles, one per character, repeats included: 谢谢 has two 谢 tiles) + **d distractor tiles**.
+- `d = mcOptions − 1`, where `mcOptions` comes from the current map's `settings.difficulty.mcOptions` (§5: realms 1–2 have 3 options so d = 2; realms 3–5 have 4 so d = 3; realms 6–7 have 5 so d = 4; realms 8–9 have 6 so d = 5). Past realm 9 the cap of 6 options applies, so d ≤ 5.
+- The first-ever-question reduction (§3.4: one fewer option, minimum 2) maps to `d − 1`, minimum 1. It can't apply under rule 2, because an item's first R-EZ question is MC. It is listed here only so the code path matches MC.
+- Example: a 2-character item on a realm-3 map (mcOptions 4) gets 2 + 3 = 5 tiles, like 你 好 + 有 他 不. The largest tray is 8 + 5 = 13 tiles.
+
+**4. Distractors (from the current map's word pool)**
+- Candidates are the distinct characters of the `simplified` forms of the items in the **current map's pool** (`settings.words`).
+- Remove: (a) any character that is in the answer; (b) any character that would make another accepted or confusable answer if it replaced one answer character, meaning the result is the target's `altZh` or an item that §9.3 `is_excluded` rejects for this target as EN→ZH (same answer, synonym or English overlap). Examples: 您 for 你好 (您好 also means hello) and 里 for 哪儿 (哪里).
+- Order of preference: first, characters from pool items the kid has already **met** (`kid.seen`: a teach card or a question); then the rest of the pool. Pick at random within each group. No two distractor tiles show the same character.
+- If too few candidates are left, show fewer distractors (as §9.3), minimum 1. If there are none at all, ask the question as MC. With 47–60-item pools this shouldn't happen.
+- Distractor characters are not asked items. They don't mark anything seen and don't count toward the 3-new-words cap.
+
+**5. Taps, grading and wrong taps**
+- Each tap is checked at once against the next empty slot (left to right). A tap is correct when the tile's character equals the answer's character at that slot. Grading uses the character, not the tile, so either 谢 tile fills either 谢 slot.
+- **The first wrong tap ends the question as one wrong answer.** This follows the one-answer-per-question rule for MC and speech (§9.1: graded once, no retry). On attack it's a miss (0 damage); on defense, a broken block (§2.2). Streak, Friendship gauge (+20), Leitner (−2) and the "two fast wrong answers" check (§1.4) all treat it as one wrong answer.
+- **The question is correct when every slot is filled without a wrong tap.** It's then one correct reading answer: normal damage (no spoken ×1.25), streak, gauge +5 (§1.2, §2.2).
+- Answer time for the 600 ms streak rule and the fast-wrong check (§1.4) runs from input unlock to the tap that ends the question (the last correct tap or the wrong tap).
+- **Insight** (§6.4) is defined as removing one distractor from an MC question, so it isn't offered on assembly questions: the button is disabled, just as it is when an MC question has only 2 options left.
+- A question can't end with nothing tapped, because there's no timer. Flee, potions and spells are hero-turn choices made before a question, as now.
+
+**6. Proficiency**
+- An assembly answer is an **R-EZ** answer. Correct: `R-EZ.correct += 1` and the Leitner box moves as in §3.2. Wrong: box −2, `correct` unchanged. `attempts += 1` either way (that's the counter rule 2 reads). Proficiency (2 correct per active way), EXP for completing a way, and "weakest way first" are unchanged.
+
+**7. Timer**
+- None. Jack decided there are no timers (What changed from v2, row 9), and the MC and spoken ways have none. Input unlocks after the text-prompt delay (800 ms, §1.2), as for MC R-EZ.
+
+**8. UI**
+- **Prompt (spell banner):** the English primary sense (`enPrimary`), framed for the turn, e.g. attack "Cast 'hello'! Build it in Chinese." and defense "Block it! Build 'hello' in Chinese." No audio before the answer (R-EZ text prompt) and **no pinyin anywhere**.
+- **Slots:** a row of n empty slots under the prompt, one per character.
+- **Tray:** tiles in random order, in the dock where MC cards go. Each tile shows one character in the display script (Simplified, §1.2). Tiles are at least 112×112 logical px, characters 60px bold, 16px apart, at most 7 per row (2 rows hold 13). They're 60% opacity and not tappable until input unlocks. Keys 1–9 pick tiles on laptops, as for MC. A second tap within 300 ms is ignored (ui-layout-review §3).
+- **Correct tap:** the tile moves into the next slot and locks, and its place in the tray stays as an empty gap so other tiles don't move. No sound per tap; the existing feedback plays at the end.
+- **No undo.** A correct tap locks, and a wrong tap ends the question, so there is never a wrong character to take back.
+- **Feedback (as MC, §1.2):** if correct, the slots turn green, the item's zh-CN audio plays, and the line reads "✔ 你好 = hello". If wrong, the tapped tile shakes with ✘, the empty slots fill with the correct characters in green, the audio plays, and the line reads "Not quite. “hello” is 你好 🔊". This is held at least 1.5 s.
+
+**9. Data needs (existing content only)**
+- Per item: `simplified` (`zh`), `traditional` (`trad`, stored, not shown), `english` / `enPrimary`, `reading`, `altZh` (curriculum.csv / items.json / realm content files). Per map: `settings.words` and `settings.difficulty.mcOptions` (level/0.2). Per kid: `seen` and `WayStat` (§3.1). There are **no new tables, columns or content.** Eligibility is computed from `zh` at load.
+- Log (§11.2): add `form = mc | assembly` to each R-EZ question record, plus the tapped sequence and the slot of the wrong tap, if there was one.
 
 ---
 
