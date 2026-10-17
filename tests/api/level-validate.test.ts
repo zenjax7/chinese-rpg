@@ -33,6 +33,17 @@ describe('level validator (§6.1)', () => {
     for (const c of ['node_dup', 'edge_from', 'link_map', 'word_dup', 'word_unknown']) expect(codes).toContain(c);
     expect(hasErrors(validateLevel(m, ctx))).toBe(true);
   });
+  it('leveling v2: enemyLevel with a roster, 1 <= lo <= hi (roster[].level too), boss.level (mirrors validate_levels.py)', () => {
+    const base = maps.find(x => x.id === 'realm_2');
+    const codes = (f: (m: any) => void) => { const m = clone(base); f(m); return validateLevel(m, ctx).filter(p => p.level === 'error').map(p => p.code); };
+    expect(codes(() => {})).toEqual([]);
+    expect(codes(m => { delete m.settings.enemyLevel; })).toContain('enemy_level');
+    expect(codes(m => { m.settings.enemyLevel = [16, 14]; })).toContain('enemy_level_range');
+    expect(codes(m => { m.settings.roster[0].level = [9, 3]; })).toContain('roster_level');
+    expect(codes(m => { m.settings.roster[0].level = 20; })).toEqual([]);
+    expect(codes(m => { delete m.settings.boss.level; })).toContain('boss_level');
+    expect(codes(m => { delete m.settings.boss.level; })).toContain('schema');   // the schema requires it too
+  });
   it('allows blank nodes (no event required, R8)', () => {
     const m = clone(maps.find(x => x.id === 'old_mine_1'));
     m.nodes.push({ id: 'blank_1', idx: 99, kind: 'waypoint', x: 0.5, y: 0.5 });

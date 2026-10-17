@@ -25,5 +25,14 @@ export function MapSettings(p: { level: Level; readOnly: boolean; edit: (f: (l: 
     <NumberField label="enemies per battle min" value={s.enemiesPerBattle?.[0]} min={1} disabled={p.readOnly} onChange={v => pair('enemiesPerBattle', 0, v)} />
     <NumberField label="enemies per battle max" value={s.enemiesPerBattle?.[1]} min={1} disabled={p.readOnly} onChange={v => pair('enemiesPerBattle', 1, v)} />
     <NumberField label="max hops to inn" value={s.maxHopsToInn} min={1} disabled={p.readOnly} onChange={v => set({ maxHopsToInn: v })} />
+    {/* leveling v2 (Jack 2026-10-17, combat-spec §2.3): normals roll in enemyLevel, elites use eliteLevel (default: max), the boss its level */}
+    <NumberField label="enemy level min" value={s.enemyLevel?.[0]} min={1} disabled={p.readOnly} testid="ed-enemy-level-min" onChange={v => pair('enemyLevel', 0, v)} />
+    <NumberField label="enemy level max" value={s.enemyLevel?.[1]} min={1} disabled={p.readOnly} testid="ed-enemy-level-max" onChange={v => pair('enemyLevel', 1, v)} />
+    <NumberField label="elite level" value={s.eliteLevel} min={1} disabled={p.readOnly} testid="ed-elite-level" onChange={v => set({ eliteLevel: v })} />
+    {(s.roster ?? []).map((r: any, i: number) => Array.isArray(r.level)
+      ? <label className="field num" key={i}><span>{`level: ${r.enemy}`}</span><input value={`${r.level[0]}–${r.level[1]}`} disabled /></label>
+      : <NumberField key={i} label={`level: ${r.enemy} (optional)`} value={r.level} min={1} disabled={p.readOnly} testid={`ed-roster-level-${i}`}
+          onChange={v => set({ roster: s.roster.map((x: any, k: number) => { if (k !== i) return x; const { level: _l, ...rest } = x; return v === undefined ? rest : { ...rest, level: v }; }) })} />)}
+    {s.boss && <NumberField label={`boss level: ${s.boss.enemy ?? ''}`} value={s.boss.level} min={1} disabled={p.readOnly} testid="ed-boss-level" onChange={v => set({ boss: { ...s.boss, level: v } })} />}
   </div>;
 }
