@@ -485,6 +485,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
 
   // ---- quest-gated fight: q8_caged_beasts on beast_pens_1/deadend_3 ----
   await edit(s => { s.level = 40; s.hp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor();   // realm 8 enemies (content/realm_8.json) need a realm-8 level
+  check(/Lv 40\b/.test(await p.locator('body').innerText()), 'a save whose new skill slot fills on load still loads (HUD shows Lv 40, not a new game)');
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
   await p.evaluate(() => { window.__proto.world.goto('beast_pens_1', 'deadend_3', true); }); await p.waitForTimeout(1200);
   check(!(await tid('battle').count()), 'quest-gated fight: no fight on deadend_3 while the quest is not active');
