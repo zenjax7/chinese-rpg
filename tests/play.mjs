@@ -262,6 +262,14 @@ check(await tid(p, 'act-patrol').count() === 0 && await tid(p, 'act-train').coun
 await tid(p, 'act-bag').click(); await tid(p, 'items').waitFor(); if (await tid(p, 'use-honey').isEnabled()) await tid(p, 'use-honey').click(); await tid(p, 'back').click();
 await tid(p, 'act-boss').click(); r = await playBattle(p, () => true, { insight: false, shot: '/tmp/proto-boss.png' });
 check((await p.evaluate(() => window.__proto.audio.music)).includes('mus_battle_boss'), 'boss fight uses boss music');
+{ // boss music v5 (Jack 2026-10-17): intro once, then loop loopStart 3.333333 s (sample 147000) .. loopEnd 83.333333 s (sample 3675000); other tracks unchanged
+  const mm = await p.evaluate(async () => (await (await fetch('assets-manifest.json')).json()).music);
+  const lp = k => JSON.stringify([mm[k]?.loopStart, mm[k]?.loopEnd]);
+  check(lp('mus_battle_boss') === '[3.333333,83.333333]' && Math.round(mm.mus_battle_boss.loopStart * 44100) === 147000 && Math.round(mm.mus_battle_boss.loopEnd * 44100) === 3675000,
+    `boss music loops ${lp('mus_battle_boss')} s (samples 147000..3675000), so the intro plays once`);
+  check(lp('mus_battle_field') === '[0,54.857143]' && lp('mus_village') === '[0,76.8]' && mm.stg_victory.loopStart === undefined && mm.stg_defeat.loopStart === undefined,
+    `other music unchanged: field ${lp('mus_battle_field')}, village ${lp('mus_village')}, stings no loop`);
+}
 check((await p.evaluate(() => window.__proto.sprites || [])).length >= 15, 'Arty sprites loaded: ' + (await p.evaluate(() => (window.__proto.sprites || []).join(','))));
 check((await p.evaluate(() => window.__proto.anims || 0)) > 0, 'hit animations played');
 check(r.result === 'win', `beat the Starter Meadow boss (${r.stats.q} q)`);

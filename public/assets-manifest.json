@@ -109,8 +109,8 @@
     "audio/music/mus_battle_boss.ogg",
     "audio/music/mus_battle_boss.mp3"
    ],
-   "loopStart": 0.0,
-   "loopEnd": 58.181814,
+   "loopStart": 3.333333,
+   "loopEnd": 83.333333,
    "volume": 0.5
   },
   "mus_battle_field": {

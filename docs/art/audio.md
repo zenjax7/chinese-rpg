@@ -1,7 +1,7 @@
 # Audio pack – Chinese-learning RPG (Phaser 4)
 
 All 18 sounds were **procedurally synthesized with original code** in `tools/`, using Python, numpy/scipy and ffmpeg.
-No samples, no downloaded music, no online services. **No CC0 or third-party samples are used.** None of the melodies
+No samples, no downloaded music, no online services. **The boss music uses VSCO 2 CE (CC0).** None of the melodies
 imitate existing game themes; every melody and chord progression was written for this pack.
 
 | folder | files | format |

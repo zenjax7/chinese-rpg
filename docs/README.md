@@ -325,6 +325,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [art/ai-art-pipeline-proposal.md](art/ai-art-pipeline-proposal.md) — AI art and audio pipeline proposal into Phaser · **Arty** · when changing the art pipeline
 - [art/asset-hooks.md](art/asset-hooks.md) — Where delivered backgrounds, SFX, music, spell art and word audio go, and how the game picks them up (was ASSETS.md) · **GameDev / Arty** · when delivering assets
 - [art/audio.md](art/audio.md) — Arty's audio pack README: SFX, music loops and stings, sources, licences · **Arty** · when adding audio
+  - [art/arty/mus_battle_boss.md](art/arty/mus_battle_boss.md) — Boss battle music (final, approved 2026-10-17): Bach Toccata & Fugue BWV 565 arrangement; sources, loop points, loudness, sample licences · **Arty** · when changing or wiring boss music
 - [art/arty/sprites.md](art/arty/sprites.md) — Arty's battle sprites README (batch 1 sheets, manifest) · **Arty** · when adding sprites
 - [art/arty/xiaolong_battle.md](art/arty/xiaolong_battle.md) — Xiaolong battle sprites: 小龙 companion idle/cheer/attack/hurt strips, 256x256 frames, anchor bottom-centre, facing right · **Arty** · when changing the battle companion
 - [art/arty/spells.md](art/arty/spells.md) — Arty's spell art README: icons, fx textures, recipes · **Arty** · when adding spell art
