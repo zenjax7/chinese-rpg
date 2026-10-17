@@ -20,3 +20,9 @@ export async function applyGraphs(q: Queryable, childId: string, deltas: GraphDe
   }
   return deltas.length;
 }
+
+/** level-editor.md §6.3: how many saves have progress on a map, shown before a beta publish. Only the number crosses over to the editor. */
+export async function countProgressOnMap(q: Queryable, mapId: string): Promise<number> {
+  const { rows } = await q.query(`select count(*)::int as n from graph_progress where graph_id = $1`, [mapId]);
+  return Number(rows[0].n);
+}

@@ -23,4 +23,4 @@ export async function verifyPin(pin: string, hash: string | null, salt: Buffer |
 /** HMAC-SHA256(IP_HASH_KEY, ip), hex. The raw IP is never stored. */
 export const hashIp = (ip: string) => hmac(env('IP_HASH_KEY'), ip.trim().toLowerCase()).toString('hex');
 /** Salted hashes for audit rows: no raw ids, so tombstones carry no personal data. */
-export const auditHash = (kind: 'p' | 'c', id: string | number) => hmac(env('AUDIT_HASH_SALT'), `${kind}:${id}`).toString('hex').slice(0, 32);
+export const auditHash = (kind: 'p' | 'c' | 'e', id: string | number) => hmac(env('AUDIT_HASH_SALT'), `${kind}:${id}`).toString('hex').slice(0, 32);
