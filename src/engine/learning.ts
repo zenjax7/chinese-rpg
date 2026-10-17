@@ -236,7 +236,6 @@ export function assemblyCandidates(targetId: string, pool: string[]): { met: str
   const ok = (ch: string) => !ans.includes(ch) && !bad(ch);
   return { met: [...met].filter(ok), rest: [...all].filter(ch => !met.has(ch) && ok(ch)) };
 }
-const shuffle = <T>(a: T[]) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 /** §9.4.3–4: pick up to d distinct distractor characters (met first, random within each group). [] = ask as MC.
  *  prev = the missed question's distractors (§9.4.2 re-ask): keep them, swapping one for a new candidate when there is one. */
 export function assemblyDistractors(targetId: string, pool: string[], d: number, prev?: string[]): string[] {
