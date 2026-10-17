@@ -6,18 +6,17 @@
 // with esbuild (a Vite dependency), so this script needs no build step.
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
-import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, rmSync } from 'node:fs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Bundles server/seed.ts into a temporary ESM file and imports it. */
+/** Bundles server/seed.ts into a temporary ESM file under node_modules/.cache (so its packages resolve) and imports it. */
 export async function loadSeed() {
   const { build } = await import('esbuild');
-  const dir = mkdtempSync(join(tmpdir(), 'seed-'));
-  const out = join(dir, 'seed.mjs');
+  const dir = join(ROOT, 'node_modules/.cache/seed-levels'); mkdirSync(dir, { recursive: true });
+  const out = join(dir, `seed-${process.pid}-${Date.now()}.mjs`);
   await build({ entryPoints: [join(ROOT, 'server/seed.ts')], bundle: true, platform: 'node', format: 'esm', outfile: out, packages: 'external', logLevel: 'error' });
-  try { return await import(pathToFileURL(out).href); } finally { rmSync(dir, { recursive: true, force: true }); }
+  try { return await import(pathToFileURL(out).href); } finally { rmSync(out, { force: true }); }
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
