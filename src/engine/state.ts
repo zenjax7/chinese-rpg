@@ -86,6 +86,10 @@ export function migrateGearIds(s: SaveState): string[] {
   for (const k of Object.keys(s.equip || {}) as (keyof SaveState['equip'])[]) s.equip[k] = to(s.equip[k]);
   return moved;
 }
+/** Short messages for the UI to toast (skill slots filled, gear auto-equipped outside the shop).
+ *  Declared before `S = load()`: load() → fillSkillSlots() can queue a notice, and before this line `notices` was still undefined there,
+ *  so a save whose new slot filled on load threw and was replaced by a new game. */
+export const notices: string[] = [];
 export let S: SaveState = load();
 export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 };
 
@@ -156,8 +160,6 @@ export function fillSkillSlots(s: SaveState, justEarned: string[] = []): string[
   if (opened && s.slotsSeen > 2 && added.length) for (const id of added) { const sk = SKILLS.find(k => k.id === id)!; notices.push(`✨ New skill slot! ${sk.emoji} ${sk.zh} ${sk.en} is ready.`); }
   return added;
 }
-/** Short messages for the UI to toast (skill slots filled, gear auto-equipped outside the shop). */
-export const notices: string[] = [];
 
 // ---------------- gear comparison, auto-equip, tier check (spec v3.2 §7.9 / §11.4 item 7) ----------------
 const GEAR_STATS = ['atk', 'def', 'mp', 'hp', 'startStreak'] as const;
