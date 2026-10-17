@@ -1,5 +1,6 @@
 // Battle state machine (spec §1.2) driven by async UI prompts. Numbers come from src/data/*.json.
-import { B, POOLS, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef } from '../data';
+import { B, POOLS, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef, LEVELING } from '../data';
+import { MapLevels, resolveEnemyLevel, enemyStatsAt, roundActions } from '../shared/leveling';
 import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
@@ -19,10 +20,19 @@ export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number;
 /** Graph mode (?world=graph): fixed enemies (Desy ids or runtime ids), a zone roster override. Jack Oct 11: no random elites anywhere. */
 export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string;
   /** the word pool's cycle key when a map brings its own pool (learning.ts cycleFill); default: the location */
-  poolKey?: string; }
+  poolKey?: string;
+  /** leveling v2: the map's level settings (enemyLevel / eliteLevel / boss.level / roster[].level, gearTier, recLevel) */ levels?: MapLevels; }
 export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.values(ENEMIES).map(e => [e.desyId.split(' ')[0], e.id]));
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
-interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
+/** Leveling v2 (§2.3): an enemy spawned on a map with level settings gets its level (roster[].level, eliteLevel / boss.level, else a
+ *  roll in enemyLevel) and that level's stats at the map's tier. Without them (classic mode, a map with no level for it) it keeps its table stats. */
+export function atLevel(def: EnemyDef, m?: MapLevels, rnd: () => number = Math.random): EnemyDef {
+  const did = def.desyId.split(' ')[0]; const n = resolveEnemyLevel(did, def.kind, m, rnd);
+  if (n == null || !m) return def;
+  const s = enemyStatsAt(def.kind, m.tier, n, LEVELING.archetype[did], LEVELING.bossHpMult[`${m.tier},${def.kind}`] ?? 1);
+  return { ...def, level: s.level, hp: s.hp, atk: s.atk, def_: s.def_ };
+}
+interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; /** SPD = level (§1.1) */ spd: number; skipNext: boolean; halfDone: boolean; waxUsed: boolean; stolen: number;
   skipWhy?: string; soaked?: boolean; summoned?: boolean; fx?: string | null; }
 /** Graph mode listens to correct battle answers (quests.md §2a words steps). Practice and preview never run a battle, so they never count. */
 export const battleHooks: { onCorrect?: (itemId: string) => void } = {};
@@ -62,7 +72,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const fixed = (opts.enemies || []).map(runtimeEnemy).filter(Boolean) as string[]; const isBoss = kind === 'boss';
   // ---- BATTLE_INIT
   const foes: Foe[] = [];
-  const mk = (id: string): Foe => { const d = ENEMIES[id]; return { d, hp: d.hp, maxHp: d.hp, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
+  const mk = (id: string): Foe => { const d = atLevel(ENEMIES[id], opts.levels); return { d, hp: d.hp, maxHp: d.hp, spd: d.level, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
   const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(mk)); return f; };
   const scripted = fixed.length ? fixed : kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
   if (isBoss) {
@@ -93,7 +103,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   /** Why a spell can't be cast now (null = it can): only MP. */
   const castBlock = (sp?: SpellDef): { why: 'mp'; text: string } | null => (sp && S.mp < sp.mp ? { why: 'mp', text: `needs ${sp.mp} MP` } : null);
   let bookTab: 'skills' | 'spells' = 'skills'; let bookPage = 0;
-  (window as any).__proto.foes = () => foes.map(f => ({ id: f.d.id, kind: f.d.kind, hp: f.hp, maxHp: f.maxHp, atk: f.d.atk, def: f.d.def_, alive: f.alive }));
+  (window as any).__proto.foes = () => foes.map(f => ({ id: f.d.id, kind: f.d.kind, hp: f.hp, maxHp: f.maxHp, atk: f.d.atk, def: f.d.def_, alive: f.alive, level: f.d.level, spd: f.spd }));
   (window as any).__proto.castState = () => ({ casts: bs.casts, kind: castKind, correct: res.correct, q: bs.q, lastCastQ: bs.lastCastQ, streak: bs.streak, round: bs.round });
   const log = (m: string, line = true) => { bs.log.unshift(m); const el = $('#blog'); if (el) el.innerHTML = bs.log.slice(0, 60).map(x => `<div>${x}</div>`).join(''); if (line) msg(m); };
   /** The dock's one message line (replaces the old scrolling log; the full log is under ⏸️ → Battle log). */
@@ -357,7 +367,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     f.alive = false; const i = foes.indexOf(f); view.updateEnemy(i, 0);
     if (f.stolen) { S.gold += f.stolen; log(`🪙 ${f.d.zh} drops the ${f.stolen} coins it stole.`); f.stolen = 0; }
     for (const o of foes) if (o.alive && o.d.id === f.d.id && o.d.mech.partnerFallSkip) { o.skipNext = true; log(`${o.d.emoji} ${o.d.zh} is sad about its partner and hides (skips its next attack).`); }
-    const damp = S.level >= loc.recLevel[1] + B.economy.expDampLevelsAbove ? B.economy.expDampMult : 1;
+    const rec = opts.levels?.recLevel ?? loc.recLevel;   // leveling v2: the map's recLevel (hero scale) when the map sets one
+    const damp = S.level >= rec[1] + B.economy.expDampLevelsAbove ? B.economy.expDampMult : 1;
     const exp = Math.round(f.d.exp * damp);
     const gold = Math.max(Math.ceil(f.d.gold * B.economy.goldRollMin), Math.round(f.d.gold * rnd(B.economy.goldRollMin, B.economy.goldRollMax)));
     S.gold += gold; res.gold += gold; res.exp += exp; const lv = addExp(exp); res.levels += lv;
@@ -471,8 +482,11 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
 
   // ---- rounds
   let potionUsedThisTurn = false;
-  for (;;) {
+  rounds: for (;;) {
     bs.round++; if (bs.doubleReady > 0) bs.doubleReady--; refresh();
+    // ROUND_START (§1.1 speed, Jack 2026-10-17): N = clamp(floor(hero SPD / highest living enemy SPD), 1, 3) hero actions, set before the
+    // companion acts from the enemies alive now; enemies killed or summoned during the round change it only at the next round's start
+    const nActions = roundActions(heroStats().spd, foes); (window as any).__proto.heroActions = { round: bs.round, n: nActions };
     // HERO_ACTION_SELECT
     // Quick Start: in round 1 these enemies attack before the hero's first turn
     // Companion (v3): at 100 gauge, a free attack at the start of the hero turn; lowest-HP normal/elite (boss only if alone)
@@ -491,47 +505,49 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       }
     }
     if (bs.round === 1) for (const f of foes.filter(x => x.alive && x.d.mech.quickStart)) { log(`💨 ${f.d.zh} is super fast and attacks first!`); if (await enemyTurn(f)) { res.outcome = 'defeat'; return finish(); } }
-    let act: Awaited<ReturnType<typeof chooseAction>>; let target: Foe | undefined;
-    for (;;) {   // TARGET_SELECT can go ◀ Back to the commands
-      act = await chooseAction(); target = undefined;
-      if (act.type !== 'attack' && act.type !== 'double' && !(act.type === 'spell' && SPELL[act.item!].target !== 'all')) break;
-      const live = foes.filter(f => f.alive);
-      if (live.length === 1) { target = live[0]; break; }
-      const k = await chooseTarget(live, act.type === 'spell' ? SPELL[act.item!] : undefined); if (k >= 0) { target = live[k]; break; }
+    for (let a = 0; a < nActions; a++) {   // HERO_ACTION_SELECT once per action; each is a normal hero turn
+      let act: Awaited<ReturnType<typeof chooseAction>>; let target: Foe | undefined;
+      for (;;) {   // TARGET_SELECT can go ◀ Back to the commands
+        act = await chooseAction(); target = undefined;
+        if (act.type !== 'attack' && act.type !== 'double' && !(act.type === 'spell' && SPELL[act.item!].target !== 'all')) break;
+        const live = foes.filter(f => f.alive);
+        if (live.length === 1) { target = live[0]; break; }
+        const k = await chooseTarget(live, act.type === 'spell' ? SPELL[act.item!] : undefined); if (k >= 0) { target = live[k]; break; }
+      }
+      $('#tgts') && ($('#tgts').innerHTML = ''); view.setTarget(-1);
+      hero.rooted = false;
+      potionUsedThisTurn = false;
+      if (act.type === 'flee') { res.outcome = 'flee'; S.stats.flees++; log('🏃 You ran away!'); break rounds; }
+      if (act.type === 'potion') {
+        const c = CONS[act.item!]; const h = heroStats(); S.inv[c.id]--; bs.potions++; potionUsedThisTurn = true; playSfx('sfx_potion');
+        if (c.healHpFrac) for (const b of foes) if (b.alive && b.d.mech.honeyDistract) { b.skipNext = true; log(`${b.d.emoji} ${b.d.zh} stares at your honey and forgets to attack!`); }
+        if (c.healHpFrac) { const n = Math.round(c.healHpFrac * h.maxHp); S.hp = Math.min(h.maxHp, S.hp + n); view.heroFloat('+' + n); log(`${c.emoji} +${n} HP`); }
+        if (c.healMpFrac) { const n = Math.round(c.healMpFrac * h.maxMp); S.mp = Math.min(h.maxMp, S.mp + n); view.heroFloat('+' + n + ' MP', '#6dd5fa'); log(`${c.emoji} +${n} MP`); }
+        refresh();
+      } else if (act.type === 'spell') {
+        await castSpell(SPELL[act.item!], target);
+      } else if (act.type === 'heal') {
+        S.mp -= SKILL.heal.mp; bs.heal++; hud();
+        const o = await ask('heal');
+        if (o.result === 'correct') { const h = heroStats(); const n = Math.round(SKILL.heal.healFrac! * h.maxHp); S.hp = Math.min(h.maxHp, S.hp + n); view.heroFloat('+' + n); log(`💚 Healed ${n} HP`); }
+        else if (o.result === 'wrong') log('💚 The heal fizzled.');
+        refresh();
+      } else {
+        if (!target) target = foes.filter(f => f.alive)[0];
+        const dbl = act.type === 'double';
+        if (dbl) { S.mp -= SKILL.double.mp; bs.doubleReady = SKILL.double.cooldownRounds! + 1; hud(); }
+        f_web = hero.webbed ? hero.webMult : 1;
+        const o = await ask('attack', target);
+        if (hero.webbed && o.result === 'correct') log('🕸️ The sticky web slows your attack (half damage).');
+        if (o.result === 'correct') {
+          await hit(target, 1, o.spoken);
+          if (dbl && target.alive && bs.streak >= SKILL.double.minStreak!) await hit(target, SKILL.double.secondHitFrac!, o.spoken);
+        } else if (o.result === 'wrong') { view.hitEnemy(foes.indexOf(target), 'MISS'); setTimeout(() => playSfx('sfx_miss'), 180); log('💨 Your spell missed!'); await sleep(600); }
+        else log('🎤 Question skipped: no damage.');
+        hero.webbed = false; f_web = 1;
+      }
+      if (bossDead() || allDead()) { if (bossDead() && !allDead()) log('The minions run away!'); res.outcome = 'win'; break rounds; }   // actions left are lost
     }
-    $('#tgts') && ($('#tgts').innerHTML = ''); view.setTarget(-1);
-    hero.rooted = false;
-    potionUsedThisTurn = false;
-    if (act.type === 'flee') { res.outcome = 'flee'; S.stats.flees++; log('🏃 You ran away!'); break; }
-    if (act.type === 'potion') {
-      const c = CONS[act.item!]; const h = heroStats(); S.inv[c.id]--; bs.potions++; potionUsedThisTurn = true; playSfx('sfx_potion');
-      if (c.healHpFrac) for (const b of foes) if (b.alive && b.d.mech.honeyDistract) { b.skipNext = true; log(`${b.d.emoji} ${b.d.zh} stares at your honey and forgets to attack!`); }
-      if (c.healHpFrac) { const n = Math.round(c.healHpFrac * h.maxHp); S.hp = Math.min(h.maxHp, S.hp + n); view.heroFloat('+' + n); log(`${c.emoji} +${n} HP`); }
-      if (c.healMpFrac) { const n = Math.round(c.healMpFrac * h.maxMp); S.mp = Math.min(h.maxMp, S.mp + n); view.heroFloat('+' + n + ' MP', '#6dd5fa'); log(`${c.emoji} +${n} MP`); }
-      refresh();
-    } else if (act.type === 'spell') {
-      await castSpell(SPELL[act.item!], target);
-    } else if (act.type === 'heal') {
-      S.mp -= SKILL.heal.mp; bs.heal++; hud();
-      const o = await ask('heal');
-      if (o.result === 'correct') { const h = heroStats(); const n = Math.round(SKILL.heal.healFrac! * h.maxHp); S.hp = Math.min(h.maxHp, S.hp + n); view.heroFloat('+' + n); log(`💚 Healed ${n} HP`); }
-      else if (o.result === 'wrong') log('💚 The heal fizzled.');
-      refresh();
-    } else {
-      if (!target) target = foes.filter(f => f.alive)[0];
-      const dbl = act.type === 'double';
-      if (dbl) { S.mp -= SKILL.double.mp; bs.doubleReady = SKILL.double.cooldownRounds! + 1; hud(); }
-      f_web = hero.webbed ? hero.webMult : 1;
-      const o = await ask('attack', target);
-      if (hero.webbed && o.result === 'correct') log('🕸️ The sticky web slows your attack (half damage).');
-      if (o.result === 'correct') {
-        await hit(target, 1, o.spoken);
-        if (dbl && target.alive && bs.streak >= SKILL.double.minStreak!) await hit(target, SKILL.double.secondHitFrac!, o.spoken);
-      } else if (o.result === 'wrong') { view.hitEnemy(foes.indexOf(target), 'MISS'); setTimeout(() => playSfx('sfx_miss'), 180); log('💨 Your spell missed!'); await sleep(600); }
-      else log('🎤 Question skipped: no damage.');
-      hero.webbed = false; f_web = 1;
-    }
-    if (bossDead() || allDead()) { if (bossDead() && !allDead()) log('The minions run away!'); res.outcome = 'win'; break; }
     // ENEMY_PHASE
     let dead = false;
     for (const f of foes.filter(x => x.alive).slice(0, C().maxEnemies)) { if (await enemyTurn(f)) { dead = true; break; } }
