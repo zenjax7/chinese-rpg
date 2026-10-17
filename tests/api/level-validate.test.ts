@@ -4,6 +4,8 @@ import { execFileSync } from 'node:child_process';
 import { validateLevel, hasErrors } from '../../src/shared/level/validate.js';
 import { levelHash, canonical } from '../../src/shared/level/hash.js';
 import { WORD_IDS } from '../../src/shared/level/wordbank.js';
+// @ts-ignore plain JS
+import { schemaCheckSource } from '../../tools/editor/build_schema_check.mjs';
 
 const DIR = 'docs/data/levels';
 const files = readdirSync(DIR).filter(f => f.endsWith('.json') && f !== 'index.json' && f !== 'world_rules.json');
@@ -64,5 +66,10 @@ describe('bundled level hashes (src/data/world/level-hashes.json)', () => {
     const { hashes } = JSON.parse(readFileSync('src/data/world/level-hashes.json', 'utf8'));
     expect(Object.keys(hashes)).toHaveLength(38);
     for (const m of maps) expect(hashes[m.id], m.id).toBe(await levelHash(m));
+  });
+  it('the precompiled schema check is up to date and has no eval (the CSP has no unsafe-eval)', () => {
+    const src = readFileSync('src/shared/level/schema-check.js', 'utf8');
+    expect(src).toBe(schemaCheckSource());
+    expect(src).not.toMatch(/new Function|\beval\(|require\(/);
   });
 });
