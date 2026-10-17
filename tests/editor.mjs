@@ -48,8 +48,10 @@ try {
   const saved = async () => { await p.waitForFunction(() => /saved/.test(document.querySelector('[data-testid=ed-save-status]')?.textContent || '') && !/unsaved/.test(document.querySelector('[data-testid=ed-save-status]')?.textContent || ''), null, { timeout: 15000 }); };
   const draft = async () => (await srv.db.query(`select draft, draft_rev from levels where id = $1`, [MAP])).rows[0];
 
-  await p.goto(B + '/editor');
-  await tid('ed-signin').waitFor();
+  const edRes = await p.goto(B + '/editor');
+  const csp = edRes.headers()['content-security-policy'] || '';
+  check(/script-src 'self'/.test(csp) && !/unsafe-eval/.test(csp), `/editor is served with production's CSP from vercel.json, no 'unsafe-eval' (${csp.slice(0, 60)}…)`);
+  await tid('ed-signin').waitFor({ timeout: 10000 });
   check(await tid('ed-maps').count() === 0, 'signed out: /editor shows only "Sign in with Google", no maps');
   await tid('ed-signin').locator('button').click();
   await tid(`ed-map-${MAP}`).waitFor({ timeout: 10000 });
