@@ -50,7 +50,7 @@ document.addEventListener('click', e => {
   const b = (e.target as HTMLElement)?.closest?.('button') as HTMLButtonElement | null; if (!b) return;
   const t = performance.now(); if (t - (lastTap.get(b) || 0) < 300) { e.stopImmediatePropagation(); e.preventDefault(); return; }
   lastTap.set(b, t);
-  if (b.disabled || b.matches('[data-o],[data-z],[data-e],#mic,.say,#say,#replay,#muteBtn')) return;
+  if (b.disabled || b.matches('[data-t],[data-o],[data-z],[data-e],#mic,.say,#say,#replay,#muteBtn')) return;
   playSfx('sfx_ui_click');
 }, true);
 

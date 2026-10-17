@@ -120,17 +120,17 @@ export function pickWay(id: string, ctx: WayCtx): WayKey {
 
 /** Spec §4 question feed: unasked in order, then missed (gap >= 2, same way), then weakest; max 4 asks per item. */
 export class QuestionFeed {
-  unasked: string[]; missed: { id: string; way: WayKey }[] = []; hist: string[] = []; count: Record<string, number> = {}; score: Record<string, number> = {};
+  unasked: string[]; missed: { id: string; way: WayKey; form?: RezForm; tray?: string[] }[] = []; hist: string[] = []; count: Record<string, number> = {}; score: Record<string, number> = {};
   constructor(public items: string[]) { this.unasked = [...items]; for (const i of items) { this.count[i] = 0; this.score[i] = 0; } }
   gap(id: string) { for (let k = this.hist.length - 1; k >= 0; k--) if (this.hist[k] === id) return this.hist.length - 1 - k; return 99; }
-  next(ctx: WayCtx): { id: string; way: WayKey; why: string } {
+  next(ctx: WayCtx): { id: string; way: WayKey; why: string; form?: RezForm; tray?: string[] } {
     const l = L();
     if (this.unasked.length) { const id = this.unasked.shift()!; return { id, way: pickWay(id, ctx), why: prog(id).seen ? 'focus' : 'new' }; }
     const m = this.missed.find(x => this.gap(x.id) >= l.reaskGap);
     if (m) {
       this.missed.splice(this.missed.indexOf(m), 1);
       let way = m.way; if (way[0] === 's' && (!spokenAllowed(ctx) || ctx.cooling.has(m.id))) way = pickWay(m.id, ctx);
-      return { id: m.id, way, why: 're-ask missed' };
+      return { id: m.id, way, why: 're-ask missed', ...(way === m.way && m.form ? { form: m.form, tray: m.tray } : {}) };
     }
     let pool = this.items.filter(i => this.gap(i) >= l.reaskGap && this.count[i] < l.maxAsksPerItem);
     if (!pool.length) pool = this.items.filter(i => this.gap(i) >= 1);
@@ -139,11 +139,12 @@ export class QuestionFeed {
     const id = pool.sort((a, b) => k[a] - k[b])[0];
     return { id, way: pickWay(id, ctx), why: 'weakest' };
   }
-  record(id: string, way: WayKey, result: 'correct' | 'wrong' | 'void') {
+  /** form/tray: the R-EZ form of this question (§9.4: a re-ask after a miss keeps the form; tray = its distractor characters). */
+  record(id: string, way: WayKey, result: 'correct' | 'wrong' | 'void', form?: RezForm, tray?: string[]) {
     if (result === 'void') return;
     this.hist.push(id); this.count[id]++;
     this.score[id] += result === 'correct' ? 0.15 : -0.3;
-    if (result === 'wrong') this.missed.push({ id, way });
+    if (result === 'wrong') this.missed.push({ id, way, ...(form ? { form, tray } : {}) });
   }
 }
 
@@ -205,4 +206,58 @@ export function distractors(targetId: string, k: number): string[] {
   for (const c of top.sort(() => Math.random() - 0.5)) { if (out.length >= k) break; if (out.some(o => excluded(o, c))) continue; out.push(c); }
   lastDistractors[t.id] = out.map(o => o.id);
   return out.map(o => o.id);
+}
+
+// ---------------- character assembly (combat-spec §9.4) ----------------
+export type RezForm = 'mc' | 'assembly';
+const HAN = /^\p{Script=Han}+$/u;
+/** §9.4.1: 2+ characters, all Han, reading = Y. */
+export function assemblyEligible(id: string): boolean {
+  const t = ITEM[id]; return !!t && t.reading && [...t.zh].length >= 2 && HAN.test(t.zh);
+}
+/** §9.4.2: an R-EZ question on an eligible item is assembly when R-EZ.attempts is odd, MC when even (so the first is MC). */
+export function rezForm(id: string): RezForm {
+  return assemblyEligible(id) && prog(id).ways.rEZ.a % 2 === 1 ? 'assembly' : 'mc';
+}
+/** §9.4.3: d = mcOptions − 1; the first-ever-question reduction maps to d − 1 (minimum 1), as for MC. */
+export function assemblyD(mcOptions: number, first: boolean): number {
+  return Math.max(1, mcOptions - 1 - (first ? L().firstAskOptionReduction : 0));
+}
+/** §9.4.4 candidate distractor characters for a target, from a pool: [met-first group, rest group]. */
+export function assemblyCandidates(targetId: string, pool: string[]): { met: string[]; rest: string[] } {
+  const t = ITEM[targetId]; const ans = [...t.zh];
+  const byZh = new Map<string, Item[]>(); for (const c of ITEMS) { const l = byZh.get(c.zh); if (l) l.push(c); else byZh.set(c.zh, [c]); }
+  const bad = (ch: string) => ans.some((_, i) => {
+    const s = ans.map((a, k) => (k === i ? ch : a)).join('');
+    return t.altZh.includes(s) || (byZh.get(s) || []).some(c => c.id !== t.id && excluded(c, t));
+  });
+  const met = new Set<string>(), all = new Set<string>();
+  for (const pid of pool) { const c = ITEM[pid]; if (!c) continue; for (const ch of c.zh) { if (!HAN.test(ch)) continue; all.add(ch); if (prog(pid).seen) met.add(ch); } }
+  const ok = (ch: string) => !ans.includes(ch) && !bad(ch);
+  return { met: [...met].filter(ok), rest: [...all].filter(ch => !met.has(ch) && ok(ch)) };
+}
+const shuffle = <T>(a: T[]) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+/** §9.4.3–4: pick up to d distinct distractor characters (met first, random within each group). [] = ask as MC.
+ *  prev = the missed question's distractors (§9.4.2 re-ask): keep them, swapping one for a new candidate when there is one. */
+export function assemblyDistractors(targetId: string, pool: string[], d: number, prev?: string[]): string[] {
+  const { met, rest } = assemblyCandidates(targetId, pool);
+  const ordered = [...shuffle(met), ...shuffle(rest)];
+  if (prev?.length) {
+    const keep = prev.filter(ch => ordered.includes(ch)); const fresh = ordered.filter(ch => !keep.includes(ch));
+    if (fresh.length && keep.length) keep.splice(Math.floor(Math.random() * keep.length), 1, fresh[0]);
+    return keep.slice(0, d);
+  }
+  return ordered.slice(0, d);
+}
+/** §9.4.3 tray: the answer's characters (repeats included) + distractors, in random order. */
+export function assemblyTray(targetId: string, distractorChars: string[]): string[] { return shuffle([...ITEM[targetId].zh, ...distractorChars]); }
+/** §9.4.5 one tap, checked at once against the next empty slot. Grading is by character. */
+export interface AsmState { answer: string[]; filled: number; taps: string[]; wrongSlot: number | null; done: boolean; }
+export function asmStart(targetId: string): AsmState { return { answer: [...ITEM[targetId].zh], filled: 0, taps: [], wrongSlot: null, done: false }; }
+export function asmTap(s: AsmState, ch: string): 'ok' | 'correct' | 'wrong' | 'ignored' {
+  if (s.done) return 'ignored';
+  s.taps.push(ch);
+  if (ch !== s.answer[s.filled]) { s.wrongSlot = s.filled; s.done = true; return 'wrong'; }
+  s.filled++; if (s.filled === s.answer.length) { s.done = true; return 'correct'; }
+  return 'ok';
 }
