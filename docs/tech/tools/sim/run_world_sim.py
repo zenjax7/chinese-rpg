@@ -9,10 +9,17 @@
       engine_patrols (engine but keeping the spec's approach patrols, which graph mode does not run yet)
       -> sim_world_levels.csv (hours, defeats and deltas vs v3.9.1) + sim_world_levels_boss_approach.csv (own-word random battles
       before each location boss, per dataset and mode).
+  python docs/tech/tools/sim/run_world_sim.py leveling [--seeds 100]
+      leveling v2 (Jack 2026-10-17) on docs/data/levels, 6 profiles x beeline/explore: v2 (the standard: real leveling from L1 with EXP from
+      kills, quests and proficiency + damping, enemy levels, speed) | v2_kill_exp_only (the approved proposal's model) | legacy (hero at L_rec)
+      -> sim_world_leveling_v2.csv, sim_world_leveling_v2_actions.csv (rounds by hero actions per map, 75% saver beeline) and
+      sim_world_leveling_v2_revisit.csv (hero at L30 / L50 back on realm_1, clover_hills, realm_2).
   python docs/tech/tools/sim/run_world_sim.py ci [--seeds 4]
       fast checks (~10 s): engine RNG test vectors, spells table = docs/data/json/spells_full.json, determinism (same seed twice),
       the transform runs, docs/data/levels (level/0.2 maps) runs and is deterministic, the sim's play order (gearTier, then link order)
-      equals the old zone order, no boss-gated link, the maps' world_rules.json, convert_levels.py --check, sane bands.
+      equals the old zone order, no boss-gated link, the maps' world_rules.json, convert_levels.py --check, sane bands; leveling v2: bands on
+      docs/data/levels, speed = 1 action per round on every map but realm_1 for the 75% saver beeline kid, the legacy model has no speed or
+      leveling, the enemy formula's rabbit targets, the speed rule's clamp.
   python docs/tech/tools/sim/run_world_sim.py simplify [--seeds 100]
       Jack's section-9 rulings (2026-10-11): v3.9.1 | the previous maps run (sim_world_maps.csv, read, not re-run) | docs/data/levels now
       (open links, no patrols / budget / pity, walked x0.5, every eligible arrival event) -> sim_world_maps_simplified.csv +
@@ -23,7 +30,7 @@
       scripted elites), 6 profiles x beeline/explore -> sim_world_maps.csv + sim_world_maps_boss_approach.csv (2026-10-11).
       Exits 1 on any failure. Writes nothing.
 Data source for 'main': docs/data/levels/ when it holds level files, else docs/data/world (world_loader.configure)."""
-import sys, os, json, csv, glob, statistics as st, subprocess, tempfile, tarfile, io, argparse, time
+import sys, os, json, csv, glob, collections, statistics as st, subprocess, tempfile, tarfile, io, argparse, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import world_sim as X
 import world_loader as WG
@@ -202,6 +209,89 @@ def difficulty(a, N):
         write('sim_world_difficulty_options.csv', drows)
     return 0
 
+LEVELING_SETS = (('v2', None),                                          # the standard: real leveling + enemy levels + speed (Jack 2026-10-17)
+                 ('v2_kill_exp_only', dict(prof_exp=False, exp_damp=False)),  # the approved v2 proposal's model: no proficiency EXP, no damping
+                 ('legacy', dict(legacy_levels=True)))                     # hero fixed at L_rec(t), enemies at their tier band: main before v2 (= sim_world_bossblock.csv)
+def lv_metrics(rs):
+    lv = lambda r, t: max([e[4] for e in r['xp'] if e[2] <= t] or [1])
+    acts = collections.Counter()
+    for r in rs: acts.update({k: v for k, v in r['actions'].items() if not k.startswith('am|')})
+    src = collections.Counter()
+    for r in rs:
+        for e in r['xp']: src[e[3]] += e[1]
+    tot = sum(src.values()) or 1
+    return dict(final_level=mean([lv(r, 9) for r in rs]), tier_end=[round(mean([lv(r, t) for r in rs]), 1) for t in range(1, 10)],
+                act2=acts['act2']/max(1, acts['rounds']), act3=acts['act3']/max(1, acts['rounds']), prof_exp_share=src['proficiency']/tot)
+def map_actions(rs):
+    """{map: Counter(actions -> rounds)} over the runs (am|map|n counters)."""
+    out = collections.defaultdict(collections.Counter)
+    for r in rs:
+        for k, v in r['actions'].items():
+            if k.startswith('am|'): _, m, n = k.split('|'); out[m][int(n)] += v
+    return out
+def lv_run(n, extra=None, procs=None, rows=None):
+    cfgs = []; keys = []
+    for (p, sp, kid, mode, o, lab) in PROFILES:
+        for m in MODES:
+            k = (f'{int(p*100)}% {kid} {lab}', m)
+            if rows and k not in rows: continue
+            cfgs.append((p, sp, kid, mode, dict(o, world=m, data=dict(source='levels'), **(extra or {})))); keys.append(k)
+    res = X.run(cfgs, n, procs)
+    k2 = lambda c: tuple(map(str, c[:4])) + (json.dumps(c[4]),)
+    return {k: res[k2(c)] for k, c in zip(keys, cfgs)}
+def revisit(n=1000, seed=1, levels=(30, 50), maps=('realm_1', 'clover_hills', 'realm_2')):
+    """A strong hero back on early maps: normal battles at full HP, hero at level L with the common gear of the main-path map whose recLevel holds L
+    (the natural row: the map's recLevel min with its own gear tier).
+    Returns rows: map, level, mean hero actions per round, % of groups cleared in round 1 (plus the natural-level hero for contrast)."""
+    import random
+    X.campaign((0.75, True, 'saver', 'off', 1, dict(world='beeline', data=dict(source='levels'))))   # sets the sim globals for docs/data/levels (LEVELS_V2 on)
+    WG.configure(dict(source='levels'))
+    lv = {r['map_id']: r for r in csv.DictReader(open(os.path.join(REPO, 'docs', 'data', 'balance', 'enemy_levels.csv'), encoding='utf-8-sig'))}
+    tier = {m: json.load(open(os.path.join(WG.LEVELS_DIR, m + '.json')))['settings']['gearTier'] for m in lv}
+    main = [m for m in lv if lv[m]['how_set'].startswith('fitted')]
+    gear_of = lambda L: next((tier[m] for m in main if int(lv[m]['rec_level_min']) <= L <= int(lv[m]['rec_level_max'])), 9)
+    rows = []
+    for m in maps:
+        t = tier[m]
+        for L in (int(lv[m]['rec_level_min']),) + tuple(levels):
+            rng = random.Random(f'{seed}|{m}|{L}'); g = t if L == int(lv[m]['rec_level_min']) else gear_of(L); C.CUR_MAP = m   # natural: the map's own gear tier
+            Lr = C.Learner(0.75, True, 'total', rng); qset = [C.Item(k, Lr.ways, prof=True) for k in range(20)]
+            stats = dict(q=0, correct=0, spoken=0, potions_used=0, companion=0, heals=0, practice_q=0, kills=collections.Counter())
+            r1 = won = 0
+            for _ in range(n):
+                h = C.hero_at(L, g)
+                S = dict(hero=h, hp=h['HP'], mp=h['MP'], gold=0, potions=3, heal=False, shield=False, campaign=True, species=None, spells=[], fizzle='spend', tea=0, bigtea=0, feather=1)
+                r0 = stats.get('rounds', 0)
+                ok = C.battle(t, S, Lr, qset, 'normal', rng, stats)[0]; won += ok; r1 += ok and stats['rounds'] - r0 == 1
+            acts = {k: stats.get(f'act{k}', 0) for k in (1, 2, 3)}
+            rows.append(dict(map=m, enemy_levels=f"{lv[m]['enemy_level_min']}-{lv[m]['enemy_level_max']}", hero_level=L, gear_tier=g,
+                             natural=(L == int(lv[m]['rec_level_min'])), battles=n, rounds_per_battle=round(stats['rounds']/n, 2),
+                             actions_per_round=round(sum(k*v for k, v in acts.items())/stats['rounds'], 2),
+                             rounds_1_2_3_actions_pct='/'.join(str(round(100*acts[k]/stats['rounds'])) for k in (1, 2, 3)),
+                             cleared_round1_pct=round(100*r1/n, 1), won_pct=round(100*won/n, 1)))
+    return rows
+def leveling(a):
+    """Leveling v2 (Jack 2026-10-17): 6 profiles x beeline/explore on docs/data/levels, the standard vs the approved proposal's model vs legacy,
+    plus the revisit check (a strong hero back on realm_1 / clover_hills / realm_2)."""
+    RES = {}
+    for name, extra in LEVELING_SETS:
+        t0 = time.time(); RES[name] = lv_run(a.seeds, extra); print(name, f'{time.time()-t0:.0f}s', flush=True)
+    rows = []
+    for key in RES['v2']:
+        for name in RES:
+            rs = RES[name][key]; x = metrics(rs); l = lv_metrics(rs)
+            rows.append(dict(profile=key[0], mode=key[1], model=name, seeds=a.seeds, hours=round(x['h'], 2), defeats=round(x['defeats'], 1),
+                             battles=round(x['battles_loc']*sum(C.LOCS.values()), 1), final_level=round(l['final_level'], 1),
+                             level_at_tier_end=' '.join(map(str, l['tier_end'])), rounds_2_actions_pct=round(100*l['act2'], 2),
+                             rounds_3_actions_pct=round(100*l['act3'], 2), proficiency_exp_pct=round(100*l['prof_exp_share'], 1)))
+            r = rows[-1]; print(f"{r['profile']:22s} {r['mode']:8s} {name:17s} h {r['hours']:6.2f} defeats {r['defeats']:6.1f} L {r['final_level']:5.1f} 2x {r['rounds_2_actions_pct']:5.2f}% 3x {r['rounds_3_actions_pct']:5.2f}%")
+    write('sim_world_leveling_v2.csv', rows)
+    am = map_actions(RES['v2'][('75% saver no spells', 'beeline')])
+    write('sim_world_leveling_v2_actions.csv', [dict(map=m, rounds=sum(c.values()), **{f'rounds_{k}_actions': c[k] for k in (1, 2, 3)}) for m, c in sorted(am.items())])
+    rv = revisit(); write('sim_world_leveling_v2_revisit.csv', rv)
+    for r in rv: print(r)
+    return 0
+
 def ci(a):
     fails = []
     def check(name, ok, info=''):
@@ -257,11 +347,28 @@ def ci(a):
         lr = json.load(open(os.path.join(WG.LEVELS_DIR, 'world_rules.json')))
         left = [k for k in ('zoneBattleBudget', 'budgetSpentMult', 'pityRolls', 'beelineBattleTarget', 'beelineBattleRange') if k in lr]
         check('levels world_rules: no budget / pity / beeline target, walked x0.5 (Jack 2026-10-11)', not left and lr.get('clearedStepMult') == 0.5, ','.join(left))
+    # leveling v2 (Jack 2026-10-17): real leveling is the standard on docs/data/levels; speed gives the 75% saver beeline kid 1 action per round
+    # on every map it fights on at its natural level (realm_1 is the one allowed exception: L1-3 rabbits against a hero leveling to ~10)
+    if WG.has_levels(WG.LEVELS_DIR):
+        R2 = lv_run(a.seeds, rows=[('75% saver no spells', 'beeline'), ('50% saver no spells', 'beeline')])
+        for k, rs in R2.items():
+            x = metrics(rs); l = lv_metrics(rs)
+            check(f'leveling v2 band {k[0]} {k[1]}', 10 < x['h'] < 45 and 0 <= x['defeats'] < 150 and 30 < l['final_level'] < 80, f"h {x['h']:.2f} defeats {x['defeats']:.1f} final level {l['final_level']:.1f}")
+        am = map_actions(R2[('75% saver no spells', 'beeline')])
+        extra = {m: dict(c) for m, c in am.items() if m != 'realm_1' and (c[2] or c[3])}
+        check('speed: 1 action per round on every map but realm_1 (75% saver beeline, natural level)', bool(am) and not extra, f"{len(am)} maps; realm_1 2/3-action rounds {am['realm_1'][2]}/{am['realm_1'][3]} of {sum(am['realm_1'].values())}" + (f'; others: {extra}' if extra else ''))
+        lg = one(dict(source='world'))
+        check('legacy model (docs/data/world): always 1 action, no leveling', not C.LEVELS_V2 and lg['actions'].get('act2', 0) + lg['actions'].get('act3', 0) == 0 and not lg['xp'])
+        e7 = C.enemy_at(1, 'normal', 7); h7 = C.hero_at(7, 1); e1 = C.enemy_at(1, 'normal', 1); h1 = C.hero_at(1, 1)
+        hits = lambda h, e: -(-e['HP'] // max(1, C.round(h['ATK'] - 0.5*e['DEF'])))
+        check("enemy formula: an L1 rabbit takes 3 hits at hero L1, 1 at L7; an L7 enemy is SPD 7 (spec §2.3)", hits(h1, e1) == 3 and hits(h7, e1) == 1 and e7['SPD'] == 7, f'{hits(h1, e1)} / {hits(h7, e1)}')
+        v2, C.LEVELS_V2 = C.LEVELS_V2, True; acts = [C.hero_actions(dict(SPD=s), [dict(HP=1, SPD=4), dict(HP=0, SPD=40)]) for s in (3, 7, 8, 11, 12, 40)]; C.LEVELS_V2 = v2
+        check('speed rule: clamp(floor(heroSPD / max living enemy SPD), 1, 3), dead enemies ignored', acts == [1, 1, 2, 2, 3, 3], str(acts))
     t0 = time.time(); R = run(dict(source='world'), a.seeds); dt = time.time() - t0
     for k, x in R.items(): check(f'band {k[0]} {k[1]}', 10 < x['h'] < 45 and 0 <= x['defeats'] < 150 and 5 < x['battles_loc'] < 40, f"h {x['h']:.2f} defeats {x['defeats']:.1f} bat/loc {x['battles_loc']:.1f}")
     print(f'{len(fails)} failures, {dt:.0f}s for {a.seeds} seeds x {len(R)} configs'); return len(fails)
 
 if __name__ == '__main__':
-    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'simplify', 'bossblock', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391'); ap.add_argument('--difficulty', action='store_true'); ap.add_argument('--only-difficulty', action='store_true')
+    ap = argparse.ArgumentParser(); ap.add_argument('what', choices=('calibrate', 'levels', 'maps', 'simplify', 'bossblock', 'leveling', 'ci')); ap.add_argument('--seeds', type=int); ap.add_argument('--v391'); ap.add_argument('--difficulty', action='store_true'); ap.add_argument('--only-difficulty', action='store_true')
     a = ap.parse_args(); a.seeds = a.seeds or (4 if a.what == 'ci' else 100)
-    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'simplify': simplify, 'bossblock': bossblock, 'ci': ci}[a.what](a) else 0)
+    sys.exit(1 if {'calibrate': calibrate, 'levels': levels, 'maps': maps, 'simplify': simplify, 'bossblock': bossblock, 'leveling': leveling, 'ci': ci}[a.what](a) else 0)

@@ -77,8 +77,8 @@
   ],
   "G": 72,
   "recLevel": [
-   22,
-   25
+   51,
+   53
   ],
   "gearTier": 9,
   "difficulty": {
@@ -89,6 +89,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   50,
+   52
+  ],
+  "eliteLevel": 52,
   "roster": [
    {
     "enemy": "imp",

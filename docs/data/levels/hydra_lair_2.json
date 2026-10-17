@@ -75,8 +75,8 @@
   ],
   "G": 36,
   "recLevel": [
-   10,
-   13
+   37,
+   38
   ],
   "gearTier": 5,
   "difficulty": {
@@ -87,6 +87,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   36,
+   38
+  ],
+  "eliteLevel": 38,
   "roster": [
    {
     "enemy": "bog_monster",
@@ -105,6 +110,7 @@
    "gateEdge": "e5",
    "kind": "realmboss",
    "enemy": "hydra",
+   "level": 37,
    "reward": {
     "heroic": "hydra_scale",
     "zh": "九头蛇鳞",

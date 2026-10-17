@@ -84,8 +84,8 @@
   ],
   "G": 54,
   "recLevel": [
-   16,
-   19
+   41,
+   43
   ],
   "gearTier": 7,
   "difficulty": {
@@ -96,6 +96,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   40,
+   42
+  ],
+  "eliteLevel": 42,
   "roster": [
    {
     "enemy": "harpy",
@@ -113,7 +118,8 @@
    "node": "boss_1",
    "gateEdge": "e10",
    "kind": "locboss",
-   "enemy": "wind_dragon"
+   "enemy": "wind_dragon",
+   "level": 43
   }
  },
  "nodes": [

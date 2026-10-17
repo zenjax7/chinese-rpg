@@ -83,8 +83,8 @@
   ],
   "G": 12,
   "recLevel": [
-   3,
-   5
+   16,
+   19
   ],
   "gearTier": 2,
   "difficulty": {
@@ -95,6 +95,11 @@
    1,
    2
   ],
+  "enemyLevel": [
+   14,
+   16
+  ],
+  "eliteLevel": 16,
   "roster": [
    {
     "enemy": "giant_bee",
@@ -116,7 +121,8 @@
    "node": "boss_1",
    "gateEdge": "e5",
    "kind": "locboss",
-   "enemy": "greedy_bear"
+   "enemy": "greedy_bear",
+   "level": 17
   }
  },
  "nodes": [

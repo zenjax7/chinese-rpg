@@ -80,8 +80,8 @@
   ],
   "G": 63,
   "recLevel": [
-   19,
-   22
+   47,
+   49
   ],
   "gearTier": 8,
   "difficulty": {
@@ -92,6 +92,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   47,
+   49
+  ],
+  "eliteLevel": 49,
   "roster": [
    {
     "enemy": "arena_troll",

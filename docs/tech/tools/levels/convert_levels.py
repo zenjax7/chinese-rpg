@@ -26,6 +26,8 @@ What it does (docs/design/level-json-coverage.md §3 has the reasons):
     11 portal/exit links and the 8 world paths); the 153 trailing no-op 'nothing' events are dropped (nodes may have no event);
     settings.difficulty has no pathFights; node `fog` (landmark) is dropped (Jack 2026-10-11: node types show only on arrival); docs/data/levels/world_rules.json holds the global encounter rules without the battle
     budget, the pity roll and the beeline targets, with walked edges at 50% (map_rules).
+ 9. Leveling v2 (Jack 2026-10-17): settings.enemyLevel [lo, hi], settings.eliteLevel and boss.level come from
+    docs/data/balance/enemy_levels.csv (one row per combat map; spec §2.3). recLevel too when the CSV gives rec_level_min/max.
 """
 import json, os, sys, re, csv, glob, copy, collections, argparse, tempfile, filecmp, shutil
 HERE = os.path.dirname(os.path.abspath(__file__)); REPO = os.path.normpath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -45,7 +47,8 @@ def load():
                 tiers={r['tier']: r for r in J(os.path.join(D, 'json', 'realm_difficulty.json'))},
                 diff={r['location_id']: r for r in J(os.path.join(D, 'json', 'realm_location_difficulty.json'))},
                 content={int(k): J(os.path.join(W, v)) for k, v in J(os.path.join(W, 'index.json')).get('content', {}).items()},
-                classic={l['id']: l for l in J(os.path.join(REPO, 'src', 'data', 'locations.json'))['locations']})
+                classic={l['id']: l for l in J(os.path.join(REPO, 'src', 'data', 'locations.json'))['locations']},
+                elv={r['map_id']: r for r in csv.DictReader(open(os.path.join(D, 'balance', 'enemy_levels.csv'), encoding='utf-8-sig'))})
 
 def remaps(old, new):
     """(graph, node) and (graph, edge) of today's data -> where they are after the surgery."""
@@ -184,8 +187,14 @@ def convert(src):
                   'difficulty': {'mcOptions': dr['mc_options'], 'reviewSlots': dr['review_slots']},   # no pathFights (Jack 2026-10-11: no own-word battle targets)
                   'enemiesPerBattle': z['enemiesPerBattle'], 'roster': z['roster'], 'packs': z['packs'], 'encounters': None,
                   'maxHopsToInn': src['rules']['maxHopsToInn'].get(str(z['realm']), src['rules']['maxHopsToInn']['default'])}
+            ev = src['elv'][gid]   # leveling v2: every combat map has a row (spec §2.3)
+            if ev.get('rec_level_min'): st['recLevel'] = [int(ev['rec_level_min']), int(ev['rec_level_max'])]
+            st = {**{k: v for k, v in st.items() if k != 'roster'}, 'enemyLevel': [int(ev['enemy_level_min']), int(ev['enemy_level_max'])],
+                  'eliteLevel': int(ev['elite_level']), 'roster': st['roster']}
+            st = dict((k, st[k]) for k in ['title', 'emoji', 'background', 'desyPool', 'words', 'G', 'recLevel', 'gearTier', 'difficulty',
+                                           'enemiesPerBattle', 'enemyLevel', 'eliteLevel', 'roster', 'packs', 'encounters', 'maxHopsToInn'])
             if z['bossNode']['graph'] == gid:
-                b = {'node': z['bossNode']['node'], 'gateEdge': z['gateEdge']['edge'], 'kind': z['bossKind'], 'enemy': z['boss']}
+                b = {'node': z['bossNode']['node'], 'gateEdge': z['gateEdge']['edge'], 'kind': z['bossKind'], 'enemy': z['boss'], 'level': int(ev['boss_level'])}
                 if z['bossKind'] == 'realmboss':
                     rw = (cl or {}).get('bossReward') if cl else src['classic'].get({1: 'meadow', 2: 'forest'}[z['realm']], {}).get('bossReward')
                     b['reward'] = rw

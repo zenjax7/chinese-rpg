@@ -76,8 +76,8 @@
   ],
   "G": 72,
   "recLevel": [
-   22,
-   25
+   51,
+   51
   ],
   "gearTier": 9,
   "difficulty": {
@@ -88,6 +88,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   48,
+   50
+  ],
+  "eliteLevel": 50,
   "roster": [
    {
     "enemy": "imp",
@@ -105,7 +110,8 @@
    "node": "boss_1",
    "gateEdge": "e6",
    "kind": "locboss",
-   "enemy": "shadow_dragon"
+   "enemy": "shadow_dragon",
+   "level": 50
   }
  },
  "nodes": [

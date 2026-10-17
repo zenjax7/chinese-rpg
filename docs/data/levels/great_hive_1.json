@@ -86,8 +86,8 @@
   ],
   "G": 12,
   "recLevel": [
-   3,
-   5
+   19,
+   21
   ],
   "gearTier": 2,
   "difficulty": {
@@ -98,6 +98,11 @@
    1,
    2
   ],
+  "enemyLevel": [
+   17,
+   19
+  ],
+  "eliteLevel": 19,
   "roster": [
    {
     "enemy": "giant_bee",
@@ -116,6 +121,7 @@
    "gateEdge": "e5",
    "kind": "realmboss",
    "enemy": "queen_bee",
+   "level": 19,
    "reward": {
     "heroic": "queens_crown",
     "text": "The Queen's Crown 蜂后之冠 is yours! (end of prototype)"

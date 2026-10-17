@@ -77,8 +77,8 @@
   ],
   "G": 63,
   "recLevel": [
-   19,
-   22
+   46,
+   48
   ],
   "gearTier": 8,
   "difficulty": {
@@ -89,6 +89,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   44,
+   46
+  ],
+  "eliteLevel": 46,
   "roster": [
    {
     "enemy": "arena_troll",
@@ -106,7 +111,8 @@
    "node": "boss_1",
    "gateEdge": "e10",
    "kind": "locboss",
-   "enemy": "minotaur"
+   "enemy": "minotaur",
+   "level": 46
   }
  },
  "nodes": [

@@ -95,19 +95,20 @@ Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by defa
 
 ### 1.1 Turn order
 
-A **round** = an optional companion attack + 1 hero turn + 1 enemy turn per living enemy on screen (max 3).
+A **round** = an optional companion attack + the hero's actions (1–3, speed below) + 1 enemy turn per living enemy on screen (max 3).
 
 ```
 Round:
   0. Companion   -> if the Friendship gauge is full: free team attack (no question), gauge -> 0   (§6.6)
-  1. Hero turn   -> Attack 攻击 | Skills 技能 | Items 道具 (potions) | Run 逃跑 (flee)
+  1. Hero turn(s) -> N actions, each one hero turn: Attack 攻击 | Skills 技能 | Items 道具 (potions) | Run 逃跑 (flee)
                     Attack and question-type skills => 1 question
   2. Enemy phase -> for each living enemy, left to right: wind-up => 1 question => resolve block
                     (Hydra: every 3rd round it attacks twice, §7.9)
   3. End of round -> tick cooldowns, specials (Regrow, Summon Worker), spawn reinforcements (tier 10+), check end
 ```
 
-- **Defense questions per round = living enemies on screen (≤ 3).** A 3-enemy round is 1 attack question plus 3 defense questions. Extra enemies (tier 10+) wait as reinforcements.
+- **Speed (Jack, 2026-10-17).** SPD = level, for the hero and every enemy. At the start of each round the hero gets N = clamp(floor(hero SPD ÷ the highest SPD among living enemies), 1, 3) actions: 2× gives 2, 3× or more gives 3. The hero acts first, then the enemies. Each action is a normal hero turn under these rules (1 question per attack; spells cost MP). N is set again only at the start of the next round.
+- **Defense questions per round = living enemies on screen (≤ 3).** A 3-enemy round is 1 attack question per hero action plus 3 defense questions. Extra enemies (tier 10+) wait as reinforcements.
 - Potions and Flee use the hero turn **without** a question. Potions are capped at 3 per battle. **Spells (v3.4/v3.5)** also use the hero turn without a question. There's no per-battle cap; MP cost is the only limit (§6.7). MP potions can't be used in battle.
 - **HP and MP carry over between battles.** HP comes back only from an inn, a potion, Heal, or waking at the inn after a defeat. MP comes back only from an inn, waking after a defeat, or map-only Mana Tea; there is **no MP regen** in battle (v3.6, §6.4).
 
@@ -116,7 +117,7 @@ Round:
 ```
 BATTLE_INIT (HP/MP carried over from the map; Friendship gauge = 0)
   -> SCOUT            (the 7 focus items; new items get a teach card; skippable after 1 s)
-  -> ROUND_START
+  -> ROUND_START      (set the hero's actions N, §1.1)
   -> COMPANION_CHECK  (gauge >= 100 -> TEAM_ATTACK -> CHECK_END)
   -> HERO_ACTION_SELECT
        (4 bilingual commands: ⚔️ 攻击 Attack · ✨ 技能 Skills · 🍯 道具 Items · 🏃 逃跑 Run)
@@ -136,6 +137,7 @@ BATTLE_INIT (HP/MP carried over from the map; Friendship gauge = 0)
     -> FEEDBACK              (correct characters + English meaning, zh-CN audio plays; never pinyin;
                               wrong: the correct card lights up, 1.5 s min)
   -> RESOLVE_ATTACK / RESOLVE_BLOCK -> CHECK_END
+  (hero actions left this round, §1.1 speed -> HERO_ACTION_SELECT again; else ENEMY_PHASE)
   -> ENEMY_PHASE ... -> ROUND_END (specials) -> ROUND_START ...
 
 On each enemy reaching HP 0: DROP (EXP + gold now; chest roll, §7.2). Summoned workers drop nothing.
@@ -176,25 +178,36 @@ END_FLEE -> MAP (no loss; answers so far still count)
 ### 2.1 Hero stats
 
 ```
-HP_h  = 30 + 6*L          MP_h = 10 + 2*L
-ATK_h = weaponATK + floor(L/2) + bonuses
-DEF_h = armorDEF + shieldDEF + floor(L/3) + bonuses
+HP_h  = 30 + 4*L          MP_h = 10 + L            SPD_h = L          (leveling v2, Jack 2026-10-17)
+ATK_h = weaponATK + (L−1) + bonuses
+DEF_h = armorDEF + shieldDEF + floor((L−1)/3) + bonuses
+EXP from L to L+1 = round(15 + 1.5 × (L−1)²): 15, 17, 21, 29, 39, 53, 69, 89, 111, 137, ...   No level cap.
 Gear at tier g (common): weaponATK = 3g+2, armorDEF = 2g+1, shieldDEF = g
 ```
 
-Hero at the recommended level with common tier-t gear (these are the reference stats `ATK_ref` / `DEF_ref`):
+A level-up adds the max-HP/MP increase to current HP/MP (no full heal). The hero by level (`data/balance/hero_levels.csv`, L1–60; ATK/DEF from level are added to gear):
 
-| tier | realm | rec_level | rec_level_range | gear_tier | hero_hp | hero_mp | hero_atk | hero_def |
-|---|---|---|---|---|---|---|---|---|
-| 1 | Starter Meadow | 2 | 1–3 | 1 | 42 | 14 | 6 | 4 |
-| 2 | Honeycomb Forest | 4 | 3–5 | 2 | 54 | 18 | 10 | 8 |
-| 3 | Crossroads Market | 6 | 5–7 | 3 | 66 | 22 | 14 | 12 |
-| 4 | Goblin Caves | 9 | 7–10 | 4 | 84 | 28 | 18 | 16 |
-| 5 | Hydra Swamp | 12 | 10–13 | 5 | 102 | 34 | 23 | 20 |
-| 6 | Zombie Lands | 15 | 13–16 | 6 | 120 | 40 | 27 | 24 |
-| 7 | Griffin Peaks | 18 | 16–19 | 7 | 138 | 46 | 32 | 28 |
-| 8 | Ogre Colosseum | 21 | 19–22 | 8 | 156 | 52 | 36 | 32 |
-| 9 | Demon King's Castle | 24 | 22–25 | 9 | 174 | 58 | 41 | 36 |
+| level | exp_to_next | exp_total | hp | mp | atk_from_level | def_from_level | spd |
+|---|---|---|---|---|---|---|---|
+| 1 | 15 | 0 | 34 | 11 | 0 | 0 | 1 |
+| 2 | 17 | 15 | 38 | 12 | 1 | 0 | 2 |
+| 3 | 21 | 32 | 42 | 13 | 2 | 0 | 3 |
+| 5 | 39 | 82 | 50 | 15 | 4 | 1 | 5 |
+| 7 | 69 | 174 | 58 | 17 | 6 | 2 | 7 |
+| 10 | 137 | 443 | 70 | 20 | 9 | 3 | 10 |
+| 13 | 231 | 942 | 82 | 23 | 12 | 4 | 13 |
+| 15 | 309 | 1442 | 90 | 25 | 14 | 4 | 15 |
+| 20 | 557 | 3453 | 110 | 30 | 19 | 6 | 20 |
+| 25 | 879 | 6852 | 130 | 35 | 24 | 8 | 25 |
+| 30 | 1277 | 12013 | 150 | 40 | 29 | 9 | 30 |
+| 35 | 1749 | 19312 | 170 | 45 | 34 | 11 | 35 |
+| 40 | 2297 | 29123 | 190 | 50 | 39 | 13 | 40 |
+| 45 | 2919 | 41822 | 210 | 55 | 44 | 14 | 45 |
+| 50 | 3617 | 57783 | 230 | 60 | 49 | 16 | 50 |
+| 55 | 4389 | 77382 | 250 | 65 | 54 | 18 | 55 |
+| 60 | 5237 | 100993 | 270 | 70 | 59 | 19 | 60 |
+
+`data/balance/hero_stats.csv` (the hero at `L_rec(t)` under the v3 growth) is kept for the legacy model only: the historical sim tables and `docs/data/world`. `L_rec(t)` now only sets EXP and gold (§2.3, §7.2).
 
 ### 2.2 Formulas (unchanged from v1)
 
@@ -211,14 +224,16 @@ Enemy attack:  right (block)  -> max(0, ATK_e - 1.25*DEF_h)                     
 
 ### 2.3 Enemy stats by role and tier
 
-`L_rec(t)` = 2, 4, 6, 9, 12, 15, 18, 21, 24 for t = 1..9, then `24 + 3(t−9)`. `ATK_ref` / `DEF_ref` are the stats of a hero at `L_rec(t)` with tier-t gear (§2.1). `base = ATK_ref − 0.5t`. `H(t)` = 3, 3, 2.5, 2.25, 2.25, 2, 2, 2, 2 (t ≥ 10: 2).
+**Enemy levels (leveling v2, Jack 2026-10-17).** Every enemy has a level n on the hero's scale. On a map, each normal rolls n uniformly in `settings.enemyLevel` [lo, hi]; elites (mini-boss and quest fights) use `settings.eliteLevel` (default hi); the boss uses `settings.boss.level`. Its stats come from n and the map's tier t (`settings.gearTier`): `ATK_ref(n)` / `DEF_ref(n)` are the stats of a hero at level n with common tier-t gear (§2.1), `DEF_e(n) = ceil(n/5)`, `base(n) = ATK_ref(n) − 0.5 × DEF_e(n)`, `SPD = n`. `H(t)` = 2.4, 3, 2.5, 2.25, 2.25, 2, 2, 2, 2 (t ≥ 10: 2; t1 was 3). Per-map levels: `data/balance/enemy_levels.csv` (fitted so the 75% saver beeline kid meets normals 2–4 levels above its entry level; realm_1 is 1–3; hubs copy their dungeon; optional maps sit 1–2 above their realm).
+
+`L_rec(t)` = 2, 4, 6, 9, 12, 15, 18, 21, 24 for t = 1..9, then `24 + 3(t−9)`, now only scales EXP and gold, which stay per realm.
 
 | role | boss_type | hp | atk | def | gold | exp | chest_chance | adds | where |
 |---|---|---|---|---|---|---|---|---|---|
-| normal | | round(H(t) × base) | round(1.21 × DEF_ref) (**Jack, 2026-10-12**: ×1.1 on the old 1.1; bosses and elites unchanged) | t | 1 × G | 6 × L_rec | 0.10 | – | random battles on edges |
-| elite | | 2 × normal HP | location-boss ATK (round(1.2 × DEF_ref)) | t | 2 × G | 10 × L_rec | 0.25 | – | only where a level places one: mini-boss and quest fights (Jack, 2026-10-11; §7.8) |
-| boss | location | round(5 × base × m(t)) (v3.6) | round(0.8 × round(1.2 × DEF_ref)) (v3.6) | t | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
-| boss | realm | round(7 × base × m(t)) (v3.6) | round(0.8 × round(1.3 × DEF_ref)) (v3.6) | t | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location |
+| normal | | round(H(t) × base(n)) | round(1.21 × DEF_ref(n)) (**Jack, 2026-10-12**: ×1.1 on the old 1.1; bosses and elites unchanged) | DEF_e(n) | 1 × G | 6 × L_rec | 0.10 | – | random battles on edges |
+| elite | | 2 × normal HP | round(1.2 × DEF_ref(n)) | DEF_e(n) | 2 × G | 10 × L_rec | 0.25 | – | only where a level places one: mini-boss and quest fights (Jack, 2026-10-11; §7.8) |
+| boss | location | round(5 × base(n) × m(t)) (v3.6) | round(0.8 × 1.2 × DEF_ref(n)) (v3.6) | DEF_e(n) | 5 × G | 20 × L_rec | 1.0 | 1 minion | end of every location except the realm's last |
+| boss | realm | round(7 × base(n) × m(t)) (v3.6) | round(0.8 × 1.3 × DEF_ref(n)) (v3.6) | DEF_e(n) | 10 × G | 50 × L_rec | 1.0 | 1 minion (t ≤ 3) or 2 | end of the realm's last location |
 
 **Boss HP and ATK (v3.6; location bosses v3.7).** m(t) is the boss HP multiplier in `data/boss_hp.csv`, tuned so that a kid who enters with full MP and spends it all on spells still needs about **15 correct answers for a location boss and about 20 for a realm boss** (targets, Jack): location bosses × 1.2–1.9 (v3.7; v3.6 was × 2.0–2.7 for 20), realm bosses × 1.05–1.85 (realm bosses already had more HP, and from t4 they face the kid's two strongest spells with a bigger pool). Boss ATK is × 0.8 so the longer fights don't raise defeats. The check is one boss fight from full HP and MP at the recommended level with full gear and the 2 strongest spells of towns t and t−1 (`build/v3/explore/boss_harness.py`, 600 fights per cell):
 
@@ -243,103 +258,125 @@ Enemy attack:  right (block)  -> max(0, ATK_e - 1.25*DEF_h)                     
 | 9 | location | 182 | 1.9 | 346 | 43 | 34 | 15 | 2.7 | 491 | 17.7 | 14.8 | 1.0 | 23.5 / 19.8 | 13.8 | 14.2 | 1.00 / 1.00 |
 | 9 | realm | 256 | 1.55 | 397 | 47 | 38 | 20 | 1.55 | 397 | 24.9 | 19.8 | 1.0 | 33.1 / 26.4 | 18.4 | 18.2 | 0.62 / 0.88 |
 
+m(t) is unchanged by leveling v2; the hp/atk columns above are the v3.6 values at L_rec (record of the tuning).
+
 The v3.2 single-battle and realm tables in §5, §6.4, §6.6 and §7.6–7.10 were run before v3.6 (v3.5 boss stats, +1 MP regen) and weren't rerun, except the special-mechanics table (§7.9), which reads the roster. The v3.6 campaign numbers are in §6.7.
 
-Values by tier (`data/enemy_stat_bands.csv`):
+Values by tier (`data/enemy_stat_bands.csv`): normals and elites at the tier's lowest and highest main-path level, every boss at its level:
 
-| tier | role | boss_type | hp | atk | def | gold | exp | chest_chance | minions |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | normal |  | 16 | 5 | 1 | 6 | 12 | 0.1 | 0 |
-| 1 | elite |  | 32 | 5 | 1 | 12 | 20 | 0.25 | 0 |
-| 1 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 1 |
-| 1 | boss | realm | 57 | 4 | 1 | 60 | 100 | 1 | 1 |
-| 2 | normal |  | 27 | 10 | 2 | 12 | 24 | 0.1 | 0 |
-| 2 | elite |  | 54 | 10 | 2 | 24 | 40 | 0.25 | 0 |
-| 2 | boss | location | 70 | 8 | 2 | 60 | 80 | 1 | 1 |
-| 2 | boss | realm | 104 | 8 | 2 | 120 | 200 | 1 | 1 |
-| 3 | normal |  | 31 | 15 | 3 | 18 | 36 | 0.1 | 0 |
-| 3 | elite |  | 62 | 14 | 3 | 36 | 60 | 0.25 | 0 |
-| 3 | boss | location | 118 | 11 | 3 | 90 | 120 | 1 | 1 |
-| 3 | boss | realm | 163 | 13 | 3 | 180 | 300 | 1 | 1 |
-| 4 | normal |  | 36 | 19 | 4 | 27 | 54 | 0.1 | 0 |
-| 4 | elite |  | 72 | 19 | 4 | 54 | 90 | 0.25 | 0 |
-| 4 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 1 |
-| 4 | boss | realm | 118 | 17 | 4 | 270 | 450 | 1 | 2 |
-| 5 | normal |  | 46 | 24 | 5 | 36 | 72 | 0.1 | 0 |
-| 5 | elite |  | 92 | 24 | 5 | 72 | 120 | 0.25 | 0 |
-| 5 | boss | location | 189 | 19 | 5 | 180 | 240 | 1 | 1 |
-| 5 | boss | realm | 173 | 21 | 5 | 360 | 600 | 1 | 2 |
-| 6 | normal |  | 48 | 29 | 6 | 45 | 90 | 0.1 | 0 |
-| 6 | elite |  | 96 | 29 | 6 | 90 | 150 | 0.25 | 0 |
-| 6 | boss | location | 216 | 23 | 6 | 225 | 300 | 1 | 1 |
-| 6 | boss | realm | 185 | 25 | 6 | 450 | 750 | 1 | 2 |
-| 7 | normal |  | 57 | 34 | 7 | 54 | 108 | 0.1 | 0 |
-| 7 | elite |  | 114 | 34 | 7 | 108 | 180 | 0.25 | 0 |
-| 7 | boss | location | 241 | 27 | 7 | 270 | 360 | 1 | 1 |
-| 7 | boss | realm | 280 | 29 | 7 | 540 | 900 | 1 | 2 |
-| 8 | normal |  | 64 | 39 | 8 | 63 | 126 | 0.1 | 0 |
-| 8 | elite |  | 128 | 38 | 8 | 126 | 210 | 0.25 | 0 |
-| 8 | boss | location | 296 | 30 | 8 | 315 | 420 | 1 | 1 |
-| 8 | boss | realm | 246 | 34 | 8 | 630 | 1050 | 1 | 2 |
-| 9 | normal |  | 73 | 44 | 9 | 72 | 144 | 0.1 | 0 |
-| 9 | elite |  | 146 | 43 | 9 | 144 | 240 | 0.25 | 0 |
-| 9 | boss | location | 346 | 34 | 9 | 360 | 480 | 1 | 1 |
-| 9 | boss | realm | 397 | 38 | 9 | 720 | 1200 | 1 | 2 |
-
-The 50-enemy roster (`enemies.json`, built by `build/enemies/build_enemies.py`) is built on these bands. Elites and bosses use them exactly. Normal enemies are archetypes around the tier's band: HP varies by up to about ±15%, ATK by about ±10%, and DEF by ±1 (for example wolf_pup 14 HP, a fast glass cannon, vs mushroom_imp 18 HP). The sim uses the band values. Each realm has 1 elite, one location boss per non-final location, and 1 realm boss. The roster's `sample_shout_zh` (the word an enemy "casts") is always an item from the enemy's **earliest roster location** in curriculum v2 (checked by the build script).
-
-| id | name_zh | name_en | location_id | role | boss_type | hp | atk | def | gold | exp | chest_chance | sample_shout_zh |
+| tier | role | boss_type | enemy | level | hp | atk | def | spd | gold | exp | chest_chance | minions |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| horned_rabbit | 角兔 | Horned Rabbit | L1.1 | normal |  | 16 | 5 | 1 | 6 | 12 | 0.1 | 你好 |
-| mushroom_imp | 蘑菇小妖 | Mushroom Imp | L1.1 | normal |  | 18 | 5 | 1 | 6 | 12 | 0.1 | 谁 |
-| wolf_pup | 小狼 | Wolf Pup | L1.2 | normal |  | 14 | 5 | 1 | 6 | 12 | 0.1 | 你是谁 |
-| swift_horned_rabbit | 疾风角兔 | Swift Horned Rabbit | L1.3 | elite |  | 32 | 5 | 1 | 12 | 20 | 0.25 | 看 |
-| big_beak_crow | 大嘴乌鸦 | Big-Beak Crow | L1.1 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 什么 |
-| big_grey_wolf | 大灰狼 | Big Grey Wolf | L1.2 | boss | location | 34 | 4 | 1 | 30 | 40 | 1 | 你好吗 |
-| horned_rabbit_king | 角兔王 | Horned Rabbit King | L1.3 | boss | realm | 57 | 4 | 1 | 60 | 100 | 1 | 欢迎 |
-| giant_bee | 巨蜂 | Giant Bee | L2.1 | normal |  | 23 | 11 | 2 | 12 | 24 | 0.1 | 蜂蜜 |
-| sapling_sprite | 小树精 | Sapling Sprite | L2.1 | normal |  | 31 | 9 | 2 | 12 | 24 | 0.1 | 尝一尝 |
-| forest_spider | 森林蜘蛛 | Forest Spider | L2.1 | normal |  | 27 | 10 | 2 | 12 | 24 | 0.1 | 好吃 |
-| royal_guard_bee | 近卫蜂 | Royal Guard Bee | L2.2 | elite |  | 54 | 10 | 2 | 24 | 40 | 0.25 | 不要 |
-| greedy_bear | 贪吃熊 | Greedy Bear | L2.1 | boss | location | 70 | 8 | 2 | 60 | 80 | 1 | 饿 |
-| queen_bee | 蜂后 | Queen Bee | L2.2 | boss | realm | 104 | 8 | 2 | 120 | 200 | 1 | 请给我…… |
-| road_bandit | 山贼 | Road Bandit | L3.1 | normal |  | 26 | 16 | 3 | 18 | 36 | 0.1 | 钱包 |
-| slime | 史莱姆 | Slime | L3.2 | normal |  | 36 | 14 | 3 | 18 | 36 | 0.1 | 绿色 |
-| mimic | 宝箱怪 | Mimic | L3.2 | elite |  | 62 | 14 | 3 | 36 | 60 | 0.25 | 礼物 |
-| bandit_boss | 山贼头目 | Bandit Boss | L3.1 | boss | location | 118 | 11 | 3 | 90 | 120 | 1 | 多少钱 |
-| mimic_king | 宝箱怪王 | Mimic King | L3.2 | boss | realm | 163 | 13 | 3 | 180 | 300 | 1 | 第一 |
-| cave_bat | 洞穴蝙蝠 | Cave Bat | L4.1 | normal |  | 31 | 21 | 4 | 27 | 54 | 0.1 | 小朋友 |
-| goblin | 哥布林 | Goblin | L4.2 | normal |  | 36 | 19 | 4 | 27 | 54 | 0.1 | 开始 |
-| goblin_monitor | 哥布林班长 | Goblin Hall Monitor | L4.3 | normal |  | 32 | 19 | 5 | 27 | 54 | 0.1 | 上课 |
-| goblin_brute | 哥布林壮汉 | Goblin Brute | L4.2 | elite |  | 72 | 19 | 4 | 54 | 90 | 0.25 | 作业 |
-| echo_bat | 回声大蝙蝠 | Giant Echo Bat | L4.1 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 我不懂 |
-| goblin_warden | 哥布林守卫 | Goblin Warden | L4.2 | boss | location | 136 | 15 | 4 | 135 | 180 | 1 | 请安静 |
-| goblin_king | 哥布林大王 | Goblin King (the 'Headmaster') | L4.3 | boss | realm | 118 | 17 | 4 | 270 | 450 | 1 | 考试 |
-| bog_monster | 沼泽怪 | Bog Monster | L5.1 | normal |  | 53 | 22 | 5 | 36 | 72 | 0.1 | 迟到 |
-| bog_lizard | 沼泽蜥蜴 | Bog Lizard | L5.2 | normal |  | 39 | 26 | 5 | 36 | 72 | 0.1 | 马上 |
-| swamp_wisp | 鬼火 | Swamp Wisp | L5.1 | elite |  | 92 | 24 | 5 | 72 | 120 | 0.25 | 晚上 |
-| bog_toad | 泥潭巨蛙 | Giant Bog Toad | L5.1 | boss | location | 189 | 19 | 5 | 180 | 240 | 1 | 一会儿 |
-| hydra | 九头蛇 | Hydra | L5.2 | boss | realm | 173 | 21 | 5 | 360 | 600 | 1 | 现在几点 |
-| zombie | 丧尸 | Zombie | L6.1 | normal |  | 55 | 26 | 6 | 45 | 90 | 0.1 | 我头疼 |
-| rattle_skeleton | 骷髅 | Rattle Skeleton | L6.2 | normal |  | 43 | 29 | 7 | 45 | 90 | 0.1 | 找 |
-| zombie_knight | 丧尸骑士 | Zombie Knight | L6.2 | elite |  | 96 | 29 | 6 | 90 | 150 | 0.25 | 我累了 |
-| zombie_mayor | 丧尸村长 | Zombie Mayor | L6.1 | boss | location | 216 | 23 | 6 | 225 | 300 | 1 | 别担心 |
-| sickness_fiend | 病魔 | Sickness Fiend | L6.2 | boss | realm | 185 | 25 | 6 | 450 | 750 | 1 | 生病 |
-| harpy | 鹰身女妖 | Harpy | L7.1 | normal |  | 48 | 37 | 7 | 54 | 108 | 0.1 | 往左走 |
-| griffin | 狮鹫 | Griffin | L7.2 | normal |  | 57 | 34 | 7 | 54 | 108 | 0.1 | 上 |
-| cliff_golem | 石头人 | Cliff Golem | L7.1 | elite |  | 114 | 34 | 7 | 108 | 180 | 0.25 | 一直走 |
-| wind_dragon | 风龙 | Wild Wind Dragon | L7.1 | boss | location | 241 | 27 | 7 | 270 | 360 | 1 | 远 |
-| griffin_king | 狮鹫王 | Griffin King | L7.2 | boss | realm | 280 | 29 | 7 | 540 | 900 | 1 | 出发 |
-| arena_troll | 巨魔 | Arena Troll | L8.1 | normal |  | 74 | 36 | 8 | 63 | 126 | 0.1 | 踢足球 |
-| ogre_gladiator | 食人魔斗士 | Ogre Gladiator | L8.2 | normal |  | 64 | 39 | 8 | 63 | 126 | 0.1 | 胜利 |
-| fire_elemental | 火元素 | Fire Elemental | L8.2 | elite |  | 128 | 38 | 8 | 126 | 210 | 0.25 | 跳舞 |
-| minotaur | 牛头人 | Minotaur | L8.1 | boss | location | 296 | 30 | 8 | 315 | 420 | 1 | 比赛 |
-| ogre_champion | 食人魔冠军 | Ogre Champion | L8.2 | boss | realm | 246 | 34 | 8 | 630 | 1050 | 1 | 没问题 |
-| imp | 小恶魔 | Imp | L9.1 | normal |  | 62 | 48 | 9 | 72 | 144 | 0.1 | 其实 |
-| demon_knight | 恶魔骑士 | Demon Knight | L9.2 | normal |  | 66 | 44 | 10 | 72 | 144 | 0.1 | 攻击 |
-| gargoyle | 石像鬼 | Gargoyle | L9.1 | elite |  | 146 | 43 | 9 | 144 | 240 | 0.25 | 终于 |
-| shadow_dragon | 暗影龙 | Shadow-Cursed Dragon | L9.1 | boss | location | 346 | 34 | 9 | 360 | 480 | 1 | 力量 |
-| demon_king | 魔王 | Demon King | L9.2 | boss | realm | 397 | 38 | 9 | 720 | 1200 | 1 | 统治 |
+| 1 | normal |  |  | 1 | 11 | 5 | 1 | 1 | 6 | 12 | 0.1 | 0 |
+| 1 | normal |  |  | 14 | 40 | 10 | 3 | 14 | 6 | 12 | 0.1 | 0 |
+| 1 | elite |  |  | 3 | 32 | 5 | 1 | 3 | 12 | 20 | 0.25 | 0 |
+| 1 | elite |  |  | 14 | 80 | 10 | 3 | 14 | 12 | 20 | 0.25 | 0 |
+| 1 | boss | location | big_beak_crow | 10 | 78 | 6 | 2 | 10 | 30 | 40 | 1 | 1 |
+| 1 | boss | location | big_grey_wolf | 13 | 94 | 8 | 3 | 13 | 30 | 40 | 1 | 1 |
+| 1 | boss | realm | horned_rabbit_king | 15 | 185 | 8 | 3 | 15 | 60 | 100 | 1 | 1 |
+| 2 | normal |  |  | 14 | 59 | 13 | 3 | 14 | 12 | 24 | 0.1 | 0 |
+| 2 | normal |  |  | 19 | 72 | 16 | 4 | 19 | 12 | 24 | 0.1 | 0 |
+| 2 | elite |  |  | 16 | 126 | 14 | 4 | 16 | 24 | 40 | 0.25 | 0 |
+| 2 | elite |  |  | 19 | 144 | 16 | 4 | 19 | 24 | 40 | 0.25 | 0 |
+| 2 | boss | location | greedy_bear | 17 | 171 | 11 | 4 | 17 | 60 | 80 | 1 | 1 |
+| 2 | boss | realm | queen_bee | 19 | 277 | 14 | 4 | 19 | 120 | 200 | 1 | 1 |
+| 3 | normal |  |  | 18 | 65 | 18 | 4 | 18 | 18 | 36 | 0.1 | 0 |
+| 3 | normal |  |  | 24 | 79 | 21 | 5 | 24 | 18 | 36 | 0.1 | 0 |
+| 3 | elite |  |  | 20 | 140 | 19 | 4 | 20 | 36 | 60 | 0.25 | 0 |
+| 3 | elite |  |  | 24 | 158 | 20 | 5 | 24 | 36 | 60 | 0.25 | 0 |
+| 3 | boss | location | bandit_boss | 23 | 291 | 16 | 5 | 23 | 90 | 120 | 1 | 1 |
+| 3 | boss | realm | mimic_king | 25 | 422 | 18 | 5 | 25 | 180 | 300 | 1 | 1 |
+| 4 | normal |  |  | 24 | 78 | 24 | 5 | 24 | 27 | 54 | 0.1 | 0 |
+| 4 | normal |  |  | 33 | 96 | 28 | 7 | 33 | 27 | 54 | 0.1 | 0 |
+| 4 | elite |  |  | 26 | 162 | 25 | 6 | 26 | 54 | 90 | 0.25 | 0 |
+| 4 | elite |  |  | 33 | 192 | 28 | 7 | 33 | 54 | 90 | 0.25 | 0 |
+| 4 | boss | location | echo_bat | 27 | 315 | 20 | 6 | 27 | 135 | 180 | 1 | 1 |
+| 4 | boss | location | goblin_warden | 32 | 354 | 22 | 7 | 32 | 135 | 180 | 1 | 1 |
+| 4 | boss | realm | goblin_king | 34 | 320 | 25 | 7 | 34 | 270 | 450 | 1 | 2 |
+| 5 | normal |  |  | 34 | 105 | 33 | 7 | 34 | 36 | 72 | 0.1 | 0 |
+| 5 | normal |  |  | 38 | 113 | 34 | 8 | 38 | 36 | 72 | 0.1 | 0 |
+| 5 | elite |  |  | 36 | 216 | 32 | 8 | 36 | 72 | 120 | 0.25 | 0 |
+| 5 | elite |  |  | 38 | 226 | 34 | 8 | 38 | 72 | 120 | 0.25 | 0 |
+| 5 | boss | location | bog_toad | 35 | 440 | 26 | 7 | 35 | 180 | 240 | 1 | 1 |
+| 5 | boss | realm | hydra | 37 | 412 | 29 | 8 | 37 | 360 | 600 | 1 | 2 |
+| 6 | normal |  |  | 37 | 104 | 38 | 8 | 37 | 45 | 90 | 0.1 | 0 |
+| 6 | normal |  |  | 41 | 111 | 39 | 9 | 41 | 45 | 90 | 0.1 | 0 |
+| 6 | elite |  |  | 39 | 216 | 37 | 8 | 39 | 90 | 150 | 0.25 | 0 |
+| 6 | elite |  |  | 41 | 222 | 38 | 9 | 41 | 90 | 150 | 0.25 | 0 |
+| 6 | boss | location | zombie_mayor | 39 | 486 | 30 | 8 | 39 | 225 | 300 | 1 | 1 |
+| 6 | boss | realm | sickness_fiend | 41 | 428 | 34 | 9 | 41 | 450 | 750 | 1 | 2 |
+| 7 | normal |  |  | 40 | 116 | 42 | 8 | 40 | 54 | 108 | 0.1 | 0 |
+| 7 | normal |  |  | 45 | 125 | 44 | 9 | 45 | 54 | 108 | 0.1 | 0 |
+| 7 | elite |  |  | 42 | 238 | 42 | 9 | 42 | 108 | 180 | 0.25 | 0 |
+| 7 | elite |  |  | 45 | 250 | 43 | 9 | 45 | 108 | 180 | 0.25 | 0 |
+| 7 | boss | location | wind_dragon | 43 | 515 | 34 | 9 | 43 | 270 | 360 | 1 | 1 |
+| 7 | boss | realm | griffin_king | 45 | 613 | 38 | 9 | 45 | 540 | 900 | 1 | 2 |
+| 8 | normal |  |  | 44 | 129 | 47 | 9 | 44 | 63 | 126 | 0.1 | 0 |
+| 8 | normal |  |  | 48 | 136 | 48 | 10 | 48 | 63 | 126 | 0.1 | 0 |
+| 8 | elite |  |  | 46 | 264 | 48 | 10 | 46 | 126 | 210 | 0.25 | 0 |
+| 8 | elite |  |  | 48 | 272 | 48 | 10 | 48 | 126 | 210 | 0.25 | 0 |
+| 8 | boss | location | minotaur | 46 | 611 | 38 | 10 | 46 | 315 | 420 | 1 | 1 |
+| 8 | boss | realm | ogre_champion | 48 | 524 | 42 | 10 | 48 | 630 | 1050 | 1 | 2 |
+| 9 | normal |  |  | 47 | 140 | 52 | 10 | 47 | 72 | 144 | 0.1 | 0 |
+| 9 | normal |  |  | 54 | 153 | 54 | 11 | 54 | 72 | 144 | 0.1 | 0 |
+| 9 | elite |  |  | 49 | 288 | 53 | 10 | 49 | 144 | 240 | 0.25 | 0 |
+| 9 | elite |  |  | 54 | 306 | 54 | 11 | 54 | 144 | 240 | 0.25 | 0 |
+| 9 | boss | location | shadow_dragon | 50 | 694 | 42 | 10 | 50 | 360 | 480 | 1 | 1 |
+| 9 | boss | realm | demon_king | 53 | 820 | 47 | 11 | 53 | 720 | 1200 | 1 | 2 |
+
+The 50-enemy roster (`enemies.json`, built by `build/enemies/build_enemies.py`) is built on these bands. Elites and bosses use them exactly. Normal enemies are archetypes around the band at their level: HP × `hp_mult` (about ±15%), ATK × `atk_mult` (about ±10%), DEF + `def_add` (0 or +1) (`data/enemies/enemies.csv`; for example wolf_pup ×0.88 HP, a fast glass cannon, vs mushroom_imp ×1.13). The sim uses the band values. The table shows each enemy at the lowest level it appears at in the maps (`level`); at other levels its stats follow the formula (`docs/tech/tools/data/leveling_v2_tables.py` writes these tables). Each realm has 1 elite, one location boss per non-final location, and 1 realm boss. The roster's `sample_shout_zh` (the word an enemy "casts") is always an item from the enemy's **earliest roster location** in curriculum v2 (checked by the build script).
+
+| id | name_zh | name_en | location_id | role | boss_type | level | hp | atk | def | hp_mult | atk_mult | def_add | gold | exp | chest_chance | sample_shout_zh |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| horned_rabbit | 角兔 | Horned Rabbit | L1.1 | normal |  | 1 | 11 | 5 | 1 | 1.00 | 1.00 | 0 | 6 | 12 | 0.1 | 你好 |
+| mushroom_imp | 蘑菇小妖 | Mushroom Imp | L1.1 | normal |  | 1 | 12 | 5 | 1 | 1.13 | 1.00 | 0 | 6 | 12 | 0.1 | 谁 |
+| wolf_pup | 小狼 | Wolf Pup | L1.2 | normal |  | 10 | 27 | 8 | 2 | 0.88 | 1.00 | 0 | 6 | 12 | 0.1 | 你是谁 |
+| swift_horned_rabbit | 疾风角兔 | Swift Horned Rabbit | L1.3 | elite |  | 14 | 80 | 10 | 3 | 1.00 | 1.00 | 0 | 12 | 20 | 0.25 | 看 |
+| big_beak_crow | 大嘴乌鸦 | Big-Beak Crow | L1.1 | boss | location | 10 | 78 | 6 | 2 | 1.00 | 1.00 | 0 | 30 | 40 | 1 | 什么 |
+| big_grey_wolf | 大灰狼 | Big Grey Wolf | L1.2 | boss | location | 13 | 94 | 8 | 3 | 1.00 | 1.00 | 0 | 30 | 40 | 1 | 你好吗 |
+| horned_rabbit_king | 角兔王 | Horned Rabbit King | L1.3 | boss | realm | 15 | 185 | 8 | 3 | 1.00 | 1.00 | 0 | 60 | 100 | 1 | 欢迎 |
+| giant_bee | 巨蜂 | Giant Bee | L2.1 | normal |  | 14 | 50 | 14 | 3 | 0.85 | 1.10 | 0 | 12 | 24 | 0.1 | 蜂蜜 |
+| sapling_sprite | 小树精 | Sapling Sprite | L2.1 | normal |  | 14 | 68 | 12 | 3 | 1.15 | 0.90 | 0 | 12 | 24 | 0.1 | 尝一尝 |
+| forest_spider | 森林蜘蛛 | Forest Spider | L2.1 | normal |  | 14 | 59 | 13 | 3 | 1.00 | 1.00 | 0 | 12 | 24 | 0.1 | 好吃 |
+| royal_guard_bee | 近卫蜂 | Royal Guard Bee | L2.2 | elite |  | 19 | 144 | 16 | 4 | 1.00 | 1.00 | 0 | 24 | 40 | 0.25 | 不要 |
+| greedy_bear | 贪吃熊 | Greedy Bear | L2.1 | boss | location | 17 | 171 | 11 | 4 | 1.00 | 1.00 | 0 | 60 | 80 | 1 | 饿 |
+| queen_bee | 蜂后 | Queen Bee | L2.2 | boss | realm | 19 | 277 | 14 | 4 | 1.00 | 1.00 | 0 | 120 | 200 | 1 | 请给我…… |
+| road_bandit | 山贼 | Road Bandit | L3.1 | normal |  | 18 | 55 | 19 | 4 | 0.84 | 1.07 | 0 | 18 | 36 | 0.1 | 钱包 |
+| slime | 史莱姆 | Slime | L3.2 | normal |  | 18 | 75 | 17 | 4 | 1.16 | 0.93 | 0 | 18 | 36 | 0.1 | 绿色 |
+| mimic | 宝箱怪 | Mimic | L3.2 | elite |  | 20 | 140 | 19 | 4 | 1.00 | 1.00 | 0 | 36 | 60 | 0.25 | 礼物 |
+| bandit_boss | 山贼头目 | Bandit Boss | L3.1 | boss | location | 23 | 291 | 16 | 5 | 1.00 | 1.00 | 0 | 90 | 120 | 1 | 多少钱 |
+| mimic_king | 宝箱怪王 | Mimic King | L3.2 | boss | realm | 25 | 422 | 18 | 5 | 1.00 | 1.00 | 0 | 180 | 300 | 1 | 第一 |
+| cave_bat | 洞穴蝙蝠 | Cave Bat | L4.1 | normal |  | 24 | 67 | 27 | 5 | 0.86 | 1.11 | 0 | 27 | 54 | 0.1 | 小朋友 |
+| goblin | 哥布林 | Goblin | L4.2 | normal |  | 27 | 83 | 25 | 6 | 1.00 | 1.00 | 0 | 27 | 54 | 0.1 | 开始 |
+| goblin_monitor | 哥布林班长 | Goblin Hall Monitor | L4.3 | normal |  | 31 | 81 | 28 | 8 | 0.89 | 1.00 | 1 | 27 | 54 | 0.1 | 上课 |
+| goblin_brute | 哥布林壮汉 | Goblin Brute | L4.2 | elite |  | 26 | 162 | 25 | 6 | 1.00 | 1.00 | 0 | 54 | 90 | 0.25 | 作业 |
+| echo_bat | 回声大蝙蝠 | Giant Echo Bat | L4.1 | boss | location | 27 | 315 | 20 | 6 | 1.00 | 1.00 | 0 | 135 | 180 | 1 | 我不懂 |
+| goblin_warden | 哥布林守卫 | Goblin Warden | L4.2 | boss | location | 32 | 354 | 22 | 7 | 1.00 | 1.00 | 0 | 135 | 180 | 1 | 请安静 |
+| goblin_king | 哥布林大王 | Goblin King (the 'Headmaster') | L4.3 | boss | realm | 34 | 320 | 25 | 7 | 1.00 | 1.00 | 0 | 270 | 450 | 1 | 考试 |
+| bog_monster | 沼泽怪 | Bog Monster | L5.1 | normal |  | 34 | 121 | 30 | 7 | 1.15 | 0.92 | 0 | 36 | 72 | 0.1 | 迟到 |
+| bog_lizard | 沼泽蜥蜴 | Bog Lizard | L5.2 | normal |  | 34 | 89 | 36 | 7 | 0.85 | 1.08 | 0 | 36 | 72 | 0.1 | 马上 |
+| swamp_wisp | 鬼火 | Swamp Wisp | L5.1 | elite |  | 36 | 216 | 32 | 8 | 1.00 | 1.00 | 0 | 72 | 120 | 0.25 | 晚上 |
+| bog_toad | 泥潭巨蛙 | Giant Bog Toad | L5.1 | boss | location | 35 | 440 | 26 | 7 | 1.00 | 1.00 | 0 | 180 | 240 | 1 | 一会儿 |
+| hydra | 九头蛇 | Hydra | L5.2 | boss | realm | 37 | 412 | 29 | 8 | 1.00 | 1.00 | 0 | 360 | 600 | 1 | 现在几点 |
+| zombie | 丧尸 | Zombie | L6.1 | normal |  | 37 | 120 | 34 | 8 | 1.15 | 0.90 | 0 | 45 | 90 | 0.1 | 我头疼 |
+| rattle_skeleton | 骷髅 | Rattle Skeleton | L6.2 | normal |  | 39 | 97 | 38 | 9 | 0.90 | 1.00 | 1 | 45 | 90 | 0.1 | 找 |
+| zombie_knight | 丧尸骑士 | Zombie Knight | L6.2 | elite |  | 39 | 216 | 37 | 8 | 1.00 | 1.00 | 0 | 90 | 150 | 0.25 | 我累了 |
+| zombie_mayor | 丧尸村长 | Zombie Mayor | L6.1 | boss | location | 39 | 486 | 30 | 8 | 1.00 | 1.00 | 0 | 225 | 300 | 1 | 别担心 |
+| sickness_fiend | 病魔 | Sickness Fiend | L6.2 | boss | realm | 41 | 428 | 34 | 9 | 1.00 | 1.00 | 0 | 450 | 750 | 1 | 生病 |
+| harpy | 鹰身女妖 | Harpy | L7.1 | normal |  | 40 | 97 | 46 | 8 | 0.84 | 1.09 | 0 | 54 | 108 | 0.1 | 往左走 |
+| griffin | 狮鹫 | Griffin | L7.2 | normal |  | 40 | 116 | 42 | 8 | 1.00 | 1.00 | 0 | 54 | 108 | 0.1 | 上 |
+| cliff_golem | 石头人 | Cliff Golem | L7.1 | elite |  | 42 | 238 | 42 | 9 | 1.00 | 1.00 | 0 | 108 | 180 | 0.25 | 一直走 |
+| wind_dragon | 风龙 | Wild Wind Dragon | L7.1 | boss | location | 43 | 515 | 34 | 9 | 1.00 | 1.00 | 0 | 270 | 360 | 1 | 远 |
+| griffin_king | 狮鹫王 | Griffin King | L7.2 | boss | realm | 45 | 613 | 38 | 9 | 1.00 | 1.00 | 0 | 540 | 900 | 1 | 出发 |
+| arena_troll | 巨魔 | Arena Troll | L8.1 | normal |  | 44 | 150 | 43 | 9 | 1.16 | 0.92 | 0 | 63 | 126 | 0.1 | 踢足球 |
+| ogre_gladiator | 食人魔斗士 | Ogre Gladiator | L8.2 | normal |  | 44 | 129 | 47 | 9 | 1.00 | 1.00 | 0 | 63 | 126 | 0.1 | 胜利 |
+| fire_elemental | 火元素 | Fire Elemental | L8.2 | elite |  | 46 | 264 | 48 | 10 | 1.00 | 1.00 | 0 | 126 | 210 | 0.25 | 跳舞 |
+| minotaur | 牛头人 | Minotaur | L8.1 | boss | location | 46 | 611 | 38 | 10 | 1.00 | 1.00 | 0 | 315 | 420 | 1 | 比赛 |
+| ogre_champion | 食人魔冠军 | Ogre Champion | L8.2 | boss | realm | 48 | 524 | 42 | 10 | 1.00 | 1.00 | 0 | 630 | 1050 | 1 | 没问题 |
+| imp | 小恶魔 | Imp | L9.1 | normal |  | 47 | 119 | 57 | 10 | 0.85 | 1.09 | 0 | 72 | 144 | 0.1 | 其实 |
+| demon_knight | 恶魔骑士 | Demon Knight | L9.2 | normal |  | 47 | 126 | 52 | 11 | 0.90 | 1.00 | 1 | 72 | 144 | 0.1 | 攻击 |
+| gargoyle | 石像鬼 | Gargoyle | L9.1 | elite |  | 49 | 288 | 53 | 10 | 1.00 | 1.00 | 0 | 144 | 240 | 0.25 | 终于 |
+| shadow_dragon | 暗影龙 | Shadow-Cursed Dragon | L9.1 | boss | location | 50 | 694 | 42 | 10 | 1.00 | 1.00 | 0 | 360 | 480 | 1 | 力量 |
+| demon_king | 魔王 | Demon King | L9.2 | boss | realm | 53 | 820 | 47 | 11 | 1.00 | 1.00 | 0 | 720 | 1200 | 1 | 统治 |
 
 ### 2.4 Worked examples
 
@@ -920,7 +957,7 @@ The Return Feather (5%) comes out of the old 40% potion share. The sim models th
 
 EXP from proficiency (never damped): +10 per way completed (2nd correct in a way) and +30 when an item becomes Proficient. Practice answers give no EXP (§8.4).
 
-EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the location's recommended maximum. The level curve is unchanged: 100 × L EXP from L to L+1.
+EXP damping: enemy EXP ×0.25 if the hero is 3+ levels above the map's `recLevel` maximum. Leveling v2 (2026-10-17): `recLevel` is on the hero's scale (the 75% saver beeline kid's level on entering and leaving the map, `data/balance/enemy_levels.csv`), and the level curve is §2.1.
 
 ### 7.3 Inn and Return Feather
 
@@ -1591,11 +1628,13 @@ All in `data/proficiency_patrol_settings.csv`, `mp_rules.csv`, `companion.csv` a
 | Spoken bonus | ×1.25 damage, +1 streak | |
 | Soft cap (Tired: enemy ATK × 0.7, hero damage × 1.5) | **30 questions** in normal battles (elites included), **45** in all boss battles (v3.2; the location boss was 40) | §2.5 |
 | G(t) | 6, 12, 18, 27, 36, 45, 54, 63, 72 (±20%, floor 80%) | gold multipliers: normal 1, elite 2, location boss 5, realm boss 10 |
-| EXP | 6 / 10 / 20 / 50 × L_rec (normal / elite / location boss / realm boss) | XP curve 100 × L |
+| EXP | 6 / 10 / 20 / 50 × L_rec (normal / elite / location boss / realm boss) | XP curve round(15 + 1.5(L−1)²) (§2.1) |
+| Enemy levels | per map: `enemyLevel` [lo, hi] (normals roll), `eliteLevel` (default hi), `boss.level` (`data/balance/enemy_levels.csv`) | §2.3, leveling v2 |
+| Speed | SPD = level; hero actions per round = clamp(floor(hero SPD ÷ highest living enemy SPD), 1, 3), set at round start | §1.1, leveling v2 |
 | Chest chance | 10% normal, 25% elite, 100% boss | §7.2 |
 | Inn / Honey Potion / Big Honey / Mana Tea / Big Mana Tea / Return Feather | 2×G / 1×G / 2×G / **6×G** / **15×G** (town 5+) / **2×G** (v3.9); MP potions are map-only (v3.4; confirmed v3.5) | §6.4, §6.7, §7.3 |
 | Start kit | 24 gold + 1 free Honey Potion (+2 Return Feathers in the tutorial, v3.9) | |
-| MP | 10 + 2L; **no regen (v3.6)**: inn, waking after a defeat, map-only Mana Tea; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20 | §6.4 |
+| MP | 10 + L (leveling v2; was 10 + 2L); **no regen (v3.6)**: inn, waking after a defeat, map-only Mana Tea; costs Insight 4, Double Strike 6, Guardian Shield 8, Frost 8, Heal 12 (30%, 1 per battle), Sweep 12, Second Wind 20 | §6.4 |
 | Companion | gauge 100; +20 per wrong, +5 per correct; attack 1.25 × ATK_h − 0.5 × DEF_e; resets each battle | §6.6 |
 | Defeat fee | max(10% of gold, inn price), never below 2 × inn; free inn when gold < inn | §7.5 |
 | Courage | +20% DEF per consecutive defeat, cap +60%, cleared by a win | §7.5 |

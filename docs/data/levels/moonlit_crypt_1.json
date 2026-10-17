@@ -88,8 +88,8 @@
   ],
   "G": 45,
   "recLevel": [
-   13,
-   16
+   40,
+   40
   ],
   "gearTier": 6,
   "difficulty": {
@@ -100,6 +100,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   39,
+   41
+  ],
+  "eliteLevel": 41,
   "roster": [
    {
     "enemy": "zombie",

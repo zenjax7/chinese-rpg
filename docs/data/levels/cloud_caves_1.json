@@ -87,8 +87,8 @@
   ],
   "G": 54,
   "recLevel": [
-   16,
-   19
+   42,
+   44
   ],
   "gearTier": 7,
   "difficulty": {
@@ -99,6 +99,11 @@
    3,
    3
   ],
+  "enemyLevel": [
+   43,
+   45
+  ],
+  "eliteLevel": 45,
   "roster": [
    {
     "enemy": "harpy",
