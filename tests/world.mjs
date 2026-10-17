@@ -2,6 +2,7 @@
 // Engine unit checks import src/world/engine.ts directly (node 22 strips the types). Browser checks drive the built game.
 // Saves are validated against docs/data/world/schemas/progress.schema.json with tools/world/validate_save.py (needs jsonschema:
 // WORLD_PY=/path/to/python, default /workspace/desy/.venv/bin/python if present, else python3).
+import { tapAsm } from './asm.mjs';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -333,7 +334,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     if (has('victory')) return 'victory'; if (has('scene')) return 'scene'; if (has('dialog')) return 'dialog'; if (has('graph') || has('town') || has('inn')) return 'left';
     const c = document.querySelector('[data-testid="continue"]'); if (c && !c.disabled) return 'continue';
     if (has('action-menu')) return 'menu'; if (document.querySelector('[data-testid^="target-"]:not([data-testid="target-menu"])')) return 'target';
-    if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; return 'wait'; });
+    if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; if (document.querySelector('[data-testid="tile"]:not([disabled])')) return 'asm'; return 'wait'; });
   async function battle() {
     for (let i = 0, waits = 0; i < 3000; i++) {
       const st = await state();
@@ -343,6 +344,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
       else if (st === 'menu') await tid('act-attack').click().catch(() => {});
       else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click().catch(() => {});
       else if (st === 'mc') { const q = await p.evaluate(() => window.__proto.q); if (q) await p.locator(`[data-testid="opt"][data-o="${q.answerId}"]`).first().click().catch(() => {}); }
+      else if (st === 'asm') await tapAsm(p, true).catch(() => {});
       if (st === 'wait') { if (++waits > 500) throw new Error('world: battle stalled'); } else waits = 0;
       await p.waitForTimeout(50);
     }
@@ -615,7 +617,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await p.evaluate(() => { window.__fightDone = null; window.__proto.world.fight('crossroads_highway').then(o => { window.__fightDone = o; }); });
   await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   const foes3 = await p.evaluate(() => window.__proto.foes());
-  for (let i = 0; i < 40 && !(await p.locator('[data-testid="opt"]:not([disabled])').count()); i++) { const st = await state();
+  for (let i = 0; i < 40 && !(await p.locator('[data-testid="opt"]:not([disabled]), [data-testid="tile"]:not([disabled])').count()); i++) { const st = await state();
     if (st === 'menu') await tid('act-attack').click().catch(() => {}); else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click().catch(() => {});
     else if (st === 'continue') await tid('continue').click().catch(() => {}); await p.waitForTimeout(150); }
   await shot('2026-10-09-battle-realm3');
@@ -732,6 +734,65 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const mv = await p.evaluate(() => ({ errs: window.__proto.world.validate(), mig: window.__proto.migratedProgress || [] })); s = await sv();
   check(mv.errs.length === 0 && mv.mig.length >= 3 && s.world.schema === 'progress/0.3' && !('junk' in s.world) && s.world.feathers <= 3, `save migration on load: ${mv.mig.length} schema errors fixed, the save validates again`);
   await keep('migrated on load');
+
+  // ---- combat-spec §9.4 character assembly: engine rules (eligibility, alternation, tray, exclusions, taps, re-ask form) ----
+  { const A = await p.evaluate(() => {
+      const X = window.__proto.asm; const all = X.ids(); const byZh = z => all.find(id => X.item(id).zh === z);
+      const it = id => X.item(id); const elig = all.filter(X.assemblyEligible);
+      const single = all.find(id => [...it(id).zh].length === 1), frame = all.find(id => it(id).zh.includes('…')), readN = all.find(id => !it(id).reading && [...it(id).zh].length >= 2);
+      const nh = byZh('你好'), ner = byZh('哪儿'), xx = byZh('谢谢');
+      const P = X.prog(nh); const a0 = P.ways.rEZ.a; const forms = [0, 1, 2, 3].map(a => { P.ways.rEZ.a = a; return X.rezForm(nh); });
+      const Ps = X.prog(single); const s0 = Ps.ways.rEZ.a; const sForms = [0, 1].map(a => { Ps.ways.rEZ.a = a; return X.rezForm(single); }); Ps.ways.rEZ.a = s0;
+      const rForms = [1, 3].map(a => { X.prog(readN).ways.rEZ.a = a; return X.rezForm(readN); }); X.prog(readN).ways.rEZ.a = 0;
+      P.ways.rEZ.a = a0;
+      const ds = [X.assemblyD(3, false), X.assemblyD(4, false), X.assemblyD(5, false), X.assemblyD(6, false), X.assemblyD(3, true), X.assemblyD(2, true)];
+      const cNh = X.assemblyCandidates(nh, all), cNer = X.assemblyCandidates(ner, all);
+      const poolChars = new Set(all.flatMap(id => [...it(id).zh]));
+      // tray: answer tiles (repeats included) + d distinct distractors from the pool, none in the answer
+      const pool = X.pool('meadow'); const d = X.assemblyD(3, false); const dch = X.assemblyDistractors(xx, all, 4); const tray = X.assemblyTray(xx, dch);
+      const meadowChars = new Set(pool.flatMap(id => [...it(id).zh])); const dm = X.assemblyDistractors(nh, pool, d);
+      // met first: mark half the pool seen (restored after)
+      const seen0 = Object.fromEntries(pool.map(id => [id, X.prog(id).seen])); pool.forEach((id, k) => { X.prog(id).seen = k % 2 === 0; });
+      const metChars = new Set(pool.filter((id, k) => k % 2 === 0).flatMap(id => [...it(id).zh])); const cm = X.assemblyCandidates(nh, pool);
+      const pickM = Array.from({ length: 20 }, () => X.assemblyDistractors(nh, pool, 2)); pool.forEach(id => { X.prog(id).seen = seen0[id]; });
+      // too few / none
+      const tiny = X.assemblyDistractors(nh, [nh, byZh('他')].filter(Boolean), 2), none = X.assemblyDistractors(nh, [nh], 2);
+      // re-ask: keeps the missed distractors but swaps exactly one
+      const prev = X.assemblyDistractors(nh, all, 4); const re = X.assemblyDistractors(nh, all, 4, prev);
+      // taps: each checked at once; first wrong ends the question; grading by character
+      const s1 = X.asmStart(nh); const t1 = [X.asmTap(s1, '你'), X.asmTap(s1, '有'), X.asmTap(s1, '好')];
+      const s2 = X.asmStart(nh); const t2 = [X.asmTap(s2, '你'), X.asmTap(s2, '好')];
+      const s3 = X.asmStart(nh); const t3 = [X.asmTap(s3, '好')];
+      const s4 = X.asmStart(xx); const t4 = [X.asmTap(s4, '谢'), X.asmTap(s4, '谢')];
+      // feed: a missed assembly question is re-asked as assembly with its tray
+      const F = X.feed([nh, single, ner]); F.next({ asked: 0, spoken: 0, cooling: new Set() }); F.record(nh, 'rEZ', 'wrong', 'assembly', ['他', '有']); F.record(single, 'rEZ', 'correct'); F.record(ner, 'rEZ', 'correct');
+      F.unasked = []; const rq = F.next({ asked: 0, spoken: 0, cooling: new Set() });
+      const G = X.feed([nh, single, ner]); G.record(nh, 'rEZ', 'wrong', 'mc'); G.record(single, 'rEZ', 'correct'); G.record(ner, 'rEZ', 'correct'); G.unasked = []; const rq2 = G.next({ asked: 0, spoken: 0, cooling: new Set() });
+      return { total: all.length, elig: elig.length, eligOk: elig.every(id => it(id).reading && [...it(id).zh].length >= 2 && /^\p{Script=Han}+$/u.test(it(id).zh)),
+        single: X.assemblyEligible(single), frame: frame ? X.assemblyEligible(frame) : null, readN: readN ? X.assemblyEligible(readN) : null, nhE: X.assemblyEligible(nh),
+        forms, sForms, rForms, ds, nin: [...cNh.met, ...cNh.rest].includes('您'), ninPool: poolChars.has('您'), li: [...cNer.met, ...cNer.rest].includes('里'), liPool: poolChars.has('里'),
+        ansIn: [...cNh.met, ...cNh.rest].some(c => '你好'.includes(c)),
+        dch, tray, dm, dmOk: dm.length === d && new Set(dm).size === d && dm.every(c => meadowChars.has(c) && !'你好'.includes(c)),
+        cmMetOk: cm.met.every(c => metChars.has(c)) && cm.rest.every(c => !metChars.has(c)), pickMOk: cm.met.length >= 2 ? pickM.every(x => x.every(c => cm.met.includes(c))) : null, metN: cm.met.length,
+        tiny, none, prev, re, shared: re.filter(c => prev.includes(c)).length,
+        t1, s1: { taps: s1.taps, wrongSlot: s1.wrongSlot, filled: s1.filled }, t2, w2: s2.wrongSlot, t3, w3: s3.wrongSlot, t4, rq, rq2 };
+    });
+    check(A.eligOk && A.elig === 628 && A.nhE && A.single === false && A.frame === false && A.readN === false,
+      `§9.4.1 eligibility: ${A.elig} of ${A.total} items (2+ Han characters, reading = Y; spec 628 of 1,051); single-character, …… frames and reading = N are not eligible`);
+    check(JSON.stringify(A.forms) === '["mc","assembly","mc","assembly"]' && JSON.stringify(A.sForms) === '["mc","mc"]' && JSON.stringify(A.rForms) === '["mc","mc"]',
+      `§9.4.2 alternation: 你好 R-EZ.attempts 0,1,2,3 → ${A.forms.join(',')} (first R-EZ is MC); ineligible items always MC`);
+    check(JSON.stringify(A.ds) === '[2,3,4,5,1,1]', `§9.4.3 d = mcOptions − 1 (3/4/5/6 → ${A.ds.slice(0, 4).join('/')}); first-ever reduction d − 1, minimum 1 (${A.ds.slice(4).join('/')})`);
+    check(A.dmOk && A.tray.length === 2 + A.dch.length && A.dch.length === 4 && A.tray.filter(c => c === '谢').length === 2 && new Set(A.dch).size === 4 && !A.dch.includes('谢'),
+      `§9.4.3–4 tray: meadow 你好 gets ${A.dm.length} distinct pool distractors (${A.dm.join('')}); 谢谢 tray = 2 谢 tiles + 4 distractors (${A.tray.join('')})`);
+    check(A.ninPool && !A.nin && A.liPool && !A.li && !A.ansIn, '§9.4.4 exclusions: 您 never a distractor for 你好 (您好), 里 never for 哪儿 (哪里), answer characters never');
+    check(A.cmMetOk && A.pickMOk === true, `§9.4.4 met (kid.seen) characters come first: ${A.metN} met candidates, 20 draws of 2 all from them`);
+    check(A.tiny.length >= 1 && A.tiny.length < 2 && A.none.length === 0, `§9.4.4 too few candidates → fewer distractors (${A.tiny.join('')}); none → [] (asked as MC)`);
+    check(A.re.length === 4 && A.shared === 3, `§9.4.2 re-ask after a miss: same tray with one distractor swapped (${A.prev.join('')} → ${A.re.join('')})`);
+    check(JSON.stringify(A.t1) === '["ok","wrong","ignored"]' && A.s1.wrongSlot === 1 && JSON.stringify(A.s1.taps) === '["你","有"]' && JSON.stringify(A.t2) === '["ok","correct"]' && A.w2 === null
+      && JSON.stringify(A.t3) === '["wrong"]' && A.w3 === 0 && JSON.stringify(A.t4) === '["ok","correct"]',
+      `§9.4.5 taps checked at once: 你 ok, 有 wrong (slot 1, ends it; later taps ignored), 你好 correct, 好 first = wrong at slot 0, either 谢 tile fills either slot`);
+    check(A.rq.form === 'assembly' && JSON.stringify(A.rq.tray) === '["他","有"]' && A.rq.why === 're-ask missed' && A.rq2.form === 'mc', `§9.4.2 a missed assembly question is re-asked as assembly (an MC miss as MC): ${JSON.stringify(A.rq)}`);
+  }
 
   // ---- every captured save validates against progress.schema.json ----
   for (const [label, sv0] of saves) { const v = validateSave(sv0, label); check(v.ok, `save schema: “${label}” validates (progress/0.3)` + (v.ok ? '' : ': ' + v.errors.slice(0, 3).join('; '))); }

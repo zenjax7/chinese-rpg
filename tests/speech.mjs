@@ -1,5 +1,6 @@
 // Spoken answers + music continuity (stubbed SpeechRecognition / speechSynthesis). Used by tests/play.mjs;
 // standalone: node tests/speech.mjs [baseUrl]
+import { tapAsm } from './asm.mjs';
 import { chromium } from 'playwright-core';
 import { pathToFileURL } from 'node:url';
 
@@ -84,7 +85,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
         const c = document.querySelector('[data-testid="continue"]'); if (c && !c.disabled) return 'continue';
         if (has('action-menu')) return 'menu'; if (document.querySelector('[data-testid^="target-"]:not([data-testid="target-menu"])')) return 'target';
         const mic = document.querySelector('[data-testid="mic"]'); if (mic && !mic.disabled && mic.classList.contains('pulse')) return 'mic';
-        if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; return 'wait'; });
+        if (document.querySelector('[data-testid="opt"]:not([disabled])')) return 'mc'; if (document.querySelector('[data-testid="tile"]:not([disabled])')) return 'asm'; return 'wait'; });
       if (i % 5 === 0) musicSamples.push(await p.evaluate(() => window.__proto.musicState?.()));
       if (st === 'victory') { perBattle.push(await p.evaluate(n => (window.__proto.audio.starts || []).slice(n).filter(k => k.startsWith('mus_battle')).length, starts0)); await tid('victory-ok').click(); break; }
       if (st === 'inn' || st === 'location') break;
@@ -97,6 +98,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
       }
       else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
       else if (st === 'mc') { const q = await p.evaluate(() => window.__proto.q); await p.locator(`[data-testid="opt"][data-o="${q.answerId}"]`).first().click(); }
+      else if (st === 'asm') await tapAsm(p, true);
       else if (st === 'mic') {
         const q = await p.evaluate(() => window.__proto.q); const say = sayFor(q); const style = styles[spokenQ % styles.length];
         const plan = style === 'interimOnly' ? [{ interims: [say.slice(0, 1), say] }]                               // no final result at all

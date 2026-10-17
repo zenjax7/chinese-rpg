@@ -3,6 +3,7 @@ import { chromium } from 'playwright-core';
 import { spellTests } from './spells.mjs';
 import { speechTests } from './speech.mjs';
 import { worldUnitTests, worldTests } from './world.mjs';
+import { tapAsm } from './asm.mjs';
 const BASE0 = process.argv[2] || 'http://127.0.0.1:8795/';
 const BASE = BASE0 + (BASE0.includes('?') ? '&' : '?') + 'debug';   // ?debug shows the 🐞 debug panel button
 const log = (...a) => console.log('•', ...a);
@@ -103,6 +104,7 @@ async function playBattle(p, policy = () => true, opts = {}) {
       if (document.querySelector('[data-testid^="target-"]:not([data-testid="target-menu"])')) return 'target';
       const mic = document.querySelector('[data-testid="mic"]'); if (mic && !mic.disabled && mic.classList.contains('pulse')) return 'mic';
       const o = document.querySelector('[data-testid="opt"]:not([disabled])'); if (o) return 'mc';
+      if (document.querySelector('[data-testid="tile"]:not([disabled])')) return 'asm';
       return 'wait';
     });
     if (state !== 'wait' && state !== 'victory' && state !== 'inn' && state !== 'location' && state !== 'town') await scanUi(p, 'battle/' + state);
@@ -113,6 +115,10 @@ async function playBattle(p, policy = () => true, opts = {}) {
     else if (state === 'continue') await tid(p, 'continue').click({ timeout: 2000 }).catch(() => {});
     else if (state === 'menu') { if (opts.shot && !opts._shot) { opts._shot = 1; await p.waitForTimeout(600); await p.screenshot({ path: opts.shot }); } const a = opts.action ? await opts.action(p) : 'act-attack'; if (a) await tid(p, a).click(); }
     else if (state === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click();
+    else if (state === 'asm') {
+      const q = await p.evaluate(() => window.__proto.q); stats.q++; stats.ways.rEZ = (stats.ways.rEZ || 0) + 1; stats.asm = (stats.asm || 0) + 1;
+      if (!(opts.onAsm && await opts.onAsm(p, q))) await tapAsm(p, policy(q));
+    }
     else if (state === 'mc' || state === 'mic') {
       const q = await p.evaluate(() => window.__proto.q);
       stats.q++; stats.ways[q.way] = (stats.ways[q.way] || 0) + 1;
@@ -418,6 +424,51 @@ await nv.context().addInitScript(() => { try { delete window.speechSynthesis; } 
 await nv.goto(BASE); await consent(nv); await goLoc(nv, 'meadow'); await tid(nv, 'preview').waitFor();
 check(await nv.locator('[data-testid="preview"] button.say:enabled').count() === 0, '🔊 buttons disabled gracefully without speechSynthesis / zh voice');
 await nv.context().close();
+
+// ================= combat-spec §9.4 character assembly in a real battle (tap to answer, right and wrong) =================
+{
+  const a = await newPage();
+  await a.goto(BASE); await consent(a); await goLoc(a, 'meadow'); await tid(a, 'preview').waitFor(); await tid(a, 'preview-done').click(); await tid(a, 'location').waitFor();
+  // every eligible meadow word has had 1 R-EZ question (so its next R-EZ is assembly) and has R-ZE done, so R-EZ is the way picked
+  const prepared = await a.evaluate(() => { const X = window.__proto.asm; const ids = X.pool('meadow').filter(X.assemblyEligible);
+    for (const id of ids) { const P = X.prog(id); P.seen = true; P.ways.rEZ.a = 1; P.ways.rEZ.c = 0; P.ways.rZE.a = 2; P.ways.rZE.c = 2; } return ids.length; });
+  await debugSet(a, { hp: 999 });
+  const seenAsm = []; let nAsm = 0;
+  const after = async (q, want) => {   // wait for the question to be graded, then read the outcome, log and R-EZ attempts
+    for (let i = 0; i < 100; i++) { const o = await a.evaluate(() => window.__proto.lastOutcome); if (o && o.id === q.id && o.form === 'assembly' && o.result === want) break; await a.waitForTimeout(100); }
+    return a.evaluate(id => ({ o: window.__proto.lastOutcome, log0: window.__proto.asm.log()[0], logN: window.__proto.asm.log().length, a: window.__proto.asm.prog(id).ways.rEZ.a }), q.id);
+  };
+  const onAsm = async (p, q) => {
+    if (nAsm >= 2) return false; nAsm++;
+    const v = await p.evaluate(() => ({ tiles: [...document.querySelectorAll('[data-testid="tile"]')].map(t => t.dataset.t), slots: document.querySelectorAll('[data-testid="asm-slot"]').length,
+      banner: document.querySelector('[data-testid="spell-banner"]').innerText, form: document.querySelector('[data-testid="question"]').dataset.form, ins: document.querySelector('#insight')?.disabled ?? null,
+      a: window.__proto.asm.prog(window.__proto.q.id).ways.rEZ.a, logN: window.__proto.asm.log().length }));
+    const ans = [...q.zh];
+    check(v.form === 'assembly' && v.slots === ans.length && v.tiles.length === ans.length + q.distractors.length && q.distractors.length === 2 && ans.every(c => v.tiles.includes(c))
+      && v.banner.includes(q.en) && !v.banner.includes(q.zh) && !TONE.test(v.banner) && v.a % 2 === 1,
+      `assembly renders: ${q.zh} “${q.en}” → ${v.slots} slots, tray ${v.tiles.join(' ')} (n + mcOptions−1 = ${ans.length}+2), English prompt only, no pinyin; R-EZ.attempts was ${v.a} (odd)`);
+    if (nAsm === 1) {
+      await tapAsm(p, true);
+      const r = await after(q, 'correct'); const sl = await p.evaluate(() => [...document.querySelectorAll('[data-testid="asm-slot"]')].map(s => s.textContent).join(''));
+      check(r.o.result === 'correct' && sl === q.zh && r.a === v.a + 1 && r.logN === v.logN + 1 && r.log0.form === 'assembly' && JSON.stringify(r.log0.taps) === JSON.stringify(ans) && r.log0.wrongSlot === null && r.log0.way === 'rEZ' && !r.o.spoken,
+        `assembly answered by tapping right: slots read ${sl}, graded correct as R-EZ (attempts ${v.a}→${r.a}), log {form:${r.log0.form}, taps:${r.log0.taps.join('')}, wrongSlot:${r.log0.wrongSlot}}`);
+    } else {
+      await tapAsm(p, false, 1);
+      await tid(p, 'continue').waitFor({ timeout: 10000 });
+      const fb = await p.evaluate(() => ({ wrong: document.querySelectorAll('[data-testid="tile"].wrong').length, live: document.querySelectorAll('[data-testid="tile"]:not([disabled])').length,
+        slots: [...document.querySelectorAll('[data-testid="asm-slot"]')].map(s => s.textContent).join(''), msg: document.querySelector('#bmsg').innerText }));
+      await tid(p, 'continue').click();
+      const r = await after(q, 'wrong');
+      check(fb.wrong === 1 && fb.live === 0 && fb.slots === q.zh && fb.msg.includes(q.zh) && !TONE.test(fb.msg), `assembly wrong tap: the tile shows ✘, the tray locks, the slots show the answer ${fb.slots}`);
+      check(r.o.result === 'wrong' && r.a === v.a + 1 && r.logN === v.logN + 1 && r.log0.form === 'assembly' && r.log0.taps.length === 2 && r.log0.taps[0] === ans[0] && r.log0.taps[1] !== ans[1] && r.log0.wrongSlot === 1,
+        `assembly: first wrong tap = one wrong answer (R-EZ.attempts +1 → ${r.a}, one log record {taps:${r.log0.taps.join('')}, wrongSlot:${r.log0.wrongSlot}})`);
+    }
+    return true;
+  };
+  for (let k = 0; k < 4 && nAsm < 2; k++) { await tid(a, 'act-path').click(); await playBattle(a, () => true, { onAsm }); if (await tid(a, 'victory-ok').count()) await tid(a, 'victory-ok').click(); await tid(a, 'location').or(tid(a, 'town')).first().waitFor(); if (await tid(a, 'town').count()) await goLoc(a, 'meadow'); }
+  check(prepared > 0 && nAsm === 2, `assembly questions met in meadow battles: ${nAsm} (eligible meadow words ${prepared})`);
+  await a.context().close();
+}
 
 // ================= v3.4 spells, magic shop, quests (seeded save) =================
 await spellTests({ browser, BASE, check, log, shots: process.env.SPELL_SHOTS || '' });
