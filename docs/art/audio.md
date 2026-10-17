@@ -1,8 +1,10 @@
 # Audio pack – Chinese-learning RPG (Phaser 4)
 
-All 18 sounds were **procedurally synthesized with original code** in `tools/`, using Python, numpy/scipy and ffmpeg.
-No samples, no downloaded music, no online services. **The boss music uses VSCO 2 CE (CC0).** None of the melodies
-imitate existing game themes; every melody and chord progression was written for this pack.
+The SFX, the village music and the stings were **procedurally synthesized with original code** in `tools/`, using Python,
+numpy/scipy and ffmpeg. The boss music (`mus_battle_boss`, final 2026-10-17) is an original arrangement of Bach's public-domain
+Toccata and Fugue BWV 565, rendered with the VSCO 2 CE samples (CC0) and the FluidR3_GM soundfont (MIT); see
+[arty/mus_battle_boss.md](arty/mus_battle_boss.md). No recordings and no online services were used, and no melody imitates
+an existing game theme.
 
 | folder | files | format |
 |---|---|---|
@@ -57,7 +59,12 @@ the first user input, so start music after a click or tap (Phaser unlocks the au
   brass, choir, FM e-piano/glockenspiel, synth basses, square lead, and synthesized kick/snare/hat/clap/toms/taiko/woodblock/
   shaker/crash/gong), `tools/make_music.py` (the compositions), `tools/check_audio.py` (ffprobe/ffmpeg verification,
   manifests, preview).
-* Third-party / CC0 samples: **none**.
+* Third-party samples (used for `mus_battle_boss` and the battle music drafts):
+  * **VSCO 2 Community Edition** by Versilian Studios, **CC0 1.0** (public domain): timpani, trumpets, horns,
+    trombone, harp and flute. Source: [sgossner/VSCO-2-CE](https://github.com/sgossner/VSCO-2-CE).
+  * **FluidR3_GM** General MIDI soundfont by Frank Wen, **MIT licence**: organ, guitars, strings, drums and bass, rendered
+    with FluidSynth.
+  * Score sources are public-domain editions only (see each track's md).
 * Tools: numpy, scipy, pyloudnorm, and matplotlib (for the preview only) in `/workspace/audio/.venv`. Encoding uses ffmpeg
   (libvorbis, libmp3lame).
 
