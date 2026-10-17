@@ -4,7 +4,7 @@
 **Owner:** GameDev. **Graph spec (§6):** a shared proposal. Desy is writing `world-graph.md`, the JSON Schemas, and example data for realm 1 and a 3-level dungeon on top of it.
 **Scope:** parent accounts with child profiles, cloud saves, the world as a node graph, and how content and assets ship.
 
-> **Revision 4 (proposed 2026-10-10, pending Jack's approval): level content moves into the DB, plus a repo export.** Maps, events, quests, word pools and dialogue per map would be edited in `/editor` and stored in Neon (`levels`, `level_revisions`), and GameDev's box exports them to `docs/data/levels/`. *(2026-10-11, r1: maps without realms, `level/0.2`; every player, guest or signed in, gets the graph world.)* That revises "the DB holds player data only" below for **level content only**; art, audio and the global tables stay static. See [§1.4](#14-revision-4-proposed-level-content-in-the-db-plus-a-repo-export) and [level-editor.md](level-editor.md).
+> **Revision 4 (proposed 2026-10-10; approved by Jack 2026-10-16 (PT) via Director, build started): level content moves into the DB, plus a repo export.** Maps, events, quests, word pools and dialogue per map would be edited in `/editor` and stored in Neon (`levels`, `level_revisions`), and GameDev's box exports them to `docs/data/levels/`. *(2026-10-11, r1: maps without realms, `level/0.2`; every player, guest or signed in, gets the graph world.)* That revises "the DB holds player data only" below for **level content only**; art, audio and the global tables stay static. See [§1.4](#14-revision-4-proposed-level-content-in-the-db-plus-a-repo-export) and [level-editor.md](level-editor.md).
 
 **Revision 3 in one paragraph.** The database now holds **player data only**. Art, music, animation, and the graph and content JSON all ship **as static files with the frontend build** on Vercel's CDN. They get content-hashed names, per-graph manifests, a service worker cache, and `immutable` headers. There are no content tables, no storage bucket, no publish-to-storage job, and no content-pointer endpoint any more. Sign-in is **Google only, through Auth.js**, with **database sessions** in an httpOnly cookie. Without row-level security, per-parent access is enforced by **one data-access layer** in the API. Every piece fits a free tier (Vercel Hobby, Neon Free, a Google OAuth client). §13 shows where those tiers break: **Neon compute hours run out first, at roughly 700–1,000 monthly active players.**
 
@@ -79,7 +79,7 @@
 
 ### 1.4 Revision 4 (proposed): level content in the DB plus a repo export
 
-**Status: proposed 2026-10-10, revised 2026-10-11 (r1, Jack's round-1 review), pending Jack's approval.** The full design is [level-editor.md](level-editor.md).
+**Status: proposed 2026-10-10, revised 2026-10-11 (r1) and 2026-10-12 (r2); approved by Jack 2026-10-16 (PT) via Director; build started.** The full design is [level-editor.md](level-editor.md).
 
 - **What changes:** D5 and D15 said graph and content JSON ship as static build files, and the DB holds player data only. For **map content** (per-map graphs, settings and word pools, events, quest definitions and variants, and dialogue scenes, as `level/0.2` JSON, one file per map, no realms), that becomes:
   - **the DB is the live source.** Tables `levels` (draft + published), append-only `level_revisions`, `content_releases`, `editors` and `editor_tokens` (level-editor §3). Estimated well under 100 MB.

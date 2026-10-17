@@ -15,6 +15,7 @@ import { exportAccount, deleteAccount } from './dal/account.js';
 import { dailyCron } from './dal/cron.js';
 import { requireUnlocked } from './dal/guard.js';
 import { timingSafeEqual } from 'node:crypto';
+import { handleLevels } from './levels-router.js';
 
 export interface Deps { db: Db }
 type Args = { req: Request; ctx: Ctx; db: Db; childId: string; body: unknown };
@@ -75,6 +76,9 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
       if (!process.env.CRON_SECRET || want.length !== got.length || !timingSafeEqual(Buffer.from(want), Buffer.from(got))) throw unauthorized();
       return json(200, await dailyCron(deps.db));
     }
+
+    const levels = await handleLevels(req, url, parts, deps.db);   // level-editor.md: editor + public map routes (own ctx, own table)
+    if (levels) return levels;
 
     let found: { route: Route; childId: string } | null = null;
     for (const route of ROUTES) { const m = match(route, req.method, parts); if (m) { found = { route, ...m }; break; } }

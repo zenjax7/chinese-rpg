@@ -1,6 +1,6 @@
 # Level and script editor: design doc
 
-**Status: 📝 PROPOSED, waiting for Jack's approval. Nothing here is built.** First written 2026-10-10 (PT) by GameDev against main `e4e6a4a`. **Revision r1, 2026-10-11 (PT):** Jack's round-1 review applied, against main `3ab6924` plus Desy's `handoff_maps` (`level/0.2`, 38 maps in `docs/data/levels/`).
+**Status: ✅ APPROVED. Approved by Jack 2026-10-16 (PT) via Director; build started.** First written 2026-10-10 (PT) by GameDev against main `e4e6a4a`. **Revision r1, 2026-10-11 (PT):** Jack's round-1 review applied, against main `3ab6924` plus Desy's `handoff_maps` (`level/0.2`, 38 maps in `docs/data/levels/`).
 **Owner:** GameDev. **Content owner:** Desy. Her companion doc [design/level-json-coverage.md](../design/level-json-coverage.md) is the must-cover checklist and the conversion record; this doc uses her names and her schema [`docs/data/levels/schemas/level.schema.json`](../data/levels/schemas/level.schema.json) (`level/0.2`). GameDev leads the final schema.
 **Standing rule (Jack, 2026-10-11):** no mechanic, system or rule that Jack hasn't approved. Anything unclear is in the open questions (§13), not in the design.
 
@@ -10,6 +10,10 @@
 - **Docs:** a worked two-map collect quest and `setFlag` in plain words (§2.6.2).
 - **Access (§9):** no automatic GitHub export and no cadence (backups only when Jack asks); GameDev's box holds an **admin DB connection string** under a written policy (§9.5); a permanent, revocable **draft-write API key** for Desy (§9.2.1); no Google token on the box. Threats and security notes updated (§10.3, §10.4), including an admin-credential leak and no Neon IP allowlist on Free.
 - **Q11** reworded as Desy's own design items.
+
+### Approval (2026-10-16)
+
+- **Approved by Jack 2026-10-16 (PT) via Director; build started** (branch `wip/editor`). §13 Q1 is closed; the decisions.md lines moved from proposed to decided.
 
 ### Jack's round-1 decisions applied in r1 (2026-10-11)
 
@@ -929,7 +933,7 @@ Not part of this docs change. Done after Desy's simplified spec arrives. Line nu
 
 ## 13. Open questions for Jack
 
-1. **Approve the overall plan?** Not yet approved; this doc stays PROPOSED and nothing is built.
+1. *(Closed 2026-10-16: approved by Jack 2026-10-16 (PT) via Director; build started.)*
 2. *(Closed Oct 12: no automatic export; GameDev backs up to GitHub only when Jack asks, §9.2.)*
 3. **The beta-reset defaults** (§2.9) are the Director's and not locked: a completed quest's reward can be earned again; quests given on other maps are unaffected; quest items stay. Also Desy's Q-J3b: does a reset un-defeat the map's boss? *Default:* no.
 4. **Existing classic saves** (guests who played classic before R1): do they get a one-time "start the new world" offer, or does classic stay reachable for a while? *Default:* none set; your call.

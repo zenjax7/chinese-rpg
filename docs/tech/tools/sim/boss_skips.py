@@ -1,11 +1,11 @@
-"""Boss-skip routes on docs/data/levels (Jack 2026-10-11: progression is purely by links; beating a boss unlocks nothing, going around
-a boss node is fine). Desy, 2026-10-11 PT. Static graph analysis, no battles simulated.
+"""Boss-skip routes on docs/data/levels (Jack 2026-10-11: progression is purely by links, beating a boss unlocks nothing; Jack 2026-10-12:
+a boss node blocks passage until its boss is beaten, and "skippable" only means an alternate route that never goes through the node). Desy, 2026-10-11 PT. Static graph analysis, no battles simulated.
 
   python docs/tech/tools/sim/boss_skips.py        -> docs/data/sim/sim_world_boss_skips.csv (+ a printed summary)
 
 Graph: every node of every map; in-map edges both ways (oneway: one way), cross-map links as written. Cost of an edge = its steps
 (stairs / portal / exit links: 1 hop, 0 steps). Expected random battles = sum of steps x the fresh encounter rate (world_loader.rate on
-docs/data/levels/world_rules.json; safe edges 0). A boss node is a fight you can walk through after winning it.
+docs/data/levels/world_rules.json; safe edges 0). A boss node blocks passage: you get past it only by winning it (Jack 2026-10-12).
  1. per boss: what is behind it = nodes you can't reach from the start when that boss node is a wall (every other boss passable).
  2. skip beeline: the route from the start to the final boss with the fewest boss fights, then the fewest steps.
  3. full beeline: start -> boss 1 -> boss 2 -> ... -> final boss in the campaign order (gearTier, then link order), each leg with the

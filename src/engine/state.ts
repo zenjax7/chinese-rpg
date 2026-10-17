@@ -10,6 +10,8 @@ export interface ItemProg { seen: boolean; ways: Record<WayKey, WayStat>; recent
  *  approachArmed, bossCheckpoint and patrolsFought; load() drops them). */
 export interface LocState { unlocked: boolean; bossDefeated: boolean; pathCleared: number; previewSeen: boolean; }
 export interface SaveState {
+  /** level-editor.md §7.3: the version hash of each map this save last played ({mapId: hash}), for the beta reset */
+  mapVersions?: Record<string, string>;
   version: number;
   consent: { given: boolean; speech: boolean; at: number };
   level: number; exp: number; hp: number; mp: number; gold: number;

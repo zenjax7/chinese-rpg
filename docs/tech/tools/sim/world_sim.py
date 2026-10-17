@@ -67,6 +67,7 @@ def campaign(args):
     C.BOSS_ATK_MULT.clear(); C.BOSS_ATK_MULT.update(opt.get('boss_atk', getattr(D, 'BOSS_ATK_MULT', {})) if v34 else {})
     if opt.get('boss_hp', True) and v34: C.BOSS_HP_MULT.update(D.BOSS_HP_MULT)     # v3.6 boss HP
     if opt.get('boss_hp_scale'): C.BOSS_HP_MULT.update({k: v*opt['boss_hp_scale'] for k, v in C.BOSS_HP_MULT.items()})   # report-only difficulty option
+    C.NORMAL_ATK_K = 1.1 if (opt.get('v391_rules') or not world) else opt.get('normal_atk_k', 1.21)   # Jack 2026-10-12: normal ATK x1.1 (1.21 x DEF_ref); history keeps 1.1
     C.ENEMY_SCALE.update(atk=opt.get('enemy_atk_mult', 1.0), hp=opt.get('enemy_hp_mult', 1.0))                          # report-only difficulty option
     C.WORKING_SET = C.DEFAULT_WORKING_SET
     pol = dict(C.POLICIES[kid]); nets = C.NETS['nets+']

@@ -301,7 +301,7 @@
       },
       "gateEdge": {
        "type": "string",
-       "description": "the boss node's approach edge (patrol: true, safe). Beating the boss unlocks nothing (Jack 2026-10-11)."
+       "description": "the boss node's approach edge (patrol: true, safe). The boss node blocks passage until beaten (Jack 2026-10-12); no link waits on a boss (Jack 2026-10-11)."
       },
       "kind": {
        "enum": [
@@ -326,7 +326,8 @@
        },
        "description": "What beating the boss gives (skill, heroic item, text, feather). The validator rejects an item-giving on:clear event on the boss node."
       }
-     }
+     },
+     "description": "The map's boss. Its node blocks passage (Jack's decision, 2026-10-12): the player can't move past it without beating the boss; fleeing returns them to the node they came from. Beating it unlocks nothing else."
     }
    }
   },

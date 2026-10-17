@@ -42,8 +42,9 @@ def quest_positions(q):
     return out
 
 def lock_errors(maps, start, quests):
-    """Jack 2026-10-11: lockedUntilQuest on nodes and edges. Reachability over links (boss nodes are fights, not walls; one-way edges
-    one way; cross-map links as written). Lock A depends on lock B when A's quest has a position that can't be reached with B closed
+    """Jack 2026-10-11: lockedUntilQuest on nodes and edges. Reachability over links (one-way edges one way; cross-map links as written).
+    Jack 2026-10-12: a boss node blocks passage: the player can enter it (the fight) but reaches what lies beyond only through it, after
+    beating it; so the walk beats every boss it reaches and goes on from there, and a boss that only sits behind a closed lock stays a wall. Lock A depends on lock B when A's quest has a position that can't be reached with B closed
     (every other lock open). Errors: unknown quest / lockedScene, circular locks (incl. a lock on its own quest), and a quest position
     unreachable with the lock and every lock depending on it (transitively) closed."""
     err = []; adj = collections.defaultdict(list); locks = {}
@@ -61,15 +62,21 @@ def lock_errors(maps, start, quests):
         if q not in quests: err.append(f'{k}: lockedUntilQuest {q} is not a quest')
         if sc and sc not in maps[mid].get('scenes', {}): err.append(f'{k}: lockedScene {sc} is not a scene of {mid}')
     s0 = f"{start['graph']}/{start['node']}"
+    bosses = {f"{mid}/{m['settings']['boss']['node']}" for mid, m in maps.items() if (m.get('settings') or {}).get('boss')}
     def reach(closed):
-        seen = {s0}; dq = collections.deque([s0])
         if f'node:{s0}' in closed: return set()
-        while dq:
-            u = dq.popleft()
-            for v, ek in adj[u]:
-                if v in seen or ek in closed or f'node:{v}' in closed: continue
-                seen.add(v); dq.append(v)
-        return seen
+        beaten = set()
+        while True:          # walk with unbeaten bosses as walls; beat every boss reached; repeat until nothing new
+            seen = {s0}; dq = collections.deque([s0])
+            while dq:
+                u = dq.popleft()
+                if u in bosses and u not in beaten and u != s0: continue
+                for v, ek in adj[u]:
+                    if v in seen or ek in closed or f'node:{v}' in closed: continue
+                    seen.add(v); dq.append(v)
+            new = (seen & bosses) - beaten
+            if not new: return seen
+            beaten |= new
     def missing(q, closed):
         if q not in quests: return []
         R = reach(closed); maps_r = {x.split('/')[0] for x in R}

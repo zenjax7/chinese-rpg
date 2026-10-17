@@ -61,11 +61,24 @@ def _cond_open(c, done):
     return True
 
 def unlock_order(maps, start):
-    """Realm-less progression, read from the links only (GameDev LE F3, Jack 2026-10-11): from the start node, walk every edge and
-    link (no boss walls: a boss node is a fight, not a wall; no link has a boss condition; quest locks (lockedUntilQuest) and quest
-    conditions count as open, since every quest is reachable without its own lock -- validate_levels checks that).
-    -> (boss maps by link distance from the start, {map id: 0 for every reachable map}). There are no rounds any more: every
-    reachable map is round 0. The sim plays locations in gearTier order, then this order."""
+    """Realm-less progression, read from the links (Jack 2026-10-11: no link conditions on bosses; Jack 2026-10-12: a boss node blocks
+    passage). From the start node, walk every edge and link; an unbeaten boss node can be entered (that is the fight) but nothing
+    beyond it is reachable through it; beat the nearest reachable boss, repeat. Quest locks (lockedUntilQuest) and quest conditions
+    count as open (validate_levels checks every lock's quest is reachable without it).
+    -> (boss maps in the order they are beaten, {map id: round in which it first becomes reachable}). Round r = after r bosses.
+    The sim plays locations in gearTier order, then this order."""
+    adj, boss = _link_graph(maps)
+    s0 = f"{start['graph']}/{start['node']}"; done = []; rnd = {}
+    for r in range(len(boss) + 1):
+        dist = _walk(adj, s0, {u for u, m in boss.items() if m not in done})
+        for u in dist: rnd.setdefault(u.split('/')[0], r)
+        nxt = sorted((d, boss[u]) for u, d in dist.items() if u in boss and boss[u] not in done)
+        if not nxt: break
+        done.append(nxt[0][1])
+    return done, rnd
+
+def _link_graph(maps):
+    """'map/node' adjacency over in-map edges (both ways unless oneway) and cross-map links (as written); {boss 'map/node': map}."""
     adj = collections.defaultdict(list); boss = {}
     for mid, m in maps.items():
         b = (m.get('settings') or {}).get('boss')
@@ -75,19 +88,30 @@ def unlock_order(maps, start):
             if isinstance(e['to'], dict): adj[a].append(f"{e['to']['graph']}/{e['to']['node']}"); continue
             bb = f"{mid}/{e['to']}"; adj[a].append(bb)
             if e['kind'] != 'oneway': adj[bb].append(a)
-    s0 = f"{start['graph']}/{start['node']}"; dist = {s0: 0}; q = collections.deque([s0])
+    return adj, boss
+
+def _walk(adj, s0, walls):
+    """BFS distances from s0; a wall node (an unbeaten boss) is reached but not passed through (Jack 2026-10-12)."""
+    dist = {s0: 0}; q = collections.deque([s0])
     while q:
         u = q.popleft()
+        if u in walls and u != s0: continue
         for v in adj[u]:
             if v not in dist: dist[v] = dist[u] + 1; q.append(v)
-    rnd = {}
-    for u in dist: rnd.setdefault(u.split('/')[0], 0)
-    return [boss[u] for _, u in sorted((d, u) for u, d in dist.items() if u in boss)], rnd
+    return dist
+
+def behind_bosses(maps, start):
+    """Jack 2026-10-12 (a boss node blocks passage): {'map/node': set of boss maps that must be beaten to reach it}. A node needs boss B
+    when it can't be reached with B's node as a wall (every other boss beaten). Bosses nothing needs are the avoidable ones."""
+    adj, boss = _link_graph(maps); s0 = f"{start['graph']}/{start['node']}"
+    allr = set(_walk(adj, s0, set())); need = collections.defaultdict(set)
+    for u, m in boss.items():
+        for v in allr - set(_walk(adj, s0, {u})): need[v].add(m)
+    return need
 
 def met_words(maps, start):
     """Proposed met rule without realms: a word is met in map M when it is in the pool of a map that becomes reachable no later than M
-    (same or earlier round of unlock_order). Since the walk is links-only (2026-10-11) every reachable map is round 0, so every word
-    of every reachable map counts as met everywhere (the rule no longer catches anything; see level-json-coverage.md Q-J13).
+    (same or earlier round of unlock_order: an unbeaten boss node blocks passage, Jack 2026-10-12).
     Returns {map id: set of word ids} and the review order of maps."""
     order, rnd = unlock_order(maps, start)
     seq = sorted(rnd, key=lambda m: (rnd[m], m))
@@ -100,7 +124,7 @@ def met_words(maps, start):
 
 def scene_met(maps, start):
     """met(map, trigger cond) -> the words met when a scene in `map` with that trigger condition can first play: the pools of every map
-    reachable by then (unlock_order rounds; all 0 since the walk is links-only), where the round is the later of the map's own round and the round right after every boss
+    reachable by then (unlock_order rounds; a boss node blocks passage, Jack 2026-10-12), where the round is the later of the map's own round and the round right after every boss
     the condition names (e.g. a village scene gated on bossDefeated: clover_hills may use clover_hills words)."""
     order, rnd = unlock_order(maps, start)
     def bosses(c):

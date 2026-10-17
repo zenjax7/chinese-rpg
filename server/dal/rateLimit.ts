@@ -9,6 +9,9 @@ export const LIMITS = {
   import: { bucket: 'import_d', limit: 5, windowSec: 86400 },
   export: { bucket: 'export_d', limit: 10, windowSec: 86400 },
   consentIp: { bucket: 'consent_ip_d', limit: 20, windowSec: 86400 },
+  // level-editor.md §4: per editor
+  editorSave: { bucket: 'ed_save_h', limit: 240, windowSec: 3600 },
+  editorPublish: { bucket: 'ed_publish_h', limit: 30, windowSec: 3600 },
 } as const;
 export type Limit = typeof LIMITS[keyof typeof LIMITS];
 

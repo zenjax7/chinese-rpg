@@ -85,6 +85,26 @@ export const importBody = z.object({
   save: z.object({ version: z.literal(3), level: z.number().int().min(1), exp: z.number().int().min(0) }).catchall(z.unknown()),
 }).strict();
 
+// ---- level editor (level-editor.md §6): the request shape here; the map itself is checked by the level/0.2 validator ----
+export const levelId = z.string().regex(ID).max(64);
+/** A map body (level/0.2). zod checks the envelope the server relies on; ajv (src/shared/level/validate.ts) checks the rest. */
+export const levelBody = z.object({
+  schema: z.literal('level/0.2'),
+  id: levelId,
+  state: z.enum(['draft', 'beta', 'golden']),
+  kind: z.string().regex(ID).max(32),
+  nodes: z.array(z.object({ id: z.string().max(64) }).catchall(z.unknown())).max(2000),
+  edges: z.array(z.object({ id: z.string().max(64) }).catchall(z.unknown())).max(4000),
+  settings: z.object({ words: z.array(z.string().max(16)).max(2000) }).catchall(z.unknown()),
+}).catchall(z.unknown());
+export const saveDraftBody = z.object({ draftRev: z.number().int().min(1), body: levelBody, goldenConfirm: z.boolean().optional() }).strict();
+export const publishBody = z.object({
+  levels: z.array(z.object({ id: levelId, draftRev: z.number().int().min(1) }).strict()).min(1).max(100),
+  note: z.string().max(500).optional(),
+  goldenConfirm: z.boolean().optional(),
+}).strict();
+export const levelVersion = z.coerce.number().int().min(1).max(1_000_000);
+
 export function parse<T extends z.ZodType>(schema: T, v: unknown): z.infer<T> {
   const r = schema.safeParse(v);
   if (!r.success) throw badRequest('Invalid request.', r.error.issues.map(i => ({ path: i.path.join('.'), message: i.message })));

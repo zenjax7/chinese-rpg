@@ -20,7 +20,9 @@ describe('migrations', () => {
   });
   it('create every §7.2 table', async () => {
     const want = ['users', 'accounts', 'sessions', 'verification_token', 'parents', 'parent_unlocks', 'child_profiles', 'consent_records', 'saves',
-      'graph_progress', 'word_mastery', 'save_backups', 'audit_log', 'rate_limits'];
+      'graph_progress', 'word_mastery', 'save_backups', 'audit_log', 'rate_limits',
+      // 003: level-editor.md §3
+      'levels', 'level_revisions', 'content_releases', 'release_levels', 'learn_items', 'editors', 'editor_tokens'];
     const { rows } = await t.db.query(`select table_name from information_schema.tables where table_schema = current_schema() and table_type = 'BASE TABLE'`);
     const have = rows.map(r => r.table_name);
     for (const w of want) expect(have).toContain(w);

@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOTS = process.argv.slice(2).length ? process.argv.slice(2) : ['api', 'server', 'src/net'];
+const ROOTS = process.argv.slice(2).length ? process.argv.slice(2) : ['api', 'server', 'src/net', 'src/shared'];
 const EXT = /\.(ts|mts|mjs|js)$/;
 const SPEC = /(?:\bfrom\s*|\bimport\s*\(\s*|^\s*import\s+|\bexport\s[^'"]*?\bfrom\s*)(['"])(\.{1,2}\/[^'"]*)\1/gm;
 const OK = /\.(js|mjs|cjs|json)$/;
