@@ -1469,6 +1469,13 @@ Approved by Jack on 2026-10-17 (PT). The player sees an English word or phrase a
 - Per item: `simplified` (`zh`), `traditional` (`trad`, stored, not shown), `english` / `enPrimary`, `reading`, `altZh` (curriculum.csv / items.json / realm content files). Per map: `settings.words` and `settings.difficulty.mcOptions` (level/0.2). Per kid: `seen` and `WayStat` (§3.1). There are **no new tables, columns or content.** Eligibility is computed from `zh` at load.
 - Log (§11.2): add `form = mc | assembly` to each R-EZ question record, plus the tapped sequence and the slot of the wrong tap, if there was one.
 
+**Implementation notes (Desy, 2026-10-17)**
+1. Trays over 7 tiles (2 rows) hide the dock's message line while the kid answers, so both rows fit in the 236 px dock; the line comes back for the feedback.
+2. The framed prompt shows in both the spell banner and the dock's message line.
+3. Confusable distractors use the game's existing §9.3 exclusion rule as is (including the early-game "shares a character, 2 characters or fewer" rule), so it can be stricter than the examples above.
+4. Spells and heal spells skip the question entirely; MP is the only limit (§6.7). A spell cast never shows an assembly question or any other question. Battle questions (attack, defense, and question-type skills such as the Heal skill, §6.4) use the attack wording for anything that isn't a block.
+5. Keys 1–9 pick the first 9 tiles; tiles past the 9th have no number key and are tapped.
+
 ---
 
 ## 10. Parent editor data model

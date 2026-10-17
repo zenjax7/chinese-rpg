@@ -448,11 +448,13 @@ await nv.context().close();
       && v.banner.includes(q.en) && !v.banner.includes(q.zh) && !TONE.test(v.banner) && v.a % 2 === 1,
       `assembly renders: ${q.zh} “${q.en}” → ${v.slots} slots, tray ${v.tiles.join(' ')} (n + mcOptions−1 = ${ans.length}+2), English prompt only, no pinyin; R-EZ.attempts was ${v.a} (odd)`);
     if (nAsm === 1) {
+      // §9.4 note 5: tiles past the 9th have no number key; tapping must not depend on it, so this answer is tapped with every key removed
+      const keys = await p.evaluate(() => { const t = [...document.querySelectorAll('[data-testid="tile"]')]; const n = t.filter(x => x.dataset.key).length; t.forEach(x => x.removeAttribute('data-key')); return n; });
       await tapAsm(p, true);
       const sl = await p.evaluate(() => [...document.querySelectorAll('[data-testid="asm-slot"]')].map(s => s.textContent).join(''));   // read during the feedback hold
       const r = await after(q, 'correct');
       check(r.o.result === 'correct' && sl === q.zh && r.a === v.a + 1 && r.logN === v.logN + 1 && r.log0.form === 'assembly' && JSON.stringify(r.log0.taps) === JSON.stringify(ans) && r.log0.wrongSlot === null && r.log0.way === 'rEZ' && !r.o.spoken,
-        `assembly answered by tapping right: slots read ${sl}, graded correct as R-EZ (attempts ${v.a}→${r.a}), log {form:${r.log0.form}, taps:${r.log0.taps.join('')}, wrongSlot:${r.log0.wrongSlot}}`);
+        `assembly answered by tapping right (tiles without number keys; had ${keys}): slots read ${sl}, graded correct as R-EZ (attempts ${v.a}→${r.a}), log {form:${r.log0.form}, taps:${r.log0.taps.join('')}, wrongSlot:${r.log0.wrongSlot}}`);
     } else {
       await tapAsm(p, false, 1);
       await tid(p, 'continue').waitFor({ timeout: 10000 });
