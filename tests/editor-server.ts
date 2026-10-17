@@ -4,6 +4,7 @@
  *  X-Test-Session injector, which the router honours only when NODE_ENV=test. Never deploy this; it has no real auth. */
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { join, resolve, extname, normalize } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { PGlite } from '@electric-sql/pglite';
@@ -22,6 +23,13 @@ function wrapPglite(pg: any): Db {
   return { ...client(pg), tx: fn => pg.transaction((t: any) => fn(client(t))) } as Db;
 }
 
+/** vercel.json's response headers (CSP and friends), so the smoke test runs under production's Content-Security-Policy. */
+function vercelHeaders(root: string): (path: string) => Record<string, string> {
+  const rules: { source: string; headers: { key: string; value: string }[] }[] = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8')).headers ?? [];
+  const compiled = rules.map(r => ({ re: new RegExp(`^${r.source}$`), headers: r.headers }));
+  return path => Object.fromEntries(compiled.filter(r => r.re.test(path)).flatMap(r => r.headers.map(h => [h.key.toLowerCase(), h.value])));
+}
+
 export async function startEditorServer(root: string, port: number, distDir = 'dist-cloud') {
   const origin = `http://127.0.0.1:${port}`;
   Object.assign(process.env, { NODE_ENV: 'test', APP_ORIGIN: origin, EDITOR_GOOGLE_SUBS: TEST_SUB,
@@ -38,8 +46,10 @@ export async function startEditorServer(root: string, port: number, distDir = 'd
   const st = { signedIn: false };
   const dist = resolve(root, distDir);
 
+  const headersFor = vercelHeaders(root);
   const server = createServer(async (req, res) => {
     const url = new URL(req.url || '/', origin);
+    for (const [k, v] of Object.entries(headersFor(url.pathname))) res.setHeader(k, v);
     try {
       if (url.pathname.startsWith('/api/auth/')) {
         if (url.pathname === '/api/auth/csrf') { res.writeHead(200, { 'content-type': 'application/json' }); res.end('{"csrfToken":"local"}'); return; }

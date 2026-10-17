@@ -1,12 +1,9 @@
 /** Map validator shared by the editor (browser) and the editor API (level-editor.md §6.1). This is the minimal first port: the
  *  level/0.2 schema (Desy's level.schema.json, ajv) plus the graph and word-pool checks the editor needs to save and publish.
  *  Errors block a publish, never a save (§6.2). Desy's validate_levels.py stays the reference. */
-import { Ajv2020 } from 'ajv/dist/2020.js';
-import levelSchema from '../../../docs/data/levels/schemas/level.schema.json' with { type: 'json' };
+import schemaCheck from './schema-check.js';   // precompiled from level.schema.json: the CSP has no 'unsafe-eval' (tools/editor/build_schema_check.mjs)
 import type { Level, Problem } from './types.js';
 
-const ajv = new Ajv2020({ allErrors: true, strict: false });
-const schemaCheck = ajv.compile(levelSchema as object);
 
 export interface ValidateCtx {
   /** The global word bank ids (§2.5.1). */
