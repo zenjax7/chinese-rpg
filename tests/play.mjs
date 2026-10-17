@@ -449,7 +449,8 @@ await nv.context().close();
       `assembly renders: ${q.zh} “${q.en}” → ${v.slots} slots, tray ${v.tiles.join(' ')} (n + mcOptions−1 = ${ans.length}+2), English prompt only, no pinyin; R-EZ.attempts was ${v.a} (odd)`);
     if (nAsm === 1) {
       await tapAsm(p, true);
-      const r = await after(q, 'correct'); const sl = await p.evaluate(() => [...document.querySelectorAll('[data-testid="asm-slot"]')].map(s => s.textContent).join(''));
+      const sl = await p.evaluate(() => [...document.querySelectorAll('[data-testid="asm-slot"]')].map(s => s.textContent).join(''));   // read during the feedback hold
+      const r = await after(q, 'correct');
       check(r.o.result === 'correct' && sl === q.zh && r.a === v.a + 1 && r.logN === v.logN + 1 && r.log0.form === 'assembly' && JSON.stringify(r.log0.taps) === JSON.stringify(ans) && r.log0.wrongSlot === null && r.log0.way === 'rEZ' && !r.o.spoken,
         `assembly answered by tapping right: slots read ${sl}, graded correct as R-EZ (attempts ${v.a}→${r.a}), log {form:${r.log0.form}, taps:${r.log0.taps.join('')}, wrongSlot:${r.log0.wrongSlot}}`);
     } else {
