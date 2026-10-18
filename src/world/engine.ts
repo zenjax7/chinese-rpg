@@ -196,6 +196,17 @@ export function rollStep(g: Graph, e: GEdge, step: number, P: Progress, rules: a
   const crossing = gp(P, g.id).crossings[e.idx] || 0;
   return roll(`${P.seed}|${g.id}|${e.id}|${crossing}|${step}`) < stepRate(g, e, P, rules).p;
 }
+/** The step of this crossing whose roll fires its one encounter: the first step from `fromStep` on whose existing per-step roll hits,
+ *  else -1 (Director Oct 17, after Jack's playtest: at most one battle per edge crossing; it used to be one battle per hitting step). */
+export function edgeEncounter(g: Graph, e: GEdge, fromStep: number, P: Progress, rules: any): number {
+  for (let s = fromStep; s < (e.steps || 1); s++) if (rollStep(g, e, s, P, rules)) return s;
+  return -1;
+}
+/** A crossing that turned back (flee or defeat): it counts as a crossing, so the next try is a fresh roll (the roll key has the crossing
+ *  count; before, the retry hit the same roll at the same step every time), and the next try starts again from step 0. */
+export function abandonEdge(P: Progress, g: Graph, e: GEdge) {
+  const pr = gp(P, g.id); pr.crossings[e.idx] = (pr.crossings[e.idx] || 0) + 1; delete pr.edgeProgress[e.idx];
+}
 /** The zone an edge's battles use: its own nodes' zone, else the `to` node's (§4.1). */
 export function edgeZone(g: Graph, e: GEdge): string | undefined {
   const t = typeof e.to === 'string' ? nodeOf(g, e.to) : undefined; const f = nodeOf(g, e.from);
