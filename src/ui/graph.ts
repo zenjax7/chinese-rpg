@@ -343,7 +343,7 @@ async function walk(e: E.GEdge) {
     const to = E.otherEnd(e, from) as string; const steps = e.steps || 1; const pr = E.gp(P(), g.id);
     const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { id: z.id };
     const a = E.nodeOf(g, from)!, b = E.nodeOf(g, to)!; const msStep = walkMsPerStep(); const t0 = performance.now();
-    let s = pr.edgeProgress[e.idx] || 0; let t = s / steps;
+    let s = pr.edgeProgress[e.idx] || 0; let t = s / steps; onEdge = true; walkUi();
     P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
     // Director Oct 17 (Jack's playtest: 4 battles on a 4-step edge): at most one battle per crossing. The existing per-step roll picks the
     // first step that hits (Jack Oct 11: no scripted path elites); the party walks to that point on the edge, stops there and fights.
@@ -353,16 +353,19 @@ async function walk(e: E.GEdge) {
       P().pos.step = s; pr.edgeProgress[e.idx] = s; saveW();
       const out = await fight(g, z, {});
       // a turned-back crossing counts as a crossing: the next try is a fresh roll (it used to repeat this same battle every time)
-      if (out === 'defeat') { E.abandonEdge(P(), g, e); partyAt = null; saveW(); return graphScreen(); }
-      if (out === 'flee') { E.abandonEdge(P(), g, e); partyAt = null; P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); toast('🏃 You ran back.'); return graphScreen(); }
+      if (out === 'defeat') { E.abandonEdge(P(), g, e); partyAt = null; onEdge = false; saveW(); return graphScreen(); }
+      if (out === 'flee') { E.abandonEdge(P(), g, e); partyAt = null; onEdge = false; P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); toast('🏃 You ran back.'); return graphScreen(); }
       graphScreen();   // after the win the party walks on from where it stopped
     }
     await walkParty(a, b, t, 1, (1 - t) * steps * msStep);
     proto().lastWalk = { edge: e.id, ms: Math.round(performance.now() - t0) };
-    E.finishEdge(P(), g, e); partyAt = null; P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
+    E.finishEdge(P(), g, e); partyAt = null; onEdge = false; P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
     await arrive(to);
-  } finally { busy = false; proto().walking = false; partyAt = null; }
+  } finally { busy = false; proto().walking = false; partyAt = null; onEdge = false; }
 }
+/** True while the party is out on an edge: the map's buttons (bag, quests, exits, rest, go in) wait until it arrives. */
+let onEdge = false;
+const walkUi = () => document.querySelectorAll<HTMLButtonElement>('[data-testid="graph"] .bottombar button').forEach(b => { b.disabled = onEdge; });
 /** The party walk speed: rules.walkSecPerStep (1.5 s) per edge step; tests may set __proto.walkMs. */
 const walkMsPerStep = () => proto().walkMs ?? (R().walkSecPerStep ?? 1.5) * 1000;
 /** Where the party stands mid-walk (null: on its node). */
@@ -531,6 +534,7 @@ export function graphScreen() {
       <button class="secondary" id="gq" data-testid="go-quests" data-key="2">📜 ${zh('任务')} Quests</button>
       <div class="hint" data-testid="graph-hint">${esc(hn.title ? `${hn.title.en}` : '')} · 🪶×${S.inv.feather || 0}${follow}</div>${exits}${act}
     </div></div>`);
+  if (onEdge) walkUi();
   const svg = $('[data-testid="graph-svg"]') as unknown as SVGSVGElement;
   svg.querySelectorAll('.gn.next').forEach(el => el.addEventListener('click', () => { if (moved) return; const id = g.nodes.find(n => n.idx === +(el as HTMLElement).dataset.idx!)?.id; if (!id) return; const e = isWorld ? worldPick.get(id) : adj.get(id); if (e) walk(e); }));
   on('[data-exit]', (_e, el) => { const e = g.edges.find(x2 => x2.id === el.dataset.exit); if (e) walk(e); });

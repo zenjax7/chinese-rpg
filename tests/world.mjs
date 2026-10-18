@@ -418,7 +418,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   // walk on a bit for the fog screenshot
   const settle = async () => { for (let k = 0; k < 40; k++) { await p.waitForTimeout(250); const st = await state();
       if (st === 'scene') await tid('scene-skip').click().catch(() => {}); else if (st === 'dialog') await tid('dialog-btn-1').click().catch(() => {});
-      else if (['menu', 'mc', 'continue', 'target', 'victory', 'wait'].includes(st) && await tid('battle').count()) await battle(); else if (st === 'left' && k > 2) return; } };
+      else if (['menu', 'mc', 'continue', 'target', 'victory', 'wait'].includes(st) && await tid('battle').count()) await battle(); else if (st === 'left' && k > 2 && !(await p.evaluate(() => window.__proto.walking))) return; } };
   for (const n of ['m_field', 'm_farm']) { if (await p.locator(gsel(n, '.next')).count()) { await tid('gnode-' + n).click(); await settle(); } }
   if (!(await tid('graph').count()) && await tid('town').count()) await tid('go-adventure').click();
   await tid('graph').waitFor({ timeout: 10000 }).catch(() => {});
