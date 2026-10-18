@@ -358,6 +358,19 @@ check((await p.locator('[data-testid="mastery"] tr').count()) === 112, 'mastery 
 await tid(p, 'dbg-close').click();
 await p.context().close();
 
+// ================= classic levels (Desy 2026-10-17): a fresh L1 hero answering 100% right wins the first meadow fights =================
+{ const c = await newPage(); await c.goto(BASE); await consent(c);
+  await goLoc(c, 'meadow'); await tid(c, 'preview-done').click(); await tid(c, 'location').waitFor();
+  const res = [];
+  for (let k = 0; k < 3; k++) {
+    await tid(c, 'act-path').click(); await tid(c, 'battle').waitFor({ state: 'attached', timeout: 15000 });
+    const foes = await c.evaluate(() => window.__proto.foes()); const rr = await playBattle(c, () => true);
+    res.push(`${foes.map(f => `${f.id} L${f.level}`).join('+')}: ${rr.result}`);
+    if (rr.result !== 'win') break; await tid(c, 'victory-ok').click(); await tid(c, 'location').waitFor();
+  }
+  const lv = +(await tid(c, 'hud-level').innerText());
+  check(res.length === 3 && res.every(x => x.endsWith('win')), `classic meadow (realm_1 levels): a 100%-correct L1 hero wins path fights 1-3 (${res.join('; ')}; now L${lv})`);
+  await c.close(); }
 // ================= speech run (fake recognizer) =================
 const s = await newPage(true);
 await s.goto(BASE); await consent(s, true);

@@ -134,6 +134,17 @@ describe('publish as beta (§6.3, §7.1)', () => {
     expect(r.body.problems.realm_4.length).toBeGreaterThan(0);
     expect((await t.db.query(`select published_version from levels where id = 'realm_4'`)).rows[0].published_version).toBe(1);
   });
+  it('publishing a map whose boss has no boss.level is refused (Desy 2026-10-17: table stats are only a runtime fallback)', async () => {
+    const d = await draftOf('warren'); expect(d.draft.settings.boss.level).toBeGreaterThan(0);
+    delete d.draft.settings.boss.level;
+    const s = await owner.api('PUT', '/editor/levels/warren/draft', { draftRev: d.draftRev, body: d.draft });
+    expect(s.status).toBe(200);   // saving is never blocked
+    expect(s.body.validation.map((p: any) => p.code)).toContain('boss_level');
+    const r = await owner.api('POST', '/editor/publish', { levels: [{ id: 'warren', draftRev: s.body.draftRev }] });
+    expect(r.status).toBe(422);
+    expect(r.body.problems.warren.map((p: any) => p.code)).toContain('boss_level');
+    expect((await t.db.query(`select published_version from levels where id = 'warren'`)).rows[0].published_version).toBe(1);
+  });
   it('drafts are not public until published; publish makes version 2 in a new release with a new hash', async () => {
     const before = (await pub('/levels/index')).body;
     expect((await pub('/levels/old_mine_1?v=1')).body.nodes.find((n: any) => n.id === 'path_1').title.en).toBe('Dark hall');
