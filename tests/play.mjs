@@ -94,7 +94,7 @@ async function debugSet(p, { gold: g, level, hp: h }) {
 async function playBattle(p, policy = () => true, opts = {}) {
   const stats = { q: 0, ways: {}, spoken: 0 }; let waits = 0;
   await tid(p, 'battle').waitFor({ state: 'attached', timeout: 15000 });   // the map token walks to the node first
-  for (let step = 0; step < 1500; step++) {
+  for (let step = 0; step < 3000; step++) {   // classic levels: the L17 Queen Bee fight at 75% runs ~60 questions (a stall is caught below)
     const state = await p.evaluate(() => {
       const has = s => !!document.querySelector(`[data-testid="${s}"]`);
       if (has('scout')) return 'scout'; if (has('victory')) return 'victory'; if (has('inn')) return 'inn';
