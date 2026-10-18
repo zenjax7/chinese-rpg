@@ -73,7 +73,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   // ---- BATTLE_INIT
   const foes: Foe[] = [];
   const mk = (id: string, level?: number): Foe => { const d = atLevel(ENEMIES[id], opts.levels, Math.random, level); return { d, hp: d.hp, maxHp: d.hp, spd: d.level, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
-  const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(mk)); return f; };
+  const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(m => mk(m))); return f; };
   const scripted = fixed.length ? fixed : kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
   if (isBoss) {
     withMinions(loc.boss);   // Jack Oct 11: no boss checkpoint; a boss fight always starts at full HP
