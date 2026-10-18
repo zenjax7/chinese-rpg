@@ -378,6 +378,11 @@ The 50-enemy roster (`enemies.json`, built by `build/enemies/build_enemies.py`) 
 | shadow_dragon | 暗影龙 | Shadow-Cursed Dragon | L9.1 | boss | location | 50 | 694 | 42 | 10 | 1.00 | 1.00 | 0 | 360 | 480 | 1 | 力量 |
 | demon_king | 魔王 | Demon King | L9.2 | boss | realm | 53 | 820 | 47 | 11 | 1.00 | 1.00 | 0 | 720 | 1200 | 1 | 统治 |
 
+**Implementation notes: enemy levels (Desy, 2026-10-17)**
+1. Classic mode is kept. Each classic location reads `enemyLevel`, `eliteLevel`, `boss.level` and `recLevel` (and `gearTier`) from the graph map it corresponds to, by a static table (`src/shared/leveling.ts` `CLASSIC_MAPS`: meadow → realm_1, forest → realm_2); a location with no entry uses its realm's main map `realm_<realm>`. EXP damping uses that recLevel. No other rule changes.
+2. worker_bee keeps the giant bee's archetype at half the HP multiplier. Its level is the encounter's rolled level (a roster worker bee rolls in `enemyLevel`), or the boss's level when a boss summons it.
+3. A boss with no `boss.level` keeps its table stats, only as a runtime fallback: `validate_levels` (and the editor's publish check) errors on any map whose boss has no `boss.level`.
+
 ### 2.4 Worked examples
 
 Boss numbers are unchanged from v2; the two elite rows are new. Normal enemy ATK is ×1.1 (**Jack, 2026-10-12**: 1.21 × DEF_ref).
