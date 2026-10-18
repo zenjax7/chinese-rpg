@@ -10,7 +10,8 @@ Run:  python combat_sim.py            -> full report (writes combat_sim_out.txt 
 Models: persistent HP/MP between battles (no auto-heal), paid inn, potions, gold drops + chests,
 4 answer ways with per-way accuracy, proficiency = 2 correct per way (total or in-a-row),
 engine picks the weakest way per question, boss-approach patrols until pool proficiency >= threshold.
-Hero is fixed at the recommended level and gear for the tier (no leveling or shopping for gear inside a run).
+Hero is fixed at the recommended level and gear for the tier (no leveling or shopping for gear inside a run): the legacy model of the v3.2 tables
+and of the historical world runs. v3.9.5 (2026-10-17, Jack): world_sim on docs/data/levels uses real leveling (LEVELS_V2 below).
 """
 import random, math, statistics, sys, csv, os, collections
 import builtins
@@ -53,12 +54,47 @@ NORMAL_ATK_K = 1.21   # normal enemy ATK = round(1.21 x DEF_ref): Jack 2026-10-1
                       # world_sim sets 1.1 for v391_rules and the pre-graph (v3.7) loop, so the historical tables still reproduce.
 ENEMY_SCALE = dict(atk=1.0, hp=1.0)   # 2026-10-11 report-only difficulty options (normal enemies' ATK / HP scaling); 1.0 = the tables as authored
 def enemy(t, kind='normal'):
+    if LEVELS_V2: return enemy_at(t, kind, enemy_level(kind))
     round = builtins.round   # stat bands stay as authored in the roster (enemies.json / prototype); half-up applies to combat resolution
     h = hero_stats(t); base = max(1, h['ATK'] - 0.5*t)
     if kind == 'normal':  return dict(HP=round(ENEMY_SCALE['hp']*HITS[t]*base), ATK=round(ENEMY_SCALE['atk']*NORMAL_ATK_K*h['DEF']), DEF=t, kind=kind)
     if kind == 'elite':   return dict(HP=2*round(HITS[t]*base), ATK=round(1.2*h['DEF']), DEF=t, kind=kind)   # 2x normal HP, location-boss ATK
     if kind == 'locboss': return dict(HP=round(5*base),       ATK=round(1.2*h['DEF']), DEF=t, kind=kind)
     if kind == 'realmboss': return dict(HP=round(7*base),     ATK=round(1.3*h['DEF']), DEF=t, kind=kind)
+
+# ---------------- leveling v2 (Jack, 2026-10-17; spec §1.1, §2.1, §2.3, §7.2) ----------------
+# The standard for world_sim on docs/data/levels: the hero levels up from L1 (EXP per kill and quest as before), enemies have levels
+# (settings.enemyLevel / eliteLevel / boss.level of the map), and speed gives the hero 1-3 actions per round. world_sim sets LEVELS_V2
+# per campaign; False keeps the legacy model above (hero fixed at L_rec(t)) for the v3.2 tables and the historical (v3.9.1) runs.
+LEVELS_V2 = False
+HITS_V2 = {**HITS, 1: 2.4}          # t1 normal hits factor 3 -> 2.4 (an L1 horned rabbit is 1 hit at hero L7)
+MAX_ACTIONS = 3
+def exp_to_next(L): return round(15 + 1.5*(L - 1)**2)
+def hero_at(L, g):
+    """Hero at level L with common tier-g gear: weapon 3g+2, armor 2g+1, shield g (spec §2.1)."""
+    return dict(HP=30 + 4*L, MP=10 + L, ATK=3*g + 2 + (L - 1), DEF=3*g + 1 + (L - 1)//3, SPD=L)
+def enemy_at(t, kind, n):
+    """An enemy of level n in a tier-t map = the §2.3 formula built from the reference hero at level n with tier-t gear. DEF = ceil(n/5), SPD = n.
+    Bosses then take m(t) and the x0.8 ATK in battle(), as before."""
+    h = hero_at(n, t); de = -(-n // 5); base = max(1, h['ATK'] - 0.5*de)
+    if kind == 'normal':    e = dict(HP=round(ENEMY_SCALE['hp']*HITS_V2[t]*base), ATK=round(ENEMY_SCALE['atk']*NORMAL_ATK_K*h['DEF']))
+    elif kind == 'elite':   e = dict(HP=2*round(HITS_V2[t]*base), ATK=round(1.2*h['DEF']))
+    elif kind == 'locboss': e = dict(HP=round(5*base), ATK=round(1.2*h['DEF']))
+    else:                   e = dict(HP=round(7*base), ATK=round(1.3*h['DEF']))
+    return dict(e, DEF=de, SPD=n, LV=n, kind=kind)
+ELEVELS = {}      # map id -> dict(lv=[lo, hi], elite=n, boss=n): the maps' settings (world_loader.ENEMY_LEVELS)
+CUR_MAP = None    # the map of the battle being fought (world_sim sets it)
+_RNG = None       # the battle's rng (level rolls)
+def enemy_level(kind):
+    r = ELEVELS[CUR_MAP]
+    if kind in ('locboss', 'realmboss'): return r['boss']
+    if kind == 'elite': return r['elite']
+    return _RNG.randint(*r['lv'])
+def hero_actions(h, foes):
+    """Speed (spec §1.1): hero actions this round = clamp(floor(SPD_h / max SPD of the living enemies), 1, 3). 1 in the legacy model."""
+    live = [f.get('SPD', 0) for f in foes if f['HP'] > 0]
+    if not LEVELS_V2 or not live or not max(live): return 1
+    return max(1, min(MAX_ACTIONS, h.get('SPD', 0) // max(live)))
 
 # ---------------- combat constants ----------------
 K_BLOCK, K_BROKEN, BROKEN_FLOOR = 1.25, 0.5, 0.5
@@ -119,9 +155,11 @@ class Item:
         self.corr = {w: (2 if prof else 0) for w in ways}; self.att = {w: self.corr[w] for w in ways}
         self.run = {w: 0 for w in ways}; self.sat = {w: prof for w in ways}
 
+PROF_EXP = (10, 30)   # spec §7.2 (balance.json learning.expWayComplete / expProficient)
 class Learner:
     def __init__(self, p, speech, rule, rng):
         self.p = p; self.ways = WAYS_ALL if speech else WAYS_ALL[:2]; self.rule = rule; self.rng = rng
+        self.pexp = 0   # proficiency EXP earned in battle answers (spec §7.2: +10 per way completed, +30 when Proficient); world_sim collects it
     def way_done(self, it, w):
         return it.sat[w] if self.rule == 'row' else it.corr[w] >= 2
     def proficient(self, it): return all(self.way_done(it, w) for w in self.ways)
@@ -147,8 +185,10 @@ class Learner:
             elif not ok: it.run[w] = 0
             return ok, w
         if ok:
+            wd, pf = self.way_done(it, w), self.proficient(it)
             it.corr[w] += 1; it.run[w] += 1
             if it.run[w] >= 2: it.sat[w] = True
+            self.pexp += PROF_EXP[0]*(not wd and self.way_done(it, w)) + PROF_EXP[1]*(not pf and self.proficient(it))
         else: it.run[w] = 0
         return ok, w
 
@@ -281,6 +321,7 @@ def cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
     return True
 
 def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=None, special=None, elite=False):
+    global _RNG; _RNG = rng
     h = dict(S['hero']); feed = QuestionFeed(L, qset, rng)
     rnd = 0
     L.bq = 0; L.bs = 0; heals = 0; gauge = 0
@@ -335,6 +376,9 @@ def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=Non
         tired = q >= SOFT_CAP_Q[kind]
         rnd += 1
         for f in foes: f['hit'] = False
+        n_act = hero_actions(h, foes)   # speed: fixed at the start of the round (spec §1.1)
+        stats['rounds'] = stats.get('rounds', 0) + 1; stats[f'act{n_act}'] = stats.get(f'act{n_act}', 0) + 1
+        if CUR_MAP and LEVELS_V2: _k = f'am|{CUR_MAP}|{n_act}'; stats[_k] = stats.get(_k, 0) + 1
         # ---- companion team attack (free action, no question) when the gauge is full
         if COMPANION['on'] and gauge >= COMPANION['full']:
             gauge = 0; stats['companion'] += 1
@@ -349,47 +393,48 @@ def battle(t, S, L, qset, kind, rng, stats, resume_half=False, foes_override=Non
             foes = [f for f in foes if f['HP'] > 0]
             if not foes or all(f['kind'] == 'normal' for f in foes) and kind != 'normal':
                 return True, gold, chests, checkpoint
-        # ---- hero turn
-        _hq0 = q
-        if S['hp'] < 0.35*h['HP'] and S['potions'] > 0:
-            S['potions'] -= 1; S['hp'] = min(h['HP'], S['hp'] + ECON['potion_heal']*h['HP']); stats['potions_used'] += 1
-        elif S['hp'] < 0.40*h['HP'] and S['heal'] and S['mp'] >= MPCFG['heal'] and heals < MPCFG['heal_limit']:
-            S['mp'] -= MPCFG['heal']; heals += 1; stats['heals'] += 1
-            if ask(): S['hp'] = min(h['HP'], S['hp'] + MPCFG['heal_frac']*h['HP'])
-        elif camp and S.get('spells') and cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
-            pass
-        elif camp and S.pop('_last_turn_cast', None) and False:
-            pass
-        else:
-            live = [f for f in foes if f['HP'] > 0]
-            if special == 'shadow_dragon_focus' or S.get('focus_boss'): tgt = live[0]   # focus_boss: diagnostic only (prototype test taps target-0)                   # kid ignores the imp and hits the dragon
-            elif special == 'troll_tag': tgt = live[(rnd // 2) % len(live)]       # v3 Tag Team: only the front troll can be targeted, they swap every 2 rounds
-            else: tgt = min(live, key=lambda f: f['HP'] if f['kind'] in ('normal', 'elite') else 1e9)
-            sk = None   # optional t6+ skills (diagnostic only; off unless S sets them): Sweep every 4 rounds, Frost every 3
-            skr = (MPCFG['heal'] + MPCFG['shield']) if (camp and MPCFG['regen'] == 0) else 0   # v3.6 (no regen): keep Heal + Shield MP
-            if S.get('sweep') and rnd % 4 == 1 and len(live) > 1 and S['mp'] >= 12 + skr: sk = 'sweep'; S['mp'] -= 12
-            elif S.get('frost') and rnd % 3 == 1 and S['mp'] >= 8 + skr: sk = 'frost'; S['mp'] -= 8
-            if ask():
-                dmg = max(1, round(h['ATK']*smult(streak)*(1.5 if tired else 1) - 0.5*tgt['DEF']))
-                if sk == 'sweep':
-                    for f in live:
-                        if f is not tgt: f['HP'] -= max(1, round(0.6*h['ATK']*smult(streak) - 0.5*f['DEF'])); f['hit'] = True
-                    dmg = max(1, round(0.6*h['ATK']*smult(streak)*(1.5 if tired else 1) - 0.5*tgt['DEF']))
-                if sk == 'frost': tgt['frozen'] = True
-                tgt['HP'] -= dmg; tgt['hit'] = True
-                if tgt['HP'] <= 0 and not tgt.get('summoned'):
-                    tgt['paid'] = True
-                    g = gold_per_enemy(t) * rng.uniform(0.8, 1.2) * GOLD_MULT[tgt['kind']]
-                    gold += g
-                    if rng.random() < CHEST_RATE[tgt['kind']]: chests += 1
-        if foes[0]['kind'] != 'normal' and foes[0]['HP'] <= maxhp0/2 and foes[0]['HP'] > 0: checkpoint = True
-        if camp: settle(foes)
-        foes = [f for f in foes if f['HP'] > 0]
-        if not foes or (kind != 'normal' and all(f['kind'] == 'normal' for f in foes) and foes != []):
-            # boss dead: remaining minions flee
-            if not foes or all(f['kind'] == 'normal' for f in foes):
-                L.bq = None; return True, gold, chests, checkpoint
-        if camp: stats['hero_q'] = stats.get('hero_q', 0) + (q - _hq0)
+        # ---- hero turn(s): n_act actions (speed, spec §1.1); each one is a full hero turn under the usual rules
+        for _act in range(n_act):
+            _hq0 = q
+            if S['hp'] < 0.35*h['HP'] and S['potions'] > 0:
+                S['potions'] -= 1; S['hp'] = min(h['HP'], S['hp'] + ECON['potion_heal']*h['HP']); stats['potions_used'] += 1
+            elif S['hp'] < 0.40*h['HP'] and S['heal'] and S['mp'] >= MPCFG['heal'] and heals < MPCFG['heal_limit']:
+                S['mp'] -= MPCFG['heal']; heals += 1; stats['heals'] += 1
+                if ask(): S['hp'] = min(h['HP'], S['hp'] + MPCFG['heal_frac']*h['HP'])
+            elif camp and S.get('spells') and cast_spell(S, h, foes, streak, tired, kind, shield_used, rng, stats, ask):
+                pass
+            elif camp and S.pop('_last_turn_cast', None) and False:
+                pass
+            else:
+                live = [f for f in foes if f['HP'] > 0]
+                if special == 'shadow_dragon_focus' or S.get('focus_boss'): tgt = live[0]   # focus_boss: diagnostic only (prototype test taps target-0)                   # kid ignores the imp and hits the dragon
+                elif special == 'troll_tag': tgt = live[(rnd // 2) % len(live)]       # v3 Tag Team: only the front troll can be targeted, they swap every 2 rounds
+                else: tgt = min(live, key=lambda f: f['HP'] if f['kind'] in ('normal', 'elite') else 1e9)
+                sk = None   # optional t6+ skills (diagnostic only; off unless S sets them): Sweep every 4 rounds, Frost every 3
+                skr = (MPCFG['heal'] + MPCFG['shield']) if (camp and MPCFG['regen'] == 0) else 0   # v3.6 (no regen): keep Heal + Shield MP
+                if S.get('sweep') and rnd % 4 == 1 and len(live) > 1 and S['mp'] >= 12 + skr: sk = 'sweep'; S['mp'] -= 12
+                elif S.get('frost') and rnd % 3 == 1 and S['mp'] >= 8 + skr: sk = 'frost'; S['mp'] -= 8
+                if ask():
+                    dmg = max(1, round(h['ATK']*smult(streak)*(1.5 if tired else 1) - 0.5*tgt['DEF']))
+                    if sk == 'sweep':
+                        for f in live:
+                            if f is not tgt: f['HP'] -= max(1, round(0.6*h['ATK']*smult(streak) - 0.5*f['DEF'])); f['hit'] = True
+                        dmg = max(1, round(0.6*h['ATK']*smult(streak)*(1.5 if tired else 1) - 0.5*tgt['DEF']))
+                    if sk == 'frost': tgt['frozen'] = True
+                    tgt['HP'] -= dmg; tgt['hit'] = True
+                    if tgt['HP'] <= 0 and not tgt.get('summoned'):
+                        tgt['paid'] = True
+                        g = gold_per_enemy(t) * rng.uniform(0.8, 1.2) * GOLD_MULT[tgt['kind']]
+                        gold += g
+                        if rng.random() < CHEST_RATE[tgt['kind']]: chests += 1
+            if foes[0]['kind'] != 'normal' and foes[0]['HP'] <= maxhp0/2 and foes[0]['HP'] > 0: checkpoint = True
+            if camp: settle(foes)
+            foes = [f for f in foes if f['HP'] > 0]
+            if not foes or (kind != 'normal' and all(f['kind'] == 'normal' for f in foes) and foes != []):
+                # boss dead: remaining minions flee
+                if not foes or all(f['kind'] == 'normal' for f in foes):
+                    L.bq = None; return True, gold, chests, checkpoint
+            if camp: stats['hero_q'] = stats.get('hero_q', 0) + (q - _hq0)
         # ---- enemy phase
         is_boss = lambda f: f['kind'] in ('locboss', 'realmboss')
         for f in foes[:3]:

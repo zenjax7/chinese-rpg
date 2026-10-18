@@ -73,8 +73,8 @@
   ],
   "G": 27,
   "recLevel": [
-   7,
-   10
+   26,
+   28
   ],
   "gearTier": 4,
   "difficulty": {
@@ -85,6 +85,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   24,
+   26
+  ],
+  "eliteLevel": 26,
   "roster": [
    {
     "enemy": "cave_bat",

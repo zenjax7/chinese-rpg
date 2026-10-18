@@ -14,6 +14,7 @@ Companion to GameDev's schema doc `docs/tech/level-editor.md` (`level/0.1`). Gam
 > - **J8, Jack's rulings on §9 (2026-10-11).** (1) **No practice fights at all:** no battle budget (nor its reset when the pool changes), no boss-approach patrols, no 20% trigger, no re-arming at inns, no own-word battle targets (6.5–9.5, 8 path fights). (2) **No pity roll.** (3) **Walked edges roll at 50%** of the normal rate (was ×0.05). (4) **Nodes may have no event;** no one-event-per-arrival rule, no filler events. (5) **Progression is purely by map links:** beating a boss unlocks nothing, going around a boss node is fine, and no link carries a boss condition. Boss nodes stay fights. Nothing was added to make up for these.
 > - **J10, map display (Jack's decision, 2026-10-11).** In game every unvisited node looks the same; a node's type and icon show only on arrival, on top of fog of war. No landmarks. The editor shows everything. The converted maps drop the 41 `fog: "landmark"` node fields.
 > - **J11, Jack's decisions of 2026-10-12.** (1) **A boss node blocks passage:** the player can't move past it without beating its boss; fleeing returns them to the node they came from; "skippable" only means a map may have an alternate route that never goes through that node (§2.1). (2) **Normal (non-boss) enemy ATK ×1.1:** `round(1.21 × DEF_ref)`, was 1.1; boss and elite ATK unchanged (the enemy tables, the roster and the generated world content were updated).
+> - **J12, leveling v2 (Jack's decision, 2026-10-17).** Enemies have levels on the hero's scale: `settings.enemyLevel [lo, hi]` (each normal rolls in it; required when the map has a roster), `settings.eliteLevel` (elites in mini-boss and quest fights; default hi), `settings.boss.level` (required with a boss), optional `roster[].level` (a level or [lo, hi] for one enemy). Stats and SPD come from the level (combat-spec §2.3); speed gives the hero 1–3 actions per round (§1.1). `recLevel` stays, now on the hero's scale. Source: `docs/data/balance/enemy_levels.csv`, read by `convert_levels.py`.
 > - **J9, quest locks (Jack's decision, 2026-10-11; his one exception to J8.5).** A node or edge may carry `lockedUntilQuest: <quest id>`: impassable until that quest is completed. An optional `lockedScene` plays when the player tries (e.g. the workers at the broken bridge); without one, one default blocked line. No keys, no partial progress, no boss gates (§2.3).
 >
 > **Superseded by these:** D1 (G derived from the tier), D2 (difficulty row read from the CSV), D10 (realm_1 fallback), the append-only / retired / renames rules, Q1, Q3, Q4, Q16 and Q17 of the 2026-10-10 version, and the zone-era tables of the old §3.9. Git history keeps the old text.
@@ -34,14 +35,14 @@ Companion to GameDev's schema doc `docs/tech/level-editor.md` (`level/0.1`). Gam
 |---|---|---|
 | map | one file `docs/data/levels/<id>.json` = one graph | the game loads, saves and hashes RNG per map |
 | portal | node `kind: portal` + a `portal` edge whose `to` is `{graph, node}` in another map; never a boss condition (J8) | the only way maps connect (with `stairs` and `exit`, also cross-map edges) |
-| boss | `settings.boss {node, gateEdge, kind, enemy, reward?}` + the boss node | at most one per map; a fight, it unlocks nothing (J8) |
+| boss | `settings.boss {node, gateEdge, kind, enemy, level, reward?}` + the boss node | at most one per map; a fight, it unlocks nothing (J8) |
 | locked bridge / gate | `lockedUntilQuest` (+ optional `lockedScene`) on the node or edge | J9 (§2.3) |
 | village / town | node `kind: village` / `town` (+ `town` number = shop tier) | unchanged |
 | treasure | event outcome `treasure` with `openChest` | unchanged |
 | NPC | node `kind: npc` + `npc` id; banter and lines are scenes | unchanged |
 | quest battle | quest objective `kill` on a placed `fight` (mini-boss or quest fight) or an edge battle | placed fights stay (J6) |
 | word pool | `settings.words` (ordered list of curriculum ids) | editable (J2) |
-| enemies | `settings.roster` (enemy + weight), `packs`, `enemiesPerBattle` | no `elite`, no `scriptedElite` (J6) |
+| enemies | `settings.roster` (enemy + weight, optional level), `enemyLevel`, `eliteLevel`, `packs`, `enemiesPerBattle` | no `elite`, no `scriptedElite` (J6); levels J12 |
 | state | top-level `state`: `draft` / `beta` / `golden` | J3 |
 
 ### 1.1 Map structure
@@ -76,13 +77,14 @@ Companion to GameDev's schema doc `docs/tech/level-editor.md` (`level/0.1`). Gam
 | `title`, `emoji`, `background {map, battle}` | zone / location | per map |
 | `words` (ordered curriculum ids) + `desyPool` (the source list, read-only provenance) | zone pool (location) | per map, editable (J2, §3) |
 | `G` (gold unit) | realm tier | per map, copied from today's tier table (6, 12, 18, 27, 36, 45, 54, 63, 72) |
-| `recLevel [min, max]` | realm tier | per map |
+| `recLevel [min, max]` | realm tier | per map, on the hero's scale (J12: the 75% saver beeline kid's level on entering and leaving, `enemy_levels.csv`); shown to the player and used by EXP damping |
 | `gearTier` | realm tier (`realm_difficulty.gear_tier`) | per map: the gear tier of chests and battle drops and of the recommended-gear check; the sim uses it as the map's tier |
 | `difficulty {mcOptions, reviewSlots}` | `realm_location_difficulty.csv` by location | per map, copied (replaces D2). No `pathFights` (J8) |
 | `maxHopsToInn` | realm (3 in realms 1–3, 5 later) | per map, copied; the validator checks it per map |
-| `enemiesPerBattle`, `roster`, `packs` | zone | per map |
+| `enemiesPerBattle`, `roster`, `packs` | zone | per map; `roster[].level` optional (J12) |
+| `enemyLevel [lo, hi]`, `eliteLevel` | – (enemies had tier stats) | per map (J12), from `docs/data/balance/enemy_levels.csv`; `enemyLevel` required with a roster |
 | `encounters` | – | optional override (D4); `null` = global |
-| `boss {node, gateEdge, kind, enemy, reward?}` | zone `bossNode`/`gateEdge`/`bossKind`/`boss`, content `bossReward` | per map (one boss per map) |
+| `boss {node, gateEdge, kind, enemy, level, reward?}` | zone `bossNode`/`gateEdge`/`bossKind`/`boss`, content `bossReward` | per map (one boss per map); `level` required (J12) |
 | shop tier | town number | unchanged: node `town` number |
 | unlock order | zone `unlockRequires`, realm order, `world.json realms[]` | **none: the links are the progression** (J8); quest locks only (J9) |
 | `elite`, `scriptedElite` | zone | **removed** (J6) |

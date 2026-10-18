@@ -183,6 +183,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   await tid('back').click();
 
   // ---- boss battle: cast on turn 1, back to back ----
+  // (leveling v2: the L19 queen hits harder, so the battle loop may cast Heal (MP down), and a kill can level the hero (+1 max MP added to MP); regen would be a rise)
   await edit(s => { s.level = 12; s.where = 'forest'; s.locs.forest.pathCleared = 8; });
   await p.reload(); await tid('location').waitFor(); await rest(34); await tid('location').waitFor();
   if (await tid('act-boss').count()) {
@@ -190,13 +191,13 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     const bc = []; const mpSeen = [];
     await tid('act-boss').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
     await battle(async () => { const c = await cs(); if (c.kind !== 'boss') return false;
-      if (bc.length >= 2) { mpSeen.push({ mp: +(await tid('hud-mp').innerText()), correct: c.correct }); if (mpSeen.length === 1) await shot('queen-battle'); return false; }
+      if (bc.length >= 2) { mpSeen.push({ mp: +(await tid('hud-mp').innerText()), lv: +(await tid('hud-level').innerText()), correct: c.correct }); if (mpSeen.length === 1) await shot('queen-battle'); return false; }
       await openBook(); if (await tid('spell-small_fireball').isDisabled()) { await closeBook(); return false; }
       bc.push({ c, r: await cast('small_fireball', { skip: true }) }); return true; });
     check(bc.length === 2 && bc[0].c.correct === 0 && bc[1].r.ls.round === bc[0].r.ls.round + 1, `boss: cast on turn 1 and again right after (${bc.length} casts, ${bc[0]?.c.correct} right answers before)`);
     check(bc.every(x => x.r.ls.hits.every(h => !h.status || h.status !== 'frozen')), 'boss: no freeze on bosses');
     const qb = bc[0]?.r.ls.hits.find(h => h.boss); log('boss hit', JSON.stringify(qb));
-    check(mpSeen.length >= 3 && mpSeen.every(x => x.mp === mpSeen[0].mp) && mpSeen[mpSeen.length - 1].correct > mpSeen[0].correct, `v3.6+: no MP regen on right answers (MP stays ${mpSeen[0]?.mp} over ${mpSeen.length} turns, ${mpSeen[0]?.correct} → ${mpSeen[mpSeen.length - 1]?.correct} right)`);
+    check(mpSeen.length >= 3 && mpSeen.every((x, i) => !i || x.mp - mpSeen[i - 1].mp <= x.lv - mpSeen[i - 1].lv) && mpSeen[mpSeen.length - 1].correct > mpSeen[0].correct, `v3.6+: no MP regen on right answers (MP never rises except a level-up's +1 max MP: ${mpSeen.map(x => x.mp + '@L' + x.lv).join(' ')} over ${mpSeen.length} turns, ${mpSeen[0]?.correct} → ${mpSeen[mpSeen.length - 1]?.correct} right)`);
   } else check(false, 'boss: forest boss reachable');
   check(errs.length === 0, 'spells: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await ctx.close();

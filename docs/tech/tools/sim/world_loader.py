@@ -168,7 +168,15 @@ def _load_levels(d, world_dir):
                                 for a in e.get('do', []) if a.get('giveItem') == 'feather')
         zones.append(z)
     quests = {q['id']: q for L in maps.values() for q in L.get('quests', [])}
+    # leveling v2 (Jack 2026-10-17): enemy levels per map (settings.enemyLevel [lo, hi], eliteLevel (default hi), boss.level)
+    ENEMY_LEVELS.clear()
+    for mid, L in maps.items():
+        st = L.get('settings') or {}
+        if st.get('enemyLevel'):
+            lo, hi = st['enemyLevel']
+            ENEMY_LEVELS[mid] = dict(lv=[lo, hi], elite=st.get('eliteLevel', hi), boss=(st.get('boss') or {}).get('level'), rec=st.get('recLevel'))
     return rules, graphs, zones, quests, start
+ENEMY_LEVELS = {}   # map id -> dict(lv, elite, boss); filled by _load_levels (empty for docs/data/world)
 
 # ---------------- transform: the Director's working defaults for dropping zones (pending Jack) ----------------
 def _next_idx(g, key):
@@ -256,7 +264,7 @@ def configure(cfg=None):
     global START, LQ
     START = None; LQ = None
     if src == 'levels': RULES, GRAPHS, ZONES, LQ, START = _load_levels(cfg.get('levels', LEVELS_DIR), world_dir); hooks = []
-    else: RULES, GRAPHS, ZONES, hooks = _load_world(world_dir)
+    else: RULES, GRAPHS, ZONES, hooks = _load_world(world_dir); ENEMY_LEVELS.clear()
     LOG = []
     if cfg.get('transform') == 'levels_proposal': GRAPHS, ZONES, LOG = levels_proposal(GRAPHS, ZONES)
     elif cfg.get('transform'): raise ValueError(cfg['transform'])

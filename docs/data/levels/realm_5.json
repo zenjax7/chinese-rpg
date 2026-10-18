@@ -72,8 +72,8 @@
   ],
   "G": 36,
   "recLevel": [
-   10,
-   13
+   35,
+   36
   ],
   "gearTier": 5,
   "difficulty": {
@@ -84,6 +84,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   34,
+   36
+  ],
+  "eliteLevel": 36,
   "roster": [
    {
     "enemy": "bog_monster",
@@ -101,7 +106,8 @@
    "node": "boss_1",
    "gateEdge": "e8",
    "kind": "locboss",
-   "enemy": "bog_toad"
+   "enemy": "bog_toad",
+   "level": 35
   }
  },
  "nodes": [

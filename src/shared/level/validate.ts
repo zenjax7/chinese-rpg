@@ -69,6 +69,18 @@ function sceneProblems(l: Level): Problem[] {
   return out;
 }
 
+/** Leveling v2 (Jack 2026-10-17; mirrors validate_levels.py 2b): a map with a roster says its enemy levels (enemyLevel [lo, hi]),
+ *  1 <= lo <= hi (roster[].level too), and a boss has a level. */
+function levelProblems(l: Level): Problem[] {
+  const out: Problem[] = []; const s: any = l.settings;
+  const ok = (r: unknown) => { const a = typeof r === 'number' ? [r, r] : r; return Array.isArray(a) && Number.isInteger(a[0]) && Number.isInteger(a[1]) && 1 <= a[0] && a[0] <= a[1]; };
+  if (s.roster?.length && !s.enemyLevel) out.push(err('enemy_level', 'A map with a roster needs enemy levels (settings.enemyLevel [lo, hi]).'));
+  if (s.enemyLevel && !ok(s.enemyLevel)) out.push(err('enemy_level_range', `Enemy levels ${JSON.stringify(s.enemyLevel)}: need 1 ≤ lo ≤ hi.`));
+  for (const r of s.roster ?? []) if (r?.level != null && !ok(r.level)) out.push(err('roster_level', `Roster ${r.enemy} level ${JSON.stringify(r.level)}: need 1 ≤ lo ≤ hi.`));
+  if (s.boss && s.boss.level == null) out.push(err('boss_level', 'The boss needs a level (settings.boss.level).'));
+  return out;
+}
+
 const hasShape = (l: any): l is Level => !!l && Array.isArray(l.nodes) && Array.isArray(l.edges) && typeof l.settings === 'object'
   && l.nodes.every((n: any) => n && typeof n.id === 'string') && l.edges.every((e: any) => e && typeof e.id === 'string');
 
@@ -76,7 +88,7 @@ const hasShape = (l: any): l is Level => !!l && Array.isArray(l.nodes) && Array.
 export function validateLevel(level: unknown, ctx: ValidateCtx): Problem[] {
   const schema = schemaProblems(level);
   if (!hasShape(level)) return schema;
-  return [...schema, ...graphProblems(level, ctx), ...eventProblems(level), ...wordProblems(level, ctx), ...sceneProblems(level)];
+  return [...schema, ...graphProblems(level, ctx), ...eventProblems(level), ...wordProblems(level, ctx), ...sceneProblems(level), ...levelProblems(level)];
 }
 
 export const hasErrors = (ps: Problem[]) => ps.some(p => p.level === 'error');

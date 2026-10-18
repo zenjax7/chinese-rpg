@@ -10,6 +10,8 @@
  7. docs/tech/tools/levels/ (level/0.2 maps, LE §14 F7): validate_levels.py must report 0 errors (schema, links, quest locks,
                                             boss reward), test_locks.py must pass (lock fixtures), convert_levels.py --check must find
                                             docs/data/levels up to date
+ 8. docs/tech/tools/data/leveling_v2_tables.py --check (leveling v2, 2026-10-17): hero_levels / enemy_stat_bands / enemies stats and
+                                            their JSON twins match the formulas and the maps' enemy levels
 Exit 1 on any failure."""
 import json, os, subprocess, sys, glob, filecmp, shutil, tempfile
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -81,5 +83,7 @@ lt = os.path.join('docs', 'tech', 'tools', 'levels')
 run('validate_levels (0 errors)', [os.path.join(lt, 'validate_levels.py')], lambda o, c: c == 0 and 'ERRORS: 0' in o)
 run('test_locks (quest-lock fixtures)', [os.path.join(lt, 'test_locks.py')], lambda o, c: c == 0 and '0 failures' in o)
 run('convert_levels --check (docs/data/levels up to date)', [os.path.join(lt, 'convert_levels.py'), '--check'])
+# 8. leveling v2 tables (hero by level, enemy bands and roster stats at their levels)
+run('leveling_v2_tables --check (enemy and hero tables up to date)', [os.path.join('docs', 'tech', 'tools', 'data', 'leveling_v2_tables.py'), '--check'])
 print('FAILED: ' + ', '.join(fails) if fails else 'world + story data: all checks passed')
 sys.exit(1 if fails else 0)

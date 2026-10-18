@@ -196,9 +196,9 @@ Exactly Desy's `settings` block (R4):
   "background": {"map": "bg_map_old_mine_1", "battle": "bg_battle_r6"},
   "desyPool": "L6.1",
   "words": ["C357", "C358", "C359"],
-  "G": 45, "recLevel": [13, 16], "gearTier": 6,
+  "G": 45, "recLevel": [39, 41], "gearTier": 6,
   "difficulty": {"mcOptions": 5, "reviewSlots": 2, "pathFights": 8},
-  "enemiesPerBattle": [3, 3],
+  "enemiesPerBattle": [3, 3], "enemyLevel": [40, 42], "eliteLevel": 42,
   "roster": [{"enemy": "zombie", "weight": 1}], "packs": {},
   "encounters": null,
   "maxHopsToInn": 5
@@ -215,13 +215,15 @@ Exactly Desy's `settings` block (R4):
 | `words` | the map's **ordered pool of learn items** (§2.5) | yes |
 | `desyPool` | provenance only: the curriculum list the pool was pre-filled from | read-only |
 | `G` | the map's **gold unit**: prices, rewards and drops on this map | yes |
-| `recLevel` | `[min, max]` recommended level (EXP and the gear check) | yes |
+| `recLevel` | `[min, max]` recommended hero level (shown to the player, EXP damping, the gear check); on the hero's scale since leveling v2 (2026-10-17) | yes |
 | `gearTier` | the map's **tier**: gear tier of chests and drops and the recommended-gear check | yes |
 | `difficulty` | the **difficulty row**: `mcOptions`, `reviewSlots`, `pathFights`, copied from `realm_location_difficulty.csv` at conversion, now stored per map | yes |
-| `enemiesPerBattle`, `roster` (enemy + weight), `packs` | enemy **ids** only; no `elite`, no `scriptedElite` | yes |
+| `enemiesPerBattle`, `roster` (enemy + weight, optional `level`: a level or `[lo, hi]` for that enemy), `packs` | enemy **ids** only; no `elite`, no `scriptedElite` | yes |
+| `enemyLevel` | `[lo, hi]`: each normal enemy rolls its level in it; stats and SPD come from the level (combat-spec §2.3, leveling v2, 2026-10-17). **Required when the map has a roster.** | yes |
+| `eliteLevel` | the level of elite enemies in this map's mini-boss and quest fights; default `enemyLevel[1]` | yes |
 | `encounters` | `null` = global odds. An object overrides **only the danger odds**, e.g. `{"danger": {"1": 0.5}}`, clamped to the global max. The depth step and the walked factor stay global. | yes |
 | `maxHopsToInn` | inn-distance authoring check per map | yes |
-| `boss` (optional) | the **boss record**: `node`, `gateEdge` (its one `patrol` edge), `kind` (`locboss` / `realmboss`), `enemy`, `reward` (the boss chest). At most one per map. | yes |
+| `boss` (optional) | the **boss record**: `node`, `gateEdge` (its one `patrol` edge), `kind` (`locboss` / `realmboss`), `enemy`, `level` (required; leveling v2), `reward` (the boss chest). At most one per map. | yes |
 
 - **Boss rewards.** The boss chest is `settings.boss.reward`. The Return Feather in the boss chests of today's realm 3, 6 and 8 bosses (`bazaar_cellars_1`, `moonlit_crypt_2`, `undercroft_3`) belongs in that `reward` on those maps. A boss chest **must not also be a node event**; the converted maps still give the Feather from an `on: clear` event (`boss_3.1`, `boss_6.1`, `boss_8.1`), which moves into `reward` in Desy's follow-up (§14 F4). Whether the Feather stays at all is still Jack's (Desy's Q-J9).
 - **Bosses don't unlock anything** (R4). Beating a boss records it (`zonesDefeated`, holding boss map ids), shows it as beaten on the map, and opens its chest once; a kid can walk past an unbeaten boss to anything the links allow.
@@ -395,9 +397,9 @@ A trimmed `old_mine_1` as converted, in the r1 shape (quest scenes on the varian
     "title": {"en": "Gloomy Village", "zh": "灰雾村"}, "emoji": "🕯️",
     "background": {"map": "bg_map_old_mine_1", "battle": "bg_battle_r6"},
     "desyPool": "L6.1", "words": ["C357", "C358", "C362", "C378", "C381", "C401", "C406"],
-    "G": 45, "recLevel": [13, 16], "gearTier": 6,
+    "G": 45, "recLevel": [39, 41], "gearTier": 6,
     "difficulty": {"mcOptions": 5, "reviewSlots": 2, "pathFights": 8},
-    "enemiesPerBattle": [3, 3], "roster": [{"enemy": "zombie", "weight": 1}], "packs": {},
+    "enemiesPerBattle": [3, 3], "enemyLevel": [40, 42], "eliteLevel": 42, "roster": [{"enemy": "zombie", "weight": 1}], "packs": {},
     "encounters": null, "maxHopsToInn": 5
   },
   "nodes": [

@@ -74,7 +74,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [data/enemies/boss_hp.csv](data/enemies/boss_hp.csv) — Boss HP multipliers and ATK × 0.8 by tier and boss type (v3.7: location ~15, realm ~20 correct answers; v3.6 values kept as columns) · **Desy** · when changing these numbers
 - [data/enemies/enemies-art-roster.csv](data/enemies/enemies-art-roster.csv) — Art-brief roster: visuals, attacks, shouts (same stats as the combat table) · **Desy** · when changing these numbers
 - [data/enemies/enemies.csv](data/enemies/enemies.csv) — Combat table: stats, drops, specials. Use this for numbers. · **Desy** · when changing these numbers
-- [data/enemies/enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) — Enemy stat bands by level and role · **Desy** · when changing these numbers
+- [data/enemies/enemy_stat_bands.csv](data/enemies/enemy_stat_bands.csv) — Enemy stat bands by tier, role and level (leveling v2: normals/elites at each tier's lowest and highest level, every boss at its level) · **Desy** · when changing these numbers
 
 ### Data: spells
 
@@ -97,7 +97,9 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 ### Data: balance
 
 - [data/balance/companion.csv](data/balance/companion.csv) — Companion stats and behavior (combat-spec table) · **Desy** · when changing these numbers
-- [data/balance/hero_stats.csv](data/balance/hero_stats.csv) — Hero stats by level (combat-spec table) · **Desy** · when changing these numbers
+- [data/balance/enemy_levels.csv](data/balance/enemy_levels.csv) — Enemy levels per map (leveling v2, 2026-10-17): normals `enemyLevel` lo–hi, `eliteLevel`, `boss.level`, `recLevel` on the hero's scale; read by convert_levels.py · **Desy** · when changing enemy levels (then re-run convert_levels.py)
+- [data/balance/hero_levels.csv](data/balance/hero_levels.csv) — Hero by level L1–60 (leveling v2): EXP to next, total EXP, HP, MP, ATK/DEF from level, SPD (combat-spec §2.1) · **Desy** · when changing hero growth
+- [data/balance/hero_stats.csv](data/balance/hero_stats.csv) — Hero at L_rec(t) per tier, v3 growth: legacy model only since leveling v2 (combat-spec table) · **Desy** · when changing these numbers
 - [data/balance/mp_rules.csv](data/balance/mp_rules.csv) — MP rules (max MP, regen, heal limits) (combat-spec table) · **Desy** · when changing these numbers
 - [data/balance/practice_modes.csv](data/balance/practice_modes.csv) — Practice mode definitions (combat-spec table) · **Desy** · when changing these numbers
 - [data/balance/practice_rewards.csv](data/balance/practice_rewards.csv) — Rewards for practice modes (combat-spec table) · **Desy** · when changing these numbers
@@ -283,6 +285,9 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [data/sim/sim_world_maps_simplified.csv](data/sim/sim_world_maps_simplified.csv) — Jack's §9 rulings (2026-10-11: no practice fights, no pity, walked ×0.5, open links, all eligible events): hours and defeats vs v3.9.1 and vs the previous maps run, plus one removed rule put back at a time; 6 profiles × beeline/explore, 100 seeds · **Desy** · when judging pacing and difficulty
 - [data/sim/sim_world_maps_simplified_boss_approach.csv](data/sim/sim_world_maps_simplified_boss_approach.csv) — Own-word battles before each boss, v3.9.1 vs the maps under Jack's §9 rulings · **Desy** · when judging pacing
 - [data/sim/sim_world_bossblock.csv](data/sim/sim_world_bossblock.csv) — Jack's 2026-10-12 decisions (boss nodes block passage; normal enemy ATK ×1.1): 100 seeds × 12 profile/mode rows, hours and defeats vs v3.9.1 and vs the previous simplify run (`run_world_sim.py bossblock`) · **Desy** · when judging the new enemy ATK
+- [data/sim/sim_world_leveling_v2.csv](data/sim/sim_world_leveling_v2.csv) — Leveling v2 (Jack 2026-10-17): 100 seeds × 12 profile/mode rows on docs/data/levels, the standard (real leveling, enemy levels, speed) vs the approved proposal's model (kill EXP only) vs legacy: hours, defeats, final level, level at each tier's end, 2/3-action rounds (`run_world_sim.py leveling`) · **Desy** · when judging leveling or speed
+- [data/sim/sim_world_leveling_v2_actions.csv](data/sim/sim_world_leveling_v2_actions.csv) — Rounds by hero actions (1/2/3) per map, 75% saver beeline, 100 seeds · **Desy** · when judging speed
+- [data/sim/sim_world_leveling_v2_revisit.csv](data/sim/sim_world_leveling_v2_revisit.csv) — Revisit check: hero at L30 / L50 (and at natural level) on realm_1, clover_hills, realm_2: actions per round, % of groups cleared in round 1 · **Desy** · when judging speed
 - [data/sim/sim_world_boss_skips.csv](data/sim/sim_world_boss_skips.csv) — What each boss node stands in front of (boss nodes block passage, Jack 2026-10-12; no boss has an alternate route around it), the shortest boss-skipping route to the final boss vs beating every boss · **Desy** · when judging progression
 - [data/sim/sim_world_difficulty_options.csv](data/sim/sim_world_difficulty_options.csv) — Report-only difficulty options on existing knobs (boss HP/ATK, normal enemy ATK, encounter rate, spell MP cost) vs the maps under Jack's §9 rulings; not in the spec · **Desy** · when Jack picks a difficulty option
 
@@ -299,9 +304,11 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [data/json/enemies-art-roster.json](data/json/enemies-art-roster.json) — JSON twin of enemies/enemies-art-roster.csv (flavor text read by tools/build_data.py) · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/enemies.json](data/json/enemies.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/enemy_stat_bands.json](data/json/enemy_stat_bands.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/enemy_levels.json](data/json/enemy_levels.json) — JSON twin of balance/enemy_levels.csv (leveling v2) · **Desy** · regenerate with leveling_v2_tables.py
 - [data/json/gear.json](data/json/gear.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/gear_heroic_drops.json](data/json/gear_heroic_drops.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/hero_stats.json](data/json/hero_stats.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
+- [data/json/hero_levels.json](data/json/hero_levels.json) — JSON twin of balance/hero_levels.csv (leveling v2) · **Desy** · regenerate with leveling_v2_tables.py
 - [data/json/mp_potions.json](data/json/mp_potions.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/mp_rules.json](data/json/mp_rules.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
 - [data/json/practice_modes.json](data/json/practice_modes.json) — JSON twin of the CSV · **Desy** · read by tools/build_data.py; regenerate with the CSV
@@ -381,6 +388,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [tech/tools/data/assemble_spec.py](tech/tools/data/assemble_spec.py) — Assembles combat-spec.md · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/build_data.py](tech/tools/data/build_data.py) — Generates the data CSV/JSON tables · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/make_gear_items.py](tech/tools/data/make_gear_items.py) — Writes data/items/gear_items.csv from gear.csv, economy_prices.csv and realm_difficulty.csv (run from the repo root) · **Desy** · after a gear or price change
+- [tech/tools/data/leveling_v2_tables.py](tech/tools/data/leveling_v2_tables.py) — Leveling v2 tables (2026-10-17): writes hero_levels.csv, enemy_stat_bands.csv, the enemies.csv stats and their JSON twins + combat_data.json from the sim formulas and the maps' enemy levels (`--check` = drift check) · **Desy** · after a change to enemy levels or the hero/enemy formulas
 - [tech/tools/data/spec_new_sections.md](tech/tools/data/spec_new_sections.md) — Spec source sections · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_data.py](tech/tools/data/spells_data.py) — Spell and quest source data and design formulas · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/data/spells_md_template.md](tech/tools/data/spells_md_template.md) — spells.md template · **Desy** · when re-running Desy's sims or generators
@@ -391,7 +399,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [tech/tools/sim/boss_tune.py](tech/tools/sim/boss_tune.py) — Boss HP multiplier tuning (v3.6, plus the v3.7 location retune) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/sim/boss_tune_v37_loc.json](tech/tools/sim/boss_tune_v37_loc.json) — v3.7 location boss HP tuning output (~15 correct answers) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/sim/combat_sim.py](tech/tools/sim/combat_sim.py) — Battle sim · **Desy** · when re-running Desy's sims or generators
-- [tech/tools/sim/run_world_sim.py](tech/tools/sim/run_world_sim.py) — Campaign sim runner: `calibrate` (v3.9.1 data, checks sim_world_v391.csv), `levels` (v3.9.1 vs main vs the level proposal vs engine rules, 100 seeds), `maps` (v3.9.1 vs docs/data/levels with Jack's Oct 11 rules), `simplify` (Jack's §9 rulings vs v3.9.1 and the previous maps run; `--difficulty` adds the report-only options), `ci` (4 seeds, ~10 s, exit 1 on failure) · **Desy** · before re-running the campaign sim or after a world/level data change
+- [tech/tools/sim/run_world_sim.py](tech/tools/sim/run_world_sim.py) — Campaign sim runner: `calibrate` (v3.9.1 data, checks sim_world_v391.csv), `levels` (v3.9.1 vs main vs the level proposal vs engine rules, 100 seeds), `maps` (v3.9.1 vs docs/data/levels with Jack's Oct 11 rules), `simplify` (Jack's §9 rulings vs v3.9.1 and the previous maps run; `--difficulty` adds the report-only options), `leveling` (leveling v2: standard vs kill-EXP-only vs legacy, 100 seeds, plus the revisit check), `ci` (4 seeds, ~10 s, exit 1 on failure) · **Desy** · before re-running the campaign sim or after a world/level data change
 - [tech/tools/sim/world_sim.py](tech/tools/sim/world_sim.py) — Campaign sim on the world graph (spells_sim + the graph loop, committed; was generated by build_world_sim.py): Jack's 2026-10-11 rules by default (no boss checkpoint, no random or scripted elites; `v391_rules` only for calibration), with engine-rule switches · **Desy** · when re-running the campaign sim
 - [tech/tools/sim/world_loader.py](tech/tools/sim/world_loader.py) — Sim world loader: docs/data/world or docs/data/levels (level/0.2, realm-less: segments by gearTier, unlock order from links, the map-order met rule), the `levels_proposal` transform and the engine RNG · **Desy** · when the world or level data format changes
 - [tech/tools/sim/boss_skips.py](tech/tools/sim/boss_skips.py) — Static boss-skip analysis on docs/data/levels (what each boss stands in front of, the boss-skipping route to the final boss) → sim_world_boss_skips.csv · **Desy** · when judging progression

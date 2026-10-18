@@ -76,8 +76,8 @@
   ],
   "G": 27,
   "recLevel": [
-   7,
-   10
+   33,
+   35
   ],
   "gearTier": 4,
   "difficulty": {
@@ -88,6 +88,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   31,
+   33
+  ],
+  "eliteLevel": 33,
   "roster": [
    {
     "enemy": "goblin",
@@ -106,6 +111,7 @@
    "gateEdge": "e5",
    "kind": "realmboss",
    "enemy": "goblin_king",
+   "level": 34,
    "reward": {
     "heroic": "goblin_crown",
     "zh": "哥布林王冠",

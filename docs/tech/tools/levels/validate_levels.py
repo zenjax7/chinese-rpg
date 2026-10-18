@@ -10,6 +10,8 @@ Checks:
     (settings.boss.gateEdge) touches it and is marked patrol: true (the safe approach; there are no patrols since Jack 2026-10-11);
     every map is reachable from the start over links (warning).
  3. links: every cross-map edge {graph, node} resolves, and the target map has the return edge (both ways).
+ 2b. enemy levels (leveling v2, Jack 2026-10-17): settings.enemyLevel [lo, hi] when the map has a roster, 1 <= lo <= hi
+    (roster[].level too); settings.boss.level when the map has a boss.
  4c. boss chest: no item-giving on:clear event on the boss node (it is settings.boss.reward; LE F4).
 4. conditions: bossDefeated names a map with a boss; quest conditions name an existing quest; no edge condition uses bossDefeated
     (Jack 2026-10-11: progression is purely by links).
@@ -131,7 +133,14 @@ def validate(d, schema_dir=None):
             if isinstance(e['to'], str) and e['to'] not in ns: err.append(f"{mid}/{e['id']}: to {e['to']} missing")
         for ev in m['events'] + [x for n in m['nodes'] for v in n.get('quests', []) for p in ('pre', 'in', 'post') for x in (v.get(p) or {}).get('events', [])]:
             if ev['node'] not in ns: err.append(f"{mid}/{ev['id']}: node missing")
-        b = m['settings'].get('boss')
+        ms = m['settings']; b = ms.get('boss'); el = ms.get('enemyLevel')
+        # leveling v2 (Jack 2026-10-17; combat-spec §2.3): a map that spawns enemies says their levels
+        if ms.get('roster') and not el: err.append(f'{mid}: a map with a roster needs settings.enemyLevel [lo, hi]')
+        if el and not 1 <= el[0] <= el[1]: err.append(f'{mid}: enemyLevel {el}: need 1 <= lo <= hi')
+        for r in ms.get('roster') or []:
+            rl = r.get('level'); rl = [rl, rl] if isinstance(rl, int) else rl
+            if rl and not 1 <= rl[0] <= rl[1]: err.append(f"{mid}: roster {r['enemy']} level {r['level']}: need 1 <= lo <= hi")
+        if b and not b.get('level'): err.append(f'{mid}: the boss needs settings.boss.level')
         if b:
             ge = next((e for e in m['edges'] if e['id'] == b['gateEdge']), None)
             if b['node'] not in ns or ns[b['node']]['kind'] != 'boss': err.append(f'{mid}: boss node {b["node"]} missing or not kind boss')

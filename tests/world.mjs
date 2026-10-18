@@ -383,6 +383,9 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   const foes = await p.evaluate(() => window.__proto.foes());
   check(foes.length === 1 && foes[0].id === 'rabbit', `tutorial fight: one horned rabbit, no fill (${foes.map(f => f.id)})`);
+  const act1 = await p.evaluate(() => window.__proto.heroActions);
+  check(foes[0].level >= 1 && foes[0].level <= 3 && foes[0].spd === foes[0].level && act1?.n === 1,
+    `leveling v2: the tutorial rabbit rolls a level in realm_1's enemyLevel [1, 3] with SPD = level; an L1 hero gets 1 action (L${foes[0].level}, SPD ${foes[0].spd}, ${act1?.n} action)`);
   const r = await battle(); check(r === 'win', 'tutorial fight won');
   await skipScenes(4);   // tutorial_first_battle_after
   await tid('town').waitFor({ timeout: 10000 });
@@ -482,6 +485,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
 
   // ---- quest-gated fight: q8_caged_beasts on beast_pens_1/deadend_3 ----
   await edit(s => { s.level = 40; s.hp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor();   // realm 8 enemies (content/realm_8.json) need a realm-8 level
+  check(/Lv 40\b/.test(await p.locator('body').innerText()), 'a save whose new skill slot fills on load still loads (HUD shows Lv 40, not a new game)');
   await p.evaluate(() => { window.__proto.noEncounters = true; window.__proto.sceneInstant = true; });
   await p.evaluate(() => { window.__proto.world.goto('beast_pens_1', 'deadend_3', true); }); await p.waitForTimeout(1200);
   check(!(await tid('battle').count()), 'quest-gated fight: no fight on deadend_3 while the quest is not active');
@@ -630,6 +634,20 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const r3 = await battle(); check(r3 === 'win' || r3 === 'left', `realm 3 battle finished (${r3})`);
   for (let i = 0; i < 30 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
   await keep('after realm 3 battle');
+  // ---- leveling v2 speed (combat-spec §1.1): a far-overleveled hero gets 3 actions before the enemies act ----
+  await edit(s => { s.level = 60; s.hp = 9999; s.mp = 999; }); await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
+  if (await tid('town').count()) { await tid('go-adventure').click(); await tid('graph').waitFor(); }
+  await p.evaluate(() => { window.__fightDone = null; window.__proto.world.fight('crossroads_highway').then(o => { window.__fightDone = o; }); });
+  await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
+  const foesS = await p.evaluate(() => window.__proto.foes()); const actS = await p.evaluate(() => window.__proto.heroActions);
+  const topS = Math.max(...foesS.map(f => f.spd));
+  check(foesS.every(f => f.level >= 18 && f.level <= 20 && f.spd === f.level) && actS?.n === Math.min(3, Math.floor(60 / topS)) && actS.n === 3,
+    `speed: L60 hero vs realm_3 enemies (levels ${foesS.map(f => f.level)}) gets ${actS?.n} actions in round 1`);
+  const rS = await battle(); const csS = await p.evaluate(() => window.__proto.castState());
+  const ordS = (await sv()).log.slice(0, csS.q).reverse(); const firstDef = ordS.findIndex(x => x.turn === 'defense');
+  check(rS === 'win' && (firstDef === -1 || firstDef >= 3) && ordS.slice(0, Math.min(3, ordS.length)).every(x => x.turn === 'attack'),
+    `speed: 3 attack questions before the first enemy turn (${ordS.map(x => x.turn[0]).join('')}, ${csS.round} round(s), ${rS})`);
+  for (let i = 0; i < 30 && (await p.evaluate(() => window.__fightDone)) === null; i++) { await p.waitForTimeout(200); if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
   // ---- v3.9.3 gear: later towns and villages stock their realm's tier (gear_items.csv "shop: town N blacksmith") ----
   const shopAt = async (g, n) => {   // arrive at the settlement (decline quest offers with "Later"), wait for its town screen, open the shop
     await p.evaluate(([g, n]) => { window.__gotoDone = false; window.__proto.world.goto(g, n, true).finally(() => { window.__gotoDone = true; }); }, [g, n]);

@@ -17,7 +17,13 @@ Per-location pre-boss battle counts: R['loc_pre'] (one dict per location).
 
 v3.3 notes (kept): one run = realms 1-9 in a row with gold, potions, spells, gear and learned items carried over.
 Reuses combat_sim.battle (campaign hooks: species, spell casts, Soaked, kill accounting) and the v3.2 learning model.
-Gear model: the kid enters realm t wearing tier t-1 gear and buys the tier-t weapon (+3 ATK), armor (+2 DEF), shield (+1 DEF)."""
+Gear model: the kid enters realm t wearing tier t-1 gear and buys the tier-t weapon (+3 ATK), armor (+2 DEF), shield (+1 DEF).
+Leveling v2 (Jack 2026-10-17), the standard on docs/data/levels (C.LEVELS_V2): the hero starts at L1 and levels from kill EXP (6/10/20/50 x L_rec),
+quest expValue and proficiency EXP (+10 per way, +30 per Proficient item; spec §7.2), with enemy EXP x0.25 at 3+ levels above the map's
+recLevel max; enemies get their level from the map (settings.enemyLevel / eliteLevel / boss.level; roster[].level is not read: no map
+uses it) and stats from combat_sim.enemy_at; speed per round (combat_sim.hero_actions). opt legacy_levels=True, v391_rules or a
+docs/data/world source keep the legacy model (hero fixed at L_rec(t), tier-band enemies, 1 action).
+"""
 import sys, random, statistics, collections, json, math
 from multiprocessing import Pool
 import os
@@ -37,8 +43,10 @@ for t in range(1, 10):
     for k in range(C.LOCS[t]):
         LOC_SPECIES[(t, k)] = D.loc_normals(f'L{t}.{k+1}') or D.realm_normals(t)
 
+EXP_MULT = {'elite': 10, 'locboss': 20, 'realmboss': 50}   # EXP per kill = mult x L_rec(t); normals 6 (spec §2.3, §7.2: EXP and gold stay per realm)
+LVL = dict(L=None)   # leveling v2 (Jack 2026-10-17): the hero's level when C.LEVELS_V2 (None = legacy: hero at L_rec(t))
 def gear_stats(t, owned):
-    h = dict(C.hero_stats(t))
+    h = dict(C.hero_stats(t) if LVL['L'] is None else C.hero_at(LVL['L'], t))
     if t == 1: miss = {'shield'} - owned                      # start kit: wooden sword + cloth tunic
     else: miss = {'weapon', 'armor', 'shield'} - owned
     h['ATK'] -= 3 if 'weapon' in miss else 0
@@ -77,7 +85,21 @@ def campaign(args):
              spells=[], fizzle='refund' if mode == 'refund' else 'spend', tea=0, bigtea=0, feather=1)
     stats = dict(q=0, correct=0, spoken=0, potions_used=0, companion=0, heals=0, practice_q=0, kills=collections.Counter())
     prior = []; uid = 0
-    out = dict(realms=[], spell_buys=[], affordable={}, events=[])
+    out = dict(realms=[], spell_buys=[], affordable={}, events=[], xp=[])   # xp: (minutes, exp, tier, source, level after, level-ups, map)
+    # leveling v2 (Jack 2026-10-17) is the standard on docs/data/levels maps: real leveling from L1, enemy levels from the maps, speed.
+    # The legacy model (hero fixed at L_rec(t)) stays for the historical runs: v391_rules, docs/data/world and the v3.7 loop.
+    C.LEVELS_V2 = bool(world) and (opt.get('data') or {}).get('source') == 'levels' and not opt.get('v391_rules') and not opt.get('legacy_levels')
+    C.ELEVELS.clear(); C.ELEVELS.update(WG.ENEMY_LEVELS if C.LEVELS_V2 else {}); C.CUR_MAP = None
+    LVL['L'] = 1 if C.LEVELS_V2 else None
+    S['level'] = 1; S['exp'] = 0
+    def gain_exp(n, t, src):
+        if not n or not C.LEVELS_V2: return
+        S['exp'] += n; up = 0
+        while S['exp'] >= C.exp_to_next(S['level']): S['exp'] -= C.exp_to_next(S['level']); S['level'] += 1; up += 1
+        out['xp'].append((round(tq_minutes(), 2), n, t, src, S['level'], up, C.CUR_MAP))
+        if up and S.get('hero'):
+            LVL['L'] = S['level']; old = dict(S['hero']); S['hero'].update(gear_stats(t, owned_gear))
+            S['hp'] += S['hero']['HP'] - old['HP']; S['mp'] += S['hero']['MP'] - old['MP']   # engine addExp: the max-HP/MP increase is added (no full heal)
     tq_minutes = lambda: (stats.get('walk_sec', 0) + stats['q']*C.SEC_PER_Q + stats['practice_q']*C.SEC_PER_PRACTICE_Q + (stats.get('spell_casts', 0)*SEC_PER_CAST if v34 else 0))/60
     delivery_due = 0
     for t in range(1, 10):
@@ -137,7 +159,7 @@ def campaign(args):
                 for slot, price in gear:
                     if slot in owned_gear: continue
                     if S['gold'] - price < reserve(): return False
-                    S['gold'] -= price; R['spent_gear'] += price; owned_gear.add(slot); h = gear_stats(t, owned_gear); S['hero'] = h
+                    S['gold'] -= price; R['spent_gear'] += price; owned_gear.add(slot); S['hero'].update(gear_stats(t, owned_gear)); h = S['hero']   # one hero object, so level-ups reach every user
                     if len(owned_gear) == len(gear) or (t == 1): R['gear_done_battle'] = R['gear_done_battle'] or R['battles']
                 return all(sl in owned_gear for sl, _ in gear)
             def buy_spell():
@@ -283,7 +305,7 @@ def campaign(args):
                 return True
             def complete(q):
                 if q in W['qd'] or q not in WG.QV2: return
-                W['qd'].add(q); rw = WG.QV2[q].get('rewards', {}); g = round(rw.get('gold', {}).get('G', 0)*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
+                W['qd'].add(q); rw = WG.QV2[q].get('rewards', {}); gain_exp(rw.get('expValue', 0), t, 'quest'); g = round(rw.get('gold', {}).get('G', 0)*C.gold_per_enemy(t)); S['gold'] += g; R['gold_side'] += g
                 its = rw.get('items') or {}
                 S['potions'] += its.get('honey', 0)
                 if its.get('feather'): S['feather'] = min(RF['carry'], S.get('feather', 0) + its['feather'])
@@ -314,8 +336,10 @@ def campaign(args):
                     elif k == 'openChest':
                         R['items_found'] += 1; C.open_chest(t, S, 'normal' if a[k] == 'chest_normal' else 'locboss', rng)
                     elif k == 'fight' and a[k].get('kind') == 'tutorial':
+                        C.CUR_MAP = T.N[W['pos']]['graph']   # the battle's map (enemy levels)
                         fight('normal', local, rslots, loc, elite=False); R['path_battles'] += 1; R['tutorial'] = 1
                     elif k == 'fight':
+                        C.CUR_MAP = T.N[W['pos']]['graph']   # the battle's map (enemy levels)
                         won, _ = fight('normal', local, rslots, loc, elite=True); R['side_battles'] += 1; R['minis'] += 1
                         if not won: wake(); return False
                         if a.get('quest'): complete(a['quest'])
@@ -374,6 +398,7 @@ def campaign(args):
                     if opt.get('trace'): print('  roll', e, step, round(rate,2), 'safe_until' if W['safe_until'].get(e,-1)>=W['hops'] else '')
                     draw = (lambda: WG.roll(f"{seed}|{E['graph']}|{E['id']}|{crossing}|{step}")) if erng else rng.random   # no draw when forced (keeps v3.9.1 streams)
                     if forced or draw() < min(1.0, rate):
+                        C.CUR_MAP = E['graph']   # the battle's map (enemy levels)
                         won, _ = fight('normal', local, rslots, loc, elite=bool(forced))
                         if forced: W['scripted'].add(e)
                         elif fresh: W['enc'] += 1
@@ -472,6 +497,7 @@ def campaign(args):
             pat = 0; first = True; kind = Z['bossKind']
             def patrol():
                 nonlocal pat
+                C.CUR_MAP = T.N[W['pos']]['graph']   # the battle's map (enemy levels)
                 won, _ = fight('normal', local, rslots, loc, elite=legacy and rng.random() < C.ELITE_PATROL_CHANCE); pat += 1
                 if not won: wake()
                 return won
@@ -501,6 +527,7 @@ def campaign(args):
             resume = False
             for attempt in range(12):
                 at_gate(); add_sec(RU['walkSecPerHop']); R['hops'] += 1
+                C.CUR_MAP = T.N[W['pos']]['graph']   # the battle's map (enemy levels)
                 won, cp = fight(kind, local, rslots + 1, loc, resume)
                 if attempt == 0: R['boss_first'] += won
                 if won: break
@@ -536,6 +563,12 @@ def campaign(args):
                 R['boss_hp_lost'].append((hp0 - (S['hp'] if won else 0))/h['HP']); R['boss_casts'].append(stats.get('spell_casts', 0) - st0.get('spell_casts', 0))
             else: R['normal_q'].append(stats['q'] - qb)
             newk = stats['kills'] - k_before
+            kx = sum(n*C.lrec(t)*EXP_MULT.get(sp, 6) for sp, n in newk.items())
+            rmax = (C.ELEVELS.get(C.CUR_MAP) or {}).get('rec', [0, 10**9])[1]
+            if opt.get('exp_damp', True) and S['level'] >= rmax + 3: kx = round(kx*0.25)   # spec §7.2 EXP damping (enemy EXP only)
+            gain_exp(kx, t, 'boss' if kind != 'normal' else 'battle')
+            pe, L.pexp = L.pexp, 0
+            if opt.get('prof_exp', True): gain_exp(pe, t, 'proficiency')   # spec §7.2: proficiency EXP, never damped
             drops += sum(1 for _ in range(newk[qs['collect']['target']]) if rng.random() < D.QUEST_RULES['collect_drop'])
             S['gold'] += g; R['income'] += g
             for _ in range(c): C.open_chest(t, S, kind if won and kind != 'normal' else 'normal', rng)
@@ -579,6 +612,7 @@ def campaign(args):
         R['quests_done'] = len(quests_done); R['quest_types'] = sorted(quests_done)
         out['realms'].append(R)
     out['total_minutes'] = tq_minutes()
+    out['actions'] = {k: v for k, v in stats.items() if isinstance(k, str) and (k.startswith('am|') or k.startswith('act') or k == 'rounds')}   # speed: rounds by hero actions (and by map)
     return out
 
 def run(cfgs, n, procs=None):

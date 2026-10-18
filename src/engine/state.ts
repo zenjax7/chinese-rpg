@@ -1,5 +1,6 @@
 import { B, LOCATIONS, LOC, GEAR, GEAR_LIST, SKILLS, CONS } from '../data';
 import type { GearDef } from '../data';
+import { heroLevelStats, expToNextAt } from '../shared/leveling';
 
 export type WayKey = 'rZE' | 'rEZ' | 'sZE' | 'sEZ';
 export const ALL_WAYS: WayKey[] = ['rZE', 'rEZ', 'sZE', 'sEZ'];
@@ -89,6 +90,10 @@ export function migrateGearIds(s: SaveState): string[] {
   for (const k of Object.keys(s.equip || {}) as (keyof SaveState['equip'])[]) s.equip[k] = to(s.equip[k]);
   return moved;
 }
+/** Short messages for the UI to toast (skill slots filled, gear auto-equipped outside the shop).
+ *  Declared before `S = load()`: load() → fillSkillSlots() can queue a notice, and before this line `notices` was still undefined there,
+ *  so a save whose new slot filled on load threw and was replaced by a new game. */
+export const notices: string[] = [];
 export let S: SaveState = load();
 export const session = { speechBlocked: false, speechBlockReason: '', voids: 0 };
 
@@ -111,16 +116,17 @@ export function replaceState(s: SaveState) { s.spells ??= []; s.quests ??= {}; m
 export function speechOn(): boolean { return S.consent.given && S.consent.speech && !session.speechBlocked; }
 
 export function heroStats(s: SaveState = S) {
-  const L = s.level; const h = B.hero;
-  let atk = Math.floor(L / h.atkLevelDiv), def = Math.floor(L / h.defLevelDiv), maxHp = h.hpBase + h.hpPerLevel * L, maxMp = h.mpBase + h.mpPerLevel * L;
+  const L = s.level;
+  let { atk, def, maxHp, maxMp } = heroLevelStats(L, B.hero); const spd = L;   // leveling v2 (§2.1): SPD = level
   for (const slot of ['weapon', 'armor', 'shield', 'charm'] as const) {
     const id = s.equip[slot]; if (!id) continue; if (slot === 'charm' && L < B.slots.charmUnlockLevel) continue;
     const g = GEAR[id]; if (!g) continue; atk += g.atk || 0; def += g.def || 0; maxMp += g.mp || 0; maxHp += g.hp || 0;
   }
   const courageMult = 1 + B.economy.courageStep * Math.min(B.economy.courageMaxStacks, s.courage);
-  return { atk, def, defBattle: def * courageMult, courageMult, maxHp, maxMp };
+  return { atk, def, defBattle: def * courageMult, courageMult, maxHp, maxMp, spd };
 }
-export function expToNext(L: number) { return B.hero.expToNextPerLevel * L; }
+/** Leveling v2 (§2.1): round(15 + 1.5(L−1)²), no cap. */
+export function expToNext(L: number) { return expToNextAt(L, B.hero); }
 /** Adds EXP; returns the number of levels gained. Level-ups add the max-HP/MP increase to current HP/MP (no full heal: no auto-heal rule). */
 export function addExp(n: number): number {
   S.exp += n; let gained = 0;
@@ -158,8 +164,6 @@ export function fillSkillSlots(s: SaveState, justEarned: string[] = []): string[
   if (opened && s.slotsSeen > 2 && added.length) for (const id of added) { const sk = SKILLS.find(k => k.id === id)!; notices.push(`✨ New skill slot! ${sk.emoji} ${sk.zh} ${sk.en} is ready.`); }
   return added;
 }
-/** Short messages for the UI to toast (skill slots filled, gear auto-equipped outside the shop). */
-export const notices: string[] = [];
 
 // ---------------- gear comparison, auto-equip, tier check (spec v3.2 §7.9 / §11.4 item 7) ----------------
 const GEAR_STATS = ['atk', 'def', 'mp', 'hp', 'startStreak'] as const;

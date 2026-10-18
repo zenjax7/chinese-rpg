@@ -77,7 +77,7 @@
   "G": 6,
   "recLevel": [
    1,
-   3
+   11
   ],
   "gearTier": 1,
   "difficulty": {
@@ -88,6 +88,11 @@
    1,
    2
   ],
+  "enemyLevel": [
+   1,
+   3
+  ],
+  "eliteLevel": 3,
   "roster": [
    {
     "enemy": "horned_rabbit",
@@ -105,7 +110,8 @@
    "node": "m_crow",
    "gateEdge": "g1",
    "kind": "locboss",
-   "enemy": "big_beak_crow"
+   "enemy": "big_beak_crow",
+   "level": 10
   }
  },
  "nodes": [

@@ -75,8 +75,8 @@
   ],
   "G": 36,
   "recLevel": [
-   10,
-   13
+   36,
+   37
   ],
   "gearTier": 5,
   "difficulty": {
@@ -87,6 +87,11 @@
    2,
    3
   ],
+  "enemyLevel": [
+   35,
+   37
+  ],
+  "eliteLevel": 37,
   "roster": [
    {
     "enemy": "bog_monster",
