@@ -175,7 +175,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     await rest(); await tid('location').waitFor(); await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
     await battle(async () => false); if (await tid('victory-ok').count()) await tid('victory-ok').click();
     // classic levels: forest normals are L14–16 (realm_2) and this hero is L8, so a fight can be lost: wake back at the forest, full HP
-    if (!(await tid('location').count())) { await p.waitForTimeout(500); if (!(await tid('location').count())) { await edit(s => { s.where = 'forest'; }); await rest(); } }
+    if (!(await tid('location').count())) { await p.waitForTimeout(500); if (!(await tid('location').count())) { log('bounty fight did not end at the location:', (await p.locator('#ui').innerText().catch(() => '')).replace(/\n+/g, ' | ').slice(0, 160)); await edit(s => { s.where = 'forest'; }); await rest(); } }
     await tid('location').waitFor(); }
   const qn = (await sv()).quests.q2_bounty.n; check(qn > 0, `quests: Giant Bee bounty progressed from kills (${qn}/8)`);
   await edit(s => { s.quests.q2_bounty.n = 8; s.where = 'town'; }); await p.reload(); await tid('town').waitFor({ timeout: 10000 });
