@@ -267,8 +267,8 @@ check((await p.evaluate(() => window.__proto.audio.music)).includes('mus_battle_
   const lp = k => JSON.stringify([mm[k]?.loopStart, mm[k]?.loopEnd]);
   check(lp('mus_battle_boss') === '[3.333333,83.333333]' && Math.round(mm.mus_battle_boss.loopStart * 44100) === 147000 && Math.round(mm.mus_battle_boss.loopEnd * 44100) === 3675000,
     `boss music loops ${lp('mus_battle_boss')} s (samples 147000..3675000), so the intro plays once`);
-  check(lp('mus_battle_field') === '[0,54.857143]' && lp('mus_village') === '[0,76.8]' && mm.stg_victory.loopStart === undefined && mm.stg_defeat.loopStart === undefined,
-    `other music unchanged: field ${lp('mus_battle_field')}, village ${lp('mus_village')}, stings no loop`);
+  check(lp('mus_battle_field') === '[3.2,67.2]' && Math.round(mm.mus_battle_field.loopStart * 44100) === 141120 && Math.round(mm.mus_battle_field.loopEnd * 44100) === 2963520 && lp('mus_village') === '[0,76.8]' && mm.stg_victory.loopStart === undefined && mm.stg_defeat.loopStart === undefined,
+    `field music v8 loops ${lp('mus_battle_field')} s (samples 141120..2963520); village ${lp('mus_village')}, stings no loop`);
 }
 check((await p.evaluate(() => window.__proto.sprites || [])).length >= 15, 'Arty sprites loaded: ' + (await p.evaluate(() => (window.__proto.sprites || []).join(','))));
 check((await p.evaluate(() => window.__proto.anims || 0)) > 0, 'hit animations played');
