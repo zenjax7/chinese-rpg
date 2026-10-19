@@ -1478,7 +1478,7 @@ Approved by Jack on 2026-10-17 (PT). The player sees an English word or phrase a
 **3. Tray size (mirrors MC options)**
 - Tray = the answer's characters (n tiles, one per character, repeats included: 谢谢 has two 谢 tiles) + **d distractor tiles**.
 - `d = mcOptions − 1`, where `mcOptions` comes from the current map's `settings.difficulty.mcOptions` (§5: realms 1–2 have 3 options so d = 2; realms 3–5 have 4 so d = 3; realms 6–7 have 5 so d = 4; realms 8–9 have 6 so d = 5). Past realm 9 the cap of 6 options applies, so d ≤ 5.
-- The first-ever-question reduction (§3.4: one fewer option, minimum 2) maps to `d − 1`, minimum 1. It can't apply under rule 2, because an item's first R-EZ question is MC. It is listed here only so the code path matches MC.
+- The first-ever-question reduction (§3.4: one fewer option, minimum 2) maps to `d − 1`, minimum 1. It applies when an item's first-ever question is an R-EZ assembly question.
 - Example: a 2-character item on a realm-3 map (mcOptions 4) gets 2 + 3 = 5 tiles, like 你 好 + 有 他 不. The largest tray is 8 + 5 = 13 tiles.
 
 **4. Distractors (from the current map's word pool)**
@@ -1497,7 +1497,7 @@ Approved by Jack on 2026-10-17 (PT). The player sees an English word or phrase a
 - A question can't end with nothing tapped, because there's no timer. Flee, potions and spells are hero-turn choices made before a question, as now.
 
 **6. Proficiency**
-- An assembly answer is an **R-EZ** answer. Correct: `R-EZ.correct += 1` and the Leitner box moves as in §3.2. Wrong: box −2, `correct` unchanged. `attempts += 1` either way (that's the counter rule 2 reads). Proficiency (2 correct per active way), EXP for completing a way, and "weakest way first" are unchanged.
+- An assembly answer is an **R-EZ** answer. Correct: `R-EZ.correct += 1` and the Leitner box moves as in §3.2. Wrong: box −2, `correct` unchanged. `attempts += 1` either way. Proficiency (2 correct per active way), EXP for completing a way, and "weakest way first" are unchanged.
 
 **7. Timer**
 - None. Jack decided there are no timers (What changed from v2, row 9), and the MC and spoken ways have none. Input unlocks after the text-prompt delay (800 ms, §1.2), as for MC R-EZ.
