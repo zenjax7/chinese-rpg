@@ -472,6 +472,17 @@ const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
   return E.realmOpen(r, x.P, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
 const MAXZ = 4;   // node x / y -> the 1280x720 frame: nodeXY in shared/level/map-view.ts (the level editor uses the same)
+/** The party's map sprites: file (under public/), frame size, frames in the horizontal strip (frame 0 is drawn), feet line as a fraction of the
+ *  frame height. Today these are the battle sprites' idle frames; Arty's map sprites replace one line each. */
+const MAP_SPRITES: Record<string, { file: string; fw: number; fh: number; frames: number; feet: number }> = {
+  hero: { file: 'sprites/hero.png', fw: 256, fh: 256, frames: 7, feet: 0.92 },
+  xiaolong: { file: 'companions/xiaolong_battle_idle.png', fw: 256, fh: 256, frames: 4, feet: 1 },
+};
+/** One party member on the map, ps px tall, feet at (dx, dy) from the party's point. */
+function mapSprite(id: string, ps: number, dx: number, dy: number) {
+  const m = MAP_SPRITES[id]; if (!m) return '';
+  return `<svg data-testid="party-${id}" x="${dx - ps / 2}" y="${dy - ps * m.feet}" width="${ps}" height="${ps}" viewBox="0 0 ${m.fw} ${m.fh}"><image href="${m.file}" width="${m.fw * m.frames}" height="${m.fh}"/></svg>`;
+}
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
 const vb = () => `${640 - 640 / zoom - panX} ${360 - 360 / zoom - panY} ${1280 / zoom} ${720 / zoom}`;
 export function graphScreen() {
@@ -513,11 +524,10 @@ export function graphScreen() {
     const ident = known ? `data-node="${n.id}" data-testid="gnode-${n.id}" data-kind="${n.kind}"` : `data-testid="gnode-i${n.idx}"`;
     return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}${lockedWay ? ' locked' : ''}" data-idx="${n.idx}" ${ident} data-fog="${f}" transform="translate(${px(n)},${py(n)})">
       <circle r="${isHere ? rr + 4 : rr}"/><text class="ic" y="${dense ? 6 : 8}">${ic}</text>${label ? `<text class="lb" y="${rr + 22}" lang="zh-CN">${esc(label)}</text>` : ''}</g>`; }).join('');
-  // Director Oct 17: the party on the map, the hero's battle sprite (idle frame) scaled down; no map sprite exists yet
-  const pp = partyAt || nodeXY(hn); proto().party = pp; const sh = view.spriteSheet('hero'); const ps = dense ? 48 : 64;
-  const party = `<g class="party" data-testid="party-sprite" transform="translate(${pp.x},${pp.y})">${sh
-    ? `<svg x="${-ps / 2}" y="${-ps * 0.92 - rr + 4}" width="${ps}" height="${ps}" viewBox="0 0 ${sh.fw} ${sh.fh}"><image href="sprites/${sh.file}" width="${sh.fw * sh.frames}" height="${sh.fh}"/></svg>`
-    : `<text class="ic" y="${-rr - 2}" style="font-size:${ps * 0.6}px">🧙</text>`}</g>`;
+  // Director Oct 17: the party on the map (MAP_SPRITES), Xiaolong just behind the Hero once she has joined; both walk in one <g>
+  const pp = partyAt || nodeXY(hn); proto().party = pp; const ps = dense ? 48 : 64;
+  const who = ['hero', ...(S.party?.includes('xiaolong') ? ['xiaolong'] : [])];
+  const party = `<g class="party" data-testid="party-sprite" transform="translate(${pp.x},${pp.y})">${who.reverse().map(id => mapSprite(id, ps, id === 'hero' ? 0 : -ps * 0.55, -rr + 4)).join('')}</g>`;
   const exits = [...adj.entries()].filter(([k]) => k.startsWith('@')).map(([, e]) => { const t = e.to as E.NodeRef; const meta = W.idx!.graphs.find(m => m.id === t.graph);
     const lab = e.kind === 'exit' ? `🌍 ${zh('世界地图')} World map` : e.kind === 'stairs' ? (hn.kind === 'stairs_up' ? `⬆️ ${zh('上楼')} Up` : `⬇️ ${zh('下楼')} Down`) : `🌀 ${meta?.title?.zh ? zh(meta.title.zh) + ' ' : ''}${esc(meta?.title?.en || t.graph)}`;
     return `<button class="secondary" data-exit="${e.id}" data-testid="gexit-${e.id}">${lab}</button>`; }).join('');

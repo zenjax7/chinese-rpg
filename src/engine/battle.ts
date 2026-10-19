@@ -691,7 +691,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       $('#tgts').innerHTML = live.map((f, k) => { const b = boxes[foes.indexOf(f)] || { x: 700 + k * 180, y: 200, w: 160, h: 200 };
         return `<button class="tgt" data-t="${k}" data-testid="target-${k}" data-key="${k + 1}" aria-label="${esc(f.d.en)}" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;height:${b.h}px"></button>`; }).join('');
       show();
-      const done = (k: number) => { document.removeEventListener('target-nav', nav as any); $('#tgts').innerHTML = ''; resolve(k); };
+      const done = (k: number) => { document.removeEventListener('target-nav', nav as any); document.removeEventListener('keydown', enter); $('#tgts').innerHTML = ''; resolve(k); };   // a tap or ◀ Back used to leave the Enter listener behind
       const nav = (e: CustomEvent) => { cur = (cur + e.detail + live.length) % live.length; show(); };
       document.addEventListener('target-nav', nav as any);
       $$('#tgts .tgt').forEach(b => { b.addEventListener('mouseenter', () => { cur = +b.dataset.t!; show(); }); b.addEventListener('click', () => done(+b.dataset.t!)); });
