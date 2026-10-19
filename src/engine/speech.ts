@@ -125,19 +125,21 @@ export async function requestMic(): Promise<boolean> {
 }
 
 // ---------------- TTS (browser zh-CN voice) ----------------
-let zhVoice: SpeechSynthesisVoice | null = null;
+let zhVoice: SpeechSynthesisVoice | null = null; let enVoice: SpeechSynthesisVoice | null = null;
 /** speechSynthesis if the browser really has it (some embedded/privacy browsers expose a stub or nothing). */
 export const synth = (): SpeechSynthesis | null => { try { const s = (window as any).speechSynthesis; return s && typeof s.speak === 'function' ? s : null; } catch { return null; } };
 function pickVoice() {
   if (!synth()) return;
   let vs: SpeechSynthesisVoice[] = []; try { vs = synth()!.getVoices() || []; } catch { /* */ }
   zhVoice = vs.find(v => /zh[-_]CN/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang) && !/HK|TW/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang)) || null;
+  enVoice = vs.find(v => /en[-_]US/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
 }
 const voiceListeners: (() => void)[] = [];
 /** Voices load asynchronously in most browsers; UI can re-check 🔊 availability when they arrive. */
 export function onVoices(f: () => void) { voiceListeners.push(f); }
 if (synth()) { pickVoice(); try { synth()!.onvoiceschanged = () => { pickVoice(); voiceListeners.forEach(f => f()); }; } catch { /* */ } }
 export const hasZhVoice = () => !!zhVoice;
+export const hasEnVoice = () => !!enVoice;
 /** Speaks text; resolves when finished or after maxMs (headless browsers may never fire onend). */
 export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlockMaxMs): Promise<void> {
   return new Promise(res => {
@@ -147,6 +149,7 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
       sy.cancel();
       const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85;
       if (lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
+      if (lang.startsWith('en') && enVoice) u.voice = enVoice;
       u.onend = fin; u.onerror = fin; sy.speak(u);
     } catch { fin(); }
     setTimeout(fin, maxMs);

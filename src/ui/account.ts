@@ -355,7 +355,7 @@ export async function pickChild(c: Child, opt: { force?: boolean } = {}) {
   if (r.status === 200 && r.body) {
     const server = r.body;
     if (opt.force || !mirror || (!box.hasWork && server.version > box.version)) {
-      const st = stateFromCloud(server, newState() as any) ?? { ...newState(), consent: { given: true, speech: false, at: Date.now() } };
+      const st = stateFromCloud(server, newState() as any) ?? { ...newState(), consent: { given: true, speech: true, at: Date.now() } };
       kv.set(childKey(c.id), JSON.stringify(st)); adoptServer(kv, c.id, server.version, st);
     }
   } else if (r.offline) {
@@ -382,7 +382,7 @@ export async function accountBoot(startGame: () => void) {
     on('#loadnewer', () => void pickChild({ id: c.childId, nickname: c.nickname || '', avatar: c.avatar || '' }, { force: true }));
   });
   if (CHILD_ID) {   // a child is playing on this device: straight into the game; check the session in the background
-    if (!S.consent.given) { S.consent = { given: true, speech: false, at: Date.now() }; save(); }
+    if (!S.consent.given) { S.consent = { given: true, speech: true, at: Date.now() }; save(); }   // Jack 2026-10-18: child profiles have speech on; ⏸️ → Parents turns it off
     start(); badge();
     const r = await call('GET', '/me');
     if (r.status === 401) banner('signedOut');

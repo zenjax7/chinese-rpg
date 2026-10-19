@@ -260,7 +260,20 @@ export function asmTap(s: AsmState, ch: string): 'ok' | 'correct' | 'wrong' | 'i
   s.filled++; if (s.filled === s.answer.length) { s.done = true; return 'correct'; }
   return 'ok';
 }
+// ---------------- audio-only (listen) prompts (combat-spec §3.4, Jack 2026-10-18) ----------------
+/** Whether a question is shown audio-only (listen) or with its text. out = which voices can speak now (zh: clip or zh-CN TTS; en: en-US TTS).
+ *  rZE: listen & pick (speech input off or not speakable: alternates listen & pick / shown-text MC by R-ZE.attempts parity).
+ *  rEZ: listen & pick unless §9.4 makes it assembly. sZE/sEZ: listen & say when attempts is even, read & say when odd.
+ *  No voice for the prompt's language -> the written form. */
+export function listenFor(id: string, way: WayKey, form: RezForm | undefined, out: { zh: boolean; en: boolean }, speechIn = speechOn()): boolean {
+  const a = prog(id).ways[way].a; const zhAudio = way === 'rZE' || way === 'sZE';
+  if (!(zhAudio ? out.zh : out.en)) return false;
+  if (way === 'rEZ') return form !== 'assembly';
+  if (way === 'rZE') return (speechIn && ITEM[id].speaking) || a % 2 === 0;
+  return a % 2 === 0;
+}
+
 // exposed for automated tests (tests/world.mjs, tests/play.mjs)
-if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { asm: { assemblyEligible, rezForm, assemblyD, assemblyCandidates, assemblyDistractors, assemblyTray, asmStart, asmTap, prog,
+if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { asm: { listenFor, pickWay, grade, activeWays, assemblyEligible, rezForm, assemblyD, assemblyCandidates, assemblyDistractors, assemblyTray, asmStart, asmTap, prog,
   pool: (loc: string) => POOLS[loc] || [], item: (id: string) => ITEM[id], ids: () => ITEMS.map(i => i.id), log: () => S.log,
   feed: (ids: string[]) => new QuestionFeed(ids) } });

@@ -3,9 +3,9 @@ import { B, POOLS, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, C
 import { MapLevels, resolveEnemyLevel, enemyStatsAt, roundActions, summonLevel } from '../shared/leveling';
 import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
-import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
+import { listenFor, chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
 import { listen, speechSupported, quietForMic, noteGrade, srDebugHtml } from './speech';
-import { sayItem } from './voice';
+import { sayItem, sayEn, canSayItem, canSayEn } from './voice';
 import { playSfx, playMusic, playSting, beep, holdMusicForMic, playSpellSfx } from '../audio/audio';
 import { BG, spellIcon } from '../assets';
 import { matchZh, matchEn } from './match';
@@ -38,7 +38,7 @@ interface Foe { d: EnemyDef; hp: number; maxHp: number; alive: boolean; /** SPD 
 export const battleHooks: { onCorrect?: (itemId: string) => void } = {};
 type Outcome = { result: 'correct' | 'wrong' | 'void'; spoken: boolean; hinted: boolean; fast: boolean;
   /** R-EZ only (§9.4.9): the form, and for assembly the tapped sequence, the wrong slot and the distractor characters. */
-  form?: RezForm; taps?: string[]; wrongSlot?: number | null; tray?: string[] };
+  form?: RezForm; /** audio-only prompt (§3.4 listen forms) */ listen?: boolean; taps?: string[]; wrongSlot?: number | null; tray?: string[] };
 
 const C = () => B.combat;
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -163,7 +163,9 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     let out: Outcome;
     for (;;) {
       if (way[0] === 's' && !speechOn()) way = pickWay(id, ctx);
-      out = await renderQuestion(id, way, turn, foe, reprompts, spell, way === 'rEZ' ? (reForm ?? rezForm(id)) : undefined, reForm ? reTray : undefined);
+      const form = way === 'rEZ' ? (reForm ?? rezForm(id)) : undefined;
+      const lis = listenFor(id, way, form, { zh: canSayItem(id), en: canSayEn() });
+      out = await renderQuestion(id, way, turn, foe, reprompts, spell, form, reForm ? reTray : undefined, lis);
       if ((out as any).tech) {
         reprompts++;
         if (reprompts > B.speech.maxTechReprompts) {
@@ -182,7 +184,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     feed.record(id, way, out.result, out.form, out.tray);
     (window as any).__proto.lastOutcome = { id, way, ...out };
     const asmLog = out.form ? { form: out.form, ...(out.form === 'assembly' ? { taps: out.taps, wrongSlot: out.wrongSlot ?? null } : {}) } : {};
-    S.log.unshift({ t: Date.now(), id, way, why, turn, result: out.result, spoken: out.spoken, hinted: out.hinted, fast: out.fast, ...asmLog }); S.log.length = Math.min(S.log.length, 300);
+    S.log.unshift({ t: Date.now(), id, way, why, turn, result: out.result, spoken: out.spoken, hinted: out.hinted, fast: out.fast, listen: !!out.listen, ...asmLog }); S.log.length = Math.min(S.log.length, 300);
     if (out.result === 'void') { res.voids++; return out; }
     // companion gauge (v3): +20 wrong, +5 correct, 0 for hinted answers
     const CG = B.companion; const before = bs.gauge;
@@ -210,7 +212,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   }
   function bs_exp(n: number, msg: string) { const lv = addExp(n); res.exp += n; res.levels += lv; if (lv) playSfx('sfx_level_up'); log(msg); toast(msg); }
 
-  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number, spell?: SpellDef, form?: RezForm, prevTray?: string[]): Promise<Outcome & { tech?: boolean; fatal?: string }> {
+  async function renderQuestion(id: string, way: WayKey, turn: string, foe: Foe | undefined, reprompts: number, spell?: SpellDef, form?: RezForm, prevTray?: string[], lis = false): Promise<Outcome & { tech?: boolean; fatal?: string }> {
     const item = ITEM[id]; const p = prog(id);
     if (form === 'assembly') {
       const first = Object.values(p.ways).every(w => w.a === 0);
@@ -225,10 +227,14 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     const zhStim = `<div class="qzh" lang="zh-CN" data-testid="q-zh">${item.zh}</div><button class="secondary" id="replay" title="Hear it again" aria-label="Hear it again">🔊</button>`;   // characters only (no pinyin anywhere; 🔊 gives the sound)
     const enStim = `<div class="stim">${splitEn(item.enPrimary)}</div>`;
     const zhPrompt = way === 'rZE' || way === 'sZE';
-    banner(`<div class="h">${head}</div>${zhPrompt ? zhStim : enStim}`, cls);
+    // listen forms: audio only (a big 🔊, no characters, no English) until the answer; then the text is revealed in the banner
+    const sayQ = (maxMs?: number) => (zhPrompt ? sayItem(id, maxMs) : sayEn(id, maxMs));
+    const lisStim = `<button class="secondary big" id="replay" data-testid="listen-replay" title="Hear it again" aria-label="Hear it again">🔊</button>`;
+    const reveal = () => { if (!lis) return; const b = $('#banner'); const h = $('#banner .h'); if (b && h) { b.innerHTML = h.outerHTML + (zhPrompt ? zhStim : enStim); b.dataset.revealed = '1'; rp(); } };
+    banner(`<div class="h">${head}</div>${lis ? lisStim : zhPrompt ? zhStim : enStim}`, cls + (lis ? ' listen' : ''));
     view.focus({ turn: turn === 'spell' ? (foe ? 'attack' : 'heal') : turn, target: (turn === 'attack' || turn === 'spell') && foe ? foes.indexOf(foe) : undefined, attacker: turn === 'defense' && foe ? foes.indexOf(foe) : undefined });
     const unlockDelay = bs.focus ? C().focusDelayMs : 0; bs.focus = false;
-    const rp = () => { const b = $('#replay'); if (b) b.onclick = () => sayItem(id); };
+    const rp = () => { const b = $('#replay'); if (b) b.onclick = () => { if (lis && !$('#banner')?.dataset.revealed) sayQ(); else sayItem(id); }; };
     if (way === 'rZE' || way === 'rEZ') {
       const first = Object.values(p.ways).every(w => w.a === 0);
       const n = Math.max(B.learning.minOptions, LOC[currentLoc].mcOptions - (first ? B.learning.firstAskOptionReduction : 0));
@@ -236,13 +242,13 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       const zhOpts = way === 'rEZ';
       const label = (oid: string) => zhOpts ? `<span lang="zh-CN">${ITEM[oid].zh}</span>` : esc(ITEM[oid].enPrimary);
       const canInsight = () => S.skillsEquipped.includes('insight') && bs.insight < SKILL.insight.perBattle! && S.mp >= SKILL.insight.mp && $$('#bmain .ans:not(.gone)').length > 2;
-      msg(zhOpts ? `${turn === 'defense' ? 'Block it! ' : ''}Tap the Chinese that means <b>${esc(item.enPrimary)}</b>` : `${turn === 'defense' ? 'Block it! ' : ''}Tap what it means`);
+      msg(lis ? `${turn === 'defense' ? 'Block it! ' : ''}👂 Listen, then tap ${zhOpts ? 'the Chinese' : 'what it means'}` : zhOpts ? `${turn === 'defense' ? 'Block it! ' : ''}Tap the Chinese that means <b>${esc(item.enPrimary)}</b>` : `${turn === 'defense' ? 'Block it! ' : ''}Tap what it means`);
       side(S.skillsEquipped.includes('insight') ? `<button class="ghost" id="insight" data-testid="insight">💡 Insight · ${SKILL.insight.mp} MP</button>` : '');
       const nc = Math.min(4, Math.max(2, opts.length));
       const main = await dockMain(`<div class="answers" data-testid="question" data-way="${way}">${opts.map((o, k) =>
         `<button class="ans n${nc} ${zhOpts ? 'zhA' : 'enA'}" data-o="${o}" data-testid="opt" data-key="${k + 1}" disabled><span class="k">${k + 1}</span>${label(o)}</button>`).join('')}</div>`);
       rp();
-      (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn };
+      (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn, listen: lis };
       let hinted = false;
       const ins = $('#insight') as HTMLButtonElement | null;
       const updIns = () => { if (ins) ins.disabled = !canInsight(); };
@@ -253,7 +259,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       };
       updIns();
       // PROMPT_PLAY -> INPUT_UNLOCKED (after audio, or 800 ms for text-only prompts); cards sit at 60% with no press state until then
-      if (zhPrompt) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
+      if (lis) await sayQ(C().audioUnlockMaxMs); else if (zhPrompt) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
       if (unlockDelay) await sleep(unlockDelay);
       $$('#bmain .ans:not(.gone)').forEach(b => { (b as HTMLButtonElement).disabled = false; b.classList.add('live'); }); updIns();
       const t0 = performance.now();
@@ -262,21 +268,22 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       $$('#bmain .ans').forEach(b => { (b as HTMLButtonElement).disabled = true; b.classList.remove('live'); if (b.dataset.o === id) b.classList.add('right'); else if (b.dataset.o === pick) b.classList.add('wrong'); else b.classList.add('faded'); });
       if (ins) ins.disabled = true;
       const correct = pick === id;
+      reveal();
       await feedback(id, correct, turn, undefined);
-      return { result: correct ? 'correct' : 'wrong', spoken: false, hinted, fast, ...(form ? { form } : {}) };
+      return { result: correct ? 'correct' : 'wrong', spoken: false, hinted, fast, listen: lis, ...(form ? { form } : {}) };
     }
     // ---- spoken ways: one 150px mic in the dock centre, nothing else tappable (spec §4.3)
     const zhAns = way === 'sEZ';
     const lang = zhAns ? 'zh-CN' : 'en-US';
-    msg(zhAns ? `🎤 Say it in <b>Chinese</b>: <b>${esc(item.enPrimary)}</b>` : '🎤 Say what it means in <b>English</b>');
+    msg(lis ? `🎤 Listen, then say it in <b>${zhAns ? 'Chinese' : 'English'}</b>` : zhAns ? `🎤 Say it in <b>Chinese</b>: <b>${esc(item.enPrimary)}</b>` : '🎤 Say what it means in <b>English</b>');
     side('');
     await dockMain(`<div class="speech" data-testid="question" data-way="${way}">
       <div class="l">${reprompts ? '🤫 Didn\'t hear you.<br>Tap and talk!' : 'Tap the mic,<br>then say it out loud.'}</div>
       <button id="mic" data-testid="mic" data-key="enter" aria-label="Microphone" disabled>🎤</button>
       <div class="r" id="micmsg">Listening starts after the beep.<br>No rush: there is no clock.</div></div>`);
     rp();
-    (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn, spoken: true };
-    if (!zhAns && reprompts === 0) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
+    (window as any).__proto.q = { id, way, answerId: id, zh: item.zh, en: item.enPrimary, turn, spoken: true, listen: lis };
+    if (lis && reprompts === 0) await sayQ(C().audioUnlockMaxMs); else if (!lis && !zhAns && reprompts === 0) await sayItem(id, C().audioUnlockMaxMs); else await sleep(C().textUnlockMs);
     const mic = $('#mic') as HTMLButtonElement; mic.disabled = false; mic.classList.add('pulse');
     await new Promise<void>(res => mic.onclick = () => res());
     mic.classList.remove('pulse'); mic.classList.add('listening'); mic.textContent = '👂'; $('#micmsg').innerHTML = '👂 Listening…<br>say it now!';
@@ -296,8 +303,9 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     // "I heard: …" for 800 ms before grading, so the child sees the game listened
     mic.classList.add('heard'); mic.textContent = '💬'; $('#micmsg').innerHTML = `💬 I heard:<br>“${esc(heard)}”` + (DEBUG ? srDebugHtml() : '');
     await sleep(800);
+    reveal();
     await feedback(id, correct, turn, heard, true);
-    return { result: correct ? 'correct' : 'wrong', spoken: true, hinted: false, fast: false };
+    return { result: correct ? 'correct' : 'wrong', spoken: true, hinted: false, fast: false, listen: lis };
   }
 
   /** §9.4 character assembly: English prompt, n slots in the banner, a tray of single-character tiles in the dock; each tap checked at once. */

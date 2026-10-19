@@ -3,7 +3,7 @@
 // Buttons are disabled when neither is available (no speechSynthesis or no Chinese voice on the device).
 import { ITEM } from '../data';
 import { assets, onAssets } from '../assets';
-import { speak, hasZhVoice, onVoices, synth, onQuietForMic } from './speech';
+import { speak, hasZhVoice, hasEnVoice, onVoices, synth, onQuietForMic } from './speech';
 import { audioSettings, duck } from '../audio/audio';
 
 const ttsOk = () => !!synth() && hasZhVoice();
@@ -39,6 +39,14 @@ function sayRaw(id: string, maxMs?: number): Promise<void> {
     });
   }
   return speak(it?.zh || '', 'zh-CN', maxMs);
+}
+
+/** English (en-US) voice prompt for an item's primary English sense (audio-only EN→ZH questions). TTS only: there are no English clips. */
+export const canSayEn = () => !!synth() && hasEnVoice();
+export function sayEn(id: string, maxMs?: number): Promise<void> {
+  const w: any = window; (w.__proto = w.__proto || {}).saidEn = [...(w.__proto.saidEn || []).slice(-20), id];
+  duck(true); let un = false; const undo = () => { if (!un) { un = true; duck(false); } };
+  return speak(ITEM[id]?.enPrimary || '', 'en-US', maxMs).then(undo, undo);
 }
 
 /** Markup for a speaker button. Wire it with wireSayButtons(). */

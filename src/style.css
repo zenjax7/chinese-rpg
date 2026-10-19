@@ -240,6 +240,7 @@ table.mastery td.zhc { font-size:24px; text-align:left; }
 #banner .stim .hint { font:700 24px var(--en); opacity:.85; }
 #banner .qzh { font:700 96px var(--zh); line-height:1.1; }
 #banner #replay { position:absolute; right:14px; bottom:14px; width:64px; height:64px; min-height:64px; padding:0; font-size:28px; }
+#banner.listen #replay { position:static; display:block; margin:6px auto 0; width:120px; height:120px; min-height:120px; font-size:60px; border-radius:60px; }   /* §3.4 listen forms: audio only */
 #roundchip { position:absolute; left:540px; top:22px; width:200px; height:48px; display:flex; align-items:center; justify-content:center; gap:10px; font:800 22px var(--title); }
 #roundchip .st.bump { animation:bump 300ms; display:inline-block; }
 .tgt { position:absolute; background:transparent; border:0; box-shadow:none; padding:0; min-height:0; border-radius:24px; }

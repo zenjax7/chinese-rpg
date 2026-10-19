@@ -4,7 +4,7 @@ import { B, ITEM, LOC, POOLS, CONS } from '../data';
 import { S, save, speechOn, session, WayKey } from '../engine/state';
 import { prog, progress, distractors, pickWay, WayCtx, gradePractice } from '../engine/learning';
 import { listen, quietForMic, noteGrade, srDebugHtml } from '../engine/speech';
-import { sayItem, sayBtn, wireSayButtons } from '../engine/voice';
+import { sayItem, sayEn, canSayItem, canSayEn, sayBtn, wireSayButtons } from '../engine/voice';
 import { playSfx, playMusic, beep, holdMusicForMic } from '../audio/audio';
 import { matchZh, matchEn } from '../engine/match';
 import { $, $$, esc, render, on, toast, dialog, sleep, hud, zh, bookHtml, wireBook, chunk, DEBUG } from './dom';
@@ -66,7 +66,7 @@ async function runMode(loc: string, mode: Mode) {
       const id = ids[k];
       let way: WayKey = mode === 'listen' ? (k % 2 ? 'rEZ' : 'rZE') : mode === 'say' ? (k % 2 ? 'sZE' : 'sEZ') : pickWay(id, ctx);
       if (way[0] === 's' && !speechOn()) way = k % 2 ? 'rEZ' : 'rZE';
-      const r = await question(loc, id, way, `${MODES.find(m => m.id === mode)!.emoji} ${k + 1}/${ids.length}`);
+      const r = await question(loc, id, way, `${MODES.find(m => m.id === mode)!.emoji} ${k + 1}/${ids.length}`, mode === 'listen');
       if (r === 'quit') { finished = false; break; }
       if (r === 'skip') continue;
       ctx.asked++; if (way[0] === 's') ctx.spoken++;
@@ -137,7 +137,7 @@ async function matching(loc: string) {
 }
 
 type QR = 'correct' | 'wrong' | 'skip' | 'quit';
-async function question(loc: string, id: string, way: WayKey, title: string): Promise<QR> {
+async function question(loc: string, id: string, way: WayKey, title: string, listenMode = false): Promise<QR> {
   const it = ITEM[id];
   const shell = (inner: string) => shellBook('practice-q', `🎯 ${title}`, `${inner}
     <div class="fbline" id="fb"></div><button class="ghost" id="quit" data-testid="practice-quit">Stop practice</button>`, `data-way="${way}"`);
@@ -147,12 +147,13 @@ async function question(loc: string, id: string, way: WayKey, title: string): Pr
     const n = Math.max(B.learning.minOptions, LOC[loc].mcOptions);
     const opts = [id, ...distractors(id, n - 1)].sort(() => Math.random() - 0.5);
     const zhToEn = way === 'rZE';
+    const lis = listenMode && (zhToEn ? canSayItem(id) : canSayEn());   // §3.4 listen & pick: audio only until the answer (written form without a voice)
     const nc = Math.min(4, Math.max(2, opts.length));
-    shell(`${zhToEn ? `<div class="prompt">What does it mean?</div><div class="row"><div class="qword" lang="zh-CN">${it.zh}</div><button class="secondary say" id="say">🔊</button></div>` : `<div class="prompt">Which one is <b>“${esc(it.enPrimary)}”</b>?</div><div style="height:106px"></div>`}
+    shell(`${lis ? `<div class="prompt">👂 Listen, then tap ${zhToEn ? 'what it means' : 'the Chinese'}</div><div class="row"><button class="secondary say big" id="say" data-testid="listen-replay">🔊</button></div>` : zhToEn ? `<div class="prompt">What does it mean?</div><div class="row"><div class="qword" lang="zh-CN">${it.zh}</div><button class="secondary say" id="say">🔊</button></div>` : `<div class="prompt">Which one is <b>“${esc(it.enPrimary)}”</b>?</div><div style="height:106px"></div>`}
       <div class="options">${opts.map((o, k) => `<button class="ans n${nc} ${zhToEn ? 'enA' : 'zhA'}" data-o="${o}" data-testid="opt" data-key="${k + 1}"><span class="k">${k + 1}</span>${zhToEn ? esc(ITEM[o].enPrimary) : `<span lang="zh-CN">${ITEM[o].zh}</span>`}</button>`).join('')}</div>`);
     on('#quit', () => quitR('quit'));
-    (window as any).__proto.q = { id, way, answerId: id, practice: true };
-    if (zhToEn) { on('#say', () => sayItem(id)); sayItem(id); }
+    (window as any).__proto.q = { id, way, answerId: id, practice: true, listen: lis };
+    if (lis && !zhToEn) { on('#say', () => sayEn(id)); sayEn(id); } else if (zhToEn) { on('#say', () => sayItem(id)); sayItem(id); }
     const pick = await Promise.race([quitP, new Promise<string>(r => on('[data-o]', (_e, el) => r(el.dataset.o!)))]);
     if (pick === 'quit') return 'quit';
     $$('[data-o]').forEach(b => { (b as HTMLButtonElement).disabled = true; if (b.dataset.o === id) b.classList.add('right'); else if (b.dataset.o === pick) b.classList.add('wrong'); else b.classList.add('faded'); });
