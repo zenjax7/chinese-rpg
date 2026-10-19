@@ -47,6 +47,19 @@ export function mapLevels(s: any): MapLevels | undefined {
   for (const x of s.roster || []) if (x && x.level != null) roster[x.enemy] = x.level;
   return { tier: s.gearTier, recLevel: s.recLevel, enemyLevel: s.enemyLevel, eliteLevel: s.eliteLevel ?? s.enemyLevel?.[1], bossLevel: s.boss?.level, roster };
 }
+/** Classic mode (Desy 2026-10-17): each classic location reads enemyLevel, eliteLevel, boss.level and recLevel (and gearTier) from the
+ *  graph map it corresponds to, by this static table; a location not in it uses its realm's main map realm_<realm>. The map's
+ *  roster[].level overrides belong to that map's roster, so they are not carried over. */
+export const CLASSIC_MAPS: Record<string, string> = { meadow: 'realm_1', forest: 'realm_2' };
+export const classicMapId = (locId: string, realm: number) => CLASSIC_MAPS[locId] ?? `realm_${realm}`;
+export function classicLevels(locId: string, realm: number, byMap: Record<string, any>): MapLevels | undefined {
+  const m = mapLevels(byMap[classicMapId(locId, realm)]);
+  return m && { ...m, roster: {} };
+}
+/** Desy 2026-10-17: a worker bee summoned in a boss fight takes the boss's level; anywhere else (a roster worker bee) it rolls like any
+ *  normal enemy (undefined = no forced level). */
+export const summonLevel = (summonDesyId: string, summonerKind: EnemyKind, summonerLevel: number): number | undefined =>
+  summonDesyId === 'worker_bee' && isBoss(summonerKind) ? summonerLevel : undefined;
 const roll = (lo: number, hi: number, rnd: () => number) => lo + Math.floor(rnd() * (hi - lo + 1));
 /** An enemy's level on spawn: its roster[].level override, else eliteLevel (elites) / boss.level (bosses), else a uniform roll in
  *  enemyLevel. null = the map sets no level for it (the enemy keeps its table stats). */

@@ -480,7 +480,7 @@ function feather(id: string) {
 
 async function doBattle(id: string, kind: BattleKind) {
   const st = S.locs[id]; const skillsBefore = S.skills.slice();
-  const res = await runBattle(id, kind, kind === 'path' ? st.pathCleared + 1 : 0);
+  const res = await runBattle(id, kind, kind === 'path' ? st.pathCleared + 1 : 0, { levels: LOC[id].levels });   // classic: the corresponding map's levels
   if (res.outcome === 'defeat') return defeat(id);
   if (res.outcome === 'flee') return kind === 'walk' ? town() : locationScreen(id, '🏃 You got away safely.');
   let extra = '';

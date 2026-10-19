@@ -1,6 +1,6 @@
 // Battle state machine (spec §1.2) driven by async UI prompts. Numbers come from src/data/*.json.
 import { B, POOLS, ENEMIES, EnemyDef, ITEM, LOC, LocationDef, GEAR, GEAR_LIST, CONS, SKILL, SPELL, SPELLS, SPELL_RULES, SpellDef, LEVELING } from '../data';
-import { MapLevels, resolveEnemyLevel, enemyStatsAt, roundActions } from '../shared/leveling';
+import { MapLevels, resolveEnemyLevel, enemyStatsAt, roundActions, summonLevel } from '../shared/leveling';
 import { onKill as questKill } from './quests';
 import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainGear, equipLine } from './state';
 import { chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
@@ -26,8 +26,8 @@ export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.valu
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
 /** Leveling v2 (§2.3): an enemy spawned on a map with level settings gets its level (roster[].level, eliteLevel / boss.level, else a
  *  roll in enemyLevel) and that level's stats at the map's tier. Without them (classic mode, a map with no level for it) it keeps its table stats. */
-export function atLevel(def: EnemyDef, m?: MapLevels, rnd: () => number = Math.random): EnemyDef {
-  const did = def.desyId.split(' ')[0]; const n = resolveEnemyLevel(did, def.kind, m, rnd);
+export function atLevel(def: EnemyDef, m?: MapLevels, rnd: () => number = Math.random, forced?: number): EnemyDef {
+  const did = def.desyId.split(' ')[0]; const n = forced ?? resolveEnemyLevel(did, def.kind, m, rnd);
   if (n == null || !m) return def;
   const s = enemyStatsAt(def.kind, m.tier, n, LEVELING.archetype[did], LEVELING.bossHpMult[`${m.tier},${def.kind}`] ?? 1);
   return { ...def, level: s.level, hp: s.hp, atk: s.atk, def_: s.def_ };
@@ -72,8 +72,8 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const fixed = (opts.enemies || []).map(runtimeEnemy).filter(Boolean) as string[]; const isBoss = kind === 'boss';
   // ---- BATTLE_INIT
   const foes: Foe[] = [];
-  const mk = (id: string): Foe => { const d = atLevel(ENEMIES[id], opts.levels); return { d, hp: d.hp, maxHp: d.hp, spd: d.level, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
-  const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(mk)); return f; };
+  const mk = (id: string, level?: number): Foe => { const d = atLevel(ENEMIES[id], opts.levels, Math.random, level); return { d, hp: d.hp, maxHp: d.hp, spd: d.level, alive: true, skipNext: false, halfDone: false, waxUsed: false, stolen: 0 }; };
+  const withMinions = (id: string) => { const f = mk(id); foes.push(f, ...ENEMIES[id].minions.map(m => mk(m))); return f; };
   const scripted = fixed.length ? fixed : kind === 'path' ? loc.scripted?.[String(pathIndex)] : undefined;
   if (isBoss) {
     withMinions(loc.boss);   // Jack Oct 11: no boss checkpoint; a boss fight always starts at full HP
@@ -405,7 +405,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   function summon(id: string, max: number, by: Foe, maxSummons = 99) {
     if (foes.filter(x => x.alive).length >= Math.min(max, C().maxEnemies) || bs.summons >= maxSummons) return;
     bs.summons++; (window as any).__proto.summons = bs.summons;
-    const n = mk(id); n.summoned = true; const dead = foes.findIndex(x => !x.alive && x !== leader);
+    const n = mk(id, summonLevel(ENEMIES[id].desyId.split(' ')[0], by.d.kind, by.d.level)); n.summoned = true; /* a boss's worker bee: the boss's level */ const dead = foes.findIndex(x => !x.alive && x !== leader);
     if (dead >= 0) foes[dead] = n; else foes.push(n);
     syncView(); log(`📣 ${by.d.emoji} ${by.d.zh} calls for help! A ${n.d.emoji} ${n.d.zh} joins the fight.`); toast(`📣 ${by.d.en} summons a ${n.d.en}!`);
   }

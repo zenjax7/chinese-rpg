@@ -22,7 +22,8 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   const m = (await tid('consent').innerText()).match(/(\d+) × (\d+)/); await tid('consent-speech').uncheck();
   await tid('consent-answer').fill(String(+m[1] * +m[2])); await tid('consent-ok').click(); await tid('town').waitFor();
   // an older (v3.2) save without spells / quests still loads
-  await edit(s => { delete s.spells; delete s.quests; s.level = 8; s.gold = 2000; s.mp = 26; s.hp = 78; s.inv.manatea = 0;
+  // classic levels: the forest reads realm_2 (normals L14–16, recLevel 16–19), so the spells hero is L16 (max HP 94, max MP 26), test-only
+  await edit(s => { delete s.spells; delete s.quests; s.level = 16; s.gold = 2000; s.mp = 26; s.hp = 94; s.inv.manatea = 0;
     s.locs.meadow.bossDefeated = true; s.locs.meadow.pathCleared = 8; s.locs.forest.unlocked = true; s.locs.forest.previewSeen = true;
     s.gear = ['wood_sword', 'cloth_tunic', 'potlid', 'horn_dagger']; s.equip = { weapon: 'horn_dagger', armor: 'cloth_tunic', shield: 'potlid', charm: null }; });
   await p.reload(); await tid('town').waitFor();
@@ -171,10 +172,14 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
   else check(false, 'map: bag with Mana Tea reachable from the location');
 
   // ---- quest progress + claim ----
+  const bountyLog = [];
   for (let extra = 0; extra < 4 && !(await sv()).quests.q2_bounty.n; extra++) {   // Giant Bees are random in the forest
     await rest(); await tid('location').waitFor(); await tid('act-path').click(); await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
-    await battle(async () => false); if (await tid('victory-ok').count()) await tid('victory-ok').click(); await tid('location').waitFor(); }
-  const qn = (await sv()).quests.q2_bounty.n; check(qn > 0, `quests: Giant Bee bounty progressed from kills (${qn}/8)`);
+    const bf = await p.evaluate(() => window.__proto.foes().map(f => `${f.id} L${f.level}`).join('+'));
+    bountyLog.push(`${bf}: ${await battle(async () => false)}`); if (await tid('victory-ok').count()) await tid('victory-ok').click();
+    if (!(await tid('location').count())) { await p.waitForTimeout(500); if (!(await tid('location').count())) { log('bounty fight did not end at the location:', (await p.locator('#ui').innerText().catch(() => '')).replace(/\n+/g, ' | ').slice(0, 160)); await edit(s => { s.where = 'forest'; }); await rest(); } }
+    await tid('location').waitFor(); }
+  const qn = (await sv()).quests.q2_bounty.n; check(qn > 0, `quests: Giant Bee bounty progressed from kills (${qn}/8; ${bountyLog.join('; ')})`);
   await edit(s => { s.quests.q2_bounty.n = 8; s.where = 'town'; }); await p.reload(); await tid('town').waitFor({ timeout: 10000 });
   await tid('go-inn').click(); await tid('inn').waitFor(); await hintFree('village inn'); await tid('back').click(); await tid('town').waitFor();
   await tid('go-quests').click(); await tid('quest-board').waitFor(); if (await tid('board-town-2').count()) await tid('board-town-2').click();

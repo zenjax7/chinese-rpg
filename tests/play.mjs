@@ -94,7 +94,7 @@ async function debugSet(p, { gold: g, level, hp: h }) {
 async function playBattle(p, policy = () => true, opts = {}) {
   const stats = { q: 0, ways: {}, spoken: 0 }; let waits = 0;
   await tid(p, 'battle').waitFor({ state: 'attached', timeout: 15000 });   // the map token walks to the node first
-  for (let step = 0; step < 1500; step++) {
+  for (let step = 0; step < 3000; step++) {   // classic levels: the L17 Queen Bee fight at 75% runs ~60 questions (a stall is caught below)
     const state = await p.evaluate(() => {
       const has = s => !!document.querySelector(`[data-testid="${s}"]`);
       if (has('scout')) return 'scout'; if (has('victory')) return 'victory'; if (has('inn')) return 'inn';
@@ -199,7 +199,8 @@ check((await p.locator('.mapnode.fight.done').count()) === 1, 'path progress 1/8
 // companion: 5 wrong answers fill the gauge (+20 each), then it attacks at the start of a hero turn
 await debugSet(p, { hp: 999 });
 let wrongs = 0;
-await tid(p, 'act-path').click(); r = await playBattle(p, () => ++wrongs > 5);
+// classic levels: path fight 2 is now L1–3 normals, so 2 right answers can end it before the companion's turn; stay wrong 2 more answers
+await tid(p, 'act-path').click(); r = await playBattle(p, () => ++wrongs > 7);
 log('battle 2 result', r.result, JSON.stringify(r.stats));
 check((await p.evaluate(() => window.__proto.companionHits || 0)) >= 1, 'companion (gauge 100) made a free attack');
 { const c = await p.evaluate(() => window.__proto.companion || {});
@@ -316,7 +317,7 @@ await tid(p, 'location').waitFor(); await debugSet(p, { level: 8, gold: 200 });
 // skill earned first (Double Strike, L5); Guardian Shield comes with the boss reward afterwards and is owned, unslotted (fill-in-earned-order rule)
 { const sv8 = await save_(p); check(sv8.skillsEquipped.length === 3 && sv8.slotsSeen === 3 && sv8.skills.includes('shield'),
     `L8+: 3 skill slots, all filled in the order the skills were earned; Guardian Shield owned (${sv8.skillsEquipped.join(',')}; owned ${sv8.skills.join(',')})`); }
-await debugSet(p, { level: 19 });   // leveling v2: the Queen Bee is level 19 (great_hive_1 boss.level; recLevel 19–21)
+await debugSet(p, { level: 17 });   // classic levels: the forest reads realm_2, so the Queen Bee is level 17 (boss.level; recLevel 16–19)
 await tid(p, 'debug-open').click(); await tid(p, 'dbg-clearpath').click(); await tid(p, 'location').waitFor();
 log('forest approach:', await tid(p, 'location').innerText().then(t => t.replace(/\n+/g, ' | ')));
 check(await tid(p, 'act-patrol').count() === 0 && await tid(p, 'act-boss').count() === 1, 'forest: no patrols before the Queen Bee either');
@@ -324,11 +325,11 @@ if (await tid(p, 'act-inn').count()) { await tid(p, 'act-inn').click(); await ti
 { const sq = await save_(p); log('queen kit:', JSON.stringify(sq.equip), 'skills', sq.skillsEquipped.join(','), 'inv', JSON.stringify(sq.inv), 'hp', await hp(p), '/', await maxHp(p));
   check((sq.inv.honey || 0) >= 3 && sq.equip.armor === 'petal_cloak' && sq.equip.shield === 'beeswax' && sq.equip.weapon === 'horn_dagger', 'Queen Bee kit: dagger + tier-2 armor/shield + 3 Honey Potions');
 }
-// Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L19, her level), 75% (every 4th answer wrong), potion/Heal below 40% HP
+// Queen Bee with the §7.9 fixes: tier-2 armor + shield and the heroic dagger (L17, her level), 75% (every 4th answer wrong), potion/Heal below 40% HP
 let qn = 0; survive.used = { potion: 0, heal: 0 }; await p.screenshot({ path: '/tmp/proto-forest-gate.png' }); await tid(p, 'act-boss').click();
 let queenStats = null; const qAct = survive(0.4);
 r = await playBattle(p, () => (++qn % 4) !== 0, { shot: '/tmp/proto-queen.png', action: async pg => { if (!queenStats) queenStats = await pg.evaluate(() => window.__proto.foes().find(f => f.id === 'queenbee')); return qAct(pg); } });
-check(queenStats && queenStats.maxHp === 277 && queenStats.atk === 14 && queenStats.level === 19, `leveling v2 Queen Bee stats: L${queenStats?.level} ${queenStats?.maxHp} HP / ${queenStats?.atk} ATK (combat_data: L19 277 / 14, HP x m(t), ATK x 0.8)`);
+check(queenStats && queenStats.maxHp === 254 && queenStats.atk === 13 && queenStats.level === 17, `classic Queen Bee stats: L${queenStats?.level} ${queenStats?.maxHp} HP / ${queenStats?.atk} ATK (forest reads realm_2: boss.level 17 -> 254 / 13, HP x m(t), ATK x 0.8)`);
 { // leveling v2: boss stats from combat_data.json at each boss's level (crow L10, grey wolf L13, bear L17, rabbit king L15; HP x m(t), ATK x 0.8)
   const { createRequire } = await import('node:module'); const en = createRequire(import.meta.url)('../src/data/enemies.json').enemies;
   const st = id => { const e = en.find(x => x.id === id); return e ? `${e.hp}/${e.atk}` : '?'; };
@@ -337,7 +338,7 @@ check(queenStats && queenStats.maxHp === 277 && queenStats.atk === 14 && queenSt
 }
 const summons = await p.evaluate(() => [...document.querySelectorAll('#blog div')].filter(d => /calls for help/.test(d.textContent)).length).catch(() => -1);
 log('queen battle', r.result, JSON.stringify(r.stats));
-check(r.result === 'win', `beat the Queen Bee at L19 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);
+check(r.result === 'win', `beat the Queen Bee at L17 with tier-2 armor/shield + dagger, 75% (${r.stats.q} q, potions ${survive.used.potion}, heals ${survive.used.heal})`);
 const qlog = await p.evaluate(() => window.__proto.summons);
 check(qlog === undefined ? true : qlog <= 2, 'Queen Bee summons ≤ 2');
 if (r.result === 'win') await tid(p, 'victory-ok').click(); else await tid(p, 'back').click();
@@ -358,6 +359,21 @@ check((await p.locator('[data-testid="mastery"] tr').count()) === 112, 'mastery 
 await tid(p, 'dbg-close').click();
 await p.context().close();
 
+// ================= classic levels (Desy 2026-10-17): a fresh L1 hero answering 100% right wins the first meadow fights =================
+{ const c = await newPage(); await c.goto(BASE); await consent(c);
+  await goLoc(c, 'meadow'); await tid(c, 'preview-done').click(); await tid(c, 'location').waitFor();
+  const res = [], lvBad = [];
+  for (let k = 0; k < 3; k++) {
+    await tid(c, 'act-path').click(); await tid(c, 'battle').waitFor({ state: 'attached', timeout: 15000 });
+    const foes = await c.evaluate(() => window.__proto.foes()); const rr = await playBattle(c, () => true);
+    lvBad.push(...foes.filter(f => !(f.kind === 'normal' ? f.level >= 1 && f.level <= 3 : f.level === 10)).map(f => `${f.id} L${f.level}`));
+    res.push(`${foes.map(f => `${f.id} L${f.level}`).join('+')}: ${rr.result}`);
+    if (rr.result !== 'win') break; await tid(c, 'victory-ok').click(); await tid(c, 'location').waitFor();
+  }
+  const lv = +(await tid(c, 'hud-level').innerText());
+  check(!lvBad.length, `classic meadow levels: normals (and a boss's minions) L1–3, bosses L10 (realm_1)${lvBad.length ? ': ' + lvBad.join(', ') : ''}`);
+  check(res.length === 3 && res.every(x => x.endsWith('win')), `classic meadow (realm_1 levels): a 100%-correct L1 hero wins path fights 1-3 (${res.join('; ')}; now L${lv})`);
+  await c.close(); }
 // ================= speech run (fake recognizer) =================
 const s = await newPage(true);
 await s.goto(BASE); await consent(s, true);

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { expToNextAt, heroLevelStats, enemyStatsAt, resolveEnemyLevel, heroActions, roundActions, mapLevels, EnemyKind } from '../../src/shared/leveling.js';
+import { expToNextAt, heroLevelStats, enemyStatsAt, resolveEnemyLevel, heroActions, roundActions, mapLevels, EnemyKind, CLASSIC_MAPS, classicMapId, classicLevels, summonLevel } from '../../src/shared/leveling.js';
 import balance from '../../src/data/balance.json' with { type: 'json' };
 
 // Leveling v2 (Jack 2026-10-17): the engine's formulas against Desy's tables (docs/data/json, written by leveling_v2_tables.py from the sim).
@@ -112,4 +112,39 @@ describe('speed: hero actions per round (§1.1)', () => {
     foes[1].alive = false; expect(roundActions(30, foes)).toBe(3);
   });
   it('no living enemy counts as 1', () => { expect(heroActions(30, [])).toBe(1); expect(roundActions(30, [{ alive: false, spd: 1 }])).toBe(1); });
+});
+
+// Desy 2026-10-17 (combat-spec §2.3 notes): classic locations read their map's levels; a boss's worker bee takes the boss's level.
+describe('classic locations read the corresponding graph map (static table)', () => {
+  const ML = JSON.parse(readFileSync('src/data/world/index.json', 'utf8')).mapLevels;
+  const LOCS = JSON.parse(readFileSync('src/data/locations.json', 'utf8')).locations;
+  it('meadow → realm_1, forest → realm_2; a location not in the table uses realm_<realm>', () => {
+    expect(CLASSIC_MAPS).toEqual({ meadow: 'realm_1', forest: 'realm_2' });
+    expect(classicMapId('somewhere', 3)).toBe('realm_3');
+    expect(classicLevels('somewhere', 3, ML)).toEqual({ ...mapLevels(ML.realm_3), roster: {} });
+    for (const l of LOCS) expect(ML[classicMapId(l.id, l.tier)], l.id).toBeTruthy();   // every classic location has its map
+  });
+  it('meadow: enemyLevel [1, 3], eliteLevel 3, boss.level 10, recLevel [1, 11] at tier 1 (realm_1); forest: realm_2', () => {
+    expect(classicLevels('meadow', 1, ML)).toEqual({ tier: 1, recLevel: [1, 11], enemyLevel: [1, 3], eliteLevel: 3, bossLevel: 10, roster: {} });
+    expect(classicLevels('forest', 2, ML)).toEqual({ ...mapLevels(ML.realm_2), roster: {} });
+  });
+  it('so a meadow wolf pup rolls L1–3 (it was its table level 10)', () => {
+    const m = classicLevels('meadow', 1, ML);
+    expect([0, 0.5, 0.999].map(x => resolveEnemyLevel('wolf_pup', 'normal', m, () => x))).toEqual([1, 2, 3]);
+    expect(resolveEnemyLevel('horned_rabbit_king', 'realmboss', m)).toBe(10);
+  });
+});
+describe('worker bee level', () => {
+  const A = JSON.parse(readFileSync('src/data/leveling.json', 'utf8')).archetype;
+  it('summoned in a boss fight: the boss\'s level; otherwise no forced level (it rolls in enemyLevel like any normal)', () => {
+    expect(summonLevel('worker_bee', 'realmboss', 19)).toBe(19);
+    expect(summonLevel('worker_bee', 'locboss', 17)).toBe(17);
+    expect(summonLevel('worker_bee', 'normal', 15)).toBeUndefined();
+    expect(summonLevel('horned_rabbit', 'realmboss', 15)).toBeUndefined();   // the rule is the worker bee's only
+  });
+  it('keeps the giant bee archetype at half the HP multiplier; at the Queen Bee\'s L19 (tier 2): same ATK, half the HP factor', () => {
+    expect(A.worker_bee).toEqual({ ...A.giant_bee, hpMult: A.giant_bee.hpMult / 2 });
+    const w = enemyStatsAt('normal', 2, 19, A.worker_bee), g = enemyStatsAt('normal', 2, 19, A.giant_bee);
+    expect(w.level).toBe(19); expect(w.atk).toBe(g.atk); expect(w.hp).toBe(Math.round(g.hp / A.giant_bee.hpMult * A.worker_bee.hpMult));
+  });
 });

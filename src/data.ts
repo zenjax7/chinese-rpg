@@ -5,7 +5,8 @@ import locationsJ from './data/locations.json';
 import shopJ from './data/shop.json';
 import skillsJ from './data/skills.json';
 import levelingJ from './data/leveling.json';
-import type { Archetype } from './shared/leveling';
+import worldIndexJ from './data/world/index.json';
+import { classicLevels, type Archetype, type MapLevels } from './shared/leveling';
 
 export interface Item { id: string; zh: string; trad: string; py: string; en: string; enPrimary: string; type: string; pos: string;
   topic: string; loc: string; speaking: boolean; reading: boolean; altZh: string[]; altEn: string[]; }
@@ -16,6 +17,7 @@ export interface EnemyDef { id: string; zh: string; py: string; en: string; emoj
     honeyDistract?: boolean; rootOnBroken?: boolean; webOnBroken?: { nextAttackMult: number }; waxShieldFirstHit?: number; healOnceAtHalf?: number;
     summonEveryNTurns?: { n: number; enemy: string; maxOnScreen: number; maxSummons?: number }; coinGrab?: number; bigHuffEveryN?: { n: number; extraBrokenDamage: number } }; }
 export interface LocationDef { id: string; name: string; zh: string; emoji: string; tier: number; G: number; recLevel: [number, number];
+  /** classic: the corresponding graph map's level settings (leveling.ts classicLevels); recLevel above is that map's */ levels?: MapLevels;
   enemiesPerBattle: [number, number]; mcOptions: number; reviewSlots: number; pathFights: number;
   /** classic placed path fights by fight number (Jack Oct 11: no elites here; no random elite either, so no `elite` field) */
   roster: { enemy: string; weight: number }[]; boss: string; packs: Record<string, number>; scripted: Record<string, string[]>;
@@ -37,7 +39,11 @@ export const ITEMS: Item[] = (itemsJ as any).items;
 export const ITEM: Record<string, Item> = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 export const POOLS: Record<string, string[]> = (itemsJ as any).pools;
 export const ENEMIES: Record<string, EnemyDef> = Object.fromEntries((enemiesJ as any).enemies.map((e: EnemyDef) => [e.id, e]));
-export const LOCATIONS: LocationDef[] = (locationsJ as any).locations;
+/** Classic locations take their levels and recLevel from the graph map they correspond to (leveling.ts CLASSIC_MAPS; Desy 2026-10-17). */
+export const LOCATIONS: LocationDef[] = (locationsJ as any).locations.map((l: LocationDef) => {
+  const levels = classicLevels(l.id, l.tier, (worldIndexJ as any).mapLevels || {});
+  return { ...l, levels, recLevel: levels?.recLevel ?? l.recLevel };
+});
 export const LOC: Record<string, LocationDef> = Object.fromEntries(LOCATIONS.map(l => [l.id, l]));
 /** Pool review order (learning.earlierItems): the classic locations, then graph-mode realm 3–9 zones once their content is loaded (world/content.ts). */
 export const POOL_ORDER: string[] = LOCATIONS.map(l => l.id);
