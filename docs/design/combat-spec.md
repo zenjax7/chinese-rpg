@@ -77,7 +77,7 @@ Removed in v3: the "twice in a row" variant, the rusty rule, "speech off by defa
 | term | meaning |
 |---|---|
 | Item | One curriculum entry (word or phrase). |
-| Way | One of 4 ways to answer: **R-ZE** reading ZH→EN (see or hear Chinese, tap the English meaning), **R-EZ** reading EN→ZH (see English, tap the Chinese), **S-ZE** spoken ZH→EN (hear or see Chinese, say the English), **S-EZ** spoken EN→ZH (see English, say the Chinese). "Reading" means multiple choice. |
+| Way | One of 4 ways to answer: **R-ZE** reading ZH→EN (hear Chinese, tap the English meaning), **R-EZ** reading EN→ZH (hear English, tap the Chinese; or build it, §9.4), **S-ZE** spoken ZH→EN (hear or see Chinese, say the English), **S-EZ** spoken EN→ZH (hear or see English, say the Chinese). "Reading" means multiple choice. Audio-only prompts ("listen" forms) show no text until the answer (§3.4, Jack 2026-10-18). |
 | Active ways | 4 when speech works (the default after the consent gate). 2 (R-ZE, R-EZ) only when the browser has no speech recognition or the mic is blocked. |
 | Proficient | 2 correct answers (in total) in every active way. At most 1 of the 2 can come from Preview practice. |
 | Location | A village, dungeon or stage with a local pool of **47–60 items** (curriculum v2). It **ends in a boss**. The realm's last location has the realm boss. |
@@ -509,11 +509,13 @@ def pick_way(item):
 
 - **Spoken cap (decided, 50%):** without it, speech-on kids got about 56% spoken questions. With it they get 48–50%, and in-battle accuracy rises about 1 point. The cost is about 15–20% more patrols but only about 5% more time (e.g. t1 at 75%: 8.9 vs 7.5 patrols, 41.6 vs 39.3 min per location), because the spoken ways fill a bit more slowly. Defeat rates barely move (`data/sim/sim_spoken_cap.csv`).
 - Presentation per way:
-  - **R-ZE:** characters + audio (for `reading = N` items the audio is the main stimulus), English options. No pinyin.
-  - **R-EZ:** English prompt; Chinese options as characters only (no pinyin, v3.2). The correct answer's audio plays in the feedback.
+  - **Listen forms (Jack 2026-10-18):** an audio-only prompt (a big 🔊 replay button, no characters, no English); the text is revealed in the feedback. Chinese is the zh-CN clip or voice, English the en-US voice.
+  - **R-ZE:** listen & pick: Chinese audio only, English options. Without speech input (speech off or the item isn't speakable) it alternates by `R-ZE.attempts` parity between listen & pick (even) and shown-text MC (odd): characters + audio. No pinyin.
+  - **R-EZ:** listen & pick: English audio only; Chinese options as characters only (no pinyin, v3.2). The correct answer's audio plays in the feedback.
     Eligible multi-character items alternate between MC and **character assembly** (tap the characters in order), from the item's 2nd R-EZ question on (§9.4, Jack 2026-10-17).
-  - **S-ZE:** Chinese audio + characters; the kid says the English meaning (`en-US` recognizer).
-  - **S-EZ:** English prompt plus a picture if available; the kid says the Chinese (`zh-CN` recognizer).
+  - **S-ZE:** listen & say (Chinese audio only) when `S-ZE.attempts` is even, read & say (Chinese audio + characters) when odd; the kid says the English meaning (`en-US` recognizer).
+  - **S-EZ:** listen & say (English audio only) when `S-EZ.attempts` is even, read & say (English prompt plus a picture if available) when odd; the kid says the Chinese (`zh-CN` recognizer).
+  - **Fallbacks:** no voice for the prompt's language (no speechSynthesis, no zh-CN/en-US voice, no clip) → the written form (shown-text MC, read & say). Without speech input the spoken ways aren't asked (§3.1). Child profiles have speech on by default; ⏸️ → Parents turns it off.
 - The first-ever question on an item uses one fewer MC option (minimum 2).
 
 ---
