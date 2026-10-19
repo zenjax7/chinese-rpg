@@ -308,6 +308,37 @@ try {
     `keyboard: ${L.o.field} and the dialogue panel stay inside the visible viewport — landscape field ${L.o.fr} panel ${L.o.pr} within [${L.o.top}, ${L.o.bot}]; portrait field ${P.o.fr} panel ${P.o.pr} within [${P.o.top}, ${P.o.bot}]; layout back to normal after it closes`);
   await shot2(ip, '5-keyboard-closed');
 
+  // Jack 21:26, "still jumps when I switch between dialog forms": on the iPad a line's side / expr <select> opens a popover and HIDES the
+  // keyboard, then the next text field brings it back. The bottom area must not drop back under the map in between.
+  const selectCase = async (name, kbh) => {
+    const Af = it('ed-line-en').last(), Sel = ip.locator('[data-testid=ed-line] select').last(), Bf = it('ed-line-zh').last();
+    await Af.tap(); await ip.evaluate(h => window.__setKb({ h, top: 0 }), kbh); await ip.waitForTimeout(300);
+    const pTop0 = await ip.evaluate(() => Math.round(document.querySelector('.panel').getBoundingClientRect().top));
+    const r = await ip.evaluate(async ([kbh]) => {
+      const seen = [], tops = []; const raf = () => new Promise(res => requestAnimationFrame(() => res()));
+      const look = () => { seen.push(document.documentElement.className); tops.push(Math.round(document.querySelector('.panel').getBoundingClientRect().top)); };
+      const sel = [...document.querySelectorAll('[data-testid=ed-line] select')].pop(), zh = [...document.querySelectorAll('[data-testid=ed-line-zh]')].pop();
+      sel.focus(); for (let i = 0; i < 2; i++) { await raf(); look(); }
+      window.__setKb(null);                                    // the select's popover replaces the keyboard
+      for (let i = 0; i < 6; i++) { await raf(); look(); }
+      zh.focus(); for (let i = 0; i < 3; i++) { await raf(); look(); }   // the next text field: focus first ...
+      window.__setKb({ h: kbh, top: 0 });                      // ... then the keyboard comes back
+      for (let i = 0; i < 4; i++) { await raf(); look(); }
+      return { seen, tops };
+    }, [kbh]);
+    await ip.waitForTimeout(200);
+    const o = await kbBoxes(); await shot2(ip, name);
+    await ip.evaluate(() => window.__setKb(null)); await ip.waitForTimeout(150); await ip.evaluate(() => document.activeElement.blur()); await ip.waitForTimeout(950);
+    const c = await ip.evaluate(() => ({ cls: document.documentElement.className, edH: document.querySelector('.editor').getBoundingClientRect().height, ih: innerHeight, work: getComputedStyle(document.querySelector('.work')).visibility }));
+    return { o, c, held: r.seen.every(x => /kb-panel/.test(x)), still: r.tops.every(t => Math.abs(t - pTop0) < 1), pTop0, tops: [...new Set(r.tops)] };
+  };
+  const XL = await selectCase('8-select-then-field-landscape', 834 - 398);
+  await ip.setViewportSize({ width: 834, height: 1194 }); await ip.waitForTimeout(300);
+  const XP = await selectCase('9-select-then-field-portrait', 1194 - 470);
+  await ip.setViewportSize({ width: 1194, height: 834 }); await ip.waitForTimeout(300);
+  check(XL.held && XL.still && XP.held && XP.still && XL.o.field === 'ed-line-zh' && XL.o.fIn && XL.o.pIn && XP.o.field === 'ed-line-zh' && XP.o.fIn && XP.o.pIn && back(XL.c) && back(XP.c),
+    `keyboard, text → select (keyboard hides) → text: the bottom area stays put in every frame (panel top landscape ${XL.tops} / portrait ${XP.tops}), the next field is inside the visible viewport, normal layout after editing ends`);
+
   // Jack's iPad bug (91a0387): with the keyboard open, tapping ANOTHER dialogue field snapped the layout back. iOS order: blur /
   // focusout on field A, a gap (the keyboard stays open), iOS scrolls the window, then focus on field B. The bottom area must stay in
   // keyboard mode the whole time, and B must end up inside the visible viewport.
