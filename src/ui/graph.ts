@@ -348,7 +348,7 @@ async function walk(e: E.GEdge) {
     const to = E.otherEnd(e, from) as string; const steps = e.steps || 1; const pr = E.gp(P(), g.id);
     const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { id: z.id };
     const a = E.nodeOf(g, from)!, b = E.nodeOf(g, to)!; const msStep = walkMsPerStep(); const t0 = performance.now();
-    let s = pr.edgeProgress[e.idx] || 0; let t = s / steps; onEdge = true; walkUi();
+    let s = pr.edgeProgress[e.idx] || 0; let t = s / steps; onEdge = true; partyLeft = b.x < a.x; walkUi(); partyRefresh();
     P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
     // Director Oct 17 (Jack's playtest: 4 battles on a 4-step edge): at most one battle per crossing. The existing per-step roll picks the
     // first step that hits (Jack Oct 11: no scripted path elites); the party walks to that point on the edge, stops there and fights.
@@ -472,17 +472,28 @@ const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
   return E.realmOpen(r, x.P, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
 const MAXZ = 4;   // node x / y -> the 1280x720 frame: nodeXY in shared/level/map-view.ts (the level editor uses the same)
-/** The party's map sprites: file (under public/), frame size, frames in the horizontal strip (frame 0 is drawn), feet line as a fraction of the
- *  frame height. Today these are the battle sprites' idle frames; Arty's map sprites replace one line each. */
-const MAP_SPRITES: Record<string, { file: string; fw: number; fh: number; frames: number; feet: number }> = {
-  hero: { file: 'sprites/hero.png', fw: 256, fh: 256, frames: 7, feet: 0.92 },
-  xiaolong: { file: 'companions/xiaolong_battle_idle.png', fw: 256, fh: 256, frames: 4, feet: 1 },
+/** The party's map sprites (Arty's final strips, approved by Jack 2026-10-18; docs/art/arty/map_sprites.md): file under public/, key, frame size,
+ *  frames in the horizontal strip, feet line (origin y), loop fps, idle frame (null: it never stops, e.g. Xiaolong keeps flying). Facing right. */
+const MAP_SPRITES: Record<string, { key: string; file: string; fw: number; fh: number; frames: number; feet: number; fps: number; idle: number | null }> = {
+  hero: { key: 'hero_map_walk', file: 'map_sprites/hero_map_walk.png', fw: 128, fh: 128, frames: 4, feet: 0.97, fps: 8, idle: 1 },
+  xiaolong: { key: 'xiaolong_map_fly', file: 'map_sprites/xiaolong_map_fly.png', fw: 128, fh: 128, frames: 4, feet: 0.92, fps: 8, idle: null },
 };
-/** One party member on the map, ps px tall, feet at (dx, dy) from the party's point. */
-function mapSprite(id: string, ps: number, dx: number, dy: number) {
+/** One party member on the map, ps px tall, feet at (dx, dy) from the party's point; `moving` plays the loop (walk / fly), else the idle frame. */
+function mapSprite(id: string, ps: number, dx: number, dy: number, moving: boolean) {
   const m = MAP_SPRITES[id]; if (!m) return '';
-  return `<svg data-testid="party-${id}" x="${dx - ps / 2}" y="${dy - ps * m.feet}" width="${ps}" height="${ps}" viewBox="0 0 ${m.fw} ${m.fh}"><image href="${m.file}" width="${m.fw * m.frames}" height="${m.fh}"/></svg>`;
+  const loop = moving || m.idle === null; const anim = loop ? (id === 'xiaolong' ? 'fly' : 'walk') : 'idle';
+  const style = loop ? `animation:mapstrip ${m.frames / m.fps}s steps(${m.frames}) infinite;--strip:-${m.fw * m.frames}px` : `transform:translateX(-${m.fw * m.idle!}px)`;
+  return `<svg data-testid="party-${id}" data-key="${m.key}" data-anim="${anim}" x="${dx - ps / 2}" y="${dy - ps * m.feet}" width="${ps}" height="${ps}" viewBox="0 0 ${m.fw} ${m.fh}"><image href="${m.file}" width="${m.fw * m.frames}" height="${m.fh}" style="${style}"/></svg>`;
 }
+/** The party group's inner markup: Xiaolong (0.6× the hero) behind and above on the trailing side, then the Hero; mirrored when walking left. */
+function partyInner(ps: number, dy: number) {
+  const moving = onEdge; const left = moving && partyLeft;
+  const xl = S.party?.includes('xiaolong') ? mapSprite('xiaolong', ps * 0.6, -0.35 * ps, dy - 0.15 * ps, moving) : '';
+  return `<g class="pflip" data-facing="${left ? 'left' : 'right'}"${left ? ' transform="scale(-1,1)"' : ''}>${xl}${mapSprite('hero', ps, 0, dy, moving)}</g>`;
+}
+/** Re-draw the party in place (walk start: walk / fly loops and facing). */
+function partyRefresh() { const g = document.querySelector('[data-testid="party-sprite"]'); if (g) g.innerHTML = partyInner(+(g as HTMLElement).dataset.ps!, +(g as HTMLElement).dataset.dy!); }
+let partyLeft = false;
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
 const vb = () => `${640 - 640 / zoom - panX} ${360 - 360 / zoom - panY} ${1280 / zoom} ${720 / zoom}`;
 export function graphScreen() {
@@ -524,10 +535,9 @@ export function graphScreen() {
     const ident = known ? `data-node="${n.id}" data-testid="gnode-${n.id}" data-kind="${n.kind}"` : `data-testid="gnode-i${n.idx}"`;
     return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}${lockedWay ? ' locked' : ''}" data-idx="${n.idx}" ${ident} data-fog="${f}" transform="translate(${px(n)},${py(n)})">
       <circle r="${isHere ? rr + 4 : rr}"/><text class="ic" y="${dense ? 6 : 8}">${ic}</text>${label ? `<text class="lb" y="${rr + 22}" lang="zh-CN">${esc(label)}</text>` : ''}</g>`; }).join('');
-  // Director Oct 17: the party on the map (MAP_SPRITES), Xiaolong just behind the Hero once she has joined; both walk in one <g>
+  // Director Oct 17: the party on the map (MAP_SPRITES), Xiaolong with the Hero once Xiaolong has joined; both walk in one <g>
   const pp = partyAt || nodeXY(hn); proto().party = pp; const ps = dense ? 48 : 64;
-  const who = ['hero', ...(S.party?.includes('xiaolong') ? ['xiaolong'] : [])];
-  const party = `<g class="party" data-testid="party-sprite" transform="translate(${pp.x},${pp.y})">${who.reverse().map(id => mapSprite(id, ps, id === 'hero' ? 0 : -ps * 0.55, -rr + 4)).join('')}</g>`;
+  const party = `<g class="party" data-testid="party-sprite" data-ps="${ps}" data-dy="${-rr + 4}" transform="translate(${pp.x},${pp.y})">${partyInner(ps, -rr + 4)}</g>`;
   const exits = [...adj.entries()].filter(([k]) => k.startsWith('@')).map(([, e]) => { const t = e.to as E.NodeRef; const meta = W.idx!.graphs.find(m => m.id === t.graph);
     const lab = e.kind === 'exit' ? `🌍 ${zh('世界地图')} World map` : e.kind === 'stairs' ? (hn.kind === 'stairs_up' ? `⬆️ ${zh('上楼')} Up` : `⬇️ ${zh('下楼')} Down`) : `🌀 ${meta?.title?.zh ? zh(meta.title.zh) + ' ' : ''}${esc(meta?.title?.en || t.graph)}`;
     return `<button class="secondary" data-exit="${e.id}" data-testid="gexit-${e.id}">${lab}</button>`; }).join('');
@@ -539,7 +549,7 @@ export function graphScreen() {
     .graph .ge.closed{stroke:#a33;opacity:.6}.graph .gn circle{fill:#fff8e6;stroke:#7a581e;stroke-width:3}.graph .gn.seen circle{fill:#cfc7b4;opacity:.85}.graph .ge.locked{stroke:#c9a227;stroke-dasharray:4 6}.graph text.lock{font-size:20px;text-anchor:middle;pointer-events:none}.graph .gn.next.locked circle{stroke:#c9a227}
     .graph .gn.here circle{fill:#ffd95a;stroke:#d4a84a;stroke-width:5}.graph .gn.next{cursor:pointer}.graph .gn.next circle{stroke:#2a8f3a;stroke-width:5;animation:gpulse 1.2s infinite}
     @keyframes gpulse{50%{stroke-width:8}}.graph .gn text.ic{font-size:${dense ? 17 : 22}px;text-anchor:middle;pointer-events:none}.graph .gn text.lb{font:700 ${dense ? 13 : 16}px 'Noto Sans SC';text-anchor:middle;fill:#fff;paint-order:stroke;stroke:#0d1b3d;stroke-width:4px;pointer-events:none}
-    .graph .party{pointer-events:none}.graph .party text{text-anchor:middle}.graph .zoom{position:absolute;right:24px;top:100px;display:flex;flex-direction:column;gap:8px}.graph .zoom .zl{font:700 14px Nunito;color:#fff;text-align:center;text-shadow:0 1px 2px #000}</style>
+    .graph .party{pointer-events:none}@keyframes mapstrip{to{transform:translateX(var(--strip))}}.graph .party text{text-anchor:middle}.graph .zoom{position:absolute;right:24px;top:100px;display:flex;flex-direction:column;gap:8px}.graph .zoom .zl{font:700 14px Nunito;color:#fff;text-align:center;text-shadow:0 1px 2px #000}</style>
     <svg viewBox="${vb()}" data-testid="graph-svg">${lines}${nodes}${party}</svg>
     <div class="zoom"><button class="secondary" id="zin" data-testid="zoom-in" aria-label="Zoom in">＋</button><button class="secondary" id="zout" data-testid="zoom-out" aria-label="Zoom out">－</button><button class="secondary" id="zhome" data-testid="zoom-home" aria-label="Centre on the hero">◎</button><div class="zl" data-testid="zoom-level">×${zoom.toFixed(1)}</div></div>
     <div class="bottombar panel">
