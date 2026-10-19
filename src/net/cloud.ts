@@ -42,12 +42,12 @@ export interface CloudSave {
 const blankWay = () => ({ c: 0, a: 0, box: 0, last: 0, due: 0, wrongRun: 0 });
 /** Turns the cloud save into a full local SaveState on top of `base` (a fresh newState()): the snapshot, `prog` rebuilt from the
  *  word_mastery rows, graph bitsets the snapshot lacks, an empty answer log (it never leaves a device), and consent marked given
- *  (the parent consented for the account; speech stays off until the parent turns it on). Returns null when there is no snapshot
+ *  (the parent consented for the account; speech is on by default, Jack 2026-10-18, and ⏸️ → Parents turns it off). Returns null when there is no snapshot
  *  and no mastery yet (a brand-new child: start fresh). */
 export function stateFromCloud(save: CloudSave, base: Record<string, any>): Record<string, any> | null {
   if (!save.state && !save.mastery.length) return null;
   const st: Record<string, any> = { ...base, ...(save.state || {}), log: [] };
-  st.consent = { given: true, speech: false, at: Date.now() };
+  st.consent = { given: true, speech: true, at: Date.now() };
   const prog: Record<string, any> = {};
   for (const m of save.mastery) {
     const ways: Record<string, any> = {};

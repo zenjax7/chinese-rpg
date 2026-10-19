@@ -814,6 +814,31 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     check(A.rq.form === 'assembly' && JSON.stringify(A.rq.tray) === '["他","有"]' && A.rq.why === 're-ask missed' && A.rq2.form === 'mc', `§9.4.2 a missed assembly question is re-asked as assembly (an MC miss as MC): ${JSON.stringify(A.rq)}`);
   }
 
+  // ---- combat-spec §3.4 listen forms (Jack 2026-10-18): form per way, fallbacks, and the mode mix ----
+  { const L = await p.evaluate(() => {
+      const X = window.__proto.asm; const all = X.ids(); const byZh = z => all.find(id => X.item(id).zh === z);
+      const nh = byZh('你好');
+      const both = { zh: true, en: true }, noEn = { zh: true, en: false }, noZh = { zh: false, en: true }, none = { zh: false, en: false };
+      const P = X.prog(nh); const save = JSON.stringify(P.ways);
+      const at = (w, a, form, out, sp) => { P.ways[w].a = a; return X.listenFor(nh, w, form, out, sp); };
+      const r = {
+        rZE: [0, 1, 2, 3].map(a => at('rZE', a, undefined, both, true)), rZEoff: [0, 1, 2, 3].map(a => at('rZE', a, undefined, both, false)),
+        rEZ: [at('rEZ', 0, 'mc', both, true), at('rEZ', 1, 'assembly', both, true)],
+        sZE: [0, 1, 2, 3].map(a => at('sZE', a, undefined, both, true)), sEZ: [0, 1, 2, 3].map(a => at('sEZ', a, undefined, both, true)),
+        noEn: [at('rEZ', 0, 'mc', noEn, true), at('sEZ', 0, undefined, noEn, true), at('rZE', 0, undefined, noEn, true), at('sZE', 0, undefined, noEn, true)],
+        noZh: [at('rZE', 0, undefined, noZh, true), at('sZE', 0, undefined, noZh, true), at('rEZ', 0, 'mc', noZh, true)],
+        none: ['rZE', 'rEZ', 'sZE', 'sEZ'].map(w => at(w, 0, w === 'rEZ' ? 'mc' : undefined, none, true)),
+      };
+      P.ways = JSON.parse(save);
+      return r; });
+    const J = x => JSON.stringify(x);
+    check(J(L.rZE) === '[true,true,true,true]' && J(L.rEZ) === '[true,false]' && J(L.sZE) === '[true,false,true,false]' && J(L.sEZ) === '[true,false,true,false]',
+      `§3.4 forms: R-ZE always listen & pick; R-EZ listen & pick unless assembly; S-ZE/S-EZ listen & say (even attempts) / read & say (odd) — ${J(L)}`.slice(0, 400));
+    check(J(L.rZEoff) === '[true,false,true,false]', `§3.4 fallback, no speech input: R-ZE alternates listen & pick / shown-text MC (${J(L.rZEoff)})`);
+    check(J(L.noEn) === '[false,false,true,true]' && J(L.noZh) === '[false,false,true]' && J(L.none) === '[false,false,false,false]',
+      `§3.4 fallback, no voice for the prompt's language → written form (no en-US: ${J(L.noEn)}, no zh: ${J(L.noZh)}, none: ${J(L.none)})`);
+  }
+
   // ---- every captured save validates against progress.schema.json ----
   for (const [label, sv0] of saves) { const v = validateSave(sv0, label); check(v.ok, `save schema: “${label}” validates (progress/0.3)` + (v.ok ? '' : ': ' + v.errors.slice(0, 3).join('; '))); }
   check(errs.length === 0, 'world: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));

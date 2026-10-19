@@ -240,6 +240,7 @@ try {
     check(mock.st.calls.some(c => c.m === 'GET' && c.p === `/children/${mia.id}/save`), 'pick: GET /children/:id/save');
     check(+(await tid(p, 'hud-gold').innerText()) === 321 && mirror?.prog?.C001?.ways?.rZE?.a === 9, 'pick: the cloud save (level 7, 321 gold, word counters) is what the game plays');
     check(!(await ls(p, 'chinese-rpg-proto-v3')) && !(await ls(p, 'chinese-rpg-proto-v4')), 'pick: guest saves are untouched (none created)');
+    check(mirror?.consent?.given === true && mirror?.consent?.speech === true, `child profile: speech on by default (consent ${JSON.stringify(mirror?.consent)}; the cloud save had speech off)`);
     check((await tid(p, 'player-chip').innerText()).includes('Mia'), 'in game: a chip shows who is playing');
     const ob = JSON.parse(await ls(p, `chinese-rpg-outbox-v1:${mia.id}`));
     check(ob?.version === 3 && ob?.sentAc?.['C001|rZE']?.[0] === 9, 'pick: the outbox adopts the server version and counters (no double counting)');

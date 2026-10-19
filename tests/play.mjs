@@ -122,6 +122,7 @@ async function playBattle(p, policy = () => true, opts = {}) {
     else if (state === 'mc' || state === 'mic') {
       const q = await p.evaluate(() => window.__proto.q);
       stats.q++; stats.ways[q.way] = (stats.ways[q.way] || 0) + 1;
+      if (opts.onQ) await opts.onQ(p, q, state);
       const ok = policy(q);
       if (state === 'mc') {
         if (opts.insight && await tid(p, 'insight').isEnabled().catch(() => false)) await tid(p, 'insight').click();
@@ -133,6 +134,7 @@ async function playBattle(p, policy = () => true, opts = {}) {
         await p.evaluate(pl => window.__srPlan.push(...(Array.isArray(pl) ? pl.slice(0, 1) : [pl])), plan);
         await tid(p, 'mic').click();
       }
+      if (opts.afterQ) await opts.afterQ(p, q, state);
     }
     if (state === 'wait') { if (++waits > 150) { await p.screenshot({ path: '/tmp/proto-stall.png' }); throw new Error('STALL: ' + (await p.locator('#ui').innerText()).slice(0, 1500)); } } else waits = 0;
     await p.waitForTimeout(80);
@@ -451,6 +453,78 @@ await nv.context().addInitScript(() => { try { delete window.speechSynthesis; } 
 await nv.goto(BASE); await consent(nv); await goLoc(nv, 'meadow'); await tid(nv, 'preview').waitFor();
 check(await nv.locator('[data-testid="preview"] button.say:enabled').count() === 0, '🔊 buttons disabled gracefully without speechSynthesis / zh voice');
 await nv.context().close();
+
+// ================= combat-spec §3.4 listen forms (Jack 2026-10-18): audio only until the answer, then the text =================
+{
+  const stubVoices = langs => () => {
+    window.__utter = [];
+    const vs = langs.map(l => ({ lang: l, name: 'Stub ' + l, voiceURI: 'stub-' + l, default: false, localService: true }));
+    const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => vs, cancel() {}, pause() {}, resume() {},
+      speak(u) { window.__utter.push({ text: u.text, lang: u.lang }); setTimeout(() => u.onend && u.onend({}), 30); }, addEventListener() {}, removeEventListener() {} };
+    Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.voice = null; } };
+  };
+  const L = await newPage(true);
+  await L.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['zh-CN', 'en-US'])})()`);
+  await L.goto(BASE); await consent(L, true);
+  // the mode mix: an all-correct kid, speech on, both voices, every meadow word to proficiency, with the game's own pickWay / grade / §9.4 / listenFor
+  const mix = await L.evaluate(() => { const X = window.__proto.asm; const both = { zh: true, en: true };
+      // mode mix: a kid who answers everything right, speech on, both voices, every meadow word to proficiency (the real pickWay/grade/§9.4 rules)
+      const saved = {}; const pool = X.pool('meadow'); for (const id of pool) saved[id] = JSON.stringify(X.prog(id));
+      for (const id of pool) { const q = X.prog(id); q.seen = false; for (const w of ['rZE', 'rEZ', 'sZE', 'sEZ']) q.ways[w] = { c: 0, a: 0, box: 0, last: 0, due: 0, wrongRun: 0 }; }
+      const n = { 1: 0, 2: 0, 3: 0, 4: 0 }; const ctx = { asked: 0, spoken: 0, cooling: new Set() };
+      for (let k = 0; k < 5000; k++) { const todo = pool.filter(id => !['rZE', 'rEZ', 'sZE', 'sEZ'].every(w => X.prog(id).ways[w].c >= 2)); if (!todo.length) break;
+        const id = todo[k % todo.length]; const w = X.pickWay(id, ctx); const form = w === 'rEZ' ? X.rezForm(id) : undefined; const lis = X.listenFor(id, w, form, both, true);
+        n[w[0] === 's' ? (lis ? 1 : 3) : form === 'assembly' ? 4 : lis ? 2 : 0]++; X.grade(id, w, true, false); ctx.asked++; if (w[0] === 's') ctx.spoken++; }
+      for (const id of pool) Object.assign(X.prog(id), JSON.parse(saved[id]));
+      const tot = n[1] + n[2] + n[3] + n[4]; return { tot, pct: Object.fromEntries(Object.entries(n).map(([k, v]) => [k, Math.round(1000 * v / tot) / 10])) }; });
+  check(mix.pct[1] >= 20 && mix.pct[2] >= 20 && mix.pct[3] >= 20 && mix.pct[4] > 0 && Math.abs(mix.pct[1] - mix.pct[3]) <= 3,
+    `mode mix (all-correct kid, speech on, meadow to proficiency, ${mix.tot} questions): listen & say ${mix.pct[1]}%, listen & pick ${mix.pct[2]}%, read & say ${mix.pct[3]}%, assembly ${mix.pct[4]}%`);
+  await goLoc(L, 'meadow'); await tid(L, 'preview').waitFor(); await tid(L, 'preview-done').click(); await tid(L, 'location').waitFor(); await debugSet(L, { hp: 999 });
+  const seen = {}, bad = [], revealBad = []; let shot = 0;
+  const onQ = async (p, q) => {
+    if (!q.listen) return;
+    const v = await p.evaluate(() => ({ banner: document.querySelector('#banner')?.innerText || '', msg: document.querySelector('#bmsg')?.innerText || '', qzh: !!document.querySelector('#banner [data-testid="q-zh"]'),
+      btn: !!document.querySelector('[data-testid="listen-replay"]'), utter: (window.__utter || []).slice(-1)[0] || null }));
+    const en = enSaid(q.en).toLowerCase(); const zhP = q.way === 'rZE' || q.way === 'sZE';
+    const leak = v.qzh || !v.btn || v.banner.includes(q.zh) || v.msg.includes(q.zh) || v.banner.toLowerCase().includes(en) || v.msg.toLowerCase().includes(en);
+    const audioOk = v.utter && (zhP ? v.utter.lang === 'zh-CN' && v.utter.text === q.zh : v.utter.lang === 'en-US' && v.utter.text === q.en);
+    if (leak || !audioOk) bad.push(`${q.way} ${q.zh} leak=${leak} utter=${JSON.stringify(v.utter)}`);
+    seen[q.way] = (seen[q.way] || 0) + 1;
+    if (!shot && q.way === 'rZE') { shot = 1; await p.screenshot({ path: '/tmp/listen-prompt.png' }); }
+  };
+  const afterQ = async (p, q) => {
+    if (!q.listen) return;
+    const ok = await p.waitForFunction(() => document.querySelector('#banner')?.dataset.revealed === '1', null, { timeout: 6000 }).then(() => true, () => false);
+    const b = ok ? await p.evaluate(() => document.querySelector('#banner').innerText) : '';
+    const zhP = q.way === 'rZE' || q.way === 'sZE';
+    if (!ok || !(zhP ? b.includes(q.zh) : b.toLowerCase().includes(enSaid(q.en).toLowerCase()))) revealBad.push(`${q.way} ${q.zh}: ${b.slice(0, 60)}`);
+    if (shot === 1 && q.way === 'rZE') { shot = 2; await p.waitForTimeout(250); await p.screenshot({ path: '/tmp/listen-feedback.png' }); }
+  };
+  for (let k = 0; k < 4 && Object.keys(seen).length < 4; k++) { await tid(L, 'act-path').click(); await playBattle(L, () => true, { onQ, afterQ }); if (await tid(L, 'victory-ok').count()) await tid(L, 'victory-ok').click(); await tid(L, 'location').or(tid(L, 'town')).first().waitFor(); if (await tid(L, 'town').count()) { await goLoc(L, 'meadow'); await tid(L, 'location').waitFor(); } }
+  check(['rZE', 'rEZ', 'sZE', 'sEZ'].every(w => seen[w] > 0) && !bad.length,
+    `listen forms render audio only (big 🔊, no characters / English in the banner or message; zh-CN audio for ZH prompts, en-US for EN): ${JSON.stringify(seen)}${bad.length ? ' — ' + bad.slice(0, 3).join(' | ') : ''}`);
+  check(!revealBad.length, `listen forms reveal the text (characters or English) in the feedback${revealBad.length ? ': ' + revealBad.slice(0, 3).join(' | ') : ''}`);
+  await L.context().close();
+  // fallback: no speech output at all -> written forms only (characters shown for R-ZE)
+  const N = await newPage();
+  await N.context().addInitScript(() => { try { delete window.speechSynthesis; } catch {} Object.defineProperty(window, 'speechSynthesis', { value: undefined, configurable: true }); });
+  await N.goto(BASE); await consent(N); await goLoc(N, 'meadow'); await tid(N, 'preview').waitFor(); await tid(N, 'preview-done').click(); await tid(N, 'location').waitFor(); await debugSet(N, { hp: 999 });
+  const nb = []; let nq = 0;
+  await tid(N, 'act-path').click();
+  await playBattle(N, () => true, { onQ: async (p, q) => { nq++; const z = await p.evaluate(() => !!document.querySelector('#banner [data-testid="q-zh"]')); if (q.listen || (q.way === 'rZE' && !z)) nb.push(q.way); } });
+  check(nq > 0 && !nb.length, `fallback: no speechSynthesis → no listen forms, R-ZE shows the characters (${nq} questions${nb.length ? '; bad ' + nb.join(',') : ''})`);
+  await N.context().close();
+  // fallback: only a Chinese voice (no en-US) -> EN prompts are written, ZH prompts can still be audio only
+  const Z = await newPage(true);
+  await Z.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['zh-CN'])})()`);
+  await Z.goto(BASE); await consent(Z, true); await goLoc(Z, 'meadow'); await tid(Z, 'preview').waitFor(); await tid(Z, 'preview-done').click(); await tid(Z, 'location').waitFor(); await debugSet(Z, { hp: 999 });
+  const zs = { zh: 0, en: 0 };
+  await tid(Z, 'act-path').click();
+  await playBattle(Z, () => true, { onQ: async (p, q) => { if (q.listen) zs[q.way === 'rZE' || q.way === 'sZE' ? 'zh' : 'en']++; } });
+  check(zs.en === 0 && zs.zh > 0, `fallback: no en-US voice → EN prompts written (EN listen ${zs.en}), ZH listen still used (${zs.zh})`);
+  await Z.context().close();
+}
 
 // ================= combat-spec §9.4 character assembly in a real battle (tap to answer, right and wrong) =================
 {
