@@ -143,6 +143,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   };
   const banner = (html: string | null, cls = '') => {
     const b = $('#banner'), rc = $('#roundchip'); if (!b) return;
+    delete b.dataset.revealed;
     if (html === null) { b.classList.add('hidden'); b.innerHTML = ''; rc?.classList.remove('hidden'); return; }
     b.className = cls; b.innerHTML = html; rc?.classList.add('hidden');
   };
