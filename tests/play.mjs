@@ -399,6 +399,7 @@ const rr = await playBattle(s, () => true, { speechPlan: (q) => {
 const srlog = await s.evaluate(() => window.__srLog.slice(-40));
 const outcomes = await s.evaluate(() => JSON.parse(localStorage.getItem('chinese-rpg-proto-v3')).log.slice(0, 60));
 log('SR langs used', [...new Set(srlog.map(x => x.lang))].join(','));
+log('wrong/no-speech battle', rr.result, JSON.stringify(rr.stats), 'sawWrong', sawWrong);
 check(outcomes.some(o => o.spoken && o.result === 'wrong'), 'wrong spoken answer graded wrong (no retry)');
 check(await s.evaluate(() => (window.__proto.lastOutcome, true)), 'battle continued after speech tests: ' + rr.result);
 if (rr.result === 'win') await tid(s, 'victory-ok').click(); else if (await tid(s, 'back').count()) await tid(s, 'back').click();
