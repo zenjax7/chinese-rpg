@@ -1,6 +1,7 @@
 /* /editor layout (level-editor.md §5.3): map list | canvas + inspector, panels below. */
 * { box-sizing: border-box; }
-body { margin: 0; font: 13px/1.4 system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; color: #1d2330; background: #f4f5f8; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body { margin: 0; -webkit-text-size-adjust: 100%; font: 13px/1.4 system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; color: #1d2330; background: #f4f5f8; }
 button { font: inherit; padding: 3px 8px; border: 1px solid #b9c0cc; border-radius: 4px; background: #fff; cursor: pointer; }
 button:disabled { opacity: .45; cursor: default; }
 button.primary { background: #2f6fde; color: #fff; border-color: #2f6fde; }
@@ -46,11 +47,65 @@ table.lines .field { margin: 0; } table.lines td:nth-child(6) { width: 40%; }
 .problems { list-style: none; padding: 0; } .problems li.error { color: #c0262d; } .problems li.warning { color: #a45f00; }
 .modal { position: fixed; inset: 0; background: rgba(20, 24, 34, .45); display: flex; align-items: center; justify-content: center; z-index: 10; }
 .modal .box { background: #fff; border-radius: 8px; padding: 16px 20px; width: min(560px, 92vw); }
-.mapnode { display: flex; align-items: center; gap: 4px; padding: 3px 8px; border: 1px solid #8e97a8; border-radius: 12px; background: #fff; font-size: 12px; max-width: 170px; }
-.mapnode .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mapnode.sel { outline: 2px solid #2f6fde; } .mapnode.err { border-color: #c0262d; background: #fde8e8; }
-.mapnode.k-boss { border-color: #b8860b; background: #fff6d6; } .mapnode.k-town, .mapnode.k-village { background: #eaf6ea; }
-.mapnode .badge { font-size: 10px; }
-.stubnode { padding: 2px 6px; border: 1px dashed #8e97a8; border-radius: 4px; background: #f3f5fa; font-size: 11px; color: #4b5468; }
 .react-flow__edge.xedge path { stroke-dasharray: 5 4; }
 .react-flow__edge.err path { stroke: #c0262d; }
+
+/* ---- map canvas: the game's 1280x720 map frame, background locked under the nodes (Canvas.tsx, shared/level/map-view.ts) ---- */
+.canvas { position: relative; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+.canvas .react-flow__pane { cursor: grab; } .canvas.mode-add .react-flow__pane { cursor: crosshair; }
+.react-flow__viewport-portal .mapframe { position: absolute; left: 0; top: 0; z-index: -1; pointer-events: none; background: #3d5a3a center / cover no-repeat; box-shadow: 0 0 0 2px #1d2330, 0 6px 24px rgba(0,0,0,.25); }
+.mapframe .nodearea { position: absolute; border: 2px dashed rgba(255,255,255,.35); border-radius: 6px; }
+.instruction { position: absolute; z-index: 6; left: 50%; top: 10px; transform: translateX(-50%); max-width: calc(100% - 20px); padding: 10px 18px; border-radius: 22px;
+  background: #1d2330; color: #fff; font-size: 17px; font-weight: 600; box-shadow: 0 3px 12px rgba(0,0,0,.3); pointer-events: none; }
+.instruction .msg { color: #9fe0a6; font-weight: 500; }
+.bgnote { position: absolute; z-index: 5; left: 10px; bottom: 10px; max-width: 60%; padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,.92); color: #4b5468; font-size: 12px; pointer-events: none; }
+/* nodes: the game's look (graph.ts): cream circle, brown ring, kind icon, Chinese title below; the node box is the touch target */
+.react-flow__node-map { background: none; border: 0; padding: 0; }
+.mapnode { position: relative; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.mapnode .dot { display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff8e6; border: 3px solid #7a581e; box-sizing: border-box; }
+.mapnode .icon { font-size: 22px; line-height: 1; } .mapnode.dense .icon { font-size: 17px; }
+.mapnode .lbl, .mapnode .sub { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; pointer-events: none; color: #fff; paint-order: stroke;
+  -webkit-text-stroke: 0; text-shadow: -2px 0 #0d1b3d, 2px 0 #0d1b3d, 0 -2px #0d1b3d, 0 2px #0d1b3d, -1px -1px #0d1b3d, 1px 1px #0d1b3d, 1px -1px #0d1b3d, -1px 1px #0d1b3d; }
+.mapnode .lbl { font: 700 16px 'Noto Sans SC', system-ui, sans-serif; } .mapnode.dense .lbl { font-size: 13px; }
+.mapnode .sub { font: italic 600 12px system-ui, sans-serif; opacity: .9; }
+.mapnode .badge { position: absolute; top: 0; right: 0; font-size: 13px; text-shadow: 0 0 3px #fff; } .mapnode .b-entry { left: 0; right: auto; color: #2a8f3a; }
+.mapnode.k-boss .dot { border-color: #b8860b; } .mapnode.err .dot { border-color: #c0262d; background: #fde8e8; }
+.mapnode.sel .dot { border-color: #2f6fde; border-width: 5px; box-shadow: 0 0 0 4px rgba(47,111,222,.45); }
+.mapnode.src .dot { border-color: #2a8f3a; border-width: 6px; box-shadow: 0 0 0 6px rgba(42,143,58,.5); animation: edsrc 1s infinite; }
+@keyframes edsrc { 50% { box-shadow: 0 0 0 11px rgba(42,143,58,.25); } }
+.mode-connect .mapnode { cursor: pointer; }
+.react-flow__handle.h-center { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 1px; height: 1px; min-width: 0; min-height: 0; opacity: 0; border: 0; pointer-events: none; }
+.react-flow__handle.h-mouse { width: 12px; height: 12px; right: -2px; background: #2f6fde; border: 2px solid #fff; opacity: 0; }
+@media (hover: hover) and (pointer: fine) { .mode-select .mapnode:hover .react-flow__handle.h-mouse { opacity: 1; } }
+@media (hover: none), (pointer: coarse) { .react-flow__handle.h-mouse { display: none; } }
+.react-flow__edge path.react-flow__edge-path { stroke: #f6e7c1; stroke-width: 5; stroke-dasharray: 10 8; }
+.react-flow__edge.sel path.react-flow__edge-path, .react-flow__edge.selected path.react-flow__edge-path { stroke: #2f6fde; stroke-width: 7; stroke-dasharray: none; }
+.react-flow__edge.xedge path.react-flow__edge-path { stroke-dasharray: 5 4; }
+.react-flow__edge.err path.react-flow__edge-path { stroke: #c0262d; }
+.react-flow__edge-textbg { fill: rgba(255,255,255,.85); }
+.stubnode { padding: 10px 12px; min-height: 44px; display: flex; align-items: center; border: 2px dashed #4b5468; border-radius: 8px; background: rgba(243,245,250,.95); font-size: 13px; color: #1d2330; }
+.react-flow__controls-button { width: 44px; height: 44px; } .react-flow__controls-button svg { max-width: 18px; max-height: 18px; }
+/* ---- touch: big buttons (≥ 44 px), modes, confirm ---- */
+button.big { min-height: 44px; min-width: 44px; padding: 8px 16px; font-size: 16px; border-radius: 8px; }
+button.big.on { background: #2a8f3a; border-color: #2a8f3a; color: #fff; }
+button.big.danger { background: #c0262d; border-color: #c0262d; color: #fff; } button.big.danger:disabled { background: #e9a5a8; border-color: #e9a5a8; }
+.big-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+.modes { display: inline-flex; gap: 8px; }
+.toolbar > button, .toolbar .modes button { min-height: 44px; }
+.modal .box.confirm p { font-size: 18px; margin: 4px 0 14px; } .modal .box.confirm .big-row { justify-content: flex-end; }
+.maps-toggle { display: none; }
+@media (pointer: coarse) {
+  button, select, input:not([type=checkbox]) { min-height: 44px; }
+  input[type=checkbox] { width: 28px; height: 28px; }
+  .maps li button { min-height: 44px; padding: 8px 6px; font-size: 15px; }
+  .tabs button { min-height: 44px; padding: 8px 14px; }
+  main { grid-template-rows: auto minmax(300px, 1fr) auto minmax(150px, 26vh); }
+}
+@media (max-width: 1280px) {
+  .editor { grid-template-columns: 1fr; }
+  .maps { position: fixed; z-index: 20; left: 0; top: 0; bottom: 0; width: min(320px, 85vw); transform: translateX(-105%); transition: transform .2s; box-shadow: 4px 0 18px rgba(0,0,0,.2); }
+  .editor.maps-open .maps { transform: none; }
+  .maps-toggle { display: inline-block; }
+  .work { grid-template-columns: 1fr 300px; }
+}
+.react-flow__controls-button { font-size: 20px; }
