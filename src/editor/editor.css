@@ -99,8 +99,9 @@ button.big.danger { background: #c0262d; border-color: #c0262d; color: #fff; } b
   input[type=checkbox] { width: 28px; height: 28px; }
   .maps li button { min-height: 44px; padding: 8px 6px; font-size: 15px; }
   .tabs button { min-height: 44px; padding: 8px 14px; }
+  main { grid-template-rows: auto minmax(300px, 1fr) auto minmax(150px, 26vh); }
 }
-@media (max-width: 1100px) {
+@media (max-width: 1280px) {
   .editor { grid-template-columns: 1fr; }
   .maps { position: fixed; z-index: 20; left: 0; top: 0; bottom: 0; width: min(320px, 85vw); transform: translateX(-105%); transition: transform .2s; box-shadow: 4px 0 18px rgba(0,0,0,.2); }
   .editor.maps-open .maps { transform: none; }

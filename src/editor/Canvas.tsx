@@ -118,7 +118,7 @@ export function Canvas(p: CanvasProps) {
       <ReactFlow nodes={rfNodes} edges={rfEdges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} nodeTypes={nodeTypes} nodeOrigin={[0.5, 0.5]}
         onInit={i => { rf.current = i; requestAnimationFrame(fit); }} minZoom={0.2} maxZoom={4}
         translateExtent={[[-FRAME_W * 0.5, -FRAME_H * 0.5], [FRAME_W * 1.5, FRAME_H * 1.5]]}
-        zoomOnDoubleClick={false} nodeDragThreshold={6} nodeClickDistance={6} paneClickDistance={6} elevateEdgesOnSelect
+        zoomOnDoubleClick={false} autoPanOnNodeDrag={false} autoPanOnConnect={false} nodeDragThreshold={6} nodeClickDistance={6} paneClickDistance={6} elevateEdgesOnSelect
         deleteKeyCode={p.readOnly ? null : ['Delete', 'Backspace']}
         onBeforeDelete={async ({ nodes: dn, edges: de }) => {
           const n = dn.filter(x => x.type === 'map').length, e = de.filter(x => !String(x.target).startsWith('stub:') || dn.length === 0).length;
@@ -143,7 +143,7 @@ export function Canvas(p: CanvasProps) {
           </div>
         </ViewportPortal>
         <Controls showInteractive={false} onFitView={fit} fitViewOptions={{ padding: 0.02 }} />
-        <MiniMap pannable zoomable />
+        <MiniMap pannable zoomable style={{ width: 150, height: 90 }} />
       </ReactFlow>
     </div>
   );
