@@ -168,18 +168,19 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     await p.evaluate(() => { window.__proto.fakeBattle = null; });
     const has = sel => p.evaluate(sel => !!document.querySelector(sel), sel);
     const until = async (fn, ms = 20000) => { for (let t = 0; t < ms; t += 100) { if (await fn()) return true; await p.waitForTimeout(100); } return false; };
-    const answer = async () => { const q = await p.evaluate(() => window.__proto.q); if (await has('[data-testid="tile"]:not([disabled])')) await tapAsm(p, true).catch(() => {});
-      else if (q) await p.locator(`[data-testid="opt"][data-o="${q.answerId}"]`).first().click().catch(() => {}); };
+    const answer = async (ok = true) => { const q = await p.evaluate(() => window.__proto.q); if (await has('[data-testid="tile"]:not([disabled])')) await tapAsm(p, ok).catch(() => {});
+      else if (q) await p.locator(ok ? `[data-testid="opt"][data-o="${q.answerId}"]` : `[data-testid="opt"]:not([data-o="${q.answerId}"])`).first().click().catch(() => {}); };
     const live = () => p.evaluate(() => (window.__proto.foes?.() || []).filter(f => f.alive).length);
-    const toMenu = async () => until(async () => { if (await has('[data-testid="action-menu"]')) return true; if (await has('[data-testid="victory"]') || await has('[data-testid="graph"]')) return true;
-      if (await has('[data-testid="continue"]:not([disabled])')) await tid('continue').click().catch(() => {}); else if (await has('[data-testid="opt"]:not([disabled]),[data-testid="tile"]:not([disabled])')) await answer(); return false; });
+    const toMenu = async (ok = true) => until(async () => { if (await has('[data-testid="action-menu"]')) return true; if (await has('[data-testid="victory"]') || await has('[data-testid="graph"]')) return true;
+      if (await has('[data-testid="continue"]:not([disabled])')) await tid('continue').click().catch(() => {}); else if (await has('[data-testid="opt"]:not([disabled]),[data-testid="tile"]:not([disabled])')) await answer(ok); return false; });
     let leak = null;
     for (let tries = 0; tries < 12 && !leak; tries++) {
       await p.evaluate(() => { window.__fd = false; window.__proto.world.fight().then(() => { window.__fd = true; }); });
+      await until(async () => !(await has('[data-testid="graph"]')) || await p.evaluate(() => window.__fd), 8000);   // the battle opens after the ~1 s transition
       await toMenu();
       if (await has('[data-testid="action-menu"]') && await live() >= 2) {
         await tid('act-attack').click(); const tapped = await tid('target-1').click({ timeout: 5000 }).then(() => true, () => false);   // prompt 1: resolved by a tap (no prompt: try another battle)
-        if (tapped) await toMenu();
+        if (tapped) await toMenu(false);   // a wrong answer: no damage, so both foes are still up for prompt 2
         if (tapped && await has('[data-testid="action-menu"]') && await live() >= 2) {
           await tid('act-attack').click(); await tid('target-0').waitFor({ timeout: 5000 });
           await p.keyboard.press('Enter');   // prompt 2: Enter picks the marked target
