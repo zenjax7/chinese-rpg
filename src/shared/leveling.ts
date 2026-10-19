@@ -47,14 +47,26 @@ export function mapLevels(s: any): MapLevels | undefined {
   for (const x of s.roster || []) if (x && x.level != null) roster[x.enemy] = x.level;
   return { tier: s.gearTier, recLevel: s.recLevel, enemyLevel: s.enemyLevel, eliteLevel: s.eliteLevel ?? s.enemyLevel?.[1], bossLevel: s.boss?.level, roster };
 }
-/** Classic mode (Desy 2026-10-17): each classic location reads enemyLevel, eliteLevel, boss.level and recLevel (and gearTier) from the
- *  graph map it corresponds to, by this static table; a location not in it uses its realm's main map realm_<realm>. The map's
- *  roster[].level overrides belong to that map's roster, so they are not carried over. */
+/** Classic mode (Desy 2026-10-17): each classic location reads enemyLevel, eliteLevel, boss.level, recLevel (and gearTier) and its
+ *  roster[].level overrides from the graph map it corresponds to, by this static table; a location not in it uses its realm's main map
+ *  realm_<realm>. Desy 2026-10-18: a boss takes the boss level of the graph map where it lives (found by its Desy enemy id: that map's
+ *  roster[].level for it, else its boss.level); a boss on no graph map keeps the location's map. Both go in as roster entries. */
 export const CLASSIC_MAPS: Record<string, string> = { meadow: 'realm_1', forest: 'realm_2' };
 export const classicMapId = (locId: string, realm: number) => CLASSIC_MAPS[locId] ?? `realm_${realm}`;
+/** Boss level by Desy enemy id, from the graph map whose boss.enemy it is (that map's roster[].level override for it first). */
+export function bossHomeLevels(byMap: Record<string, any>): MapLevels['roster'] {
+  const out: MapLevels['roster'] = {};
+  for (const s of Object.values(byMap)) {
+    const m = mapLevels(s); const id = s?.boss?.enemy;
+    if (!m || !id) continue;
+    const lv = m.roster[id] ?? m.bossLevel;
+    if (lv != null) out[id] = lv;
+  }
+  return out;
+}
 export function classicLevels(locId: string, realm: number, byMap: Record<string, any>): MapLevels | undefined {
   const m = mapLevels(byMap[classicMapId(locId, realm)]);
-  return m && { ...m, roster: {} };
+  return m && { ...m, roster: { ...m.roster, ...bossHomeLevels(byMap) } };
 }
 /** Desy 2026-10-17: a worker bee summoned in a boss fight takes the boss's level; anywhere else (a roster worker bee) it rolls like any
  *  normal enemy (undefined = no forced level). */
