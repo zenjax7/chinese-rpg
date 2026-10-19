@@ -5,6 +5,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tapAsm } from './asm.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const J = f => JSON.parse(readFileSync(path.join(ROOT, f), 'utf8'));
 
@@ -75,6 +76,14 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     await tid('name-input').waitFor(); await tid('name-input').fill('Tao'); await tid('name-ok').click();
     await settle(200);
 
+    { // a save without Xiaolong shows only the Hero
+      await p.evaluate(() => { const k = 'chinese-rpg-proto-v4'; const s = JSON.parse(localStorage.getItem(k)); s.party = []; localStorage.setItem(k, JSON.stringify(s)); });
+      await p.reload(); await settle(200); if (await tid('go-adventure').count()) await tid('go-adventure').click(); await tid('graph').waitFor({ timeout: 15000 });
+      const solo = await p.evaluate(() => ({ hero: !!document.querySelector('[data-testid="party-hero"]'), xl: !!document.querySelector('[data-testid="party-xiaolong"]') }));
+      check(solo.hero && !solo.xl, `map party: no Xiaolong yet → only the Hero (${JSON.stringify(solo)})`);
+      await p.evaluate(() => { const k = 'chinese-rpg-proto-v4'; const s = JSON.parse(localStorage.getItem(k)); s.party = ['xiaolong']; localStorage.setItem(k, JSON.stringify(s)); });
+      await p.reload(); await settle(200); await p.evaluate(() => { window.__proto.fakeBattle = 'win'; window.__proto.sceneInstant = true; window.__proto.battles = []; }); }
+
     // ---- bug 1 repro: realm_1 m_field → m_grass over e6 (4 steps, danger 2); the seed's rolls hit on all 4 steps ----
     await p.evaluate(async seed => { const w = window.__proto.world; await w.goto('realm_1', 'm_field'); w.P().seed = seed; window.__proto.battles = []; }, seeds.allHitE6);
     await settle();
@@ -87,8 +96,18 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     await p.evaluate(async g => { const w = window.__proto.world; w.W.graphs[g.id] = g; w.E.registerGraph(g); const P = w.P(); if (!P.flags.includes('tt_quest')) P.flags.push('tt_quest');
       await w.goto(g.id, 'ta'); window.__proto.battles = []; }, TRAVEL_GRAPH);
     await settle();
-    const sprite = await p.evaluate(() => { const s = document.querySelector('[data-testid="party-sprite"]'); return s ? { href: s.querySelector('image')?.getAttribute('href') || '', txt: s.textContent } : null; });
+    const sprite = await p.evaluate(() => { const s = document.querySelector('[data-testid="party-sprite"]'); return s ? { href: s.querySelector('[data-testid="party-hero"] image')?.getAttribute('href') || '', txt: s.textContent } : null; });
     check(!!sprite && (/hero/.test(sprite.href) || sprite.txt.length > 0), `party sprite on the map (${JSON.stringify(sprite)})`);
+    // ---- Arty's map sprites (approved 2026-10-18): keys, sizes, Xiaolong's place; on a node the Hero idles while Xiaolong keeps flying ----
+    const pstate = () => p.evaluate(() => { const g = document.querySelector('[data-testid="party-sprite"]'); const one = id => { const e = g?.querySelector(`[data-testid="party-${id}"]`);
+      return e && { key: e.dataset.key, anim: e.dataset.anim, href: e.querySelector('image')?.getAttribute('href'), x: +e.getAttribute('x'), y: +e.getAttribute('y'), w: +e.getAttribute('width') }; };
+      return { facing: g?.querySelector('.pflip')?.dataset.facing, hero: one('hero'), xl: one('xiaolong'), walking: !!window.__proto.walking }; });
+    { const st = await pstate();
+      check(st.hero?.key === 'hero_map_walk' && /map_sprites\/hero_map_walk\.png$/.test(st.hero.href || '') && st.xl?.key === 'xiaolong_map_fly' && /map_sprites\/xiaolong_map_fly\.png$/.test(st.xl.href || ''),
+        `map sprites: hero_map_walk + xiaolong_map_fly from public/map_sprites (${st.hero?.href}, ${st.xl?.href})`);
+      check(st.hero.w === 64 && Math.abs(st.xl.w - 0.6 * 64) < 0.01 && Math.abs((st.xl.x + st.xl.w / 2) - (st.hero.x + st.hero.w / 2) + 0.35 * 64) < 0.01 && Math.abs((st.xl.y + st.xl.w * 0.92) - (st.hero.y + st.hero.w * 0.97) + 0.15 * 64) < 0.01,
+        `map sprites: Hero 64 px, Xiaolong 0.6×, anchor −0.35 / −0.15 hero sizes (behind and above, trailing side) (${JSON.stringify({ hero: st.hero, xl: st.xl })})`);
+      check(st.hero.anim === 'idle' && st.xl.anim === 'fly' && st.facing === 'right', `map sprites on a node: Hero idle, Xiaolong flying, facing right (${st.hero.anim}, ${st.xl.anim}, ${st.facing})`); }
     await tap(1); await settle();
     const P2 = await p.evaluate(() => window.__proto.world.P());
     const atTb = (await battles()).filter(b => b.node === 'tb' && !b.edge);
@@ -98,13 +117,20 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     // ---- the walk: the party sprite moves slowly along the edge and ends on the target node ----
     const A = await xy('tb'), Bxy = await xy('ta');
     await p.evaluate(() => { window.__proto.battles = []; }); await tap(0);
-    const samples = []; for (let i = 0; i < 40; i++) { const s = await p.evaluate(() => ({ party: window.__proto.party, walking: !!window.__proto.walking })); samples.push(s); if (!s.walking && i > 2) break; await p.waitForTimeout(60); }
+    const samples = []; for (let i = 0; i < 40; i++) { const s = { ...(await p.evaluate(() => ({ party: window.__proto.party, walking: !!window.__proto.walking }))), st: await pstate() }; samples.push(s); if (!s.walking && i > 2) break; await p.waitForTimeout(60); }
     await settle();
     const fin = await p.evaluate(() => window.__proto.party); const lw = await p.evaluate(() => window.__proto.lastWalk);
     const between = A && Bxy ? samples.filter(s => s.walking && s.party && s.party.x < A.x - 2 && s.party.x > Bxy.x + 2).length : 0;
     check((await pos()) === 'ta' && between >= 2 && fin && Bxy && Math.abs(fin.x - Bxy.x) < 1 && Math.abs(fin.y - Bxy.y) < 1 && lw?.ms >= 1000,
       `walk: the party walks along tab and stops on ta (${between} mid-edge samples, end ${JSON.stringify(fin)} vs ${JSON.stringify(Bxy)}, ${lw?.ms} ms)`);
-    await tap(1); await settle();
+    { const onEdge = samples.filter(x => x.walking && x.st.hero?.anim === 'walk'); const end = await pstate();
+      check(onEdge.length >= 2 && onEdge.every(x => x.st.xl?.anim === 'fly' && x.st.facing === 'left') && end.hero.anim === 'idle' && end.xl.anim === 'fly',
+        `map sprites on an edge: walk + fly while walking, mirrored walking left (tb → ta); idle on arrival (${onEdge.length} walk samples, facing ${[...new Set(onEdge.map(x => x.st.facing))]}; end ${end.hero.anim})`); }
+    await tap(1);
+    { const r = []; for (let i = 0; i < 40; i++) { const st = await pstate(); r.push(st); if (!st.walking && i > 2) break; await p.waitForTimeout(60); }
+      const w = r.filter(x => x.walking && x.hero?.anim === 'walk');
+      check(w.length >= 2 && w.every(x => x.facing === 'right'), `map sprites: walking right (ta → tb) is not mirrored (${w.length} walk samples, facing ${[...new Set(w.map(x => x.facing))]})`); }
+    await settle();
     const atTb2 = (await battles()).filter(b => b.node === 'tb' && !b.edge);
     check((await pos()) === 'tb' && atTb2.length === 1 && (await p.evaluate(() => window.__proto.world.P().flags.includes('tt_plain'))), `one battle per arrival: the waiting fight event runs on the next visit (${atTb2.length})`);
 
@@ -136,6 +162,39 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     const tk = await trans('key'), tt = await trans('tap'), tn = await trans('none');
     check(tk.shown && tk.skipped && tk.ms < 800 && tt.shown && tt.skipped && tt.ms < 800 && tn.shown && !tn.skipped && tn.ms >= 900 && tn.ms < 2000,
       `map → battle transition: shown; Space skips it (${tk.ms} ms), a tap skips it (${tt.ms} ms), untouched it lasts about 1 s (${tn.ms} ms)`);
+
+    // ---- regression (battle.ts chooseTarget): a target prompt resolved by a tap left its Enter listener behind, so Enter on the next
+    // prompt ran the stale one first, which cleared the new prompt's target buttons (the battle then waited with no targets) ----
+    await p.evaluate(() => { window.__proto.fakeBattle = null; });
+    const has = sel => p.evaluate(sel => !!document.querySelector(sel), sel);
+    const until = async (fn, ms = 20000) => { for (let t = 0; t < ms; t += 100) { if (await fn()) return true; await p.waitForTimeout(100); } return false; };
+    const answer = async (ok = true) => { const q = await p.evaluate(() => window.__proto.q); if (await has('[data-testid="tile"]:not([disabled])')) await tapAsm(p, ok).catch(() => {});
+      else if (q) await p.locator(ok ? `[data-testid="opt"][data-o="${q.answerId}"]` : `[data-testid="opt"]:not([data-o="${q.answerId}"])`).first().click().catch(() => {}); };
+    const live = () => p.evaluate(() => (window.__proto.foes?.() || []).filter(f => f.alive).length);
+    const toMenu = async (ok = true) => until(async () => { if (await has('[data-testid="action-menu"]')) return true; if (await has('[data-testid="victory"]') || await has('[data-testid="graph"]')) return true;
+      if (await has('[data-testid="continue"]:not([disabled])')) await tid('continue').click().catch(() => {}); else if (await has('[data-testid="opt"]:not([disabled]),[data-testid="tile"]:not([disabled])')) await answer(ok); return false; });
+    let leak = null;
+    for (let tries = 0; tries < 12 && !leak; tries++) {
+      await p.evaluate(() => { window.__fd = false; window.__proto.world.fight().then(() => { window.__fd = true; }); });
+      await until(async () => !(await has('[data-testid="graph"]')) || await p.evaluate(() => window.__fd), 8000);   // the battle opens after the ~1 s transition
+      await toMenu();
+      if (await has('[data-testid="action-menu"]') && await live() >= 2) {
+        await tid('act-attack').click(); const tapped = await tid('target-1').click({ timeout: 5000 }).then(() => true, () => false);   // prompt 1: resolved by a tap (no prompt: try another battle)
+        if (tapped) await toMenu(false);   // a wrong answer: no damage, so both foes are still up for prompt 2
+        if (tapped && await has('[data-testid="action-menu"]') && await live() >= 2) {
+          await tid('act-attack').click(); await tid('target-0').waitFor({ timeout: 5000 });
+          await p.keyboard.press('Enter');   // prompt 2: Enter picks the marked target
+          const asked = await until(() => has('[data-testid="opt"],[data-testid="tile"]'), 4000);
+          leak = { asked, tgts: await p.locator('#tgts .tgt').count(), menu: await has('[data-testid="target-menu"]') };
+        }
+      }
+      // leave the battle: ◀ Back out of a target prompt, then flee (or close the victory screen)
+      if (await has('[data-testid="act-back"]')) await tid('act-back').click().catch(() => {});
+      await toMenu(); if (await has('[data-testid="action-menu"]')) await tid('act-flee').click().catch(() => {});
+      await until(async () => { if (await has('[data-testid="victory-ok"]')) await tid('victory-ok').click().catch(() => {}); return p.evaluate(() => window.__fd); });
+      await settle(); await p.evaluate(() => { window.__proto.battles = []; });
+    }
+    check(!!leak && leak.asked, `battle: after a target prompt answered by a tap, Enter on the next prompt still picks a target (${JSON.stringify(leak)})`);
     check(!errs.length, `travel: no page errors (${errs.slice(0, 3).join(' | ')})`);
   } catch (e) { check(false, 'travel tests crashed: ' + (e.stack || e.message).split('\n').slice(0, 3).join(' ')); }
   await ctx.close();

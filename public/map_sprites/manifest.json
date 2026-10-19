@@ -1,0 +1,58 @@
+{
+  "hero_map_walk": {
+    "file": "hero_map_walk.png",
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "frameCount": 4,
+    "origin": {
+      "x": 0.5,
+      "y": 0.97
+    },
+    "facing": "right",
+    "flipForLeft": true,
+    "anchorNote": "feet on baseline at y=124 (97%)",
+    "displayPx": {
+      "normal": 64,
+      "dense": 48
+    },
+    "animations": {
+      "walk": {
+        "start": 0,
+        "end": 3,
+        "frameRate": 8,
+        "repeat": -1
+      },
+      "idle": {
+        "start": 1,
+        "end": 1,
+        "frameRate": 1,
+        "repeat": 0
+      }
+    }
+  },
+  "xiaolong_map_fly": {
+    "file": "xiaolong_map_fly.png",
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "frameCount": 4,
+    "origin": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "facing": "right",
+    "flipForLeft": true,
+    "flying": true,
+    "anchorNote": "body bottom at y=118 in frame 0; frames 1-3 bob up 5/10/5 px (baked in)",
+    "displayScaleVsHero": 0.6,
+    "placementNote": "draw behind and above the hero, offset toward the trailing side (about -0.35 x hero width, -0.15 x hero height)",
+    "animations": {
+      "fly": {
+        "start": 0,
+        "end": 3,
+        "frameRate": 8,
+        "repeat": -1
+      }
+    }
+  },
+  "status": "FINAL - approved by Jack 2026-10-18 (map sprite v3, wingbeat as is)"
+}

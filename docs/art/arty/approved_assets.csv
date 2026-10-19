@@ -1,0 +1,5 @@
+name,use,file,approved
+hero_map_walk,Hero walk cycle on the graph map,art/map_sprites/hero_map_walk.png,2026-10-18
+xiaolong_map_fly,Xiaolong fly cycle on the graph map,art/map_sprites/xiaolong_map_fly.png,2026-10-18
+mus_battle_boss,Boss battle music (Bach BWV 565 arr.),audio/music/mus_battle_boss.ogg,2026-10-17
+mus_battle_field,Field battle music v8 (Bach BWV 847 arr.),audio/music/mus_battle_field.ogg,2026-10-17
