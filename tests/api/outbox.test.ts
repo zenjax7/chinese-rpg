@@ -98,6 +98,15 @@ describe('cloud outbox (§9.2)', () => {
     expect((await t.db.query(`select ways from word_mastery where child_id = $1`, [P.kids[0]])).rows[0].ways.rZE).toMatchObject({ a: 6, c: 4 });
     expect(stateFromCloud({ version: 0, contentVersion: null, state: null, graphs: [], mastery: [] }, {})).toBeNull();
   });
+  it('the parent speech toggle survives a cloud save reload; speech defaults to on only when the save has no setting', async () => {
+    const P = await parent(t.db, 'outbox6@example.com', { children: 1 });
+    const a = new Outbox(memKV(), net(P.token).api, P.kids[0], 'graph');
+    a.enqueue({ ...full(3, 4, 3), consent: { given: true, speech: false, at: 1 } }); expect(await a.flush()).toMatchObject({ kind: 'sent', version: 1 });
+    const got = await net(P.token).api.call('GET', `/children/${P.kids[0]}/save`);
+    expect(stateFromCloud(got.body, { consent: { given: false } })!.consent.speech).toBe(false);
+    const noSetting = { ...got.body, state: { ...got.body.state, consent: undefined } };
+    expect(stateFromCloud(noSetting, { consent: { given: false } })!.consent.speech).toBe(true);
+  });
   it('cloud saving is off by default: no build flag or no chosen child -> no sender', () => {
     const kv = memKV();
     expect(cloudSender(false, 'graph', { kv })).toBeUndefined();
