@@ -181,7 +181,7 @@ export async function spellTests({ browser, BASE, check, log = console.log, shot
     if (!(await tid('location').count())) { await p.waitForTimeout(500); if (!(await tid('location').count())) { log('bounty fight did not end at the location:', (await p.locator('#ui').innerText().catch(() => '')).replace(/\n+/g, ' | ').slice(0, 160)); await edit(s => { s.where = 'forest'; }); await rest(); } }
     await tid('location').waitFor(); }
   const qn = (await sv()).quests.q2_bounty.n; check(qn > 0, `quests: Giant Bee bounty progressed from kills (${qn}/8; ${bountyLog.join('; ')})`);
-  await edit(s => { s.level = lvSpells; });
+  await p.evaluate(([k, lv]) => { const s = JSON.parse(localStorage.getItem(k)); s.level = lv; localStorage.setItem(k, JSON.stringify(s)); }, [KEY, lvSpells]);   // back to the spells hero's level (edit() can't see this closure)
   await edit(s => { s.quests.q2_bounty.n = 8; s.where = 'town'; }); await p.reload(); await tid('town').waitFor({ timeout: 10000 });
   await tid('go-inn').click(); await tid('inn').waitFor(); await hintFree('village inn'); await tid('back').click(); await tid('town').waitFor();
   await tid('go-quests').click(); await tid('quest-board').waitFor(); if (await tid('board-town-2').count()) await tid('board-town-2').click();
