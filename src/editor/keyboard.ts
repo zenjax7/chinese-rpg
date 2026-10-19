@@ -15,6 +15,8 @@ import { useEffect } from 'react';
 
 /** Keyboard counts as open when the visual viewport is this much shorter than the layout viewport. */
 const KB_MIN = 120;
+/** How long a text field focused from a held select waits for the keyboard to come back (ms). */
+const WAIT_KB = 800;
 const inPanel = (el: Element | null) => !!el?.closest('.panel, .tabs');
 const isField = (el: Element | null): el is HTMLElement => !!el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || (el as HTMLElement).isContentEditable);
 /** The layout viewport height; on iOS it does not shrink when the keyboard opens. */
@@ -31,7 +33,7 @@ function revealInPanel(el: HTMLElement) {
 export function useKeyboardViewport() {
   useEffect(() => {
     const root = document.documentElement;
-    let panelMode = false, open = false, raf = 0, out = 0;
+    let panelMode = false, open = false, on = false, raf = 0, out = 0, waitKb = 0, waitT = 0;   // open: the keyboard is up; on: the keyboard layout is applied
     const unscroll = () => {
       if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
       const se = document.scrollingElement; if (se && se.scrollTop) se.scrollTop = 0;
@@ -39,20 +41,29 @@ export function useKeyboardViewport() {
     };
     const apply = () => {
       const vv = window.visualViewport;
-      const was = open;
+      const was = on;
       open = !!vv && (vv.scale ?? 1) < 1.05 && layoutH() - vv.height > KB_MIN;   // a pinch-zoomed page is not a keyboard
-      if (was && !open) panelMode = false;   // the keyboard closed (focus comes before the keyboard opens, so only on close)
-      root.classList.toggle('kb-open', open);
-      root.classList.toggle('kb-panel', open && panelMode);
-      if (open && vv) { unscroll(); root.style.setProperty('--vv-top', `${vv.offsetTop}px`); root.style.setProperty('--vv-h', `${vv.height}px`); }
+      // Jack 21:26 ("still jumps when I switch between dialog forms"): on the iPad a <select> (a line's side / expr) opens a popover and
+      // hides the keyboard. While a panel select is focused right after the keyboard was up, keep the layout, so the panel does not drop
+      // back under the map and come up again when the next text field brings the keyboard back.
+      const a = document.activeElement;
+      // Likewise when the next tap lands on a text field: its focus comes before the keyboard is back, so allow it a moment (WAIT_KB).
+      const hold = was && panelMode && !open && !!a && inPanel(a) && (a.tagName === 'SELECT' || (isField(a) && performance.now() < waitKb));
+      on = open || hold;
+      if (was && !on) panelMode = false;   // the keyboard closed (focus comes before the keyboard opens, so only on close)
+      root.classList.toggle('kb-open', on);
+      root.classList.toggle('kb-panel', on && panelMode);
+      if (on && vv) { unscroll(); root.style.setProperty('--vv-top', `${vv.offsetTop}px`); root.style.setProperty('--vv-h', `${vv.height}px`); }
       else { root.style.removeProperty('--vv-top'); root.style.removeProperty('--vv-h'); }
     };
-    const reveal = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const a = document.activeElement; if (open && isField(a)) revealInPanel(a); }); };
+    const reveal = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const a = document.activeElement; if (on && isField(a)) revealInPanel(a); }); };
     const onViewport = () => { apply(); reveal(); };
     const onFocusIn = (e: FocusEvent) => {
       clearTimeout(out);
       const t = e.target as Element | null; if (!isField(t)) return;
-      panelMode = inPanel(t); apply(); reveal();
+      panelMode = inPanel(t);
+      if (on && !open) { waitKb = performance.now() + WAIT_KB; clearTimeout(waitT); waitT = window.setTimeout(apply, WAIT_KB + 20); }   // no keyboard yet: re-check
+      apply(); reveal();
     };
     const onFocusOut = () => {   // iOS: blur comes before the next field's focus; decide one frame later, and never "closed" from here
       clearTimeout(out);
@@ -62,13 +73,13 @@ export function useKeyboardViewport() {
         apply();
       }), 0);
     };
-    const onScroll = () => { if (open) { unscroll(); apply(); } };
+    const onScroll = () => { if (on) { unscroll(); apply(); } };
     const vv = window.visualViewport;
     vv?.addEventListener('resize', onViewport); vv?.addEventListener('scroll', onViewport);
     window.addEventListener('scroll', onScroll, { passive: true }); document.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('focusin', onFocusIn); document.addEventListener('focusout', onFocusOut);
     return () => {
-      cancelAnimationFrame(raf); clearTimeout(out);
+      cancelAnimationFrame(raf); clearTimeout(out); clearTimeout(waitT);
       vv?.removeEventListener('resize', onViewport); vv?.removeEventListener('scroll', onViewport);
       window.removeEventListener('scroll', onScroll); document.removeEventListener('scroll', onScroll);
       document.removeEventListener('focusin', onFocusIn); document.removeEventListener('focusout', onFocusOut);
