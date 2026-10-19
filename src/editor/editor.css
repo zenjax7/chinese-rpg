@@ -109,3 +109,10 @@ button.big.danger { background: #c0262d; border-color: #c0262d; color: #fff; } b
   .work { grid-template-columns: 1fr 300px; }
 }
 .react-flow__controls-button { font-size: 20px; }
+/* ---- iPad keyboard (keyboard.ts): pin the editor to the visual viewport; a focused bottom-panel field gets the visible height ---- */
+html.kb-open .editor { position: fixed; left: 0; right: 0; top: var(--vv-top, 0); height: var(--vv-h, 100vh); }
+html.kb-open main { height: var(--vv-h, 100vh); }
+html.kb-panel main { grid-template-rows: auto 0 auto minmax(0, 1fr); }
+html.kb-panel .work { visibility: hidden; overflow: hidden; }
+html.kb-panel .panel { scroll-padding: 12px; }
+.empty-scene { padding: 10px 12px; border: 1px dashed #b9c0cc; border-radius: 6px; color: #4b5468; background: #f7f8fb; }

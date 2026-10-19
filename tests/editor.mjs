@@ -101,6 +101,7 @@ try {
 
   // dialogue: add a line to the first scene
   await tid('ed-tab-dialogue').click();
+  if (!(await tid('ed-scene').inputValue())) await tid('ed-scene').selectOption({ index: 1 });   // the new node has no scene: pick the first
   const lines0 = await tid('ed-line').count();
   await tid('ed-line-add').click();
   const lastEn = tid('ed-line-en').last(); await commit(lastEn, 'Smoke test line.');
@@ -146,6 +147,18 @@ try {
   if (SHOTS) mkdirSync(SHOTS, { recursive: true });
   const shot = async (pg, name) => { if (SHOTS) await pg.screenshot({ path: path.join(SHOTS, `editor-ipad-${name}.png`) }); };
   const ictx = await browser.newContext({ ...devices['iPad Pro 11 landscape'] });
+  // a stand-in window.visualViewport: the real values, unless the test sets __kb = { h, top } (the WebKit on-screen keyboard shrinks
+  // only the visual viewport; desktop Chromium has no keyboard to open)
+  await ictx.addInitScript(() => {
+    const real = window.visualViewport; const fake = new EventTarget(); window.__kb = null;
+    for (const k of ['width', 'offsetLeft', 'pageLeft', 'pageTop', 'scale']) Object.defineProperty(fake, k, { get: () => real[k] });
+    Object.defineProperty(fake, 'height', { get: () => window.__kb ? window.__kb.h : real.height });
+    Object.defineProperty(fake, 'offsetTop', { get: () => window.__kb ? window.__kb.top : real.offsetTop });
+    real.addEventListener('resize', () => fake.dispatchEvent(new Event('resize'))); real.addEventListener('scroll', () => fake.dispatchEvent(new Event('scroll')));
+    Object.defineProperty(window, 'visualViewport', { get: () => fake });
+    window.__setKb = kb => { window.__kb = kb; fake.dispatchEvent(new Event('resize')); };
+  });
+  const shot2 = async (pg, name) => { if (SHOTS) await pg.screenshot({ path: path.join(SHOTS, `editor-ipad2-${name}.png`) }); };
   const ip = await ictx.newPage(); const ipErrors = []; ip.on('pageerror', e => ipErrors.push(e.message));
   const it = id => ip.locator(`[data-testid="${id}"]`);
   const cdp2 = await ictx.newCDPSession(ip);
@@ -258,6 +271,44 @@ try {
   check(/Tap the spot/.test(insA) && added && Math.abs(added.x - wantA.x) < 0.005 && Math.abs(added.y - wantA.y) < 0.01 && await it('ed-add-node').getAttribute('aria-pressed') === 'false',
     `tap-to-add: “＋ Add node” then a tap on the map adds ${added?.id} at x/y ${added?.x}, ${added?.y} (tap ≈ ${wantA.x.toFixed(4)}, ${wantA.y.toFixed(4)}) and opens its panel`);
   await shot(ip, '5-added-node-panel');
+
+  // selecting a node selects its main scene in the dialogue editor (level-edit mainScene); no scene → empty state + create control
+  const nsc = async () => ({ val: await it('ed-scene').inputValue(), note: await it('ed-node-scene').innerText().catch(() => ''), tab: await it('ed-tab-dialogue').getAttribute('class'),
+    add: await it('ed-scene-add').count(), lines: await it('ed-line').count() });
+  const sNew = await nsc();
+  await shot2(ip, '1-node-without-scene');
+  await it('ed-tab-words').tap();
+  await ip.locator('.react-flow__node[data-id="village"]').tap(); await ip.waitForTimeout(300); const sVil = await nsc();
+  await shot2(ip, '2-village-main-scene');
+  await ip.locator('.react-flow__node[data-id="m_farm"]').tap(); await ip.waitForTimeout(300); const sFarm = await nsc();
+  check(sNew.val === '' && /has no scene/.test(sNew.note) && sNew.add === 1 && sNew.lines === 0 &&
+    sVil.tab === 'on' && sVil.val === 'sc_r1_opening' && /first arrival event/.test(sVil.note) && sVil.lines > 0 && sFarm.val === 'sc_realm_1__farmer_thanks',
+    `node → main scene: ${added?.id} (no scene) shows the empty state with “+ scene”; village → ${sVil.val} (its firstEnter event, from the Word pool tab back to Dialogue); m_farm → ${sFarm.val}`);
+
+  // iPad keyboard: a focused dialogue field and its panel stay above the keyboard (visualViewport), landscape and portrait; then back to normal
+  const kbBoxes = () => ip.evaluate(() => { const a = document.activeElement, pn = document.querySelector('.panel'), vv = window.visualViewport;
+    const r = a.getBoundingClientRect(), q = pn.getBoundingClientRect(); const top = vv.offsetTop, bot = vv.offsetTop + vv.height;
+    return { field: a.dataset.testid, fIn: r.top >= top - 0.5 && r.bottom <= bot + 0.5 && r.height > 0, pIn: q.top >= top - 0.5 && q.bottom <= bot + 0.5 && q.height > 60,
+      cls: document.documentElement.className, top, bot, fr: [Math.round(r.top), Math.round(r.bottom)], pr: [Math.round(q.top), Math.round(q.bottom)],
+      edH: document.querySelector('.editor').getBoundingClientRect().height, ih: innerHeight, work: getComputedStyle(document.querySelector('.work')).visibility }; });
+  const kbCase = async (name, kb) => {
+    await it('ed-line-en').last().tap();
+    await ip.evaluate(k => window.__setKb(k), kb); await ip.waitForTimeout(400);
+    const o = await kbBoxes(); await shot2(ip, name);
+    await ip.evaluate(() => window.__setKb(null)); await ip.waitForTimeout(150);
+    await ip.evaluate(() => document.activeElement.blur()); await ip.waitForTimeout(300);
+    return { o, c: await kbBoxes().catch(async () => ip.evaluate(() => ({ cls: document.documentElement.className, edH: document.querySelector('.editor').getBoundingClientRect().height, ih: innerHeight, work: getComputedStyle(document.querySelector('.work')).visibility }))) };
+  };
+  const L = await kbCase('3-keyboard-landscape', { h: 834 - 398, top: 0 });
+  await ip.setViewportSize({ width: 834, height: 1194 }); await ip.waitForTimeout(300);
+  const P = await kbCase('4-keyboard-portrait', { h: 1194 - 470, top: 90 });
+  await ip.setViewportSize({ width: 1194, height: 834 }); await ip.waitForTimeout(300);
+  const back = c => !/kb-/.test(c.cls) && Math.abs(c.edH - c.ih) < 1 && c.work === 'visible';
+  check(L.o.fIn && L.o.pIn && /kb-panel/.test(L.o.cls) && P.o.fIn && P.o.pIn && back(L.c) && back(P.c),
+    `keyboard: ${L.o.field} and the dialogue panel stay inside the visible viewport — landscape field ${L.o.fr} panel ${L.o.pr} within [${L.o.top}, ${L.o.bot}]; portrait field ${P.o.fr} panel ${P.o.pr} within [${P.o.top}, ${P.o.bot}]; layout back to normal after it closes`);
+  await shot2(ip, '5-keyboard-closed');
+  await ip.locator('[data-testid=ed-fit]').tap(); await ip.waitForTimeout(300);
+  await ip.locator(`.react-flow__node[data-id="${added?.id}"]`).tap(); await it('ed-node-delete').waitFor({ timeout: 5000 });
 
   // delete always confirms: Cancel keeps it, Delete removes it; the same for a link picked by tapping it
   await it('ed-node-delete').tap(); await it('ed-confirm').waitFor({ timeout: 3000 });
