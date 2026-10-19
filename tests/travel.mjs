@@ -5,6 +5,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tapAsm } from './asm.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const J = f => JSON.parse(readFileSync(path.join(ROOT, f), 'utf8'));
 
@@ -75,6 +76,14 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     await tid('name-input').waitFor(); await tid('name-input').fill('Tao'); await tid('name-ok').click();
     await settle(200);
 
+    { // a save without Xiaolong shows only the Hero
+      await p.evaluate(() => { const k = 'chinese-rpg-proto-v4'; const s = JSON.parse(localStorage.getItem(k)); s.party = []; localStorage.setItem(k, JSON.stringify(s)); });
+      await p.reload(); await settle(200); if (await tid('go-adventure').count()) await tid('go-adventure').click(); await tid('graph').waitFor({ timeout: 15000 });
+      const solo = await p.evaluate(() => ({ hero: !!document.querySelector('[data-testid="party-hero"]'), xl: !!document.querySelector('[data-testid="party-xiaolong"]') }));
+      check(solo.hero && !solo.xl, `map party: no Xiaolong yet → only the Hero (${JSON.stringify(solo)})`);
+      await p.evaluate(() => { const k = 'chinese-rpg-proto-v4'; const s = JSON.parse(localStorage.getItem(k)); s.party = ['xiaolong']; localStorage.setItem(k, JSON.stringify(s)); });
+      await p.reload(); await settle(200); await p.evaluate(() => { window.__proto.fakeBattle = 'win'; window.__proto.sceneInstant = true; window.__proto.battles = []; }); }
+
     // ---- bug 1 repro: realm_1 m_field → m_grass over e6 (4 steps, danger 2); the seed's rolls hit on all 4 steps ----
     await p.evaluate(async seed => { const w = window.__proto.world; await w.goto('realm_1', 'm_field'); w.P().seed = seed; window.__proto.battles = []; }, seeds.allHitE6);
     await settle();
@@ -87,8 +96,13 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     await p.evaluate(async g => { const w = window.__proto.world; w.W.graphs[g.id] = g; w.E.registerGraph(g); const P = w.P(); if (!P.flags.includes('tt_quest')) P.flags.push('tt_quest');
       await w.goto(g.id, 'ta'); window.__proto.battles = []; }, TRAVEL_GRAPH);
     await settle();
-    const sprite = await p.evaluate(() => { const s = document.querySelector('[data-testid="party-sprite"]'); return s ? { href: s.querySelector('image')?.getAttribute('href') || '', txt: s.textContent } : null; });
+    const sprite = await p.evaluate(() => { const s = document.querySelector('[data-testid="party-sprite"]'); return s ? { href: s.querySelector('[data-testid="party-hero"] image')?.getAttribute('href') || '', txt: s.textContent } : null; });
     check(!!sprite && (/hero/.test(sprite.href) || sprite.txt.length > 0), `party sprite on the map (${JSON.stringify(sprite)})`);
+    { // Xiaolong (joined in the tutorial) walks just behind the Hero, same size, inside the same moving group
+      const pm = await p.evaluate(() => { const g = document.querySelector('[data-testid="party-sprite"]'); const one = id => { const e = g?.querySelector(`[data-testid="party-${id}"]`);
+        return e && { href: e.querySelector('image')?.getAttribute('href'), x: +e.getAttribute('x'), w: +e.getAttribute('width') }; }; return { hero: one('hero'), xl: one('xiaolong') }; });
+      check(/sprites\/hero\.png$/.test(pm.hero?.href || '') && /companions\/xiaolong_battle_idle\.png$/.test(pm.xl?.href || '') && pm.xl.w === pm.hero.w && pm.xl.x < pm.hero.x,
+        `map party: Xiaolong's battle sprite at the Hero's size, just behind him, in the party group (${JSON.stringify(pm)})`); }
     await tap(1); await settle();
     const P2 = await p.evaluate(() => window.__proto.world.P());
     const atTb = (await battles()).filter(b => b.node === 'tb' && !b.edge);
@@ -136,6 +150,38 @@ export async function travelTests({ browser, BASE, check, log = console.log }) {
     const tk = await trans('key'), tt = await trans('tap'), tn = await trans('none');
     check(tk.shown && tk.skipped && tk.ms < 800 && tt.shown && tt.skipped && tt.ms < 800 && tn.shown && !tn.skipped && tn.ms >= 900 && tn.ms < 2000,
       `map → battle transition: shown; Space skips it (${tk.ms} ms), a tap skips it (${tt.ms} ms), untouched it lasts about 1 s (${tn.ms} ms)`);
+
+    // ---- regression (battle.ts chooseTarget): a target prompt resolved by a tap left its Enter listener behind, so Enter on the next
+    // prompt ran the stale one first, which cleared the new prompt's target buttons (the battle then waited with no targets) ----
+    await p.evaluate(() => { window.__proto.fakeBattle = null; });
+    const has = sel => p.evaluate(sel => !!document.querySelector(sel), sel);
+    const until = async (fn, ms = 20000) => { for (let t = 0; t < ms; t += 100) { if (await fn()) return true; await p.waitForTimeout(100); } return false; };
+    const answer = async () => { const q = await p.evaluate(() => window.__proto.q); if (await has('[data-testid="tile"]:not([disabled])')) await tapAsm(p, true).catch(() => {});
+      else if (q) await p.locator(`[data-testid="opt"][data-o="${q.answerId}"]`).first().click().catch(() => {}); };
+    const live = () => p.evaluate(() => (window.__proto.foes?.() || []).filter(f => f.alive).length);
+    const toMenu = async () => until(async () => { if (await has('[data-testid="action-menu"]')) return true; if (await has('[data-testid="victory"]') || await has('[data-testid="graph"]')) return true;
+      if (await has('[data-testid="continue"]:not([disabled])')) await tid('continue').click().catch(() => {}); else if (await has('[data-testid="opt"]:not([disabled]),[data-testid="tile"]:not([disabled])')) await answer(); return false; });
+    let leak = null;
+    for (let tries = 0; tries < 12 && !leak; tries++) {
+      await p.evaluate(() => { window.__fd = false; window.__proto.world.fight().then(() => { window.__fd = true; }); });
+      await toMenu();
+      if (await has('[data-testid="action-menu"]') && await live() >= 2) {
+        await tid('act-attack').click(); await tid('target-1').click({ timeout: 5000 });   // prompt 1: resolved by a tap
+        await toMenu();
+        if (await has('[data-testid="action-menu"]') && await live() >= 2) {
+          await tid('act-attack').click(); await tid('target-0').waitFor({ timeout: 5000 });
+          await p.keyboard.press('Enter');   // prompt 2: Enter picks the marked target
+          const asked = await until(() => has('[data-testid="opt"],[data-testid="tile"]'), 4000);
+          leak = { asked, tgts: await p.locator('#tgts .tgt').count(), menu: await has('[data-testid="target-menu"]') };
+        }
+      }
+      // leave the battle: ◀ Back out of a target prompt, then flee (or close the victory screen)
+      if (await has('[data-testid="act-back"]')) await tid('act-back').click().catch(() => {});
+      await toMenu(); if (await has('[data-testid="action-menu"]')) await tid('act-flee').click().catch(() => {});
+      await until(async () => { if (await has('[data-testid="victory-ok"]')) await tid('victory-ok').click().catch(() => {}); return p.evaluate(() => window.__fd); });
+      await settle(); await p.evaluate(() => { window.__proto.battles = []; });
+    }
+    check(!!leak && leak.asked, `battle: after a target prompt answered by a tap, Enter on the next prompt still picks a target (${JSON.stringify(leak)})`);
     check(!errs.length, `travel: no page errors (${errs.slice(0, 3).join(' | ')})`);
   } catch (e) { check(false, 'travel tests crashed: ' + (e.stack || e.message).split('\n').slice(0, 3).join(' ')); }
   await ctx.close();
