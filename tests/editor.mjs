@@ -307,6 +307,41 @@ try {
   check(L.o.fIn && L.o.pIn && /kb-panel/.test(L.o.cls) && P.o.fIn && P.o.pIn && back(L.c) && back(P.c),
     `keyboard: ${L.o.field} and the dialogue panel stay inside the visible viewport — landscape field ${L.o.fr} panel ${L.o.pr} within [${L.o.top}, ${L.o.bot}]; portrait field ${P.o.fr} panel ${P.o.pr} within [${P.o.top}, ${P.o.bot}]; layout back to normal after it closes`);
   await shot2(ip, '5-keyboard-closed');
+
+  // Jack's iPad bug (91a0387): with the keyboard open, tapping ANOTHER dialogue field snapped the layout back. iOS order: blur /
+  // focusout on field A, a gap (the keyboard stays open), iOS scrolls the window, then focus on field B. The bottom area must stay in
+  // keyboard mode the whole time, and B must end up inside the visible viewport.
+  const frames = n => ip.evaluate(n2 => new Promise(r => { let k = 0; const f = () => (++k >= n2 ? r() : requestAnimationFrame(f)); requestAnimationFrame(f); }), n);
+  const switchCase = async (name, kb, kb2) => {
+    const A = ip.locator('.slots input').first(), Bf = it('ed-line-en').last();
+    await A.tap(); await ip.evaluate(k => window.__setKb(k), kb); await ip.waitForTimeout(300);
+    const before = await ip.evaluate(() => document.documentElement.className);
+    const gap = await ip.evaluate(async kb2 => {
+      const seen = [];
+      const watch = new MutationObserver(() => seen.push(document.documentElement.className)); watch.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      const raf = () => new Promise(r => requestAnimationFrame(() => r()));
+      document.activeElement.blur();                                  // blur + focusout on A; nothing focused for a moment
+      for (let i = 0; i < 3; i++) { await raf(); seen.push(document.documentElement.className); }
+      const pad = document.createElement('div'); pad.style.height = '3000px'; document.documentElement.appendChild(pad);   // give the page room to scroll, as on iOS
+      window.scrollTo(0, 140); const scrolledTo = window.scrollY; window.__kb = kb2;   // iOS scrolls the window to reveal the next input
+      window.dispatchEvent(new Event('scroll')); window.visualViewport.dispatchEvent(new Event('scroll')); window.visualViewport.dispatchEvent(new Event('resize'));
+      for (let i = 0; i < 2; i++) { await raf(); seen.push(document.documentElement.className); }
+      document.querySelectorAll('[data-testid=ed-line-en]')[document.querySelectorAll('[data-testid=ed-line-en]').length - 1].focus();
+      for (let i = 0; i < 3; i++) { await raf(); seen.push(document.documentElement.className); }
+      watch.disconnect(); const y = window.scrollY; pad.remove(); return { seen, scrolledTo, scrollY: y };
+    }, kb2);
+    await frames(4); await ip.waitForTimeout(200);
+    const o = await kbBoxes(); await shot2(ip, name);
+    await ip.evaluate(() => window.__setKb(null)); await ip.waitForTimeout(150); await ip.evaluate(() => document.activeElement.blur()); await ip.waitForTimeout(300);
+    const c = await ip.evaluate(() => ({ cls: document.documentElement.className, edH: document.querySelector('.editor').getBoundingClientRect().height, ih: innerHeight, work: getComputedStyle(document.querySelector('.work')).visibility }));
+    return { before, gap, o, c, held: /kb-panel/.test(before) && gap.seen.every(x => /kb-panel/.test(x)) && gap.scrolledTo > 0 && gap.scrollY === 0 };
+  };
+  const SL = await switchCase('6-switch-field-landscape', { h: 834 - 398, top: 0 }, { h: 834 - 398, top: 0 });
+  await ip.setViewportSize({ width: 834, height: 1194 }); await ip.waitForTimeout(300);
+  const SP = await switchCase('7-switch-field-portrait', { h: 1194 - 470, top: 0 }, { h: 1194 - 470, top: 90 });
+  await ip.setViewportSize({ width: 1194, height: 834 }); await ip.waitForTimeout(300);
+  check(SL.held && SP.held && SL.o.field === 'ed-line-en' && SL.o.fIn && SL.o.pIn && SP.o.field === 'ed-line-en' && SP.o.fIn && SP.o.pIn && back(SL.c) && back(SP.c),
+    `keyboard, field A → field B (blur, gap, window scroll, focus): keyboard mode held in every frame and the window scroll (${SL.gap.scrolledTo} px) undone (landscape ${SL.held}, portrait ${SP.held}; gap classes ${[...new Set([...SL.gap.seen, ...SP.gap.seen])].join(' / ') || '—'}); B inside the visible viewport — landscape ${SL.o.fr} in [${SL.o.top}, ${SL.o.bot}], portrait ${SP.o.fr} in [${SP.o.top}, ${SP.o.bot}]; normal layout after close`);
   await ip.locator('[data-testid=ed-fit]').tap(); await ip.waitForTimeout(300);
   await ip.locator(`.react-flow__node[data-id="${added?.id}"]`).tap(); await it('ed-node-delete').waitFor({ timeout: 5000 });
 
