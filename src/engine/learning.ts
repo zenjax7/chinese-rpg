@@ -217,7 +217,7 @@ export function assemblyEligible(id: string): boolean {
 }
 /** §9.4.2: an R-EZ question on an eligible item is assembly when R-EZ.attempts is odd, MC when even (so the first is MC). */
 export function rezForm(id: string): RezForm {
-  return assemblyEligible(id) && prog(id).ways.rEZ.a % 2 === 1 ? 'assembly' : 'mc';
+  return assemblyEligible(id) ? 'assembly' : 'mc';   // Jack 2026-10-18: always assembly when eligible
 }
 /** §9.4.3: d = mcOptions − 1; the first-ever-question reduction maps to d − 1 (minimum 1), as for MC. */
 export function assemblyD(mcOptions: number, first: boolean): number {

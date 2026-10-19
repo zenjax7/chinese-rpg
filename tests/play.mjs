@@ -532,7 +532,7 @@ await nv.context().close();
 {
   const a = await newPage();
   await a.goto(BASE); await consent(a); await goLoc(a, 'meadow'); await tid(a, 'preview').waitFor(); await tid(a, 'preview-done').click(); await tid(a, 'location').waitFor();
-  // every eligible meadow word has had 1 R-EZ question (so its next R-EZ is assembly) and has R-ZE done, so R-EZ is the way picked
+  // every eligible meadow word has had 1 R-EZ question (R-EZ on an eligible word is always assembly) and has R-ZE done, so R-EZ is the way picked
   const prepared = await a.evaluate(() => { const X = window.__proto.asm; const ids = X.pool('meadow').filter(X.assemblyEligible);
     for (const id of ids) { const P = X.prog(id); P.seen = true; P.ways.rEZ.a = 1; P.ways.rEZ.c = 0; P.ways.rZE.a = 2; P.ways.rZE.c = 2; } return ids.length; });
   await debugSet(a, { hp: 999 });
@@ -548,8 +548,8 @@ await nv.context().close();
       a: window.__proto.asm.prog(window.__proto.q.id).ways.rEZ.a, logN: window.__proto.asm.log().length }));
     const ans = [...q.zh];
     check(v.form === 'assembly' && v.slots === ans.length && v.tiles.length === ans.length + q.distractors.length && q.distractors.length === 2 && ans.every(c => v.tiles.includes(c))
-      && v.banner.includes(q.en) && !v.banner.includes(q.zh) && !TONE.test(v.banner) && v.a % 2 === 1,
-      `assembly renders: ${q.zh} “${q.en}” → ${v.slots} slots, tray ${v.tiles.join(' ')} (n + mcOptions−1 = ${ans.length}+2), English prompt only, no pinyin; R-EZ.attempts was ${v.a} (odd)`);
+      && v.banner.includes(q.en) && !v.banner.includes(q.zh) && !TONE.test(v.banner),
+      `assembly renders: ${q.zh} “${q.en}” → ${v.slots} slots, tray ${v.tiles.join(' ')} (n + mcOptions−1 = ${ans.length}+2), English prompt only, no pinyin; R-EZ.attempts was ${v.a}`);
     if (nAsm === 1) {
       // §9.4 note 5: tiles past the 9th have no number key; tapping must not depend on it, so this answer is tapped with every key removed
       const keys = await p.evaluate(() => { const t = [...document.querySelectorAll('[data-testid="tile"]')]; const n = t.filter(x => x.dataset.key).length; t.forEach(x => x.removeAttribute('data-key')); return n; });

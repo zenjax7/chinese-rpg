@@ -1470,7 +1470,7 @@ Approved by Jack on 2026-10-17 (PT). The player sees an English word or phrase a
 
 **2. When it is used (selection)**
 - The engine picks `(item, way)` as now (§3.3–§3.4, spoken cap included). Assembly changes only how an R-EZ question looks.
-- An R-EZ question on an eligible item is shown as **assembly when that item's `R-EZ.attempts` is odd**, and as MC when it's even. So the first R-EZ question on an item is always MC, and after that the two forms take turns.
+- An R-EZ question on an eligible item is **always shown as assembly**. R-EZ on a non-eligible item stays listen & pick (§3.4).
 - A **re-ask after a miss** (§4) keeps the form of the missed question: an assembly miss is re-asked as assembly with the tray reshuffled and one distractor swapped. This mirrors the MC re-ask.
 - Assembly is a reading question: it never counts toward the 50% spoken cap and works the same in 4-way and reading mode.
 - Scope: battle questions (attack, defense, and question-type skills). Practice modes are unchanged.

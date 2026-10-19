@@ -799,8 +799,8 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     });
     check(A.eligOk && A.elig === 628 && A.nhE && A.single === false && A.frame === false && A.readN === false,
       `§9.4.1 eligibility: ${A.elig} of ${A.total} items (2+ Han characters, reading = Y; spec 628 of 1,051); single-character, …… frames and reading = N are not eligible`);
-    check(JSON.stringify(A.forms) === '["mc","assembly","mc","assembly"]' && JSON.stringify(A.sForms) === '["mc","mc"]' && JSON.stringify(A.rForms) === '["mc","mc"]',
-      `§9.4.2 alternation: 你好 R-EZ.attempts 0,1,2,3 → ${A.forms.join(',')} (first R-EZ is MC); ineligible items always MC`);
+    check(JSON.stringify(A.forms) === '["assembly","assembly","assembly","assembly"]' && JSON.stringify(A.sForms) === '["mc","mc"]' && JSON.stringify(A.rForms) === '["mc","mc"]',
+      `§9.4.2: 你好 R-EZ.attempts 0,1,2,3 → ${A.forms.join(',')} (eligible: always assembly); ineligible items always MC`);
     check(JSON.stringify(A.ds) === '[2,3,4,5,1,1]', `§9.4.3 d = mcOptions − 1 (3/4/5/6 → ${A.ds.slice(0, 4).join('/')}); first-ever reduction d − 1, minimum 1 (${A.ds.slice(4).join('/')})`);
     check(A.dmOk && A.tray.length === 2 + A.dch.length && A.dch.length === 4 && A.tray.filter(c => c === '谢').length === 2 && new Set(A.dch).size === 4 && !A.dch.includes('谢'),
       `§9.4.3–4 tray: meadow 你好 gets ${A.dm.length} distinct pool distractors (${A.dm.join('')}); 谢谢 tray = 2 谢 tiles + 4 distractors (${A.tray.join('')})`);
