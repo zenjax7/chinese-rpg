@@ -5,6 +5,7 @@ import { editorApi, authForm, type MapRow } from './api';
 import { useDraft } from './useDraft';
 import { Canvas, type CanvasMode } from './Canvas';
 import { ConfirmHost } from './confirm';
+import { useKeyboardViewport } from './keyboard';
 import { resolveMapBg, type MapBg } from './map-bg';
 import { Inspector } from './Inspector';
 import { DialogueEditor } from './DialogueEditor';
@@ -45,6 +46,8 @@ function Editor({ role }: { role: string }) {
   const [bg, setBg] = useState<MapBg | null | 'loading'>('loading');
   const [mode, setMode] = useState<CanvasMode>('select');
   const [mapsOpen, setMapsOpen] = useState(false);
+  useKeyboardViewport();
+  useEffect(() => { if (sel.node) setTab('dialogue'); }, [sel.node]);   // a selected node shows its main scene
   const refreshList = useCallback(() => { editorApi.list().then(r => { if (r.status === 200 && r.body) setMaps(r.body.levels); }); }, []);
   const d = useDraft(current, refreshList);
   const owner = role === 'owner';
@@ -134,7 +137,7 @@ function Editor({ role }: { role: string }) {
             {t === 'dialogue' ? 'Dialogue' : t === 'settings' ? 'Map settings' : t === 'words' ? `Word pool (${level.settings.words.length})` : `Problems (${allProblems.length})`}</button>)}
         </div>
         <div className="panel">
-          {tab === 'dialogue' && <DialogueEditor key={level.id} level={level} readOnly={readOnly} characters={characters} edit={edit} />}
+          {tab === 'dialogue' && <DialogueEditor key={level.id} level={level} readOnly={readOnly} characters={characters} edit={edit} node={sel.node} />}
           {tab === 'settings' && <MapSettings level={level} readOnly={readOnly} edit={edit} />}
           {tab === 'words' && <WordPool level={level} readOnly={readOnly} maps={maps} audio={audio} edit={edit} />}
           {tab === 'problems' && <Problems problems={allProblems} />}

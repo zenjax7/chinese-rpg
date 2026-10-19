@@ -1,13 +1,17 @@
 /** Dialogue editor (level-editor.md §5.3, §2.8): the map's scene/0.2 scenes; slots with character and expression; per line the
  *  speaker, side, expression, optional Chinese and the English gloss. No pinyin field; a line with no Chinese is valid. */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Level } from '../shared/level/types';
 import * as X from './level-edit';
 import { TextField, SelectField } from './fields';
 
-export function DialogueEditor(p: { level: Level; readOnly: boolean; characters: string[]; edit: (f: (l: Level) => Level) => void }) {
+const RULE: Record<number, string> = { 1: 'its first arrival event with a scene', 2: 'an event of this node', 3: 'its quest variant', 4: 'the scene trigger names this node' };
+/** `node`: the node selected on the map; its main scene (level-edit mainScene) is selected here when the node changes. */
+export function DialogueEditor(p: { level: Level; readOnly: boolean; characters: string[]; edit: (f: (l: Level) => Level) => void; node?: string }) {
   const ids = Object.keys(p.level.scenes ?? {}).sort();
   const [sel, setSel] = useState(ids[0] ?? '');
+  const main = p.node ? X.mainScene(p.level, p.node) : null;
+  useEffect(() => { if (p.node) setSel(main?.id ?? ''); }, [p.node]);   // only when the selected node changes, so picking another scene sticks
   const [newId, setNewId] = useState(`sc_${p.level.id}_`);
   const s = p.level.scenes?.[sel];
   const chars = [...new Set([...p.characters, ...Object.keys((p.level as any).npcs ?? {})])].sort();
@@ -19,6 +23,9 @@ export function DialogueEditor(p: { level: Level; readOnly: boolean; characters:
       <button disabled={p.readOnly || !/^sc_[a-z0-9_]+$/.test(newId) || !!p.level.scenes?.[newId]} data-testid="ed-scene-add"
         onClick={() => { p.edit(l => X.addScene(l, newId)); setSel(newId); }}>+ scene</button>
     </div>
+    {p.node && <p className={main ? 'muted' : 'empty-scene'} data-testid="ed-node-scene" data-scene={main?.id ?? ''}>
+      {main ? <>Node <b>{p.node}</b>: main scene <b>{main.id}</b> ({RULE[main.rule]}).</> : <>Node <b>{p.node}</b> has no scene. Create one with “new scene id” and “+ scene” above.</>}
+    </p>}
     {s && <>
       <div className="row slots">{X.SIDES.map(side => <span key={side} className="slot">
         <TextField label={side} value={s.slots?.[side]?.char} list="dl-chars" disabled={p.readOnly} onChange={v => p.edit(l => X.setSlot(l, sel, side, v, s.slots?.[side]?.expr))} />
