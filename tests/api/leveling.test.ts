@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { expToNextAt, heroLevelStats, enemyStatsAt, resolveEnemyLevel, heroActions, roundActions, mapLevels, EnemyKind, CLASSIC_MAPS, classicMapId, classicLevels, summonLevel } from '../../src/shared/leveling.js';
+import { readFileSync, readdirSync } from 'node:fs';
+import { expToNextAt, heroLevelStats, enemyStatsAt, resolveEnemyLevel, heroActions, roundActions, mapLevels, EnemyKind, CLASSIC_MAPS, classicMapId, classicLevels, bossHomeLevels, summonLevel } from '../../src/shared/leveling.js';
 import balance from '../../src/data/balance.json' with { type: 'json' };
 
 // Leveling v2 (Jack 2026-10-17): the engine's formulas against Desy's tables (docs/data/json, written by leveling_v2_tables.py from the sim).
@@ -121,17 +121,42 @@ describe('classic locations read the corresponding graph map (static table)', ()
   it('meadow → realm_1, forest → realm_2; a location not in the table uses realm_<realm>', () => {
     expect(CLASSIC_MAPS).toEqual({ meadow: 'realm_1', forest: 'realm_2' });
     expect(classicMapId('somewhere', 3)).toBe('realm_3');
-    expect(classicLevels('somewhere', 3, ML)).toEqual({ ...mapLevels(ML.realm_3), roster: {} });
+    expect(classicLevels('somewhere', 3, ML)).toEqual({ ...mapLevels(ML.realm_3), roster: { ...mapLevels(ML.realm_3)!.roster, ...bossHomeLevels(ML) } });
     for (const l of LOCS) expect(ML[classicMapId(l.id, l.tier)], l.id).toBeTruthy();   // every classic location has its map
   });
   it('meadow: enemyLevel [1, 3], eliteLevel 3, boss.level 10, recLevel [1, 11] at tier 1 (realm_1); forest: realm_2', () => {
-    expect(classicLevels('meadow', 1, ML)).toEqual({ tier: 1, recLevel: [1, 11], enemyLevel: [1, 3], eliteLevel: 3, bossLevel: 10, roster: {} });
-    expect(classicLevels('forest', 2, ML)).toEqual({ ...mapLevels(ML.realm_2), roster: {} });
+    expect(classicLevels('meadow', 1, ML)).toEqual({ tier: 1, recLevel: [1, 11], enemyLevel: [1, 3], eliteLevel: 3, bossLevel: 10, roster: bossHomeLevels(ML) });
+    expect(classicLevels('forest', 2, ML)).toEqual({ ...mapLevels(ML.realm_2), roster: { ...mapLevels(ML.realm_2)!.roster, ...bossHomeLevels(ML) } });
   });
   it('so a meadow wolf pup rolls L1–3 (it was its table level 10)', () => {
     const m = classicLevels('meadow', 1, ML);
     expect([0, 0.5, 0.999].map(x => resolveEnemyLevel('wolf_pup', 'normal', m, () => x))).toEqual([1, 2, 3]);
-    expect(resolveEnemyLevel('horned_rabbit_king', 'realmboss', m)).toBe(10);
+  });
+});
+// Desy 2026-10-18: a classic boss takes the boss.level of the graph map where it lives (by enemy id); roster[].level overrides go through
+// the same lookup; a boss on no graph map keeps the location's map.
+describe('classic bosses use their home graph map\'s boss level', () => {
+  const ML = JSON.parse(readFileSync('src/data/world/index.json', 'utf8')).mapLevels;
+  const meadow = classicLevels('meadow', 1, ML), forest = classicLevels('forest', 2, ML);
+  it('big_grey_wolf → clover_hills L13, horned_rabbit_king → warren L15, crow → realm_1 L10; bear → realm_2 L17, queen_bee → great_hive_1 L19', () => {
+    expect(resolveEnemyLevel('big_grey_wolf', 'locboss', meadow)).toBe(13);
+    expect(resolveEnemyLevel('horned_rabbit_king', 'realmboss', meadow)).toBe(15);
+    expect(resolveEnemyLevel('big_beak_crow', 'locboss', meadow)).toBe(10);
+    expect(resolveEnemyLevel('greedy_bear', 'locboss', forest)).toBe(17);
+    expect(resolveEnemyLevel('queen_bee', 'realmboss', forest)).toBe(19);
+  });
+  it('a boss on no graph map falls back to the location\'s map boss.level', () => {
+    expect(resolveEnemyLevel('no_such_boss', 'realmboss', meadow)).toBe(10);
+    expect(resolveEnemyLevel('no_such_boss', 'locboss', forest)).toBe(17);
+  });
+  it('roster[].level overrides: the location map\'s carry over; a home map\'s override for its own boss wins over its boss.level', () => {
+    const byMap = { ...ML,
+      realm_1: { ...ML.realm_1, roster: [{ enemy: 'wolf_pup', level: [2, 2] }, { enemy: 'rabbit', weight: 1 }] },
+      warren: { ...ML.warren, roster: [{ enemy: 'horned_rabbit_king', level: 16 }] } };
+    const m = classicLevels('meadow', 1, byMap);
+    expect(resolveEnemyLevel('wolf_pup', 'normal', m, () => 0)).toBe(2);
+    expect(resolveEnemyLevel('horned_rabbit_king', 'realmboss', m)).toBe(16);
+    expect(bossHomeLevels(byMap).big_grey_wolf).toBe(13);
   });
 });
 describe('worker bee level', () => {
@@ -147,4 +172,28 @@ describe('worker bee level', () => {
     const w = enemyStatsAt('normal', 2, 19, A.worker_bee), g = enemyStatsAt('normal', 2, 19, A.giant_bee);
     expect(w.level).toBe(19); expect(w.atk).toBe(g.atk); expect(w.hp).toBe(Math.round(g.hp / A.giant_bee.hpMult * A.worker_bee.hpMult));
   });
+});
+// CI check (Desy 2026-10-18): every classic boss (a location's boss and its scripted path bosses) gets, in its classic location, the
+// boss.level of the published graph map (docs/data/levels) whose boss it is; a boss on no graph map gets the location map's boss.level.
+describe('CI: every classic boss level equals its graph map boss.level', () => {
+  const ML = JSON.parse(readFileSync('src/data/world/index.json', 'utf8')).mapLevels;
+  const LOCS = JSON.parse(readFileSync('src/data/locations.json', 'utf8')).locations;
+  const EN: Record<string, any> = Object.fromEntries(JSON.parse(readFileSync('src/data/enemies.json', 'utf8')).enemies.map((e: any) => [e.id, e]));
+  const home: Record<string, { map: string; level: number }> = {};
+  for (const f of readdirSync('docs/data/levels').filter(f => f.endsWith('.json'))) {
+    const L = JSON.parse(readFileSync(`docs/data/levels/${f}`, 'utf8')); const b = L.settings?.boss;
+    if (!String(L.schema || '').startsWith('level/') || !b?.enemy || b.level == null) continue;
+    const o = (L.settings.roster || []).find((r: any) => r.enemy === b.enemy && r.level != null);
+    home[b.enemy] = { map: L.id, level: o ? o.level : b.level };
+  }
+  const bosses = (l: any) => [...new Set([l.boss, ...Object.values(l.scripted || {}).flat(), ...(l.roster || []).map((r: any) => r.enemy)] as string[])]
+    .filter(id => EN[id] && (EN[id].kind === 'locboss' || EN[id].kind === 'realmboss'));
+  it('finds the classic bosses', () => { expect(LOCS.flatMap(bosses).length).toBeGreaterThanOrEqual(5); });
+  for (const l of LOCS) for (const id of bosses(l)) {
+    const did = EN[id].desyId.split(' ')[0];
+    it(`${l.id} ${id} (${did})`, () => {
+      const want = home[did]?.level ?? ML[classicMapId(l.id, l.tier)].boss.level;
+      expect(resolveEnemyLevel(did, EN[id].kind, classicLevels(l.id, l.tier, ML))).toEqual(want);
+    });
+  }
 });
