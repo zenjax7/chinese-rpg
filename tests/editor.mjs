@@ -322,25 +322,26 @@ try {
       const raf = () => new Promise(r => requestAnimationFrame(() => r()));
       document.activeElement.blur();                                  // blur + focusout on A; nothing focused for a moment
       for (let i = 0; i < 3; i++) { await raf(); seen.push(document.documentElement.className); }
-      window.scrollTo(0, 140); document.scrollingElement.scrollTop = 140; window.__kb = kb2;   // iOS scrolls to reveal the next input
+      const pad = document.createElement('div'); pad.style.height = '3000px'; document.documentElement.appendChild(pad);   // give the page room to scroll, as on iOS
+      window.scrollTo(0, 140); const scrolledTo = window.scrollY; window.__kb = kb2;   // iOS scrolls the window to reveal the next input
       window.dispatchEvent(new Event('scroll')); window.visualViewport.dispatchEvent(new Event('scroll')); window.visualViewport.dispatchEvent(new Event('resize'));
       for (let i = 0; i < 2; i++) { await raf(); seen.push(document.documentElement.className); }
       document.querySelectorAll('[data-testid=ed-line-en]')[document.querySelectorAll('[data-testid=ed-line-en]').length - 1].focus();
       for (let i = 0; i < 3; i++) { await raf(); seen.push(document.documentElement.className); }
-      watch.disconnect(); return { seen, scrollY: window.scrollY };
+      watch.disconnect(); const y = window.scrollY; pad.remove(); return { seen, scrolledTo, scrollY: y };
     }, kb2);
     await frames(4); await ip.waitForTimeout(200);
     const o = await kbBoxes(); await shot2(ip, name);
     await ip.evaluate(() => window.__setKb(null)); await ip.waitForTimeout(150); await ip.evaluate(() => document.activeElement.blur()); await ip.waitForTimeout(300);
     const c = await ip.evaluate(() => ({ cls: document.documentElement.className, edH: document.querySelector('.editor').getBoundingClientRect().height, ih: innerHeight, work: getComputedStyle(document.querySelector('.work')).visibility }));
-    return { before, gap, o, c, held: /kb-panel/.test(before) && gap.seen.every(x => /kb-panel/.test(x)) };
+    return { before, gap, o, c, held: /kb-panel/.test(before) && gap.seen.every(x => /kb-panel/.test(x)) && gap.scrolledTo > 0 && gap.scrollY === 0 };
   };
   const SL = await switchCase('6-switch-field-landscape', { h: 834 - 398, top: 0 }, { h: 834 - 398, top: 0 });
   await ip.setViewportSize({ width: 834, height: 1194 }); await ip.waitForTimeout(300);
   const SP = await switchCase('7-switch-field-portrait', { h: 1194 - 470, top: 0 }, { h: 1194 - 470, top: 90 });
   await ip.setViewportSize({ width: 1194, height: 834 }); await ip.waitForTimeout(300);
   check(SL.held && SP.held && SL.o.field === 'ed-line-en' && SL.o.fIn && SL.o.pIn && SP.o.field === 'ed-line-en' && SP.o.fIn && SP.o.pIn && back(SL.c) && back(SP.c),
-    `keyboard, field A → field B (blur, gap, window scroll, focus): keyboard mode held in every frame (landscape ${SL.held}, portrait ${SP.held}; gap classes ${[...new Set([...SL.gap.seen, ...SP.gap.seen])].join(' / ') || '—'}); B inside the visible viewport — landscape ${SL.o.fr} in [${SL.o.top}, ${SL.o.bot}], portrait ${SP.o.fr} in [${SP.o.top}, ${SP.o.bot}]; normal layout after close`);
+    `keyboard, field A → field B (blur, gap, window scroll, focus): keyboard mode held in every frame and the window scroll (${SL.gap.scrolledTo} px) undone (landscape ${SL.held}, portrait ${SP.held}; gap classes ${[...new Set([...SL.gap.seen, ...SP.gap.seen])].join(' / ') || '—'}); B inside the visible viewport — landscape ${SL.o.fr} in [${SL.o.top}, ${SL.o.bot}], portrait ${SP.o.fr} in [${SP.o.top}, ${SP.o.bot}]; normal layout after close`);
   await ip.locator('[data-testid=ed-fit]').tap(); await ip.waitForTimeout(300);
   await ip.locator(`.react-flow__node[data-id="${added?.id}"]`).tap(); await it('ed-node-delete').waitFor({ timeout: 5000 });
 
