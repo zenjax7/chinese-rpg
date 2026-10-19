@@ -10,6 +10,7 @@ import { town, graphHooks, rewards, itemsScreen, applyDefeat, flushNotices } fro
 import { $, esc, render, on, hud, toast, dialog, zh, dlg, setTitle, ui } from './dom';
 import { view } from '../phaser/view';
 import { BG } from '../assets';
+import { nodeXY, NODE_ICON, mapLocation, isDense, nodeRadius } from '../shared/level/map-view';
 import { playMusic, playSfx } from '../audio/audio';
 import * as E from '../world/engine';
 import { playScene, Scene, SceneEnv } from '../world/scene';
@@ -140,7 +141,7 @@ function zoneOf(g: E.Graph, node?: string, e?: E.GEdge): E.Zone | undefined {
   const zid = e ? E.edgeZone(g, e) : (node ? E.nodeOf(g, node)?.zone : undefined);
   return (zid && W.zones[zid]) || W.idx!.zones.find(z => z.realm === g.realm);
 }
-const battleLoc = (z?: E.Zone) => (z && LOC[z.location] ? z.location : (z?.realm ?? 1) >= 2 && LOC.forest ? 'forest' : 'meadow');
+const battleLoc = (z?: E.Zone) => mapLocation(z, l => !!LOC[l]);
 /** A map loaded from the API fights with its own word pool (settings.words, §2.5.1), limited to words the game has loaded.
  *  That pool has its own draw cycle (poolKey `map:<id>`). */
 function mapPool(g: E.Graph, loc: string): { restore: () => void; poolKey?: string } {
@@ -462,7 +463,7 @@ function rest(g: E.Graph, n: E.GNode) {
 }
 
 // ---------------- the map (SVG over the Phaser background) ----------------
-const ICON: Record<string, string> = { town: '🏘️', village: '🏡', inn: '🛏️', boss: '👑', miniboss: '💀', chest: '🧰', story: '📖', npc: '🙂', portal: '🌀', stairs_up: '⬆️', stairs_down: '⬇️', fork: '•', waypoint: '•', shop: '🛒' };
+const ICON = NODE_ICON;
 const allRealms = () => /[?&]realms=all\b/.test(location.search) || !!proto().allRealms;
 /** World map: Jack Oct 11, progression by links only: a realm node is open unless the data gives it an unlock condition (the build drops
  *  the old bossDefeated unlocks); ?realms=all opens all. Realms are left through their own exit edge (kind exit, from the entry town / village). */
@@ -470,9 +471,7 @@ const realmNodeOpen = (n: E.GNode, x: E.Ctx) => { if (allRealms()) return true;
   const rl = W.idx!.realms?.find(r => r.node === n.id); const r = rl?.realm ?? Number(String(n.id).match(/(\d+)$/)?.[1] || 1);
   return E.realmOpen(r, x.P, W.idx!.realms || [], x); };
 let zoom = 1, panX = 0, panY = 0, zoomGraph = '';
-const MAXZ = 4, MW = 1160, MH = 410, OX = 60, OY = 130;   // the node area keeps nodes + labels clear of the HUD and the bottom bar (top 592)
-/** A node's point in the map's SVG coordinates. */
-const nodeXY = (n: E.GNode) => ({ x: OX + n.x * MW, y: OY + n.y * MH });
+const MAXZ = 4;   // node x / y -> the 1280x720 frame: nodeXY in shared/level/map-view.ts (the level editor uses the same)
 const clampPan = () => { const mx = 640 - 640 / zoom, my = 360 - 360 / zoom; panX = Math.max(-mx, Math.min(mx, panX)); panY = Math.max(-my, Math.min(my, panY)); };
 const vb = () => `${640 - 640 / zoom - panX} ${360 - 360 / zoom - panY} ${1280 / zoom} ${720 / zoom}`;
 export function graphScreen() {
@@ -489,7 +488,7 @@ export function graphScreen() {
   const lvl = g.kind === 'dungeon_level' && g.level && !(ttl?.zh || '').includes('层') ? ` · ${zh(`第${g.level}层`)} Level ${g.level}` : '';   // most titles already name the level
   setTitle(`${isWorld ? '🌍' : g.kind === 'dungeon_level' ? '🕳️' : '🗺️'} ${zh(ttl?.zh || '')} ${esc(ttl?.en || g.id)}${lvl}`);
   const x = ctx(); const fogS: Record<string, E.FogState> = isWorld ? Object.fromEntries(g.nodes.map(n => [n.id, 'visited' as E.FogState])) : E.fog(g, P(), x);
-  const dense = g.nodes.length > 60; const rr = dense ? 17 : 22;
+  const dense = isDense(g.nodes.length); const rr = nodeRadius(g.nodes.length);
   const adj = new Map<string, E.GEdge>(); for (const e of E.edgesAt(g, here)) { const o = E.otherEnd(e, here); adj.set(typeof o === 'string' ? o : `@${e.id}`, e); }
   // on the world map every open realm node is one tap away (through its own portal edge)
   const worldPick = new Map<string, E.GEdge>(); if (isWorld) for (const n of g.nodes) { const e = g.edges.find(e2 => e2.from === n.id && typeof e2.to === 'object'); if (e && realmNodeOpen(n, x)) worldPick.set(n.id, e); }

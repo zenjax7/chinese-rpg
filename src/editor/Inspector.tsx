@@ -5,6 +5,7 @@ import type { Level, LevelEdge, NodeRef } from '../shared/level/types';
 import type { MapRow } from './api';
 import * as X from './level-edit';
 import { TextField, NumberField, SelectField, Check, JsonField } from './fields';
+import { askConfirm } from './confirm';
 
 /** "Jack picks" -> kind (§2.2). Blank is waypoint/fork with no event. */
 export const KINDS: [string, string][] = [['waypoint', 'Blank (waypoint)'], ['fork', 'Blank (fork)'], ['village', 'Village'], ['town', 'Town'], ['inn', 'Inn / campfire'],
@@ -19,6 +20,9 @@ export interface InspectorProps {
   /** Adds or removes the other half of a cross-map pair on the target map. */
   onPair: (op: 'add' | 'remove', target: NodeRef, back: NodeRef, kind: string) => Promise<void>;
   loadMapNodes: (id: string) => Promise<string[]>;
+  /** Deletes nodes / links (with their cross-map pairs); the caller has already confirmed. */
+  onDelete: (nodes: string[], edges: string[]) => void;
+  onOpenMap: (id: string) => void;
 }
 
 export function Inspector(p: InspectorProps) {
@@ -30,7 +34,7 @@ export function Inspector(p: InspectorProps) {
   </>;
   if (p.sel.node) return <div className="inspector" data-testid="ed-inspector">{lists}<NodePanel {...p} id={p.sel.node} /></div>;
   if (p.sel.edge) return <div className="inspector" data-testid="ed-inspector">{lists}<EdgePanel {...p} id={p.sel.edge} /></div>;
-  return <div className="inspector muted" data-testid="ed-inspector"><p>Select a node or a link. Drag from a node’s right handle to another node to link them; press Delete to remove the selection.</p></div>;
+  return <div className="inspector muted" data-testid="ed-inspector"><p>Tap a node or a link to edit it here. To link two nodes, turn on <b>Connect</b>, then tap one node and then the other. To add a node, tap <b>＋ Add node</b>, then tap the spot on the map.</p></div>;
 }
 
 function Gate(p: { value: { lockedUntilQuest?: string; lockedScene?: string }; disabled: boolean; onChange: (patch: { lockedUntilQuest?: string; lockedScene?: string }) => void }) {
@@ -48,6 +52,8 @@ function NodePanel(p: InspectorProps & { id: string }) {
   const links = p.level.edges.filter(e => e.from === n.id && X.isCrossMap(e));
   return <>
     <h3>Node {n.id} · idx {n.idx}</h3>
+    <div className="big-row"><button className="big danger" disabled={p.readOnly} data-testid="ed-node-delete"
+      onClick={async () => { if (await askConfirm(`Delete node ${n.id} and its links?`)) p.onDelete([n.id], []); }}>🗑 Delete node</button></div>
     <TextField label="id" value={n.id} disabled={p.readOnly || golden} testid="ed-node-id" onChange={v => { p.edit(l => X.renameNode(l, n.id, v)); p.onSelect({ node: v }); }} />
     <SelectField label="kind" value={n.kind} options={KINDS.some(k => k[0] === n.kind) ? KINDS : [...KINDS, [n.kind, n.kind]]} disabled={p.readOnly} testid="ed-node-kind"
       onChange={v => p.edit(l => X.setKind(l, n.id, v))} />
@@ -68,17 +74,18 @@ function NodePanel(p: InspectorProps & { id: string }) {
 function EdgePanel(p: InspectorProps & { id: string }) {
   const e = p.level.edges.find(x => x.id === p.id);
   if (!e) return <p className="muted">Link {p.id} is gone.</p>;
-  if (X.isCrossMap(e)) return <><h3>Link {e.id}</h3><CrossLink {...p} edge={e} /></>;
+  if (X.isCrossMap(e)) return <><h3>Link {e.id}</h3><div className="big-row"><button className="big" data-testid="ed-open-map" onClick={() => p.onOpenMap(e.to.graph)}>Open {e.to.graph}</button></div><CrossLink {...p} edge={e} /></>;
   const set = (patch: Partial<LevelEdge>) => p.edit(l => X.updateEdge(l, e.id, patch));
   return <>
     <h3>Link {e.id}: {e.from} → {String(e.to)}</h3>
+    <div className="big-row"><button className="big danger" disabled={p.readOnly} data-testid="ed-edge-delete"
+      onClick={async () => { if (await askConfirm(`Delete link ${e.from} → ${String(e.to)}?`)) p.onDelete([], [e.id]); }}>🗑 Delete link</button></div>
     <SelectField label="kind" value={e.kind ?? 'path'} options={EDGE_KINDS} disabled={p.readOnly} onChange={v => set({ kind: v })} />
     <NumberField label="danger 0–3" value={e.danger} min={0} max={3} disabled={p.readOnly} testid="ed-edge-danger" onChange={v => set({ danger: v })} />
     <NumberField label="steps" value={e.steps} min={1} max={20} disabled={p.readOnly} onChange={v => set({ steps: v })} />
     <TextField label="terrain" value={e.terrain} disabled={p.readOnly} onChange={v => set({ terrain: v || undefined })} />
     <Check label="patrol (the boss gate: no random rolls)" value={e.patrol as boolean} disabled={p.readOnly} onChange={v => set({ patrol: v || undefined })} />
     <Gate value={e} disabled={p.readOnly} onChange={set} />
-    <button disabled={p.readOnly} onClick={() => { p.edit(l => X.removeEdges(l, [e.id]).level); p.onSelect({}); }}>Delete link</button>
   </>;
 }
 
@@ -86,6 +93,7 @@ function EdgePanel(p: InspectorProps & { id: string }) {
 function CrossLink(p: InspectorProps & { edge: LevelEdge & { to: NodeRef } }) {
   const e = p.edge, here: NodeRef = { graph: p.level.id, node: e.from };
   const remove = async () => {
+    if (!(await askConfirm(`Delete the link to ${e.to.graph}/${e.to.node}${e.kind !== 'exit' ? ' on both maps' : ''}?`))) return;
     p.edit(l => X.removeEdges(l, [e.id]).level);
     if (e.kind !== 'exit') await p.onPair('remove', e.to, here, e.kind ?? 'portal');
     p.onSelect({ node: e.from });

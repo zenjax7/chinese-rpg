@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { editorApi, authForm, type MapRow } from './api';
 import { useDraft } from './useDraft';
-import { Canvas } from './Canvas';
+import { Canvas, type CanvasMode } from './Canvas';
+import { ConfirmHost } from './confirm';
+import { resolveMapBg, type MapBg } from './map-bg';
 import { Inspector } from './Inspector';
 import { DialogueEditor } from './DialogueEditor';
 import { WordPool } from './WordPool';
@@ -39,6 +41,10 @@ function Editor({ role }: { role: string }) {
   const [publishing, setPublishing] = useState(false);
   const [characters, setCharacters] = useState<string[]>([]);
   const [audio, setAudio] = useState<Set<string>>(new Set());
+  const [bgManifest, setBgManifest] = useState<Record<string, string> | null>(null);
+  const [bg, setBg] = useState<MapBg | null | 'loading'>('loading');
+  const [mode, setMode] = useState<CanvasMode>('select');
+  const [mapsOpen, setMapsOpen] = useState(false);
   const refreshList = useCallback(() => { editorApi.list().then(r => { if (r.status === 200 && r.body) setMaps(r.body.levels); }); }, []);
   const d = useDraft(current, refreshList);
   const owner = role === 'owner';
@@ -46,10 +52,15 @@ function Editor({ role }: { role: string }) {
 
   const reloadAssets = useCallback(() => {   // §2.7: pickers from the deployed manifests, no-store
     fetch('/portraits/portraits_index.json', { cache: 'no-store' }).then(r => r.json()).then(j => setCharacters(j.characters.map((c: { id: string }) => c.id))).catch(() => {});
-    fetch('/assets-manifest.json', { cache: 'no-store' }).then(r => r.json()).then(j => setAudio(new Set(Object.keys(j.vo ?? {}).map(k => k.replace(/^vo\//, ''))))).catch(() => {});
+    fetch('/assets-manifest.json', { cache: 'no-store' }).then(r => r.json()).then(j => { setAudio(new Set(Object.keys(j.vo ?? {}).map(k => k.replace(/^vo\//, '')))); setBgManifest(j.bg ?? {}); }).catch(() => setBgManifest({}));
   }, []);
   useEffect(() => { refreshList(); reloadAssets(); window.addEventListener('focus', reloadAssets); return () => window.removeEventListener('focus', reloadAssets); }, [refreshList, reloadAssets]);
-  const open = (id: string) => { void d.flush(); setCurrent(id); setSel({}); history.replaceState(null, '', `/editor?map=${id}`); };
+  const open = (id: string) => { void d.flush(); setCurrent(id); setSel({}); setMode('select'); setMapsOpen(false); history.replaceState(null, '', `/editor?map=${id}`); };
+  useEffect(() => {   // the map screen's background art for this map, from the deployed manifest (map-bg.ts)
+    if (!current || !bgManifest) { setBg('loading'); return; }
+    let live = true; setBg('loading'); resolveMapBg(current, bgManifest).then(b => { if (live) setBg(b); }).catch(() => { if (live) setBg(null); });
+    return () => { live = false; };
+  }, [current, bgManifest]);
 
   const level = d.doc?.level ?? null;
   const problems: Problem[] = useMemo(() => {
@@ -80,7 +91,8 @@ function Editor({ role }: { role: string }) {
   };
 
   const shown = maps.filter(m => !search || m.id.includes(search.toLowerCase()) || (m.title?.en ?? '').toLowerCase().includes(search.toLowerCase()));
-  return <div className="editor">
+  return <div className={`editor${mapsOpen ? ' maps-open' : ''}`}>
+    <ConfirmHost />
     <aside className="maps" data-testid="ed-maps">
       <h2>Maps</h2>
       <input placeholder="search" value={search} onChange={e => setSearch(e.target.value)} data-testid="ed-map-search" />
@@ -92,10 +104,16 @@ function Editor({ role }: { role: string }) {
       <a className="dl" href="/api/v1/editor/export" data-testid="ed-download">⬇ Download JSON</a>
     </aside>
     <main>
-      {!level ? <div className="empty">{current ? 'Loading map…' : 'Open a map on the left.'}</div> : <>
+      {!level ? <div className="empty"><button className="big maps-toggle" data-testid="ed-maps-toggle" onClick={() => setMapsOpen(o => !o)}>☰ Maps</button>{current ? 'Loading map…' : 'Open a map on the left.'}</div> : <>
         <div className="toolbar">
+          <button className="big maps-toggle" data-testid="ed-maps-toggle" onClick={() => setMapsOpen(o => !o)}>☰ Maps</button>
           <b>{level.id}</b> <span className={`st st-${level.state}`}>{level.state}</span> v{d.doc!.publishedVersion}
-          <button disabled={readOnly} data-testid="ed-add-node" onClick={() => { const r = X.addNode(level, { x: 0.5, y: 0.5 }); edit(() => r.level); setSel({ node: r.id }); }}>＋ node</button>
+          <span className="modes">
+            <button className={`big${mode === 'connect' ? ' on' : ''}`} disabled={readOnly} data-testid="ed-connect" aria-pressed={mode === 'connect'}
+              onClick={() => { setMode(m => (m === 'connect' ? 'select' : 'connect')); setSel({}); }}>🔗 Connect{mode === 'connect' ? ': on' : ''}</button>
+            <button className={`big${mode === 'add' ? ' on' : ''}`} disabled={readOnly} data-testid="ed-add-node" aria-pressed={mode === 'add'}
+              onClick={() => setMode(m => (m === 'add' ? 'select' : 'add'))}>＋ Add node</button>
+          </span>
           {d.readOnly && owner && <button data-testid="ed-golden-unlock" onClick={d.unlockGolden}>🔒 golden: unlock to edit</button>}
           {!owner && <span className="muted">read-only ({role})</span>}
           <span className={`save s-${d.status}`} data-testid="ed-save-status">{statusText(d.status, d.savedAt)}</span>
@@ -104,11 +122,12 @@ function Editor({ role }: { role: string }) {
           {owner && <button className="primary" data-testid="ed-publish" onClick={async () => { await d.flush(); setPublishing(true); }}>Publish…</button>}
         </div>
         <div className="work">
-          <Canvas key={level.id} level={level} readOnly={readOnly} errorAt={errorAt} onSelect={setSel}
+          <Canvas key={level.id} level={level} readOnly={readOnly} errorAt={errorAt} onSelect={setSel} mode={mode} bg={bg} selected={sel}
+            onAdd={(x, y) => { const r = X.addNode(level, { x: Math.round(x * 1e4) / 1e4, y: Math.round(y * 1e4) / 1e4 }); edit(() => r.level); setSel({ node: r.id }); setMode('select'); }}
             onMove={(id, x, y) => edit(l => X.moveNode(l, id, x, y))}
             onConnect={(from, to) => { const r = X.addEdge(level, from, to); edit(() => r.level); setSel({ edge: r.id }); }}
             onDelete={onDelete} onOpenMap={open} />
-          <Inspector level={level} readOnly={readOnly} maps={maps} sel={sel} edit={edit} onSelect={setSel} onPair={onPair} loadMapNodes={loadMapNodes} />
+          <Inspector level={level} readOnly={readOnly} maps={maps} sel={sel} edit={edit} onSelect={setSel} onPair={onPair} loadMapNodes={loadMapNodes} onDelete={onDelete} onOpenMap={open} />
         </div>
         <div className="tabs">
           {(['dialogue', 'settings', 'words', 'problems'] as const).map(t => <button key={t} className={tab === t ? 'on' : ''} data-testid={`ed-tab-${t}`} onClick={() => setTab(t)}>
