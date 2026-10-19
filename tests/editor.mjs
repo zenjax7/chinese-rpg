@@ -190,6 +190,10 @@ try {
   for (const n of r1.nodes.slice(0, 3)) { const b = await ip.locator(`.react-flow__node[data-id="${n.id}"]`).boundingBox(); sizes.push(Math.min(b.width, b.height)); }
   check(Math.min(...sizes) >= 44, `touch targets: toolbar buttons and nodes are ≥ 44 px on screen (min ${Math.min(...sizes).toFixed(0)} px)`);
 
+  const ios = await ip.evaluate(() => { const c = getComputedStyle(document.querySelector('[data-testid=ed-canvas]')); return { ta: c.touchAction, us: c.userSelect || c.webkitUserSelect,
+    ob: getComputedStyle(document.body).overscrollBehaviorY, meta: document.querySelector('meta[name=viewport]').content }; });
+  check(ios.ta === 'none' && ios.us === 'none' && ios.ob === 'none' && /maximum-scale=1/.test(ios.meta) && /user-scalable=no/.test(ios.meta),
+    `iOS gestures go to the editor: canvas touch-action none, no text selection, no page bounce, no page zoom (${ios.meta})`);
   // Connect mode: tap A, tap B (touch); the mode stays on for a second link
   const linked = (a, b, l) => l.edges.some(e => (e.from === a && e.to === b) || (e.from === b && e.to === a));
   const pairs = []; for (const a of r1.nodes) for (const b of r1.nodes) if (a.id < b.id && !linked(a.id, b.id, r1)) pairs.push([a.id, b.id]);

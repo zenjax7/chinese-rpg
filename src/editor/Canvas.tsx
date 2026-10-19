@@ -5,7 +5,7 @@
  *  Modes (toolbar): Select (tap a node or a link to edit it), Connect (tap node A, then node B; stays on), Add node (tap the spot).
  *  Cross-map links are stubs next to their node: tap one to select the link. A mouse can also drag from a node's handle to link. */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ReactFlow, Controls, MiniMap, Handle, Position, ViewportPortal, useNodesState, useEdgesState, useStore, type Node, type Edge, type NodeProps,
+import { ReactFlow, Controls, ControlButton, MiniMap, Handle, Position, ViewportPortal, useNodesState, useEdgesState, useStore, type Node, type Edge, type NodeProps,
   type Connection, type ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import type { Level } from '../shared/level/types';
@@ -142,7 +142,7 @@ export function Canvas(p: CanvasProps) {
             <div className="nodearea" style={{ left: NODE_AREA.x, top: NODE_AREA.y, width: NODE_AREA.w, height: NODE_AREA.h }} />
           </div>
         </ViewportPortal>
-        <Controls showInteractive={false} onFitView={fit} fitViewOptions={{ padding: 0.02 }} />
+        <Controls showInteractive={false} showFitView={false}><ControlButton className="react-flow__controls-fitview" data-testid="ed-fit" title="Show the whole map" aria-label="Show the whole map" onClick={fit}>⤢</ControlButton></Controls>
         <MiniMap pannable zoomable style={{ width: 150, height: 90 }} />
       </ReactFlow>
     </div>

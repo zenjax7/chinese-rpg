@@ -108,3 +108,4 @@ button.big.danger { background: #c0262d; border-color: #c0262d; color: #fff; } b
   .maps-toggle { display: inline-block; }
   .work { grid-template-columns: 1fr 300px; }
 }
+.react-flow__controls-button { font-size: 20px; }
