@@ -48,7 +48,7 @@ async function loadGraph(id: string): Promise<E.Graph> {
 async function syncMapVersion(g: E.Graph) {
   const m = (await levelIndex())?.maps[g.id]; if (!m || !S.world) return;
   const seen = (S.mapVersions ??= {});
-  const last = seen[g.id] ?? (P().graphs[g.id] ? bundledHash(g.id) : undefined);
+  const last = seen[g.id];   // Oct 24: no bundled-hash fallback, a bundled → published switch never wipes progress
   if (last && last !== m.hash && m.state === 'beta') resetMap(P(), S.storyQuests ??= {}, W.quests, g);
   if (seen[g.id] !== m.hash) { seen[g.id] = m.hash; saveW(); }
 }
@@ -76,6 +76,7 @@ export async function ensureProgress() {
     S.inv.feather = migrated ? Math.min(fr.carry, S.inv.feather || 0) : fr.start;
     const g0 = await graph(W.idx!.start.graph); const z0 = E.nodeOf(g0, W.idx!.start.node)?.zone || W.idx!.zones[0].id;
     S.world = E.newProgress(seed, W.idx!.start, W.idx!.dataVersion, S.inv.feather, z0);
+    await syncMapVersion(g0);   // Oct 24: record the published hash on the first session (graph() above ran before S.world existed)
     // classic progress maps onto zones: the meadow realm boss (rabbitking) = realm 1 cleared, the forest boss = realm 2 cleared
     if (S.locs.meadow?.bossDefeated) S.world.zonesDefeated.push(...W.idx!.zones.filter(z => z.realm === 1).map(z => z.id));
     if (S.locs.forest?.bossDefeated) S.world.zonesDefeated.push(...W.idx!.zones.filter(z => z.realm === 2).map(z => z.id));

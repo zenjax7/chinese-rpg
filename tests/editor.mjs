@@ -9,6 +9,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEditorServer } from './editor-serve.mjs';
+import { firstSessionReloadTest } from './mapversion.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = process.argv[2] || 'dist-cloud';
@@ -416,6 +417,9 @@ try {
     return { nodes: gg.nodes.map(n => n.id), title: gg.nodes.find(n => n.id === 'smoke_hall')?.title?.en, state: gg.levelState }; }, MAP);
   check(now.nodes.includes('smoke_hall') && now.title === 'Smoke Test Hall' && now.state === 'beta', `game: plays the beta map as published (smoke_hall “${now.title}”, state ${now.state})`);
   check(gErrors.length === 0, `game: no page errors (${gErrors.slice(0, 2)})`);
+
+  // ============ Oct 24: realm_1 published (hash ≠ bundled), first session's hash is recorded, a reload keeps progress ============
+  await firstSessionReloadTest({ browser, url: B + '/?world=graph&debug', check, label: 'published', published: true });
 
   // ============ coordinate round trip: the game draws realm_1's nodes where the editor did, over the same background ============
   const g2c = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const g2 = await g2c.newPage();
