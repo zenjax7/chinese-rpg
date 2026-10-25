@@ -325,3 +325,4 @@ button.tab.on { background:linear-gradient(180deg,#e9dcff,#b48cff); border-color
 .casting b { font:700 30px var(--zh); }
 .casting .muted { font-size:16px; }
 .itemicon { vertical-align:middle; display:inline-block; object-fit:contain; }
+body.tentr [data-testid="dock"] { visibility:hidden; }   /* travel-scroll prototype: the battle menu waits for the slide-in */

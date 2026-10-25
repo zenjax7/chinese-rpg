@@ -5,6 +5,7 @@
 import { tapAsm } from './asm.mjs';
 import { travelUnitTests, travelTests } from './travel.mjs';
 import { firstSessionReloadTest } from './mapversion.mjs';
+import { travelScrollTests } from './travelscroll.mjs';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -864,6 +865,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await c2.close();
   await travelTests({ browser, BASE, check, log });
   await firstSessionReloadTest({ browser, url: BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph&debug', check, label: 'bundled' });
+  await travelScrollTests({ browser, url: BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph&debug', check });
 }
 
 // standalone: node tests/world.mjs [baseUrl]
