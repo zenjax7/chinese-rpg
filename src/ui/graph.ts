@@ -151,10 +151,10 @@ function mapPool(g: E.Graph, loc: string): { restore: () => void; poolKey?: stri
   const before = POOLS[loc]; POOLS[loc] = words;
   return { restore: () => { POOLS[loc] = before; }, poolKey: `map:${g.id}` };
 }
-async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef }): Promise<BattleResult['outcome']> {
+async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; enemies?: string[]; canLose?: boolean; label?: string; wakeAt?: E.NodeRef; entrance?: boolean }): Promise<BattleResult['outcome']> {
   // tests: every battle is logged with where it started; __proto.fakeBattle ('win' | 'flee') skips playing it
   const tp = proto(); (tp.battles ??= []).push({ graph: g.id, node: P().pos.node, edge: P().pos.edge, step: P().pos.step, party: tp.party && { ...tp.party } });
-  await battleTransition();
+  if (!o.entrance) await battleTransition();
   if (tp.fakeBattle === 'win' || tp.fakeBattle === 'flee') return tp.fakeBattle;
   const loc = battleLoc(z); setCurrentLoc(loc);
   // leveling v2: the level settings of the map being played: a published map's own, else the bundled ones of the zone's map
@@ -348,6 +348,7 @@ async function walk(e: E.GEdge) {
     { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); }   // quest gate: the blocked line, the hero stays put
     const to = E.otherEnd(e, from) as string; const steps = e.steps || 1; const pr = E.gp(P(), g.id);
     const z = zoneOf(g, undefined, e); if (z && P().zone.id !== z.id) P().zone = { id: z.id };
+    if (scrollOn(g, e)) return void await scrollWalk(g, e, from, to, z);
     const a = E.nodeOf(g, from)!, b = E.nodeOf(g, to)!; const msStep = walkMsPerStep(); const t0 = performance.now();
     let s = pr.edgeProgress[e.idx] || 0; let t = s / steps; onEdge = true; partyLeft = b.x < a.x; walkUi(); partyRefresh();
     P().pos = { graph: g.id, node: from, edge: e.id, step: s }; pr.edgeProgress[e.idx] = s; saveW();
@@ -368,6 +369,57 @@ async function walk(e: E.GEdge) {
     E.finishEdge(P(), g, e); partyAt = null; onEdge = false; P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
     await arrive(to);
   } finally { busy = false; proto().walking = false; partyAt = null; onEdge = false; }
+}
+// ---------------- travel-scroll prototype (Jack Oct 25: realm_1 only, opt-in with ?scroll) ----------------
+/** On realm_1 a tap on a next node cuts to a battle-layout walk: the party walks in place at the centre while the meadow battle background
+ *  scrolls (~20 s, rules-free: __proto.travelMs in tests). The edge's usual one-encounter roll (E.edgeEncounter) picks whether and when a
+ *  battle starts: the party hops to its battle spots, the monsters slide in from the right, then the normal battle. After the win the walk
+ *  goes on to the end and the map opens at the destination. Skip jumps to the next stop (the battle, else the arrival). */
+const scrollOn = (g: E.Graph, e: E.GEdge) => g.id === 'realm_1' && typeof e.to === 'string' && (proto().scrollTravel ?? /[?&]scroll\b/.test(location.search));
+let travelSkip: (() => void) | null = null;
+function travelScreen(g: E.Graph, from: string, to: string) {
+  const t = (id: string) => { const n = E.nodeOf(g, id); return n?.title ? `${zh(n.title.zh)} ${esc(n.title.en)}` : esc(id); };
+  render(`<div class="travel" data-testid="travel-scroll"><style>.travel{position:absolute;inset:0;pointer-events:none}
+    .travel .tbar{position:absolute;left:24px;right:24px;bottom:24px;display:flex;gap:16px;align-items:center;padding:14px 18px;pointer-events:auto}
+    .travel .tprog{flex:1;height:14px;border-radius:7px;background:rgba(0,0,0,.25);overflow:hidden}.travel .tprog i{display:block;height:100%;width:0;background:#ffd95a}
+    .travel .tlab{font:700 18px Nunito;white-space:nowrap}</style>
+    <div class="tbar panel"><div class="tlab" data-testid="travel-label">🚶 ${t(from)} → ${t(to)}</div><div class="tprog"><i data-testid="travel-progress"></i></div>
+    <button class="secondary" data-testid="travel-skip" data-key="enter">⏩ ${zh('跳过')} Skip</button></div></div>`);
+  on('[data-testid="travel-skip"]', () => { proto().travel.skipped = (proto().travel.skipped || 0) + 1; travelSkip?.(); });
+  hud();
+}
+/** Walk the scroll from fraction t0 to t1 of the edge; resolves at t1 or on Skip. */
+function scrollRun(t0: number, t1: number): Promise<void> {
+  const total = proto().travelMs ?? 20000; const ms = Math.max(0, (t1 - t0) * total); const st = performance.now();
+  return new Promise(res => { let done = false;
+    const end = () => { if (done) return; done = true; travelSkip = null; proto().travel.t = t1; res(); }; travelSkip = end;
+    const tick = () => { if (done) return; const k = ms > 0 ? Math.min(1, (performance.now() - st) / ms) : 1; const f = t0 + (t1 - t0) * k; proto().travel.t = f;
+      const bar = document.querySelector<HTMLElement>('[data-testid="travel-progress"]'); if (bar) bar.style.width = `${Math.round(f * 100)}%`;
+      if (k < 1) requestAnimationFrame(tick); else end(); };
+    tick(); });
+}
+async function scrollWalk(g: E.Graph, e: E.GEdge, from: string, to: string, z: E.Zone | undefined) {
+  const steps = e.steps || 1; const pr = E.gp(P(), g.id); const s0 = pr.edgeProgress[e.idx] || 0;
+  P().pos = { graph: g.id, node: from, edge: e.id, step: s0 }; pr.edgeProgress[e.idx] = s0; saveW();
+  const force = proto().travelForce;   // tests: 'fight' | 'none'
+  const hit = proto().noEncounters || force === 'none' ? -1 : force === 'fight' ? s0 : E.edgeEncounter(g, e, s0, P(), R());
+  const bg = BG.battle(LOC[battleLoc(z)], false);
+  proto().travel = { edge: e.id, from, to, hit, phase: 'scroll', t: s0 / steps, battles: 0 };
+  const walkOn = async (t0: number, t1: number) => { proto().travel.phase = 'scroll'; travelScreen(g, from, to); view.travelBegin(bg); playMusic('mus_village'); await scrollRun(t0, t1); };
+  let t = s0 / steps;
+  if (hit >= 0) {
+    const th = (hit + 0.5) / steps; await walkOn(t, th); t = th;
+    P().pos.step = hit; pr.edgeProgress[e.idx] = hit; saveW();
+    proto().travel.phase = 'battle'; proto().travel.battles++;
+    view.entrance(); document.body.classList.add('tentr'); setTimeout(() => document.body.classList.remove('tentr'), 800);   // the menu after the slide-in
+    const out = await fight(g, z, { entrance: true });
+    if (out === 'defeat') { E.abandonEdge(P(), g, e); saveW(); proto().travel.phase = 'done'; view.travelEnd(); return graphScreen(); }
+    if (out === 'flee') { E.abandonEdge(P(), g, e); P().pos = { graph: g.id, node: from, edge: null, step: 0 }; saveW(); proto().travel.phase = 'done'; view.travelEnd(); toast('🏃 You ran back.'); return graphScreen(); }
+  }
+  await walkOn(t, 1);
+  view.travelEnd(); proto().travel.phase = 'done';
+  E.finishEdge(P(), g, e); P().pos = { graph: g.id, node: to, edge: null, step: 0 }; saveW();
+  await arrive(to);
 }
 /** True while the party is out on an edge: the map's buttons (bag, quests, exits, rest, go in) wait until it arrives. */
 let onEdge = false;
