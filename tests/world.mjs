@@ -4,6 +4,7 @@
 // WORLD_PY=/path/to/python, default /workspace/desy/.venv/bin/python if present, else python3).
 import { tapAsm } from './asm.mjs';
 import { travelUnitTests, travelTests } from './travel.mjs';
+import { firstSessionReloadTest } from './mapversion.mjs';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -862,6 +863,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   check(!(await q.locator('[data-testid="graph"]').count()) && (await q.evaluate(k => localStorage.getItem(k), KEY3)) === v3before, '?world=classic: back to the classic village on the v3 save');
   await c2.close();
   await travelTests({ browser, BASE, check, log });
+  await firstSessionReloadTest({ browser, url: BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph&debug', check, label: 'bundled' });
 }
 
 // standalone: node tests/world.mjs [baseUrl]
