@@ -33,7 +33,9 @@ export async function travelScrollTests({ browser, url, check }) {
       `travel scroll: meadow default (no ?scroll) — tap → the scroll walk (party at centre ${w1.tv?.hero}/${w1.tv?.comp}, bg ${w1.tv?.bg}, phase ${w1.tr?.phase})`);
     const x0 = w1.tv?.scrollX ?? 0; await p.waitForTimeout(300); const x1 = (await st()).tv?.scrollX ?? 0;
     check(x1 > x0, `travel scroll: the background scrolls (${x0} → ${x1})`);
-    const L = (await st()).tv?.layers || []; check(L.length === 3 && L[0] < L[1] && L[1] < L[2], `travel scroll: 3 parallax layers, far slowest → near fastest (${L})`);
+    const tvp = (await st()).tv || {}; const K = tvp.layerKeys || [], D = (tvp.dist || []).map(Math.round);
+    check(K.join() === 'parallax_meadow_far,parallax_meadow_mid,parallax_meadow_near' && D.length === 3 && D[0] > 0 && D[0] < D[1] && D[1] < D[2] && Math.abs(D[1] / D[2] - 0.5) < 0.05 && Math.abs(D[0] / D[2] - 0.2) < 0.05,
+      `travel scroll: Arty's 3 parallax strips load and scroll at ×0.2 / ×0.5 / ×1.0 (${K}; ${D})`);
     const steps = await p.evaluate(() => window.__proto.world.W.graphs.realm_1.edges.find(e => e.id === window.__proto.travel.edge)?.steps || 1);
     const dur = await p.evaluate(() => { const g = window.__proto.world.W.graphs.realm_1; const m = Math.max(...g.edges.map(e => e.steps || 1)); return { m }; });
     check(w1.tr.total === 2400 * (1 + 0.25 * (steps - 1)) && dur.m > 1, `travel scroll: duration scales with steps (edge ${steps} step(s) → ${w1.tr.total} ms of base 2400; 1 step = base, longest edge ${dur.m} steps = ×${1 + 0.25 * (dur.m - 1)})`);

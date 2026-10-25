@@ -13,6 +13,7 @@ import { attachSound } from '../audio/audio';
 
 export interface ViewEnemy { sprite?: string; tint?: number | null; headAnchor?: number; emoji: string; name: string; hp: number; maxHp: number; color: number; boss: boolean; tired?: boolean; }
 export const W = 1280, H = 720, RENDER_ZOOM = 1.5;
+const TRAVEL_SPEED = 0.3; // px/ms for a ×1.0 travel layer
 export const BASE_Y = 420, HERO_X = 290, COMP_X = 150;
 export const TRAVEL_HERO_X = 700, TRAVEL_COMP_X = 560;   // travel-scroll prototype: the party walks at the centre
 export const SIZE = { hero: 230, normal: 185, boss: 290 };   // on-screen frame height in frame px (spec §4.1)
@@ -151,22 +152,25 @@ class MainScene extends Phaser.Scene {
   /** Shows the first background key that was delivered; returns false (=> draw the placeholder scene) if none. */
   // ---------------- travel-scroll prototype (Jack Oct 25, realm_1 only): the party walks in place, the battle background scrolls ----------------
   entrance = false; travelBg: Phaser.GameObjects.TileSprite | null = null; travelLayers: { ts: Phaser.GameObjects.TileSprite; v: number }[] = []; travelBobs: Phaser.Tweens.Tween[] = [];
-  travelBegin(bgKeys: string[]) {
+  travelBegin(bgKeys: string[], layers?: { key: string; speed: number; y?: number }[]) {
     this.setMode('battle', 0x6fbf4a, bgKeys);
     for (const [o, x] of [[this.hero, TRAVEL_HERO_X], [this.heroShadow, TRAVEL_HERO_X], [this.comp, TRAVEL_COMP_X]] as [any, number][]) o.x = x;
     const key = bgKeys.find(k => this.textures.exists(k));
     if (key) { const f = this.textures.get(key).getSourceImage() as HTMLImageElement; const sc = Math.max(W / f.width, H / f.height);
-      // parallax: the meadow BG split into 3 horizontal bands — far sky/hills slow, mid ground medium, near ground fast
-      const bands: [number, number, number][] = [[0, 0.45, 0.06], [0.45, 0.7, 0.14], [0.7, 1, 0.3]];
-      this.travelLayers = bands.map(([a, b, v]) => { const ts = this.add.tileSprite(W / 2, H * (a + b) / 2, W / sc, H * (b - a) / sc + 1, key).setScale(sc).setDepth(0);
-        ts.tilePositionY = H * a / sc; return { ts, v }; });
-      this.travelBg = this.travelLayers[2].ts; this.art.setVisible(false); }
+      this.travelBg = this.add.tileSprite(W / 2, H / 2, W / sc, H / sc, key).setScale(sc).setDepth(0); this.travelLayers = [{ ts: this.travelBg, v: TRAVEL_SPEED }];
+      this.art.setVisible(false); }
+    // parallax: Arty's three looping strips (art/backgrounds/parallax/manifest.json): far y 0 ×0.2, mid y 200 ×0.5, near at the bottom ×1.0; tiles wrap x % width
+    if (layers?.every(l => this.textures.exists(l.key))) {
+      this.travelLayers.forEach(l => l.ts.destroy());
+      this.travelLayers = layers.map(l => { const f = this.textures.get(l.key).getSourceImage() as HTMLImageElement; const y = l.y ?? H - f.height;
+        return { ts: this.add.tileSprite(0, y, W, f.height, l.key).setOrigin(0, 0).setDepth(0), v: TRAVEL_SPEED * l.speed }; });
+      this.travelBg = this.travelLayers[this.travelLayers.length - 1].ts; this.art.setVisible(false); }
     const hy = this.hero.y, cy = this.comp.y;
     this.travelBobs = [this.tweens.add({ targets: this.hero, y: hy - 9, duration: 230, yoyo: true, repeat: -1, ease: 'Sine.inOut' }),
       this.tweens.add({ targets: this.comp, y: cy - 7, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.inOut', delay: 90 }),
       this.tweens.add({ targets: this.heroShadow, scaleX: 0.9, duration: 230, yoyo: true, repeat: -1, ease: 'Sine.inOut' })];
     this.travelY = { hy, cy };
-    (window as any).__proto.travelView = { scrolling: true, bg: key || null, hero: this.hero.x, comp: this.comp.x };
+    (window as any).__proto.travelView = { scrolling: true, bg: key || null, layerKeys: this.travelLayers.map(l => l.ts.texture.key), hero: this.hero.x, comp: this.comp.x };
   }
   travelY = { hy: 0, cy: 0 };
   travelEnd() {
@@ -175,8 +179,9 @@ class MainScene extends Phaser.Scene {
     if (this.travelBg) { this.travelLayers.forEach(l => l.ts.destroy()); this.travelLayers = []; this.travelBg = null; if (this.art.texture.key !== '__DEFAULT') this.art.setVisible(true); }
     const tv = (window as any).__proto.travelView; if (tv) tv.scrolling = false;
   }
-  travelTick(dt: number) { if (this.travelBg) { this.travelLayers.forEach(l => l.ts.tilePositionX += dt * l.v); const tv = (window as any).__proto.travelView;
-    tv.scrollX = Math.round(this.travelBg.tilePositionX); tv.layers = this.travelLayers.map(l => Math.round(l.ts.tilePositionX)); } }
+  travelTick(dt: number) { if (this.travelBg) { this.travelLayers.forEach(l => l.ts.tilePositionX = (l.ts.tilePositionX + dt * l.v) % l.ts.texture.getSourceImage().width); const tv = (window as any).__proto.travelView;
+    tv.layers = this.travelLayers.map(l => Math.round(l.ts.tilePositionX)); tv.dist = this.travelLayers.map((l, i) => (tv.dist?.[i] || 0) + dt * l.v);
+    tv.scrollX = Math.round(tv.dist[tv.dist.length - 1]); } }
   setArt(keys: string[]): boolean {
     const key = keys.find(k => this.textures.exists(k));
     (window as any).__proto.bg = key || null;
@@ -475,7 +480,7 @@ export const view = {
     frames: Math.max(1, scene.textures.get(id).frameTotal - 1) } : null,
   onReady: (f: () => void) => call(() => f()),
   /** travel-scroll prototype: start / stop the side-scroll walk; entrance(): the next battle slides the party and the monsters in. */
-  travelBegin: (bg: string[]) => call(s => s.travelBegin(bg)),
+  travelBegin: (bg: string[], layers?: { key: string; speed: number; y?: number }[]) => call(s => s.travelBegin(bg, layers)),
   travelEnd: () => call(s => s.travelEnd()),
   entrance: () => call(s => { s.entrance = true; }),
   castSpell: (sp: { id: string; element: string; emoji: string; target: string }, targets: number[], dmgs: number[], hpAfter: number[], opts?: { status?: (string | null)[]; tag?: string }) =>
