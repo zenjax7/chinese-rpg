@@ -150,13 +150,17 @@ class MainScene extends Phaser.Scene {
   clearDecor() { this.decor.forEach(d => d.destroy()); this.decor = []; }
   /** Shows the first background key that was delivered; returns false (=> draw the placeholder scene) if none. */
   // ---------------- travel-scroll prototype (Jack Oct 25, realm_1 only): the party walks in place, the battle background scrolls ----------------
-  entrance = false; travelBg: Phaser.GameObjects.TileSprite | null = null; travelBobs: Phaser.Tweens.Tween[] = [];
+  entrance = false; travelBg: Phaser.GameObjects.TileSprite | null = null; travelLayers: { ts: Phaser.GameObjects.TileSprite; v: number }[] = []; travelBobs: Phaser.Tweens.Tween[] = [];
   travelBegin(bgKeys: string[]) {
     this.setMode('battle', 0x6fbf4a, bgKeys);
     for (const [o, x] of [[this.hero, TRAVEL_HERO_X], [this.heroShadow, TRAVEL_HERO_X], [this.comp, TRAVEL_COMP_X]] as [any, number][]) o.x = x;
     const key = bgKeys.find(k => this.textures.exists(k));
     if (key) { const f = this.textures.get(key).getSourceImage() as HTMLImageElement; const sc = Math.max(W / f.width, H / f.height);
-      this.travelBg = this.add.tileSprite(W / 2, H / 2, W / sc, H / sc, key).setScale(sc).setDepth(0); this.art.setVisible(false); }
+      // parallax: the meadow BG split into 3 horizontal bands — far sky/hills slow, mid ground medium, near ground fast
+      const bands: [number, number, number][] = [[0, 0.45, 0.06], [0.45, 0.7, 0.14], [0.7, 1, 0.3]];
+      this.travelLayers = bands.map(([a, b, v]) => { const ts = this.add.tileSprite(W / 2, H * (a + b) / 2, W / sc, H * (b - a) / sc + 1, key).setScale(sc).setDepth(0);
+        ts.tilePositionY = H * a / sc; return { ts, v }; });
+      this.travelBg = this.travelLayers[2].ts; this.art.setVisible(false); }
     const hy = this.hero.y, cy = this.comp.y;
     this.travelBobs = [this.tweens.add({ targets: this.hero, y: hy - 9, duration: 230, yoyo: true, repeat: -1, ease: 'Sine.inOut' }),
       this.tweens.add({ targets: this.comp, y: cy - 7, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.inOut', delay: 90 }),
@@ -168,10 +172,11 @@ class MainScene extends Phaser.Scene {
   travelEnd() {
     if (!this.travelBg && !this.travelBobs.length) return;
     this.travelBobs.forEach(t => t.stop()); this.travelBobs = []; this.hero.y = this.travelY.hy; this.comp.y = this.travelY.cy; this.heroShadow.setScale(1);
-    if (this.travelBg) { this.travelBg.destroy(); this.travelBg = null; if (this.art.texture.key !== '__DEFAULT') this.art.setVisible(true); }
+    if (this.travelBg) { this.travelLayers.forEach(l => l.ts.destroy()); this.travelLayers = []; this.travelBg = null; if (this.art.texture.key !== '__DEFAULT') this.art.setVisible(true); }
     const tv = (window as any).__proto.travelView; if (tv) tv.scrolling = false;
   }
-  travelTick(dt: number) { if (this.travelBg) { this.travelBg.tilePositionX += dt * 0.22; (window as any).__proto.travelView.scrollX = Math.round(this.travelBg.tilePositionX); } }
+  travelTick(dt: number) { if (this.travelBg) { this.travelLayers.forEach(l => l.ts.tilePositionX += dt * l.v); const tv = (window as any).__proto.travelView;
+    tv.scrollX = Math.round(this.travelBg.tilePositionX); tv.layers = this.travelLayers.map(l => Math.round(l.ts.tilePositionX)); } }
   setArt(keys: string[]): boolean {
     const key = keys.find(k => this.textures.exists(k));
     (window as any).__proto.bg = key || null;
