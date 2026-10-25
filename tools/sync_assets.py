@@ -246,6 +246,11 @@ def main():
         for name in sorted(os.listdir(ART_BG)):
             if re.fullmatch(r'bg_[a-z0-9_]+\.png', name):
                 shutil.copy2(os.path.join(ART_BG, name), dst); man['bg'][name[:-4]] = f'bg/{name}'
+        par = os.path.join(ART_BG, 'parallax')  # travel-scroll parallax strips (Arty, Oct 25): parallax/parallax_<place>_<far|mid|near>.png
+        if os.path.isdir(par):
+            for name in sorted(os.listdir(par)):
+                if re.fullmatch(r'parallax_[a-z0-9_]+\.png', name):
+                    shutil.copy2(os.path.join(par, name), dst); man['bg'][name[:-4]] = f'bg/{name}'
     sfx = sync_audio(os.path.join(AUDIO, 'sfx'), 'audio/sfx', r'sfx_[a-z0-9_]+', SFX_KNOWN, ['sfx_'])
     man['sfx'] = OLD.get('sfx', {}) if sfx is None else sfx
     mus = sync_audio(os.path.join(AUDIO, 'music'), 'audio/music', r'(?:mus|stg)_[a-z0-9_]+', MUS_KNOWN, ['mus_', 'stg_'])

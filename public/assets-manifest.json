@@ -8,7 +8,10 @@
   "bg_inn": "bg/bg_inn.png",
   "bg_map_r1_starter_meadow": "bg/bg_map_r1_starter_meadow.png",
   "bg_map_r2_honeycomb_forest": "bg/bg_map_r2_honeycomb_forest.png",
-  "bg_village": "bg/bg_village.png"
+  "bg_village": "bg/bg_village.png",
+  "parallax_meadow_far": "bg/parallax_meadow_far.png",
+  "parallax_meadow_mid": "bg/parallax_meadow_mid.png",
+  "parallax_meadow_near": "bg/parallax_meadow_near.png"
  },
  "sfx": {
   "sfx_block": {
