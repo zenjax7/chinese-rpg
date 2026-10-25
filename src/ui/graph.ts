@@ -375,7 +375,7 @@ async function walk(e: E.GEdge) {
  *  scrolls (~20 s, rules-free: __proto.travelMs in tests). The edge's usual one-encounter roll (E.edgeEncounter) picks whether and when a
  *  battle starts: the party hops to its battle spots, the monsters slide in from the right, then the normal battle. After the win the walk
  *  goes on to the end and the map opens at the destination. Skip jumps to the next stop (the battle, else the arrival). */
-const scrollOn = (g: E.Graph, e: E.GEdge) => g.id === 'realm_1' && typeof e.to === 'string' && (proto().scrollTravel ?? /[?&]scroll\b/.test(location.search));
+const scrollOn = (g: E.Graph, e: E.GEdge) => g.id === 'realm_1' && typeof e.to === 'string' && (proto().scrollTravel ?? proto().walkMs === undefined) /* default on for meadow; fast-walk test harnesses (walkMs) keep the map walk unless they opt in */;
 let travelSkip: (() => void) | null = null;
 function travelScreen(g: E.Graph, from: string, to: string) {
   const t = (id: string) => { const n = E.nodeOf(g, id); return n?.title ? `${zh(n.title.zh)} ${esc(n.title.en)}` : esc(id); };
@@ -389,8 +389,11 @@ function travelScreen(g: E.Graph, from: string, to: string) {
   hud();
 }
 /** Walk the scroll from fraction t0 to t1 of the edge; resolves at t1 or on Skip. */
+/** Scroll time for an edge: ~20 s for a 1-step edge, +25% per extra step (2→25 s, 4→35 s, 5→40 s). */
+export const travelTotalMs = (steps: number, base = 20000) => base * (1 + 0.25 * Math.max(0, steps - 1));
+let travelTotal = 20000;
 function scrollRun(t0: number, t1: number): Promise<void> {
-  const total = proto().travelMs ?? 20000; const ms = Math.max(0, (t1 - t0) * total); const st = performance.now();
+  const total = travelTotal; const ms = Math.max(0, (t1 - t0) * total); const st = performance.now();
   return new Promise(res => { let done = false;
     const end = () => { if (done) return; done = true; travelSkip = null; proto().travel.t = t1; res(); }; travelSkip = end;
     const tick = () => { if (done) return; const k = ms > 0 ? Math.min(1, (performance.now() - st) / ms) : 1; const f = t0 + (t1 - t0) * k; proto().travel.t = f;
@@ -404,7 +407,8 @@ async function scrollWalk(g: E.Graph, e: E.GEdge, from: string, to: string, z: E
   const force = proto().travelForce;   // tests: 'fight' | 'none'
   const hit = proto().noEncounters || force === 'none' ? -1 : force === 'fight' ? s0 : E.edgeEncounter(g, e, s0, P(), R());
   const bg = BG.battle(LOC[battleLoc(z)], false);
-  proto().travel = { edge: e.id, from, to, hit, phase: 'scroll', t: s0 / steps, battles: 0 };
+  travelTotal = travelTotalMs(steps, proto().travelMs ?? 20000);
+  proto().travel = { edge: e.id, from, to, hit, phase: 'scroll', t: s0 / steps, battles: 0, total: travelTotal };
   const walkOn = async (t0: number, t1: number) => { proto().travel.phase = 'scroll'; travelScreen(g, from, to); view.travelBegin(bg); playMusic('mus_village'); await scrollRun(t0, t1); };
   let t = s0 / steps;
   if (hit >= 0) {

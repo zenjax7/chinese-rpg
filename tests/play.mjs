@@ -11,7 +11,7 @@ const errors = [];
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
 
 async function newPage(fakeSpeech = false) {
-  const ctx = await browser.newContext({ viewport: { width: 1200, height: 900 } });
+  const ctx = await browser.newContext({ viewport: { width: 1200, height: 900 } }); await ctx.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */
   if (fakeSpeech) await ctx.addInitScript(() => {
     // Fake SpeechRecognition: window.__srPlan is a queue of outcomes: {alts:[...]} | {error:'no-speech'} | {nomatch:true}
     window.__srPlan = []; window.__srLog = [];

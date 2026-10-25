@@ -313,7 +313,7 @@ async function v393UnitTests({ E, J, idx, rules, quests, check }) {
 
 export async function worldTests({ browser, BASE, check, log = console.log, shots = '' }) {
   const B = BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph';
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const p = await ctx.newPage();
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); await ctx.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */ const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('response', r => { if (r.status() >= 400) errs.push(`${r.status()} ${r.url()}`); });
   // Jack Oct 11 hidden node types: an unvisited node is only `gnode-i<idx>` (no id / kind in the DOM). Tests address nodes by id:
   // gsel(id) = the visited testid or the unvisited idx testid (only when the id is unique across the built graphs).
@@ -847,7 +847,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await ctx.close();
 
   // ---- v3 → v4 migration; classic untouched ----
-  const c2 = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const q = await c2.newPage();
+  const c2 = await browser.newContext({ viewport: { width: 1280, height: 720 } }); await c2.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */ const q = await c2.newPage();
   await q.goto(BASE + (BASE.includes('?') ? '&' : '?') + 'world=classic'); await q.locator('[data-testid="consent"]').waitFor();
   await q.evaluate(k => localStorage.setItem(k, JSON.stringify({ __seed: 1 })), 'x');
   const cm = (await q.locator('[data-testid="consent"]').innerText()).match(/(\d+) × (\d+)/); await q.locator('[data-testid="consent-speech"]').uncheck();

@@ -55,7 +55,7 @@ export async function travelUnitTests({ check }) {
 export async function travelTests({ browser, BASE, check, log = console.log }) {
   const seeds = await travelSeeds(); log('travel seeds', JSON.stringify({ allHitE6: seeds.allHitE6, midTbc: seeds.midTbc, fleeThenFree: seeds.fleeThenFree }));
   const B = BASE + (BASE.includes('?') ? '&' : '?') + 'world=graph&debug';
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const p = await ctx.newPage();
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } }); await ctx.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */ const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   const tid = id => p.locator(`[data-testid="${id}"]`);
   const pos = () => p.evaluate(() => window.__proto.world.P().pos.node);

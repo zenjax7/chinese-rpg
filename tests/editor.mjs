@@ -147,7 +147,7 @@ try {
   // ============ iPad (touch only): background, in-game placement, Connect / move / add / delete by touch ============
   if (SHOTS) mkdirSync(SHOTS, { recursive: true });
   const shot = async (pg, name) => { if (SHOTS) await pg.screenshot({ path: path.join(SHOTS, `editor-ipad-${name}.png`) }); };
-  const ictx = await browser.newContext({ ...devices['iPad Pro 11 landscape'] });
+  const ictx = await browser.newContext({ ...devices['iPad Pro 11 landscape'] }); await ictx.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */
   // a stand-in window.visualViewport: the real values, unless the test sets __kb = { h, top } (the WebKit on-screen keyboard shrinks
   // only the visual viewport; desktop Chromium has no keyboard to open)
   await ictx.addInitScript(() => {
@@ -422,7 +422,7 @@ try {
   await firstSessionReloadTest({ browser, url: B + '/?world=graph&debug', check, label: 'published', published: true });
 
   // ============ coordinate round trip: the game draws realm_1's nodes where the editor did, over the same background ============
-  const g2c = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const g2 = await g2c.newPage();
+  const g2c = await browser.newContext({ viewport: { width: 1280, height: 720 } }); await g2c.addInitScript(() => { window.__proto = Object.assign(window.__proto || {}, { scrollTravel: false }); }); /* old map-walk harness: opt out of the meadow scroll walk (tests/travelscroll.mjs covers it) */ const g2 = await g2c.newPage();
   const g2t = id => g2.locator(`[data-testid="${id}"]`);
   await g2.goto(B + '/?world=graph&debug'); await g2t('title-screen').waitFor({ timeout: 15000 }); await g2t('play-guest').click();
   await g2t('consent').waitFor({ timeout: 15000 });
