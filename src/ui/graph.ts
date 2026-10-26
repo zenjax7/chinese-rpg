@@ -393,8 +393,9 @@ function travelScreen(g: E.Graph, from: string, to: string) {
 export const travelTotalMs = (steps: number, base = 20000) => base * (1 + 0.25 * Math.max(0, steps - 1));
 let travelTotal = 20000;
 /** Per-map parallax strips (sync_assets copies art/backgrounds/parallax/*.png into public/bg). No y = bottom-aligned. */
-const TRAVEL_LAYERS: Record<string, { key: string; speed: number; y?: number }[]> = {
-  realm_1: [{ key: 'parallax_meadow_far', speed: 0.2, y: 0 }, { key: 'parallax_meadow_mid', speed: 0.5, y: 200 }, { key: 'parallax_meadow_near', speed: 1.0 }] };
+const TRAVEL_LAYERS: Record<string, { key: string; speed: number; y?: number; front?: boolean }[]> = {
+  realm_1: [{ key: 'parallax_meadow_far', speed: 0.15, y: 0 }, { key: 'parallax_meadow_mid', speed: 0.4, y: 200 }, { key: 'parallax_meadow_ground', speed: 1.0, y: 380 },
+    { key: 'parallax_meadow_foreground', speed: 1.35, front: true }] }; // front: drawn above the party, bottom-aligned
 function scrollRun(t0: number, t1: number): Promise<void> {
   const total = travelTotal; const ms = Math.max(0, (t1 - t0) * total); const st = performance.now();
   return new Promise(res => { let done = false;

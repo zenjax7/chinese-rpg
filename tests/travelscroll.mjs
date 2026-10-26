@@ -34,8 +34,12 @@ export async function travelScrollTests({ browser, url, check }) {
     const x0 = w1.tv?.scrollX ?? 0; await p.waitForTimeout(300); const x1 = (await st()).tv?.scrollX ?? 0;
     check(x1 > x0, `travel scroll: the background scrolls (${x0} → ${x1})`);
     const tvp = (await st()).tv || {}; const K = tvp.layerKeys || [], D = (tvp.dist || []).map(Math.round);
-    check(K.join() === 'parallax_meadow_far,parallax_meadow_mid,parallax_meadow_near' && D.length === 3 && D[0] > 0 && D[0] < D[1] && D[1] < D[2] && Math.abs(D[1] / D[2] - 0.5) < 0.05 && Math.abs(D[0] / D[2] - 0.2) < 0.05,
-      `travel scroll: Arty's 3 parallax strips load and scroll at ×0.2 / ×0.5 / ×1.0 (${K}; ${D})`);
+    const Z = tvp.layerDepths || [];
+    check(K.join() === 'parallax_meadow_far,parallax_meadow_mid,parallax_meadow_ground,parallax_meadow_foreground' && D.length === 4 && D[0] > 0
+      && [0.15, 0.4, 1, 1.35].every((r, i) => Math.abs(D[i] / D[2] - r) < 0.05),
+      `travel scroll: Arty's 4 parallax strips load and scroll at ×0.15 / ×0.4 / ×1.0 / ×1.35 (${K}; ${D})`);
+    check(Z.length === 4 && Z[3] > tvp.heroDepth && Z[3] > tvp.compDepth && Z.slice(0, 3).every(z => z < tvp.compDepth),
+      `travel scroll: foreground strip drawn above the party, the rest behind (depths ${Z}; hero ${tvp.heroDepth}, comp ${tvp.compDepth})`);
     const steps = await p.evaluate(() => window.__proto.world.W.graphs.realm_1.edges.find(e => e.id === window.__proto.travel.edge)?.steps || 1);
     const dur = await p.evaluate(() => { const g = window.__proto.world.W.graphs.realm_1; const m = Math.max(...g.edges.map(e => e.steps || 1)); return { m }; });
     check(w1.tr.total === 2400 * (1 + 0.25 * (steps - 1)) && dur.m > 1, `travel scroll: duration scales with steps (edge ${steps} step(s) → ${w1.tr.total} ms of base 2400; 1 step = base, longest edge ${dur.m} steps = ×${1 + 0.25 * (dur.m - 1)})`);
