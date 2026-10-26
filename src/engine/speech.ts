@@ -146,11 +146,12 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
     const sy = synth(); if (!sy) { res(); return; }
     let done = false; const fin = () => { if (!done) { done = true; res(); } };
     try {
-      sy.cancel();
       const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85;
       if (lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
       if (lang.startsWith('en') && enVoice) u.voice = enVoice;
-      u.onend = fin; u.onerror = fin; sy.speak(u);
+      u.onend = fin; u.onerror = fin;
+      // speak() straight after cancel() can be dropped (Safari, Chrome): wait ~50 ms when something was playing
+      if (sy.speaking || sy.pending) { sy.cancel(); setTimeout(() => { try { if (!done) sy.speak(u); } catch { fin(); } }, 50); } else sy.speak(u);
     } catch { fin(); }
     setTimeout(fin, maxMs);
   });

@@ -10,6 +10,7 @@ import Phaser from 'phaser';
 import { setAssetManifest } from '../assets';
 import { playCast, setFxData, fxTextureList, showStatus, clearStatus, StatusView, CastHandle, elementColor } from './spellfx';
 import { attachSound } from '../audio/audio';
+const appleWebKit = typeof navigator !== 'undefined' && /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|CriOS|Android/.test(navigator.userAgent) || /iPhone|iPad|iPod/.test(typeof navigator !== 'undefined' ? navigator.userAgent : '');
 
 export interface ViewEnemy { sprite?: string; tint?: number | null; headAnchor?: number; emoji: string; name: string; hp: number; maxHp: number; color: number; boss: boolean; tired?: boolean; }
 export const W = 1280, H = 720, RENDER_ZOOM = 1.5;
@@ -72,7 +73,7 @@ class MainScene extends Phaser.Scene {
             if (a?.file) this.load.spritesheet(`${id}_${st}`, `companions/${a.file}`, { frameWidth: c.frameWidth, frameHeight: c.frameHeight }); }); }
       if (!this.sound || (this.sound as any).noAudio) return;
       for (const group of ['sfx', 'music'] as const) for (const [key, e] of Object.entries<any>(m[group] || {}))
-        if (e?.urls?.length) this.load.audio(key, e.urls);   // [ogg, mp3]: Phaser picks the first the browser supports
+        if (e?.urls?.length) this.load.audio(key, appleWebKit ? [...e.urls].sort((a: string, b: string) => +b.endsWith('.mp3') - +a.endsWith('.mp3')) : e.urls);   // [ogg, mp3]: Phaser picks the first the browser supports; Safari/iOS get mp3 first (Ogg Vorbis decode is partial before iOS 18.4)
     });
   }
   create() {

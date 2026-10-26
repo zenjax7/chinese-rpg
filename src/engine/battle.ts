@@ -6,6 +6,12 @@ import { S, save, heroStats, addExp, session, speechOn, WayKey, clampHpMp, gainG
 import { listenFor, chooseBattleSet, QuestionFeed, WayCtx, grade, prog, proficient, distractors, pickWay, decayRecentMisses, RezForm, rezForm, assemblyD, assemblyDistractors, assemblyTray, asmStart, asmTap } from './learning';
 import { listen, speechSupported, quietForMic, noteGrade, srDebugHtml } from './speech';
 import { sayItem, sayEn, canSayItem, canSayEn } from './voice';
+/** No Chinese voice on this device (Jack 2026-10-25): quiz words fall back to written text; say so once per page load. */
+let voiceHinted = false;
+function voiceMissingHint() {
+  if (voiceHinted) return; voiceHinted = true; ((window as any).__proto ||= {}).voiceHint = true;
+  toast('🔈 No Chinese voice on this device, so quiz words are shown as text. iPhone/iPad: Settings → Accessibility → Spoken Content → Voices → Chinese.');
+}
 import { playSfx, playMusic, playSting, beep, holdMusicForMic, playSpellSfx } from '../audio/audio';
 import { BG, spellIcon } from '../assets';
 import { matchZh, matchEn } from './match';
@@ -166,6 +172,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
       if (way[0] === 's' && !speechOn()) way = pickWay(id, ctx);
       const form = way === 'rEZ' ? (reForm ?? rezForm(id)) : undefined;
       const lis = listenFor(id, way, form, { zh: canSayItem(id), en: canSayEn() });
+      if (!canSayItem(id)) voiceMissingHint();
       out = await renderQuestion(id, way, turn, foe, reprompts, spell, form, reForm ? reTray : undefined, lis);
       if ((out as any).tech) {
         reprompts++;

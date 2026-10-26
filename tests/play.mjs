@@ -526,6 +526,28 @@ await nv.context().close();
   await playBattle(Z, () => true, { onQ: async (p, q) => { if (q.listen) zs[q.way === 'rZE' || q.way === 'sZE' ? 'zh' : 'en']++; } });
   check(zs.en === 0 && zs.zh > 0, `fallback: no en-US voice → EN prompts written (EN listen ${zs.en}), ZH listen still used (${zs.zh})`);
   await Z.context().close();
+  // iOS silent switch (Jack 2026-10-25): the first gesture puts the audio session in "playback" and speaks one empty utterance
+  const I = await newPage(true);
+  await I.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['zh-CN', 'en-US'])})()`);
+  await I.context().addInitScript(() => { Object.defineProperty(navigator, 'audioSession', { value: { type: 'auto' }, configurable: true }); });
+  await I.goto(BASE); await tid(I, 'consent').waitFor();
+  const pre = await I.evaluate(() => ({ primed: window.__proto?.audio?.ttsPrimed || 0, utter: window.__utter.length }));
+  await tid(I, 'consent-answer').click(); await I.waitForTimeout(200);
+  const post = await I.evaluate(() => ({ primed: window.__proto.audio.ttsPrimed || 0, session: navigator.audioSession.type, empty: window.__utter.filter(u => u.text === '').length }));
+  check(pre.primed === 0 && pre.utter === 0 && post.primed >= 1 && post.empty >= 1 && post.session === 'playback',
+    `iOS priming on the first gesture: audioSession.type = ${post.session}, ${post.empty} empty utterance(s) spoken (none before the tap)`);
+  await I.context().close();
+  // no Chinese voice: written fallback plus a one-time hint
+  const H = await newPage(true);
+  await H.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['en-US'])})()`);
+  await H.goto(BASE); await consent(H, true); await goLoc(H, 'meadow'); await tid(H, 'preview').waitFor(); await tid(H, 'preview-done').click(); await tid(H, 'location').waitFor(); await debugSet(H, { hp: 999 });
+  const hints = [];
+  await tid(H, 'act-path').click();
+  await playBattle(H, () => true, { onQ: async (p) => { hints.push(await p.evaluate(() => [...document.querySelectorAll('#toasts .toast')].filter(t => t.textContent.includes('No Chinese voice')).length)); } });
+  const zl = await H.evaluate(() => window.__utter.filter(u => u.lang.startsWith('zh')).length);
+  check(await H.evaluate(() => window.__proto.voiceHint === true) && hints.some(n => n > 0) && hints.every(n => n <= 1),
+    `no Chinese voice: one-time hint shown (${hints.filter(n => n > 0).length} of ${hints.length} questions saw it, never twice); zh utterances ${zl}`);
+  await H.context().close();
 }
 
 // ================= combat-spec §9.4 character assembly in a real battle (tap to answer, right and wrong) =================

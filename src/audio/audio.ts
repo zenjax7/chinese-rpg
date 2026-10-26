@@ -71,9 +71,20 @@ export function unlockAudio() {
   const m: any = mgr;
   if (m?.locked) m.once('unlocked', startWanted); else startWanted();
 }
+/** iOS (Jack 2026-10-25, silent switch ON): put the page's audio in the "playback" session so Web Audio and speech are not muted by
+ *  the ring/silent switch (Safari 17+ navigator.audioSession), and speak one empty utterance inside a user gesture so iOS lets the
+ *  later, timer-started quiz prompts through. Safe to call repeatedly; elsewhere it is a no-op. */
+export function primeIosAudio() {
+  const d = dbg();
+  try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; d.session = as?.type ?? null; } catch { /* */ }
+  try { const sy: any = (window as any).speechSynthesis; if (sy && typeof sy.speak === 'function' && typeof SpeechSynthesisUtterance !== 'undefined') { const u = new SpeechSynthesisUtterance(''); u.volume = 0; sy.speak(u); d.ttsPrimed = (d.ttsPrimed || 0) + 1; } } catch { /* */ }
+}
 if (typeof document !== 'undefined') {
-  const once = () => { unlockAudio(); document.removeEventListener('pointerdown', once, true); document.removeEventListener('keydown', once, true); };
-  document.addEventListener('pointerdown', once, true); document.addEventListener('keydown', once, true);
+  try { const as: any = (navigator as any).audioSession; if (as) as.type = 'playback'; } catch { /* */ }
+  // pointerdown is not a user activation on iOS WebKit, so touchend/click/keydown are bound too; listeners go once one of those fires
+  const evs = ['pointerdown', 'touchend', 'click', 'keydown'];
+  const once = (e: Event) => { unlockAudio(); primeIosAudio(); if (e.type !== 'pointerdown') evs.forEach(t => document.removeEventListener(t, once, true)); };
+  evs.forEach(t => document.addEventListener(t, once, true));
 }
 
 /** detune in cents (the streak sound rises one semitone per streak level, spec §4.4). */
