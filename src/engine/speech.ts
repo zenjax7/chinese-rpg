@@ -1,6 +1,7 @@
 // Web Speech wrappers. Recognition code adapted from chinese-rpg/speech-demo/index.html
 // (SpeechRecognition || webkitSpeechRecognition, continuous=false, interimResults=true, maxAlternatives=5, error-code handling).
 import { B } from '../data';
+import { speechKeepAliveStart, speechKeepAliveStop } from '../audio/audio';
 
 export type ListenResult =
   | { kind: 'result'; alts: string[] }
@@ -173,7 +174,8 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
     const d = ttsDbg();
     // iOS/WebKit: keep the 'playback' audio session so the ring/silent switch does not mute game voice (see audio.ts primeIosAudio)
     if (appleWebKit && !/[?&]ttssession=0/.test(location.search)) try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; } catch { /* */ }
-    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    if (appleWebKit) speechKeepAliveStart();
+    let done = false; const fin = () => { if (!done) { done = true; if (appleWebKit) speechKeepAliveStop(); res(); } };
     let cur: SpeechSynthesisUtterance | null = null, started = false;
     const mk = (withVoice: boolean) => {
       const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85; u.volume = 1;

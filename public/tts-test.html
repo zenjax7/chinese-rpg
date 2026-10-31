@@ -1,13 +1,23 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TTS test v4</title><style>
+<title>TTS test v5</title><style>
 body{font:17px system-ui;margin:0;padding:8px;background:#111;color:#eee}
 .b{display:flex;flex-wrap:wrap;gap:8px}button{font-size:19px;padding:16px 10px;min-width:45%;flex:1;border-radius:12px;border:0;background:#2a6;color:#fff;touch-action:manipulation}
 button.o{background:#555}button.k{background:#26a}label{display:block;margin:8px 0;font-size:17px}
 #big{font-size:20px;font-weight:bold;padding:10px;border-radius:10px;margin:6px 0;display:none}
 #log{width:100%;box-sizing:border-box;height:50vh;background:#000;color:#9f9;font:13px/1.35 monospace;padding:6px;border:2px solid #2a6;-webkit-user-select:text;user-select:text}
 #st{font-size:14px;color:#ff0;min-height:1.2em}</style></head><body>
-<b>🔊 TTS test v4</b> (b-ver: 2026-10-30d). <b>Test with the ringer switch MUTED</b>, volume up. The first tap anywhere sets <b>audioSession → playback</b> (needed so voice ignores the ringer switch). Add <code>?ttssession=0</code> to skip it for comparison.
+<b>🔊 TTS test v5</b> (b-ver: 2026-10-31a). <b>Test with the ringer switch MUTED</b>, volume up. The first tap anywhere sets <b>audioSession → playback</b> (needed so voice ignores the ringer switch). Add <code>?ttssession=0</code> to skip it for comparison.
 <div id="big"></div>
+<p><b>v5 — ringer MUTED. Reload page between rows if one works (so you know which fixed it). Each says 苹果.</b></p>
+<div class="b">
+<button class="k" id="xA">A: playback only → speak</button>
+<button class="k" id="xB">B: silent MP3 play → speak (same tap)</button>
+<button class="k" id="xC">C: audible MP3 play → speak (same tap)</button>
+<button class="k" id="xD">D: Web Audio beep → speak</button>
+<button class="k" id="xE">E: silent MP3 LOOP running → speak</button>
+<button class="k" id="xF">F: speak after MP3 play() resolves</button>
+<button class="o" id="xStop">Stop loop (E)</button>
+</div><hr>
 <div class="b">
 <button id="zh">中文: 苹果 (voice)</button><button id="zhn">中文: 你好 (no voice set)</button>
 <button id="en">English: apple (voice)</button><button id="enn">English: hello (no voice set)</button>
@@ -21,4 +31,4 @@ button.o{background:#555}button.k{background:#26a}label{display:block;margin:8px
 <div id="st"></div>
 <textarea id="log" readonly>(JS has not run — if this text stays after tapping, the script is blocked)</textarea>
 <p style="font-size:14px">If Copy fails: tap <b>Select all</b>, then long-press inside the green box → Copy. Or use <b>Share log…</b> → Messages/Notes/Mail.</p>
-<script src="tts-test.js?v=4"></script></body></html>
+<script src="tts-test.js?v=5"></script></body></html>

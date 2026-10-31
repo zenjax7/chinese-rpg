@@ -5,7 +5,7 @@ function log(m){if(!L)L=document.getElementById('log');if(L.value.indexOf('(JS h
 function big(m,c){B.style.display='block';B.style.background=c||'#a22';B.textContent=m;}
 window.onerror=function(m,s,l,c){log('JS ERROR '+m+' @'+l+':'+c);};
 window.addEventListener('unhandledrejection',function(e){log('REJECTION '+(e.reason&&e.reason.message||e.reason));});
-log('page JS alive (tts-test.js v4)');document.addEventListener('DOMContentLoaded',function(){log('DOMContentLoaded — page JS alive')});
+log('page JS alive (tts-test.js v5)');document.addEventListener('DOMContentLoaded',function(){log('DOMContentLoaded — page JS alive')});
 log('UA '+navigator.userAgent);
 log('secureContext '+window.isSecureContext+' · clipboard '+(!!(navigator.clipboard&&navigator.clipboard.writeText))+' · share '+(!!navigator.share));
 log('speechSynthesis '+(sy&&typeof sy.speak==='function'?'yes':'NO')+' · Utterance '+(typeof SpeechSynthesisUtterance)+' · audioSession '+(navigator.audioSession?navigator.audioSession.type:'n/a'));
@@ -59,7 +59,19 @@ function asType(){return navigator.audioSession?navigator.audioSession.type:'n/a
 function prime(why){if(primed)return;primed=true;var b=asType();
  if(optOut){log('audioSession '+b+' (?ttssession=0: NOT setting playback — voice will follow the ringer)');return;}
  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){log('audioSession set threw '+e)}
- log('first tap ('+why+'): audioSession '+b+' → '+asType());
- try{var a=new Audio('data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA');a.volume=0;a.playsInline=true;var p=a.play();if(p&&p.then)p.then(function(){log('silent <audio> play() ok')},function(e){log('silent <audio> play() rejected '+e.name)});}catch(e){log('silent audio threw '+e)}}
+ log('first tap ('+why+'): audioSession '+b+' → '+asType());}
 ['touchend','click','keydown'].forEach(function(t){document.addEventListener(t,function(ev){prime(t)},true)});
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&primed&&!optOut&&navigator.audioSession&&navigator.audioSession.type!=='playback'){navigator.audioSession.type='playback';log('visible again: audioSession → '+asType())}});
+
+// v5 experiments (Jack 2026-10-31: speech START/END but silent with ringer muted; HTMLAudio mp3 audible)
+function mp3(src,vol,loop,tag){var a=new Audio(src);a.volume=vol;a.loop=!!loop;a.playsInline=true;a.setAttribute('playsinline','');
+ a.onplaying=function(){log(tag+' '+src+' playing')};a.onerror=function(){log(tag+' '+src+' error '+(a.error&&a.error.code))};
+ var p=a.play();if(p&&p.then)p.then(function(){log(tag+' play() ok')},function(e){log(tag+' play() REJECTED '+e.name)});return {a:a,p:p};}
+function ask(tag){setTimeout(function(){S.textContent=tag+': did you HEAR 苹果? Note it next to the log.';},1500);}
+on('xA',function(){if(navigator.audioSession)navigator.audioSession.type='playback';log('[A] session '+asType());speak('苹果','zh-CN',true);ask('A')});
+on('xB',function(){log('[B] silent mp3 then speak');mp3('tts/silent.mp3',0.01,false,'[B]');speak('苹果','zh-CN',true);ask('B')});
+on('xC',function(){log('[C] audible mp3 then speak');mp3('audio/sfx/sfx_correct.mp3',1,false,'[C]');speak('苹果','zh-CN',true);ask('C')});
+var AC=null;on('xD',function(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state!=='running')AC.resume();var o=AC.createOscillator(),g=AC.createGain();g.gain.value=0.2;o.frequency.value=660;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+0.15);log('[D] beep ctx '+AC.state)}catch(e){log('[D] webaudio threw '+e)}speak('苹果','zh-CN',true);ask('D')});
+var LOOP=null;on('xE',function(){if(!LOOP){LOOP=mp3('tts/silent.mp3',0.01,true,'[E loop]').a;}else{LOOP.play();}log('[E] loop paused='+LOOP.paused+' → speak');speak('苹果','zh-CN',true);ask('E')});
+on('xStop',function(){if(LOOP){LOOP.pause();log('[E] loop stopped')}});
+on('xF',function(){var r=mp3('tts/silent.mp3',0.01,false,'[F]');if(r.p&&r.p.then)r.p.then(function(){log('[F] resolved → speak (no gesture now)');speak('苹果','zh-CN',true)},function(){speak('苹果','zh-CN',true)});else speak('苹果','zh-CN',true);ask('F')});

@@ -78,7 +78,24 @@ export function unlockAudio() {
  *  and stayed pending on WebKit). Opt out with ?ttssession=0 for A/B. Desktop Chromium is untouched. */
 export const ttsSessionOptOut = () => { try { return /[?&]ttssession=0/.test(location.search); } catch { return false; } };
 export const isIosWebKit = () => { try { const ua = navigator.userAgent; return !!(navigator as any).audioSession || /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); } catch { return false; } };
-const SILENT_WAV = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+// v5 (Jack 2026-10-31): the data-URI WAV was rejected (NotSupportedError) and speech still silent with ringer muted although
+// HTMLAudio mp3 was audible → prime with a real 1 s silent MP3 (same path as the working sfx) and keep it LOOPING while an
+// utterance plays, so WebKit's media/playback session (which ignores the silent switch) is active during speech.
+const SILENT_MP3 = 'tts/silent.mp3';
+let keepAlive: HTMLAudioElement | null = null;
+function silentEl(): HTMLAudioElement | null {
+  if (typeof Audio === 'undefined') return null;
+  if (!keepAlive) { keepAlive = new Audio(SILENT_MP3); keepAlive.loop = true; keepAlive.volume = 0.01; (keepAlive as any).playsInline = true; keepAlive.setAttribute('playsinline', ''); }
+  return keepAlive;
+}
+/** iOS/WebKit: run the silent loop while speaking (call inside the tap when possible). */
+export function speechKeepAliveStart() {
+  if (!isIosWebKit() || ttsSessionOptOut()) return;
+  const a = silentEl(); if (!a) return;
+  try { const p = a.play(); dbg().silentAudio = 'play'; if (p && (p as any).catch) (p as any).catch((e: any) => { dbg().silentAudio = 'rejected ' + (e?.name || ''); }); } catch { /* */ }
+}
+let kaTimer: any = 0;
+export function speechKeepAliveStop() { clearTimeout(kaTimer); kaTimer = setTimeout(() => { try { keepAlive?.pause(); } catch { /* */ } }, 800); }
 let silentPrimed = false;
 export function setPlaybackSession(): string | null {
   try { const as: any = (navigator as any).audioSession; if (!as) return null; if (as.type !== 'playback') as.type = 'playback'; return as.type; } catch { return null; }
@@ -87,10 +104,7 @@ export function primeIosAudio() {
   const d = dbg();
   if (!isIosWebKit() || ttsSessionOptOut()) { try { d.session = (navigator as any).audioSession?.type ?? null; } catch { /* */ } return; }
   d.session = setPlaybackSession();
-  if (!silentPrimed && typeof Audio !== 'undefined') {
-    silentPrimed = true;
-    try { const a = new Audio(SILENT_WAV); a.volume = 0; a.muted = false; (a as any).playsInline = true; const p = a.play(); d.silentAudio = 'play'; if (p && (p as any).catch) (p as any).catch(() => { d.silentAudio = 'rejected'; silentPrimed = false; }); } catch { silentPrimed = false; }
-  }
+  if (!silentPrimed) { silentPrimed = true; speechKeepAliveStart(); speechKeepAliveStop(); }
 }
 if (typeof document !== 'undefined') {
   // pointerdown is not a user activation on iOS WebKit, so touchend/click/keydown are bound too; listeners go once one of those fires
