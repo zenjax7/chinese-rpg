@@ -71,18 +71,18 @@ export function unlockAudio() {
   const m: any = mgr;
   if (m?.locked) m.once('unlocked', startWanted); else startWanted();
 }
-/** iOS (Jack 2026-10-25, silent switch ON): put the page's audio in the "playback" session so Web Audio and speech are not muted by
- *  the ring/silent switch (Safari 17+ navigator.audioSession), and speak one empty utterance inside a user gesture so iOS lets the
- *  later, timer-started quiz prompts through. Safe to call repeatedly; elsewhere it is a no-op. */
+/** iOS (Jack 2026-10-30, second retest): the Oct 25 iOS "unlock" (audioSession 'playback' + an empty zero-volume utterance on the first
+ *  gesture) is the most likely cause of the silent quiz voice on iPhone/iPad in Safari, Chrome AND Brave (all WebKit): WebKit leaves the empty
+ *  utterance pending (no onstart/onend), so the synthesizer stays "speaking" and every later prompt went through cancel+wait and was
+ *  dropped, and the forced playback session is not shared by WebKit's speech synthesizer. Speech worked before Oct 25 without either.
+ *  Now: no empty utterance anywhere, and the playback session is opt-in (?ttssession=1, for the silent-switch music case) so Jack can
+ *  A/B it on a device. */
+export const ttsSessionOptIn = () => { try { return /[?&]ttssession=1/.test(location.search); } catch { return false; } };
 export function primeIosAudio() {
   const d = dbg();
-  try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; d.session = as?.type ?? null; } catch { /* */ }
-  // the empty utterance is for iOS WebKit only: Chromium (Chrome/Brave) can leave its queue wedged on it and drop later prompts
-  const ios = !!(navigator as any).audioSession || /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
-  if (ios) try { const sy: any = (window as any).speechSynthesis; if (sy && typeof sy.speak === 'function' && typeof SpeechSynthesisUtterance !== 'undefined') { const u = new SpeechSynthesisUtterance(''); u.volume = 0; sy.speak(u); d.ttsPrimed = (d.ttsPrimed || 0) + 1; } } catch { /* */ }
+  try { const as: any = (navigator as any).audioSession; if (as && ttsSessionOptIn() && as.type !== 'playback') as.type = 'playback'; d.session = as?.type ?? null; } catch { /* */ }
 }
 if (typeof document !== 'undefined') {
-  try { const as: any = (navigator as any).audioSession; if (as) as.type = 'playback'; } catch { /* */ }
   // pointerdown is not a user activation on iOS WebKit, so touchend/click/keydown are bound too; listeners go once one of those fires
   const evs = ['pointerdown', 'touchend', 'click', 'keydown'];
   const once = (e: Event) => { unlockAudio(); primeIosAudio(); if (e.type !== 'pointerdown') evs.forEach(t => document.removeEventListener(t, once, true)); };

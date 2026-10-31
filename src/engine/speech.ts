@@ -140,33 +140,67 @@ export function onVoices(f: () => void) { voiceListeners.push(f); }
 if (synth()) { pickVoice(); try { synth()!.onvoiceschanged = () => { pickVoice(); voiceListeners.forEach(f => f()); }; } catch { /* */ } }
 export const hasZhVoice = () => !!zhVoice;
 export const hasEnVoice = () => !!enVoice;
+/** iOS/iPadOS WebKit (Safari, and Chrome/Brave on iOS, which are WebKit too; iPadOS desktop mode reports "Macintosh" + touch). */
+export const appleWebKit = (() => { try { const ua = navigator.userAgent; return /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || (/AppleWebKit/.test(ua) && /Version\/[\d.]+.*Safari/.test(ua) && !/Chrome|Chromium|Edg|Android/.test(ua)); } catch { return false; } })();
+/** On-screen TTS status (Jack has no console on iPad/iPhone): ?ttsdbg=1, a long-press on any 🔊, or 3 prompts that never started. */
+export const ttsDbg = (): any => ((window as any).__ttsDbg ||= { speak: 0, start: 0, end: 0, retry: 0, fail: 0, err: '', last: null, show: /[?&]ttsdbg=1/.test(location.search) });
+export function ttsDbgText(): string {
+  const d = ttsDbg(), sy = synth(); let vs: SpeechSynthesisVoice[] = []; try { vs = sy?.getVoices() || []; } catch { /* */ }
+  const as: any = (navigator as any).audioSession;
+  return `TTS speak ${d.speak} start ${d.start} end ${d.end} retry ${d.retry} fail ${d.fail}${d.err ? ' err ' + d.err : ''} · voices ${vs.length} (zh ${vs.filter(v => /^zh/i.test(v.lang)).length}, en ${vs.filter(v => /^en/i.test(v.lang)).length})`
+    + ` · ${sy ? (sy.speaking ? 'speaking' : '') + (sy.pending ? ' pending' : '') + (sy.paused ? ' paused' : '') || 'idle' : 'no synth'} · ${appleWebKit ? 'iOS/WebKit' : 'other'} · session ${as ? as.type : 'n/a'}`
+    + (d.last ? ` · last ${d.last.lang} “${String(d.last.text).slice(0, 24)}” voice ${d.last.voice || 'default'}${d.last.sync ? ' (in tap)' : ''}` : '');
+}
+export function renderTtsDbg() {
+  const d = ttsDbg(); if (!d.show || typeof document === 'undefined' || !document.body) return;
+  let el = document.getElementById('ttsdbg');
+  if (!el) { el = document.createElement('div'); el.id = 'ttsdbg'; el.dataset.testid = 'tts-debug';
+    el.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;font:11px/1.3 monospace;background:rgba(0,0,0,.75);color:#9f9;padding:3px 6px;pointer-events:none;white-space:normal';
+    document.body.appendChild(el); }
+  el.textContent = ttsDbgText();
+}
+if (typeof document !== 'undefined') {
+  // long-press (700 ms) on a 🔊 button toggles the strip
+  let lp: any = 0;
+  document.addEventListener('touchstart', e => { const b = (e.target as Element)?.closest?.('button.say, #replay, [data-testid="listen-replay"]'); if (!b) return; clearTimeout(lp); lp = setTimeout(() => { const d = ttsDbg(); d.show = !d.show; if (!d.show) document.getElementById('ttsdbg')?.remove(); renderTtsDbg(); }, 700); }, { passive: true, capture: true });
+  ['touchend', 'touchmove', 'touchcancel'].forEach(t => document.addEventListener(t, () => clearTimeout(lp), { passive: true, capture: true }));
+  setInterval(renderTtsDbg, 500);
+}
 /** Speaks text; resolves when finished or after maxMs (headless browsers may never fire onend). */
 export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlockMaxMs): Promise<void> {
   return new Promise(res => {
     const sy = synth(); if (!sy || !text) { res(); return; }
-    const d: any = ((window as any).__ttsDbg ||= { speak: 0, start: 0, retry: 0, last: null });
+    const d = ttsDbg();
     let done = false; const fin = () => { if (!done) { done = true; res(); } };
     let cur: SpeechSynthesisUtterance | null = null, started = false;
-    const mk = () => {
+    const mk = (withVoice: boolean) => {
       const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85; u.volume = 1;
-      if (lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
-      if (lang.startsWith('en') && enVoice) u.voice = enVoice;
-      u.onstart = () => { if (u === cur) { started = true; d.start++; } };
-      u.onend = () => { if (u === cur) fin(); }; u.onerror = () => { if (u === cur) fin(); };
+      // retry without an explicit voice: iOS lists voices that are not downloaded and stay silent when picked
+      if (withVoice && lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
+      if (withVoice && lang.startsWith('en') && enVoice) u.voice = enVoice;
+      u.onstart = () => { if (u === cur) { started = true; d.start++; renderTtsDbg(); } };
+      u.onend = () => { if (u === cur) { d.end++; fin(); } }; u.onerror = (e: any) => { if (u === cur) { d.err = e?.error || 'error'; fin(); } };
       return u;
     };
-    // Chrome/Brave: a paused or wedged queue swallows speak() silently, so resume() first; keep a live reference (GC'd utterances go quiet)
     const go = (u: SpeechSynthesisUtterance) => {
       if (done) return; cur = u; (window as any).__ttsKeep = u;
-      d.speak++; d.last = { text: u.text, lang: u.lang, volume: u.volume, voice: u.voice?.name ?? null };
-      try { sy.resume(); } catch { /* */ }
+      let sync = false; try { sync = !!(navigator as any).userActivation?.isActive; } catch { /* */ }
+      d.speak++; d.last = { text: u.text, lang: u.lang, volume: u.volume, voice: u.voice?.name ?? null, sync };
+      // Chromium: a paused/wedged queue swallows speak(), so resume() first. Not on WebKit (pre-Oct-25 path, which worked on iOS).
+      if (!appleWebKit) try { sy.resume(); } catch { /* */ }
       try { sy.speak(u); } catch { fin(); }
+      renderTtsDbg();
     };
     try {
-      // speak() straight after cancel() is dropped by Chromium and Safari: wait when something was queued
-      if (sy.speaking || sy.pending) { sy.cancel(); setTimeout(() => go(mk()), 250); } else go(mk());
-      // watchdog: no onstart within 1.5 s means the engine dropped it; cancel and try once more
-      setTimeout(() => { if (done || started || !cur) return; d.retry++; cur = null; try { sy.cancel(); } catch { /* */ } setTimeout(() => go(mk()), 250); }, 1500);
+      if (sy.speaking || sy.pending) {
+        sy.cancel();
+        // WebKit: speak in the same tick (keeps the 🔊 tap's user gesture; a timer-delayed speak() is not a gesture on iOS).
+        // Chromium drops a speak() straight after cancel(), so wait 250 ms there.
+        if (appleWebKit) go(mk(true)); else setTimeout(() => go(mk(true)), 250);
+      } else go(mk(true));
+      // watchdog: no onstart within 1.5 s means the engine dropped it; cancel and try once more, without the picked voice
+      setTimeout(() => { if (done || started || !cur) return; d.retry++; cur = null; try { sy.cancel(); } catch { /* */ }
+        setTimeout(() => { go(mk(false)); setTimeout(() => { if (!started && !done) { d.fail++; if (d.fail >= 3) d.show = true; renderTtsDbg(); } }, 1500); }, appleWebKit ? 0 : 250); }, 1500);
     } catch { fin(); }
     setTimeout(fin, maxMs);
   });

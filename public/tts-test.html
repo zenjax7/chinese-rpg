@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TTS test</title><style>
+body{font:16px system-ui;margin:0;padding:8px;background:#111;color:#eee}
+.b{display:flex;flex-wrap:wrap;gap:6px}button{font-size:18px;padding:14px 10px;min-width:45%;flex:1;border-radius:10px;border:0;background:#2a6;color:#fff}
+button.o{background:#555}label{display:block;margin:6px 0}
+#log{position:fixed;left:0;right:0;bottom:0;height:45vh;overflow:auto;background:#000;color:#9f9;font:12px/1.35 monospace;padding:6px;white-space:pre-wrap;border-top:2px solid #2a6}
+#pad{height:47vh}</style></head><body>
+<b>🔊 TTS test</b> — tap buttons, then screenshot the log.
+<div class="b">
+<button id="zh">说中文: 苹果</button><button id="zh2">中文: 你好，小龙</button>
+<button id="en">English: apple</button><button id="en2">English: Hello dragon</button>
+<button class="o" id="empty">Unlock: empty utterance (old iOS hack)</button><button class="o" id="sess">audioSession → playback</button>
+<button class="o" id="sessA">audioSession → auto</button><button class="o" id="cancel">cancel()</button>
+<button class="o" id="voices">List voices</button><button class="o" id="mp3">Play game MP3 clip</button>
+<button class="o" id="copy">Copy log</button><button class="o" id="clr">Clear log</button>
+</div>
+<label><input type="checkbox" id="usev" checked> set utterance.voice (picked zh-CN / en-US)</label>
+<label><input type="checkbox" id="delay"> delay speak 250 ms after cancel (game's Chrome path)</label>
+<label><input type="checkbox" id="resume"> call resume() before speak</label>
+<div id="pad"></div><div id="log"></div>
+<script>
+const L=document.getElementById('log'),t0=performance.now(),sy=window.speechSynthesis;
+const st=()=>sy?`[${sy.speaking?'speaking':''}${sy.pending?' pending':''}${sy.paused?' paused':''}${!sy.speaking&&!sy.pending&&!sy.paused?'idle':''}]`:'[no synth]';
+function log(m){const l=`${((performance.now()-t0)/1000).toFixed(2)}s ${m} ${st()}`;L.textContent+=l+'\n';L.scrollTop=1e9;}
+log('UA '+navigator.userAgent);log('speechSynthesis '+(sy&&typeof sy.speak==='function'?'yes':'NO')+' · audioSession '+(navigator.audioSession?navigator.audioSession.type:'n/a')+' · userActivation '+('userActivation' in navigator));
+let V=[];const pick=l=>V.find(v=>new RegExp(l.replace('-','[-_]'),'i').test(v.lang))||V.find(v=>v.lang.toLowerCase().startsWith(l.slice(0,2)))||null;
+function lv(why){try{V=sy?sy.getVoices():[]}catch(e){V=[]}const z=pick('zh-CN'),e=pick('en-US');log(`voices(${why}) ${V.length} · zh ${V.filter(v=>/^zh/i.test(v.lang)).length} pick ${z?z.name+' '+z.lang+(z.localService?' local':''):'none'} · en ${V.filter(v=>/^en/i.test(v.lang)).length} pick ${e?e.name+' '+e.lang:'none'}`);}
+if(sy){lv('load');sy.onvoiceschanged=()=>lv('voiceschanged');}
+let keep=[];let n=0;
+function speak(text,lang){if(!sy){log('NO speechSynthesis');return;}const id=++n,act=navigator.userActivation?navigator.userActivation.isActive:'?';
+ const go=()=>{const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.85;u.volume=1;const v=document.getElementById('usev').checked?pick(lang):null;if(v)u.voice=v;keep.push(u);
+  u.onstart=()=>log(`#${id} START`);u.onend=()=>log(`#${id} END`);u.onerror=e=>log(`#${id} ERROR ${e.error}`);u.onboundary=e=>log(`#${id} boundary ${e.name} @${e.charIndex}`);
+  if(document.getElementById('resume').checked){sy.resume();log(`#${id} resume()`);}
+  sy.speak(u);log(`#${id} speak("${text}") ${lang} vol ${u.volume} voice ${v?v.name:'default'} inTap ${navigator.userActivation?navigator.userActivation.isActive:'?'}`);
+  setTimeout(()=>{},0);};
+ log(`#${id} tap ${lang} (gesture active ${act})`);
+ if(sy.speaking||sy.pending){sy.cancel();log(`#${id} cancel() (was busy)`);if(document.getElementById('delay').checked){setTimeout(go,250);return;}}go();
+ setTimeout(()=>{if(!keep.length)return;},0);}
+const on=(i,f)=>document.getElementById(i).addEventListener('click',f);
+on('zh',()=>speak('苹果','zh-CN'));on('zh2',()=>speak('你好，小龙','zh-CN'));on('en',()=>speak('apple','en-US'));on('en2',()=>speak('Hello dragon','en-US'));
+on('empty',()=>{const u=new SpeechSynthesisUtterance('');u.volume=0;u.onstart=()=>log('empty START');u.onend=()=>log('empty END');u.onerror=e=>log('empty ERROR '+e.error);keep.push(u);sy.speak(u);log('empty utterance spoken');});
+on('sess',()=>{if(navigator.audioSession){navigator.audioSession.type='playback';log('audioSession='+navigator.audioSession.type)}else log('no audioSession API')});
+on('sessA',()=>{if(navigator.audioSession){navigator.audioSession.type='auto';log('audioSession='+navigator.audioSession.type)}else log('no audioSession API')});
+on('cancel',()=>{sy.cancel();log('cancel()')});on('voices',()=>{lv('button');V.filter(v=>/^(zh|en)/i.test(v.lang)).forEach(v=>log(`  ${v.lang} ${v.name}${v.default?' default':''}${v.localService?' local':''}`))});
+on('mp3',()=>{const a=new Audio('audio/sfx/sfx_correct.mp3');a.onplaying=()=>log('mp3 playing');a.onerror=()=>log('mp3 error');a.play().then(()=>log('mp3 play() ok'),e=>log('mp3 play() rejected '+e.name));});
+on('copy',()=>{navigator.clipboard?.writeText(L.textContent).then(()=>log('copied'),()=>log('copy failed'))});on('clr',()=>{L.textContent=''});
+setInterval(()=>{},1000);
+</script></body></html>

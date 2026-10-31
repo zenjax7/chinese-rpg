@@ -526,16 +526,42 @@ await nv.context().close();
   await playBattle(Z, () => true, { onQ: async (p, q) => { if (q.listen) zs[q.way === 'rZE' || q.way === 'sZE' ? 'zh' : 'en']++; } });
   check(zs.en === 0 && zs.zh > 0, `fallback: no en-US voice → EN prompts written (EN listen ${zs.en}), ZH listen still used (${zs.zh})`);
   await Z.context().close();
-  // iOS silent switch (Jack 2026-10-25): the first gesture puts the audio session in "playback" and speaks one empty utterance
+  // iOS/WebKit regression (Jack 2026-10-30 retest: iPhone/iPad Safari, Chrome, Brave all silent): a WebKit-like engine that wedges on
+  // an empty utterance (stays pending, no onstart/onend) and is silent while audioSession is forced to 'playback'. On an iPhone UA the
+  // first tap must not speak an empty utterance or force the session; listen prompts and the 🔊 replay must START (replay inside the tap).
+  const webkitTts = () => {
+    Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/130.0 Mobile/15E148 Safari/604.1', configurable: true });
+    Object.defineProperty(navigator, 'audioSession', { value: { type: 'auto' }, configurable: true });
+    window.__utter = []; window.__started = [];
+    const vs = ['zh-CN', 'en-US'].map(l => ({ lang: l, name: 'Stub ' + l, voiceURI: 'stub-' + l, default: false, localService: true }));
+    let cur = null;
+    const sy = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => vs, pause() {}, resume() {},
+      cancel() { if (cur) { const u = cur; cur = null; clearTimeout(u.__t); } sy.speaking = false; sy.pending = false; },
+      speak(u) { const act = !!navigator.userActivation?.isActive; window.__utter.push({ text: u.text, lang: u.lang, volume: u.volume, act });
+        if (cur) return;
+        if (u.text === '') { cur = u; sy.pending = true; return; }                  // wedged: pending forever
+        if (navigator.audioSession.type === 'playback') return;                    // silent under the forced playback session
+        cur = u; sy.speaking = true; setTimeout(() => { if (cur !== u) return; window.__started.push({ text: u.text, lang: u.lang, volume: u.volume, act }); u.onstart && u.onstart({});
+          u.__t = setTimeout(() => { if (cur === u) { cur = null; sy.speaking = false; u.onend && u.onend({}); } }, 300); }, 20); },
+      addEventListener() {}, removeEventListener() {} };
+    Object.defineProperty(window, 'speechSynthesis', { value: sy, configurable: true });
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.volume = 1; this.voice = null; } };
+  };
   const I = await newPage(true);
-  await I.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['zh-CN', 'en-US'])})()`);
-  await I.context().addInitScript(() => { Object.defineProperty(navigator, 'audioSession', { value: { type: 'auto' }, configurable: true }); });
-  await I.goto(BASE); await tid(I, 'consent').waitFor();
-  const pre = await I.evaluate(() => ({ primed: window.__proto?.audio?.ttsPrimed || 0, utter: window.__utter.length }));
-  await tid(I, 'consent-answer').click(); await I.waitForTimeout(200);
-  const post = await I.evaluate(() => ({ primed: window.__proto.audio.ttsPrimed || 0, session: navigator.audioSession.type, empty: window.__utter.filter(u => u.text === '').length }));
-  check(pre.primed === 0 && pre.utter === 0 && post.primed >= 1 && post.empty >= 1 && post.session === 'playback',
-    `iOS priming on the first gesture: audioSession.type = ${post.session}, ${post.empty} empty utterance(s) spoken (none before the tap)`);
+  await I.context().addInitScript(`(${webkitTts.toString()})()`);
+  await I.goto(BASE + (BASE.includes('?') ? '&' : '?') + 'ttsdbg=1'); await consent(I, true);
+  const ioPost = await I.evaluate(() => ({ session: navigator.audioSession.type, empty: window.__utter.filter(u => u.text === '').length }));
+  await goLoc(I, 'meadow'); await tid(I, 'preview').waitFor(); await tid(I, 'preview-done').click(); await tid(I, 'location').waitFor(); await debugSet(I, { hp: 999 });
+  const ioSeen = { zh: 0, en: 0 }, ioBad = []; let ioReplay = null;
+  const ioQ = async (p, q) => { if (!q.listen) return; const zhP = q.way === 'rZE' || q.way === 'sZE'; const want = zhP ? q.zh : q.en;
+    const ok = await p.waitForFunction(w => window.__started.some(u => u.text === w && u.volume > 0), want, { timeout: 4000 }).then(() => true, () => false);
+    if (ok) ioSeen[zhP ? 'zh' : 'en']++; else ioBad.push(`${q.way} ${q.zh}`);
+    if (!ioReplay && zhP) { const n0 = await p.evaluate(() => window.__utter.length); await tid(p, 'listen-replay').click();
+      ioReplay = await p.waitForFunction(n => window.__utter.slice(n).some(u => u.act) , n0, { timeout: 4000 }).then(() => 'in-tap', () => 'not-in-tap'); } };
+  for (let k = 0; k < 3 && !(ioSeen.zh && ioSeen.en); k++) { await tid(I, 'act-path').click(); await playBattle(I, () => true, { onQ: ioQ }); if (await tid(I, 'victory-ok').count()) await tid(I, 'victory-ok').click(); await tid(I, 'location').or(tid(I, 'town')).first().waitFor(); if (await tid(I, 'town').count()) { await goLoc(I, 'meadow'); await tid(I, 'location').waitFor(); } }
+  const ioDbg = await I.evaluate(() => document.querySelector('[data-testid="tts-debug"]')?.textContent || '');
+  check(ioPost.empty === 0 && ioPost.session === 'auto' && ioSeen.zh > 0 && ioSeen.en > 0 && !ioBad.length && ioReplay === 'in-tap' && /TTS speak \d+ start [1-9]/.test(ioDbg) && /voices 2/.test(ioDbg),
+    `iOS/WebKit TTS: no empty unlock (${ioPost.empty}), session ${ioPost.session}, prompts start (ZH ${ioSeen.zh}, EN ${ioSeen.en}), 🔊 replay ${ioReplay}, debug strip “${ioDbg.slice(0, 80)}”${ioBad.length ? ' — silent: ' + ioBad.slice(0, 3).join(' | ') : ''}`);
   await I.context().close();
   // Chrome/Brave regression (Jack 2026-10-30): a Chromium-like engine that wedges on an empty utterance and drops a speak() that comes
   // < 200 ms after cancel(); battle listen prompts and the 🔊 replay must still START (onstart) with real text at volume 1, EN and ZH

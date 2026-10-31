@@ -349,7 +349,8 @@ export function settings() {
     <div class="card" style="margin-top:10px" data-testid="audio-settings"><b>🔊 Sound</b> <span class="muted">(saved on this device)</span><br>
       ${(['master', 'music', 'sfx'] as const).map(k => `<label style="margin-right:16px">${({ master: 'Master', music: 'Music', sfx: 'Effects' })[k]}
         <input type="range" min="0" max="100" value="${Math.round(audioSettings()[k] * 100)}" data-vol="${k}" data-testid="vol-${k}"></label>`).join('')}
-      <label><input type="checkbox" id="mute" data-testid="audio-mute" ${audioSettings().muted ? 'checked' : ''}> Mute all</label></div>
+      <label><input type="checkbox" id="mute" data-testid="audio-mute" ${audioSettings().muted ? 'checked' : ''}> Mute all</label>
+      <br><a href="tts-test.html" target="_blank" data-testid="tts-test-link">🔧 Voice test page (debug log)</a> · <a href="?ttsdbg=1">show voice debug strip in game</a></div>
     <div class="row" style="margin-top:14px"><button class="secondary" id="pclose" data-key="enter">Done</button></div></div>`);
   $$('[data-vol]', m).forEach(el => el.addEventListener('input', () => setAudio({ [el.dataset.vol!]: +(el as HTMLInputElement).value / 100 })));
   $('#mute', m).addEventListener('change', () => setAudio({ muted: ($('#mute') as HTMLInputElement).checked }));
