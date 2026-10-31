@@ -425,7 +425,7 @@ await v.context().addInitScript(() => {
   window.__utter = [];
   const zh = { lang: 'zh-CN', name: 'Stub Chinese', voiceURI: 'stub-zh', default: false, localService: true };
   const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => [zh], cancel() {}, pause() {}, resume() {},
-    speak(u) { window.__utter.push({ text: u.text, lang: u.lang, rate: u.rate, voice: u.voice && u.voice.name }); setTimeout(() => u.onend && u.onend({}), 30); },
+    speak(u) { window.__utter.push({ text: u.text, lang: u.lang, rate: u.rate, voice: u.voice && u.voice.name }); u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 30); },
     addEventListener() {}, removeEventListener() {} };
   Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
   window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.voice = null; } };
@@ -462,7 +462,7 @@ await nv.context().close();
     window.__utter = [];
     const vs = langs.map(l => ({ lang: l, name: 'Stub ' + l, voiceURI: 'stub-' + l, default: false, localService: true }));
     const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => vs, cancel() {}, pause() {}, resume() {},
-      speak(u) { window.__utter.push({ text: u.text, lang: u.lang }); setTimeout(() => u.onend && u.onend({}), 30); }, addEventListener() {}, removeEventListener() {} };
+      speak(u) { window.__utter.push({ text: u.text, lang: u.lang }); u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 30); }, addEventListener() {}, removeEventListener() {} };
     Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.voice = null; } };
   };
@@ -537,6 +537,38 @@ await nv.context().close();
   check(pre.primed === 0 && pre.utter === 0 && post.primed >= 1 && post.empty >= 1 && post.session === 'playback',
     `iOS priming on the first gesture: audioSession.type = ${post.session}, ${post.empty} empty utterance(s) spoken (none before the tap)`);
   await I.context().close();
+  // Chrome/Brave regression (Jack 2026-10-30): a Chromium-like engine that wedges on an empty utterance and drops a speak() that comes
+  // < 200 ms after cancel(); battle listen prompts and the 🔊 replay must still START (onstart) with real text at volume 1, EN and ZH
+  const chromiumTts = () => {
+    window.__utter = []; window.__started = [];
+    const vs = ['zh-CN', 'en-US'].map(l => ({ lang: l, name: 'Stub ' + l, voiceURI: 'stub-' + l, default: false, localService: false }));
+    let cur = null, cancelAt = -1e9;
+    const sy = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => vs, pause() { sy.paused = true; }, resume() { sy.paused = false; },
+      cancel() { cancelAt = performance.now(); if (cur) { const u = cur; cur = null; clearTimeout(u.__t); u.onerror && u.onerror({ error: 'interrupted' }); } sy.speaking = false; },
+      speak(u) { window.__utter.push({ text: u.text, lang: u.lang, volume: u.volume });
+        if (cur) return;                                                     // queue busy (wedged): never starts
+        if (u.text === '') { cur = u; sy.speaking = true; return; }          // empty utterance wedges the queue, no onend
+        if (sy.paused || performance.now() - cancelAt < 200) return;        // dropped silently
+        cur = u; sy.speaking = true; setTimeout(() => { if (cur !== u) return; window.__started.push({ text: u.text, lang: u.lang, volume: u.volume }); u.onstart && u.onstart({});
+          u.__t = setTimeout(() => { if (cur === u) { cur = null; sy.speaking = false; u.onend && u.onend({}); } }, 300); }, 20); },
+      addEventListener() {}, removeEventListener() {} };
+    Object.defineProperty(window, 'speechSynthesis', { value: sy, configurable: true });
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.volume = 1; this.voice = null; } };
+  };
+  const CR = await newPage(true);
+  await CR.context().addInitScript(`(${chromiumTts.toString()})()`);
+  await CR.goto(BASE); await consent(CR, true); await goLoc(CR, 'meadow'); await tid(CR, 'preview').waitFor(); await tid(CR, 'preview-done').click(); await tid(CR, 'location').waitFor(); await debugSet(CR, { hp: 999 });
+  const crSeen = { zh: 0, en: 0 }, crBad = []; let crReplay = null;
+  const crQ = async (p, q) => { if (!q.listen) return; const zhP = q.way === 'rZE' || q.way === 'sZE'; const want = zhP ? q.zh : q.en;
+    const ok = await p.waitForFunction(w => window.__started.some(u => u.text === w && u.volume > 0), want, { timeout: 4000 }).then(() => true, () => false);
+    if (ok) crSeen[zhP ? 'zh' : 'en']++; else crBad.push(`${q.way} ${q.zh}`);
+    if (!crReplay && zhP) { const n0 = await p.evaluate(() => window.__started.length); await tid(p, 'listen-replay').click();
+      crReplay = await p.waitForFunction(n => window.__started.length > n, n0, { timeout: 4000 }).then(() => 'ok', () => 'silent'); } };
+  for (let k = 0; k < 3 && !(crSeen.zh && crSeen.en); k++) { await tid(CR, 'act-path').click(); await playBattle(CR, () => true, { onQ: crQ }); if (await tid(CR, 'victory-ok').count()) await tid(CR, 'victory-ok').click(); await tid(CR, 'location').or(tid(CR, 'town')).first().waitFor(); if (await tid(CR, 'town').count()) { await goLoc(CR, 'meadow'); await tid(CR, 'location').waitFor(); } }
+  const crEmpty = await CR.evaluate(() => window.__utter.filter(u => u.text === '').length);
+  check(crSeen.zh > 0 && crSeen.en > 0 && !crBad.length && crReplay === 'ok' && crEmpty === 0,
+    `Chrome/Brave TTS: listen prompts start with text at volume > 0 (ZH ${crSeen.zh}, EN ${crSeen.en}), 🔊 replay ${crReplay}, ${crEmpty} empty unlock utterances${crBad.length ? ' — silent: ' + crBad.slice(0, 3).join(' | ') : ''}`);
+  await CR.context().close();
   // no Chinese voice: written fallback plus a one-time hint
   const H = await newPage(true);
   await H.context().addInitScript(`(${stubVoices.toString()})(${JSON.stringify(['en-US'])})()`);

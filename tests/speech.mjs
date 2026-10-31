@@ -14,7 +14,7 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
     const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null,
       getVoices: () => [{ lang: 'zh-CN', name: 'Stub Chinese', voiceURI: 'stub-zh', default: false, localService: true }],
       cancel() { if (cur) { const u = cur; cur = null; synth.speaking = false; clearTimeout(u.__t); u.onend && u.onend({}); } }, pause() {}, resume() {},
-      speak(u) { synth.cancel(); window.__utter.push({ text: u.text, at: performance.now() }); cur = u; synth.speaking = true;
+      speak(u) { synth.cancel(); window.__utter.push({ text: u.text, at: performance.now() }); cur = u; synth.speaking = true; u.onstart && u.onstart({});
         u.__t = setTimeout(() => { if (cur === u) { cur = null; synth.speaking = false; u.onend && u.onend({}); } }, 700); },
       addEventListener() {}, removeEventListener() {} };
     Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });

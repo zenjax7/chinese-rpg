@@ -143,15 +143,30 @@ export const hasEnVoice = () => !!enVoice;
 /** Speaks text; resolves when finished or after maxMs (headless browsers may never fire onend). */
 export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlockMaxMs): Promise<void> {
   return new Promise(res => {
-    const sy = synth(); if (!sy) { res(); return; }
+    const sy = synth(); if (!sy || !text) { res(); return; }
+    const d: any = ((window as any).__ttsDbg ||= { speak: 0, start: 0, retry: 0, last: null });
     let done = false; const fin = () => { if (!done) { done = true; res(); } };
-    try {
-      const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85;
+    let cur: SpeechSynthesisUtterance | null = null, started = false;
+    const mk = () => {
+      const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85; u.volume = 1;
       if (lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
       if (lang.startsWith('en') && enVoice) u.voice = enVoice;
-      u.onend = fin; u.onerror = fin;
-      // speak() straight after cancel() can be dropped (Safari, Chrome): wait ~50 ms when something was playing
-      if (sy.speaking || sy.pending) { sy.cancel(); setTimeout(() => { try { if (!done) sy.speak(u); } catch { fin(); } }, 50); } else sy.speak(u);
+      u.onstart = () => { if (u === cur) { started = true; d.start++; } };
+      u.onend = () => { if (u === cur) fin(); }; u.onerror = () => { if (u === cur) fin(); };
+      return u;
+    };
+    // Chrome/Brave: a paused or wedged queue swallows speak() silently, so resume() first; keep a live reference (GC'd utterances go quiet)
+    const go = (u: SpeechSynthesisUtterance) => {
+      if (done) return; cur = u; (window as any).__ttsKeep = u;
+      d.speak++; d.last = { text: u.text, lang: u.lang, volume: u.volume, voice: u.voice?.name ?? null };
+      try { sy.resume(); } catch { /* */ }
+      try { sy.speak(u); } catch { fin(); }
+    };
+    try {
+      // speak() straight after cancel() is dropped by Chromium and Safari: wait when something was queued
+      if (sy.speaking || sy.pending) { sy.cancel(); setTimeout(() => go(mk()), 250); } else go(mk());
+      // watchdog: no onstart within 1.5 s means the engine dropped it; cancel and try once more
+      setTimeout(() => { if (done || started || !cur) return; d.retry++; cur = null; try { sy.cancel(); } catch { /* */ } setTimeout(() => go(mk()), 250); }, 1500);
     } catch { fin(); }
     setTimeout(fin, maxMs);
   });

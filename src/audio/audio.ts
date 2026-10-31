@@ -77,7 +77,9 @@ export function unlockAudio() {
 export function primeIosAudio() {
   const d = dbg();
   try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; d.session = as?.type ?? null; } catch { /* */ }
-  try { const sy: any = (window as any).speechSynthesis; if (sy && typeof sy.speak === 'function' && typeof SpeechSynthesisUtterance !== 'undefined') { const u = new SpeechSynthesisUtterance(''); u.volume = 0; sy.speak(u); d.ttsPrimed = (d.ttsPrimed || 0) + 1; } } catch { /* */ }
+  // the empty utterance is for iOS WebKit only: Chromium (Chrome/Brave) can leave its queue wedged on it and drop later prompts
+  const ios = !!(navigator as any).audioSession || /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+  if (ios) try { const sy: any = (window as any).speechSynthesis; if (sy && typeof sy.speak === 'function' && typeof SpeechSynthesisUtterance !== 'undefined') { const u = new SpeechSynthesisUtterance(''); u.volume = 0; sy.speak(u); d.ttsPrimed = (d.ttsPrimed || 0) + 1; } } catch { /* */ }
 }
 if (typeof document !== 'undefined') {
   try { const as: any = (navigator as any).audioSession; if (as) as.type = 'playback'; } catch { /* */ }
