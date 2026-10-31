@@ -71,22 +71,34 @@ export function unlockAudio() {
   const m: any = mgr;
   if (m?.locked) m.once('unlocked', startWanted); else startWanted();
 }
-/** iOS (Jack 2026-10-30, second retest): the Oct 25 iOS "unlock" (audioSession 'playback' + an empty zero-volume utterance on the first
- *  gesture) is the most likely cause of the silent quiz voice on iPhone/iPad in Safari, Chrome AND Brave (all WebKit): WebKit leaves the empty
- *  utterance pending (no onstart/onend), so the synthesizer stays "speaking" and every later prompt went through cancel+wait and was
- *  dropped, and the forced playback session is not shared by WebKit's speech synthesizer. Speech worked before Oct 25 without either.
- *  Now: no empty utterance anywhere, and the playback session is opt-in (?ttssession=1, for the silent-switch music case) so Jack can
- *  A/B it on a device. */
-export const ttsSessionOptIn = () => { try { return /[?&]ttssession=1/.test(location.search); } catch { return false; } };
+/** iOS silent switch (Jack 2026-10-30, third retest, iPad Brave): with audioSession 'auto' WebKit speech follows the ring/silent switch
+ *  (speaks with ringer ON, silent with it muted). Game voice must not depend on the ringer, so on iOS/WebKit (Safari, Chrome, Brave: all
+ *  WebKit) we set navigator.audioSession.type = 'playback' on the first user gesture and keep it, and play a tiny silent HTMLAudioElement
+ *  inside that gesture so the media session is active. NEVER an empty SpeechSynthesisUtterance (that wedged Chromium's queue, 0c855f9,
+ *  and stayed pending on WebKit). Opt out with ?ttssession=0 for A/B. Desktop Chromium is untouched. */
+export const ttsSessionOptOut = () => { try { return /[?&]ttssession=0/.test(location.search); } catch { return false; } };
+export const isIosWebKit = () => { try { const ua = navigator.userAgent; return !!(navigator as any).audioSession || /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); } catch { return false; } };
+const SILENT_WAV = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+let silentPrimed = false;
+export function setPlaybackSession(): string | null {
+  try { const as: any = (navigator as any).audioSession; if (!as) return null; if (as.type !== 'playback') as.type = 'playback'; return as.type; } catch { return null; }
+}
 export function primeIosAudio() {
   const d = dbg();
-  try { const as: any = (navigator as any).audioSession; if (as && ttsSessionOptIn() && as.type !== 'playback') as.type = 'playback'; d.session = as?.type ?? null; } catch { /* */ }
+  if (!isIosWebKit() || ttsSessionOptOut()) { try { d.session = (navigator as any).audioSession?.type ?? null; } catch { /* */ } return; }
+  d.session = setPlaybackSession();
+  if (!silentPrimed && typeof Audio !== 'undefined') {
+    silentPrimed = true;
+    try { const a = new Audio(SILENT_WAV); a.volume = 0; a.muted = false; (a as any).playsInline = true; const p = a.play(); d.silentAudio = 'play'; if (p && (p as any).catch) (p as any).catch(() => { d.silentAudio = 'rejected'; silentPrimed = false; }); } catch { silentPrimed = false; }
+  }
 }
 if (typeof document !== 'undefined') {
   // pointerdown is not a user activation on iOS WebKit, so touchend/click/keydown are bound too; listeners go once one of those fires
   const evs = ['pointerdown', 'touchend', 'click', 'keydown'];
   const once = (e: Event) => { unlockAudio(); primeIosAudio(); if (e.type !== 'pointerdown') evs.forEach(t => document.removeEventListener(t, once, true)); };
   evs.forEach(t => document.addEventListener(t, once, true));
+  // keep the playback session after backgrounding (iOS may reset it)
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && isIosWebKit() && !ttsSessionOptOut()) setPlaybackSession(); });
 }
 
 /** detune in cents (the streak sound rises one semitone per streak level, spec §4.4). */

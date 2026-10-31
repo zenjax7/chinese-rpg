@@ -526,9 +526,9 @@ await nv.context().close();
   await playBattle(Z, () => true, { onQ: async (p, q) => { if (q.listen) zs[q.way === 'rZE' || q.way === 'sZE' ? 'zh' : 'en']++; } });
   check(zs.en === 0 && zs.zh > 0, `fallback: no en-US voice → EN prompts written (EN listen ${zs.en}), ZH listen still used (${zs.zh})`);
   await Z.context().close();
-  // iOS/WebKit regression (Jack 2026-10-30 retest: iPhone/iPad Safari, Chrome, Brave all silent): a WebKit-like engine that wedges on
-  // an empty utterance (stays pending, no onstart/onend) and is silent while audioSession is forced to 'playback'. On an iPhone UA the
-  // first tap must not speak an empty utterance or force the session; listen prompts and the 🔊 replay must START (replay inside the tap).
+  // iOS/WebKit regression (Jack 2026-10-30, iPad Brave log): a WebKit-like engine with the RINGER MUTED: speech is silent unless
+  // audioSession is 'playback', and an empty utterance wedges it (pending forever). The first tap must set 'playback' and prime with a
+  // silent <audio> play() — never an empty utterance; listen prompts and the 🔊 replay must START (replay inside the tap).
   const webkitTts = () => {
     Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/130.0 Mobile/15E148 Safari/604.1', configurable: true });
     Object.defineProperty(navigator, 'audioSession', { value: { type: 'auto' }, configurable: true });
@@ -540,17 +540,18 @@ await nv.context().close();
       speak(u) { const act = !!navigator.userActivation?.isActive; window.__utter.push({ text: u.text, lang: u.lang, volume: u.volume, act });
         if (cur) return;
         if (u.text === '') { cur = u; sy.pending = true; return; }                  // wedged: pending forever
-        if (navigator.audioSession.type === 'playback') return;                    // silent under the forced playback session
+        if (navigator.audioSession.type !== 'playback') return;                    // ringer muted: silent unless playback session
         cur = u; sy.speaking = true; setTimeout(() => { if (cur !== u) return; window.__started.push({ text: u.text, lang: u.lang, volume: u.volume, act }); u.onstart && u.onstart({});
           u.__t = setTimeout(() => { if (cur === u) { cur = null; sy.speaking = false; u.onend && u.onend({}); } }, 300); }, 20); },
       addEventListener() {}, removeEventListener() {} };
     Object.defineProperty(window, 'speechSynthesis', { value: sy, configurable: true });
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.volume = 1; this.voice = null; } };
+    window.__silent = 0; const op = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { if (/^data:audio\/wav/.test(this.src || '')) window.__silent++; return op.call(this); };
   };
   const I = await newPage(true);
   await I.context().addInitScript(`(${webkitTts.toString()})()`);
   await I.goto(BASE + (BASE.includes('?') ? '&' : '?') + 'ttsdbg=1'); await consent(I, true);
-  const ioPost = await I.evaluate(() => ({ session: navigator.audioSession.type, empty: window.__utter.filter(u => u.text === '').length }));
+  const ioPost = await I.evaluate(() => ({ session: navigator.audioSession.type, empty: window.__utter.filter(u => u.text === '').length, silent: window.__silent }));
   await goLoc(I, 'meadow'); await tid(I, 'preview').waitFor(); await tid(I, 'preview-done').click(); await tid(I, 'location').waitFor(); await debugSet(I, { hp: 999 });
   const ioSeen = { zh: 0, en: 0 }, ioBad = []; let ioReplay = null;
   const ioQ = async (p, q) => { if (!q.listen) return; const zhP = q.way === 'rZE' || q.way === 'sZE'; const want = zhP ? q.zh : q.en;
@@ -560,8 +561,8 @@ await nv.context().close();
       ioReplay = await p.waitForFunction(n => window.__utter.slice(n).some(u => u.act) , n0, { timeout: 4000 }).then(() => 'in-tap', () => 'not-in-tap'); } };
   for (let k = 0; k < 3 && !(ioSeen.zh && ioSeen.en); k++) { await tid(I, 'act-path').click(); await playBattle(I, () => true, { onQ: ioQ }); if (await tid(I, 'victory-ok').count()) await tid(I, 'victory-ok').click(); await tid(I, 'location').or(tid(I, 'town')).first().waitFor(); if (await tid(I, 'town').count()) { await goLoc(I, 'meadow'); await tid(I, 'location').waitFor(); } }
   const ioDbg = await I.evaluate(() => document.querySelector('[data-testid="tts-debug"]')?.textContent || '');
-  check(ioPost.empty === 0 && ioPost.session === 'auto' && ioSeen.zh > 0 && ioSeen.en > 0 && !ioBad.length && ioReplay === 'in-tap' && /TTS speak \d+ start [1-9]/.test(ioDbg) && /voices 2/.test(ioDbg),
-    `iOS/WebKit TTS: no empty unlock (${ioPost.empty}), session ${ioPost.session}, prompts start (ZH ${ioSeen.zh}, EN ${ioSeen.en}), 🔊 replay ${ioReplay}, debug strip “${ioDbg.slice(0, 80)}”${ioBad.length ? ' — silent: ' + ioBad.slice(0, 3).join(' | ') : ''}`);
+  check(ioPost.empty === 0 && ioPost.session === 'playback' && ioPost.silent > 0 && ioSeen.zh > 0 && ioSeen.en > 0 && !ioBad.length && ioReplay === 'in-tap' && /TTS speak \d+ start [1-9]/.test(ioDbg) && /voices 2/.test(ioDbg),
+    `iOS/WebKit TTS (ringer muted): no empty unlock (${ioPost.empty}), session ${ioPost.session}, silent <audio> primes ${ioPost.silent}, prompts start (ZH ${ioSeen.zh}, EN ${ioSeen.en}), 🔊 replay ${ioReplay}, debug strip “${ioDbg.slice(0, 80)}”${ioBad.length ? ' — silent: ' + ioBad.slice(0, 3).join(' | ') : ''}`);
   await I.context().close();
   // Chrome/Brave regression (Jack 2026-10-30): a Chromium-like engine that wedges on an empty utterance and drops a speak() that comes
   // < 200 ms after cancel(); battle listen prompts and the 🔊 replay must still START (onstart) with real text at volume 1, EN and ZH
@@ -580,6 +581,7 @@ await nv.context().close();
       addEventListener() {}, removeEventListener() {} };
     Object.defineProperty(window, 'speechSynthesis', { value: sy, configurable: true });
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.volume = 1; this.voice = null; } };
+    window.__silent = 0; const op = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { if (/^data:audio\/wav/.test(this.src || '')) window.__silent++; return op.call(this); };
   };
   const CR = await newPage(true);
   await CR.context().addInitScript(`(${chromiumTts.toString()})()`);
@@ -591,9 +593,9 @@ await nv.context().close();
     if (!crReplay && zhP) { const n0 = await p.evaluate(() => window.__started.length); await tid(p, 'listen-replay').click();
       crReplay = await p.waitForFunction(n => window.__started.length > n, n0, { timeout: 4000 }).then(() => 'ok', () => 'silent'); } };
   for (let k = 0; k < 3 && !(crSeen.zh && crSeen.en); k++) { await tid(CR, 'act-path').click(); await playBattle(CR, () => true, { onQ: crQ }); if (await tid(CR, 'victory-ok').count()) await tid(CR, 'victory-ok').click(); await tid(CR, 'location').or(tid(CR, 'town')).first().waitFor(); if (await tid(CR, 'town').count()) { await goLoc(CR, 'meadow'); await tid(CR, 'location').waitFor(); } }
-  const crEmpty = await CR.evaluate(() => window.__utter.filter(u => u.text === '').length);
-  check(crSeen.zh > 0 && crSeen.en > 0 && !crBad.length && crReplay === 'ok' && crEmpty === 0,
-    `Chrome/Brave TTS: listen prompts start with text at volume > 0 (ZH ${crSeen.zh}, EN ${crSeen.en}), 🔊 replay ${crReplay}, ${crEmpty} empty unlock utterances${crBad.length ? ' — silent: ' + crBad.slice(0, 3).join(' | ') : ''}`);
+  const crEmpty = await CR.evaluate(() => window.__utter.filter(u => u.text === '').length), crSilent = await CR.evaluate(() => window.__silent);
+  check(crSeen.zh > 0 && crSeen.en > 0 && !crBad.length && crReplay === 'ok' && crEmpty === 0 && crSilent === 0,
+    `Chrome/Brave TTS: listen prompts start with text at volume > 0 (ZH ${crSeen.zh}, EN ${crSeen.en}), 🔊 replay ${crReplay}, ${crEmpty} empty unlock utterances, ${crSilent} iOS silent primes${crBad.length ? ' — silent: ' + crBad.slice(0, 3).join(' | ') : ''}`);
   await CR.context().close();
   // no Chinese voice: written fallback plus a one-time hint
   const H = await newPage(true);

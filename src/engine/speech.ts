@@ -171,6 +171,8 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
   return new Promise(res => {
     const sy = synth(); if (!sy || !text) { res(); return; }
     const d = ttsDbg();
+    // iOS/WebKit: keep the 'playback' audio session so the ring/silent switch does not mute game voice (see audio.ts primeIosAudio)
+    if (appleWebKit && !/[?&]ttssession=0/.test(location.search)) try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; } catch { /* */ }
     let done = false; const fin = () => { if (!done) { done = true; res(); } };
     let cur: SpeechSynthesisUtterance | null = null, started = false;
     const mk = (withVoice: boolean) => {

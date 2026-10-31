@@ -5,7 +5,7 @@ function log(m){if(!L)L=document.getElementById('log');if(L.value.indexOf('(JS h
 function big(m,c){B.style.display='block';B.style.background=c||'#a22';B.textContent=m;}
 window.onerror=function(m,s,l,c){log('JS ERROR '+m+' @'+l+':'+c);};
 window.addEventListener('unhandledrejection',function(e){log('REJECTION '+(e.reason&&e.reason.message||e.reason));});
-log('page JS alive (tts-test.js v3)');document.addEventListener('DOMContentLoaded',function(){log('DOMContentLoaded — page JS alive')});
+log('page JS alive (tts-test.js v4)');document.addEventListener('DOMContentLoaded',function(){log('DOMContentLoaded — page JS alive')});
 log('UA '+navigator.userAgent);
 log('secureContext '+window.isSecureContext+' · clipboard '+(!!(navigator.clipboard&&navigator.clipboard.writeText))+' · share '+(!!navigator.share));
 log('speechSynthesis '+(sy&&typeof sy.speak==='function'?'yes':'NO')+' · Utterance '+(typeof SpeechSynthesisUtterance)+' · audioSession '+(navigator.audioSession?navigator.audioSession.type:'n/a'));
@@ -35,7 +35,7 @@ function speak(text,lang,useVoice){var id=++n;
   setTimeout(function(){if(!started){log('#'+id+' ⚠️ no onstart after 2s');big('⚠️ #'+id+' never started. If MP3 also silent → check ringer/volume. If MP3 plays → speech engine issue.','#a60');}},2000);
  }catch(e){log('#'+id+' THREW '+e.name+': '+e.message);big('❌ speak threw: '+e.message);}
 }
-function on(i,f){document.getElementById(i).addEventListener('click',function(ev){log('tap ['+i+']');try{f(ev)}catch(e){log(i+' THREW '+e.message)}});}
+function on(i,f){document.getElementById(i).addEventListener('click',function(ev){log('tap ['+i+'] audioSession '+(navigator.audioSession?navigator.audioSession.type:'n/a'));try{f(ev)}catch(e){log(i+' THREW '+e.message)}});}
 on('zh',function(){speak('苹果','zh-CN',true)});on('zhn',function(){speak('你好','zh-CN',false)});
 on('en',function(){speak('apple','en-US',true)});on('enn',function(){speak('hello','en-US',false)});
 on('cancel',function(){sy.cancel();log('cancel()')});
@@ -53,3 +53,13 @@ on('share',function(){if(!navigator.share){log('no Web Share API');S.textContent
  navigator.share({title:'TTS log',text:L.value}).then(function(){log('share OK')},function(e){log('share failed '+e.name)});});
 on('mail',function(){var b=L.value;if(b.length>1800)b='...(truncated)\n'+b.slice(-1800);location.href='mailto:?subject='+encodeURIComponent('TTS test log')+'&body='+encodeURIComponent(b);});
 on('clr',function(){L.value='';S.textContent='';});
+// v4: iOS silent switch — on the first tap set audioSession 'playback' (+ silent <audio> play), never an empty utterance
+var primed=false,optOut=/[?&]ttssession=0/.test(location.search);
+function asType(){return navigator.audioSession?navigator.audioSession.type:'n/a'}
+function prime(why){if(primed)return;primed=true;var b=asType();
+ if(optOut){log('audioSession '+b+' (?ttssession=0: NOT setting playback — voice will follow the ringer)');return;}
+ try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){log('audioSession set threw '+e)}
+ log('first tap ('+why+'): audioSession '+b+' → '+asType());
+ try{var a=new Audio('data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA');a.volume=0;a.playsInline=true;var p=a.play();if(p&&p.then)p.then(function(){log('silent <audio> play() ok')},function(e){log('silent <audio> play() rejected '+e.name)});}catch(e){log('silent audio threw '+e)}}
+['touchend','click','keydown'].forEach(function(t){document.addEventListener(t,function(ev){prime(t)},true)});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&primed&&!optOut&&navigator.audioSession&&navigator.audioSession.type!=='playback'){navigator.audioSession.type='playback';log('visible again: audioSession → '+asType())}});
