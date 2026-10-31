@@ -12,7 +12,7 @@ for (const [W, H] of VPS) {
   const ctx = await browser.newContext({ viewport: { width: W, height: H } });
   await ctx.addInitScript(() => {
     const zh = { lang: 'zh-CN', name: 'Stub Chinese', voiceURI: 'stub', default: false, localService: true };
-    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: { getVoices: () => [zh], speak(u) { setTimeout(() => u.onend && u.onend({}), 30); }, cancel() {}, onvoiceschanged: null } });
+    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: { getVoices: () => [zh], speak(u) { u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 30); }, cancel() {}, resume() {}, onvoiceschanged: null } });
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
   });
   const p = await ctx.newPage(); const errs = [];

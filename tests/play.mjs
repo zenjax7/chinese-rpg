@@ -425,7 +425,7 @@ await v.context().addInitScript(() => {
   window.__utter = [];
   const zh = { lang: 'zh-CN', name: 'Stub Chinese', voiceURI: 'stub-zh', default: false, localService: true };
   const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => [zh], cancel() {}, pause() {}, resume() {},
-    speak(u) { window.__utter.push({ text: u.text, lang: u.lang, rate: u.rate, voice: u.voice && u.voice.name }); setTimeout(() => u.onend && u.onend({}), 30); },
+    speak(u) { window.__utter.push({ text: u.text, lang: u.lang, rate: u.rate, voice: u.voice && u.voice.name }); u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 30); },
     addEventListener() {}, removeEventListener() {} };
   Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
   window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.voice = null; } };
@@ -462,7 +462,7 @@ await nv.context().close();
     window.__utter = [];
     const vs = langs.map(l => ({ lang: l, name: 'Stub ' + l, voiceURI: 'stub-' + l, default: false, localService: true }));
     const synth = { speaking: false, pending: false, paused: false, onvoiceschanged: null, getVoices: () => vs, cancel() {}, pause() {}, resume() {},
-      speak(u) { window.__utter.push({ text: u.text, lang: u.lang }); setTimeout(() => u.onend && u.onend({}), 30); }, addEventListener() {}, removeEventListener() {} };
+      speak(u) { window.__utter.push({ text: u.text, lang: u.lang }); u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 30); }, addEventListener() {}, removeEventListener() {} };
     Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.rate = 1; this.voice = null; } };
   };
