@@ -167,6 +167,23 @@ if (typeof document !== 'undefined') {
   ['touchend', 'touchmove', 'touchcancel'].forEach(t => document.addEventListener(t, () => clearTimeout(lp), { passive: true, capture: true }));
   setInterval(renderTtsDbg, 500);
 }
+/** iOS/WebKit has no "ringer muted" API and speechSynthesis follows the silent switch, so on the first spoken word per session
+ * show a small dismissible banner. ?iostip=1 forces it (tests/desktop), ?iostip=0 disables. */
+export const MUTED_TIP = 'Can\u2019t hear the word? Turn off the silent switch and raise the volume \u2014 the quiz voice follows the ringer.';
+export function showMutedTip() {
+  try {
+    const q = location.search; if (/[?&]iostip=0/.test(q) || !(appleWebKit || /[?&]iostip=1/.test(q))) return;
+    if (sessionStorage.getItem('crpg-mutetip') || document.getElementById('mute-tip')) return;
+    sessionStorage.setItem('crpg-mutetip', '1');
+    const el = document.createElement('div'); el.id = 'mute-tip'; el.setAttribute('data-testid', 'mute-tip'); el.setAttribute('role', 'status');
+    el.style.cssText = 'position:fixed;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:9999;max-width:min(92vw,560px);display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(20,20,30,.92);color:#fff;font:15px/1.35 system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.4)';
+    const t = document.createElement('span'); t.textContent = '\u{1F507} ' + MUTED_TIP;
+    const x = document.createElement('button'); x.textContent = '\u2715'; x.setAttribute('aria-label', 'Dismiss'); x.setAttribute('data-testid', 'mute-tip-close');
+    x.style.cssText = 'flex:none;min-width:44px;min-height:44px;border:0;border-radius:10px;background:rgba(255,255,255,.15);color:#fff;font-size:18px';
+    const close = () => el.remove(); x.onclick = close; setTimeout(close, 12000);
+    el.append(t, x); document.body.appendChild(el);
+  } catch { /* */ }
+}
 /** Speaks text; resolves when finished or after maxMs (headless browsers may never fire onend). */
 export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlockMaxMs): Promise<void> {
   return new Promise(res => {
@@ -182,7 +199,7 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
       // retry without an explicit voice: iOS lists voices that are not downloaded and stay silent when picked
       if (withVoice && lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
       if (withVoice && lang.startsWith('en') && enVoice) u.voice = enVoice;
-      u.onstart = () => { if (u === cur) { started = true; d.start++; renderTtsDbg(); } };
+      u.onstart = () => { if (u === cur) { started = true; d.start++; renderTtsDbg(); showMutedTip(); } };
       u.onend = () => { if (u === cur) { d.end++; fin(); } }; u.onerror = (e: any) => { if (u === cur) { d.err = e?.error || 'error'; fin(); } };
       return u;
     };
@@ -209,3 +226,4 @@ export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlock
     setTimeout(fin, maxMs);
   });
 }
+if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { speak });

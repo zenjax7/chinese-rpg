@@ -150,6 +150,23 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
   await tid('debug-open').click(); await tid('dbg-srlog').waitFor();
   check((await p.locator('[data-testid="dbg-srlog"] [data-testid="sr-debug"]').count()) >= 4 && /final: “/.test(await tid('dbg-srlog').innerText()), '?debug panel: speech log with raw transcripts, alternatives, confidence');
   await tid('dbg-close').click();
+  // ---- iOS muted-ringer tip: never on desktop; with ?iostip=1 once per session, dismissible ----
+  check(await tid('mute-tip').count() === 0, 'mute tip: not shown on non-iOS after speaking');
+  {
+    const c2 = await browser.newContext({ viewport: { width: 1024, height: 768 } });
+    await c2.addInitScript(() => { const synth = { speaking: false, pending: false, paused: false, getVoices: () => [], cancel() {}, pause() {}, resume() {},
+      speak(u) { u.onstart && u.onstart({}); setTimeout(() => u.onend && u.onend({}), 200); }, addEventListener() {}, removeEventListener() {} };
+      Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true }); });
+    const q = await c2.newPage(); const t2 = id => q.locator(`[data-testid="${id}"]`);
+    await q.goto(BASE + '&iostip=1'); await q.waitForFunction(() => window.__proto?.speak);
+    await q.evaluate(() => window.__proto.speak('你好', 'zh-CN', 2000));
+    check(await t2('mute-tip').count() === 1 && /silent switch/.test(await t2('mute-tip').innerText()), 'mute tip: shown on first speak (iOS flag)');
+    await t2('mute-tip-close').click();
+    check(await t2('mute-tip').count() === 0, 'mute tip: dismissed by ✕');
+    await q.evaluate(() => window.__proto.speak('再见', 'zh-CN', 2000));
+    check(await t2('mute-tip').count() === 0, 'mute tip: not shown again this session');
+    await c2.close();
+  }
   check(errs.length === 0, 'speech tests: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await ctx.close();
 }
