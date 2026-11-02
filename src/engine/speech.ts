@@ -1,7 +1,7 @@
 // Web Speech wrappers. Recognition code adapted from chinese-rpg/speech-demo/index.html
 // (SpeechRecognition || webkitSpeechRecognition, continuous=false, interimResults=true, maxAlternatives=5, error-code handling).
 import { B } from '../data';
-import { speechKeepAliveStart, speechKeepAliveStop } from '../audio/audio';
+import { speechKeepAliveStart, speechKeepAliveStop, speechKeepAliveState } from '../audio/audio';
 
 export type ListenResult =
   | { kind: 'result'; alts: string[] }
@@ -184,46 +184,66 @@ export function showMutedTip() {
     el.append(t, x); document.body.appendChild(el);
   } catch { /* */ }
 }
+/** v6 (Jack 2026-11-01: voice worked once or twice, then silent for the rest of the session, 🔊 too).
+ *  Root causes: (1) the previous speak's keep-alive stop timer paused the silent loop 800 ms into the next utterance;
+ *  (2) a superseded speak() never resolved its own state, so `speaking/pending` from a dropped utterance stayed true and every later
+ *  speak did cancel()+speak() in the same tick, which WebKit drops while it is still flushing; (3) after an interruption WebKit can leave
+ *  the engine `paused` and nothing ever resumed it on WebKit. Now every speak first unsticks the engine (resume if paused, cancel if busy,
+ *  resume again), supersedes the previous call cleanly, and the retry waits for the queue to drain. */
+let prevFin: (() => void) | null = null;
+export function unstickSynth(sy: SpeechSynthesis): boolean {
+  let busy = false;
+  try { busy = !!(sy.speaking || sy.pending); } catch { /* */ }
+  try { if ((sy as any).paused) sy.resume(); } catch { /* */ }
+  if (busy) { try { sy.cancel(); } catch { /* */ } }
+  try { sy.resume(); } catch { /* */ }            // WebKit too: a paused engine after END/interruption swallows every speak()
+  return busy;
+}
 /** Speaks text; resolves when finished or after maxMs (headless browsers may never fire onend). */
 export function speak(text: string, lang = 'zh-CN', maxMs = B.combat.audioUnlockMaxMs): Promise<void> {
   return new Promise(res => {
     const sy = synth(); if (!sy || !text) { res(); return; }
     const d = ttsDbg();
+    try { prevFin?.(); } catch { /* */ }          // supersede the previous call (its timers become no-ops)
     // iOS/WebKit: keep the 'playback' audio session so the ring/silent switch does not mute game voice (see audio.ts primeIosAudio)
     if (appleWebKit && !/[?&]ttssession=0/.test(location.search)) try { const as: any = (navigator as any).audioSession; if (as && as.type !== 'playback') as.type = 'playback'; } catch { /* */ }
-    if (appleWebKit) speechKeepAliveStart();
-    let done = false; const fin = () => { if (!done) { done = true; if (appleWebKit) speechKeepAliveStop(); res(); } };
+    if (appleWebKit) speechKeepAliveStart();       // after prevFin, so its delayed stop is cancelled
+    let done = false; const fin = () => { if (!done) { done = true; if (prevFin === fin) prevFin = null; if (appleWebKit) speechKeepAliveStop(); res(); } };
+    prevFin = fin;
     let cur: SpeechSynthesisUtterance | null = null, started = false;
     const mk = (withVoice: boolean) => {
       const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.85; u.volume = 1;
       // retry without an explicit voice: iOS lists voices that are not downloaded and stay silent when picked
       if (withVoice && lang.startsWith('zh') && zhVoice) u.voice = zhVoice;
       if (withVoice && lang.startsWith('en') && enVoice) u.voice = enVoice;
-      u.onstart = () => { if (u === cur) { started = true; d.start++; renderTtsDbg(); showMutedTip(); } };
+      u.onstart = () => { if (u === cur) { started = true; d.start++; renderTtsDbg(); setTimeout(showMutedTip, 0); } };   // tip never runs inside the speech callback
       u.onend = () => { if (u === cur) { d.end++; fin(); } }; u.onerror = (e: any) => { if (u === cur) { d.err = e?.error || 'error'; fin(); } };
       return u;
     };
     const go = (u: SpeechSynthesisUtterance) => {
-      if (done) return; cur = u; (window as any).__ttsKeep = u;
+      if (done) return; cur = u; (window as any).__ttsKeep = u;   // single ref (no growing array) so the utterance is not GC'd
       let sync = false; try { sync = !!(navigator as any).userActivation?.isActive; } catch { /* */ }
       d.speak++; d.last = { text: u.text, lang: u.lang, volume: u.volume, voice: u.voice?.name ?? null, sync };
-      // Chromium: a paused/wedged queue swallows speak(), so resume() first. Not on WebKit (pre-Oct-25 path, which worked on iOS).
-      if (!appleWebKit) try { sy.resume(); } catch { /* */ }
+      try { if ((sy as any).paused) sy.resume(); } catch { /* */ }
       try { sy.speak(u); } catch { fin(); }
       renderTtsDbg();
     };
     try {
-      if (sy.speaking || sy.pending) {
-        sy.cancel();
-        // WebKit: speak in the same tick (keeps the 🔊 tap's user gesture; a timer-delayed speak() is not a gesture on iOS).
-        // Chromium drops a speak() straight after cancel(), so wait 250 ms there.
-        if (appleWebKit) go(mk(true)); else setTimeout(() => go(mk(true)), 250);
-      } else go(mk(true));
-      // watchdog: no onstart within 1.5 s means the engine dropped it; cancel and try once more, without the picked voice
-      setTimeout(() => { if (done || started || !cur) return; d.retry++; cur = null; try { sy.cancel(); } catch { /* */ }
-        setTimeout(() => { go(mk(false)); setTimeout(() => { if (!started && !done) { d.fail++; if (d.fail >= 3) d.show = true; renderTtsDbg(); } }, 1500); }, appleWebKit ? 0 : 250); }, 1500);
+      const wasBusy = unstickSynth(sy);
+      if (wasBusy) d.unstick = (d.unstick || 0) + 1;
+      // WebKit: speak in the same tick (keeps the 🔊 tap's user gesture). Chromium drops a speak() straight after cancel(), so wait 250 ms.
+      if (wasBusy && !appleWebKit) setTimeout(() => go(mk(true)), 250); else go(mk(true));
+      // watchdog: no onstart within 1.5 s means the engine dropped it; unstick and retry without the picked voice,
+      // waiting until the queue has drained (WebKit drops a speak() issued while cancel() is still flushing)
+      setTimeout(() => { if (done || started || !cur) return; d.retry++; cur = null; unstickSynth(sy);
+        if (appleWebKit) speechKeepAliveStart();
+        const t0 = performance.now();
+        const tryGo = () => { if (done) return; let b = false; try { b = !!(sy.speaking || sy.pending); } catch { /* */ }
+          if (b && performance.now() - t0 < 600) { try { sy.cancel(); } catch { /* */ } setTimeout(tryGo, 100); return; }
+          go(mk(false)); setTimeout(() => { if (!started && !done) { d.fail++; if (d.fail >= 3) d.show = true; renderTtsDbg(); } }, 1500); };
+        setTimeout(tryGo, appleWebKit ? 50 : 250); }, 1500);
     } catch { fin(); }
     setTimeout(fin, maxMs);
   });
 }
-if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { speak });
+if (typeof window !== 'undefined') (window as any).__proto = Object.assign((window as any).__proto || {}, { speak, ttsKeepAlive: speechKeepAliveState });

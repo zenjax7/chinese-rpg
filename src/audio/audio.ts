@@ -88,14 +88,24 @@ function silentEl(): HTMLAudioElement | null {
   if (!keepAlive) { keepAlive = new Audio(SILENT_MP3); keepAlive.loop = true; keepAlive.volume = 0.01; (keepAlive as any).playsInline = true; keepAlive.setAttribute('playsinline', ''); }
   return keepAlive;
 }
-/** iOS/WebKit: run the silent loop while speaking (call inside the tap when possible). */
+/** iOS/WebKit: run the silent loop while speaking (call inside the tap when possible).
+ *  v6 (Jack 2026-11-01 "worked twice then silent"): a pending stop timer from the previous utterance used to fire 800 ms
+ *  into the NEXT one and pause the loop mid-speech (session drop → WebKit synth wedged). Start now cancels that timer, and a
+ *  broken/errored element is thrown away and rebuilt instead of being replayed forever. */
 export function speechKeepAliveStart() {
+  clearTimeout(kaTimer); kaTimer = 0;
   if (!isIosWebKit() || ttsSessionOptOut()) return;
+  if (keepAlive && (keepAlive.error || kaBroken)) { try { keepAlive.pause(); keepAlive.removeAttribute('src'); keepAlive.load(); } catch { /* */ } keepAlive = null; kaBroken = false; }
   const a = silentEl(); if (!a) return;
-  try { const p = a.play(); dbg().silentAudio = 'play'; if (p && (p as any).catch) (p as any).catch((e: any) => { dbg().silentAudio = 'rejected ' + (e?.name || ''); }); } catch { /* */ }
+  try { const p = a.play(); dbg().silentAudio = 'play'; if (p && (p as any).catch) (p as any).catch((e: any) => { dbg().silentAudio = 'rejected ' + (e?.name || ''); kaBroken = true; }); } catch { kaBroken = true; }
 }
-let kaTimer: any = 0;
-export function speechKeepAliveStop() { clearTimeout(kaTimer); kaTimer = setTimeout(() => { try { keepAlive?.pause(); } catch { /* */ } }, 800); }
+let kaTimer: any = 0, kaBroken = false;
+export function speechKeepAliveStop(now = false) {
+  clearTimeout(kaTimer); const off = () => { kaTimer = 0; try { keepAlive?.pause(); } catch { /* */ } dbg().silentAudio = 'paused'; };
+  if (now) off(); else kaTimer = setTimeout(off, 800);
+}
+/** true while the silent loop is playing (tests / debug). */
+export const speechKeepAliveState = () => ({ playing: !!keepAlive && !keepAlive.paused, stopPending: !!kaTimer });
 let silentPrimed = false;
 export function setPlaybackSession(): string | null {
   try { const as: any = (navigator as any).audioSession; if (!as) return null; if (as.type !== 'playback') as.type = 'playback'; return as.type; } catch { return null; }

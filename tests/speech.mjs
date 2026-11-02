@@ -167,6 +167,51 @@ export async function speechTests({ browser, BASE, check, log = console.log }) {
     check(await t2('mute-tip').count() === 0, 'mute tip: not shown again this session');
     await c2.close();
   }
+  // ---- v6 regression (Jack 2026-11-01): N good speaks, then the engine wedges (speaking/pending stuck, paused) and the
+  //      keep-alive loop is left in a stop window; the next speak must still start, and the loop must be playing during it ----
+  {
+    const c3 = await browser.newContext({ viewport: { width: 1024, height: 768 }, hasTouch: true,
+      userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' });
+    await c3.addInitScript(() => {
+      // WebKit-like stub: when wedged, speak() is queued silently (pending forever) unless cancel() AND resume() ran first and the
+      // queue had drained (no speak in the same tick as a cancel while wedged)
+      window.__ka = []; const op = HTMLMediaElement.prototype;
+      op.play = function () { this.__p = true; window.__ka.push('play'); return Promise.resolve(); };
+      op.pause = function () { this.__p = false; window.__ka.push('pause'); };
+      Object.defineProperty(op, 'paused', { get() { return !this.__p; }, configurable: true });
+      const S = window.__S = { wedged: false, cancelled: false, resumed: false, cancelAt: 0, starts: 0, kaAtStart: [] };
+      let cur = null;
+      const synth = { speaking: false, pending: false, paused: false, getVoices: () => [],
+        cancel() { S.cancelled = true; S.cancelAt = performance.now(); if (cur) { const u = cur; cur = null; clearTimeout(u.__t); u.onend && u.onend({}); } if (!S.wedged) { synth.speaking = false; synth.pending = false; } else setTimeout(() => { if (S.resumed) { S.wedged = false; synth.speaking = false; synth.pending = false; synth.paused = false; } }, 60); },
+        pause() { synth.paused = true; }, resume() { S.resumed = true; synth.paused = false; },
+        speak(u) {
+          if (S.wedged || synth.paused || performance.now() - S.cancelAt < 20 && S.wasWedged) { synth.pending = true; return; }   // dropped
+          cur = u; synth.speaking = true; S.starts++; S.kaAtStart.push(window.__proto.ttsKeepAlive().playing); u.onstart && u.onstart({});
+          u.__t = setTimeout(() => { if (cur === u) { cur = null; synth.speaking = false; u.onend && u.onend({}); } }, 300); },
+        addEventListener() {}, removeEventListener() {} };
+      window.__wedge = () => { S.wedged = true; S.wasWedged = true; S.resumed = false; synth.speaking = true; synth.pending = true; synth.paused = true; };
+      Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
+    });
+    const q = await c3.newPage(); q.on('pageerror', e => errs.push(e.message));
+    await q.goto(BASE + '&iostip=0'); await q.waitForFunction(() => window.__proto?.speak && window.__proto?.ttsKeepAlive);
+    for (let i = 0; i < 3; i++) await q.evaluate(() => window.__proto.speak('你好', 'zh-CN', 3000));
+    check(await q.evaluate(() => window.__S.starts) === 3, 'tts v6: 3 normal speaks start');
+    // back-to-back: next speak inside the previous one's 800 ms keep-alive stop window → loop must still be playing mid-utterance
+    await q.evaluate(() => window.__proto.speak('一', 'zh-CN', 3000));
+    const midLoop = await q.evaluate(async () => { const p = window.__proto.speak('二', 'zh-CN', 3000); await new Promise(r => setTimeout(r, 0)); const st = window.__proto.ttsKeepAlive(); await p; return st; });
+    check(midLoop.playing && !midLoop.stopPending, 'tts v6: keep-alive stop timer from the previous speak is cancelled by the next speak');
+    await q.evaluate(() => window.__wedge());
+    const t0 = Date.now();
+    await q.evaluate(() => window.__proto.speak('谢谢', 'zh-CN', 5000));
+    const S = await q.evaluate(() => window.__S);
+    check(S.starts === 6 && S.cancelled && S.resumed, `tts v6: after the engine wedged (speaking+pending+paused), next speak unsticks (cancel+resume) and starts (starts=${S.starts}, ${Date.now() - t0} ms)`);
+    check(S.kaAtStart.every(Boolean), 'tts v6: silent keep-alive loop playing at every utterance start');
+    await q.waitForTimeout(1000);
+    check(!(await q.evaluate(() => window.__proto.ttsKeepAlive().playing)), 'tts v6: keep-alive loop released after speech ends');
+    for (let i = 0; i < 3; i++) await q.evaluate(() => window.__proto.speak('再见', 'zh-CN', 3000));
+    check(await q.evaluate(() => window.__S.starts) === 9, 'tts v6: speech keeps working after recovery');
+    await c3.close();
+  }
   check(errs.length === 0, 'speech tests: no page errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await ctx.close();
 }
