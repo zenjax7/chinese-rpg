@@ -618,6 +618,28 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
       `小龙 forms: entering realm 4 earns xiaolong_form_fledgling; the map falls back to the hatchling strip until the fledgling one is delivered (${xk})`);
     await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
   }
+  { // ---- Ending C (2026-11-20): sc_r9_chain before the boss_1 fight, sc_r9_mom_freed after it (grown 小龙), sc_r9_ending after boss_9 ----
+    const playOrder = async src => { await p.evaluate(src => { window.__bgDone = false; (0, eval)(src)().finally(() => { window.__bgDone = true; }); }, src);
+      const order = [];
+      for (let i = 0; i < 100 && !(await p.evaluate(() => window.__bgDone)); i++) { await p.waitForTimeout(200);
+        const id = await p.evaluate(() => document.querySelector('[data-testid=scene]')?.dataset.scene);
+        if (id) { if (order.at(-1) !== id) order.push(id); await tid('scene-skip').click().catch(() => {}); }
+        else if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+      return order; };
+    await p.evaluate(() => { window.__proto.fakeBattle = 'win'; });
+    const o1 = await playOrder(`() => window.__proto.world.goto('demon_castle_2', 'boss_1', true)`);
+    const f1 = (await sv()).world.flags;
+    check(o1.indexOf('sc_r9_chain') >= 0 && o1.indexOf('sc_r9_mom_freed') > o1.indexOf('sc_r9_chain') && f1.includes('mom_freed') && f1.includes('xiaolong_form_grown'),
+      `Ending C: entering demon_castle_2/boss_1 plays sc_r9_chain, the (won) fight, then sc_r9_mom_freed, which sets mom_freed + xiaolong_form_grown (${JSON.stringify(o1)})`);
+    await p.evaluate(() => window.__proto.world.goto('demon_castle_2', 'boss_1')); await tid('party-xiaolong').waitFor({ timeout: 8000 }).catch(() => {});
+    const gk = await tid('party-xiaolong').getAttribute('data-key').catch(() => null);
+    check(gk === 'xiaolong_map_fly', `Ending C: grown 小龙 falls back to the current map strip until Arty delivers the grown set (${gk})`);
+    const o2 = await playOrder(`() => window.__proto.world.goto('demon_castle_5', 'boss_9', true)`);
+    const f2 = (await sv()).world.flags;
+    check(o2.includes('sc_r9_ending') && f2.includes('bell_rung') && f2.includes('hero_is_keeper'), `Ending C: clearing demon_castle_5/boss_9 plays sc_r9_ending (bell_rung, hero_is_keeper) (${JSON.stringify(o2)})`);
+    await p.evaluate(() => { delete window.__proto.fakeBattle; const P = window.__proto.world.P(); P.zonesDefeated = P.zonesDefeated.filter(z => z !== 'demon_king_s_gate' && z !== 'throne_hall'); });
+    await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
+  }
   // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
   check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_9', '.next')).count() === 1, 'world map (links-only, Jack Oct 11: no boss-gated unlocks): every linked realm can be tapped from the start, before the realm 1 realm boss');

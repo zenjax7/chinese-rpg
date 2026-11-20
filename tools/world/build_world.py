@@ -147,6 +147,19 @@ for f in sorted(glob.glob(os.path.join(SRC, 'dialogue', 'sc_*.json'))):
             if t not in items and t not in cur: err.append(f"scene {s['id']}/{l['id']}: token {t} unknown")
 words = {t: (items.get(t) and {'zh': items[t]['zh'], 'en': items[t]['en']}) or cur[t]
          for s in scenes.values() for l in s['lines'] for t in re.findall(r'\{(C\d+)\}', l['en'] + ''.join(c['en'] for c in l.get('choices', []))) if t in items or t in cur}
+# ---- node scenes (Ending C, 2026-11-20): a scene whose trigger is {graph, node, on: enter | firstEnter | clear} and that no map event plays
+# yet becomes a story event on that node (once when the scene is once), e.g. sc_r9_chain on entering demon_castle_2/boss_1 (before the
+# boss fight), sc_r9_mom_freed and sc_r9_ending on clearing boss_1 / boss_9. The engine already plays enter / clear events.
+played = {a['scene'] for g in graphs.values() for ev in g.get('events', []) for a in ev.get('do', []) + [a for p in ev.get('pick', []) for a in p['do']] if 'scene' in a}
+for sid, s in sorted(scenes.items()):
+    t = s.get('trigger') or {}
+    if sid in played or t.get('on') not in ('enter', 'firstEnter', 'clear') or t.get('graph') not in graphs: continue
+    g = graphs[t['graph']]
+    if not any(n['id'] == t.get('node') for n in g['nodes']): err.append(f"scene {sid}: trigger node {t.get('graph')}/{t.get('node')} does not exist"); continue
+    ev = {'id': f"{t['node']}.scene.{sid}", 'node': t['node'], 'on': t['on'], 'once': bool(s.get('once')), 'outcome': 'story'}
+    if t.get('cond'): ev['cond'] = t['cond']
+    g.setdefault('events', []).append({**ev, 'do': [{'scene': sid}]})
+
 # ---- turn-in scenes (story rework 2026-11-20): every scene whose trigger is {on: questTurnIn, cond: {questReady: <quest>}} plays at that
 # quest's turn-in, the extra ones first (by id), the quest's own thanks scene last (q1_quiet_morning: sc_r1_hatch, then the thanks).
 # The hand-in place itself comes from quests.json (build_quests.py derives it from the thanks trigger and errors on drift).
