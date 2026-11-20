@@ -102,17 +102,31 @@ class MainScene extends Phaser.Scene {
     this.tweens.add({ targets: this.shieldBubble, alpha: 0.6, duration: 600, yoyo: true, repeat: -1 });
     ready(this);
   }
+  /** True when the companions manifest has strips for `id` and its idle texture loaded (e.g. xiaolong_fledgling once Arty delivers it). */
+  hasCompanion(id: string) { return !!this.cache.json.get('companionManifest')?.[id]?.states?.idle && this.textures.exists(`${id}_idle`); }
+  /** The loaded states of companion `id`, with their animations created. */
+  compStates(id: string) {
+    const c = this.cache.json.get('companionManifest')?.[id]; const states: Record<string, any> = {};
+    for (const [st, a] of Object.entries<any>(c?.states || {})) {
+      if (!this.textures.exists(`${id}_${st}`)) continue; states[st] = a;
+      if (!this.anims.exists(`${id}_${st}`)) this.anims.create({ key: `${id}_${st}`, frames: this.anims.generateFrameNumbers(`${id}_${st}`, { start: 0, end: (a.frames || 1) - 1 }),
+        frameRate: a.fps || 8, repeat: a.loop ? -1 : 0 });
+    }
+    return states;
+  }
+  /** Story form swap (xiaolong-form.ts): draw 小龙 from companion `id` when its strips are loaded; else keep the current art. */
+  setCompanionArt(id: string) {
+    const sp = this.comp; if (!this.compArt || this.compArt.id === id || !(sp instanceof Phaser.GameObjects.Sprite) || !this.hasCompanion(id)) return;
+    const c = this.cache.json.get('companionManifest')[id];
+    this.compArt = { id, states: this.compStates(id) }; sp.setOrigin(c.anchor?.x ?? 0.5, c.anchor?.y ?? 1).play(`${id}_idle`);
+    (window as any).__proto.companion = { ...(window as any).__proto.companion, art: true, id, states: Object.keys(this.compArt.states) };
+  }
   /** 小龙 stands left of the hero on the feet line (y = BASE_Y), bottom-centre anchor, drawn ~120 px tall at scale 1 (Arty's strips are
    *  256x256 frames, facing right). Falls back to the 🐲 emoji placeholder when the strips (or their idle state) are missing. */
   makeCompanion(): Phaser.GameObjects.Text | Phaser.GameObjects.Sprite {
-    const cm = this.cache.json.get('companionManifest'); const id = 'xiaolong'; const c = cm?.[id];
-    if (c?.states?.idle && this.textures.exists(`${id}_idle`)) {
-      const states: Record<string, any> = {};
-      for (const [st, a] of Object.entries<any>(c.states)) {
-        if (!this.textures.exists(`${id}_${st}`)) continue; states[st] = a;
-        if (!this.anims.exists(`${id}_${st}`)) this.anims.create({ key: `${id}_${st}`, frames: this.anims.generateFrameNumbers(`${id}_${st}`, { start: 0, end: (a.frames || 1) - 1 }),
-          frameRate: a.fps || 8, repeat: a.loop ? -1 : 0 });
-      }
+    const id = 'xiaolong'; const c = this.cache.json.get('companionManifest')?.[id];
+    if (this.hasCompanion(id)) {
+      const states = this.compStates(id);
       this.compArt = { id, states };
       (window as any).__proto = (window as any).__proto || {}; (window as any).__proto.companion = { art: true, states: Object.keys(states), played: [] as string[] };
       return this.add.sprite(COMP_X, BASE_Y, `${id}_idle`).setOrigin(c.anchor?.x ?? 0.5, c.anchor?.y ?? 1).setDepth(3).play(`${id}_idle`);
@@ -471,6 +485,9 @@ export const view = {
   hitEnemy: (i: number, d: number | string, opts?: { spoken?: boolean; companion?: boolean }) => call(s => s.hitEnemy(i, d, opts)),
   /** 小龙 one-shot: cheer (correct answer, win), hurt. Attack is played by hitEnemy(..., { companion: true }). */
   companion: (state: 'cheer' | 'hurt') => call(s => { s.compPlay(state); }),
+  /** 小龙's story form: battle strips from companion id (xiaolong, xiaolong_fledgling, xiaolong_grown); no-op until they are loaded. */
+  companionArt: (id: string) => call(s => s.setCompanionArt(id)),
+  hasCompanion: (id: string) => !!scene?.hasCompanion(id),
   enemyAttack: (i: number, d: number | string, blocked: boolean) => call(s => s.enemyAttack(i, d, blocked)),
   heroFloat: (t: string, c?: string) => call(s => s.heroFloat(t, c)),
   windUp: (i: number, on: boolean) => call(s => s.windUp(i, on)),

@@ -13,7 +13,8 @@ import { BG } from '../assets';
 import { nodeXY, NODE_ICON, mapLocation, isDense, nodeRadius } from '../shared/level/map-view';
 import { playMusic, playSfx } from '../audio/audio';
 import * as E from '../world/engine';
-import { playScene, Scene, SceneEnv } from '../world/scene';
+import { playScene, portraitIds, Scene, SceneEnv } from '../world/scene';
+import { XIAOLONG, xiaolongArt, formFlagsOnEnter, withXiaolongArt } from '../world/xiaolong-form';
 import { loadRealmContent } from '../world/content';
 import { levelIndex, publishedLevel, levelToGraph, resetMap, bundledHash, type LevelGraph } from '../world/levels';
 import { battleHooks } from '../engine/battle';
@@ -123,8 +124,10 @@ function sceneEnv(g?: E.Graph): SceneEnv {
     flag: f => P().flags.includes(f), setFlag: f => { if (!P().flags.includes(f)) P().flags.push(f); },
     clearFlag: f => { P().flags = P().flags.filter(x => x !== f); }, cond: c => E.evalCond(c, ctx()) };
 }
+/** 小龙's portrait follows his story form (xiaolong-form.ts), the hatchling's while a form's portraits are not delivered. */
+async function xiaolongPortrait<T extends Scene>(sc: T): Promise<T> { const ids = await portraitIds(); return withXiaolongArt(sc, xiaolongArt(P().flags, k => ids.has(k))); }
 async function runScene(sc: Scene, g?: E.Graph) {
-  const r = await playScene(sc, sceneEnv(g), ui()!.parentElement || document.body);
+  const r = await playScene(await xiaolongPortrait(sc), sceneEnv(g), ui()!.parentElement || document.body);
   if (!S.scenesSeen!.includes(sc.id)) S.scenesSeen!.push(sc.id);
   for (const a of sc.onEnd || []) await doAction(a, g);
   saveW(); return r;
@@ -134,7 +137,7 @@ async function runDialogue(id: string, g: E.Graph) {
   const sideOf = (sp: string) => sp === 'narrator' ? 'none' : sp === 'hero' ? 'L1' : sp === 'xiaolong' ? 'L2' : 'R1';
   const sc: Scene = { id: `${g.id}:${id}`, lines: lines.map((l, i) => ({ id: `d${i}`, speaker: l.speaker, side: sideOf(l.speaker), expr: 'neutral', en: l.en, zh: l.zh, tokens: l.tokens,
     portrait: g.npcs?.[l.speaker]?.portrait || g.npcs?.[l.speaker]?.base })) };
-  await playScene(sc, sceneEnv(g), ui()!.parentElement || document.body);
+  await playScene(await xiaolongPortrait(sc), sceneEnv(g), ui()!.parentElement || document.body);
 }
 
 // ---------------- battles ----------------
@@ -163,6 +166,7 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
   const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, levels };   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
   const pool = mapPool(g, loc); opts.poolKey = pool.poolKey;
+  view.companionArt(xiaolongArt(P().flags, view.hasCompanion));   // 小龙's battle strips by story form (hatchling until delivered)
   let res: BattleResult; try { res = await runBattle(loc, o.boss ? 'boss' : 'field', 0, opts); } finally { battleHooks.onCorrect = undefined; pool.restore(); }
   if (res.outcome === 'win') {
     if (res.kills?.length) questUpdate(E.questEvent(W.quests, ctx(), { type: 'kill', enemies: res.kills, realm: g.realm }));
@@ -458,6 +462,7 @@ async function blocked(l: E.Lock, g: E.Graph) {
 export async function arrive(node: string) {
   offeredNow.clear();
   const g = W.graphs[P().pos.graph]; const n = E.nodeOf(g, node)!;
+  for (const f of formFlagsOnEnter(g.realm, P().flags, S.party)) P().flags.push(f);   // 小龙 becomes a fledgling on entering realm 4
   const first = !E.bitGet(E.gp(P(), g.id).visited, n.idx); E.markVisited(P(), g, node); saveW(); cloudTrigger('nodeChange', `${g.id}/${node}`);
   graphScreen();
   if (n.kind === 'boss' && n.boss && !P().zonesDefeated.includes(n.boss)) {
@@ -540,9 +545,17 @@ const MAP_SPRITES: Record<string, { key: string; file: string; fw: number; fh: n
   hero: { key: 'hero_map_walk', file: 'map_sprites/hero_map_walk.png', fw: 128, fh: 128, frames: 4, feet: 0.97, fps: 8, idle: 1 },
   xiaolong: { key: 'xiaolong_map_fly', file: 'map_sprites/xiaolong_map_fly.png', fw: 128, fh: 128, frames: 4, feet: 0.92, fps: 8, idle: null },
 };
+/** Map strips Arty has delivered (map_sprites/manifest.json keys), so 小龙's later forms are drawn only once their strip exists. */
+let mapStripKeys = new Set<string>(['xiaolong_map_fly']);
+fetch('map_sprites/manifest.json').then(r => r.json()).then(m => { mapStripKeys = new Set(Object.keys(m || {})); }).catch(() => {});
+/** 小龙's map strip for his story form (xiaolong-form.ts): <key>_map_fly.png, the hatchling's until the form's strip is delivered. */
+function xiaolongMapStrip() {
+  const key = xiaolongArt(P().flags, k => mapStripKeys.has(`${k}_map_fly`)); const m = MAP_SPRITES[XIAOLONG];
+  return key === XIAOLONG ? m : { ...m, key: `${key}_map_fly`, file: `map_sprites/${key}_map_fly.png` };
+}
 /** One party member on the map, ps px tall, feet at (dx, dy) from the party's point; `moving` plays the loop (walk / fly), else the idle frame. */
 function mapSprite(id: string, ps: number, dx: number, dy: number, moving: boolean) {
-  const m = MAP_SPRITES[id]; if (!m) return '';
+  const m = id === XIAOLONG ? xiaolongMapStrip() : MAP_SPRITES[id]; if (!m) return '';
   const loop = moving || m.idle === null; const anim = loop ? (id === 'xiaolong' ? 'fly' : 'walk') : 'idle';
   const style = loop ? `animation:mapstrip ${m.frames / m.fps}s steps(${m.frames}) infinite;--strip:-${m.fw * m.frames}px` : `transform:translateX(-${m.fw * m.idle!}px)`;
   return `<svg data-testid="party-${id}" data-key="${m.key}" data-anim="${anim}" x="${dx - ps / 2}" y="${dy - ps * m.feet}" width="${ps}" height="${ps}" viewBox="0 0 ${m.fw} ${m.fh}"><image href="${m.file}" width="${m.fw * m.frames}" height="${m.fh}" style="${style}"/></svg>`;

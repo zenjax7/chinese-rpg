@@ -603,6 +603,13 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     const s9 = await sv(); const hi = order.indexOf('sc_r1_hatch'), ti = order.indexOf('sc_q1_quiet_morning_thanks');
     check(hi >= 0 && ti > hi && s9.party?.includes('xiaolong') && s9.world.flags.includes('met_xiaolong') && s9.world.flags.includes('xiaolong_form_hatch') && s9.storyQuests.q1_quiet_morning?.s === 'completed',
       `story rework: at the well the egg hatches (sc_r1_hatch) before the thanks, and 小龙 joins the party there (${JSON.stringify({ order, party: s9.party, q: s9.storyQuests.q1_quiet_morning?.s })})`);
+    // 小龙 forms (xiaolong-form.ts): entering realm 4 earns the fledgling flag; until Arty's fledgling strip exists the map keeps the hatchling's
+    await bgCall(`() => window.__proto.world.goto('realm_4', 'entry_town', true)`);
+    await p.evaluate(() => window.__proto.world.goto('realm_4', 'entry_town')); await tid('party-xiaolong').waitFor({ timeout: 8000 }).catch(() => {});
+    const s10 = await sv(); const xk = await tid('party-xiaolong').getAttribute('data-key').catch(() => null);
+    check(s10.world.flags.includes('xiaolong_form_fledgling') && xk === 'xiaolong_map_fly',
+      `小龙 forms: entering realm 4 earns xiaolong_form_fledgling; the map falls back to the hatchling strip until the fledgling one is delivered (${xk})`);
+    await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
   }
   // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
