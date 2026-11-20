@@ -163,7 +163,8 @@ async function fight(g: E.Graph, z: E.Zone | undefined, o: { boss?: boolean; ene
   // leveling v2: the level settings of the map being played: a published map's own, else the bundled ones of the zone's map
   // (realm_1's clover_hills / warren zones are their own maps), else of the graph's map
   const ml = W.idx!.mapLevels || {}; const levels = mapLevels((g as LevelGraph).levelSettings ?? (z && ml[z.id]) ?? ml[g.id]);
-  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, levels };   // Jack Oct 11: no random elites, a boss always starts fresh
+  const opts: BattleOpts = { roster: z?.roster, enemies: o.enemies, boss: o.boss ? z?.boss : undefined, levels,
+    noCompanion: !S.party!.includes(XIAOLONG) };   // 小龙 fights only once he has hatched and joined (sc_r1_hatch)   // Jack Oct 11: no random elites, a boss always starts fresh
   battleHooks.onCorrect = onCorrect;
   const pool = mapPool(g, loc); opts.poolKey = pool.poolKey;
   view.companionArt(xiaolongArt(P().flags, view.hasCompanion));   // 小龙's battle strips by story form (hatchling until delivered)
@@ -420,7 +421,7 @@ async function scrollWalk(g: E.Graph, e: E.GEdge, from: string, to: string, z: E
   const bg = BG.battle(LOC[battleLoc(z)], false);
   travelTotal = travelTotalMs(steps, proto().travelMs ?? 20000);
   proto().travel = { edge: e.id, from, to, hit, phase: 'scroll', t: s0 / steps, battles: 0, total: travelTotal };
-  const walkOn = async (t0: number, t1: number) => { proto().travel.phase = 'scroll'; travelScreen(g, from, to); view.travelBegin(bg, TRAVEL_LAYERS[g.id]); playMusic('mus_village'); await scrollRun(t0, t1); };
+  const walkOn = async (t0: number, t1: number) => { proto().travel.phase = 'scroll'; travelScreen(g, from, to); view.travelBegin(bg, TRAVEL_LAYERS[g.id]); view.companionShown(S.party!.includes(XIAOLONG)); playMusic('mus_village'); await scrollRun(t0, t1); };
   let t = s0 / steps;
   if (hit >= 0) {
     const th = (hit + 0.5) / steps; await walkOn(t, th); t = th;

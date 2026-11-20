@@ -488,6 +488,8 @@ export const view = {
   /** 小龙's story form: battle strips from companion id (xiaolong, xiaolong_fledgling, xiaolong_grown); no-op until they are loaded. */
   companionArt: (id: string) => call(s => s.setCompanionArt(id)),
   hasCompanion: (id: string) => !!scene?.hasCompanion(id),
+  /** Show / hide 小龙 for this battle (call after mode('battle'); hidden while he is still an egg). */
+  companionShown: (b: boolean) => call(s => { s.comp.setVisible(b); }),
   enemyAttack: (i: number, d: number | string, blocked: boolean) => call(s => s.enemyAttack(i, d, blocked)),
   heroFloat: (t: string, c?: string) => call(s => s.heroFloat(t, c)),
   windUp: (i: number, on: boolean) => call(s => s.windUp(i, on)),

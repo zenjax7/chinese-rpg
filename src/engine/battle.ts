@@ -27,6 +27,8 @@ export interface BattleResult { outcome: 'win' | 'defeat' | 'flee'; exp: number;
 export interface BattleOpts { enemies?: string[]; roster?: { enemy: string; weight: number }[]; boss?: string;
   /** the word pool's cycle key when a map brings its own pool (learning.ts cycleFill); default: the location */
   poolKey?: string;
+  /** story rework 2026-11-20: 小龙 is still an egg (graph mode, before sc_r1_hatch): no sprite, no Friendship gauge, no companion attack or cheer */
+  noCompanion?: boolean;
   /** leveling v2: the map's level settings (enemyLevel / eliteLevel / boss.level / roster[].level, gearTier, recLevel) */ levels?: MapLevels; }
 export const DESY_ENEMY: Record<string, string> = Object.fromEntries(Object.values(ENEMIES).map(e => [e.desyId.split(' ')[0], e.id]));
 export const runtimeEnemy = (id: string) => (ENEMIES[id] ? id : DESY_ENEMY[id]);
@@ -101,6 +103,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const ctx: WayCtx = { asked: 0, spoken: 0, cooling: new Set() };
   (window as any).__proto.summons = 0;
   const wpn = S.equip.weapon ? GEAR[S.equip.weapon] : null;
+  const withComp = !opts.noCompanion; (window as any).__proto.companionInBattle = withComp;
   const bs = { summons: 0, gauge: 0, round: 0, streak: wpn?.startStreak || 0, q: 0, potions: 0, insight: 0, heal: 0, shield: 0, doubleReady: 0, fastWrongs: 0, focus: false, log: [] as string[], casts: 0, lastCastQ: -1 };
   const res: BattleResult = { outcome: 'win', exp: 0, gold: 0, loot: [], levels: 0, learned: [], questions: 0, correct: 0, spoken: 0, voids: 0, tired: false, gearGot: [], equipped: [] };
   const tired = () => bs.q >= tiredAt;
@@ -117,7 +120,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   const side = (html: string) => { const el = $('#bside'); if (el) el.innerHTML = html; };
   const zhName = (f: Foe) => zh(f.d.zh);
   S.stats.battles++;
-  view.mode('battle', parseInt(loc.bg), BG.battle(loc, isBoss));
+  view.mode('battle', parseInt(loc.bg), BG.battle(loc, isBoss)); view.companionShown(withComp);
   playMusic(leader || isBoss ? 'mus_battle_boss' : 'mus_battle_field');
   const syncView = () => { view.enemies(foes.map(f => ({ sprite: f.d.sprite, tint: f.d.spriteTint, headAnchor: f.d.headAnchor, emoji: f.d.emoji, name: f.d.zh, hp: f.hp, maxHp: f.maxHp, color: f.d.color, boss: ['locboss', 'realmboss'].includes(f.d.kind) })));
     foes.forEach((f, i) => { if (f.alive && f.fx) view.setStatus(i, f.fx); }); };
@@ -137,7 +140,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   };
   let lastStreak = -1;
   const refresh = () => {
-    setBattleHud({ gauge: bs.gauge });
+    if (withComp) setBattleHud({ gauge: bs.gauge });   // no egg in the HUD: the EXP row stays
     const rc = $('#roundchip');
     if (rc) {
       const st = [hero.webbed ? '<span title="Webbed: next attack does half damage">🕸️</span>' : '', hero.rooted ? '<span title="Rooted: can\'t run away">🌱</span>' : '', tired() ? '<span title="Enemies are tired">😪</span>' : ''].join('');
@@ -196,7 +199,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     if (out.result === 'void') { res.voids++; return out; }
     // companion gauge (v3): +20 wrong, +5 correct, 0 for hinted answers
     const CG = B.companion; const before = bs.gauge;
-    if (!out.hinted) bs.gauge = Math.min(CG.gaugeFull, bs.gauge + (out.result === 'correct' ? CG.gainPerCorrect : CG.gainPerWrong));
+    if (withComp && !out.hinted) bs.gauge = Math.min(CG.gaugeFull, bs.gauge + (out.result === 'correct' ? CG.gainPerCorrect : CG.gainPerWrong));
     if (bs.gauge > before && out.result !== 'correct') flyTo(`💖 +${bs.gauge - before}`, heroFrame(), 'gauge', '#ff7eb3');   // the mistake visibly turns into help
     if (bs.gauge >= CG.gaugeFull && before < CG.gaugeFull) { log(`💖 Your companion ${zh('小龙')} is ready to help!`); toast(`💖 ${zh('小龙')}: ${zh('我来帮你!')}`); }
     ctx.asked++; if (out.spoken) { ctx.spoken++; res.spoken++; S.stats.spoken++; }
@@ -364,7 +367,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
     const heardTxt = heard !== undefined ? ` <span class="muted">(I heard “${esc(heard)}”)</span>` : '';
     if (correct) {
       playSfx('sfx_correct', { detune: 100 * Math.min(5, bs.streak) });
-      view.companion('cheer');   // 小龙 hops
+      if (withComp) view.companion('cheer');   // 小龙 hops
       msg(`✔ Great! ${zh(item.zh)} = ${esc(item.enPrimary)}`, 'fb-ok');
       if (!spoken) sayItem(id);   // spoken questions: the child just said it (or heard it as the question); no replay after a right answer
       await sleep(Math.max(800, C().correctFeedbackMs));
@@ -609,7 +612,7 @@ export async function runBattle(locId: string, kind: BattleKind, pathIndex = 0, 
   for (const id of res.gearGot) { const r = gainGear(id); if (r.equipped) res.equipped.push(equipLine(GEAR[id], r.from)); }
   clampHpMp();
   if (res.outcome !== 'flee') playSting(res.outcome === 'win' ? 'stg_victory' : 'stg_defeat');
-  if (res.outcome === 'win') view.companion('cheer');
+  if (res.outcome === 'win' && withComp) view.companion('cheer');
   if (res.outcome === 'win') { S.stats.wins++; S.courage = 0; res.kills = foes.map(f => f.d.desyId.split(' ')[0]); }
   save(); setBattleHud(null); view.clearFocus();
   (window as any).__proto.q = null; (window as any).__proto.battleLog = bs.log.slice(0, 200);

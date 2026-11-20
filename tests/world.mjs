@@ -386,6 +386,8 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   const foes = await p.evaluate(() => window.__proto.foes());
   check(foes.length === 1 && foes[0].id === 'rabbit', `tutorial fight: one horned rabbit, no fill (${foes.map(f => f.id)})`);
+  const egg = await p.evaluate(() => ({ inBattle: window.__proto.companionInBattle, gauge: !!document.querySelector('[data-testid="gauge"]') }));
+  check(egg.inBattle === false && !egg.gauge, `tutorial fight before the hatch: 小龙 is still an egg — no companion sprite, no Friendship gauge (${JSON.stringify(egg)})`);
   const act1 = await p.evaluate(() => window.__proto.heroActions);
   check(foes[0].level >= 1 && foes[0].level <= 3 && foes[0].spd === foes[0].level && act1?.n === 1,
     `leveling v2: the tutorial rabbit rolls a level in realm_1's enemyLevel [1, 3] with SPD = level; an L1 hero gets 1 action (L${foes[0].level}, SPD ${foes[0].spd}, ${act1?.n} action)`);
@@ -662,6 +664,8 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await p.evaluate(() => { window.__fightDone = null; window.__proto.world.fight('crossroads_highway').then(o => { window.__fightDone = o; }); });
   await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   const foes3 = await p.evaluate(() => window.__proto.foes());
+  const xl3 = await p.evaluate(() => ({ inBattle: window.__proto.companionInBattle, gauge: !!document.querySelector('[data-testid="gauge"]') }));
+  check(xl3.inBattle === true && xl3.gauge, `after the hatch at the well 小龙 fights again: companion + Friendship gauge in battle (${JSON.stringify(xl3)})`);
   for (let i = 0; i < 40 && !(await p.locator('[data-testid="opt"]:not([disabled]), [data-testid="tile"]:not([disabled])').count()); i++) { const st = await state();
     if (st === 'menu') await tid('act-attack').click().catch(() => {}); else if (st === 'target') await p.locator('[data-testid^="target-"]:not([data-testid="target-menu"])').first().click().catch(() => {});
     else if (st === 'continue') await tid('continue').click().catch(() => {}); await p.waitForTimeout(150); }
