@@ -613,8 +613,23 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   }
   // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
-  check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_9', '.next')).count() === 1, 'world map (links-only, Jack Oct 11: no boss-gated unlocks): every linked realm is open from the start, before the realm 1 realm boss');
-  await edit(s => { if (!s.world.zonesDefeated.includes('warren')) s.world.zonesDefeated.push('warren'); }); await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+  check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_9', '.next')).count() === 1, 'world map (links-only, Jack Oct 11: no boss-gated unlocks): every linked realm can be tapped from the start, before the realm 1 realm boss');
+  { // ---- story rework 2026-11-20: world exits w12…w89 lock on each land's climax main; a locked realm shows 🔒 and the default blocked line ----
+    const cls = await p.locator(gsel('realm_2')).first().getAttribute('class');
+    const w12 = await p.locator('[data-testid="graph-svg"] line[data-edge="w12"].locked').count();
+    await tid('gnode-realm_2').click(); await tid('lock-blocked').waitFor({ timeout: 8000 }).catch(() => {});
+    const msg = await tid('lock-blocked').count() ? await tid('lock-blocked').innerText() : '';
+    const lb = await p.evaluate(() => window.__proto.lastBlocked);
+    if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click();
+    const at = (await sv()).world.pos;
+    check(/locked/.test(cls || '') && w12 === 1 && /路不通/.test(msg) && /The way is blocked/.test(msg) && lb?.quest === 'q1_shatter_crown' && at.graph === 'world' && at.node === 'realm_1',
+      `world exit lock: realm 2 shows a lock until q1_shatter_crown is turned in; tapping it shows “${msg}” and you stay put (${JSON.stringify({ cls, w12, lb, at })})`);
+  }
+  await edit(s => { if (!s.world.zonesDefeated.includes('warren')) s.world.zonesDefeated.push('warren');
+    for (const q of ['q1_shatter_crown', 'q2_royal_jelly']) s.storyQuests[q] = { s: 'completed', at: 0, step: 0, obj: {}, done: 0 }; });   // the R1 / R2 climax mains open w12, w23
+  await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+  check(!/locked/.test(await p.locator(gsel('realm_2')).first().getAttribute('class') || '') && /locked/.test(await p.locator(gsel('realm_4')).first().getAttribute('class') || ''),
+    'world exit lock: after the R1 and R2 climax mains, realms 2 and 3 open; realm 4 stays locked behind w34 (q3_fog_jar)');
   await shot('2026-10-03-graph-world-map');
   check(await p.locator(gsel('realm_2', '.next')).count() === 1 && await p.locator(gsel('realm_3', '.next')).count() === 1, 'world map: realms 2 and 3 open (no realm boss needed)');
   await tid('gnode-realm_2').click();

@@ -231,6 +231,17 @@ for g in graphs.values():
     if g.get('realms'):
         for r in g['realms']: r['unlock'] = drop_boss_cond(r.get('unlock'))
 for r in realms: r['unlock'] = drop_boss_cond(r.get('unlock'))
+# quest gates (level-editor §2.6.1; story rework 2026-11-20: world exits w12…w89 lock on each land's climax main) live in docs/data/levels.
+# The static build plays these graphs, so each node / edge takes lockedUntilQuest / lockedScene from its map's level file (by id).
+LOCK_KEYS = ('lockedUntilQuest', 'lockedScene')
+for g in graphs.values():
+    lp = os.path.join(SRC, 'levels', f"{g['id']}.json")
+    if not os.path.exists(lp): continue
+    L = J(lp)
+    for part in ('nodes', 'edges'):
+        locks = {x['id']: {k: x[k] for k in LOCK_KEYS if x.get(k)} for x in L.get(part, [])}
+        for x in g[part]:
+            if locks.get(x['id']): x.update(locks[x['id']])
 
 if err:
     for m in err: print('ERROR', m)

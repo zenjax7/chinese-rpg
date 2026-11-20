@@ -127,6 +127,23 @@ export function lockOnWay(g: Graph, e: GEdge, from: string, x: Ctx): Lock | null
   const o = otherEnd(e, from); const n = typeof o === 'string' ? nodeOf(g, o) : (graphsCache[o.graph] && nodeOf(graphsCache[o.graph], o.node));
   return n && locked(n, x) ? n : null;
 }
+/** World map (story rework 2026-11-20): realm nodes are joined by link edges (w12…w89) that may carry a quest gate. A realm node can be
+ *  picked when open links join it to the hero's node or to a realm node already visited (a realm once reached stays reachable); else
+ *  the first locked link on the shortest way there. null when it is open (or not linked at all). */
+export function worldLockOnWay(g: Graph, target: string, from: string, x: Ctx): Lock | null {
+  const links = g.edges.filter(e => typeof e.to === 'string');
+  const starts = g.nodes.filter(n => n.id === from || isVisited(x.P, g.id, n.id)).map(n => n.id);
+  const walk = (open: (e: GEdge) => boolean) => {
+    const prev = new Map<string, { node: string; e: GEdge } | null>(starts.map(id => [id, null])); const q = [...starts];
+    while (q.length) { const a = q.shift()!;
+      for (const e of links) { const b = e.from === a ? e.to as string : e.to === a ? e.from : null; if (b && !prev.has(b) && open(e)) { prev.set(b, { node: a, e }); q.push(b); } } }
+    return prev;
+  };
+  if (walk(e => !locked(e, x)).has(target)) return null;
+  const prev = walk(() => true); if (!prev.has(target)) return null;
+  const way: GEdge[] = []; for (let c = target, p = prev.get(c); p; c = p.node, p = prev.get(c)) way.unshift(p.e);
+  return way.find(e => locked(e, x)) || null;
+}
 /** Can the hero walk this edge now? (edge cond, shortcut, and no quest gate on the edge or the node it leads to) */
 export function edgeOpen(e: GEdge, x: Ctx, g?: Graph, from?: string) {
   if (!edgeCondOpen(e, x) || locked(e, x)) return false;

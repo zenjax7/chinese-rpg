@@ -345,8 +345,10 @@ async function walk(e: E.GEdge) {
       const wn = g.kind === 'world' ? E.nodeOf(g, e.from) as any : null;
       if (!meta || (wn && wn.inBuild === false && !allRealms())) { await dialog(`🚧 ${zh('还没开放')} Not in this build`, `<p data-testid="not-in-build">${esc(wn?.title?.en || tgt.graph)} is not in this build yet.</p>`, ['OK']); return; }
       if (!E.edgeCondOpen(e, ctx()) || (wn && !realmNodeOpen(wn, ctx()))) { toast('🔒 The way is closed.'); return; }
+      { const wl = wn && !allRealms() ? E.worldLockOnWay(g, wn.id, from, ctx()) : null; if (wl) return void await blocked(wl, g); }   // world exit gate (w12…w89)
       await graph(tgt.graph);
-      { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); } P().pos = { graph: tgt.graph, node: tgt.node, edge: null, step: 0 }; P().hops++; saveW(); cloudTrigger('graphChange', tgt.graph);
+      { const lk = E.lockOnWay(g, e, from, ctx()); if (lk) return void await blocked(lk, g); } if (wn) E.markVisited(P(), g, wn.id);   // a realm once entered stays reachable
+      P().pos = { graph: tgt.graph, node: tgt.node, edge: null, step: 0 }; P().hops++; saveW(); cloudTrigger('graphChange', tgt.graph);
       return void await arrive(tgt.node);
     }
     if (!E.edgeCondOpen(e, ctx())) { toast('🔒 The way is closed.'); return; }
@@ -591,7 +593,7 @@ export function graphScreen() {
   const worldPick = new Map<string, E.GEdge>(); if (isWorld) for (const n of g.nodes) { const e = g.edges.find(e2 => e2.from === n.id && typeof e2.to === 'object'); if (e && realmNodeOpen(n, x)) worldPick.set(n.id, e); }
   const pr = E.gp(P(), g.id);
   const lines = isWorld ? g.edges.filter(e => typeof e.to === 'string').map(e => { const a = E.nodeOf(g, e.from)!, b = E.nodeOf(g, e.to as string)!;   // link edges w12..w89
-    const open = allRealms() || E.edgeOpen(e, x); return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${open ? ' walked' : ' closed'}" data-edge="${e.id}"/>`; }).join('')
+    const open = allRealms() || E.edgeOpen(e, x); return `<line x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}" class="ge${open ? ' walked' : ' closed'}${open || !E.locked(e, x) ? '' : ' locked'}" data-edge="${e.id}"/>`; }).join('')
     : g.edges.filter(e => typeof e.to === 'string').map(e => { const a = E.nodeOf(g, e.from)!, b = E.nodeOf(g, e.to as string)!;
     if (fogS[a.id] === 'hidden' || fogS[b.id] === 'hidden' || (fogS[a.id] !== 'visited' && fogS[b.id] !== 'visited')) return '';
     const walked = E.bitGet(pr.walked, e.idx); const open = E.edgeCondOpen(e, x);
@@ -602,10 +604,10 @@ export function graphScreen() {
   // Jack Oct 11 (hidden node types): an unvisited node carries no kind, title, icon or id in the DOM: only its index and fog state
   const nodes = g.nodes.map(n => { const f = fogS[n.id]; if (f === 'hidden') return '';
     const isHere = n.id === here; const ae = adj.get(n.id); const next = isWorld ? worldPick.has(n.id) && !isHere : !!ae && E.edgeCondOpen(ae, x);
-    const lockedWay = !isWorld && !!ae && next && !!E.lockOnWay(g, ae, here, x);
+    const lockedWay = next && (isWorld ? !allRealms() && !!E.worldLockOnWay(g, n.id, here, x) : !!ae && !!E.lockOnWay(g, ae, here, x));
     const known = f === 'visited';
     const done = known && n.kind === 'boss' && P().zonesDefeated.includes(n.boss || '');
-    const ic = !known ? '?' : done ? '✔' : isWorld ? (worldPick.has(n.id) ? '🌀' : '🔒') : (ICON[n.kind] || '•');
+    const ic = !known ? '?' : done ? '✔' : isWorld ? (worldPick.has(n.id) && !lockedWay ? '🌀' : '🔒') : (ICON[n.kind] || '•');
     const label = known && n.title ? `${n.title.zh}` : '';
     const ident = known ? `data-node="${n.id}" data-testid="gnode-${n.id}" data-kind="${n.kind}"` : `data-testid="gnode-i${n.idx}"`;
     return `<g class="gn ${f}${isHere ? ' here' : ''}${next ? ' next' : ''}${lockedWay ? ' locked' : ''}" data-idx="${n.idx}" ${ident} data-fog="${f}" transform="translate(${px(n)},${py(n)})">
