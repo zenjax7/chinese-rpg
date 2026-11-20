@@ -285,8 +285,9 @@ async function questsAtNode(g: E.Graph, node: string) {
   for (const q of W.quests) {
     const st = S.storyQuests![q.id];
     if (st?.s === 'ready' && E.atNode(q.turnInAt || q.giverAt, g.id, node)) {
-      const sc = q.scenes?.turnIn ? await scene(q.scenes.turnIn) : null;
-      if (sc) await runScene(sc, g); else await dialog(`✅ ${zh(q.title.zh)} ${esc(q.title.en)}`, `<p data-testid="quest-turnin" data-quest="${q.id}">Thank you, ${esc(S.heroName || 'Hero')}!</p>`, ['OK']);
+      let played = 0;
+      for (const id of E.turnInScenes(q)) { const sc = await scene(id); if (sc) { await runScene(sc, g); played++; } }
+      if (!played) await dialog(`✅ ${zh(q.title.zh)} ${esc(q.title.en)}`, `<p data-testid="quest-turnin" data-quest="${q.id}">Thank you, ${esc(S.heroName || 'Hero')}!</p>`, ['OK']);
       E.turnIn(st); giveRewards(q); saveW(); cloudTrigger('questCompleted', `${q.id}:completed`);
     } else if (st?.s === 'active' && E.atNode(q.giverAt, g.id, node) && q.scenes?.progress) {
       const sc = await scene(q.scenes.progress); if (sc) await runScene(sc, g);

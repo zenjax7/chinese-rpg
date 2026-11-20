@@ -37,7 +37,7 @@ export interface QuestStep { id: string; event?: string; objective: { type: stri
   /** escort steps: the node that completes the step (quests.md §2a) */
   toAt?: NodeRef | null }
 export interface Quest { id: string; realm: number; zone: string; title: Txt; giver: any; giverAt: NodeRef | null; turnIn: any; turnInAt: NodeRef | null;
-  returnToGiver?: boolean; requires?: Cond | null; objectives: QuestStep[]; scenes?: { offer?: string; progress?: string; turnIn?: string } | null;
+  returnToGiver?: boolean; requires?: Cond | null; objectives: QuestStep[]; scenes?: { offer?: string; progress?: string; turnIn?: string; beforeTurnIn?: string[] } | null;
   rewards: { goldValue?: number; expValue?: number; items?: Record<string, number>; flags?: string[]; gear?: { id: string; rarity?: string }[] }; summary?: string; repeatable?: boolean }
 /** One story quest's saved state (architecture §11.2): only active / ready / completed are stored. */
 export interface QState { s: 'active' | 'ready' | 'completed'; at: number; done?: number; step: number; obj: Record<string, number> }
@@ -287,6 +287,8 @@ export function questStatus(q: Quest, x: Ctx): QStatus {
 /** "graph/node" (quests.json refs) or a NodeRef → NodeRef */
 export const toRef = (r: string | NodeRef): NodeRef => typeof r === 'string' ? { graph: r.split('/')[0], node: r.split('/').slice(1).join('/') } : r;
 export const atNode = (a: any, gid: string, node: string) => !!a && a.graph === gid && a.node === node;
+/** The scenes a turn-in plays, in order: scenes.beforeTurnIn (e.g. sc_r1_hatch), then the quest's own thanks scene (build_world.py). */
+export const turnInScenes = (q: Pick<Quest, 'scenes'>): string[] => [...(q.scenes?.beforeTurnIn || []), ...(q.scenes?.turnIn ? [q.scenes.turnIn] : [])];
 export const autoTurnIn = (q: Quest) => q.turnIn === 'auto' || q.returnToGiver === false;
 /** The steps that count as objectives (the first talk = the offer, the last talk with turnIn = the hand-in). */
 export function objectiveSteps(q: Quest): QuestStep[] {

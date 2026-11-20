@@ -147,6 +147,16 @@ for f in sorted(glob.glob(os.path.join(SRC, 'dialogue', 'sc_*.json'))):
             if t not in items and t not in cur: err.append(f"scene {s['id']}/{l['id']}: token {t} unknown")
 words = {t: (items.get(t) and {'zh': items[t]['zh'], 'en': items[t]['en']}) or cur[t]
          for s in scenes.values() for l in s['lines'] for t in re.findall(r'\{(C\d+)\}', l['en'] + ''.join(c['en'] for c in l.get('choices', []))) if t in items or t in cur}
+# ---- turn-in scenes (story rework 2026-11-20): every scene whose trigger is {on: questTurnIn, cond: {questReady: <quest>}} plays at that
+# quest's turn-in, the extra ones first (by id), the quest's own thanks scene last (q1_quiet_morning: sc_r1_hatch, then the thanks).
+# The thanks scene's trigger node is where the hand-in happens (the egg hatches at the well, not back in the village).
+for q in quests:
+    own = (q.get('scenes') or {}).get('turnIn')
+    extra = sorted(sid for sid, s in scenes.items() if sid != own and (s.get('trigger') or {}).get('on') == 'questTurnIn'
+                   and ((s['trigger'].get('cond') or {}).get('questReady')) == q['id'])
+    if extra: q['scenes'] = {**q['scenes'], 'beforeTurnIn': extra}
+    t = (scenes.get(own) or {}).get('trigger') or {}
+    if q.get('turnInAt') and t.get('on') == 'questTurnIn' and t.get('graph') and t.get('node'): q['turnInAt'] = {'graph': t['graph'], 'node': t['node']}
 for g in graphs.values():
     for ev in g.get('events', []):
         for a in ev.get('do', []) + [a for p in ev.get('pick', []) for a in p['do']]:

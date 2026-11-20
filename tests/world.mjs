@@ -362,25 +362,21 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   await tid('name-input').waitFor(); await tid('name-input').fill('Mia'); await tid('name-ok').click();
   await tid('scene').waitFor({ timeout: 15000 });
   let sc = await scene();
-  check(sc.id === 'sc_r1_opening' && sc.line === 'l1' && sc.main.includes('Mia') && !sc.main.includes('{hero}'), `scene: the tutorial plays sc_r1_opening with {hero} → the player's name (“${sc.main}”)`);
+  check(sc.id === 'sc_r1_opening' && sc.line === 'l1' && sc.name === '' && sc.L?.dim && sc.R?.dim, `scene: the tutorial plays sc_r1_opening (story rework); narrator line → no nameplate, everyone dimmed (${sc.id} ${sc.line})`);
   await p.waitForTimeout(1100); await p.keyboard.press('Enter'); await p.waitForTimeout(250);
   sc = await scene();
-  check(sc.line === 'l2' && sc.name.includes('白奶奶') && sc.R?.char === 'granny_bai' && sc.R.flip && sc.R.lit && sc.L?.char === 'hero' && sc.L.dim && !sc.L.flip && /portraits\/granny_bai_happy\.webp$/.test(sc.R.img || ''),
-    `scene: Enter advances; speaker lit + listener dimmed, right portrait mirrored, nameplate 白奶奶 (${JSON.stringify({ line: sc.line, name: sc.name, L: sc.L, R: sc.R })})`);
+  check(sc.line === 'l2' && sc.main.includes('Mia') && !sc.main.includes('{hero}') && sc.name.includes('白奶奶') && sc.R?.char === 'granny_bai' && sc.R.flip && sc.R.lit && sc.L?.char === 'hero' && sc.L.dim && !sc.L.flip && /portraits\/granny_bai_worried\.webp$/.test(sc.R.img || ''),
+    `scene: Enter advances; {hero} → the player's name, speaker lit + listener dimmed, right portrait mirrored, nameplate 白奶奶 (${JSON.stringify({ line: sc.line, main: sc.main, name: sc.name, L: sc.L, R: sc.R })})`);
   await p.mouse.click(640, 600); await p.waitForTimeout(80); await p.mouse.click(640, 600); await p.waitForTimeout(250);   // tap: finish typing, then advance
-  sc = await scene(); check(sc.line === 'l3' && sc.name === '' && sc.L?.dim && sc.R?.dim, `scene: tap advances; narrator line → no nameplate, everyone dimmed (${sc.line})`);
+  sc = await scene(); check(sc.line === 'l3' && sc.name.includes('白奶奶'), `scene: tap advances (${sc.line})`);
   await p.keyboard.press(' '); await p.waitForTimeout(80); await p.keyboard.press(' '); await p.waitForTimeout(300);
-  sc = await scene(); check(sc.line === 'l4' && /小龙/.test(sc.name) && sc.main.includes('你好') && /hello/i.test(sc.gloss), `scene: Space advances; {C001} shows the Chinese word + English gloss (“${sc.main}” / “${sc.gloss}”)`);
+  sc = await scene(); check(sc.line === 'l4' && sc.L?.lit && sc.main.includes('什么') && /what/i.test(sc.gloss), `scene: Space advances; {C035} shows the Chinese word + English gloss (“${sc.main}” / “${sc.gloss}”)`);
   check(!/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/.test(sc.main + sc.gloss + sc.name), 'scene: no pinyin');
   await shot('2026-10-03-graph-dialogue-scene');
-  for (let i = 0; i < 20 && !(await tid('scene-choice-0').count()); i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(150); }
-  check(await tid('scene-choice-0').count() === 1 && (await tid('scene-choice-0').innerText()).includes('你好'), 'scene: a choice line shows bilingual choice buttons');
-  await shot('2026-10-03-graph-dialogue-choice');
-  await tid('scene-choice-0').click(); await p.waitForTimeout(300);
   await tid('scene-skip').click(); await p.waitForTimeout(500);
   let s = await sv();
-  check(s.scenesSeen?.includes('sc_r1_opening') && s.world.flags.includes('r1_said_hello') && s.world.flags.includes('met_xiaolong') && s.party?.includes('xiaolong'),
-    `scene: skip ends it; seen scene, choice flag, onEnd flags + joinParty saved (${JSON.stringify({ seen: s.scenesSeen, flags: s.world.flags, party: s.party })})`);
+  check(s.scenesSeen?.includes('sc_r1_opening') && s.world.flags.includes('met_granny_bai') && !s.world.flags.includes('met_xiaolong') && !s.party?.includes('xiaolong'),
+    `scene: skip ends it; seen scene + onEnd flag saved; 小龙 is still an egg (no joinParty before sc_r1_hatch) (${JSON.stringify({ seen: s.scenesSeen, flags: s.world.flags, party: s.party })})`);
   await skipScenes(4);   // meadow_intro, tutorial_first_battle
   await tid('battle').waitFor({ state: 'attached', timeout: 15000 });
   const foes = await p.evaluate(() => window.__proto.foes());
@@ -593,6 +589,20 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click();
     check(/locked/.test(lockCls || '') && /The way is blocked/.test(msg) && (await sv()).world.pos.node === 'la', `quest gates (UI): the locked node shows a lock, tapping it shows “${msg}” and you stay put`);
     await p.evaluate(() => { const P = window.__proto.world.P(); delete P.graphs.synthetic_lock; });
+  }
+  { // ---- story rework 2026-11-20: q1_quiet_morning is handed in at the well; sc_r1_hatch plays first (joinParty 小龙), then the short thanks ----
+    await edit(s => { s.party = (s.party || []).filter(x => x !== 'xiaolong'); s.storyQuests.q1_quiet_morning = { s: 'ready', at: 0, step: 3, obj: {} };
+      s.scenesSeen = (s.scenesSeen || []).filter(x => x !== 'sc_r1_hatch' && x !== 'sc_q1_quiet_morning_thanks'); });
+    await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+    await p.evaluate(() => { window.__bgDone = false; window.__proto.world.goto('realm_1', 'm_well', true).finally(() => { window.__bgDone = true; }); });
+    const order = [];
+    for (let i = 0; i < 80 && !(await p.evaluate(() => window.__bgDone)); i++) { await p.waitForTimeout(200);
+      const id = await p.evaluate(() => document.querySelector('[data-testid=scene]')?.dataset.scene);
+      if (id) { if (order.at(-1) !== id) order.push(id); await tid('scene-skip').click().catch(() => {}); }
+      else if (await tid('dialog').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+    const s9 = await sv(); const hi = order.indexOf('sc_r1_hatch'), ti = order.indexOf('sc_q1_quiet_morning_thanks');
+    check(hi >= 0 && ti > hi && s9.party?.includes('xiaolong') && s9.world.flags.includes('met_xiaolong') && s9.world.flags.includes('xiaolong_form_hatch') && s9.storyQuests.q1_quiet_morning?.s === 'completed',
+      `story rework: at the well the egg hatches (sc_r1_hatch) before the thanks, and 小龙 joins the party there (${JSON.stringify({ order, party: s9.party, q: s9.storyQuests.q1_quiet_morning?.s })})`);
   }
   // ---- the world map: realm nodes in order, realm 2 opens after the realm 1 realm boss; realms 3–9 not in this build ----
   await p.evaluate(() => window.__proto.world.goto('world', 'realm_1')); await tid('graph').waitFor();
