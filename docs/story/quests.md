@@ -1,4 +1,4 @@
-# Quests v2: 50 NPC and story quests (Desy, 2026-10-02 PT; gold rescaled 22:51 PT)
+# Quests v2: NPC and story quests (Desy, 2026-10-02 PT; gold rescaled 22:51 PT; story rework approved Jack 2026-11-20 PT)
 
 This replaces the v1 design (4 town-board quests per town, 36 quests). Quests are now given by NPCs standing on world-graph nodes, and every step happens at a world-graph event. The schema is **`quest/0.2`**: GameDev's `quest/0.1` (architecture.md §11.2) plus a few fields.
 
@@ -8,16 +8,17 @@ This replaces the v1 design (4 town-board quests per town, 36 quests). Quests ar
 
 ## 0. Decisions (director's calls 2026-10-02 22:49 PT, pending Jack)
 
+- **2026-11-20 — Story rework (Jack).** Main quests carry each land's beat on the old Bell Road (story.md v1.2). R1 and R2 chains and the later-realm mains are in §5a. New quests are 0 gold, or take budget from sides, so the ~30 × G per-land target still holds. No existing quest id is deleted. Two R1 sides (`q1_bounty`, `q1_carrot`) become main. Option A for 小龙: he joins at the `q1_quiet_morning` hatch, not in the opening scene. World exits `w12`…`w89` lock on each land's climax main. `q2_lost_panda` stays an optional side, unchanged. **Ending: TBD.**
 - **The quest target counts gold only.** Quest gold ≈ 30 × G per realm (±10%). Items, gear and spells are a bonus on top. Gold rewards were rescaled to match; items, gear and spells are unchanged.
 - **The free Bubble Spell reward is approved** (q2_bubble_lesson). The Honey Town shelf shows "Quest reward" while the quest is open.
 - **Escorts never fail.** The escortee can't be harmed. After a lost battle it is waiting at the last inn used (runtime rules in §2a).
-- **Ending approved.** The Demon King shrinks to a grumpy small demon and goes to Teacher Zhang's school with Pipi (story.md).
+- **Ending: TBD (Jack 2026-11-20).** The old school ending is dropped. Do not write a new ending until Jack picks one.
 - **The companion is 小龙**, speaker id `xiaolong`. The world-graph owner is renaming `panda` → `xiaolong` in data/world. Inn pandas are `innkeeper_panda`.
 - **Names stay placeholders** until Jack picks.
 
 ## 1. Design rules
 
-1. **50 quests**: R1 3, R2 4, R3 5, R4 5, R5 6, R6 6, R7 7, R8 7, R9 7. Sized to the NPC slots in `quests_world.json` (v3.9: 55 slots, 29 quest hooks + 26 ambient), with more weight on later realms. 15 are main-story quests (they unlock or carry the realm arc) and 35 are side quests.
+1. **60 quests** (Jack 2026-11-20; was 50): R1 5, R2 6, R3 6, R4 5, R5 7, R6 7, R7 9, R8 8, R9 7. 27 are main-story quests (they carry the land's beat on the Bell Road) and 33 are side quests. New ids are listed in §5a. Sized to the NPC slots in `quests_world.json`, plus a few new hooks (Grandpa Wang in the village, Fei in Honey Town, and the new later-realm givers already on the maps).
 2. **Types** (mixed in every realm from R3 on): fetch 13, slay 11, rescue 8, find 7, deliver 6, escort 5.
 3. **Placement.** Realm 1 uses real `realm_1.json` node and edge ids. Realms 2–9 use `{zone, nodeKind, position}` and, where a generated hook exists, `ref` = the hook's giver node (e.g. `great_hive_1/npc_1`), so the content survives graph regeneration.
 4. **Words.** Each quest lists 4–6 curriculum items used in its scenes. All are met by the time the quest becomes available (the quest zone's pool, plus the next zone if the quest requires that zone's boss).
@@ -108,16 +109,20 @@ EXP is L × L_rec, with L 10–30 per quest. The build fails if a realm's quest 
 - **Hand in to someone else** (8): q1_carrot → Xiaoming in the village. q3_caravan → Boss Qian. q4_free_classmates → Uncle Shi. q4_school_bell → Teacher Zhang. q5_escort_xiaohe → Xiaohe's grandma. q7_lost_mapmaker → mapmaker Lu (Cloud Ridge). q7_griffin_chick → the griffin mother (griffin_spire_3 npc). q9_pipi_surrender → Granny Bai.
 - **Auto** (1): q8_singer_escort completes when the singer reaches the arena.
 
-## 5. All 50 quests
+## 5. All quests (60 after the 2026-11-20 story rework; was 50)
 
 | id | realm · zone | type | giver | title | steps (event:objective) | back to giver | rewards | value (× G) | words |
 |---|---|---|---|---|---|---|---|---|---|
+| `q1_quiet_morning` | 1 · meadow | find | granny_bai | 太安静了 The Quiet Morning | quest_offer:talk → quest_offer:talk → quest_offer:talk → story:reach → quest_offer:talk | yes | 0 g, 30 EXP (hatch scene `sc_r1_hatch`; 小龙 joins) | 0.0 | 你好 什么 哪儿 这里 谢谢 |
 | `q1_bounty` | 1 · meadow | slay | farmer_li | 赶走角兔 Rabbits in the Cabbages | quest_offer:talk → edge_battle:kill → quest_offer:talk | yes | 48 g, 30 EXP, 1× Honey Potion | 9.0 | 你好 谢谢 多少 几 请 |
 | `q1_hoe` | 1 · meadow | find | farmer_li | 找回锄头 The Lost Hoe | quest_offer:talk → story:reach → item:collect → quest_offer:talk | yes | 42 g, 20 EXP, 1× Honey Potion | 8.0 | 什么 哪儿 这里 那里 谢谢 |
 | `q1_carrot` | 1 · warren | fetch | xiaoming | 金萝卜 The Golden Carrot Thief | quest_offer:talk → miniboss:kill → item:collect → quest_offer:talk | to xiaoming | 90 g, 40 EXP, 1× Return Feather | 17.0 | 救命 小心 快跑 朋友 帮忙 兔子 |
+| `q1_shatter_crown` | 1 · warren | slay | granny_bai | 打碎雾冠 Shatter the Fog Crown | quest_offer:talk → story:reach → boss:kill → quest_offer:talk | yes | 0 g, 40 EXP (boss chest still has Guardian Shield and the Rabbit-Horn Dagger) | 0.0 | 小心 快跑 帮忙 兔子 朋友 |
+| `q2_fei_boast` | 2 · forest | find | fei | 小飞的挑战 Fei's Boast | quest_offer:talk → quest_offer:talk | yes | 0 g, 20 EXP | 0.0 | 你好 朋友 我 你 会 |
 | `q2_lost_panda` | 2 · forest | find | duoduo | 找熊猫 Duoduo's Lost Panda | quest_offer:talk → story:reach → item:collect → quest_offer:talk | yes | 108 g, 40 EXP, 1× Honey Potion | 10.0 | 熊猫 森林 树 花 ……在哪儿 谢谢 |
 | `q2_spider_silk` | 2 · forest | fetch | granny_mi | 收集蜘蛛丝 Silk for the Bee Veils | quest_offer:talk → edge_battle:collect → quest_offer:talk | yes | 132 g, 60 EXP, 2× Honey Potion | 13.0 | 蜂蜜 渴 甜 好吃 饿 |
 | `q2_bubble_lesson` | 2 · forest | fetch | granny_bai | 白奶奶的泡泡课 Granny Bai's Bubble Lesson | quest_offer:talk → item:collect → quest_offer:words → quest_offer:talk | yes | 0 g, 60 EXP, spell **Bubble Spell 泡泡术** | 0.0 | 吃 喝 水 甜 尝一尝 |
+| `q2_road_blocked` | 2 · forest | find | granny_mi | 路不通 The Road Is Blocked | quest_offer:talk → story:reach → quest_offer:talk | to yezi | 0 g, 40 EXP | 0.0 | 路 走 不要 因为 所以 |
 | `q2_royal_jelly` | 2 · great_hive | fetch | yezi | 蜂后的蜂王浆 The Queen's Stolen Jelly | quest_offer:talk → miniboss:kill → story:collect → boss:kill → quest_offer:talk | yes | 120 g, 100 EXP, 1× Mana Tea, skill **heal** | 16.0 | 要 给 请给我…… 不要 所以 因为 |
 | `q3_rescue_fei` | 3 · crossroads_highway | rescue | xiaomei | 救小飞 Fei and the Bandit Cave | quest_offer:talk → story:reach → miniboss:kill → story:talk → quest_offer:talk | yes | 90 g, 150 EXP, Fine Round Shield | 13.3 | 多少钱 一共 钱 钱包 救命 朋友 |
 | `q3_stolen_hats` | 3 · crossroads_highway | fetch | auntie_hat | 找帽子 Hats Off! | quest_offer:talk → edge_battle:collect → quest_offer:talk | yes | 108 g, 90 EXP, 1× Honey Potion | 7.0 | 买 卖 商店 东西 颜色 |
@@ -162,6 +167,18 @@ EXP is L × L_rec, with L 10–30 per quest. The build fails if a realm's quest 
 | `q9_second_wind` | 9 · demon_king_s_gate | fetch | granny_bai | 白奶奶最后一课 Granny Bai's Last Lesson | quest_offer:talk → treasure:collect → quest_offer:words → quest_offer:talk | yes | 216 g, 720 EXP, skill **second_wind** | 3.0 | 不要放弃 放弃 勇敢 就算 一定 |
 | `q9_pipi_surrender` | 9 · throne_hall | escort | pipi | 皮皮投降 Pipi Gives Up | quest_offer:talk → edge_battle:escort → quest_offer:talk | to granny_bai | 288 g, 480 EXP | 4.0 | 投降 逃跑 秘密 真相 坏人 |
 | `q9_lanterns` | 9 · demon_king_s_gate | deliver | lantern_keeper_deng | 灯火 Light Every Lantern | quest_offer:talk → quest_offer:deliver → quest_offer:deliver → quest_offer:deliver → quest_offer:talk | yes | 288 g, 360 EXP, 1× Return Feather | 6.0 | 为了 否则 应该 可能 因此 |
+
+## 5a. Story rework: main chains (Jack 2026-11-20)
+
+Each land's main quests investigate the blockade on the old Bell Road, include the story boss as a step where that fits, and end on a reveal that names the next stretch. Sides stay local. Step types only: kill, collect, reach, talk, words, deliver, escort. No existing quest id is deleted.
+
+**R1 (4 mains + `q1_hoe` side).** `q1_quiet_morning` (new, Granny Bai at `realm_1/village`): talk to Granny, Farmer Li (`m_farm`) and Grandpa Wang (village), reach `m_well`, turn in. Reward 0 g, 30 EXP. Reveal and hatch: the land is forgetting its words; the egg, hidden at this well since the last war, hatches; 小龙 joins; the King is hunting him. `q1_bounty` (reuse, side → main): kill 8 horned rabbits; they wear crown scraps and drop a red button (Pipi). `q1_carrot` (reuse, side → main): Xiaoming saw a red imp crown a rabbit; Pipi's taunt plays at `w_camp`. `q1_shatter_crown` (new, Granny Bai at the village or her letter at `w_camp`): reach `w_throne`, calm the Horned Rabbit King (kill), turn in. Reward 0 g, 40 EXP; the boss chest still holds Guardian Shield and the Rabbit-Horn Dagger. Reveal: the crown breaks; Pipi flees toward Honey Town; if 小龙 stays, the village is next. `q1_hoe` stays side, with one lore line: the hoe is at the well where Granny hid the egg.
+
+**R2 (4 mains + 2 sides).** `q2_fei_boast` (new, Fei at `realm_2/entry_town`): talk, turn in. Fei will "save Honey Town himself" and runs ahead toward the Crossroads (sets up R3). `q2_bubble_lesson` (reuse, main; retone the offer): Granny's letter is not just a lesson — Honey Town sits on the Bell Road, and the Queen may remember the pact. Reward unchanged (Bubble Spell). `q2_road_blocked` (new, Granny Mi at Honey Town): reach the hive road (`realm_2/boss_1`), talk to Yezi. The east road is shut; the Queen's jelly is gone. `q2_royal_jelly` (reuse, main; retone the thanks): Pipi stole the jelly to close the road; the Queen, calmed, remembers the Bell and names the Crossroads. Reward unchanged (Heal, Mana Tea). `q2_spider_silk` stays side. `q2_lost_panda` stays side; it is the cutesiest R2 quest and may be retoned if Jack wants less cute.
+
+**Later lands (data pass, not fully tabled here).** Keep and retone: `q3_rescue_fei`, `q4_free_classmates`, `q4_school_bell`, `q5_fog_bottle`, `q6_medicine_herbs`, `q6_knight_dad`, `q8_singer_escort`, and the R9 pact quests, `q9_second_wind`, and `q9_pipi_surrender`. New mains: `q3_fog_jar` (reopen the market / Pipi's jar), `q5_time_pearl` (the Hydra has the pearl, so no one can cross), `q6_cure_mayor` (Village Key), `q7_wind_truth` (the Wind Dragon knows 小龙; Mom is chained), `q7_storm_crown` (break Mist's crown, open the sky road), `q8_win_tournament` (Dachui's pledge is a turn-in).
+
+**World-map exits.** If Jack approves, each land's world-map exit (`world` edges `w12`…`w89`) gets `lockedUntilQuest` on that land's climax main (`q1_shatter_crown`, `q2_royal_jelly`, and the later climax ids). Locks open on turn-in. Inner maps stay links-only.
 
 ## 6. Reconciliation with `quests_world.json` (world graph v3.9, final)
 

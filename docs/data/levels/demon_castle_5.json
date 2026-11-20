@@ -770,6 +770,30 @@
   "xiaolong"
  ],
  "npcs": {
+  "fei": {
+   "name": {
+    "zh": "小飞",
+    "en": "Fei"
+   }
+  },
+  "general_mo": {
+   "name": {
+    "zh": "莫将军",
+    "en": "General Mo"
+   }
+  },
+  "granny_bai": {
+   "name": {
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   }
+  },
+  "narrator": {
+   "name": {
+    "zh": "",
+    "en": "Narrator"
+   }
+  },
   "xiaolong": {
    "name": {
     "zh": "小龙",

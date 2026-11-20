@@ -406,12 +406,24 @@
    "outcome": "quest_offer",
    "do": [
     {
-     "offerQuest": "q7_griffin_feathers"
+     "offerQuest": "q7_storm_crown"
     }
    ]
   },
   {
    "id": "npc_1.2",
+   "node": "npc_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "quest_offer",
+   "do": [
+    {
+     "offerQuest": "q7_griffin_feathers"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.3",
    "node": "npc_1",
    "on": "enter",
    "once": false,

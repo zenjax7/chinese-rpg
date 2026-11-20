@@ -1,0 +1,120 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q2_bubble_lesson_offer",
+ "title": "Granny Bai's Bubble Lesson (offer)",
+ "realm": 2,
+ "zone": "forest",
+ "density": "D2",
+ "trigger": {
+  "graph": "realm_2",
+  "node": "entry_town",
+  "on": "questOffer",
+  "cond": {
+   "not": {
+    "questActive": "q2_bubble_lesson"
+   }
+  }
+ },
+ "background": "bg_honey_town",
+ "music": "town_theme",
+ "once": false,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "granny_bai",
+   "expr": "neutral"
+  }
+ },
+ "words": [
+  "C642",
+  "C119"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "I wrote ahead. Honey Town sits on the old Bell Road.",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "happy",
+   "en": "The Queen may remember our pact. First, a lesson — and three soap-flowers. {C642}.",
+   "tokens": [
+    "C642"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "They smell {C119}!",
+   "tokens": [
+    "C119"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "happy",
+   "en": "We'll gather them and practice the forest words.",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "We'll start now.",
+     "goto": "l5",
+     "setFlags": [
+      "accept_q2_bubble_lesson"
+     ]
+    },
+    {
+     "id": "c2",
+     "en": "Not now.",
+     "goto": "l6"
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Bring the flowers here. Then I will teach you your first spell.",
+   "vo": null,
+   "end": true
+  },
+  {
+   "id": "l6",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "The road can wait a little. I will be here.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "if": {
+    "flag": "accept_q2_bubble_lesson"
+   },
+   "acceptQuest": "q2_bubble_lesson"
+  }
+ ]
+}

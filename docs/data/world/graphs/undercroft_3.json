@@ -508,6 +508,21 @@
    ]
   },
   {
+   "id": "boss_8.2",
+   "node": "boss_8",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q8_win_tournament"
+   },
+   "do": [
+    {
+     "dialogue": "undercroft_3.boss_8.step_q8_win_tournament"
+    }
+   ]
+  },
+  {
    "id": "miniboss_1.1",
    "node": "miniboss_1",
    "on": "enter",
@@ -840,6 +855,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "undercroft_3.boss_8.step_q8_win_tournament": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q8_win_tournament: scene from data/dialogue)"
    }
   ],
   "undercroft_3.story_1.step_q8_singer_escort": [

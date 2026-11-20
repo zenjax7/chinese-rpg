@@ -37,6 +37,24 @@ import world_loader as WL
 J = lambda p: json.load(open(p, encoding='utf-8'))
 SCHEMA = 'level/0.2'
 
+# Jack 2026-11-20: each land's world-map exit stays closed until that land's climax main is turned in.
+# lockedScene is left unset so the default blocked line is used ("The way is blocked." / 路不通。).
+EXIT_LOCKS = {
+    'w12': 'q1_shatter_crown',
+    'w23': 'q2_royal_jelly',
+    'w34': 'q3_fog_jar',
+    'w45': 'q4_school_bell',
+    'w56': 'q5_time_pearl',
+    'w67': 'q6_cure_mayor',
+    'w78': 'q7_storm_crown',
+    'w89': 'q8_win_tournament',
+}
+# Standing NPCs placed for the story rework (not present on the generated seed graphs).
+PLACE_NPCS = {
+    ('realm_1', 'village'): 'grandpa_wang',
+    ('realm_2', 'entry_town'): 'fei',
+}
+
 def load():
     rules, graphs, zones, hooks = WL._load_world(W)
     return dict(rules=rules, graphs=graphs, zones=zones, index=J(os.path.join(W, 'index.json')), qworld=J(os.path.join(W, 'quests_world.json')),
@@ -253,6 +271,8 @@ def convert(src):
             e.pop('scripted', None)   # the 9 scripted path elites (Jack 2026-10-11: no random or scripted strong enemies)
             if 'bossDefeated' in json.dumps(e.get('cond')):   # Jack 2026-10-11: progression is purely by links; no boss-gated link
                 assert list(e['cond']) == ['bossDefeated'], (gid, e['id'], e['cond']); e.pop('cond')
+            if gid == 'world' and e['id'] in EXIT_LOCKS:
+                e['lockedUntilQuest'] = EXIT_LOCKS[e['id']]
             edges.append(e)
         scenes = {}
         dia = og.get('dialogue', {})
@@ -273,11 +293,24 @@ def convert(src):
                 b.setdefault('reward', {})['feather'] = b.get('reward', {}).get('feather', 0) + sum(a.get('qty', 1) for a in e['do'])
                 plain.remove(e)
         m.update(nodes=nodes, edges=edges, events=[e for e in plain], quests=[{k: v for k, v in q.items() if k != 'scenes'} for q in quests_by_map.get(gid, [])], scenes=scenes)   # LE F5: quest scenes live only in the giver's variants
-        npcs = og.get('npcs') or {}
+        for n in nodes:
+            who = PLACE_NPCS.get((gid, n['id']))
+            if who and not n.get('npc'):
+                n['npc'] = who
+        npcs = dict(og.get('npcs') or {})
+        speakers = src['qworld'].get('speakers') or {}
+        def npc_entry(k):
+            if k in npcs: return npcs[k]
+            sp = speakers.get(k)
+            if not sp: return None
+            if 'name' in sp: return sp
+            return {'name': {'zh': sp.get('zh', k), 'en': sp.get('en', k)}}
         chars = sorted({l['speaker'] for s in scenes.values() for l in s['lines']} | {s2['char'] for s in scenes.values() for s2 in s.get('slots', {}).values()}
-                       | {n['npc'] for n in nodes if n.get('npc')})
+                       | {n['npc'] for n in nodes if n.get('npc')}
+                       | {q['giver']['npc'] for q in quests_by_map.get(gid, []) if (q.get('giver') or {}).get('npc')}
+                       | {q['turnIn']['npc'] for q in quests_by_map.get(gid, []) if isinstance(q.get('turnIn'), dict) and q['turnIn'].get('npc')})
         m['characters'] = chars
-        m['npcs'] = {k: v for k, v in npcs.items() if k in chars}
+        m['npcs'] = {k: npc_entry(k) for k in chars if npc_entry(k)}
         out[gid] = m
     # entry nodes of the split maps
     for gid in ('clover_hills', 'warren'): out[gid]['entry'] = {'clover_hills': 'c_gate', 'warren': 'w_gate'}[gid]

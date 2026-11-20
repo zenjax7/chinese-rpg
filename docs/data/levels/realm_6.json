@@ -151,6 +151,19 @@
      "post": {
       "scene": "sc_q6_medicine_herbs_thanks"
      }
+    },
+    {
+     "quest": "q6_cure_mayor",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q6_cure_mayor_offer"
+     },
+     "in": {
+      "scene": "sc_q6_cure_mayor_wait"
+     },
+     "post": {
+      "scene": "sc_q6_cure_mayor_thanks"
+     }
     }
    ]
   },
@@ -277,7 +290,38 @@
    "title": {
     "zh": "丧尸村长",
     "en": "Zombie Mayor"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q6_cure_mayor",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_1.1",
+        "node": "boss_1",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q6_cure_mayor"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_6__realm_6_boss_1_step_q6_cure_mayor"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q6_cure_mayor",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
   },
   {
    "id": "portal_2",
@@ -2034,6 +2078,113 @@
     "C358"
    ],
    "summary": "Carry Cook Ma's hot soup to three recovering villagers and ask how they feel."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q6_cure_mayor",
+   "story": "main",
+   "type": "rescue",
+   "title": {
+    "zh": "治好镇长",
+    "en": "Cure the Mayor"
+   },
+   "giver": {
+    "npc": "dr_an",
+    "graph": "realm_6",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "entry_town"
+     },
+     "note": "Dr. An: the mayor is sick with fog, not dead. If he isn't cured, the sickness will spread."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "boss_1"
+     },
+     "note": "The Zombie Mayor."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "enemy": "zombie_mayor",
+      "desyType": "boss",
+      "maps": [
+       "old_mine_1",
+       "realm_6"
+      ]
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "boss_1"
+     },
+     "note": "Calm and cure the mayor."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_6",
+      "node": "entry_town"
+     },
+     "note": "The Village Key, and a clue that the sickness came from the graveyard. (World exit w67 unlocks on turn-in.)"
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 300,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C398",
+    "C399",
+    "C400",
+    "C386",
+    "C385"
+   ],
+   "summary": "The mayor is sick with fog, not dead. Cure him, take the Village Key, and keep the sickness from outrunning you."
   }
  ],
  "scenes": {
@@ -2050,6 +2201,22 @@
      "id": "l1",
      "speaker": "xiaolong",
      "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_6__realm_6_boss_1_step_q6_cure_mayor": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_6__realm_6_boss_1_step_q6_cure_mayor",
+   "title": "realm_6.boss_1.step_q6_cure_mayor",
+   "trigger": {
+    "graph": "realm_6",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q6_cure_mayor: scene from data/dialogue)"
     }
    ]
   },
@@ -2180,23 +2347,213 @@
      "en": "(quest step for q6_hot_soup: scene from data/dialogue)"
     }
    ]
+  },
+  "sc_q6_cure_mayor_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q6_cure_mayor_offer",
+   "title": "Cure the Mayor (offer)",
+   "density": "D4",
+   "trigger": {
+    "graph": "realm_6",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q6_cure_mayor"
+     }
+    }
+   },
+   "background": "bg_gloomy_village",
+   "music": "lands_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "worried"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "dr_an",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C386",
+    "C399",
+    "C400"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The mayor is sick with fog, not dead. {C386}",
+     "zh": "你怎么了？",
+     "zhTrad": "你怎麼了？",
+     "tokens": [
+      "C386"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "sad",
+     "en": "I am the {C399}. If we do not cure him, the sickness will spread.",
+     "tokens": [
+      "C399"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "brave",
+     "en": "We'll calm him and bring him back.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll help the mayor.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q6_cure_mayor"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Take this {C400} if you need it. Come back when he is himself.",
+     "tokens": [
+      "C400"
+     ],
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "sad",
+     "en": "The Village Key stays with a sick mayor. The road stays shut.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q6_cure_mayor"
+     },
+     "acceptQuest": "q6_cure_mayor"
+    }
+   ]
+  },
+  "sc_q6_cure_mayor_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q6_cure_mayor_thanks",
+   "title": "Cure the Mayor (turn-in)",
+   "density": "D4",
+   "trigger": {
+    "graph": "realm_6",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q6_cure_mayor"
+    }
+   },
+   "background": "bg_gloomy_village",
+   "music": "lands_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "dr_an",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C385"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "happy",
+     "en": "He is himself again. {C385}",
+     "zh": "你没事吧？",
+     "zhTrad": "你沒事吧？",
+     "tokens": [
+      "C385"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "The Village Key is yours. The sickness came from the graveyard — a clue, not a closing of the road.",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "dr_an",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Go on. Don't let the fog outrun you.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q6_cure_mayor"
+    }
+   ]
   }
  },
  "characters": [
+  "cook_ma",
+  "dr_an",
+  "hero",
   "traveller",
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

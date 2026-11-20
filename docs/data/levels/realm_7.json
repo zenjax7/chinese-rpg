@@ -143,6 +143,19 @@
    "town": 7,
    "quests": [
     {
+     "quest": "q7_wind_truth",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q7_wind_truth_offer"
+     },
+     "in": {
+      "scene": "sc_q7_wind_truth_wait"
+     },
+     "post": {
+      "scene": "sc_q7_wind_truth_thanks"
+     }
+    },
+    {
      "quest": "q7_harpy_socks",
      "role": "giver",
      "pre": {
@@ -324,7 +337,38 @@
    "title": {
     "zh": "风龙",
     "en": "Wild Wind Dragon"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q7_wind_truth",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_1.1",
+        "node": "boss_1",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q7_wind_truth"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_7__realm_7_boss_1_step_q7_wind_truth"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q7_wind_truth",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
   },
   {
    "id": "portal_2",
@@ -3540,6 +3584,113 @@
  "quests": [
   {
    "schema": "quest/0.2",
+   "id": "q7_wind_truth",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "风龙的真话",
+    "en": "The Wind Dragon's Truth"
+   },
+   "giver": {
+    "npc": "granny_xue",
+    "graph": "realm_7",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_xue"
+     },
+     "where": {
+      "graph": "realm_7",
+      "node": "entry_town"
+     },
+     "note": "The sky road is closed. The Wind Dragon blocks the pass."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "graph": "realm_7",
+      "node": "boss_1"
+     },
+     "note": "The Wind Dragon on the pass."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "enemy": "wind_dragon",
+      "desyType": "boss",
+      "maps": [
+       "cloud_caves_1",
+       "realm_7"
+      ]
+     },
+     "where": {
+      "graph": "realm_7",
+      "node": "boss_1"
+     },
+     "note": "Calm the Wind Dragon. He recognizes 小龙 and tells the truth: 小龙's mother is chained in the castle (sc_r7_wind_dragon_truth)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_xue",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_7",
+      "node": "entry_town"
+     },
+     "note": "The mid-game twist is out: the Golden Dragon is a prisoner of the Demon King."
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 360,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C907",
+    "C908",
+    "C425",
+    "C426",
+    "C444"
+   ],
+   "summary": "The Wind Dragon blocks the pass. Calm him, and he recognizes 小龙 and reveals that his mother is chained in the castle."
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q7_glacier_roses",
    "story": "side",
    "type": "fetch",
@@ -4142,6 +4293,22 @@
     }
    ]
   },
+  "sc_realm_7__realm_7_boss_1_step_q7_wind_truth": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_7__realm_7_boss_1_step_q7_wind_truth",
+   "title": "realm_7.boss_1.step_q7_wind_truth",
+   "trigger": {
+    "graph": "realm_7",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q7_wind_truth: scene from data/dialogue)"
+    }
+   ]
+  },
   "sc_realm_7__realm_7_miniboss_1_step_q7_golem_sign": {
    "schema": "scene/0.2",
    "id": "sc_realm_7__realm_7_miniboss_1_step_q7_golem_sign",
@@ -4382,6 +4549,203 @@
     }
    ]
   },
+  "sc_q7_wind_truth_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q7_wind_truth_offer",
+   "title": "The Wind Dragon's Truth (offer)",
+   "density": "D5",
+   "trigger": {
+    "graph": "realm_7",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q7_wind_truth"
+     }
+    }
+   },
+   "background": "bg_cliffs",
+   "music": "wind_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "granny_xue",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C907",
+    "C444",
+    "C425"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The sky road is closed. The Wind Dragon blocks the pass.",
+     "zh": "我迷路了。",
+     "zhTrad": "我迷路了。",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "sad",
+     "en": "Travellers say they {C907} in the wind. He will not let anyone {C444}.",
+     "tokens": [
+      "C907",
+      "C444"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "brave",
+     "en": "We'll go up {C425} and talk to him.",
+     "tokens": [
+      "C425"
+     ],
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll calm the dragon.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q7_wind_truth"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Be kind. He is old, and he remembers more than he says.",
+     "zh": "到这儿。",
+     "zhTrad": "到這兒。",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "sad",
+     "en": "No one reaches the peaks until the pass is open.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q7_wind_truth"
+     },
+     "acceptQuest": "q7_wind_truth"
+    }
+   ]
+  },
+  "sc_q7_wind_truth_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q7_wind_truth_thanks",
+   "title": "The Wind Dragon's Truth (turn-in)",
+   "density": "D5",
+   "trigger": {
+    "graph": "realm_7",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q7_wind_truth"
+    }
+   },
+   "background": "bg_cliffs",
+   "music": "wind_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "thinking"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "sad"
+    },
+    "R1": {
+     "char": "granny_xue",
+     "expr": "sad"
+    }
+   },
+   "words": [
+    "C426"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "sad",
+     "en": "So he knew 小龙. And he told you the truth.",
+     "zh": "他认识小龙。",
+     "zhTrad": "他認識小龍。",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "sad",
+     "en": "Mom is {C426} — in the castle.",
+     "zh": "妈妈在那儿。",
+     "zhTrad": "媽媽在那兒。",
+     "tokens": [
+      "C426"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The Golden Dragon is a prisoner of the Demon King. The peak is still ahead.",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_xue",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Go on. The storm still wears a crown.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q7_wind_truth"
+    }
+   ]
+  },
   "sc_r7_wind_dragon_truth": {
    "schema": "scene/0.2",
    "id": "sc_r7_wind_dragon_truth",
@@ -4595,23 +4959,34 @@
   }
  },
  "characters": [
+  "granny_xue",
   "hero",
+  "laundry_auntie",
+  "mapmaker_lu",
   "narrator",
+  "road_warden_he",
   "traveller",
+  "weather_sage",
   "wind_dragon",
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
+  "narrator": {
    "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
+    "zh": "",
+    "en": "Narrator"
    }
   },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

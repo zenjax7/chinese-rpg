@@ -1,0 +1,83 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q7_wind_truth_thanks",
+ "title": "The Wind Dragon's Truth (turn-in)",
+ "realm": 7,
+ "zone": "windy_cliffs",
+ "density": "D5",
+ "trigger": {
+  "graph": "realm_7",
+  "node": "entry_town",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q7_wind_truth"
+  }
+ },
+ "background": "bg_cliffs",
+ "music": "wind_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "thinking"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "sad"
+  },
+  "R1": {
+   "char": "granny_xue",
+   "expr": "sad"
+  }
+ },
+ "words": [
+  "C426"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "sad",
+   "en": "So he knew 小龙. And he told you the truth.",
+   "zh": "他认识小龙。",
+   "zhTrad": "他認識小龍。",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "sad",
+   "en": "Mom is {C426} — in the castle.",
+   "zh": "妈妈在那儿。",
+   "zhTrad": "媽媽在那兒。",
+   "tokens": [
+    "C426"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "worried",
+   "en": "The Golden Dragon is a prisoner of the Demon King. The peak is still ahead.",
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Go on. The storm still wears a crown.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q7_wind_truth"
+  }
+ ]
+}

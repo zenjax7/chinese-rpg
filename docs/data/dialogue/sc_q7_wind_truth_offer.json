@@ -1,0 +1,118 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q7_wind_truth_offer",
+ "title": "The Wind Dragon's Truth (offer)",
+ "realm": 7,
+ "zone": "windy_cliffs",
+ "density": "D5",
+ "trigger": {
+  "graph": "realm_7",
+  "node": "entry_town",
+  "on": "questOffer",
+  "cond": {
+   "not": {
+    "questActive": "q7_wind_truth"
+   }
+  }
+ },
+ "background": "bg_cliffs",
+ "music": "wind_theme",
+ "once": false,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "worried"
+  },
+  "R1": {
+   "char": "granny_xue",
+   "expr": "worried"
+  }
+ },
+ "words": [
+  "C907",
+  "C444",
+  "C425"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "worried",
+   "en": "The sky road is closed. The Wind Dragon blocks the pass.",
+   "zh": "我迷路了。",
+   "zhTrad": "我迷路了。",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "sad",
+   "en": "Travellers say they {C907} in the wind. He will not let anyone {C444}.",
+   "tokens": [
+    "C907",
+    "C444"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "brave",
+   "en": "We'll go up {C425} and talk to him.",
+   "tokens": [
+    "C425"
+   ],
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "We'll calm the dragon.",
+     "goto": "l4",
+     "setFlags": [
+      "accept_q7_wind_truth"
+     ]
+    },
+    {
+     "id": "c2",
+     "en": "Not now.",
+     "goto": "l5"
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Be kind. He is old, and he remembers more than he says.",
+   "zh": "到这儿。",
+   "zhTrad": "到這兒。",
+   "vo": null,
+   "end": true
+  },
+  {
+   "id": "l5",
+   "speaker": "granny_xue",
+   "side": "R1",
+   "expr": "sad",
+   "en": "No one reaches the peaks until the pass is open.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "if": {
+    "flag": "accept_q7_wind_truth"
+   },
+   "acceptQuest": "q7_wind_truth"
+  }
+ ]
+}

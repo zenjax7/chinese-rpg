@@ -1,22 +1,22 @@
 # Characters and portraits: brief for Arty (Desy, v1, 2026-10-02 PT)
 
-These are the dialogue portraits for `scene/0.2` scenes (story.md §7, architecture.md §11.1). Style follows `enemies-art-brief.md`: painterly, soft rim light, warm palette, round friendly shapes, kid-safe. Villains look mischievous, not frightening.
+These are the dialogue portraits for `scene/0.2` scenes (story.md §7, architecture.md §11.1). Style follows `enemies-art-brief.md`: painterly, soft rim light, warm palette, round friendly shapes, kid-safe. Villains look mischievous, not frightening. After the 2026-11-20 story rework (pending Jack), the tone is stakes and mystery rather than cute; portraits stay kid-safe, but 小龙 is a hunted companion, not a pet.
 
 ## 1. Key cast (all 7 expressions)
 
 | id | name | look | palette | notes |
 |---|---|---|---|---|
 | `hero` | {hero} | Two variants (`hero_a` and `hero_b`, the player picks one). Age 8–10, adventurer tunic, satchel, Granny Bai's old stick. Kept neutral so any kid can see themselves in it. | moss green, cream, brown | Gear isn't shown on the portrait (it stays the same all game) |
-| `xiaolong` | 小龙 Little Dragon | Baby golden dragon, about cat-sized. Huge eyes, stubby wings, a crumb of food usually on his cheek. Grows slightly bigger in R7+ (optional `xiaolong_big` set) | gold, cream belly, red-orange cheeks | Extra expressions: `hungry`, `brave` |
+| `xiaolong` | 小龙 Little Dragon | Last free golden dragon and bonded companion (story.md Option A, pending Jack). Three forms, same palette: **hatch** (`xiaolong`, R1–R3) cat-sized, stubby wings; **fledgling** (`xiaolong_fledgling`, from R4) larger, wings that work; **grown** (`xiaolong_grown`, R9 after his mother is freed) a standing young dragon, still clearly the same character, head-and-shoulders may use `"big": true`. The old optional `xiaolong_big` set is replaced by these two later forms. | gold, cream belly, red-orange cheeks | Extra expressions: `hungry`, `brave`. All 7 standard expressions in each form. Battle strips and walk/fly sprites need a matching set per form. |
 | `granny_bai` | 白奶奶 Granny Bai | Small, round, silver bun with a jade hairpin, tea cup, walking stick (a carved wand with a tiny hidden glow) | white, jade, plum | Extra expression: `wink`. Her pigeon 咕咕 Gugu can sit on her shoulder |
 | `fei` | 林小飞 Fei | About 11, spiky hair, oversized wooden sword, a "hero" scarf that's too long | sky blue, red scarf | Extra `smug`. In R8+ a bandage on his cheek |
 | `xiaomei` | 小美 Xiaomei | Fei's little sister, about 6, pigtails, holds a toy sword | pink, blue | neutral, happy, sad, surprised |
-| `pipi` | 皮皮 Pipi | Small red imp, big ears, spade tail, cheeky grin, too-large horns. Carries a jar of fog | red, purple, gold buttons | Extra `smug`. R9 `ashamed` (surrender); ending: tiny school cap |
+| `pipi` | 皮皮 Pipi | Small red imp, big ears, spade tail, cheeky grin, too-large horns. Carries a jar of fog | red, purple, gold buttons | Extra `smug`. R9 `ashamed` (surrender). Post-game look is **TBD** with the ending. |
 | `madame_mist` | 雾夫人 Madame Mist | Tall and elegant, a veil made of swirling fog, potion bottles on a belt, hands always mid-flourish | lavender, grey, teal glow | She mustn't look ghostly or scary: a theatrical stage-villain |
 | `general_mo` | 墨将军 General Mo | Big demon-knight in ink-black armor with a red plume. Visor up to show tired, kind eyes | black, crimson, silver | Extra `bow` (respectful) |
 | `wind_dragon` | 风龙 Uncle Wind | Long serpent-like blue dragon with cloud-tufted whiskers. Head and neck only (too big for the frame) | sky blue, white | Fogged version: grey eyes (use `angry`) |
 | `golden_dragon` | 金龙 Golden Dragon | 小龙's mother, head and neck. Cursed version is the shadow-cursed palette with a chain. Freed version is radiant gold | gold, warm white / cursed: indigo | Two sets: `golden_dragon_cursed`, `golden_dragon` |
-| `demon_king` | 魔王 Demon King | Phase 1: towering shadow armor with crown horns. After the Bell: a small grumpy demon in oversized armor pieces | black, violet / after: pink-red | Sets `demon_king` and `demon_king_small` |
+| `demon_king` | 魔王 Demon King | Phase 1: towering shadow armor with crown horns. After the Bell: a small grumpy demon in oversized armor pieces | black, violet / after: pink-red | Set `demon_king`. A post-fight look is **TBD** with the ending |
 
 The 7 standard expressions are **neutral, happy, sad, surprised, angry, worried, thinking**.
 
@@ -84,7 +84,7 @@ Each named NPC is a **generic base** (§3) with a recolor and one prop, so the p
 | 25 | goblin_student | goblin student, school bag (R4 ending) |
 | 26 | gugu | 咕咕 Gugu the postman pigeon, mail bag (letters) |
 
-That makes about 11 key sets × 7 expressions plus 26 bases × 3 = about **155 images**. With variants (hero_b, golden_dragon_cursed, demon_king_small) it is about 175. Shipping order: R1 cast first (hero, xiaolong, granny_bai, farmer_li, xiaoming, pipi, innkeeper_panda).
+That makes about 11 key sets × 7 expressions plus 26 bases × 3 = about **155 images**. With variants (hero_b, golden_dragon_cursed, and 小龙's two later forms; a post-fight Demon King look is TBD) it is about 190. Shipping order: R1 cast first (hero, xiaolong hatch, granny_bai, farmer_li, xiaoming, pipi, innkeeper_panda). Fledgling form is due by R4; grown form by R9.
 
 ## 4. Portrait spec (answer to GameDev §11.3 for Arty)
 

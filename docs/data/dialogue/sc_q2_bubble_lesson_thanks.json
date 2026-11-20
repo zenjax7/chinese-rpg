@@ -1,0 +1,83 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q2_bubble_lesson_thanks",
+ "title": "Granny Bai's Bubble Lesson (turn-in)",
+ "realm": 2,
+ "zone": "forest",
+ "density": "D2",
+ "trigger": {
+  "graph": "realm_2",
+  "node": "entry_town",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q2_bubble_lesson"
+  }
+ },
+ "background": "bg_honey_town",
+ "music": "town_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "granny_bai",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C107",
+  "C094"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "happy",
+   "en": "Good. Soap-flowers and eight words. Now watch: a bubble, like {C107}.",
+   "tokens": [
+    "C107"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "hungry",
+   "en": "Can I {C094} it?",
+   "tokens": [
+    "C094"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "happy",
+   "en": "No drinking the spell. Honey Town's shelf will show my lesson, not a price.",
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Use it kindly. The Queen is the next door on the Bell Road.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q2_bubble_lesson"
+  }
+ ]
+}

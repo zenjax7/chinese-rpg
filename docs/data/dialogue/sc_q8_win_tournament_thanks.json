@@ -1,0 +1,87 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q8_win_tournament_thanks",
+ "title": "Win the Tournament (turn-in)",
+ "realm": 8,
+ "zone": "grand_colosseum",
+ "density": "D5",
+ "trigger": {
+  "graph": "realm_8",
+  "node": "entry_town",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q8_win_tournament"
+  }
+ },
+ "background": "bg_pits",
+ "music": "colosseum_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "general_mo",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C955",
+  "C965"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "general_mo",
+   "side": "R1",
+   "expr": "happy",
+   "en": "You beat Dachui fairly. He laughed, and he pledged the beastfolk.",
+   "zh": "你是冠军。",
+   "zhTrad": "你是冠軍。",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "general_mo",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "A true {C955} can also be a friend. We will meet at the castle.",
+   "zh": "对手。",
+   "zhTrad": "對手。",
+   "tokens": [
+    "C955"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "We did not give up. We had to {C965}!",
+   "tokens": [
+    "C965"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "general_mo",
+   "side": "R1",
+   "expr": "brave",
+   "en": "The last gate is open. Go.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q8_win_tournament"
+  }
+ ]
+}

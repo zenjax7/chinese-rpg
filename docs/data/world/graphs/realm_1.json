@@ -39,6 +39,7 @@
    ],
    "hub": "village",
    "town": 1,
+   "npc": "grandpa_wang",
    "fog": "landmark"
   },
   {

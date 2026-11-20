@@ -133,7 +133,34 @@
    ],
    "hub": "village",
    "town": 1,
+   "npc": "grandpa_wang",
    "quests": [
+    {
+     "quest": "q1_quiet_morning",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q1_quiet_morning_offer"
+     },
+     "in": {
+      "scene": "sc_q1_quiet_morning_wait"
+     },
+     "post": {
+      "scene": "sc_q1_quiet_morning_thanks"
+     }
+    },
+    {
+     "quest": "q1_shatter_crown",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q1_shatter_crown_offer"
+     },
+     "in": {
+      "scene": "sc_q1_shatter_crown_wait"
+     },
+     "post": {
+      "scene": "sc_q1_shatter_crown_thanks"
+     }
+    },
     {
      "quest": "q1_carrot",
      "role": "step",
@@ -217,6 +244,11 @@
      "post": {
       "scene": "sc_q1_bounty_thanks"
      }
+    },
+    {
+     "quest": "q1_quiet_morning",
+     "role": "step",
+     "step": "s2"
     }
    ]
   },
@@ -256,6 +288,16 @@
        }
       ]
      }
+    },
+    {
+     "quest": "q1_quiet_morning",
+     "role": "step",
+     "step": "s4"
+    },
+    {
+     "quest": "q1_quiet_morning",
+     "role": "step",
+     "step": "s5"
     },
     {
      "quest": "q1_hoe",
@@ -596,8 +638,126 @@
  "quests": [
   {
    "schema": "quest/0.2",
+   "id": "q1_quiet_morning",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "太安静了",
+    "en": "The Quiet Morning"
+   },
+   "giver": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "village"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "The village woke too quiet. Granny Bai shows the cold egg she has kept since the last war."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Farmer Li: the rabbits are fighting and have forgotten their kind words."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_wang"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "Grandpa Wang, in the village: even the well is quieter than it used to be."
+    },
+    {
+     "id": "s4",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "m_well"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "The old well: where Granny first hid the egg. The fog reaches the village."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "sc_r1_hatch: the egg hatches, 小龙 says 你好, joinParty, Granny tells the truth about the King."
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 30,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [
+     "met_xiaolong",
+     "xiaolong_form_hatch"
+    ],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C001",
+    "C035",
+    "C037",
+    "C594",
+    "C007"
+   ],
+   "summary": "The village is too quiet. Talk to Farmer Li and Grandpa Wang, reach the old well, and see the hidden egg hatch."
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q1_bounty",
-   "story": "side",
+   "story": "main",
    "type": "slay",
    "title": {
     "zh": "赶走角兔",
@@ -697,7 +857,7 @@
     "C038",
     "C011"
    ],
-   "summary": "Chase 8 horned rabbits away from Farmer Li's cabbage field, then tell him they're gone."
+   "summary": "Chase 8 horned rabbits away from Farmer Li's cabbage field, They aren't wild: they wear scraps of a fog crown and drop a red button (Pipi)."
   },
   {
    "schema": "quest/0.2",
@@ -803,7 +963,113 @@
     "C595",
     "C007"
    ],
-   "summary": "Farmer Li dropped his hoe somewhere; spot the glint in the old well and bring it back."
+   "summary": "Farmer Li dropped his hoe somewhere; spot the glint in the old well — the same well where Granny Bai once hid the egg — and bring it back."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q1_shatter_crown",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "打碎雾冠",
+    "en": "Shatter the Fog Crown"
+   },
+   "giver": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "village"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "Granny Bai: the crowned Rabbit King is the fog's hold on this land. You have to calm him."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "w_throne"
+     },
+     "where": {
+      "graph": "warren",
+      "node": "w_throne"
+     },
+     "note": "The Horned Rabbit King's throne in the warren."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "enemy": "horned_rabbit_king",
+      "desyType": "boss",
+      "maps": [
+       "warren"
+      ]
+     },
+     "where": {
+      "graph": "warren",
+      "node": "w_throne"
+     },
+     "note": "Calm the Horned Rabbit King. The crown shatters. Pipi flees toward Honey Town."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "If 小龙 stays, the village is next. The Bell Road starts east. (World exit w12 unlocks on turn-in.)"
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 40,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C077",
+    "C078",
+    "C090",
+    "C092",
+    "C282"
+   ],
+   "summary": "Calm the Horned Rabbit King, shatter Pipi's fog crown, and learn that the Bell Road starts east toward Honey Town."
   }
  ],
  "scenes": {
@@ -945,10 +1211,6 @@
      "char": "hero",
      "expr": "neutral"
     },
-    "L2": {
-     "char": "xiaolong",
-     "expr": "neutral"
-    },
     "R1": {
      "char": "farmer_li",
      "expr": "worried"
@@ -964,7 +1226,7 @@
      "speaker": "farmer_li",
      "side": "R1",
      "expr": "surprised",
-     "en": "Oh! Hello there, little hero. And... is that a dragon?",
+     "en": "Oh! Hello there, little hero. The field is too quiet today.",
      "vo": null
     },
     {
@@ -980,10 +1242,10 @@
     },
     {
      "id": "l3",
-     "speaker": "xiaolong",
-     "side": "L2",
+     "speaker": "farmer_li",
+     "side": "R1",
      "expr": "thinking",
-     "en": "(He sniffs the air and points toward the old well.)",
+     "en": "I saw a glint in the old well — the same well where Granny Bai once hid the egg.",
      "vo": null
     },
     {
@@ -1083,7 +1345,7 @@
      "speaker": "farmer_li",
      "side": "R1",
      "expr": "surprised",
-     "en": "My hoe! It was down {C595}, in the old well?",
+     "en": "My hoe! It was down {C595}, in the old well? That is where Granny Bai hid the egg.",
      "tokens": [
       "C595"
      ],
@@ -1152,18 +1414,126 @@
     }
    ]
   },
-  "sc_r1_opening": {
+  "sc_q1_quiet_morning_offer": {
    "schema": "scene/0.2",
-   "id": "sc_r1_opening",
-   "title": "A birthday egg",
+   "id": "sc_q1_quiet_morning_offer",
+   "title": "The Quiet Morning (offer)",
    "density": "D1",
    "trigger": {
     "graph": "realm_1",
     "node": "village",
-    "on": "firstEnter",
-    "replaces": "village.1 (plays before meadow_intro)"
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q1_quiet_morning"
+     }
+    }
    },
    "background": "bg_village_morning",
+   "music": "village_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C035",
+    "C594"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The village woke too quiet. I need you to learn {C035} is happening.",
+     "tokens": [
+      "C035"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Talk to Farmer Li, and to Grandpa Wang {C594} in the village. Then meet me at the old well.",
+     "tokens": [
+      "C594"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "neutral",
+     "en": "I'll go now.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "Yes, I'll ask around.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q1_quiet_morning"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Go carefully. I will stay with the egg.",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "sad",
+     "en": "All right. I will be right here.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q1_quiet_morning"
+     },
+     "acceptQuest": "q1_quiet_morning"
+    }
+   ]
+  },
+  "sc_q1_quiet_morning_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q1_quiet_morning_thanks",
+   "title": "The Quiet Morning (turn-in)",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "m_well",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q1_quiet_morning"
+    }
+   },
+   "background": "bg_well",
    "music": "village_theme",
    "once": true,
    "slots": {
@@ -1171,9 +1541,281 @@
      "char": "hero",
      "expr": "happy"
     },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "neutral"
+    }
+   },
+   "words": [
+    "C001",
+    "C007"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "He is yours to protect now. The Bell Road starts east — after you deal with the King.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "{C001}!",
+     "tokens": [
+      "C001"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "happy",
+     "en": "{C007}, Granny Bai.",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Go carefully, both of you.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q1_quiet_morning"
+    }
+   ]
+  },
+  "sc_q1_shatter_crown_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q1_shatter_crown_offer",
+   "title": "Shatter the Fog Crown (offer)",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "village",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q1_shatter_crown"
+     }
+    }
+   },
+   "background": "bg_village_morning",
+   "music": "village_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C077",
+    "C092"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The Horned Rabbit King wears a fog crown. That is the fog's hold on this land.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "{C077}. You have to calm him — he is still a rabbit under that crown.",
+     "tokens": [
+      "C077"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "brave",
+     "en": "We'll go to the throne.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll help him.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q1_shatter_crown"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Come back when the {C092} king is himself again.",
+     "tokens": [
+      "C092"
+     ],
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "sad",
+     "en": "The road stays shut until he is calm.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q1_shatter_crown"
+     },
+     "acceptQuest": "q1_shatter_crown"
+    }
+   ]
+  },
+  "sc_q1_shatter_crown_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q1_shatter_crown_thanks",
+   "title": "Shatter the Fog Crown (turn-in)",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "village",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q1_shatter_crown"
+    }
+   },
+   "background": "bg_village_afternoon",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
     "R1": {
      "char": "granny_bai",
      "expr": "happy"
+    }
+   },
+   "words": [
+    "C282",
+    "C090"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "The crown shattered. A red imp fled east, toward Honey Town.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "If 小龙 stays, the village is next. You are his {C282} now.",
+     "tokens": [
+      "C282"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "{C090}!",
+     "tokens": [
+      "C090"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "The Bell Road starts east. Honey Town is the next stretch. Go.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q1_shatter_crown"
+    }
+   ]
+  },
+  "sc_r1_hatch": {
+   "schema": "scene/0.2",
+   "id": "sc_r1_hatch",
+   "title": "The egg hatches",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "m_well",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q1_quiet_morning"
+    }
+   },
+   "background": "bg_well",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "surprised"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "worried"
     },
     "R2": {
      "char": "xiaolong",
@@ -1194,15 +1836,15 @@
      "speaker": "narrator",
      "side": "none",
      "expr": "neutral",
-     "en": "Little Hill Village. Today is {hero}'s birthday.",
+     "en": "The old well. This is where Granny Bai first hid the egg. The fog has reached the village.",
      "vo": null
     },
     {
      "id": "l2",
      "speaker": "granny_bai",
      "side": "R1",
-     "expr": "happy",
-     "en": "Happy birthday, {hero}! I found this by the old well this morning. It's warm... and it's wiggling.",
+     "expr": "surprised",
+     "en": "You're back. The egg — it's shaking!",
      "vo": null
     },
     {
@@ -1210,7 +1852,7 @@
      "speaker": "narrator",
      "side": "none",
      "expr": "neutral",
-     "en": "Crack... crack... POP! A tiny golden dragon tumbles out of the egg.",
+     "en": "Crack... crack... POP! A tiny golden dragon tumbles out.",
      "vo": null
     },
     {
@@ -1236,43 +1878,24 @@
      "id": "l6",
      "speaker": "granny_bai",
      "side": "R1",
-     "expr": "surprised",
-     "en": "A golden dragon! I haven't seen one of those since... well. Since I was young and brave and had knees that worked.",
+     "expr": "worried",
+     "en": "A golden dragon. The last free one, if I am right. The Demon King is hunting him.",
      "vo": null
     },
     {
      "id": "l7",
-     "speaker": "xiaolong",
-     "side": "R2",
-     "expr": "happy",
-     "en": "{C001}! {C001}!",
-     "tokens": [
-      "C001"
-     ],
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "sad",
+     "en": "If he stays, the village is next. I am too old to walk the road.",
      "vo": null
     },
     {
      "id": "l8",
-     "speaker": "granny_bai",
-     "side": "R1",
-     "expr": "thinking",
-     "en": "One word is all he knows. Words are precious, little one. Lately the creatures out in the meadow have been forgetting theirs.",
-     "vo": null
-    },
-    {
-     "id": "l9",
-     "speaker": "granny_bai",
-     "side": "R1",
-     "expr": "worried",
-     "en": "A grey fog rolled over the hills. Now the rabbits are grumpy and the crows won't stop shouting.",
-     "vo": null
-    },
-    {
-     "id": "l10",
      "speaker": "hero",
      "side": "L1",
      "expr": "thinking",
-     "en": "What should I say to the little dragon?",
+     "en": "What do you say to him?",
      "vo": null,
      "choices": [
       {
@@ -1281,7 +1904,7 @@
        "tokens": [
         "C001"
        ],
-       "goto": "l11",
+       "goto": "l9",
        "correct": true,
        "setFlags": [
         "r1_said_hello"
@@ -1290,21 +1913,21 @@
       {
        "id": "c2",
        "en": "Wave and say nothing.",
-       "goto": "l12"
+       "goto": "l10"
       }
      ]
     },
     {
-     "id": "l11",
+     "id": "l9",
      "speaker": "xiaolong",
      "side": "R2",
      "expr": "happy",
      "en": "(He spins in a circle and hugs your leg.)",
      "vo": null,
-     "goto": "l13"
+     "goto": "l11"
     },
     {
-     "id": "l12",
+     "id": "l10",
      "speaker": "xiaolong",
      "side": "R2",
      "expr": "sad",
@@ -1312,49 +1935,30 @@
      "vo": null
     },
     {
-     "id": "l13",
+     "id": "l11",
      "speaker": "granny_bai",
      "side": "R1",
      "expr": "happy",
-     "en": "When someone gives you a present, we say {C007}. Go on, try it!",
+     "en": "When someone is kind, we say {C007}. Take him. Follow the old Bell Road. Ring the Bell before home goes silent.",
      "tokens": [
       "C007"
      ],
      "vo": null
     },
     {
-     "id": "l14",
+     "id": "l12",
      "speaker": "hero",
      "side": "L1",
      "expr": "happy",
-     "en": "{C007}, Granny Bai!",
-     "tokens": [
-      "C007"
-     ],
+     "en": "Thank you, Granny Bai.",
      "vo": null
     },
     {
-     "id": "l15",
-     "speaker": "granny_bai",
-     "side": "R1",
-     "expr": "happy",
-     "en": "Ha! Good manners. He looks like a Xiaolong to me. Little Dragon. Now take my old stick... and this hungry fellow.",
-     "vo": null
-    },
-    {
-     "id": "l16",
-     "speaker": "xiaolong",
-     "side": "R2",
-     "expr": "happy",
-     "en": "(He chews the stick. Then he chews your sleeve.)",
-     "vo": null
-    },
-    {
-     "id": "l17",
+     "id": "l13",
      "speaker": "granny_bai",
      "side": "R1",
      "expr": "neutral",
-     "en": "Farmer Li down the road needs help. Talk kindly, answer bravely, and the fog will clear. Off you go!",
+     "en": "His name is 小龙. Little Dragon. The King still wears a fog crown. Off you go.",
      "vo": null,
      "end": true
     }
@@ -1364,8 +1968,118 @@
      "setFlag": "met_xiaolong"
     },
     {
-     "joinParty": "xiaolong"
+     "setFlag": "xiaolong_form_hatch"
     },
+    {
+     "joinParty": "xiaolong"
+    }
+   ]
+  },
+  "sc_r1_opening": {
+   "schema": "scene/0.2",
+   "id": "sc_r1_opening",
+   "title": "Too quiet",
+   "density": "D1",
+   "trigger": {
+    "graph": "realm_1",
+    "node": "village",
+    "on": "firstEnter",
+    "replaces": "village.1 (plays before meadow_intro)"
+   },
+   "background": "bg_village_morning",
+   "music": "village_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "worried"
+    }
+   },
+   "teaches": [
+    "C035"
+   ],
+   "words": [
+    "C035",
+    "C594"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Little Hill Village. Dawn, and the fields are too quiet.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "worried",
+     "en": "{hero}. Come here. The birds did not sing this morning.",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "I have kept this egg since the last war. It was cold for years. Today it is warm again.",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "surprised",
+     "en": "{C035} is happening?",
+     "tokens": [
+      "C035"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "worried",
+     "en": "A grey fog is on the hills. The creatures are forgetting their words.",
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Talk to Farmer Li in the field, and to Grandpa Wang here in the village. Then meet me at the old well.",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "I'll go. Is the egg safe {C594}?",
+     "tokens": [
+      "C594"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l8",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "I will wait with it. Go carefully.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
     {
      "setFlag": "met_granny_bai"
     }
@@ -1552,6 +2266,7 @@
  },
  "characters": [
   "farmer_li",
+  "grandpa_wang",
   "granny_bai",
   "hero",
   "narrator",
@@ -1559,16 +2274,40 @@
   "xiaoming"
  ],
  "npcs": {
+  "farmer_li": {
+   "name": {
+    "zh": "李农夫",
+    "en": "Farmer Li"
+   }
+  },
+  "grandpa_wang": {
+   "name": {
+    "zh": "王爷爷",
+    "en": "Grandpa Wang"
+   }
+  },
+  "granny_bai": {
+   "name": {
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   }
+  },
+  "narrator": {
+   "name": {
+    "zh": "",
+    "en": "Narrator"
+   }
+  },
   "xiaolong": {
    "name": {
     "zh": "小龙",
     "en": "Xiaolong (Little Dragon, companion)"
    }
   },
-  "farmer_li": {
+  "xiaoming": {
    "name": {
-    "zh": "李农夫",
-    "en": "Farmer Li"
+    "zh": "小明",
+    "en": "Xiaoming"
    }
   }
  }

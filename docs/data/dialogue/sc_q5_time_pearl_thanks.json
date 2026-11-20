@@ -1,0 +1,77 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q5_time_pearl_thanks",
+ "title": "The Time Pearl (turn-in)",
+ "realm": 5,
+ "zone": "hydra_s_lair",
+ "density": "D4",
+ "trigger": {
+  "graph": "realm_5",
+  "node": "entry_town",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q5_time_pearl"
+  }
+ },
+ "background": "bg_marsh",
+ "music": "swamp_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "grandpa_turtle",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C324",
+  "C539"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "grandpa_turtle",
+   "side": "R1",
+   "expr": "happy",
+   "en": "The pearl is home. Morning is {C324} coming back.",
+   "zh": "已经早上了。",
+   "zhTrad": "已經早上了。",
+   "tokens": [
+    "C324"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "grandpa_turtle",
+   "side": "R1",
+   "expr": "thinking",
+   "en": "{C539} the swamp was still, we can walk again.",
+   "tokens": [
+    "C539"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "grandpa_turtle",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "The path to the sick lands is open. Go while the light lasts.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q5_time_pearl"
+  }
+ ]
+}

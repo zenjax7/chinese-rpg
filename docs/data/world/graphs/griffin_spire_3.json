@@ -258,6 +258,21 @@
    ]
   },
   {
+   "id": "boss_7.1",
+   "node": "boss_7",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q7_storm_crown"
+   },
+   "do": [
+    {
+     "dialogue": "griffin_spire_3.boss_7.step_q7_storm_crown"
+    }
+   ]
+  },
+  {
    "id": "path_3.1",
    "node": "path_3",
    "on": "enter",
@@ -324,6 +339,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "griffin_spire_3.boss_7.step_q7_storm_crown": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q7_storm_crown: scene from data/dialogue)"
    }
   ],
   "griffin_spire_3.npc_1.step_q7_griffin_chick": [

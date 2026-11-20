@@ -460,6 +460,21 @@
    "id": "npc_1.2",
    "node": "npc_1",
    "on": "enter",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q2_road_blocked"
+   },
+   "do": [
+    {
+     "dialogue": "great_hive_1.npc_1.step_q2_road_blocked"
+    }
+   ]
+  },
+  {
+   "id": "npc_1.3",
+   "node": "npc_1",
+   "on": "enter",
    "once": false,
    "outcome": "story",
    "do": [
@@ -671,6 +686,12 @@
    {
     "speaker": "traveller",
     "en": "(quest step for q2_royal_jelly: scene from data/dialogue)"
+   }
+  ],
+  "great_hive_1.npc_1.step_q2_road_blocked": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_road_blocked: scene from data/dialogue)"
    }
   ],
   "great_hive_1.story_1.step_q2_royal_jelly": [

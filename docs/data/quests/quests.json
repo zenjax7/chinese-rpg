@@ -31,11 +31,138 @@
  "quests": [
   {
    "schema": "quest/0.2",
+   "id": "q1_quiet_morning",
+   "realm": 1,
+   "zone": "meadow",
+   "pool": "L1.1",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "太安静了",
+    "en": "The Quiet Morning"
+   },
+   "giver": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "village"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "The village woke too quiet. Granny Bai shows the cold egg she has kept since the last war."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "farmer_li"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_farm"
+     },
+     "note": "Farmer Li: the rabbits are fighting and have forgotten their kind words."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_wang"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "Grandpa Wang, in the village: even the well is quieter than it used to be."
+    },
+    {
+     "id": "s4",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "m_well"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "The old well: where Granny first hid the egg. The fog reaches the village."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "m_well"
+     },
+     "note": "sc_r1_hatch: the egg hatches, 小龙 says 你好, joinParty, Granny tells the truth about the King."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q1_quiet_morning_offer",
+    "progress": "sc_q1_quiet_morning_wait",
+    "turnIn": "sc_q1_quiet_morning_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 30,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [
+     "met_xiaolong",
+     "xiaolong_form_hatch"
+    ],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C001",
+    "C035",
+    "C037",
+    "C594",
+    "C007"
+   ],
+   "summary": "The village is too quiet. Talk to Farmer Li and Grandpa Wang, reach the old well, and see the hidden egg hatch.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q1_bounty",
    "realm": 1,
    "zone": "meadow",
    "pool": "L1.1",
-   "story": "side",
+   "story": "main",
    "type": "slay",
    "title": {
     "zh": "赶走角兔",
@@ -135,7 +262,7 @@
     "C038",
     "C011"
    ],
-   "summary": "Chase 8 horned rabbits away from Farmer Li's cabbage field, then tell him they're gone.",
+   "summary": "Chase 8 horned rabbits away from Farmer Li's cabbage field, They aren't wild: they wear scraps of a fog crown and drop a red button (Pipi).",
    "hook": null,
    "repeatable": false
   },
@@ -250,7 +377,7 @@
     "C595",
     "C007"
    ],
-   "summary": "Farmer Li dropped his hoe somewhere; spot the glint in the old well and bring it back.",
+   "summary": "Farmer Li dropped his hoe somewhere; spot the glint in the old well — the same well where Granny Bai once hid the egg — and bring it back.",
    "hook": "q1_hoe",
    "repeatable": false
   },
@@ -260,7 +387,7 @@
    "realm": 1,
    "zone": "warren",
    "pool": "L1.3",
-   "story": "side",
+   "story": "main",
    "type": "fetch",
    "title": {
     "zh": "金萝卜",
@@ -377,8 +504,208 @@
     "C090",
     "C092"
    ],
-   "summary": "Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming.",
+   "summary": "Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming. He saw a red imp crown a rabbit; Pipi's taunt plays at w_camp.",
    "hook": "q1_carrot",
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q1_shatter_crown",
+   "realm": 1,
+   "zone": "warren",
+   "pool": "L1.3",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "打碎雾冠",
+    "en": "Shatter the Fog Crown"
+   },
+   "giver": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "village"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "Granny Bai: the crowned Rabbit King is the fog's hold on this land. You have to calm him."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "w_throne"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "w_throne"
+     },
+     "note": "The Horned Rabbit King's throne in the warren."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "warren",
+      "enemy": "horned_rabbit_king",
+      "desyType": "boss"
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "w_throne"
+     },
+     "note": "Calm the Horned Rabbit King. The crown shatters. Pipi flees toward Honey Town."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_bai",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_1",
+      "node": "village"
+     },
+     "note": "If 小龙 stays, the village is next. The Bell Road starts east. (World exit w12 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q1_shatter_crown_offer",
+    "progress": "sc_q1_shatter_crown_wait",
+    "turnIn": "sc_q1_shatter_crown_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 40,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C077",
+    "C078",
+    "C090",
+    "C092",
+    "C282"
+   ],
+   "summary": "Calm the Horned Rabbit King, shatter Pipi's fog crown, and learn that the Bell Road starts east toward Honey Town.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q2_fei_boast",
+   "realm": 2,
+   "zone": "forest",
+   "pool": "L2.1",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "小飞的挑战",
+    "en": "Fei's Boast"
+   },
+   "giver": {
+    "npc": "fei",
+    "zone": "forest",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "fei"
+     },
+     "where": {
+      "zone": "forest",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Fei shows off in Honey Town: he will 'save the town himself'."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "fei",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "forest",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "He runs ahead toward the Crossroads (sets up his capture in R3)."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_fei_boast_offer",
+    "progress": "sc_q2_fei_boast_wait",
+    "turnIn": "sc_q2_fei_boast_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 5
+    },
+    "expValue": 20,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C001",
+    "C115",
+    "C118",
+    "C121"
+   ],
+   "summary": "Fei shows off in Honey Town, vows to save it himself, and runs ahead toward the Crossroads.",
+   "hook": null,
    "repeatable": false
   },
   {
@@ -650,7 +977,7 @@
       "nodeKind": "town",
       "position": "entry_town"
      },
-     "note": "Granny Bai 'happens to be in town' and offers a first spell lesson."
+     "note": "Granny Bai's letter: Honey Town sits on the Bell Road, the Queen may remember the old pact, and she will teach you a first spell."
     },
     {
      "id": "s2",
@@ -738,7 +1065,114 @@
     "C119",
     "C642"
    ],
-   "summary": "Gather 3 soap-flowers and learn 8 forest words; Granny Bai teaches you your first spell, Bubble Spell.",
+   "summary": "Granny Bai writes that Honey Town sits on the Bell Road and the Queen may remember the pact. Gather 3 soap-flowers and learn 8 forest words; she teaches Bubble Spell.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q2_road_blocked",
+   "realm": 2,
+   "zone": "forest",
+   "pool": "L2.1",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "路不通",
+    "en": "The Road Is Blocked"
+   },
+   "giver": {
+    "npc": "granny_mi",
+    "zone": "forest",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "yezi",
+    "zone": "great_hive",
+    "nodeKind": "npc",
+    "position": "level_1_mid",
+    "ref": "great_hive_1/npc_1"
+   },
+   "returnToGiver": false,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_mi"
+     },
+     "where": {
+      "zone": "forest",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "The east road is shut: the hive has gone mad."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "zone": "forest",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "realm_2/boss_1"
+     },
+     "note": "The hive road, at the greedy-bear clearing."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi"
+     },
+     "where": {
+      "zone": "great_hive",
+      "nodeKind": "npc",
+      "position": "level_1_mid",
+      "ref": "great_hive_1/npc_1"
+     },
+     "note": "Yezi: the Queen's jelly is gone. That is why the bees are raging."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q2_road_blocked_offer",
+    "progress": "sc_q2_road_blocked_wait",
+    "turnIn": "sc_q2_road_blocked_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 10
+    },
+    "expValue": 40,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C115",
+    "C118",
+    "C121",
+    "C119"
+   ],
+   "summary": "The east road is shut because the hive went mad. Reach the hive road and hear from Yezi that the Queen's jelly is gone.",
    "hook": null,
    "repeatable": false
   },
@@ -782,7 +1216,7 @@
       "position": "level_1_mid",
       "ref": "great_hive_1/npc_1"
      },
-     "note": "Yezi the elf: the bees blame Honey Town for a theft."
+     "note": "Yezi: Pipi stole the Queen's jelly to fog the hive and close the Bell Road."
     },
     {
      "id": "s2",
@@ -888,7 +1322,7 @@
     "C342",
     "C343"
    ],
-   "summary": "Find the royal jelly Pipi stole, return it to the Queen Bee, and Yezi teaches you Heal.",
+   "summary": "Find the royal jelly Pipi stole to close the road, return it to the Queen Bee, and learn Heal. The Queen remembers the Bell and names the Crossroads. (World exit w23 unlocks on turn-in.)",
    "hook": "q2_great_hive_1_npc_1",
    "repeatable": false
   },
@@ -1040,6 +1474,125 @@
     "C282"
    ],
    "summary": "Follow the ransom note to the bandits' cave, beat the Sack Brothers and bring Fei home to his sister.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q3_fog_jar",
+   "realm": 3,
+   "zone": "crossroads_highway",
+   "pool": "L3.1",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "雾罐子",
+    "en": "Fog in a Jar"
+   },
+   "giver": {
+    "npc": "boss_qian",
+    "zone": "crossroads_highway",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "boss_qian"
+     },
+     "where": {
+      "zone": "crossroads_highway",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Boss Qian: the market is shut. Someone is selling fog in a jar at the bazaar."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "zone": "night_bazaar",
+      "nodeKind": "story",
+      "position": "level_1_mid",
+      "ref": "bazaar_cellars_1/story_1"
+     },
+     "note": "Pipi at a stall, hawking a jar of fog."
+    },
+    {
+     "id": "s3",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "fog_jar",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "zone": "night_bazaar",
+      "nodeKind": "story",
+      "position": "level_1_mid",
+      "ref": "bazaar_cellars_1/story_1"
+     },
+     "note": "Take the jar (Pipi flees)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "boss_qian",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "crossroads_highway",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Qian reopens the market. The cave road is open. (World exit w34 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q3_fog_jar_offer",
+    "progress": "sc_q3_fog_jar_wait",
+    "turnIn": "sc_q3_fog_jar_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 90,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C162",
+    "C171",
+    "C172",
+    "C164",
+    "C166"
+   ],
+   "summary": "Pipi is selling fog in a jar at the bazaar. Take the jar, reopen the market, and open the cave road.",
    "hook": null,
    "repeatable": false
   },
@@ -2923,6 +3476,143 @@
   },
   {
    "schema": "quest/0.2",
+   "id": "q5_time_pearl",
+   "realm": 5,
+   "zone": "hydra_s_lair",
+   "pool": "L5.2",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "时间珍珠",
+    "en": "The Time Pearl"
+   },
+   "giver": {
+    "npc": "grandpa_turtle",
+    "zone": "misty_marsh",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle"
+     },
+     "where": {
+      "zone": "misty_marsh",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "The swamp is stuck in one evening. Mist fed Grandpa Turtle's Time Pearl to the Hydra, so no one can cross."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_5"
+     },
+     "where": {
+      "zone": "hydra_s_lair",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "hydra_lair_2/boss_5"
+     },
+     "note": "The Hydra's lair."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "hydra_s_lair",
+      "enemy": "hydra",
+      "desyType": "boss"
+     },
+     "where": {
+      "zone": "hydra_s_lair",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "hydra_lair_2/boss_5"
+     },
+     "note": "Calm the Hydra and take back the Time Pearl."
+    },
+    {
+     "id": "s4",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "time_pearl",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "zone": "hydra_s_lair",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "hydra_lair_2/boss_5"
+     },
+     "note": "The pearl, after the Hydra is calmed."
+    },
+    {
+     "id": "s5",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "grandpa_turtle",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "misty_marsh",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Morning returns. The path to the sick lands opens. (World exit w56 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q5_time_pearl_offer",
+    "progress": "sc_q5_time_pearl_wait",
+    "turnIn": "sc_q5_time_pearl_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 300,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C539",
+    "C821",
+    "C820",
+    "C324",
+    "C317"
+   ],
+   "summary": "The Hydra has the Time Pearl, so the swamp is stuck in one evening. Calm the Hydra, return the pearl, and bring back morning.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q6_medicine_herbs",
    "realm": 6,
    "zone": "gloomy_village",
@@ -3693,6 +4383,369 @@
    ],
    "summary": "Cure Lingling's dad, the Zombie Knight, in the lower crypt and bring father and daughter back together.",
    "hook": "q6_moonlit_crypt_2_npc_1",
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q6_cure_mayor",
+   "realm": 6,
+   "zone": "gloomy_village",
+   "pool": "L6.1",
+   "story": "main",
+   "type": "rescue",
+   "title": {
+    "zh": "治好镇长",
+    "en": "Cure the Mayor"
+   },
+   "giver": {
+    "npc": "dr_an",
+    "zone": "gloomy_village",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an"
+     },
+     "where": {
+      "zone": "gloomy_village",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Dr. An: the mayor is sick with fog, not dead. If he isn't cured, the sickness will spread."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "zone": "gloomy_village",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "realm_6/boss_1"
+     },
+     "note": "The Zombie Mayor."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "gloomy_village",
+      "enemy": "zombie_mayor",
+      "desyType": "boss"
+     },
+     "where": {
+      "zone": "gloomy_village",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "realm_6/boss_1"
+     },
+     "note": "Calm and cure the mayor."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "dr_an",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "gloomy_village",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "The Village Key, and a clue that the sickness came from the graveyard. (World exit w67 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q6_cure_mayor_offer",
+    "progress": "sc_q6_cure_mayor_wait",
+    "turnIn": "sc_q6_cure_mayor_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 300,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C398",
+    "C399",
+    "C400",
+    "C386",
+    "C385"
+   ],
+   "summary": "The mayor is sick with fog, not dead. Cure him, take the Village Key, and keep the sickness from outrunning you.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q7_wind_truth",
+   "realm": 7,
+   "zone": "windy_cliffs",
+   "pool": "L7.1",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "风龙的真话",
+    "en": "The Wind Dragon's Truth"
+   },
+   "giver": {
+    "npc": "granny_xue",
+    "zone": "windy_cliffs",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_xue"
+     },
+     "where": {
+      "zone": "windy_cliffs",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "The sky road is closed. The Wind Dragon blocks the pass."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "zone": "windy_cliffs",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "realm_7/boss_1"
+     },
+     "note": "The Wind Dragon on the pass."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "windy_cliffs",
+      "enemy": "wind_dragon",
+      "desyType": "boss"
+     },
+     "where": {
+      "zone": "windy_cliffs",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "realm_7/boss_1"
+     },
+     "note": "Calm the Wind Dragon. He recognizes 小龙 and tells the truth: 小龙's mother is chained in the castle (sc_r7_wind_dragon_truth)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_xue",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "windy_cliffs",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "The mid-game twist is out: the Golden Dragon is a prisoner of the Demon King."
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q7_wind_truth_offer",
+    "progress": "sc_q7_wind_truth_wait",
+    "turnIn": "sc_q7_wind_truth_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 20
+    },
+    "expValue": 360,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C907",
+    "C908",
+    "C425",
+    "C426",
+    "C444"
+   ],
+   "summary": "The Wind Dragon blocks the pass. Calm him, and he recognizes 小龙 and reveals that his mother is chained in the castle.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q7_storm_crown",
+   "realm": 7,
+   "zone": "griffin_summit",
+   "pool": "L7.2",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "风暴冠",
+    "en": "The Storm Crown"
+   },
+   "giver": {
+    "npc": "yezi",
+    "zone": "griffin_summit",
+    "nodeKind": "npc",
+    "position": "spire_entry",
+    "ref": "griffin_spire_1/npc_1"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi"
+     },
+     "where": {
+      "zone": "griffin_summit",
+      "nodeKind": "npc",
+      "position": "spire_entry",
+      "ref": "griffin_spire_1/npc_1"
+     },
+     "note": "Yezi: Mist's storm crown is on the Griffin King. Break it, or the sky road stays closed."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_7"
+     },
+     "where": {
+      "zone": "griffin_summit",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "griffin_spire_3/boss_7"
+     },
+     "note": "The Griffin King."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "griffin_summit",
+      "enemy": "griffin_king",
+      "desyType": "boss"
+     },
+     "where": {
+      "zone": "griffin_summit",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "griffin_spire_3/boss_7"
+     },
+     "note": "Calm the Griffin King. The storm crown breaks. Mist is blown away."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "griffin_summit",
+      "nodeKind": "npc",
+      "position": "spire_entry",
+      "ref": "griffin_spire_1/npc_1"
+     },
+     "note": "The road to the colosseum opens. (World exit w78 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q7_storm_crown_offer",
+    "progress": "sc_q7_storm_crown_wait",
+    "turnIn": "sc_q7_storm_crown_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 450,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C470",
+    "C477",
+    "C482",
+    "C473",
+    "C466"
+   ],
+   "summary": "Break Mist's storm crown on the Griffin King, clear the sky road, and open the way to the colosseum.",
+   "hook": null,
    "repeatable": false
   },
   {
@@ -5202,6 +6255,126 @@
     "C534"
    ],
    "summary": "Deliver the fan club's letters to the Ogre Champion's manager under the Colosseum.",
+   "hook": null,
+   "repeatable": false
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q8_win_tournament",
+   "realm": 8,
+   "zone": "grand_colosseum",
+   "pool": "L8.2",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "赢得比赛",
+    "en": "Win the Tournament"
+   },
+   "giver": {
+    "npc": "general_mo",
+    "zone": "training_pits",
+    "nodeKind": "town",
+    "position": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "general_mo"
+     },
+     "where": {
+      "zone": "training_pits",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "General Mo: 'Win, and you may pass.' The tournament is the last gate before the castle."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_8"
+     },
+     "where": {
+      "zone": "grand_colosseum",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "undercroft_3/boss_8"
+     },
+     "note": "The Ogre Champion, Dachui."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "zone": "grand_colosseum",
+      "enemy": "ogre_champion",
+      "desyType": "boss"
+     },
+     "where": {
+      "zone": "grand_colosseum",
+      "nodeKind": "boss",
+      "position": "final",
+      "ref": "undercroft_3/boss_8"
+     },
+     "note": "Beat Dachui fairly. He laughs and pledges the beastfolk."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "general_mo",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "zone": "training_pits",
+      "nodeKind": "town",
+      "position": "entry_town"
+     },
+     "note": "Mo: 'We will meet at the castle.' (World exit w89 unlocks on turn-in.)"
+    }
+   ],
+   "scenes": {
+    "offer": "sc_q8_win_tournament_offer",
+    "progress": "sc_q8_win_tournament_wait",
+    "turnIn": "sc_q8_win_tournament_thanks"
+   },
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 525,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C955",
+    "C956",
+    "C965",
+    "C503",
+    "C991"
+   ],
+   "summary": "Win the tournament fairly, earn Dachui's pledge, and open the last gate to the castle.",
    "hook": null,
    "repeatable": false
   },

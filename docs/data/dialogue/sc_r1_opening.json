@@ -1,7 +1,7 @@
 {
  "schema": "scene/0.2",
  "id": "sc_r1_opening",
- "title": "A birthday egg",
+ "title": "Too quiet",
  "realm": 1,
  "zone": "meadow",
  "density": "D1",
@@ -17,24 +17,19 @@
  "slots": {
   "L1": {
    "char": "hero",
-   "expr": "happy"
+   "expr": "neutral"
   },
   "R1": {
    "char": "granny_bai",
-   "expr": "happy"
-  },
-  "R2": {
-   "char": "xiaolong",
-   "expr": "neutral"
+   "expr": "worried"
   }
  },
  "teaches": [
-  "C001",
-  "C007"
+  "C035"
  ],
  "words": [
-  "C001",
-  "C007"
+  "C035",
+  "C594"
  ],
  "lines": [
   {
@@ -42,60 +37,60 @@
    "speaker": "narrator",
    "side": "none",
    "expr": "neutral",
-   "en": "Little Hill Village. Today is {hero}'s birthday.",
+   "en": "Little Hill Village. Dawn, and the fields are too quiet.",
    "vo": null
   },
   {
    "id": "l2",
    "speaker": "granny_bai",
    "side": "R1",
-   "expr": "happy",
-   "en": "Happy birthday, {hero}! I found this by the old well this morning. It's warm... and it's wiggling.",
+   "expr": "worried",
+   "en": "{hero}. Come here. The birds did not sing this morning.",
    "vo": null
   },
   {
    "id": "l3",
-   "speaker": "narrator",
-   "side": "none",
-   "expr": "neutral",
-   "en": "Crack... crack... POP! A tiny golden dragon tumbles out of the egg.",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "thinking",
+   "en": "I have kept this egg since the last war. It was cold for years. Today it is warm again.",
    "vo": null
   },
   {
    "id": "l4",
-   "speaker": "xiaolong",
-   "side": "R2",
+   "speaker": "hero",
+   "side": "L1",
    "expr": "surprised",
-   "en": "{C001}!",
+   "en": "{C035} is happening?",
    "tokens": [
-    "C001"
+    "C035"
    ],
    "vo": null
   },
   {
    "id": "l5",
-   "speaker": "hero",
-   "side": "L1",
-   "expr": "surprised",
-   "en": "It... talked?!",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "worried",
+   "en": "A grey fog is on the hills. The creatures are forgetting their words.",
    "vo": null
   },
   {
    "id": "l6",
    "speaker": "granny_bai",
    "side": "R1",
-   "expr": "surprised",
-   "en": "A golden dragon! I haven't seen one of those since... well. Since I was young and brave and had knees that worked.",
+   "expr": "neutral",
+   "en": "Talk to Farmer Li in the field, and to Grandpa Wang here in the village. Then meet me at the old well.",
    "vo": null
   },
   {
    "id": "l7",
-   "speaker": "xiaolong",
-   "side": "R2",
-   "expr": "happy",
-   "en": "{C001}! {C001}!",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "thinking",
+   "en": "I'll go. Is the egg safe {C594}?",
    "tokens": [
-    "C001"
+    "C594"
    ],
    "vo": null
   },
@@ -103,117 +98,13 @@
    "id": "l8",
    "speaker": "granny_bai",
    "side": "R1",
-   "expr": "thinking",
-   "en": "One word is all he knows. Words are precious, little one. Lately the creatures out in the meadow have been forgetting theirs.",
-   "vo": null
-  },
-  {
-   "id": "l9",
-   "speaker": "granny_bai",
-   "side": "R1",
-   "expr": "worried",
-   "en": "A grey fog rolled over the hills. Now the rabbits are grumpy and the crows won't stop shouting.",
-   "vo": null
-  },
-  {
-   "id": "l10",
-   "speaker": "hero",
-   "side": "L1",
-   "expr": "thinking",
-   "en": "What should I say to the little dragon?",
-   "vo": null,
-   "choices": [
-    {
-     "id": "c1",
-     "en": "{C001}!",
-     "tokens": [
-      "C001"
-     ],
-     "goto": "l11",
-     "correct": true,
-     "setFlags": [
-      "r1_said_hello"
-     ]
-    },
-    {
-     "id": "c2",
-     "en": "Wave and say nothing.",
-     "goto": "l12"
-    }
-   ]
-  },
-  {
-   "id": "l11",
-   "speaker": "xiaolong",
-   "side": "R2",
-   "expr": "happy",
-   "en": "(He spins in a circle and hugs your leg.)",
-   "vo": null,
-   "goto": "l13"
-  },
-  {
-   "id": "l12",
-   "speaker": "xiaolong",
-   "side": "R2",
-   "expr": "sad",
-   "en": "(He tilts his head, waiting... then hugs your leg anyway.)",
-   "vo": null
-  },
-  {
-   "id": "l13",
-   "speaker": "granny_bai",
-   "side": "R1",
-   "expr": "happy",
-   "en": "When someone gives you a present, we say {C007}. Go on, try it!",
-   "tokens": [
-    "C007"
-   ],
-   "vo": null
-  },
-  {
-   "id": "l14",
-   "speaker": "hero",
-   "side": "L1",
-   "expr": "happy",
-   "en": "{C007}, Granny Bai!",
-   "tokens": [
-    "C007"
-   ],
-   "vo": null
-  },
-  {
-   "id": "l15",
-   "speaker": "granny_bai",
-   "side": "R1",
-   "expr": "happy",
-   "en": "Ha! Good manners. He looks like a Xiaolong to me. Little Dragon. Now take my old stick... and this hungry fellow.",
-   "vo": null
-  },
-  {
-   "id": "l16",
-   "speaker": "xiaolong",
-   "side": "R2",
-   "expr": "happy",
-   "en": "(He chews the stick. Then he chews your sleeve.)",
-   "vo": null
-  },
-  {
-   "id": "l17",
-   "speaker": "granny_bai",
-   "side": "R1",
    "expr": "neutral",
-   "en": "Farmer Li down the road needs help. Talk kindly, answer bravely, and the fog will clear. Off you go!",
+   "en": "I will wait with it. Go carefully.",
    "vo": null,
    "end": true
   }
  ],
  "onEnd": [
-  {
-   "setFlag": "met_xiaolong"
-  },
-  {
-   "joinParty": "xiaolong"
-  },
   {
    "setFlag": "met_granny_bai"
   }

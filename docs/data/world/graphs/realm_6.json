@@ -1177,6 +1177,21 @@
    ]
   },
   {
+   "id": "boss_1.1",
+   "node": "boss_1",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q6_cure_mayor"
+   },
+   "do": [
+    {
+     "dialogue": "realm_6.boss_1.step_q6_cure_mayor"
+    }
+   ]
+  },
+  {
    "id": "portal_2.1",
    "node": "portal_2",
    "on": "enter",
@@ -1719,6 +1734,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_6.boss_1.step_q6_cure_mayor": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q6_cure_mayor: scene from data/dialogue)"
    }
   ],
   "realm_6.portal_2.step_q6_old_mine": [

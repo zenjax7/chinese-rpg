@@ -636,6 +636,21 @@
    "on": "enter",
    "once": true,
    "outcome": "story",
+   "cond": {
+    "questActive": "q3_fog_jar"
+   },
+   "do": [
+    {
+     "dialogue": "bazaar_cellars_1.story_1.step_q3_fog_jar"
+    }
+   ]
+  },
+  {
+   "id": "story_1.2",
+   "node": "story_1",
+   "on": "enter",
+   "once": true,
+   "outcome": "story",
    "do": [
     {
      "dialogue": "bazaar_cellars_1.story_1"
@@ -672,6 +687,12 @@
    {
     "speaker": "traveller",
     "en": "(quest step for q3_lost_wallet: scene from data/dialogue)"
+   }
+  ],
+  "bazaar_cellars_1.story_1.step_q3_fog_jar": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q3_fog_jar: scene from data/dialogue)"
    }
   ],
   "bazaar_cellars_1.story_1": [

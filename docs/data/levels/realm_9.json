@@ -3145,20 +3145,32 @@
   }
  },
  "characters": [
+  "dachui",
+  "granny_bai",
+  "lantern_keeper_deng",
   "traveller",
-  "xiaolong"
+  "uncle_shi",
+  "wind_dragon",
+  "xiaolong",
+  "yezi"
  ],
  "npcs": {
-  "xiaolong": {
+  "granny_bai": {
    "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
+    "zh": "白奶奶",
+    "en": "Granny Bai"
    }
   },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

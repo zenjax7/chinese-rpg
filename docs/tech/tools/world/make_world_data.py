@@ -84,10 +84,13 @@ QUEST_HOOKS = [   # v3.9: reconciled with data/quests.json (quest/0.2); quest co
 QUEST_ITEMS = [
  {"id": "farmers_hoe", "zh": "锄头", "en": "Farmer Li's hoe", "emoji": "🪓", "quest": "q1_hoe"},
  {"id": "golden_carrot", "zh": "金萝卜", "en": "Golden carrot", "emoji": "🥕", "quest": "q1_carrot"},
+ {"id": "fog_jar", "zh": "雾罐子", "en": "Jar of fog", "emoji": "🫙", "quest": "q3_fog_jar"},
+ {"id": "time_pearl", "zh": "时间珍珠", "en": "Time Pearl", "emoji": "🔮", "quest": "q5_time_pearl"},
 ]
 SPEAKERS = {"xiaolong": {"zh": "小龙", "en": "Xiaolong (Little Dragon, companion)"}, "innkeeper_panda": {"zh": "熊猫掌柜", "en": "Panda innkeeper"}, "granny_bai": {"zh": "白奶奶", "en": "Granny Bai"},
             "farmer_li": {"zh": "李农夫", "en": "Farmer Li"}, "grandpa_wang": {"zh": "王爷爷", "en": "Grandpa Wang"}, "traveller": {"zh": "旅人", "en": "Traveller"}, "narrator": {"zh": "", "en": "Narrator"},
-            "xiaoming": {"zh": "小明", "en": "Xiaoming"}, "mayor_hu": {"zh": "胡镇长", "en": "Mayor Hu"}}
+            "xiaoming": {"zh": "小明", "en": "Xiaoming"}, "mayor_hu": {"zh": "胡镇长", "en": "Mayor Hu"},
+            "fei": {"zh": "小飞", "en": "Fei"}, "general_mo": {"zh": "莫将军", "en": "General Mo"}}
 ENC = [
  {"id": "meadow", "tier": 1, "enemiesPerBattle": [1, 2], "roster": [{"enemy": "horned_rabbit", "weight": 3}, {"enemy": "mushroom_imp", "weight": 2}], "packs": {}, "elite": "swift_horned_rabbit"},
  {"id": "clover_hills", "tier": 1, "enemiesPerBattle": [1, 2], "roster": [{"enemy": "horned_rabbit", "weight": 3}, {"enemy": "mushroom_imp", "weight": 2}, {"enemy": "wolf_pup", "weight": 1}], "packs": {"wolf_pup": 2}, "elite": "swift_horned_rabbit"},
@@ -107,7 +110,7 @@ realm1 = {
   {"id": "clover_hills", "order": 2, "location": "clover_hills", "desyPool": "L1.2", "pool": "clover_hills", "boss": "c_den", "bossKind": "locboss", "enemy": "big_grey_wolf", "gateEdge": "g2", "encounterTable": "clover_hills", "requires": [{"bossDefeated": "realm_1/m_crow"}]},
   {"id": "warren", "order": 3, "location": "warren", "desyPool": "L1.3", "pool": "warren", "boss": "w_throne", "bossKind": "realmboss", "enemy": "horned_rabbit_king", "gateEdge": "g3", "encounterTable": "warren", "requires": [{"bossDefeated": "realm_1/c_den"}], "scriptedElite": "swift_horned_rabbit"}],
  "nodes": [
-  N("village", "town", "Little Hill Village", "小山村", 150, 560, zone="meadow", town=1, services=["inn", "save", "shop"], onArrive=[{"event": "tutorial_first_battle"}, {"event": "r1_village_banter"}]),
+  N("village", "town", "Little Hill Village", "小山村", 150, 560, zone="meadow", town=1, services=["inn", "save", "shop"], npc="grandpa_wang", onArrive=[{"event": "tutorial_first_battle"}, {"event": "r1_village_banter"}]),
   N("m_fork", "crossroads", "Meadow crossroads", "草地路口", 330, 520, zone="meadow", onArrive=PATH),
   N("m_farm", "npc", "Farmer Li's field", "李农夫的田", 300, 650, zone="meadow", npc="farmer_li", onArrive=[{"event": "farmer_offer_hoe"}, {"event": "farmer_offer_bounty"}, {"event": "farmer_thanks"}]),
   N("m_well", "treasure", "Old well", "老井", 470, 650, zone="meadow", onArrive=[{"event": "well_hoe"}, {"event": "chest_normal"}, {"event": "well_hint"}]),

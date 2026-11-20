@@ -634,20 +634,23 @@
   }
  },
  "characters": [
+  "teacher_zhang",
   "traveller",
+  "uncle_shi",
+  "xiaohu",
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

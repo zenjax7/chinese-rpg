@@ -363,6 +363,20 @@
     "en": "Golden carrot",
     "emoji": "🥕",
     "quest": "q1_carrot"
+   },
+   {
+    "id": "fog_jar",
+    "zh": "雾罐子",
+    "en": "Jar of fog",
+    "emoji": "🫙",
+    "quest": "q3_fog_jar"
+   },
+   {
+    "id": "time_pearl",
+    "zh": "时间珍珠",
+    "en": "Time Pearl",
+    "emoji": "🔮",
+    "quest": "q5_time_pearl"
    }
   ],
   "speakers": {
@@ -401,6 +415,14 @@
    "mayor_hu": {
     "zh": "胡镇长",
     "en": "Mayor Hu"
+   },
+   "fei": {
+    "zh": "小飞",
+    "en": "Fei"
+   },
+   "general_mo": {
+    "zh": "莫将军",
+    "en": "General Mo"
    }
   }
  },

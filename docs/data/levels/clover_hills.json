@@ -403,16 +403,16 @@
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "innkeeper_panda": {
    "name": {
     "zh": "熊猫掌柜",
     "en": "Panda innkeeper"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

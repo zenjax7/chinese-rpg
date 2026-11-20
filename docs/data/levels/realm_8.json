@@ -147,6 +147,19 @@
      "post": {
       "scene": "sc_q8_training_thanks"
      }
+    },
+    {
+     "quest": "q8_win_tournament",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q8_win_tournament_offer"
+     },
+     "in": {
+      "scene": "sc_q8_win_tournament_wait"
+     },
+     "post": {
+      "scene": "sc_q8_win_tournament_thanks"
+     }
     }
    ]
   },
@@ -4586,6 +4599,114 @@
   },
   {
    "schema": "quest/0.2",
+   "id": "q8_win_tournament",
+   "story": "main",
+   "type": "slay",
+   "title": {
+    "zh": "赢得比赛",
+    "en": "Win the Tournament"
+   },
+   "giver": {
+    "npc": "general_mo",
+    "graph": "realm_8",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "general_mo"
+     },
+     "where": {
+      "graph": "realm_8",
+      "node": "entry_town"
+     },
+     "note": "General Mo: 'Win, and you may pass.' The tournament is the last gate before the castle."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_8"
+     },
+     "where": {
+      "graph": "undercroft_3",
+      "node": "boss_8"
+     },
+     "note": "The Ogre Champion, Dachui."
+    },
+    {
+     "id": "s3",
+     "event": "boss",
+     "objective": {
+      "type": "kill",
+      "enemy": "ogre_champion",
+      "desyType": "boss",
+      "maps": [
+       "undercroft_1",
+       "undercroft_2",
+       "undercroft_3"
+      ]
+     },
+     "where": {
+      "graph": "undercroft_3",
+      "node": "boss_8"
+     },
+     "note": "Beat Dachui fairly. He laughs and pledges the beastfolk."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "general_mo",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_8",
+      "node": "entry_town"
+     },
+     "note": "Mo: 'We will meet at the castle.' (World exit w89 unlocks on turn-in.)"
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 25
+    },
+    "expValue": 525,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C955",
+    "C956",
+    "C965",
+    "C503",
+    "C991"
+   ],
+   "summary": "Win the tournament fairly, earn Dachui's pledge, and open the last gate to the castle."
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q8_caged_beasts",
    "story": "side",
    "type": "rescue",
@@ -4974,23 +5095,241 @@
      "en": "(story beat to write)"
     }
    ]
+  },
+  "sc_q8_win_tournament_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q8_win_tournament_offer",
+   "title": "Win the Tournament (offer)",
+   "density": "D5",
+   "trigger": {
+    "graph": "realm_8",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q8_win_tournament"
+     }
+    }
+   },
+   "background": "bg_pits",
+   "music": "colosseum_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "brave"
+    },
+    "R1": {
+     "char": "general_mo",
+     "expr": "neutral"
+    }
+   },
+   "words": [
+    "C503",
+    "C991",
+    "C956",
+    "C965"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Win, and you may pass. The {C503} is the last gate before the castle.",
+     "zh": "要比赛。",
+     "zhTrad": "要比賽。",
+     "tokens": [
+      "C503"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "thinking",
+     "en": "{C991} fight Dachui fairly? He is the {C956} of these pits.",
+     "tokens": [
+      "C991",
+      "C956"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "brave",
+     "en": "We'll fight fair.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We accept.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q8_win_tournament"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "{C965}. Come back when the match is won.",
+     "zh": "坚持。",
+     "zhTrad": "堅持。",
+     "tokens": [
+      "C965"
+     ],
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Then the castle road stays closed.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q8_win_tournament"
+     },
+     "acceptQuest": "q8_win_tournament"
+    }
+   ]
+  },
+  "sc_q8_win_tournament_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q8_win_tournament_thanks",
+   "title": "Win the Tournament (turn-in)",
+   "density": "D5",
+   "trigger": {
+    "graph": "realm_8",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q8_win_tournament"
+    }
+   },
+   "background": "bg_pits",
+   "music": "colosseum_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "general_mo",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C955",
+    "C965"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "happy",
+     "en": "You beat Dachui fairly. He laughed, and he pledged the beastfolk.",
+     "zh": "你是冠军。",
+     "zhTrad": "你是冠軍。",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "A true {C955} can also be a friend. We will meet at the castle.",
+     "zh": "对手。",
+     "zhTrad": "對手。",
+     "tokens": [
+      "C955"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "We did not give up. We had to {C965}!",
+     "tokens": [
+      "C965"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "general_mo",
+     "side": "R1",
+     "expr": "brave",
+     "en": "The last gate is open. Go.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q8_win_tournament"
+    }
+   ]
   }
  },
  "characters": [
+  "coach_niu",
+  "fan_xiaoli",
+  "farmer_wang",
+  "general_mo",
+  "hero",
   "traveller",
+  "troll_kid_dudu",
+  "vet_ji",
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
+  "general_mo": {
    "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
+    "zh": "莫将军",
+    "en": "General Mo"
    }
   },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

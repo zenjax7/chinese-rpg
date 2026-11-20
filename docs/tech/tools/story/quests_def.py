@@ -1,4 +1,4 @@
-# Quest definitions (v2, 50 quests). Single source for data/quests.json, data/quests.csv and the tables in quests.md.
+# Quest definitions (v2, 60 quests after Jack 2026-11-20 story rework). Single source for data/quests.json, data/quests.csv and the tables in quests.md.
 # Edit here, then run build_quests.py.
 # Step tuple: (event, objective, where, note)
 #   event = world-graph arrival outcome: quest_offer | nothing | miniboss | item | portal | story | treasure,
@@ -17,7 +17,19 @@ Q = []
 def q(**kw): Q.append(kw)
 
 # ---------------- Realm 1 Starter Meadow (G=6) ----------------
-q(id="q1_bounty", realm=1, zone="meadow", type="slay", story="side",
+q(id="q1_quiet_morning", realm=1, zone="meadow", type="find", story="main",
+  title=("太安静了", "The Quiet Morning"), giver="granny_bai", giverAt=W1("village"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, W1("village"), "The village woke too quiet. Granny Bai shows the cold egg she has kept since the last war."),
+         ("quest_offer", {"type": "talk", "npc": "farmer_li"}, W1("m_farm"), "Farmer Li: the rabbits are fighting and have forgotten their kind words."),
+         ("quest_offer", {"type": "talk", "npc": "grandpa_wang"}, W1("village"), "Grandpa Wang, in the village: even the well is quieter than it used to be."),
+         ("story", {"type": "reach", "node": "m_well"}, W1("m_well"), "The old well: where Granny first hid the egg. The fog reaches the village."),
+         ("quest_offer", {"type": "turn_in", "npc": "granny_bai"}, W1("m_well"), "sc_r1_hatch: the egg hatches, 小龙 says 你好, joinParty, Granny tells the truth about the King.")],
+  rewards=dict(G=0, items={}, L=15, flags=["met_xiaolong", "xiaolong_form_hatch"]),
+  words=["C001", "C035", "C037", "C594", "C007"],
+  summary="The village is too quiet. Talk to Farmer Li and Grandpa Wang, reach the old well, and see the hidden egg hatch.")
+
+q(id="q1_bounty", realm=1, zone="meadow", type="slay", story="main",
   title=("赶走角兔", "Rabbits in the Cabbages"), giver="farmer_li", giverAt=W1("m_farm"), hook=None,
   turnIn="giver", requires=None,
   steps=[("quest_offer", {"type": "talk", "npc": "farmer_li"}, W1("m_farm"), "Farmer Li's cabbages are being nibbled (existing event m_farm.2)."),
@@ -25,7 +37,7 @@ q(id="q1_bounty", realm=1, zone="meadow", type="slay", story="side",
          ("quest_offer", {"type": "turn_in", "npc": "farmer_li"}, W1("m_farm"), "Return to Farmer Li.")],
   rewards=dict(G=8, items={"honey": 1}, L=15),
   words=["C001", "C007", "C039", "C038", "C011"],
-  summary="Chase 8 horned rabbits away from Farmer Li's cabbage field, then tell him they're gone.")
+  summary="Chase 8 horned rabbits away from Farmer Li's cabbage field, They aren't wild: they wear scraps of a fog crown and drop a red button (Pipi).")
 q(id="q1_hoe", realm=1, zone="meadow", type="find", story="side",
   title=("找回锄头", "The Lost Hoe"), giver="farmer_li", giverAt=W1("m_farm"), hook="q1_hoe",
   turnIn="giver", requires=None,
@@ -35,8 +47,8 @@ q(id="q1_hoe", realm=1, zone="meadow", type="find", story="side",
          ("quest_offer", {"type": "turn_in", "npc": "farmer_li"}, W1("m_farm"), "Existing story farmer_thanks (m_farm.3).")],
   rewards=dict(G=7, items={"honey": 1}, L=10),
   words=["C035", "C037", "C594", "C595", "C007"],
-  summary="Farmer Li dropped his hoe somewhere; spot the glint in the old well and bring it back.")
-q(id="q1_carrot", realm=1, zone="warren", type="fetch", story="side",
+  summary="Farmer Li dropped his hoe somewhere; spot the glint in the old well — the same well where Granny Bai once hid the egg — and bring it back.")
+q(id="q1_carrot", realm=1, zone="warren", type="fetch", story="main",
   title=("金萝卜", "The Golden Carrot Thief"), giver="xiaoming", giverAt=W1("w_path"), hook="q1_carrot",
   turnIn={"npc": "xiaoming", "graph": "realm_1", "node": "village"}, requires={"bossDefeated": "clover_hills"},
   steps=[("quest_offer", {"type": "talk", "npc": "xiaoming"}, W1("w_path"), "Xiaoming: '救命! A rabbit took my golden carrot!' (existing event w_path.1)"),
@@ -45,9 +57,29 @@ q(id="q1_carrot", realm=1, zone="warren", type="fetch", story="side",
          ("quest_offer", {"type": "turn_in", "npc": "xiaoming"}, W1("village"), "Xiaoming waits at home in Little Hill Village (hook turnIn).")],
   rewards=dict(G=15, items={"feather": 1}, L=20),
   words=["C076", "C077", "C078", "C282", "C090", "C092"],
-  summary="Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming.")
+  summary="Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming. He saw a red imp crown a rabbit; Pipi's taunt plays at w_camp.")
+
+q(id="q1_shatter_crown", realm=1, zone="warren", type="slay", story="main",
+  title=("打碎雾冠", "Shatter the Fog Crown"), giver="granny_bai", giverAt=W1("village"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, W1("village"), "Granny Bai: the crowned Rabbit King is the fog's hold on this land. You have to calm him."),
+         ("story", {"type": "reach", "node": "w_throne"}, W1("w_throne"), "The Horned Rabbit King's throne in the warren."),
+         ("boss", {"type": "boss", "zone": "warren", "enemy": "horned_rabbit_king"}, W1("w_throne"), "Calm the Horned Rabbit King. The crown shatters. Pipi flees toward Honey Town."),
+         ("quest_offer", {"type": "turn_in", "npc": "granny_bai"}, W1("village"), "If 小龙 stays, the village is next. The Bell Road starts east. (World exit w12 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=20),
+  words=["C077", "C078", "C090", "C092", "C282"],
+  summary="Calm the Horned Rabbit King, shatter Pipi's fog crown, and learn that the Bell Road starts east toward Honey Town.")
 
 # ---------------- Realm 2 Honeycomb Forest (G=12) ----------------
+q(id="q2_fei_boast", realm=2, zone="forest", type="find", story="main",
+  title=("小飞的挑战", "Fei's Boast"), giver="fei", giverAt=Z("forest", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "fei"}, Z("forest", "town", "entry_town"), "Fei shows off in Honey Town: he will 'save the town himself'."),
+         ("quest_offer", {"type": "turn_in", "npc": "fei"}, Z("forest", "town", "entry_town"), "He runs ahead toward the Crossroads (sets up his capture in R3).")],
+  rewards=dict(G=0, items={}, L=5),
+  words=["C001", "C115", "C118", "C121"],
+  summary="Fei shows off in Honey Town, vows to save it himself, and runs ahead toward the Crossroads.")
+
 q(id="q2_lost_panda", realm=2, zone="forest", type="find", story="side",
   title=("找熊猫", "Duoduo's Lost Panda"), giver="duoduo", giverAt=Z("forest", "town", "entry_town"), hook=None,
   turnIn="giver", requires={"bossDefeated": "forest"},
@@ -70,24 +102,34 @@ q(id="q2_spider_silk", realm=2, zone="forest", type="fetch", story="side",
 q(id="q2_bubble_lesson", realm=2, zone="forest", type="fetch", story="main",
   title=("白奶奶的泡泡课", "Granny Bai's Bubble Lesson"), giver="granny_bai", giverAt=Z("forest", "town", "entry_town"), hook=None,
   turnIn="giver", requires=None,
-  steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, Z("forest", "town", "entry_town"), "Granny Bai 'happens to be in town' and offers a first spell lesson."),
+  steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, Z("forest", "town", "entry_town"), "Granny Bai's letter: Honey Town sits on the Bell Road, the Queen may remember the old pact, and she will teach you a first spell."),
          ("item", {"type": "pickup", "item": "soap_flower", "n": 3}, Z("forest", "waypoint", "branch", refs=["realm_2/path_2", "realm_2/path_3", "realm_2/path_5"]), "3 soap-flowers on side branches (quest items)."),
          ("quest_offer", {"type": "words", "pool": "L2.1", "n": 8}, Z("forest", "town", "entry_town"), "Answer 8 Flower Glade (L2.1) words correctly in battles."),
          ("quest_offer", {"type": "turn_in", "npc": "granny_bai"}, Z("forest", "town", "entry_town"), "She teaches 泡泡术; Honey Town's shelf shows 'Granny Bai's lesson' instead of a price.")],
   rewards=dict(G=0, items={}, L=15, spells=["bubble_spell"]),
   words=["C093", "C094", "C107", "C119", "C642"],
-  summary="Gather 3 soap-flowers and learn 8 forest words; Granny Bai teaches you your first spell, Bubble Spell.")
+  summary="Granny Bai writes that Honey Town sits on the Bell Road and the Queen may remember the pact. Gather 3 soap-flowers and learn 8 forest words; she teaches Bubble Spell.")
+q(id="q2_road_blocked", realm=2, zone="forest", type="find", story="main",
+  title=("路不通", "The Road Is Blocked"), giver="granny_mi", giverAt=Z("forest", "town", "entry_town"), hook=None,
+  turnIn={"npc": "yezi", "zone": "great_hive", "nodeKind": "npc", "position": "level_1_mid", "ref": "great_hive_1/npc_1"}, requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "granny_mi"}, Z("forest", "town", "entry_town"), "The east road is shut: the hive has gone mad."),
+         ("story", {"type": "reach", "node": "boss_1"}, Z("forest", "boss", "final", "realm_2/boss_1"), "The hive road, at the greedy-bear clearing."),
+         ("quest_offer", {"type": "talk", "npc": "yezi"}, Z("great_hive", "npc", "level_1_mid", "great_hive_1/npc_1"), "Yezi: the Queen's jelly is gone. That is why the bees are raging.")],
+  rewards=dict(G=0, items={}, L=10),
+  words=["C115", "C118", "C121", "C119"],
+  summary="The east road is shut because the hive went mad. Reach the hive road and hear from Yezi that the Queen's jelly is gone.")
+
 q(id="q2_royal_jelly", realm=2, zone="great_hive", type="fetch", story="main",
   title=("蜂后的蜂王浆", "The Queen's Stolen Jelly"), giver="yezi", giverAt=Z("great_hive", "npc", "level_1_mid", "great_hive_1/npc_1"), hook="q2_great_hive_1_npc_1",
   turnIn="giver", requires={"bossDefeated": "forest"},
-  steps=[("quest_offer", {"type": "talk", "npc": "yezi"}, Z("great_hive", "npc", "level_1_mid", "great_hive_1/npc_1"), "Yezi the elf: the bees blame Honey Town for a theft."),
+  steps=[("quest_offer", {"type": "talk", "npc": "yezi"}, Z("great_hive", "npc", "level_1_mid", "great_hive_1/npc_1"), "Yezi: Pipi stole the Queen's jelly to fog the hive and close the Bell Road."),
          ("miniboss", {"type": "fight", "enemies": ["royal_guard_bee", "giant_bee"]}, Z("great_hive", "miniboss", "dead_end", "great_hive_1/miniboss_1"), "Guards around Pipi's stash."),
          ("story", {"type": "pickup", "item": "royal_jelly"}, Z("great_hive", "story", "dead_end", "great_hive_1/story_1"), "Pipi's stash: the jar and a red feather. First proof it was Pipi."),
          ("boss", {"type": "boss", "zone": "great_hive"}, Z("great_hive", "boss", "boss_room", "great_hive_1/boss_2"), "After the Queen's battle, give the jelly back (clear scene)."),
          ("quest_offer", {"type": "turn_in", "npc": "yezi"}, Z("great_hive", "npc", "level_1_mid", "great_hive_1/npc_1"), "Yezi teaches Heal (spec: Honeycomb quest).")],
   rewards=dict(G=10, items={"manatea": 1}, L=25, skills=["heal"]),
   words=["C130", "C134", "C138", "C135", "C342", "C343"],
-  summary="Find the royal jelly Pipi stole, return it to the Queen Bee, and Yezi teaches you Heal.")
+  summary="Find the royal jelly Pipi stole to close the road, return it to the Queen Bee, and learn Heal. The Queen remembers the Bell and names the Crossroads. (World exit w23 unlocks on turn-in.)")
 
 # ---------------- Realm 3 Crossroads Market (G=18) ----------------
 q(id="q3_rescue_fei", realm=3, zone="crossroads_highway", type="rescue", story="main",
@@ -101,6 +143,17 @@ q(id="q3_rescue_fei", realm=3, zone="crossroads_highway", type="rescue", story="
   rewards=dict(G=5, items={}, gear=[(3, "shield", "fine")], L=25),
   words=["C166", "C663", "C164", "C668", "C076", "C282"],
   summary="Follow the ransom note to the bandits' cave, beat the Sack Brothers and bring Fei home to his sister.")
+q(id="q3_fog_jar", realm=3, zone="crossroads_highway", type="find", story="main",
+  title=("雾罐子", "Fog in a Jar"), giver="boss_qian", giverAt=Z("crossroads_highway", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "boss_qian"}, Z("crossroads_highway", "town", "entry_town"), "Boss Qian: the market is shut. Someone is selling fog in a jar at the bazaar."),
+         ("story", {"type": "reach"}, Z("night_bazaar", "story", "level_1_mid", "bazaar_cellars_1/story_1"), "Pipi at a stall, hawking a jar of fog."),
+         ("item", {"type": "pickup", "item": "fog_jar"}, Z("night_bazaar", "story", "level_1_mid", "bazaar_cellars_1/story_1"), "Take the jar (Pipi flees)."),
+         ("quest_offer", {"type": "turn_in", "npc": "boss_qian"}, Z("crossroads_highway", "town", "entry_town"), "Qian reopens the market. The cave road is open. (World exit w34 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=15),
+  words=["C162", "C171", "C172", "C164", "C166"],
+  summary="Pipi is selling fog in a jar at the bazaar. Take the jar, reopen the market, and open the cave road.")
+
 q(id="q3_stolen_hats", realm=3, zone="crossroads_highway", type="fetch", story="side",
   title=("找帽子", "Hats Off!"), giver="auntie_hat", giverAt=Z("crossroads_highway", "town", "entry_town"), hook=None,
   turnIn="giver", requires=None, alsoOnBoard=True,
@@ -254,6 +307,18 @@ q(id="q5_fog_bottle", realm=5, zone="hydra_s_lair", type="slay", story="main",
   words=["C539", "C821", "C820", "C542", "C324"],
   summary="Beat the guardians of Madame Mist's fog bottle on the Lair's lower level and bring it to Grandpa Turtle to seal.")
 
+q(id="q5_time_pearl", realm=5, zone="hydra_s_lair", type="find", story="main",
+  title=("时间珍珠", "The Time Pearl"), giver="grandpa_turtle", giverAt=Z("misty_marsh", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "grandpa_turtle"}, Z("misty_marsh", "town", "entry_town"), "The swamp is stuck in one evening. Mist fed Grandpa Turtle's Time Pearl to the Hydra, so no one can cross."),
+         ("story", {"type": "reach", "node": "boss_5"}, Z("hydra_s_lair", "boss", "final", "hydra_lair_2/boss_5"), "The Hydra's lair."),
+         ("boss", {"type": "boss", "zone": "hydra_s_lair", "enemy": "hydra"}, Z("hydra_s_lair", "boss", "final", "hydra_lair_2/boss_5"), "Calm the Hydra and take back the Time Pearl."),
+         ("item", {"type": "pickup", "item": "time_pearl"}, Z("hydra_s_lair", "boss", "final", "hydra_lair_2/boss_5"), "The pearl, after the Hydra is calmed."),
+         ("quest_offer", {"type": "turn_in", "npc": "grandpa_turtle"}, Z("misty_marsh", "town", "entry_town"), "Morning returns. The path to the sick lands opens. (World exit w56 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=25),
+  words=["C539", "C821", "C820", "C324", "C317"],
+  summary="The Hydra has the Time Pearl, so the swamp is stuck in one evening. Calm the Hydra, return the pearl, and bring back morning.")
+
 # ---------------- Realm 6 Zombie Lands (G=45) ----------------
 q(id="q6_medicine_herbs", realm=6, zone="gloomy_village", type="fetch", story="main",
   title=("找草药", "Herbs for Dr. An"), giver="dr_an", giverAt=Z("gloomy_village", "town", "entry_town"), hook=None,
@@ -317,7 +382,40 @@ q(id="q6_knight_dad", realm=6, zone="moonlit_graveyard", type="rescue", story="m
   words=["C273", "C862", "C847", "C874", "C872", "C885"],
   summary="Cure Lingling's dad, the Zombie Knight, in the lower crypt and bring father and daughter back together.")
 
+q(id="q6_cure_mayor", realm=6, zone="gloomy_village", type="rescue", story="main",
+  title=("治好镇长", "Cure the Mayor"), giver="dr_an", giverAt=Z("gloomy_village", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "dr_an"}, Z("gloomy_village", "town", "entry_town"), "Dr. An: the mayor is sick with fog, not dead. If he isn't cured, the sickness will spread."),
+         ("story", {"type": "reach", "node": "boss_1"}, Z("gloomy_village", "boss", "final", "realm_6/boss_1"), "The Zombie Mayor."),
+         ("boss", {"type": "boss", "zone": "gloomy_village", "enemy": "zombie_mayor"}, Z("gloomy_village", "boss", "final", "realm_6/boss_1"), "Calm and cure the mayor."),
+         ("quest_offer", {"type": "turn_in", "npc": "dr_an"}, Z("gloomy_village", "town", "entry_town"), "The Village Key, and a clue that the sickness came from the graveyard. (World exit w67 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=20),
+  words=["C398", "C399", "C400", "C386", "C385"],
+  summary="The mayor is sick with fog, not dead. Cure him, take the Village Key, and keep the sickness from outrunning you.")
+
 # ---------------- Realm 7 Griffin Peaks (G=54) ----------------
+q(id="q7_wind_truth", realm=7, zone="windy_cliffs", type="slay", story="main",
+  title=("风龙的真话", "The Wind Dragon's Truth"), giver="granny_xue", giverAt=Z("windy_cliffs", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "granny_xue"}, Z("windy_cliffs", "town", "entry_town"), "The sky road is closed. The Wind Dragon blocks the pass."),
+         ("story", {"type": "reach", "node": "boss_1"}, Z("windy_cliffs", "boss", "final", "realm_7/boss_1"), "The Wind Dragon on the pass."),
+         ("boss", {"type": "boss", "zone": "windy_cliffs", "enemy": "wind_dragon"}, Z("windy_cliffs", "boss", "final", "realm_7/boss_1"), "Calm the Wind Dragon. He recognizes 小龙 and tells the truth: 小龙's mother is chained in the castle (sc_r7_wind_dragon_truth)."),
+         ("quest_offer", {"type": "turn_in", "npc": "granny_xue"}, Z("windy_cliffs", "town", "entry_town"), "The mid-game twist is out: the Golden Dragon is a prisoner of the Demon King.")],
+  rewards=dict(G=0, items={}, L=20),
+  words=["C907", "C908", "C425", "C426", "C444"],
+  summary="The Wind Dragon blocks the pass. Calm him, and he recognizes 小龙 and reveals that his mother is chained in the castle.")
+
+q(id="q7_storm_crown", realm=7, zone="griffin_summit", type="slay", story="main",
+  title=("风暴冠", "The Storm Crown"), giver="yezi", giverAt=Z("griffin_summit", "npc", "spire_entry", "griffin_spire_1/npc_1"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "yezi"}, Z("griffin_summit", "npc", "spire_entry", "griffin_spire_1/npc_1"), "Yezi: Mist's storm crown is on the Griffin King. Break it, or the sky road stays closed."),
+         ("story", {"type": "reach", "node": "boss_7"}, Z("griffin_summit", "boss", "final", "griffin_spire_3/boss_7"), "The Griffin King."),
+         ("boss", {"type": "boss", "zone": "griffin_summit", "enemy": "griffin_king"}, Z("griffin_summit", "boss", "final", "griffin_spire_3/boss_7"), "Calm the Griffin King. The storm crown breaks. Mist is blown away."),
+         ("quest_offer", {"type": "turn_in", "npc": "yezi"}, Z("griffin_summit", "npc", "spire_entry", "griffin_spire_1/npc_1"), "The road to the colosseum opens. (World exit w78 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=25),
+  words=["C470", "C477", "C482", "C473", "C466"],
+  summary="Break Mist's storm crown on the Griffin King, clear the sky road, and open the way to the colosseum.")
+
 q(id="q7_glacier_roses", realm=7, zone="windy_cliffs", type="fetch", story="side",
   title=("三朵冰川玫瑰", "Three Glacier Roses"), giver="granny_xue", giverAt=Z("windy_cliffs", "village", "outpost_1"), hook=None,
   turnIn="giver", requires={"bossDefeated": "windy_cliffs"},
@@ -439,6 +537,17 @@ q(id="q8_fan_letters", realm=8, zone="grand_colosseum", type="deliver", story="s
   rewards=dict(G=4, items={"feather": 1}, L=15),
   words=["C975", "C974", "C517", "C513", "C534"],
   summary="Deliver the fan club's letters to the Ogre Champion's manager under the Colosseum.")
+q(id="q8_win_tournament", realm=8, zone="grand_colosseum", type="slay", story="main",
+  title=("赢得比赛", "Win the Tournament"), giver="general_mo", giverAt=Z("training_pits", "town", "entry_town"), hook=None,
+  turnIn="giver", requires=None,
+  steps=[("quest_offer", {"type": "talk", "npc": "general_mo"}, Z("training_pits", "town", "entry_town"), "General Mo: 'Win, and you may pass.' The tournament is the last gate before the castle."),
+         ("story", {"type": "reach", "node": "boss_8"}, Z("grand_colosseum", "boss", "final", "undercroft_3/boss_8"), "The Ogre Champion, Dachui."),
+         ("boss", {"type": "boss", "zone": "grand_colosseum", "enemy": "ogre_champion"}, Z("grand_colosseum", "boss", "final", "undercroft_3/boss_8"), "Beat Dachui fairly. He laughs and pledges the beastfolk."),
+         ("quest_offer", {"type": "turn_in", "npc": "general_mo"}, Z("training_pits", "town", "entry_town"), "Mo: 'We will meet at the castle.' (World exit w89 unlocks on turn-in.)")],
+  rewards=dict(G=0, items={}, L=25),
+  words=["C955", "C956", "C965", "C503", "C991"],
+  summary="Win the tournament fairly, earn Dachui's pledge, and open the last gate to the castle.")
+
 q(id="q8_singer_escort", realm=8, zone="grand_colosseum", type="escort", story="main",
   title=("开幕歌手", "The Opening Song"), giver="singer_meimei", giverAt=Z("grand_colosseum", "npc", "level_1", "undercroft_1/npc_2"), hook="q8_undercroft_1_npc_2",
   turnIn="auto", requires={"bossDefeated": "training_pits"},

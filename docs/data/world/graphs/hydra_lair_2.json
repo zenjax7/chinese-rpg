@@ -435,6 +435,21 @@
    ]
   },
   {
+   "id": "boss_5.1",
+   "node": "boss_5",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q5_time_pearl"
+   },
+   "do": [
+    {
+     "dialogue": "hydra_lair_2.boss_5.step_q5_time_pearl"
+    }
+   ]
+  },
+  {
    "id": "path_4.1",
    "node": "path_4",
    "on": "enter",
@@ -664,6 +679,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "hydra_lair_2.boss_5.step_q5_time_pearl": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q5_time_pearl: scene from data/dialogue)"
    }
   ],
   "hydra_lair_2.miniboss_1.step_q5_fog_bottle": [

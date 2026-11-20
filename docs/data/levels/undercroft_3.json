@@ -187,7 +187,38 @@
    "title": {
     "zh": "食人魔冠军",
     "en": "Ogre Champion"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q8_win_tournament",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_8.2",
+        "node": "boss_8",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q8_win_tournament"
+        },
+        "do": [
+         {
+          "scene": "sc_undercroft_3__undercroft_3_boss_8_step_q8_win_tournament"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q8_win_tournament",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
   },
   {
    "id": "miniboss_1",
@@ -933,6 +964,22 @@
     }
    ]
   },
+  "sc_undercroft_3__undercroft_3_boss_8_step_q8_win_tournament": {
+   "schema": "scene/0.2",
+   "id": "sc_undercroft_3__undercroft_3_boss_8_step_q8_win_tournament",
+   "title": "undercroft_3.boss_8.step_q8_win_tournament",
+   "trigger": {
+    "graph": "undercroft_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q8_win_tournament: scene from data/dialogue)"
+    }
+   ]
+  },
   "sc_undercroft_3__undercroft_3_npc_1_step_q8_fan_letters": {
    "schema": "scene/0.2",
    "id": "sc_undercroft_3__undercroft_3_npc_1_step_q8_fan_letters",
@@ -1003,16 +1050,16 @@
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

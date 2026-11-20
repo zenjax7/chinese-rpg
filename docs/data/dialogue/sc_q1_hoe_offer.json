@@ -23,10 +23,6 @@
    "char": "hero",
    "expr": "neutral"
   },
-  "L2": {
-   "char": "xiaolong",
-   "expr": "neutral"
-  },
   "R1": {
    "char": "farmer_li",
    "expr": "worried"
@@ -42,7 +38,7 @@
    "speaker": "farmer_li",
    "side": "R1",
    "expr": "surprised",
-   "en": "Oh! Hello there, little hero. And... is that a dragon?",
+   "en": "Oh! Hello there, little hero. The field is too quiet today.",
    "vo": null
   },
   {
@@ -58,10 +54,10 @@
   },
   {
    "id": "l3",
-   "speaker": "xiaolong",
-   "side": "L2",
+   "speaker": "farmer_li",
+   "side": "R1",
    "expr": "thinking",
-   "en": "(He sniffs the air and points toward the old well.)",
+   "en": "I saw a glint in the old well — the same well where Granny Bai once hid the egg.",
    "vo": null
   },
   {

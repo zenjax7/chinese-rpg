@@ -192,7 +192,43 @@
    "title": {
     "zh": "九头蛇",
     "en": "Hydra"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q5_time_pearl",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_5.1",
+        "node": "boss_5",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q5_time_pearl"
+        },
+        "do": [
+         {
+          "scene": "sc_hydra_lair_2__hydra_lair_2_boss_5_step_q5_time_pearl"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q5_time_pearl",
+     "role": "step",
+     "step": "s3"
+    },
+    {
+     "quest": "q5_time_pearl",
+     "role": "step",
+     "step": "s4"
+    }
+   ]
   },
   {
    "id": "path_4",
@@ -770,6 +806,22 @@
     }
    ]
   },
+  "sc_hydra_lair_2__hydra_lair_2_boss_5_step_q5_time_pearl": {
+   "schema": "scene/0.2",
+   "id": "sc_hydra_lair_2__hydra_lair_2_boss_5_step_q5_time_pearl",
+   "title": "hydra_lair_2.boss_5.step_q5_time_pearl",
+   "trigger": {
+    "graph": "hydra_lair_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q5_time_pearl: scene from data/dialogue)"
+    }
+   ]
+  },
   "sc_hydra_lair_2__hydra_lair_2_miniboss_1_step_q5_fog_bottle": {
    "schema": "scene/0.2",
    "id": "sc_hydra_lair_2__hydra_lair_2_miniboss_1_step_q5_fog_bottle",
@@ -808,16 +860,16 @@
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

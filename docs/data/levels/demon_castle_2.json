@@ -1490,22 +1490,36 @@
   }
  },
  "characters": [
+  "granny_bai",
   "hero",
   "narrator",
+  "pipi",
   "traveller",
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
+  "granny_bai": {
    "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   }
+  },
+  "narrator": {
+   "name": {
+    "zh": "",
+    "en": "Narrator"
    }
   },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

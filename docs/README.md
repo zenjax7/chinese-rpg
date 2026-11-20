@@ -57,7 +57,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 
 - [story/README.md](story/README.md) — What story/ holds · **Desy** · browsing
 - [story/story.md](story/story.md) — Story bible v1.1 (v3.9.2 escort wording): premise, cast, arc per realm, event placement, Chinese density, scene/0.2 format · **Desy** · before writing story, scenes or dialogue
-- [story/quests.md](story/quests.md) — Quests v2 (v3.9.2 text): 50 NPC/story quests, quest/0.2 schema, §2a escort/words runtime rules, rewards, hooks · **Desy** · before quest work
+- [story/quests.md](story/quests.md) — Quests v2 (v3.9.2 text): 60 NPC/story quests (Jack 2026-11-20 story rework), quest/0.2 schema, §2a escort/words runtime rules, rewards, hooks · **Desy** · before quest work
 - [story/characters.md](story/characters.md) — Portrait brief: key cast, named NPCs, 26 generic bases, portrait spec · **Desy / Arty** · when drawing or wiring portraits
 
 ### Data: curriculum
@@ -124,10 +124,35 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [data/dialogue/sc_q1_hoe_offer.json](data/dialogue/sc_q1_hoe_offer.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q1_hoe_thanks.json](data/dialogue/sc_q1_hoe_thanks.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q9_second_wind_badge.json](data/dialogue/sc_q9_second_wind_badge.json) — q9_second_wind step 2 scene: Granny Bai's old badge, plays at demon_castle_2/treasure_1 (scene/0.2) · **Desy** · when writing scenes
-- [data/dialogue/sc_r1_opening.json](data/dialogue/sc_r1_opening.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r1_opening.json](data/dialogue/sc_r1_opening.json) — Opening (scene/0.2): the quiet village and the unhatched egg; no joinParty (Jack 2026-11-20) · **Desy** · when writing scenes
+- [data/dialogue/sc_r1_hatch.json](data/dialogue/sc_r1_hatch.json) — Hatch at the old well (scene/0.2): 小龙 joins the party (Jack 2026-11-20) · **Desy** · when writing scenes
 - [data/dialogue/sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q1_quiet_morning_offer.json](data/dialogue/sc_q1_quiet_morning_offer.json) — q1_quiet_morning offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q1_quiet_morning_thanks.json](data/dialogue/sc_q1_quiet_morning_thanks.json) — q1_quiet_morning turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q1_shatter_crown_offer.json](data/dialogue/sc_q1_shatter_crown_offer.json) — q1_shatter_crown offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q1_shatter_crown_thanks.json](data/dialogue/sc_q1_shatter_crown_thanks.json) — q1_shatter_crown turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_fei_boast_offer.json](data/dialogue/sc_q2_fei_boast_offer.json) — q2_fei_boast offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_fei_boast_thanks.json](data/dialogue/sc_q2_fei_boast_thanks.json) — q2_fei_boast turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_road_blocked_offer.json](data/dialogue/sc_q2_road_blocked_offer.json) — q2_road_blocked offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_road_blocked_thanks.json](data/dialogue/sc_q2_road_blocked_thanks.json) — q2_road_blocked turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_bubble_lesson_offer.json](data/dialogue/sc_q2_bubble_lesson_offer.json) — q2_bubble_lesson offer, Bell Road retone (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_bubble_lesson_thanks.json](data/dialogue/sc_q2_bubble_lesson_thanks.json) — q2_bubble_lesson turn-in, Bell Road retone (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_royal_jelly_offer.json](data/dialogue/sc_q2_royal_jelly_offer.json) — q2_royal_jelly offer, Bell Road retone (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q2_royal_jelly_thanks.json](data/dialogue/sc_q2_royal_jelly_thanks.json) — q2_royal_jelly turn-in, Bell Road retone (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q3_fog_jar_offer.json](data/dialogue/sc_q3_fog_jar_offer.json) — q3_fog_jar offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q3_fog_jar_thanks.json](data/dialogue/sc_q3_fog_jar_thanks.json) — q3_fog_jar turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q5_time_pearl_offer.json](data/dialogue/sc_q5_time_pearl_offer.json) — q5_time_pearl offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q5_time_pearl_thanks.json](data/dialogue/sc_q5_time_pearl_thanks.json) — q5_time_pearl turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q6_cure_mayor_offer.json](data/dialogue/sc_q6_cure_mayor_offer.json) — q6_cure_mayor offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q6_cure_mayor_thanks.json](data/dialogue/sc_q6_cure_mayor_thanks.json) — q6_cure_mayor turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q7_wind_truth_offer.json](data/dialogue/sc_q7_wind_truth_offer.json) — q7_wind_truth offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q7_wind_truth_thanks.json](data/dialogue/sc_q7_wind_truth_thanks.json) — q7_wind_truth turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q7_storm_crown_offer.json](data/dialogue/sc_q7_storm_crown_offer.json) — q7_storm_crown offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q7_storm_crown_thanks.json](data/dialogue/sc_q7_storm_crown_thanks.json) — q7_storm_crown turn-in (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q8_win_tournament_offer.json](data/dialogue/sc_q8_win_tournament_offer.json) — q8_win_tournament offer (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_q8_win_tournament_thanks.json](data/dialogue/sc_q8_win_tournament_thanks.json) — q8_win_tournament turn-in (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/scene.schema.json](data/dialogue/scene.schema.json) — JSON Schema for scene/0.2 (extends GameDev scene/0.1) · **Desy** · when writing scenes
 
 ### Data: world (v3.9.2)
@@ -421,7 +446,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [tech/tools/sim/v37_boss_check_0.9.json](tech/tools/sim/v37_boss_check_0.9.json) — Boss check output · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/story/build_quests.py](tech/tools/story/build_quests.py) — Builds and checks data/quests/quests.json and .csv (positions, hooks, words) · **Desy** · when rebuilding quests/scenes
 - [tech/tools/story/make_dialogue.py](tech/tools/story/make_dialogue.py) — Writes the data/dialogue scenes · **Desy** · when rebuilding quests/scenes
-- [tech/tools/story/quests_def.py](tech/tools/story/quests_def.py) — The 50 quest definitions · **Desy** · when rebuilding quests/scenes
+- [tech/tools/story/quests_def.py](tech/tools/story/quests_def.py) — The 60 quest definitions (Jack 2026-11-20 story rework) · **Desy** · when rebuilding quests/scenes
 - [tech/tools/story/validate_dialogue.py](tech/tools/story/validate_dialogue.py) — Checks the scenes: schema, word tokens, met-word rule, density, gotos · **Desy** · when rebuilding quests/scenes
 - [tech/tools/world/build_world_sim.py](tech/tools/world/build_world_sim.py) — Superseded by tech/tools/sim/world_sim.py (built world_sim.py from spells_sim.py plus the loop, /workspace/desy paths) · **Desy** · when re-running Desy's sims or generators
 - [tech/tools/world/doc/spec12.md](tech/tools/world/doc/spec12.md) — The text of combat-spec §12 · **Desy** · when re-running Desy's sims or generators

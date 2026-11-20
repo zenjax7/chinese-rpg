@@ -1,0 +1,108 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q1_quiet_morning_offer",
+ "title": "The Quiet Morning (offer)",
+ "realm": 1,
+ "zone": "meadow",
+ "density": "D1",
+ "trigger": {
+  "graph": "realm_1",
+  "node": "village",
+  "on": "questOffer",
+  "cond": {
+   "not": {
+    "questActive": "q1_quiet_morning"
+   }
+  }
+ },
+ "background": "bg_village_morning",
+ "music": "village_theme",
+ "once": false,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "neutral"
+  },
+  "R1": {
+   "char": "granny_bai",
+   "expr": "worried"
+  }
+ },
+ "words": [
+  "C035",
+  "C594"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "worried",
+   "en": "The village woke too quiet. I need you to learn {C035} is happening.",
+   "tokens": [
+    "C035"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Talk to Farmer Li, and to Grandpa Wang {C594} in the village. Then meet me at the old well.",
+   "tokens": [
+    "C594"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "hero",
+   "side": "L1",
+   "expr": "neutral",
+   "en": "I'll go now.",
+   "vo": null,
+   "choices": [
+    {
+     "id": "c1",
+     "en": "Yes, I'll ask around.",
+     "goto": "l4",
+     "setFlags": [
+      "accept_q1_quiet_morning"
+     ]
+    },
+    {
+     "id": "c2",
+     "en": "Not now.",
+     "goto": "l5"
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Go carefully. I will stay with the egg.",
+   "vo": null,
+   "end": true
+  },
+  {
+   "id": "l5",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "sad",
+   "en": "All right. I will be right here.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "if": {
+    "flag": "accept_q1_quiet_morning"
+   },
+   "acceptQuest": "q1_quiet_morning"
+  }
+ ]
+}

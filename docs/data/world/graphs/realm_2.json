@@ -429,6 +429,21 @@
    ]
   },
   {
+   "id": "boss_1.1",
+   "node": "boss_1",
+   "on": "clear",
+   "once": true,
+   "outcome": "story",
+   "cond": {
+    "questActive": "q2_road_blocked"
+   },
+   "do": [
+    {
+     "dialogue": "realm_2.boss_1.step_q2_road_blocked"
+    }
+   ]
+  },
+  {
    "id": "path_4.1",
    "node": "path_4",
    "on": "enter",
@@ -582,6 +597,12 @@
    {
     "speaker": "xiaolong",
     "en": "Let's keep going!"
+   }
+  ],
+  "realm_2.boss_1.step_q2_road_blocked": [
+   {
+    "speaker": "traveller",
+    "en": "(quest step for q2_road_blocked: scene from data/dialogue)"
    }
   ],
   "realm_2.path_4.step_q2_lost_panda": [

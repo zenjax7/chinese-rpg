@@ -193,7 +193,38 @@
    "title": {
     "zh": "狮鹫王",
     "en": "Griffin King"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q7_storm_crown",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_7.1",
+        "node": "boss_7",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q7_storm_crown"
+        },
+        "do": [
+         {
+          "scene": "sc_griffin_spire_3__griffin_spire_3_boss_7_step_q7_storm_crown"
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "quest": "q7_storm_crown",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
   },
   {
    "id": "path_3",
@@ -451,6 +482,22 @@
     }
    ]
   },
+  "sc_griffin_spire_3__griffin_spire_3_boss_7_step_q7_storm_crown": {
+   "schema": "scene/0.2",
+   "id": "sc_griffin_spire_3__griffin_spire_3_boss_7_step_q7_storm_crown",
+   "title": "griffin_spire_3.boss_7.step_q7_storm_crown",
+   "trigger": {
+    "graph": "griffin_spire_3",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q7_storm_crown: scene from data/dialogue)"
+    }
+   ]
+  },
   "sc_griffin_spire_3__griffin_spire_3_npc_1_step_q7_griffin_chick": {
    "schema": "scene/0.2",
    "id": "sc_griffin_spire_3__griffin_spire_3_npc_1_step_q7_griffin_chick",
@@ -473,16 +520,16 @@
   "xiaolong"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

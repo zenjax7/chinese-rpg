@@ -288,7 +288,19 @@
    "title": {
     "zh": "角兔王座",
     "en": "Rabbit King's throne"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q1_shatter_crown",
+     "role": "step",
+     "step": "s2"
+    },
+    {
+     "quest": "q1_shatter_crown",
+     "role": "step",
+     "step": "s3"
+    }
+   ]
   },
   {
    "id": "w_gate",
@@ -510,7 +522,7 @@
   {
    "schema": "quest/0.2",
    "id": "q1_carrot",
-   "story": "side",
+   "story": "main",
    "type": "fetch",
    "title": {
     "zh": "金萝卜",
@@ -623,7 +635,7 @@
     "C090",
     "C092"
    ],
-   "summary": "Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming."
+   "summary": "Beat the speedy thief rabbit in its nest, find the golden carrot by Clover Lake and take it home to Xiaoming. He saw a red imp crown a rabbit; Pipi's taunt plays at w_camp."
   }
  ],
  "scenes": {
@@ -701,6 +713,12 @@
    "name": {
     "zh": "小龙",
     "en": "Xiaolong (Little Dragon, companion)"
+   }
+  },
+  "xiaoming": {
+   "name": {
+    "zh": "小明",
+    "en": "Xiaoming"
    }
   }
  }

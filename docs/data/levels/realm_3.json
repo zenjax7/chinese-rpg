@@ -138,6 +138,19 @@
    "town": 3,
    "quests": [
     {
+     "quest": "q3_fog_jar",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q3_fog_jar_offer"
+     },
+     "in": {
+      "scene": "sc_q3_fog_jar_wait"
+     },
+     "post": {
+      "scene": "sc_q3_fog_jar_thanks"
+     }
+    },
+    {
      "quest": "q3_stolen_hats",
      "role": "giver",
      "pre": {
@@ -1485,6 +1498,109 @@
   },
   {
    "schema": "quest/0.2",
+   "id": "q3_fog_jar",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "雾罐子",
+    "en": "Fog in a Jar"
+   },
+   "giver": {
+    "npc": "boss_qian",
+    "graph": "realm_3",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "boss_qian"
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     },
+     "note": "Boss Qian: the market is shut. Someone is selling fog in a jar at the bazaar."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "story_1"
+     },
+     "note": "Pipi at a stall, hawking a jar of fog."
+    },
+    {
+     "id": "s3",
+     "event": "item",
+     "objective": {
+      "type": "collect",
+      "item": "fog_jar",
+      "desyType": "pickup",
+      "source": "nodeItem"
+     },
+     "where": {
+      "graph": "bazaar_cellars_1",
+      "node": "story_1"
+     },
+     "note": "Take the jar (Pipi flees)."
+    },
+    {
+     "id": "s4",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "boss_qian",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_3",
+      "node": "entry_town"
+     },
+     "note": "Qian reopens the market. The cave road is open. (World exit w34 unlocks on turn-in.)"
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 15
+    },
+    "expValue": 90,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C162",
+    "C171",
+    "C172",
+    "C164",
+    "C166"
+   ],
+   "summary": "Pipi is selling fog in a jar at the bazaar. Take the jar, reopen the market, and open the cave road."
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q3_stolen_hats",
    "story": "side",
    "type": "fetch",
@@ -1892,23 +2008,213 @@
      "en": "(quest step for q3_caravan: scene from data/dialogue)"
     }
    ]
+  },
+  "sc_q3_fog_jar_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q3_fog_jar_offer",
+   "title": "Fog in a Jar (offer)",
+   "density": "D3",
+   "trigger": {
+    "graph": "realm_3",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q3_fog_jar"
+     }
+    }
+   },
+   "background": "bg_market",
+   "music": "market_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "boss_qian",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C166",
+    "C172",
+    "C171"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "angry",
+     "en": "The market is shut. Someone is selling fog in a jar at a stall.",
+     "zh": "商店关了。",
+     "zhTrad": "商店關了。",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "worried",
+     "en": "They shout {C166} as if fog were a normal {C172}.",
+     "tokens": [
+      "C166",
+      "C172"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "brave",
+     "en": "We'll take the jar.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll stop the sale.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q3_fog_jar"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Bring it here. Then I can open the {C171} again.",
+     "tokens": [
+      "C171"
+     ],
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "sad",
+     "en": "The cave road stays closed until the jar is gone.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q3_fog_jar"
+     },
+     "acceptQuest": "q3_fog_jar"
+    }
+   ]
+  },
+  "sc_q3_fog_jar_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q3_fog_jar_thanks",
+   "title": "Fog in a Jar (turn-in)",
+   "density": "D3",
+   "trigger": {
+    "graph": "realm_3",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q3_fog_jar"
+    }
+   },
+   "background": "bg_market",
+   "music": "market_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "boss_qian",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C162"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "happy",
+     "en": "The jar is ours. Pipi ran. The market can {C162} and sell again.",
+     "zh": "可以买了。",
+     "zhTrad": "可以買了。",
+     "tokens": [
+      "C162"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "(He sneezes. The last of the stall-fog fades.)",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "boss_qian",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "The cave road is open. Walk it before the fog comes back.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q3_fog_jar"
+    }
+   ]
   }
  },
  "characters": [
+  "auntie_hat",
+  "boss_qian",
+  "dye_maker_lan",
+  "hero",
   "traveller",
-  "xiaolong"
+  "xiaolong",
+  "xiaomei"
  ],
  "npcs": {
-  "xiaolong": {
-   "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
-   }
-  },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

@@ -226,7 +226,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 9
+   "idx": 9,
+   "lockedUntilQuest": "q1_shatter_crown"
   },
   {
    "id": "w23",
@@ -236,7 +237,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 10
+   "idx": 10,
+   "lockedUntilQuest": "q2_royal_jelly"
   },
   {
    "id": "w34",
@@ -246,7 +248,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 11
+   "idx": 11,
+   "lockedUntilQuest": "q3_fog_jar"
   },
   {
    "id": "w45",
@@ -256,7 +259,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 12
+   "idx": 12,
+   "lockedUntilQuest": "q4_school_bell"
   },
   {
    "id": "w56",
@@ -266,7 +270,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 13
+   "idx": 13,
+   "lockedUntilQuest": "q5_time_pearl"
   },
   {
    "id": "w67",
@@ -276,7 +281,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 14
+   "idx": 14,
+   "lockedUntilQuest": "q6_cure_mayor"
   },
   {
    "id": "w78",
@@ -286,7 +292,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 15
+   "idx": 15,
+   "lockedUntilQuest": "q7_storm_crown"
   },
   {
    "id": "w89",
@@ -296,7 +303,8 @@
    "danger": 0,
    "steps": 1,
    "terrain": "road",
-   "idx": 16
+   "idx": 16,
+   "lockedUntilQuest": "q8_win_tournament"
   }
  ],
  "events": [],

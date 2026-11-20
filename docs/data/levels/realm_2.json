@@ -146,6 +146,19 @@
    "town": 2,
    "quests": [
     {
+     "quest": "q2_fei_boast",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q2_fei_boast_offer"
+     },
+     "in": {
+      "scene": "sc_q2_fei_boast_wait"
+     },
+     "post": {
+      "scene": "sc_q2_fei_boast_thanks"
+     }
+    },
+    {
      "quest": "q2_lost_panda",
      "role": "giver",
      "pre": {
@@ -183,8 +196,22 @@
      "post": {
       "scene": "sc_q2_bubble_lesson_thanks"
      }
+    },
+    {
+     "quest": "q2_road_blocked",
+     "role": "giver",
+     "pre": {
+      "scene": "sc_q2_road_blocked_offer"
+     },
+     "in": {
+      "scene": "sc_q2_road_blocked_wait"
+     },
+     "post": {
+      "scene": "sc_q2_road_blocked_thanks"
+     }
     }
-   ]
+   ],
+   "npc": "fei"
   },
   {
    "id": "path_1",
@@ -260,7 +287,33 @@
    "title": {
     "zh": "贪吃熊",
     "en": "Greedy Bear"
-   }
+   },
+   "quests": [
+    {
+     "quest": "q2_road_blocked",
+     "role": "step",
+     "step": "s2",
+     "in": {
+      "events": [
+       {
+        "id": "boss_1.1",
+        "node": "boss_1",
+        "on": "clear",
+        "once": true,
+        "outcome": "story",
+        "cond": {
+         "questActive": "q2_road_blocked"
+        },
+        "do": [
+         {
+          "scene": "sc_realm_2__realm_2_boss_1_step_q2_road_blocked"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "path_4",
@@ -703,6 +756,81 @@
  "quests": [
   {
    "schema": "quest/0.2",
+   "id": "q2_fei_boast",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "小飞的挑战",
+    "en": "Fei's Boast"
+   },
+   "giver": {
+    "npc": "fei",
+    "graph": "realm_2",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": "giver",
+   "returnToGiver": true,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "fei"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "Fei shows off in Honey Town: he will 'save the town himself'."
+    },
+    {
+     "id": "s2",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "fei",
+      "desyType": "turn_in",
+      "turnIn": true
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "He runs ahead toward the Crossroads (sets up his capture in R3)."
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 5
+    },
+    "expValue": 20,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C001",
+    "C115",
+    "C118",
+    "C121"
+   ],
+   "summary": "Fei shows off in Honey Town, vows to save it himself, and runs ahead toward the Crossroads."
+  },
+  {
+   "schema": "quest/0.2",
    "id": "q2_lost_panda",
    "story": "side",
    "type": "find",
@@ -938,7 +1066,7 @@
       "graph": "realm_2",
       "node": "entry_town"
      },
-     "note": "Granny Bai 'happens to be in town' and offers a first spell lesson."
+     "note": "Granny Bai's letter: Honey Town sits on the Bell Road, the Queen may remember the old pact, and she will teach you a first spell."
     },
     {
      "id": "s2",
@@ -1018,7 +1146,97 @@
     "C119",
     "C642"
    ],
-   "summary": "Gather 3 soap-flowers and learn 8 forest words; Granny Bai teaches you your first spell, Bubble Spell."
+   "summary": "Granny Bai writes that Honey Town sits on the Bell Road and the Queen may remember the pact. Gather 3 soap-flowers and learn 8 forest words; she teaches Bubble Spell."
+  },
+  {
+   "schema": "quest/0.2",
+   "id": "q2_road_blocked",
+   "story": "main",
+   "type": "find",
+   "title": {
+    "zh": "路不通",
+    "en": "The Road Is Blocked"
+   },
+   "giver": {
+    "npc": "granny_mi",
+    "graph": "realm_2",
+    "node": "entry_town"
+   },
+   "alsoOnBoard": false,
+   "turnIn": {
+    "npc": "yezi",
+    "graph": "great_hive_1",
+    "node": "npc_1"
+   },
+   "returnToGiver": false,
+   "requires": null,
+   "order": "sequence",
+   "repeatable": false,
+   "objectives": [
+    {
+     "id": "s1",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "granny_mi"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "entry_town"
+     },
+     "note": "The east road is shut: the hive has gone mad."
+    },
+    {
+     "id": "s2",
+     "event": "story",
+     "objective": {
+      "type": "reach",
+      "node": "boss_1"
+     },
+     "where": {
+      "graph": "realm_2",
+      "node": "boss_1"
+     },
+     "note": "The hive road, at the greedy-bear clearing."
+    },
+    {
+     "id": "s3",
+     "event": "quest_offer",
+     "objective": {
+      "type": "talk",
+      "npc": "yezi"
+     },
+     "where": {
+      "graph": "great_hive_1",
+      "node": "npc_1"
+     },
+     "note": "Yezi: the Queen's jelly is gone. That is why the bees are raging."
+    }
+   ],
+   "rewards": {
+    "gold": {
+     "G": 0
+    },
+    "goldValue": 0,
+    "exp": {
+     "L": 10
+    },
+    "expValue": 40,
+    "items": {},
+    "gear": [],
+    "spells": [],
+    "skills": [],
+    "flags": [],
+    "valueG": 0.0,
+    "spellValueGold": 0
+   },
+   "words": [
+    "C115",
+    "C118",
+    "C121",
+    "C119"
+   ],
+   "summary": "The east road is shut because the hive went mad. Reach the hive road and hear from Yezi that the Queen's jelly is gone."
   }
  ],
  "scenes": {
@@ -1035,6 +1253,22 @@
      "id": "l1",
      "speaker": "xiaolong",
      "en": "Let's keep going!"
+    }
+   ]
+  },
+  "sc_realm_2__realm_2_boss_1_step_q2_road_blocked": {
+   "schema": "scene/0.2",
+   "id": "sc_realm_2__realm_2_boss_1_step_q2_road_blocked",
+   "title": "realm_2.boss_1.step_q2_road_blocked",
+   "trigger": {
+    "graph": "realm_2",
+    "on": "enter"
+   },
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "traveller",
+     "en": "(quest step for q2_road_blocked: scene from data/dialogue)"
     }
    ]
   },
@@ -1069,23 +1303,540 @@
      "en": "(quest step for q2_lost_panda: scene from data/dialogue)"
     }
    ]
+  },
+  "sc_q2_bubble_lesson_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q2_bubble_lesson_offer",
+   "title": "Granny Bai's Bubble Lesson (offer)",
+   "density": "D2",
+   "trigger": {
+    "graph": "realm_2",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q2_bubble_lesson"
+     }
+    }
+   },
+   "background": "bg_honey_town",
+   "music": "town_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "neutral"
+    }
+   },
+   "words": [
+    "C642",
+    "C119"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "I wrote ahead. Honey Town sits on the old Bell Road.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "The Queen may remember our pact. First, a lesson — and three soap-flowers. {C642}.",
+     "tokens": [
+      "C642"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "They smell {C119}!",
+     "tokens": [
+      "C119"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "happy",
+     "en": "We'll gather them and practice the forest words.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll start now.",
+       "goto": "l5",
+       "setFlags": [
+        "accept_q2_bubble_lesson"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l6"
+      }
+     ]
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Bring the flowers here. Then I will teach you your first spell.",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l6",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "The road can wait a little. I will be here.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q2_bubble_lesson"
+     },
+     "acceptQuest": "q2_bubble_lesson"
+    }
+   ]
+  },
+  "sc_q2_bubble_lesson_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q2_bubble_lesson_thanks",
+   "title": "Granny Bai's Bubble Lesson (turn-in)",
+   "density": "D2",
+   "trigger": {
+    "graph": "realm_2",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q2_bubble_lesson"
+    }
+   },
+   "background": "bg_honey_town",
+   "music": "town_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "happy"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C107",
+    "C094"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Good. Soap-flowers and eight words. Now watch: a bubble, like {C107}.",
+     "tokens": [
+      "C107"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "hungry",
+     "en": "Can I {C094} it?",
+     "tokens": [
+      "C094"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "No drinking the spell. Honey Town's shelf will show my lesson, not a price.",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Use it kindly. The Queen is the next door on the Bell Road.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q2_bubble_lesson"
+    }
+   ]
+  },
+  "sc_q2_fei_boast_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q2_fei_boast_offer",
+   "title": "Fei's Boast (offer)",
+   "density": "D2",
+   "trigger": {
+    "graph": "realm_2",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q2_fei_boast"
+     }
+    }
+   },
+   "background": "bg_honey_town",
+   "music": "town_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "neutral"
+    },
+    "R1": {
+     "char": "fei",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C001",
+    "C115"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "happy",
+     "en": "{C001}! I am Fei. I will save Honey Town myself!",
+     "tokens": [
+      "C001"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "brave",
+     "en": "The {C115} is ours. I don't need help.",
+     "tokens": [
+      "C115"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "The east road is shut. Maybe we should go together.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "Wait — let's talk first.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q2_fei_boast"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Talk is slow. I'll show you at the Crossroads!",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "angry",
+     "en": "Hmph. I'll go anyway.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q2_fei_boast"
+     },
+     "acceptQuest": "q2_fei_boast"
+    }
+   ]
+  },
+  "sc_q2_fei_boast_thanks": {
+   "schema": "scene/0.2",
+   "id": "sc_q2_fei_boast_thanks",
+   "title": "Fei's Boast (turn-in)",
+   "density": "D2",
+   "trigger": {
+    "graph": "realm_2",
+    "node": "entry_town",
+    "on": "questTurnIn",
+    "cond": {
+     "questReady": "q2_fei_boast"
+    }
+   },
+   "background": "bg_honey_town",
+   "music": "town_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "worried"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "fei",
+     "expr": "happy"
+    }
+   },
+   "words": [
+    "C121"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "happy",
+     "en": "See? I can do this. The Crossroads will be easy.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "worried",
+     "en": "(He sniffs. Fei already smells like fog.)",
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "fei",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Don't be {C121} for glory — leave some for me!",
+     "tokens": [
+      "C121"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "He runs ahead, toward the Crossroads, before you can stop him.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "completeQuest": "q2_fei_boast"
+    }
+   ]
+  },
+  "sc_q2_road_blocked_offer": {
+   "schema": "scene/0.2",
+   "id": "sc_q2_road_blocked_offer",
+   "title": "The Road Is Blocked (offer)",
+   "density": "D2",
+   "trigger": {
+    "graph": "realm_2",
+    "node": "entry_town",
+    "on": "questOffer",
+    "cond": {
+     "not": {
+      "questActive": "q2_road_blocked"
+     }
+    }
+   },
+   "background": "bg_honey_town",
+   "music": "town_theme",
+   "once": false,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "neutral"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "granny_mi",
+     "expr": "worried"
+    }
+   },
+   "words": [
+    "C115"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "granny_mi",
+     "side": "R1",
+     "expr": "worried",
+     "en": "The east road is shut. The hive has gone mad.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_mi",
+     "side": "R1",
+     "expr": "sad",
+     "en": "No one can take {C115} to the next land. Something is wrong with the Queen.",
+     "tokens": [
+      "C115"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "neutral",
+     "en": "We'll walk the hive road and look.",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "We'll find out why.",
+       "goto": "l4",
+       "setFlags": [
+        "accept_q2_road_blocked"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "Not now.",
+       "goto": "l5"
+      }
+     ]
+    },
+    {
+     "id": "l4",
+     "speaker": "granny_mi",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "Ask Yezi if you reach the hive. Go carefully.",
+     "vo": null,
+     "end": true
+    },
+    {
+     "id": "l5",
+     "speaker": "granny_mi",
+     "side": "R1",
+     "expr": "sad",
+     "en": "The Bell Road stays closed until the hive is calm.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "if": {
+      "flag": "accept_q2_road_blocked"
+     },
+     "acceptQuest": "q2_road_blocked"
+    }
+   ]
   }
  },
  "characters": [
+  "duoduo",
+  "fei",
+  "granny_bai",
+  "granny_mi",
+  "hero",
+  "narrator",
   "traveller",
-  "xiaolong"
+  "xiaolong",
+  "yezi"
  ],
  "npcs": {
-  "xiaolong": {
+  "fei": {
    "name": {
-    "zh": "小龙",
-    "en": "Xiaolong (Little Dragon, companion)"
+    "zh": "小飞",
+    "en": "Fei"
+   }
+  },
+  "granny_bai": {
+   "name": {
+    "zh": "白奶奶",
+    "en": "Granny Bai"
+   }
+  },
+  "narrator": {
+   "name": {
+    "zh": "",
+    "en": "Narrator"
    }
   },
   "traveller": {
    "name": {
     "zh": "旅人",
     "en": "Traveller"
+   }
+  },
+  "xiaolong": {
+   "name": {
+    "zh": "小龙",
+    "en": "Xiaolong (Little Dragon, companion)"
    }
   }
  }

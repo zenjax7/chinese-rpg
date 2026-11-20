@@ -1,0 +1,83 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q1_shatter_crown_thanks",
+ "title": "Shatter the Fog Crown (turn-in)",
+ "realm": 1,
+ "zone": "warren",
+ "density": "D1",
+ "trigger": {
+  "graph": "realm_1",
+  "node": "village",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q1_shatter_crown"
+  }
+ },
+ "background": "bg_village_afternoon",
+ "music": "village_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "granny_bai",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C282",
+  "C090"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "thinking",
+   "en": "The crown shattered. A red imp fled east, toward Honey Town.",
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "If 小龙 stays, the village is next. You are his {C282} now.",
+   "tokens": [
+    "C282"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "xiaolong",
+   "side": "L2",
+   "expr": "happy",
+   "en": "{C090}!",
+   "tokens": [
+    "C090"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l4",
+   "speaker": "granny_bai",
+   "side": "R1",
+   "expr": "happy",
+   "en": "The Bell Road starts east. Honey Town is the next stretch. Go.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q1_shatter_crown"
+  }
+ ]
+}

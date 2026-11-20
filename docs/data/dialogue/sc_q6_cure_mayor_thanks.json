@@ -1,0 +1,73 @@
+{
+ "schema": "scene/0.2",
+ "id": "sc_q6_cure_mayor_thanks",
+ "title": "Cure the Mayor (turn-in)",
+ "realm": 6,
+ "zone": "gloomy_village",
+ "density": "D4",
+ "trigger": {
+  "graph": "realm_6",
+  "node": "entry_town",
+  "on": "questTurnIn",
+  "cond": {
+   "questReady": "q6_cure_mayor"
+  }
+ },
+ "background": "bg_gloomy_village",
+ "music": "lands_theme",
+ "once": true,
+ "slots": {
+  "L1": {
+   "char": "hero",
+   "expr": "happy"
+  },
+  "L2": {
+   "char": "xiaolong",
+   "expr": "happy"
+  },
+  "R1": {
+   "char": "dr_an",
+   "expr": "happy"
+  }
+ },
+ "words": [
+  "C385"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "speaker": "dr_an",
+   "side": "R1",
+   "expr": "happy",
+   "en": "He is himself again. {C385}",
+   "zh": "你没事吧？",
+   "zhTrad": "你沒事吧？",
+   "tokens": [
+    "C385"
+   ],
+   "vo": null
+  },
+  {
+   "id": "l2",
+   "speaker": "dr_an",
+   "side": "R1",
+   "expr": "thinking",
+   "en": "The Village Key is yours. The sickness came from the graveyard — a clue, not a closing of the road.",
+   "vo": null
+  },
+  {
+   "id": "l3",
+   "speaker": "dr_an",
+   "side": "R1",
+   "expr": "neutral",
+   "en": "Go on. Don't let the fog outrun you.",
+   "vo": null,
+   "end": true
+  }
+ ],
+ "onEnd": [
+  {
+   "completeQuest": "q6_cure_mayor"
+  }
+ ]
+}

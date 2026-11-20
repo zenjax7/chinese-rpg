@@ -128,3 +128,11 @@ Dates are 2026, Pacific time.
 ## Docs and process
 
 - **Oct 9** — GitHub (this repo) is the only primary source for all design docs and tables: tables are CSV, docs are Markdown, git is the version control, and no Google Docs or Sheets copies are maintained. [README.md: Rules](README.md#rules)
+
+## Story rework (Nov 20)
+
+- **2026-11-20 — Decided (Jack):** new premise and Bell Road. The golden dragon egg has a history (Granny Bai has kept it since the last war) and hatches after the first main quest, not as a birthday surprise. The nine lands are stretches of the old Bell Road to the Demon King's Castle; each land's story boss is the blockade on that stretch, and that land's main quests carry the beat. [story.md](story/story.md)
+- **2026-11-20 — Decided (Jack):** 小龙 is option A, a bonded companion. The existing Friendship team attack is unchanged (combat-spec.md §6.6). He is the last free golden dragon, hunted by the Demon King; the Bell still answers a dragon's voice. Three visible forms, story and art only: hatch (R1–R3), fledgling (from R4), grown (R9, after his mother is freed). He joins at the `q1_quiet_morning` hatch, not in the opening scene. [story.md](story/story.md), [characters.md](story/characters.md)
+- **2026-11-20 — Decided (Jack):** lock each land's world-map exit (`docs/data/levels/world.json` edges `w12`…`w89`) until that land's climax main quest is turned in. Exits only; inner maps stay links-only. No `lockedScene` unless one fits better — the default blocked line is used. Climax quests: `q1_shatter_crown`, `q2_royal_jelly`, `q3_fog_jar`, `q4_school_bell`, `q5_time_pearl`, `q6_cure_mayor`, `q7_storm_crown`, `q8_win_tournament`. [story.md](story/story.md), [quests.md §5a](story/quests.md)
+- **2026-11-20 — Decided (Jack):** the ending is **TBD** (Jack choosing between options). The old ending (the Demon King shrinks and goes to Teacher Zhang's school with Pipi) is dropped. No new ending is written until he picks one. This supersedes the Oct 2 Director's-call ending. [story.md §3a](story/story.md)
+- **2026-11-20 — Decided (Jack):** `q2_lost_panda` stays an optional side quest, unchanged. [quests.md](story/quests.md)
