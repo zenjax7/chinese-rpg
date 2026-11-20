@@ -47,7 +47,11 @@
     "node": "village"
    },
    "alsoOnBoard": false,
-   "turnIn": "giver",
+   "turnIn": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "m_well"
+   },
    "returnToGiver": true,
    "requires": null,
    "order": "sequence",
@@ -4267,7 +4271,13 @@
     "ref": "moonlit_crypt_2/npc_1"
    },
    "alsoOnBoard": false,
-   "turnIn": "giver",
+   "turnIn": {
+    "npc": "lingling",
+    "zone": "moonlit_graveyard",
+    "nodeKind": "npc",
+    "position": "level_2_entry",
+    "ref": "moonlit_crypt_2/npc_2"
+   },
    "returnToGiver": true,
    "requires": null,
    "order": "sequence",

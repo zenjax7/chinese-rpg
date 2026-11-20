@@ -651,7 +651,11 @@
     "node": "village"
    },
    "alsoOnBoard": false,
-   "turnIn": "giver",
+   "turnIn": {
+    "npc": "granny_bai",
+    "graph": "realm_1",
+    "node": "m_well"
+   },
    "returnToGiver": true,
    "requires": null,
    "order": "sequence",

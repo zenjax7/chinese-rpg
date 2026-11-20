@@ -2235,7 +2235,11 @@
     "node": "npc_1"
    },
    "alsoOnBoard": false,
-   "turnIn": "giver",
+   "turnIn": {
+    "npc": "lingling",
+    "graph": "moonlit_crypt_2",
+    "node": "npc_2"
+   },
    "returnToGiver": true,
    "requires": null,
    "order": "sequence",

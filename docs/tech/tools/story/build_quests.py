@@ -1,6 +1,6 @@
 """Build data/quests.json, data/quests.csv and build/story/quests_tables.md from quests_def.py (v2, 50 quests).
 Also validates: curriculum ids exist and are met by then, enemies exist, realm-1 nodes exist, hooks reconcile."""
-import csv, json, os, sys
+import csv, json, os, sys, glob
 from collections import defaultdict, Counter
 sys.path.insert(0, os.path.dirname(__file__))
 import quests_def as D
@@ -61,6 +61,59 @@ def check_position(loc):
 errors, warns = [], []
 # Desy step verbs → GameDev quest/0.1 objective types (escort is the one new type)
 GD_TYPE = {"pickup": "collect", "fight": "kill", "boss": "kill", "turn_in": "talk"}
+
+# Hand-in location must match the thanks / questTurnIn scene trigger (GameDev's build_world.py
+# derives turnInAt from that trigger; e.g. q1_quiet_morning hands in at realm_1/m_well, not the village).
+# If no thanks scene exists, the last turn_in step is the hand-in place.
+def _gn(loc):
+    if not loc or not isinstance(loc, dict): return None
+    if loc.get("graph") and loc.get("node"): return (loc["graph"], loc["node"])
+    ref = loc.get("ref")
+    if isinstance(ref, str) and "/" in ref:
+        g, n = ref.split("/", 1); return (g, n)
+    return None
+
+def _pos(loc):
+    """Default positions: a town with no position is entry_town; a village with no position is the first outpost."""
+    pos = loc.get("position") or loc.get("node")
+    if pos: return pos
+    if loc.get("nodeKind") == "town": return "entry_town"
+    if loc.get("nodeKind") == "village": return "outpost"
+    return None
+
+def same_place(a, b):
+    """True if two location dicts name the same node (graph/node, ref, or zone/position)."""
+    if not a or not b: return not a and not b
+    ga, gb = _gn(a), _gn(b)
+    if ga and gb: return ga == gb
+    za = (a.get("zone"), a.get("nodeKind"), _pos(a))
+    zb = (b.get("zone"), b.get("nodeKind"), _pos(b))
+    if a.get("zone") and b.get("zone") and za == zb:
+        if a.get("ref") and b.get("ref"): return a["ref"] == b["ref"]
+        return True
+    if ga and _pos(b) == ga[1] and not b.get("ref"): return True
+    if gb and _pos(a) == gb[1] and not a.get("ref"): return True
+    return False
+
+def load_turnin_scenes():
+    """quest id -> (graph, node) for every scene with trigger.on == questTurnIn. Errors if one quest has two nodes."""
+    out, conflict = {}, []
+    d = os.path.dirname(P("data/dialogue/sc_r1_opening.json"))
+    for f in glob.glob(os.path.join(d, "sc_*.json")):
+        s = json.load(open(f, encoding="utf-8"))
+        t = s.get("trigger") or {}
+        if t.get("on") != "questTurnIn" or not t.get("graph") or not t.get("node"): continue
+        qid = (t.get("cond") or {}).get("questReady")
+        if not qid: continue
+        loc = (t["graph"], t["node"])
+        if qid in out and out[qid] != loc:
+            conflict.append(f"{qid}: questTurnIn scenes at {out[qid][0]}/{out[qid][1]} and {loc[0]}/{loc[1]}")
+        else:
+            out[qid] = loc
+    return out, conflict
+
+TURNIN_SCENES, _turnin_conflicts = load_turnin_scenes()
+errors.extend(_turnin_conflicts)
 
 def avail_gno(q):
     g = zone_gno[q["zone"]]
@@ -138,12 +191,45 @@ for q in D.Q:
         if note: s["note"] = note
         steps.append(s)
     giver = {"npc": q["giver"], **q["giverAt"]}
+    # Canonical hand-in: thanks/questTurnIn trigger if any, else the last turn_in step.
+    last_ti = next(((ob, wh) for ev, ob, wh, note in reversed(q["steps"]) if ob.get("type") == "turn_in"), None)
+    scene_loc = TURNIN_SCENES.get(q["id"])
+    scene_ti = {"graph": scene_loc[0], "node": scene_loc[1]} if scene_loc else None
+    if scene_ti and last_ti and not same_place(last_ti[1], scene_ti):
+        errors.append(f"{q['id']}: turn_in step at {last_ti[1]} does not match thanks trigger {scene_loc[0]}/{scene_loc[1]}")
+    if q["turnIn"] == "giver":
+        implied = {"npc": q["giver"], **q["giverAt"]}
+    elif isinstance(q["turnIn"], dict):
+        implied = q["turnIn"]
+    else:
+        implied = None   # auto
+    if scene_ti:
+        canonical = {"npc": (last_ti[0].get("npc") if last_ti else implied.get("npc") if implied else q["giver"]), **scene_ti}
+        # keep the step's own encoding (ref / zone) when it already names the same node
+        if last_ti and same_place(last_ti[1], scene_ti):
+            canonical = {"npc": last_ti[0].get("npc") or canonical["npc"], **last_ti[1]}
+    elif last_ti:
+        canonical = {"npc": last_ti[0].get("npc") or q["giver"], **last_ti[1]}
+    else:
+        canonical = None
+    turn_in, return_to = q["turnIn"], q["turnIn"] == "giver"
+    if "returnToGiver" in q: return_to = q["returnToGiver"]
+    if canonical and implied and turn_in != "auto" and not same_place(canonical, implied):
+        if turn_in == "giver":
+            # Player still walks to the hand-in node (returnToGiver stays True unless the def sets it).
+            turn_in = dict(canonical)
+            if "returnToGiver" not in q: return_to = True
+        else:
+            errors.append(f"{q['id']}: turnIn {implied} does not match hand-in {canonical}")
+    if isinstance(turn_in, dict):
+        msg = check_position(turn_in)
+        if msg: errors.append(f"{q['id']}: {msg}")
     rec = {
         "schema": "quest/0.2", "id": q["id"], "realm": t, "zone": q["zone"], "pool": zone_by[q["zone"]]["desyPool"],
         "story": q["story"], "type": q["type"],
         "title": {"zh": q["title"][0], "en": q["title"][1]},
         "giver": giver, "alsoOnBoard": bool(q.get("alsoOnBoard")),
-        "turnIn": q["turnIn"], "returnToGiver": q["turnIn"] == "giver",
+        "turnIn": turn_in, "returnToGiver": return_to,
         "requires": q.get("requires"), "order": "sequence",
         "objectives": steps,
         "scenes": {"offer": f"sc_{q['id']}_offer", "progress": f"sc_{q['id']}_wait", "turnIn": f"sc_{q['id']}_thanks"},

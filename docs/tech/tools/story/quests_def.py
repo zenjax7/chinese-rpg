@@ -19,7 +19,7 @@ def q(**kw): Q.append(kw)
 # ---------------- Realm 1 Starter Meadow (G=6) ----------------
 q(id="q1_quiet_morning", realm=1, zone="meadow", type="find", story="main",
   title=("太安静了", "The Quiet Morning"), giver="granny_bai", giverAt=W1("village"), hook=None,
-  turnIn="giver", requires=None,
+  turnIn={"npc": "granny_bai", **W1("m_well")}, returnToGiver=True, requires=None,
   steps=[("quest_offer", {"type": "talk", "npc": "granny_bai"}, W1("village"), "The village woke too quiet. Granny Bai shows the cold egg she has kept since the last war."),
          ("quest_offer", {"type": "talk", "npc": "farmer_li"}, W1("m_farm"), "Farmer Li: the rabbits are fighting and have forgotten their kind words."),
          ("quest_offer", {"type": "talk", "npc": "grandpa_wang"}, W1("village"), "Grandpa Wang, in the village: even the well is quieter than it used to be."),
@@ -373,7 +373,7 @@ q(id="q6_rattle_bones", realm=6, zone="moonlit_graveyard", type="slay", story="s
   summary="Scatter 8 rattle skeletons so the gravekeeper can replant the flowers.")
 q(id="q6_knight_dad", realm=6, zone="moonlit_graveyard", type="rescue", story="main",
   title=("骑士爸爸", "Cure My Dad, the Knight"), giver="lingling", giverAt=Z("moonlit_graveyard", "npc", "level_2_entry", "moonlit_crypt_2/npc_1"), hook="q6_moonlit_crypt_2_npc_1",
-  turnIn="giver", requires=None,
+  turnIn={"npc": "lingling", **Z("moonlit_graveyard", "npc", "level_2_entry", "moonlit_crypt_2/npc_2")}, returnToGiver=True, requires=None,
   steps=[("quest_offer", {"type": "talk", "npc": "lingling"}, Z("moonlit_graveyard", "npc", "level_2_entry", "moonlit_crypt_2/npc_1"), "Her dad, the village knight, 'turned into a zombie' guarding the crypt."),
          ("story", {"type": "reach"}, Z("moonlit_graveyard", "story", "mid_level_2", "moonlit_crypt_2/story_2"), "General Mo refuses Madame Mist's plan (foreshadow)."),
          ("miniboss", {"type": "fight", "enemies": ["zombie_knight", "rattle_skeleton"]}, Z("moonlit_graveyard", "miniboss", "dead_end", "moonlit_crypt_2/deadend_1"), "Cured at 0 HP."),
