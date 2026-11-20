@@ -70,8 +70,9 @@ export async function worldUnitTests({ check, log = console.log }) {
   check(gw.edges.every(e => !JSON.stringify(e.cond || {}).includes('bossDefeated')) && idx.graphs.every(m => J(`graphs/${m.id}.json`).edges.every(e => !JSON.stringify(e.cond || {}).includes('bossDefeated') && !('scripted' in e))),
     'links-only: no edge anywhere carries a bossDefeated condition or a scripted path elite');
   const links = RL.filter(r => r.linkEdge).map(r => gw.edges.find(e => e.id === r.linkEdge));
-  check(links.length === 8 && links.every((e, i) => e && e.kind === 'path' && (e.danger ?? 0) === 0 && e.to === RL[i + 1].node && e.from === RL[i].node && E.edgeOpen(e, xu, gw, e.from)),
-    `realms[]: link edges ${RL.filter(r => r.linkEdge).map(r => r.linkEdge).join(',')} join realm N−1 → N on the world map, danger 0, open`);
+  const climaxDone = { ...xu, quests: Object.fromEntries(links.map(e => [e?.lockedUntilQuest, { s: 'completed', at: 0, step: 0, obj: {} }])) };   // story rework: each link locks on its land's climax main
+  check(links.length === 8 && links.every((e, i) => e && e.kind === 'path' && (e.danger ?? 0) === 0 && e.to === RL[i + 1].node && e.from === RL[i].node && e.lockedUntilQuest && !E.edgeOpen(e, xu, gw, e.from) && E.edgeOpen(e, climaxDone, gw, e.from)),
+    `realms[]: link edges ${RL.filter(r => r.linkEdge).map(r => r.linkEdge).join(',')} join realm N−1 → N on the world map, danger 0, quest-locked until that land's climax main is turned in, then open`);
   const ex = []; for (const r of RL) { const g = J(`graphs/${r.graph}.json`); const e = g.edges.find(e => e.id === r.exitEdge); const en = gw.edges.find(e => e.id === r.enterEdge);
     if (!(e && e.kind === 'exit' && e.from === r.entry && e.to?.graph === 'world' && e.to?.node === r.node && (e.danger ?? 0) === 0 && en && en.from === r.node && en.to?.graph === r.graph && en.to?.node === r.entry)) ex.push(r.realm);
     else { E.registerGraph(g); if (!E.edgeSafe(g, e, E.newProgress(1, idx.start), rules)) ex.push(r.realm + '(unsafe)'); } }
@@ -333,6 +334,10 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const scene = () => p.evaluate(() => { const s = document.querySelector('[data-testid=scene]'); if (!s) return null;
     const pd = side => { const e = s.querySelector(`[data-side=${side}]`); return e && e.style.display !== 'none' ? { char: e.dataset.char, expr: e.dataset.expr, dim: e.classList.contains('dim'), lit: e.classList.contains('lit'), flip: e.classList.contains('flip'), img: e.querySelector('img')?.getAttribute('src') } : null; };
     return { id: s.dataset.scene, line: s.dataset.line, main: s.querySelector('.sc-main').innerText, gloss: s.querySelector('.sc-gloss').innerText, name: s.querySelector('.sc-name:not(.hidden)')?.innerText || '', L: pd('L'), R: pd('R') }; });
+  /** Story rework: arriving in the village can open quest offers (Granny, Grandpa Wang); skip scenes / answer "Later" until the town shows. */
+  const toTown = async (ms = 10000) => { for (let i = 0; i < 40 && !(await tid('town').count()); i++) { await p.waitForTimeout(250);
+    if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {}); else if (await tid('dialog-btn-1').count()) await tid('dialog-btn-1').click().catch(() => {}); else if (await tid('dialog-btn-0').count()) await tid('dialog-btn-0').click().catch(() => {}); }
+    await tid('town').waitFor({ timeout: ms }); };
   const skipScenes = async (max = 8) => { for (let i = 0; i < max; i++) { await p.waitForTimeout(250); if (!(await tid('scene').count())) { await p.waitForTimeout(400); if (!(await tid('scene').count())) return; } await tid('scene-skip').click().catch(() => {}); } };
   const state = () => p.evaluate(() => { const has = s => !!document.querySelector(`[data-testid="${s}"]`);
     if (has('victory')) return 'victory'; if (has('scene')) return 'scene'; if (has('dialog')) return 'dialog'; if (has('graph') || has('town') || has('inn')) return 'left';
@@ -386,7 +391,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     `leveling v2: the tutorial rabbit rolls a level in realm_1's enemyLevel [1, 3] with SPD = level; an L1 hero gets 1 action (L${foes[0].level}, SPD ${foes[0].spd}, ${act1?.n} action)`);
   const r = await battle(); check(r === 'win', 'tutorial fight won');
   await skipScenes(4);   // tutorial_first_battle_after
-  await tid('town').waitFor({ timeout: 10000 });
+  await toTown();
   s = await sv(); await keep('after tutorial');
   check(s.world.eventsDone.includes('realm_1/village.1') && s.inv.feather === 2 && s.world.feathers === 2, `tutorial event done once; the player starts with 2 Feathers (${s.inv.feather})`);
 
@@ -431,7 +436,7 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   const opts = await p.evaluate(() => [...document.querySelectorAll('[data-testid^="feather-to-"]')].map(e => e.dataset.testid));
   check(opts.includes('feather-to-realm_1-village'), `Feather picker lists the last inn + visited towns/villages (${opts})`);
   await shot('2026-10-03-graph-feather-picker');
-  await tid('feather-to-realm_1-village').click(); await tid('town').waitFor({ timeout: 10000 });
+  await tid('feather-to-realm_1-village').click(); await toTown();
   s = await sv(); check(s.inv.feather === fBefore - 1 && s.world.pos.node === 'village', `Feather used: flew to the village, ${fBefore} → ${s.inv.feather}`);
   const cf = await p.evaluate(() => window.__proto.world.cloud());
   check(cf.kind === 'cloud' && cf.pushes.some(x => x.trigger === 'feather') && cf.triggers.some(x => x.trigger === 'nodeChange') ,
@@ -592,8 +597,8 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
   }
   { // ---- story rework 2026-11-20: q1_quiet_morning is handed in at the well; sc_r1_hatch plays first (joinParty 小龙), then the short thanks ----
     await edit(s => { s.party = (s.party || []).filter(x => x !== 'xiaolong'); s.storyQuests.q1_quiet_morning = { s: 'ready', at: 0, step: 3, obj: {} };
-      s.scenesSeen = (s.scenesSeen || []).filter(x => x !== 'sc_r1_hatch' && x !== 'sc_q1_quiet_morning_thanks'); });
-    await p.reload(); await tid('graph').waitFor({ timeout: 15000 });
+      s.scenesSeen = (s.scenesSeen || []).filter(x => x !== 'sc_r1_hatch' && x !== 'sc_q1_quiet_morning_thanks'); s.world.pos = { graph: 'realm_1', node: 'm_fork', edge: null, step: 0 }; });
+    await p.reload(); await tid('graph').or(tid('town')).first().waitFor({ timeout: 15000 });
     await p.evaluate(() => { window.__bgDone = false; window.__proto.world.goto('realm_1', 'm_well', true).finally(() => { window.__bgDone = true; }); });
     const order = [];
     for (let i = 0; i < 80 && !(await p.evaluate(() => window.__bgDone)); i++) { await p.waitForTimeout(200);
