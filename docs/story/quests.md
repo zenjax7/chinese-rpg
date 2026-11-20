@@ -8,11 +8,11 @@ This replaces the v1 design (4 town-board quests per town, 36 quests). Quests ar
 
 ## 0. Decisions (director's calls 2026-10-02 22:49 PT, pending Jack)
 
-- **2026-11-20 — Story rework (Jack).** Main quests carry each land's beat on the old Bell Road (story.md v1.2). R1 and R2 chains and the later-realm mains are in §5a. New quests are 0 gold, or take budget from sides, so the ~30 × G per-land target still holds. No existing quest id is deleted. Two R1 sides (`q1_bounty`, `q1_carrot`) become main. Option A for 小龙: he joins at the `q1_quiet_morning` hatch, not in the opening scene. World exits `w12`…`w89` lock on each land's climax main. `q2_lost_panda` stays an optional side, unchanged. **Ending: TBD.**
+- **2026-11-20 — Story rework (Jack).** Main quests carry each land's beat on the old Bell Road (story.md v1.2). R1 and R2 chains and the later-realm mains are in §5a. New quests are 0 gold, or take budget from sides, so the ~30 × G per-land target still holds. No existing quest id is deleted. Two R1 sides (`q1_bounty`, `q1_carrot`) become main. Option A for 小龙: he joins at the `q1_quiet_morning` hatch, not in the opening scene. World exits `w12`…`w89` lock on each land's climax main. `q2_lost_panda` stays an optional side, unchanged. **Ending C (new Keeper).**
 - **The quest target counts gold only.** Quest gold ≈ 30 × G per realm (±10%). Items, gear and spells are a bonus on top. Gold rewards were rescaled to match; items, gear and spells are unchanged.
 - **The free Bubble Spell reward is approved** (q2_bubble_lesson). The Honey Town shelf shows "Quest reward" while the quest is open.
 - **Escorts never fail.** The escortee can't be harmed. After a lost battle it is waiting at the last inn used (runtime rules in §2a).
-- **Ending: TBD (Jack 2026-11-20).** The old school ending is dropped. Do not write a new ending until Jack picks one.
+- **Ending C (new Keeper, Jack 2026-11-20).** The Demon King is destroyed; the hero becomes the Bell Keeper; grown 小龙 flies them home (`sc_r9_ending`). The old school ending stays dropped. No new quest, reward, or post-game is added.
 - **The companion is 小龙**, speaker id `xiaolong`. The world-graph owner is renaming `panda` → `xiaolong` in data/world. Inn pandas are `innkeeper_panda`.
 - **Names stay placeholders** until Jack picks.
 

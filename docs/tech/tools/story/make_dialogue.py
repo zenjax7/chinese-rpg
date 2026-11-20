@@ -538,5 +538,76 @@ SCENES.append(scene(
   L("l4", "general_mo", "The last gate is open. Go.", "R1", "brave", end=True)],
  onEnd=[{"completeQuest": "q8_win_tournament"}]))
 
+
+# ---------------- Realm 9: Pipi and the curse chain (enter, Shadow-Cursed Dragon) ----------------
+SCENES.append(scene(
+ id="sc_r9_chain", title="The curse chain", realm=9, zone="demon_king_s_gate", density="D6",
+ trigger={"graph": "demon_castle_2", "node": "boss_1", "on": "enter", "zone": "demon_king_s_gate", "nodeKind": "boss"},
+ background="bg_castle_gate", music="tension", once=True,
+ slots={"L1": {"char": "hero", "expr": "angry"}, "L2": {"char": "xiaolong", "expr": "worried"},
+        "R1": {"char": "pipi", "expr": "smug"}, "R2": {"char": "golden_dragon_cursed", "expr": "sad"}},
+ teaches=[],
+ lines=[
+  L("l1", "narrator", "At the inner gate a great dragon is bound in a chain of shadow. A small red imp holds the end of it.", side="none"),
+  L("l2", "xiaolong", "Mom!", "L2", "surprised", zh="妈妈！", zhId="C274"),
+  L("l3", "pipi", "Stay back! This chain makes her strong and mean.", "R1", "smug", zh="你们不可以！"),
+  L("l4", "hero", "Let her go!", "L1", "angry", zh="放开她！"),
+  L("l5", "xiaolong", "She is my mom! We will {C558} you!", "L2", "angry", zh="她是我的妈妈！"),
+  L("l6", "pipi", "We'll see! I am not afraid.", "R1", "smug", zh="我不怕！"),
+  L("l7", "hero", "What do you say?", "L1", "thinking", choices=[
+     C("c1", "{C565}", goto="l8", correct=True),
+     C("c2", "{C564}", goto="l7b")]),
+  L("l7b", "xiaolong", "No! We do not give up.", "L2", "angry", zh="不要放弃！", zhId="C565", goto="l8"),
+  L("l8", "narrator", "The fight is to break the chain, not to hurt her. Xiaolong runs to her side.", side="none", end=True)],
+ onEnd=[{"setFlag": "saw_mom_chained"}]))
+
+# ---------------- Realm 9: Mom freed (clear, Shadow-Cursed Dragon) ----------------
+SCENES.append(scene(
+ id="sc_r9_mom_freed", title="Mom is free", realm=9, zone="demon_king_s_gate", density="D6",
+ trigger={"graph": "demon_castle_2", "node": "boss_1", "on": "clear", "zone": "demon_king_s_gate", "nodeKind": "boss",
+          "cond": {"bossDefeated": "demon_king_s_gate"}},
+ background="bg_castle_gate", music="sad_wind", once=True,
+ slots={"L1": {"char": "hero", "expr": "happy"}, "L2": {"char": "xiaolong", "expr": "surprised"},
+        "R1": {"char": "golden_dragon", "expr": "happy"}},
+ teaches=[],
+ lines=[
+  L("l1", "narrator", "The shadow chain breaks. The dragon's scales turn gold again. She bows her head.", side="none"),
+  L("l2", "golden_dragon", "{C007}.", "R1", "happy", zh="谢谢。", zhId="C007"),
+  L("l3", "xiaolong", "Mom!", "L2", "happy", zh="妈妈！", zhId="C274"),
+  L("l4", "golden_dragon", "You came so far, little one. You are a {C566}.", "R1", "happy", zh="你是英雄。"),
+  L("l5", "hero", "Are you okay now?", "L1", "worried", zh="你很好吗？"),
+  L("l6", "golden_dragon", "I am well. I will help you.", "R1", "neutral", zh="我很好。我来帮助你。"),
+  L("l7", "narrator", "Xiaolong stands taller. His wings are strong now. He looks like his mother.", side="none"),
+  L("l8", "xiaolong", "{C617}!", "L2", "brave", zh="我们走吧！", zhId="C617"),
+  L("l9", "golden_dragon", "I will come to the last door with you.", "R1", "happy", zh="我跟你去。", end=True)],
+ onEnd=[{"setFlag": "mom_freed"}, {"setFlag": "xiaolong_form_grown"}]))
+
+# ---------------- Realm 9: Ending C — the new Keeper (clear, Demon King) ----------------
+SCENES.append(scene(
+ id="sc_r9_ending", title="The new Keeper", realm=9, zone="throne_hall", density="D6",
+ trigger={"graph": "demon_castle_5", "node": "boss_9", "on": "clear", "zone": "throne_hall", "nodeKind": "boss",
+          "cond": {"bossDefeated": "throne_hall"}},
+ background="bg_throne_hall_light", music="bell_theme", once=True,
+ slots={"L1": {"char": "hero", "expr": "surprised"}, "L2": {"char": "xiaolong", "expr": "brave"},
+        "R1": {"char": "granny_bai", "expr": "happy"}, "R2": {"char": "golden_dragon", "expr": "happy"}},
+ teaches=[],
+ lines=[
+  L("l1", "narrator", "The Demon King falls. His fog crown breaks. He is gone. He does not get up.", side="none"),
+  L("l2", "granny_bai", "The {C570} Bell! Ring it, all of you!", "R1", "happy", zh="和平！", zhId="C570"),
+  L("l3", "narrator", "Elves, dwarves, beastfolk, humans and dragons pull the rope together. The Harmony Bell rings out over the nine lands.", side="none"),
+  L("l4", "xiaolong", "{C1039}!", "L2", "happy", zh="我们成功了！", zhId="C1039"),
+  L("l5", "narrator", "The Silent Fog lifts. {C1034} fills the hall. Far below, at Lantern Light Camp, Pipi stands very still and does not run.", side="none"),
+  L("l6", "granny_bai", "The Bell needs a keeper. That is you now. You will {C1026} it.", "R1", "happy", zh="你保卫和平钟。"),
+  L("l7", "hero", "What do you say?", "L1", "thinking", choices=[
+     C("c1", "{C1040}", goto="l8", correct=True, setFlags=["said_thanks_all"]),
+     C("c2", "{C333}", goto="l8b")]),
+  L("l8", "granny_bai", "Go home, little keeper. The village is waiting.", "R1", "happy", zh="谢谢大家。", zhId="C1040", goto="l9"),
+  L("l8b", "granny_bai", "Yes. Home first. We will watch the Bell for you.", "R1", "happy", zh="我们回家。"),
+  L("l9", "xiaolong", "{C333}! I will {C466} you there!", "L2", "brave", zh="我带你飞！"),
+  L("l10", "golden_dragon", "I will see you in the sky.", "R2", "happy", zh="我在天空等你。"),
+  L("l11", "narrator", "Little Hill Village. The birds are singing. Grown 小龙 sets you down in the meadow, and home is loud again.", side="none", end=True)],
+ onEnd=[{"setFlag": "bell_rung"}, {"setFlag": "hero_is_keeper"}]))
+
+
 if __name__ == "__main__":
     for s in SCENES: print(s["id"], len(s["lines"]), "lines", s["words"])

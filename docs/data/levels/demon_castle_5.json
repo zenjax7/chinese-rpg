@@ -759,11 +759,223 @@
      "startBattle": "boss_9"
     }
    ]
+  },
+  "sc_r9_ending": {
+   "schema": "scene/0.2",
+   "id": "sc_r9_ending",
+   "title": "The new Keeper",
+   "density": "D6",
+   "trigger": {
+    "graph": "demon_castle_5",
+    "node": "boss_9",
+    "on": "clear",
+    "cond": {
+     "bossDefeated": "demon_castle_5"
+    }
+   },
+   "background": "bg_throne_hall_light",
+   "music": "bell_theme",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "surprised"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "brave"
+    },
+    "R1": {
+     "char": "granny_bai",
+     "expr": "happy"
+    },
+    "R2": {
+     "char": "golden_dragon",
+     "expr": "happy"
+    }
+   },
+   "teaches": [],
+   "words": [
+    "C570",
+    "C1039",
+    "C1034",
+    "C1026",
+    "C1040",
+    "C333",
+    "C466"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The Demon King falls. His fog crown breaks. He is gone. He does not get up.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "The {C570} Bell! Ring it, all of you!",
+     "zh": "和平！",
+     "zhTrad": "和平！",
+     "zhId": "C570",
+     "tokens": [
+      "C570"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Elves, dwarves, beastfolk, humans and dragons pull the rope together. The Harmony Bell rings out over the nine lands.",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "{C1039}!",
+     "zh": "我们成功了！",
+     "zhTrad": "我們成功了！",
+     "zhId": "C1039",
+     "tokens": [
+      "C1039"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The Silent Fog lifts. {C1034} fills the hall. Far below, at Lantern Light Camp, Pipi stands very still and does not run.",
+     "tokens": [
+      "C1034"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "The Bell needs a keeper. That is you now. You will {C1026} it.",
+     "zh": "你保卫和平钟。",
+     "zhTrad": "你保衛和平鍾。",
+     "tokens": [
+      "C1026"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What do you say?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C1040}",
+       "tokens": [
+        "C1040"
+       ],
+       "goto": "l8",
+       "correct": true,
+       "setFlags": [
+        "said_thanks_all"
+       ]
+      },
+      {
+       "id": "c2",
+       "en": "{C333}",
+       "tokens": [
+        "C333"
+       ],
+       "goto": "l8b"
+      }
+     ]
+    },
+    {
+     "id": "l8",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Go home, little keeper. The village is waiting.",
+     "zh": "谢谢大家。",
+     "zhTrad": "謝謝大家。",
+     "zhId": "C1040",
+     "tokens": [
+      "C1040"
+     ],
+     "vo": null,
+     "goto": "l9"
+    },
+    {
+     "id": "l8b",
+     "speaker": "granny_bai",
+     "side": "R1",
+     "expr": "happy",
+     "en": "Yes. Home first. We will watch the Bell for you.",
+     "zh": "我们回家。",
+     "zhTrad": "我們回家。",
+     "vo": null
+    },
+    {
+     "id": "l9",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "brave",
+     "en": "{C333}! I will {C466} you there!",
+     "zh": "我带你飞！",
+     "zhTrad": "我帶你飛！",
+     "tokens": [
+      "C333",
+      "C466"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l10",
+     "speaker": "golden_dragon",
+     "side": "R2",
+     "expr": "happy",
+     "en": "I will see you in the sky.",
+     "zh": "我在天空等你。",
+     "zhTrad": "我在天空等你。",
+     "vo": null
+    },
+    {
+     "id": "l11",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Little Hill Village. The birds are singing. Grown 小龙 sets you down in the meadow, and home is loud again.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "bell_rung"
+    },
+    {
+     "setFlag": "hero_is_keeper"
+    }
+   ]
   }
  },
  "characters": [
   "fei",
   "general_mo",
+  "golden_dragon",
   "granny_bai",
   "hero",
   "narrator",

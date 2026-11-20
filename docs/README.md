@@ -129,6 +129,9 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
 - [data/dialogue/sc_r1_village_banter.json](data/dialogue/sc_r1_village_banter.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r7_wind_dragon_truth.json](data/dialogue/sc_r7_wind_dragon_truth.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_r9_before_demon_king.json](data/dialogue/sc_r9_before_demon_king.json) — Sample scene (scene/0.2) · **Desy** · when writing scenes
+- [data/dialogue/sc_r9_chain.json](data/dialogue/sc_r9_chain.json) — R9 enter at the Shadow-Cursed Dragon: Pipi holds Mom's curse chain (scene/0.2, Ending C) · **Desy** · when writing scenes
+- [data/dialogue/sc_r9_mom_freed.json](data/dialogue/sc_r9_mom_freed.json) — R9 clear: Mom is freed, sets `xiaolong_form_grown` (scene/0.2, Ending C) · **Desy** · when writing scenes
+- [data/dialogue/sc_r9_ending.json](data/dialogue/sc_r9_ending.json) — Ending C (new Keeper): King destroyed, hero is Bell Keeper, grown 小龙 flies home (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q1_quiet_morning_offer.json](data/dialogue/sc_q1_quiet_morning_offer.json) — q1_quiet_morning offer (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q1_quiet_morning_thanks.json](data/dialogue/sc_q1_quiet_morning_thanks.json) — q1_quiet_morning turn-in (scene/0.2) · **Desy** · when writing scenes
 - [data/dialogue/sc_q1_shatter_crown_offer.json](data/dialogue/sc_q1_shatter_crown_offer.json) — q1_shatter_crown offer (scene/0.2) · **Desy** · when writing scenes

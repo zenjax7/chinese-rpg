@@ -11,12 +11,12 @@ These are the dialogue portraits for `scene/0.2` scenes (story.md §7, architect
 | `granny_bai` | 白奶奶 Granny Bai | Small, round, silver bun with a jade hairpin, tea cup, walking stick (a carved wand with a tiny hidden glow) | white, jade, plum | Extra expression: `wink`. Her pigeon 咕咕 Gugu can sit on her shoulder |
 | `fei` | 林小飞 Fei | About 11, spiky hair, oversized wooden sword, a "hero" scarf that's too long | sky blue, red scarf | Extra `smug`. In R8+ a bandage on his cheek |
 | `xiaomei` | 小美 Xiaomei | Fei's little sister, about 6, pigtails, holds a toy sword | pink, blue | neutral, happy, sad, surprised |
-| `pipi` | 皮皮 Pipi | Small red imp, big ears, spade tail, cheeky grin, too-large horns. Carries a jar of fog | red, purple, gold buttons | Extra `smug`. R9 `ashamed` (surrender). Post-game look is **TBD** with the ending. |
+| `pipi` | 皮皮 Pipi | Small red imp, big ears, spade tail, cheeky grin, too-large horns. Carries a jar of fog | red, purple, gold buttons | Extra `smug`. R9 `ashamed` (surrender). No post-game look (Ending C: he stays at Lantern Light Camp). |
 | `madame_mist` | 雾夫人 Madame Mist | Tall and elegant, a veil made of swirling fog, potion bottles on a belt, hands always mid-flourish | lavender, grey, teal glow | She mustn't look ghostly or scary: a theatrical stage-villain |
 | `general_mo` | 墨将军 General Mo | Big demon-knight in ink-black armor with a red plume. Visor up to show tired, kind eyes | black, crimson, silver | Extra `bow` (respectful) |
 | `wind_dragon` | 风龙 Uncle Wind | Long serpent-like blue dragon with cloud-tufted whiskers. Head and neck only (too big for the frame) | sky blue, white | Fogged version: grey eyes (use `angry`) |
 | `golden_dragon` | 金龙 Golden Dragon | 小龙's mother, head and neck. Cursed version is the shadow-cursed palette with a chain. Freed version is radiant gold | gold, warm white / cursed: indigo | Two sets: `golden_dragon_cursed`, `golden_dragon` |
-| `demon_king` | 魔王 Demon King | Phase 1: towering shadow armor with crown horns. After the Bell: a small grumpy demon in oversized armor pieces | black, violet / after: pink-red | Set `demon_king`. A post-fight look is **TBD** with the ending |
+| `demon_king` | 魔王 Demon King | Towering shadow armor with crown horns. Ending C: he is destroyed (no redemption), so there is no post-fight or shrunken look | black, violet | Set `demon_king` only. No second portrait. |
 
 The 7 standard expressions are **neutral, happy, sad, surprised, angry, worried, thinking**.
 
@@ -84,7 +84,7 @@ Each named NPC is a **generic base** (§3) with a recolor and one prop, so the p
 | 25 | goblin_student | goblin student, school bag (R4 ending) |
 | 26 | gugu | 咕咕 Gugu the postman pigeon, mail bag (letters) |
 
-That makes about 11 key sets × 7 expressions plus 26 bases × 3 = about **155 images**. With variants (hero_b, golden_dragon_cursed, and 小龙's two later forms; a post-fight Demon King look is TBD) it is about 190. Shipping order: R1 cast first (hero, xiaolong hatch, granny_bai, farmer_li, xiaoming, pipi, innkeeper_panda). Fledgling form is due by R4; grown form by R9.
+That makes about 11 key sets × 7 expressions plus 26 bases × 3 = about **155 images**. With variants (hero_b, golden_dragon_cursed, and 小龙's two later forms) it is about 190. Ending C needs no post-fight Demon King look. Shipping order: R1 cast first (hero, xiaolong hatch, granny_bai, farmer_li, xiaoming, pipi, innkeeper_panda). Fledgling form is due by R4; grown form by R9.
 
 ## 4. Portrait spec (answer to GameDev §11.3 for Arty)
 

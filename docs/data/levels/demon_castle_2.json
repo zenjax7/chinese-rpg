@@ -1487,9 +1487,323 @@
      "end": true
     }
    ]
+  },
+  "sc_r9_chain": {
+   "schema": "scene/0.2",
+   "id": "sc_r9_chain",
+   "title": "The curse chain",
+   "density": "D6",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "node": "boss_1",
+    "on": "enter"
+   },
+   "background": "bg_castle_gate",
+   "music": "tension",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "angry"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "worried"
+    },
+    "R1": {
+     "char": "pipi",
+     "expr": "smug"
+    },
+    "R2": {
+     "char": "golden_dragon_cursed",
+     "expr": "sad"
+    }
+   },
+   "teaches": [],
+   "words": [
+    "C274",
+    "C558",
+    "C565",
+    "C564"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "At the inner gate a great dragon is bound in a chain of shadow. A small red imp holds the end of it.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "surprised",
+     "en": "Mom!",
+     "zh": "妈妈！",
+     "zhTrad": "媽媽！",
+     "zhId": "C274",
+     "tokens": [
+      "C274"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "pipi",
+     "side": "R1",
+     "expr": "smug",
+     "en": "Stay back! This chain makes her strong and mean.",
+     "zh": "你们不可以！",
+     "zhTrad": "你們不可以！",
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "angry",
+     "en": "Let her go!",
+     "zh": "放开她！",
+     "zhTrad": "放開她！",
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "angry",
+     "en": "She is my mom! We will {C558} you!",
+     "zh": "她是我的妈妈！",
+     "zhTrad": "她是我的媽媽！",
+     "tokens": [
+      "C558"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "pipi",
+     "side": "R1",
+     "expr": "smug",
+     "en": "We'll see! I am not afraid.",
+     "zh": "我不怕！",
+     "zhTrad": "我不怕！",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "thinking",
+     "en": "What do you say?",
+     "vo": null,
+     "choices": [
+      {
+       "id": "c1",
+       "en": "{C565}",
+       "tokens": [
+        "C565"
+       ],
+       "goto": "l8",
+       "correct": true
+      },
+      {
+       "id": "c2",
+       "en": "{C564}",
+       "tokens": [
+        "C564"
+       ],
+       "goto": "l7b"
+      }
+     ]
+    },
+    {
+     "id": "l7b",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "angry",
+     "en": "No! We do not give up.",
+     "zh": "不要放弃！",
+     "zhTrad": "不要放棄！",
+     "zhId": "C565",
+     "tokens": [
+      "C565"
+     ],
+     "vo": null,
+     "goto": "l8"
+    },
+    {
+     "id": "l8",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The fight is to break the chain, not to hurt her. Xiaolong runs to her side.",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "saw_mom_chained"
+    }
+   ]
+  },
+  "sc_r9_mom_freed": {
+   "schema": "scene/0.2",
+   "id": "sc_r9_mom_freed",
+   "title": "Mom is free",
+   "density": "D6",
+   "trigger": {
+    "graph": "demon_castle_2",
+    "node": "boss_1",
+    "on": "clear",
+    "cond": {
+     "bossDefeated": "demon_castle_2"
+    }
+   },
+   "background": "bg_castle_gate",
+   "music": "sad_wind",
+   "once": true,
+   "slots": {
+    "L1": {
+     "char": "hero",
+     "expr": "happy"
+    },
+    "L2": {
+     "char": "xiaolong",
+     "expr": "surprised"
+    },
+    "R1": {
+     "char": "golden_dragon",
+     "expr": "happy"
+    }
+   },
+   "teaches": [],
+   "words": [
+    "C007",
+    "C274",
+    "C566",
+    "C617"
+   ],
+   "lines": [
+    {
+     "id": "l1",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "The shadow chain breaks. The dragon's scales turn gold again. She bows her head.",
+     "vo": null
+    },
+    {
+     "id": "l2",
+     "speaker": "golden_dragon",
+     "side": "R1",
+     "expr": "happy",
+     "en": "{C007}.",
+     "zh": "谢谢。",
+     "zhTrad": "謝謝。",
+     "zhId": "C007",
+     "tokens": [
+      "C007"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l3",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "happy",
+     "en": "Mom!",
+     "zh": "妈妈！",
+     "zhTrad": "媽媽！",
+     "zhId": "C274",
+     "tokens": [
+      "C274"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l4",
+     "speaker": "golden_dragon",
+     "side": "R1",
+     "expr": "happy",
+     "en": "You came so far, little one. You are a {C566}.",
+     "zh": "你是英雄。",
+     "zhTrad": "你是英雄。",
+     "tokens": [
+      "C566"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l5",
+     "speaker": "hero",
+     "side": "L1",
+     "expr": "worried",
+     "en": "Are you okay now?",
+     "zh": "你很好吗？",
+     "zhTrad": "你很好嗎？",
+     "vo": null
+    },
+    {
+     "id": "l6",
+     "speaker": "golden_dragon",
+     "side": "R1",
+     "expr": "neutral",
+     "en": "I am well. I will help you.",
+     "zh": "我很好。我来帮助你。",
+     "zhTrad": "我很好。我來幫助你。",
+     "vo": null
+    },
+    {
+     "id": "l7",
+     "speaker": "narrator",
+     "side": "none",
+     "expr": "neutral",
+     "en": "Xiaolong stands taller. His wings are strong now. He looks like his mother.",
+     "vo": null
+    },
+    {
+     "id": "l8",
+     "speaker": "xiaolong",
+     "side": "L2",
+     "expr": "brave",
+     "en": "{C617}!",
+     "zh": "我们走吧！",
+     "zhTrad": "我們走吧！",
+     "zhId": "C617",
+     "tokens": [
+      "C617"
+     ],
+     "vo": null
+    },
+    {
+     "id": "l9",
+     "speaker": "golden_dragon",
+     "side": "R1",
+     "expr": "happy",
+     "en": "I will come to the last door with you.",
+     "zh": "我跟你去。",
+     "zhTrad": "我跟你去。",
+     "vo": null,
+     "end": true
+    }
+   ],
+   "onEnd": [
+    {
+     "setFlag": "mom_freed"
+    },
+    {
+     "setFlag": "xiaolong_form_grown"
+    }
+   ]
   }
  },
  "characters": [
+  "golden_dragon",
+  "golden_dragon_cursed",
   "granny_bai",
   "hero",
   "narrator",
