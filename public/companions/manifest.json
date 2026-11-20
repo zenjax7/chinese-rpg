@@ -34,5 +34,79 @@
         "loop": false
       }
     }
+  },
+  "xiaolong_fledgling": {
+    "frameWidth": 256,
+    "frameHeight": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 1.0
+    },
+    "facing": "right",
+    "scaleVsHero": 0.66,
+    "states": {
+      "idle": {
+        "file": "xiaolong_fledgling_battle_idle.png",
+        "frames": 4,
+        "fps": 6,
+        "loop": true
+      },
+      "cheer": {
+        "file": "xiaolong_fledgling_battle_cheer.png",
+        "frames": 4,
+        "fps": 8,
+        "loop": false
+      },
+      "attack": {
+        "file": "xiaolong_fledgling_battle_attack.png",
+        "frames": 4,
+        "fps": 10,
+        "loop": false,
+        "hitFrame": 2
+      },
+      "hurt": {
+        "file": "xiaolong_fledgling_battle_hurt.png",
+        "frames": 2,
+        "fps": 6,
+        "loop": false
+      }
+    }
+  },
+  "xiaolong_grown": {
+    "frameWidth": 256,
+    "frameHeight": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 1.0
+    },
+    "facing": "right",
+    "scaleVsHero": 0.72,
+    "states": {
+      "idle": {
+        "file": "xiaolong_grown_battle_idle.png",
+        "frames": 4,
+        "fps": 6,
+        "loop": true
+      },
+      "cheer": {
+        "file": "xiaolong_grown_battle_cheer.png",
+        "frames": 4,
+        "fps": 8,
+        "loop": false
+      },
+      "attack": {
+        "file": "xiaolong_grown_battle_attack.png",
+        "frames": 4,
+        "fps": 10,
+        "loop": false,
+        "hitFrame": 2
+      },
+      "hurt": {
+        "file": "xiaolong_grown_battle_hurt.png",
+        "frames": 2,
+        "fps": 6,
+        "loop": false
+      }
+    }
   }
 }

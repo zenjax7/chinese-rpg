@@ -614,8 +614,8 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
     await bgCall(`() => window.__proto.world.goto('realm_4', 'entry_town', true)`);
     await p.evaluate(() => window.__proto.world.goto('realm_4', 'entry_town')); await tid('party-xiaolong').waitFor({ timeout: 8000 }).catch(() => {});
     const s10 = await sv(); const xk = await tid('party-xiaolong').getAttribute('data-key').catch(() => null);
-    check(s10.world.flags.includes('xiaolong_form_fledgling') && xk === 'xiaolong_map_fly',
-      `小龙 forms: entering realm 4 earns xiaolong_form_fledgling; the map falls back to the hatchling strip until the fledgling one is delivered (${xk})`);
+    check(s10.world.flags.includes('xiaolong_form_fledgling') && xk === 'xiaolong_fledgling_map_fly',
+      `小龙 forms: entering realm 4 earns xiaolong_form_fledgling; the map flies Arty's fledgling strip (${xk})`);
     await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
   }
   { // ---- Ending C (2026-11-20): sc_r9_chain before the boss_1 fight, sc_r9_mom_freed after it (grown 小龙), sc_r9_ending after boss_9 ----
@@ -633,10 +633,16 @@ export async function worldTests({ browser, BASE, check, log = console.log, shot
       `Ending C: entering demon_castle_2/boss_1 plays sc_r9_chain, the (won) fight, then sc_r9_mom_freed, which sets mom_freed + xiaolong_form_grown (${JSON.stringify(o1)})`);
     await p.evaluate(() => window.__proto.world.goto('demon_castle_2', 'boss_1')); await tid('party-xiaolong').waitFor({ timeout: 8000 }).catch(() => {});
     const gk = await tid('party-xiaolong').getAttribute('data-key').catch(() => null);
-    check(gk === 'xiaolong_map_fly', `Ending C: grown 小龙 falls back to the current map strip until Arty delivers the grown set (${gk})`);
+    check(gk === 'xiaolong_grown_map_fly', `Ending C: after Mom is freed the map flies grown 小龙 (${gk})`);
     const o2 = await playOrder(`() => window.__proto.world.goto('demon_castle_5', 'boss_9', true)`);
     const f2 = (await sv()).world.flags;
     check(o2.includes('sc_r9_ending') && f2.includes('bell_rung') && f2.includes('hero_is_keeper'), `Ending C: clearing demon_castle_5/boss_9 plays sc_r9_ending (bell_rung, hero_is_keeper) (${JSON.stringify(o2)})`);
+    // the ending's 小龙 slot shows the grown portrait (slot stays 'xiaolong'; the engine swaps the art from the flag)
+    await p.evaluate(() => { window.__endDone = false; window.__proto.world.playScene('sc_r9_ending').finally(() => { window.__endDone = true; }); });
+    await tid('scene').waitFor({ timeout: 8000 }).catch(() => {}); let xs = null;
+    for (let i = 0; i < 30 && !xs; i++) { const sc = await scene(); if (!sc) break; if (/xiaolong/.test(sc.L?.char || '')) xs = sc.L; else { await p.keyboard.press('Enter'); await p.waitForTimeout(150); await p.keyboard.press('Enter'); await p.waitForTimeout(200); } }
+    if (await tid('scene').count()) await tid('scene-skip').click().catch(() => {});
+    check(xs?.char === 'xiaolong_grown' && /portraits\/xiaolong_grown_\w+\.webp$/.test(xs?.img || ''), `Ending C: sc_r9_ending shows grown 小龙's portrait (${JSON.stringify(xs)})`);
     await p.evaluate(() => { delete window.__proto.fakeBattle; const P = window.__proto.world.P(); P.zonesDefeated = P.zonesDefeated.filter(z => z !== 'demon_king_s_gate' && z !== 'throne_hall'); });
     await p.evaluate(() => window.__proto.world.goto('realm_1', 'village'));
   }

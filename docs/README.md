@@ -365,6 +365,7 @@ v3.9.5 (Oct 10) is in the game too: villages have no smith (no gear for sale), h
   - [art/arty/approved_assets.csv](art/arty/approved_assets.csv) — Index of Jack-approved art/audio assets (name, use, file, date) · **Arty** · to check what's final
 - [art/arty/sprites.md](art/arty/sprites.md) — Arty's battle sprites README (batch 1 sheets, manifest) · **Arty** · when adding sprites
 - [art/arty/xiaolong_battle.md](art/arty/xiaolong_battle.md) — Xiaolong battle sprites: 小龙 companion idle/cheer/attack/hurt strips, 256x256 frames, anchor bottom-centre, facing right · **Arty** · when changing the battle companion
+- [art/arty/xiaolong_forms.md](art/arty/xiaolong_forms.md) — 小龙 fledgling (R4+) and grown (R9 after Mom is freed, and the ending) sets: portraits, battle strips, map fly; picked by story flag (src/world/xiaolong-form.ts) · **Arty** · when changing 小龙's forms
 - [art/arty/spells.md](art/arty/spells.md) — Arty's spell art README: icons, fx textures, recipes · **Arty** · when adding spell art
 - [art/arty/portraits.md](art/arty/portraits.md) — Arty's dialogue portraits README · **Arty** · when adding portraits
 - [art/arty/backgrounds.md](art/arty/backgrounds.md) — Arty's backgrounds README (realms 1–2) · **Arty** · when adding backgrounds

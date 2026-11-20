@@ -304,6 +304,54 @@
     "surprised": "villager_m_surprised.webp"
    },
    "source": "innkeeper/ (v1 512x512)"
+  },
+  {
+   "id": "xiaolong_fledgling",
+   "group": "xiaolong_forms",
+   "name": {
+    "zh": "小龙",
+    "en": "Little Dragon"
+   },
+   "portraitJson": "xiaolong_fledgling.portrait.json",
+   "anchorY": 230,
+   "scale": 1.0,
+   "files": {
+    "neutral": "xiaolong_fledgling_neutral.webp",
+    "happy": "xiaolong_fledgling_happy.webp",
+    "sad": "xiaolong_fledgling_sad.webp",
+    "surprised": "xiaolong_fledgling_surprised.webp",
+    "angry": "xiaolong_fledgling_angry.webp",
+    "worried": "xiaolong_fledgling_worried.webp",
+    "thinking": "xiaolong_fledgling_thinking.webp",
+    "hungry": "xiaolong_fledgling_hungry.webp",
+    "brave": "xiaolong_fledgling_brave.webp"
+   },
+   "source": "companions/xiaolong_forms_drafts/src/fledgling_portraits_3x3.jpg",
+   "storyFlag": "used from R4 until mother is freed in R9"
+  },
+  {
+   "id": "xiaolong_grown",
+   "group": "xiaolong_forms",
+   "name": {
+    "zh": "小龙",
+    "en": "Little Dragon"
+   },
+   "portraitJson": "xiaolong_grown.portrait.json",
+   "anchorY": 230,
+   "scale": 1.0,
+   "files": {
+    "neutral": "xiaolong_grown_neutral.webp",
+    "happy": "xiaolong_grown_happy.webp",
+    "sad": "xiaolong_grown_sad.webp",
+    "surprised": "xiaolong_grown_surprised.webp",
+    "angry": "xiaolong_grown_angry.webp",
+    "worried": "xiaolong_grown_worried.webp",
+    "thinking": "xiaolong_grown_thinking.webp",
+    "hungry": "xiaolong_grown_hungry.webp",
+    "brave": "xiaolong_grown_brave.webp"
+   },
+   "source": "companions/xiaolong_forms_drafts/src/grown_portraits_3x3.jpg",
+   "storyFlag": "fledgling from R4 until mother freed; grown after R9 (and ending flight home)"
   }
  ]
 }
